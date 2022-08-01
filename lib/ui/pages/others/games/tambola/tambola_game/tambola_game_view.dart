@@ -67,7 +67,9 @@ class _TambolaGameViewState extends State<TambolaGameView>
                           leading: FelloAppBarBackButton(),
                           title: "Tambola",
                           actions: [
-                            FelloCoinBar(),
+                            FelloCoinBar(
+                              svgAsset: Assets.aFelloToken,
+                            ),
                             SizedBox(width: SizeConfig.padding8),
                             CircleAvatar(
                               backgroundColor: Colors.black,

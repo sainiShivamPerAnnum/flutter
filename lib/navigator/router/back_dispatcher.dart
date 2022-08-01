@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -28,6 +29,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _webGameViewModel = locator<WebGameViewModel>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -61,6 +63,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    log("Back Request called");
+    if (JourneyService.isAvatarAnimationInProgress) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
     Future.delayed(Duration(milliseconds: 20), () {
@@ -70,27 +74,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         FocusManager.instance.primaryFocus.unfocus();
       }
     });
-    // if (WinViewModel().panelController.isPanelOpen) {
-    //   WinViewModel().panelController.close();
-    //   return Future.value(true);
-    // }
-    // If user is in the profile page and preferences are changed
-
-    if (AppState.unsavedPrefs) {
-      if (_baseUtil != null &&
-          _userService.baseUser != null &&
-          _userService.baseUser.uid != null &&
-          _userService.baseUser.userPreferences != null)
-        _dbModel
-            .updateUserPreferences(_userService.baseUser.uid,
-                _userService.baseUser.userPreferences)
-            .then((value) {
-          AppState.unsavedPrefs = false;
-          log("Preferences updated");
-        });
-    }
     // If the top item is anything except a scaffold
-    if (AppState.screenStack.last == ScreenItem.dialog) {
+    if (AppState.screenStack.last == ScreenItem.dialog ||
+        AppState.screenStack.last == ScreenItem.modalsheet) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
@@ -137,14 +123,15 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return _routerDelegate.popRoute();
     }
     // If the root tab is not 0 at the time of exit
+
     else if (_baseUtil.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
-        (AppState.delegate.appState.rootIndex != 1 ||
-            RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
+        (AppState.delegate.appState.rootIndex != 1)) {
       logger.w("Checking if app can be closed");
-      if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
-        RootViewModel.scaffoldKey.currentState.openEndDrawer();
-      else if (AppState.delegate.appState.rootIndex != 1)
+      // if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
+      //   RootViewModel.scaffoldKey.currentState.openEndDrawer();
+      // else
+      if (AppState.delegate.appState.rootIndex != 1)
         AppState.delegate.appState.setCurrentTabIndex = 1;
       return Future.value(true);
     }

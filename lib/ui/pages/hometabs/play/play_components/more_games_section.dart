@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
@@ -23,12 +24,12 @@ class MoreGamesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: List.generate(
-        model.isTrendingCount == 0 ? 3 : model.isTrendingCount,
+        model.isGamesListDataLoading ? 3 : model.moreGamesListData.length,
         (index) {
           return model.isGamesListDataLoading
               ? MoreGamesShimmer()
               : MoreGames(
-                  game: model.gamesListData[index],
+                  game: model.moreGamesListData[index],
                 );
         },
       ),
@@ -37,7 +38,7 @@ class MoreGamesSection extends StatelessWidget {
 }
 
 class MoreGames extends StatelessWidget {
-  final GameData game;
+  final GameDataModel game;
 
   const MoreGames({
     this.game,
@@ -95,7 +96,7 @@ class MoreGames extends StatelessWidget {
                   style: TextStyles.rajdhaniSB.body2,
                 ),
                 SizedBox(height: SizeConfig.padding4),
-               GameRewards(prizeAmount: game.prizeAmount),
+                GameRewards(prizeAmount: game.prizeAmount),
               ],
             ),
             Spacer(),
@@ -120,7 +121,11 @@ class MoreGamesShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(SizeConfig.padding16),
+      margin: EdgeInsets.only(
+        left: SizeConfig.padding24,
+        right: SizeConfig.padding24,
+        bottom: SizeConfig.padding12,
+      ),
       height: SizeConfig.screenWidth * 0.218,
       width: SizeConfig.screenWidth * 0.901,
       decoration: BoxDecoration(

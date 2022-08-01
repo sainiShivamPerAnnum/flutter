@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class GameCard extends StatelessWidget {
-  final GameModel gameData;
+  final GameDataModel gameData;
   GameCard({this.gameData});
 
   @override

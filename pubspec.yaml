@@ -114,6 +114,7 @@ flutter:
     - assets/videos/
     - assets/temp/
     - assets/svg/
+    - assets/journey/
 
   fonts:
     - family: Cucciolo

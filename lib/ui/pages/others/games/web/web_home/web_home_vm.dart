@@ -5,9 +5,11 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
@@ -43,9 +45,10 @@ class WebHomeViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
+  final GamesRepository _gamesRepo = locator<GamesRepository>();
 
   //Local Variables
-  GameData _currentGameData;
+  GameDataModel _currentGameData;
 
   int currentPage = 0;
   int gameIndex = 0;
@@ -61,7 +64,7 @@ class WebHomeViewModel extends BaseModel {
   String token = "";
   bool _isLoading;
 
-  List<GameData> _gamesListData;
+  List<GameDataModel> _gamesListData;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
       color: Color(0xff5948B2),
@@ -84,7 +87,7 @@ class WebHomeViewModel extends BaseModel {
   int get getGameIndex => this.gameIndex;
   String get message => _message;
   String get sessionID => _sessionId;
-  GameData get currentGameData => this._currentGameData;
+  GameDataModel get currentGameData => this._currentGameData;
   get isLoading => this._isLoading;
 
   set isLoading(value) {
@@ -116,10 +119,8 @@ class WebHomeViewModel extends BaseModel {
   init(String game) async {
     currentGame = game;
     isLoading = true;
-    await loadGameLists();
-    currentGameData =
-        _gamesListData.firstWhere((game) => game.code == currentGame);
-    print(currentGame);
+    // await loadGameLists();
+    await getGameDetails(game);
     scrollController = _lbService.parentController;
     pageController = new PageController(initialPage: 0);
     refreshPrizes();
@@ -439,22 +440,34 @@ class WebHomeViewModel extends BaseModel {
     return token;
   }
 
-  loadGameLists() async {
-    Future.delayed(Duration(seconds: 5));
-    try {
-      final token = await _getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath().kGames,
-        token: token,
-        cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
-      );
-      final _responseModel = NewGameModel.fromJson(response);
-      _logger.d(response);
-      _gamesListData = _responseModel.data.games;
-      _logger.d('Game Length: ${_responseModel.data.games.length}');
-      _logger.d('Game Response: $response');
-    } catch (e) {
-      _logger.d('Catch Error: $e');
+  // loadGameLists() async {
+  //   Future.delayed(Duration(seconds: 5));
+  //   try {
+  //     final token = await _getBearerToken();
+  //     final response = await APIService.instance.getData(
+  //       ApiPath().kGames,
+  //       token: token,
+  //       cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
+  //     );
+  //     final _responseModel = NewGameModel.fromJson(response);
+  //     _logger.d(response);
+  //     _gamesListData = _responseModel.data.games;
+  //     _logger.d('Game Length: ${_responseModel.data.games.length}');
+  //     _logger.d('Game Response: $response');
+  //   } catch (e) {
+  //     _logger.d('Catch Error: $e');
+  //   }
+  // }
+  getGameDetails(String gameCode) async {
+    if (_gamesRepo.allgames != null && _gamesRepo.allgames.isNotEmpty)
+      currentGameData =
+          _gamesRepo.allgames.firstWhere((game) => game.gameCode == gameCode);
+    else {
+      currentGameData = _gamesRepo.getGameByCode(gameCode);
     }
+
+    if (currentGameData == null)
+      BaseUtil.showNegativeAlert(
+          "Something went wrong", "Please reload this page");
   }
 }

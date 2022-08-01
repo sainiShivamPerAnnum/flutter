@@ -1,6 +1,12 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
@@ -15,13 +21,15 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Save(), Play(), Win()];
+  final pages = [Play(), JourneyView(), Save()];
 
   @override
   Widget build(BuildContext context) {
@@ -133,14 +141,14 @@ class Root extends StatelessWidget {
               //             ? TransactionLoader()
               //             : SizedBox()),
 
-              if (SizeConfig.screenWidth < 600)
-                WantMoreTickets(
-                  model: model,
-                ),
-              if (SizeConfig.screenWidth < 600)
-                SaveBaseline(
-                  model: model,
-                ),
+              // if (SizeConfig.screenWidth < 600)
+              //   WantMoreTickets(
+              //     model: model,
+              //   ),
+              // if (SizeConfig.screenWidth < 600)
+              //   SaveBaseline(
+              //     model: model,
+              //   ),
               BottomNavBar(
                 model: model,
               ),
@@ -150,7 +158,94 @@ class Root extends StatelessWidget {
               // ? TransactionLoader()
               //             : SizedBox()),
             ],
+
+            // if (AppState.delegate.appState.getCurrentTabIndex != 1)
+            // FelloAppBar(
+            //   key: felloAppBarKey,
+            //   leading: InkWell(
+            //     onTap: () => model.showDrawer(),
+            //     child: ProfileImageSE(
+            //       radius: SizeConfig.avatarRadius,
+            //     ),
+            //   ),
+            //   actions: [
+            //     FelloCoinBar(),
+            //     SizedBox(width: 5),
+            //     NotificationButton(),
+            //     SizedBox(width: 5),
+
+            //     CircleAvatar(
+            //       backgroundColor: Colors.black,
+            //       child: IconButton(
+            //         color: Colors.white,
+            //         icon: model.isUploading
+            //             ? CircularProgressIndicator(color: Colors.black)
+            //             : Icon(Icons.upload_rounded),
+            //         onPressed: () {
+            //           model.uploadJourneyPage();
+            //         },
+            //       ),
+            //     ),
+            // SizedBox(width: 5),
+            // CircleAvatar(
+            //   backgroundColor: Colors.black,
+            //   child: IconButton(
+            //     color: Colors.white,
+            //     icon: model.isUploading
+            //         ? CircularProgressIndicator(color: Colors.black)
+            //         : Icon(Icons.download_rounded),
+            //     onPressed: () {
+            //       model.completeNViewDownloadSaveLViewAsset();
+            //     },
+            //   ),
+            // )
+            // ],
           ),
+          // Positioned(
+          //   bottom: 0,
+          //   child: Container(
+          //     width: SizeConfig.screenWidth,
+          //     height: SizeConfig.navBarHeight,
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //           begin: Alignment.bottomCenter,
+          //           end: Alignment.topCenter,
+          //           colors: [
+          //             UiConstants.scaffoldColor.withOpacity(0.8),
+          //             UiConstants.scaffoldColor.withOpacity(0.2),
+          //           ],
+          //           stops: [
+          //             0.8,
+          //             1
+          //           ]),
+          //     ),
+          //     child: BackdropFilter(
+          //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          //     ),
+          //   ),
+          // ),
+          // if (SizeConfig.screenWidth < 600)
+          //   WantMoreTickets(
+          //     model: model,
+          //   ),
+          // if (SizeConfig.screenWidth < 600)
+          //   SaveBaseline(
+          //     model: model,
+          //   ),
+          // BottomNavBar(
+          //   model: model,
+          // ),
+          // Consumer<AppState>(
+          //     builder: (ctx, m, child) =>
+          //         AppState.delegate.appState.isTxnLoaderInView
+          //             ? TransactionLoader()
+          //             : SizedBox()),
+          // if (model.svgSource.isNotEmpty)
+          //   Positioned.fill(child: SourceAdaptiveAssetView(asset: 'b1'),)
+          // ],
+          // ),
+// >>>>>>> journey_view
+          // ),
         );
       },
     );
@@ -166,14 +261,12 @@ class BottomNavBar extends StatelessWidget {
     S locale = S.of(context);
     return Consumer<AppState>(
       builder: (ctx, m, child) => Positioned(
-        bottom: SizeConfig.pageHorizontalMargins,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
+        bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
-          width: SizeConfig.navBarWidth,
+          width: SizeConfig.screenWidth,
           height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
-            color: UiConstants.primaryColor,
+            color: Colors.black,
             borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           ),
           child: NavBar(
@@ -181,18 +274,18 @@ class BottomNavBar extends StatelessWidget {
             currentIndex: AppState.delegate.appState.getCurrentTabIndex,
             items: [
               NavBarItemData(
-                locale.navBarFinance,
-                Assets.navSave,
-                SizeConfig.screenWidth * 0.27,
-              ),
-              NavBarItemData(
                 locale.navBarPlay,
                 Assets.navPlay,
                 SizeConfig.screenWidth * 0.27,
               ),
               NavBarItemData(
-                locale.navBarWin,
+                'Home',
                 Assets.navWin,
+                SizeConfig.screenWidth * 0.27,
+              ),
+              NavBarItemData(
+                locale.navBarFinance,
+                Assets.navSave,
                 SizeConfig.screenWidth * 0.27,
               ),
             ],

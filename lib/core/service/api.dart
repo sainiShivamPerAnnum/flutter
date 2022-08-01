@@ -1,6 +1,9 @@
+import 'dart:developer' as dev;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
@@ -300,6 +303,17 @@ class Api {
         .set(data, SetOptions(merge: false));
   }
 
+  Future<int> getUserRemoteMlIndex(String userid) async {
+    DocumentSnapshot snapshot = await _db
+        .collection('users')
+        .doc(userid)
+        .collection('stats')
+        .doc('journey')
+        .get();
+    final Map<String, dynamic> data = snapshot.data();
+    return data["mlIndex"].toInt();
+  }
+
   Future<void> addClaimDocument(Map data) {
     return _db.collection('claims').doc().set(data, SetOptions(merge: false));
   }
@@ -388,6 +402,31 @@ class Api {
         })
         .then((value) => true)
         .catchError((onErr) => false);
+  }
+
+  Future addJourneyPage(JourneyPage page) async {
+    DocumentReference documentReference =
+        _db.collection('journey').doc('page_${page.page}');
+    dev.log(page.toMap().toString());
+    return await documentReference.set(page.toMap());
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> fetchJourneyPage(
+      DocumentSnapshot lastDoc) async {
+    Query query;
+    if (lastDoc != null)
+      query = _db
+          .collection('journey')
+          .orderBy('id')
+          .startAfterDocument(lastDoc)
+          .limit(2);
+    else
+      query = _db.collection('journey').orderBy('id').limit(2);
+    QuerySnapshot res = await query.get();
+    if (res != null && res.size > 0)
+      return res.docs;
+    else
+      return null;
   }
 
   Future<QuerySnapshot> getPromoCardCollection() {
@@ -662,6 +701,17 @@ class Api {
       // logger.d(data);
     } catch (e) {
       logger.e(e.toString());
+    }
+  }
+
+  Future<bool> addMilestones(Map<String, dynamic> data) async {
+    CollectionReference colRef = _db.collection('milestones');
+    try {
+      await colRef.add(data);
+      return true;
+    } catch (e) {
+      logger.d(e.toString());
+      return false;
     }
   }
   //---------------------------------------REALTIME DATABASE-------------------------------------------//

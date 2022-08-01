@@ -1,14 +1,20 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -25,15 +31,15 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -44,6 +50,9 @@ class RootViewModel extends BaseModel {
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
+  final DBModel _dbModel = locator<DBModel>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -52,6 +61,21 @@ class RootViewModel extends BaseModel {
 
   BuildContext rootContext;
   bool _isInitialized = false;
+  bool _isUploading = false;
+  get isUploading => this._isUploading;
+  String _svgSource = '';
+
+  String get svgSource => this._svgSource;
+
+  set svgSource(value) {
+    this._svgSource = value;
+    notifyListeners();
+  }
+
+  set isUploading(value) {
+    this._isUploading = value;
+    notifyListeners();
+  }
 
   String get myUserDpUrl => _userService.myUserDpUrl;
   //int get currentTabIndex => _appState.rootIndex;
@@ -105,6 +129,7 @@ class RootViewModel extends BaseModel {
   }
 
   void onItemTapped(int index) {
+    if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
       case 0:
         _analyticsService.track(eventName: AnalyticsEvents.saveSection);
@@ -120,6 +145,8 @@ class RootViewModel extends BaseModel {
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
+    if (AppState.delegate.appState.getCurrentTabIndex == 1)
+      _journeyService.checkIfAnyAnimationIsLeft();
   }
 
   _initAdhocNotifications() {
@@ -131,6 +158,53 @@ class RootViewModel extends BaseModel {
         }
       });
     }
+  }
+
+  // uploadMilestone(){
+
+  // }
+
+  downloadJourneyPage() {
+    _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+  }
+
+  uploadJourneyPage() async {
+    // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
+    log(json.encode(jourenyPages.last.toMap()));
+  }
+
+  uploadMilestones() async {
+    // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
+    //       log(milestone.toMap().toString());
+    //     }));
+    log(json.encode(jourenyPages
+        .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
+        .toList()));
+  }
+
+  // completeNViewDownloadSaveLViewAsset() async {
+  //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
+  //     log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
+  //     svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+  //   } else {
+  //     svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
+  //     log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
+  //     await Future.delayed(Duration(seconds: 5));
+  //     final bool result = await _journeyRepo.downloadAndSaveFile(
+  //         "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
+  //     if (result) {
+  //       log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
+
+  //       svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+  //     } else {
+  //       log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
+  //     }
+  //   }
+  // }
+
+  Future<void> openJourneyView() async {
+    AppState.delegate.appState.currentAction =
+        PageAction(page: JourneyViewPageConfig, state: PageState.addPage);
   }
 
   void _showSecurityBottomSheet() {
@@ -424,6 +498,14 @@ class RootViewModel extends BaseModel {
       isBarrierDismissable: true,
     );
   }
+
+  // addJourneyPage() async {
+  //   isUploading = true;
+  //   jourenyPages.forEach((page) async {
+  //     await _dbModel.addJourneypage(page);
+  //   });
+  //   isUploading = false;
+  // }
 
   void focusBuyField() {
     Haptic.vibrate();

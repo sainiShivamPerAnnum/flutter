@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -53,10 +54,7 @@ class TambolaHomeView extends StatelessWidget {
                               curve: Curves.decelerate,
                               opacity: model.cardOpacity ?? 1,
                               child: GameCard(
-                                gameData: BaseUtil.gamesList.firstWhere(
-                                    (element) =>
-                                        element.gameCode ==
-                                        Constants.GAME_TYPE_TAMBOLA),
+                                gameData: model.game,
                               ),
                             ),
                           ),
@@ -165,7 +163,9 @@ class TambolaHomeView extends StatelessWidget {
                   FelloAppBar(
                     leading: FelloAppBarBackButton(),
                     actions: [
-                      FelloCoinBar(),
+                      FelloCoinBar(
+                        svgAsset: Assets.aFelloToken,
+                      ),
                       SizedBox(width: 16),
                       NotificationButton(),
                     ],

@@ -59,4 +59,10 @@ class ApiPath {
   get kOngoingCampaigns => "/$stage/campaigns";
   get kPromos => "/$stage/promos";
   get kGames => "/$stage/games";
+  static String kGame(String gameCode) => "/game/$gameCode";
+
+  //Journey
+  get kMilestones => '/milestones';
+  get kJourney => "/journey";
+  static String getJourney(int page) => "/journey/$page";
 }

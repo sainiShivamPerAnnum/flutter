@@ -12,8 +12,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../service/notifier_services/user_service.dart';
-
 class UserRepository {
   final _logger = locator<CustomLogger>();
   final _appflyerService = locator<AppFlyerAnalytics>();

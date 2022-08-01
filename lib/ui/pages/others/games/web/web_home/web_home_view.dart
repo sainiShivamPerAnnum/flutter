@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
@@ -428,7 +429,7 @@ class GameInfoBlock extends StatelessWidget {
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  final GameData game;
+  final GameDataModel game;
   final bool isLoading;
   MySliverAppBar({
     @required this.expandedHeight,

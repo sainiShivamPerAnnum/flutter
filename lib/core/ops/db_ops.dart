@@ -11,6 +11,7 @@ import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
@@ -945,6 +946,35 @@ class DBModel extends ChangeNotifier {
     return userMilestones;
   }
 
+  Future addJourneypage(JourneyPage page) async {
+    try {
+      await _api.addJourneyPage(page);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchJourneyPage(
+      {DocumentSnapshot lastDoc}) async {
+    List<JourneyPage> pages = [];
+    DocumentSnapshot latestlastDoc;
+    try {
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> pageData =
+          await _api.fetchJourneyPage(lastDoc);
+      if (pageData != null && pageData.isNotEmpty) {
+        latestlastDoc = pageData.last;
+        pageData.forEach((page) {
+          pages.add(JourneyPage.fromMap(page.data()));
+        });
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    logger.d(
+        "No of pages fetched: ${pages.length} || last doc id: ${latestlastDoc?.id}");
+    return {"pages": pages, "lastDoc": latestlastDoc};
+  }
+
   Future<List<FelloMilestoneModel>> getMilestonesList() async {
     List<FelloMilestoneModel> felloMilestones = [];
     try {
@@ -1014,6 +1044,14 @@ class DBModel extends ChangeNotifier {
       resultAutosaveTransactionsMap['listOfTransactions'] = requestedTxns;
       resultAutosaveTransactionsMap['lastDocument'] = lastDocument;
       return resultAutosaveTransactionsMap;
+    }
+  }
+
+  getRemoteMLIndex(String uid) {
+    try {
+      return _api.getUserRemoteMlIndex(uid);
+    } catch (e) {
+      return null;
     }
   }
 

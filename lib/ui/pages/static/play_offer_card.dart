@@ -44,7 +44,7 @@ class OfferCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness24),
         child: Container(
-          width: SizeConfig.screenWidth,
+          width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 3,
           height: SizeConfig.screenWidth * 0.28,
           margin: EdgeInsets.only(
             bottom: SizeConfig.screenWidth * 0.1,

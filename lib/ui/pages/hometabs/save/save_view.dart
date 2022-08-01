@@ -25,93 +25,99 @@ class Save extends StatelessWidget {
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) => model.init(null),
       builder: (ctx, model, child) {
-        return Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.12),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  SizedBox(
-                      height:
-                          SizeConfig.screenWidth * 0.12 + SizeConfig.padding32),
-                  Stack(
-                    children: [
-                      if (model.focusCoupon != null)
-                        FocusCouponClip(model: model),
-                      Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.decelerate,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            width: SizeConfig.screenWidth / 2,
-                            height: model.appliedCoupon == null &&
-                                    model.showCoupons == true &&
-                                    model.focusCoupon != null
-                                ? SizeConfig.screenWidth * 0.12
-                                : 0,
-                          ),
-                          AugmontBuyCard(model: model),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins * 2,
-                        vertical: SizeConfig.padding20),
-                    child: CurrentPriceWidget(
-                      fetchGoldRates: model.fetchGoldRates,
-                      goldprice: model.goldRates != null
-                          ? model.goldRates.goldBuyPrice
-                          : 0.0,
-                      isFetching: model.isGoldRateFetching,
-                      mini: true,
+        return Container(
+          margin: EdgeInsets.only(
+              top: SizeConfig.screenWidth * 0.1 +
+                  SizeConfig.viewInsets.top +
+                  SizeConfig.padding32),
+          child: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.12),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    SizedBox(
+                        height: SizeConfig.screenWidth * 0.12 +
+                            SizeConfig.padding32),
+                    Stack(
+                      children: [
+                        if (model.focusCoupon != null)
+                          FocusCouponClip(model: model),
+                        Column(
+                          children: [
+                            AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.decelerate,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              width: SizeConfig.screenWidth / 2,
+                              height: model.appliedCoupon == null &&
+                                      model.showCoupons == true &&
+                                      model.focusCoupon != null
+                                  ? SizeConfig.screenWidth * 0.12
+                                  : 0,
+                            ),
+                            AugmontBuyCard(model: model),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                  // SizedBox(height: SizeConfig.padding32),
-                  // // Goldlinks(model: model),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showInstantTestGT();
-                  //   },
-                  //   child: Text("Show instant gt"),
-                  // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTxnSuccessScreen(null, null);
-                  //   },
-                  //   child: Text("Show txn complete UI"),
-                  // ),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     model.showTransactionPendingDialog();
-                  //   },
-                  //   child: Text("Show txn waiting dialog"),
-                  // ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: SizeConfig.screenWidth,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins * 2,
+                          vertical: SizeConfig.padding20),
+                      child: CurrentPriceWidget(
+                        fetchGoldRates: model.fetchGoldRates,
+                        goldprice: model.goldRates != null
+                            ? model.goldRates.goldBuyPrice
+                            : 0.0,
+                        isFetching: model.isGoldRateFetching,
+                        mini: true,
+                      ),
+                    ),
+                    // SizedBox(height: SizeConfig.padding32),
+                    // // Goldlinks(model: model),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     model.showInstantTestGT();
+                    //   },
+                    //   child: Text("Show instant gt"),
+                    // ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     model.showTxnSuccessScreen(null, null);
+                    //   },
+                    //   child: Text("Show txn complete UI"),
+                    // ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     model.showTransactionPendingDialog();
+                    //   },
+                    //   child: Text("Show txn waiting dialog"),
+                    // ),
 
-                  // TextButton(
-                  //   onPressed: () {
-                  //     AppState.delegate.appState.currentAction = PageAction(
-                  //         state: PageState.addPage, page: PoolViewPageConfig);
-                  //   },
-                  //   child: Text("Show pool game"),
-                  // ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     AppState.delegate.appState.currentAction = PageAction(
+                    //         state: PageState.addPage, page: PoolViewPageConfig);
+                    //   },
+                    //   child: Text("Show pool game"),
+                    // ),
 
-                  AutosaveCard(),
-                  SizedBox(height: SizeConfig.padding32),
-                  // Goldlinks(model: model),
-                  //CustomSubscriptionContainer(),
-                  SizedBox(height: SizeConfig.navBarHeight * 2),
-                ],
+                    AutosaveCard(),
+                    SizedBox(height: SizeConfig.padding32),
+                    // Goldlinks(model: model),
+                    //CustomSubscriptionContainer(),
+                    SizedBox(height: SizeConfig.navBarHeight * 2),
+                  ],
+                ),
               ),
-            ),
-            GoldBalanceContainer(model: model),
-          ],
+              GoldBalanceContainer(model: model),
+            ],
+          ),
         );
       },
     );
