@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserAugmontDetail {
@@ -15,8 +16,8 @@ class UserAugmontDetail {
   bool _isSellLocked;
   String _sellNotice;
   String _depNotice;
-  Timestamp _createdTime;
-  Timestamp _updatedTime;
+  TimestampModel _createdTime;
+  TimestampModel _updatedTime;
 
   static final String fldUserId = 'aUid';
   static final String fldUserName = 'aUsrName';
@@ -52,8 +53,22 @@ class UserAugmontDetail {
 
   UserAugmontDetail.newUser(String uid, String uname, String stateId,
       String bankHolderName, String bankAccNo, String ifsc)
-      : this(uid, uname, bankAccNo, bankHolderName, ifsc, stateId, false, null,
-            Timestamp.now(), Timestamp.now(), false, false, null, null);
+      : this(
+          uid,
+          uname,
+          bankAccNo,
+          bankHolderName,
+          ifsc,
+          stateId,
+          false,
+          null,
+          TimestampModel.currentTimeStamp(),
+          TimestampModel.currentTimeStamp(),
+          false,
+          false,
+          null,
+          null,
+        );
 
   UserAugmontDetail.fromMap(Map<String, dynamic> data)
       : this(
@@ -65,8 +80,8 @@ class UserAugmontDetail {
           data[fldStateId],
           data[fldFirstInvMade] ?? false,
           data[fldHasIssue],
-          data[fldCreatedTime],
-          data[fldUpdatedTime],
+          TimestampModel.fromMap(data[fldCreatedTime]),
+          TimestampModel.fromMap(data[fldUpdatedTime]),
           data[fldIsSellLocked] ?? false,
           data[fldIsDepLocked] ?? false,
           data[fldSellNotice],
@@ -82,8 +97,8 @@ class UserAugmontDetail {
       fldStateId: _userStateId,
       fldFirstInvMade: _firstInvMade,
       fldIfsc: _ifsc,
-      fldCreatedTime: _createdTime,
-      fldUpdatedTime: Timestamp.now()
+      fldCreatedTime: _createdTime.toMap(),
+      fldUpdatedTime: TimestampModel.currentTimeStamp().toMap(),
     };
   }
 

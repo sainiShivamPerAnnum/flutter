@@ -25,99 +25,62 @@ class Save extends StatelessWidget {
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) => model.init(null),
       builder: (ctx, model, child) {
-        return Container(
-          margin: EdgeInsets.only(
-              top: SizeConfig.screenWidth * 0.1 +
-                  SizeConfig.viewInsets.top +
-                  SizeConfig.padding32),
-          child: Stack(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.12),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    SizedBox(
-                        height: SizeConfig.screenWidth * 0.12 +
-                            SizeConfig.padding32),
-                    Stack(
-                      children: [
-                        if (model.focusCoupon != null)
-                          FocusCouponClip(model: model),
-                        Column(
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.decelerate,
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              width: SizeConfig.screenWidth / 2,
-                              height: model.appliedCoupon == null &&
-                                      model.showCoupons == true &&
-                                      model.focusCoupon != null
-                                  ? SizeConfig.screenWidth * 0.12
-                                  : 0,
-                            ),
-                            AugmontBuyCard(model: model),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      width: SizeConfig.screenWidth,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins * 2,
-                          vertical: SizeConfig.padding20),
-                      child: CurrentPriceWidget(
-                        fetchGoldRates: model.fetchGoldRates,
-                        goldprice: model.goldRates != null
-                            ? model.goldRates.goldBuyPrice
-                            : 0.0,
-                        isFetching: model.isGoldRateFetching,
-                        mini: true,
+        return Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding32),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  SizedBox(height: SizeConfig.screenWidth * 0.12),
+                  Stack(
+                    children: [
+                      if (model.focusCoupon != null)
+                        FocusCouponClip(model: model),
+                      Column(
+                        children: [
+                          AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.decelerate,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            width: SizeConfig.screenWidth / 2,
+                            height: model.appliedCoupon == null &&
+                                    model.showCoupons == true &&
+                                    model.focusCoupon != null
+                                ? SizeConfig.screenWidth * 0.12
+                                : 0,
+                          ),
+                          AugmontBuyCard(model: model),
+                        ],
                       ),
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins * 2,
+                        vertical: SizeConfig.padding20),
+                    child: CurrentPriceWidget(
+                      fetchGoldRates: model.fetchGoldRates,
+                      goldprice: model.goldRates != null
+                          ? model.goldRates.goldBuyPrice
+                          : 0.0,
+                      isFetching: model.isGoldRateFetching,
+                      mini: true,
                     ),
-                    // SizedBox(height: SizeConfig.padding32),
-                    // // Goldlinks(model: model),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     model.showInstantTestGT();
-                    //   },
-                    //   child: Text("Show instant gt"),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     model.showTxnSuccessScreen(null, null);
-                    //   },
-                    //   child: Text("Show txn complete UI"),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     model.showTransactionPendingDialog();
-                    //   },
-                    //   child: Text("Show txn waiting dialog"),
-                    // ),
-
-                    // TextButton(
-                    //   onPressed: () {
-                    //     AppState.delegate.appState.currentAction = PageAction(
-                    //         state: PageState.addPage, page: PoolViewPageConfig);
-                    //   },
-                    //   child: Text("Show pool game"),
-                    // ),
-
-                    AutosaveCard(),
-                    SizedBox(height: SizeConfig.padding32),
-                    // Goldlinks(model: model),
-                    //CustomSubscriptionContainer(),
-                    SizedBox(height: SizeConfig.navBarHeight * 2),
-                  ],
-                ),
+                  ),
+                  AutosaveCard(),
+                  SizedBox(height: SizeConfig.navBarHeight * 2),
+                ],
               ),
-              GoldBalanceContainer(model: model),
-            ],
-          ),
+            ),
+            GoldBalanceContainer(
+              model: model,
+              showNavIcon: true,
+            ),
+          ],
         );
       },
     );
@@ -195,29 +158,54 @@ class FocusCouponClip extends StatelessWidget {
 
 class GoldBalanceContainer extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
-  GoldBalanceContainer({this.model});
+  final bool showNavIcon;
+  final bool hapticReq;
+  GoldBalanceContainer(
+      {this.model, this.showNavIcon = false, this.hapticReq = true});
 
   @override
   Widget build(BuildContext context) {
     return WinningsContainer(
       onTap: model != null ? model.navigateToGoldBalanceDetailsScreen : () {},
+      hapticRequired: hapticReq,
+      borderRadius: SizeConfig.roundness16,
       shadow: true,
       color: UiConstants.tertiarySolid,
+      height: SizeConfig.screenWidth * 0.16,
       child: Container(
         width: SizeConfig.screenWidth,
         alignment: Alignment.center,
-        padding: EdgeInsets.all(SizeConfig.padding8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        padding: EdgeInsets.only(
+          top: SizeConfig.padding8,
+          bottom: SizeConfig.padding8,
+          left: SizeConfig.padding24,
+          right: showNavIcon ? SizeConfig.padding12 : SizeConfig.padding24,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "My Gold Balance",
-              style: TextStyles.title5.colour(Colors.white.withOpacity(0.8)),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "My Gold Balance:",
+                style: TextStyles.title5.colour(Colors.white.withOpacity(0.8)),
+              ),
             ),
-            UserGoldQuantitySE(
-              style: TextStyles.title2
-                  .colour(Colors.white)
-                  .weight(FontWeight.w900),
+            Row(
+              children: [
+                UserGoldQuantitySE(
+                  style: TextStyles.title2
+                      .colour(Colors.white)
+                      .weight(FontWeight.w900),
+                ),
+                if (showNavIcon)
+                  Icon(
+                    Icons.navigate_next_rounded,
+                    color: Colors.white.withOpacity(0.5),
+                    size: SizeConfig.padding40,
+                  )
+              ],
             )
           ],
         ),

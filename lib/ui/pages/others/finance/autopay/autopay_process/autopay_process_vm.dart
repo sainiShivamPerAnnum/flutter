@@ -7,7 +7,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
@@ -20,7 +19,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 // enum STATUS { Pending, Complete, Cancel }
@@ -30,7 +28,6 @@ class AutosaveProcessViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
-  final _dbModel = locator<DBModel>();
   final GoldenTicketService _gtService = GoldenTicketService();
 
   bool _showSetAmountView = false;
@@ -201,7 +198,7 @@ class AutosaveProcessViewModel extends BaseModel {
     if (FlavorConfig.isDevelopment()) vpaController.text = "7777777777@paytm";
     if (_paytmService.activeSubscription != null)
       vpaController.text = _paytmService.activeSubscription.vpa;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _paytmService.jumpToSubPage(page);
       _paytmService.fraction = page;
       if (page == 1) {
@@ -288,10 +285,12 @@ class AutosaveProcessViewModel extends BaseModel {
   // }
 
   getChipAmounts() async {
-    dailyChips =
-        await _paytmService.getAmountChips(Constants.DOC_IAR_DAILY_CHIPS);
-    weeklyChips =
-        await _paytmService.getAmountChips(Constants.DOC_IAR_WEEKLY_CHIPS);
+    dailyChips = await _paytmService.getAmountChips(
+      freq: Constants.DOC_IAR_DAILY_CHIPS,
+    );
+    weeklyChips = await _paytmService.getAmountChips(
+      freq: Constants.DOC_IAR_WEEKLY_CHIPS,
+    );
   }
 
   tryAgain() {

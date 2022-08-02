@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/top_saver_model.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -9,7 +9,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AllParticipantsView extends StatelessWidget {
-  final List<TopSavers> participants;
+  final List<ScoreBoard> participants;
   final String type;
   AllParticipantsView({this.participants, this.type});
   bool isInteger(num value) => value is int || value == value.roundToDouble();
@@ -43,7 +43,7 @@ class AllParticipantsView extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "All Participants",
+                title: "Top Participants",
               ),
               Expanded(
                 child: Container(

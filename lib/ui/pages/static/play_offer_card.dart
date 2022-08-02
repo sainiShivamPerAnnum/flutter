@@ -47,7 +47,7 @@ class OfferCard extends StatelessWidget {
           width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 3,
           height: SizeConfig.screenWidth * 0.28,
           margin: EdgeInsets.only(
-            bottom: SizeConfig.screenWidth * 0.1,
+            bottom: SizeConfig.screenWidth * 0.05,
             right: SizeConfig.pageHorizontalMargins,
           ),
           decoration: (model.bgImage == null || model.bgImage.isEmpty)
@@ -59,38 +59,12 @@ class OfferCard extends StatelessWidget {
                       ? Color(model.bgColor)
                       : UiConstants.tertiarySolid,
                   borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 30,
-                      color: model.bgColor != null
-                          ? Color(model.bgColor).withOpacity(0.3)
-                          : UiConstants.tertiarySolid.withOpacity(0.3),
-                      offset: Offset(
-                        0,
-                        SizeConfig.screenWidth * 0.14,
-                      ),
-                      spreadRadius: -44,
-                    )
-                  ],
                 )
               : BoxDecoration(
                   image: DecorationImage(
                       image: CachedNetworkImageProvider(model.bgImage),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 30,
-                      color: model.bgColor != null
-                          ? Color(model.bgColor).withOpacity(0.3)
-                          : UiConstants.tertiarySolid.withOpacity(0.3),
-                      offset: Offset(
-                        0,
-                        SizeConfig.screenWidth * 0.14,
-                      ),
-                      spreadRadius: -44,
-                    )
-                  ],
                 ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(SizeConfig.roundness32),

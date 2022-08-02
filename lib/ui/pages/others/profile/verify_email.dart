@@ -2,16 +2,21 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -19,6 +24,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../util/styles/textStyles.dart';
+import '../../../widgets/buttons/fello_button/large_button.dart';
 
 class VerifyEmail extends StatefulWidget {
   static const int index = 3;
@@ -35,6 +43,8 @@ class VerifyEmailState extends State<VerifyEmail> {
   final _userService = locator<UserService>();
   // final baseProvider = locator<BaseUtil>();
   final formKey = GlobalKey<FormState>();
+  final _userRepo = locator<UserRepository>();
+
   Timer timer;
   bool isGmailVerifying = false;
   BaseUtil baseProvider;
@@ -54,7 +64,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     email = TextEditingController(text: "");
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
       focusNode = new FocusNode();
       showEmailOptions();
@@ -153,13 +163,18 @@ class VerifyEmailState extends State<VerifyEmail> {
       _userService.isEmailVerified = true;
       _userService.baseUser.isEmailVerified = true;
 
-      bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
-          _userService.baseUser.email, _userService.baseUser.isEmailVerified);
+      ApiResponse<bool> res = await _userRepo.updateUser(
+        uid: _userService.baseUser.uid,
+        dMap: {
+          'email': _userService.baseUser.email,
+          'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+        },
+      );
 
       setState(() {
         _isVerifying = false;
       });
-      if (res) {
+      if (res.model) {
         BaseUtil.showPositiveAlert(
             "Email verified", "Thank you for verifying your email");
         AppState.backButtonDispatcher.didPopRoute();
@@ -196,9 +211,15 @@ class VerifyEmailState extends State<VerifyEmail> {
         baseProvider.setEmailVerified();
         _userService.isEmailVerified = true;
         _userService.baseUser.isEmailVerified = true;
-        bool res = await dbProvider.updateUserEmail(_userService.baseUser.uid,
-            _userService.baseUser.email, _userService.baseUser.isEmailVerified);
-        if (res) {
+
+        ApiResponse<bool> res = await _userRepo.updateUser(
+          uid: _userService.baseUser.uid,
+          dMap: {
+            'email': _userService.baseUser.email,
+            'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+          },
+        );
+        if (res.model) {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
           });
@@ -460,18 +481,14 @@ class VerifyEmailState extends State<VerifyEmail> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: SafeArea(
-                        child: InkWell(
-                          onTap: confirmAction,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 24),
-                            width: SizeConfig.screenWidth -
-                                SizeConfig.pageHorizontalMargins * 2,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: UiConstants.primaryColor,
-                            ),
-                            alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.viewInsets.bottom == 0
+                                ? SizeConfig.padding24
+                                : 0,
+                          ),
+                          child: FelloButtonLg(
+                            onPressed: confirmAction,
                             child: _isVerifying || _isProcessing
                                 ? SpinKitThreeBounce(
                                     color: UiConstants.spinnerColor2,
@@ -479,11 +496,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                                   )
                                 : Text(
                                     _isOtpSent ? "Verify" : "Send OTP",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.mediumTextSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
                                   ),
                           ),
                         ),

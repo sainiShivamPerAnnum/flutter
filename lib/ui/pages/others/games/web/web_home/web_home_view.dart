@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
@@ -21,6 +23,7 @@ import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
   final String game;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<WebHomeViewModel>(
@@ -44,12 +47,12 @@ class WebHomeView extends StatelessWidget {
                       delegate: model.isLoading
                           ? MySliverAppBar(
                               expandedHeight: SizeConfig.screenHeight * 0.32,
-                              game: model.currentGameData,
+                              game: model.currentGameModel,
                               isLoading: true,
                             )
                           : MySliverAppBar(
                               expandedHeight: SizeConfig.screenHeight * 0.32,
-                              game: model.currentGameData,
+                              game: model.currentGameModel,
                             ),
                     ),
                     SliverList(
@@ -78,7 +81,7 @@ class WebHomeView extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    model.currentGameData.gameName,
+                                    model.currentGameModel.gameName,
                                     style: TextStyles.rajdhaniB.title2,
                                   ),
                           ),
@@ -142,13 +145,14 @@ class WebHomeView extends StatelessWidget {
                                     ),
                                     GameInfoBlock(
                                       coin:
-                                          '${NumberFormat.compact().format(model.currentGameData.prizeAmount)}',
+                                          '${NumberFormat.compact().format(model.currentGameModel.prizeAmount)}',
                                       coinText: 'Win upto',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.rewardGameAsset,
                                     ),
                                     GameInfoBlock(
-                                      coin: '${model.currentGameData.playCost}',
+                                      coin:
+                                          '${model.currentGameModel.playCost}',
                                       coinText: 'Per Game',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.aFelloToken,
@@ -448,7 +452,7 @@ class GameInfoBlock extends StatelessWidget {
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  final GameDataModel game;
+  final GameModel game;
   final bool isLoading;
   MySliverAppBar({
     @required this.expandedHeight,

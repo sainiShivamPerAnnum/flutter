@@ -47,7 +47,7 @@ class TrendingGamesSection extends StatelessWidget {
 }
 
 class TrendingGames extends StatelessWidget {
-  final GameDataModel game;
+  final GameModel game;
   const TrendingGames({
     this.game,
     Key key,

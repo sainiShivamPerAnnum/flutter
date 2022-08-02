@@ -38,7 +38,7 @@ class MoreGamesSection extends StatelessWidget {
 }
 
 class MoreGames extends StatelessWidget {
-  final GameDataModel game;
+  final GameModel game;
 
   const MoreGames({
     this.game,

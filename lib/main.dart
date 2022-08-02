@@ -81,7 +81,7 @@ Future mainInit() async {
           measurementId: "G-7GGFTPBVCX"),
     );
   } catch (e) {
-    print('$e');
+    print('Firebase initialisation error: $e');
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
 }

@@ -9,6 +9,7 @@
 		<string>applinks:fello.page.link</string>
 		<string>applinks:fello.in/app/referral</string>
 		<string>applinks:fello.in/download</string>
+		<string>applinks:fello.onelink.me</string>
 	</array>
 </dict>
 </plist>

@@ -1,81 +1,49 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
-import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
+import 'package:flutter/cupertino.dart';
 
-class GamesRepository {
-  //Dependencies
+import 'base_repo.dart';
 
-  final UserService _userService = locator<UserService>();
-  final CustomLogger _logger = locator<CustomLogger>();
+class GameRepo extends BaseRepo {
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? "https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com/dev"
+      : "https://u9c7w6pnw7.execute-api.ap-south-1.amazonaws.com/prod";
 
-  //Local Variables
-
-  List<GameDataModel> _allgames;
-
-  //Getters
-
-  List<GameDataModel> get allgames => this._allgames;
-
-  //Setters
-  set allgames(List<GameDataModel> value) => this._allgames = value;
-
-//Main functions
-
-  Future<void> loadGamesList() async {
-    Future.delayed(Duration(seconds: 5));
-    // try {
-    final token = await _getBearerToken();
-    final response = await APIService.instance.getData(
-      ApiPath().kGames,
-      token: token,
-      cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
-    );
-    final _responseData = response["data"]["games"];
-    if (_responseData != null) {
-      allgames = [];
-      _responseData.forEach((game) {
-        allgames.add(GameDataModel.fromJson(game));
-      });
-    }
-
-    _responseData.map((game) => GameDataModel.fromJson(game)).toList();
-    _logger.d(allgames.length);
-    // allgames = _responseModel;
-    // _logger.d('Game Length: ${_responseModel.length}');
-    _logger.d('Game Response: $response');
-    // } catch (e) {
-    //   _logger.d('Catch Error: $e');
-    // }
-  }
-
-  Future<GameDataModel> getGameByCode(String gameCode) async {
+  Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
-      final token = await _getBearerToken();
+      final token = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.kGame(gameCode),
+        ApiPath.getGames,
+        cBaseUrl: _baseUrl,
         token: token,
-        cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
       );
-      final _responseData = response["data"];
-      final GameDataModel _responseModel =
-          GameDataModel.fromJson(_responseData);
-      _logger.d(_responseData);
-      return _responseModel;
+      logger.d("Games: ${response["data"]}");
+
+      final games = GameModel.helper.fromMapArray(response["data"]["games"]);
+      return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
-      _logger.e(e);
-      return null;
+      logger.e("Unable to fetch games ${e.toString()}");
+      return ApiResponse.withError("Unable to fetch games", 400);
     }
   }
 
-  //Helper functions
-
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d('Token: $token');
-    return token;
+  Future<ApiResponse<GameModel>> getGameByCode(
+      {@required String gameCode}) async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.getGameByCode(gameCode),
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+      final game = GameModel.fromMap(response["data"]);
+      return ApiResponse<GameModel>(model: game, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch game by id", 400);
+    }
   }
 }

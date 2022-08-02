@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -47,7 +48,7 @@ class TopPlayer extends StatelessWidget {
     @required this.isUserInTopThree,
   });
 
-  final LeaderBoardModal model;
+  final LeaderboardModel model;
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;

@@ -1,35 +1,40 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
-import 'package:felloapp/core/repository/statistics_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class TambolaHomeViewModel extends BaseModel {
-  final _stats = locator<StatisticsRepository>();
+  final _getterRepo = locator<GetterRepository>();
   final _prizeService = locator<PrizeService>();
+  final _baseUtil = locator<BaseUtil>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
-  final GamesRepository _gamesRepo = locator<GamesRepository>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
   int currentPage = 0;
   PageController pageController = new PageController(initialPage: 0);
-  LeaderBoardModal _tLeaderBoard;
+  LeaderboardModel _tLeaderBoard;
   ScrollController scrollController;
   double cardOpacity = 1;
-  GameDataModel game;
+  GameModel game;
 
   Map<String, IconData> tambolaOdds = {
     "Full House": Icons.apps,
@@ -47,7 +52,7 @@ class TambolaHomeViewModel extends BaseModel {
     notifyListeners();
   }
 
-  LeaderBoardModal get tlboard => _tLeaderBoard;
+  LeaderboardModel get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
 
   viewpage(int index) {
@@ -69,9 +74,14 @@ class TambolaHomeViewModel extends BaseModel {
   Future<void> getLeaderboard() async {
     isLeaderboardLoading = true;
     notifyListeners();
-    ApiResponse temp = await _stats.getLeaderBoard("GM_TAMBOLA2020", "weekly");
+
+    log("GM_TAMBOLA2020");
+    ApiResponse temp = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+      type: "GM_TAMBOLA2020",
+      freq: "weekly",
+    );
     _logger.d(temp.code);
-    if (temp.model != null) _tLeaderBoard = temp.model;
+    if (temp.model != null && temp.model.isNotEmpty) _tLeaderBoard = temp.model;
     // else
     //   BaseUtil.showNegativeAlert(
     //       "Leaderboard failed to update", temp.errorMessage);
@@ -96,10 +106,10 @@ class TambolaHomeViewModel extends BaseModel {
   }
 
   getGameDetails() async {
-    if (_gamesRepo.allgames != null && _gamesRepo.allgames.isNotEmpty)
-      game = _gamesRepo.allgames
-          .firstWhere((game) => game.gameCode == Constants.GAME_TYPE_TAMBOLA);
-    else
-      game = await _gamesRepo.getGameByCode(Constants.GAME_TYPE_TAMBOLA);
+    final response =
+        await _gamesRepo.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
+    if (response.isSuccess()) {
+      game = response.model;
+    }
   }
 }

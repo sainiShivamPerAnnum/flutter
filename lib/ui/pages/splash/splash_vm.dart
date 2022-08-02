@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -8,15 +8,19 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:package_info/package_info.dart';
 
@@ -41,6 +45,8 @@ class LauncherViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _journeyService = locator<JourneyService>();
   final _journeyRepo = locator<JourneyRepository>();
+  final _userCoinService = locator<UserCoinService>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -67,12 +73,26 @@ class LauncherViewModel extends BaseModel {
       _journeyService.init();
       await userService.init();
       await _journeyRepo.init();
+      await CacheService.initialize();
+      await BaseRemoteConfig.init();
+
+      // check if cache invalidation required
+      final now = DateTime.now().millisecondsSinceEpoch;
+      _logger.d(
+          'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
+      if (now <= BaseRemoteConfig.invalidationBefore) {
+        await new CacheService().invalidateAll();
+      }
+
+      await userService.init();
+      await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
-      userService.firebaseUser?.getIdToken()?.then(
-            (token) =>
-                _userRepo.updateUserAppFlyer(userService.baseUser, token),
-          );
+      if (userService.isUserOnborded)
+        userService.firebaseUser?.getIdToken()?.then(
+              (token) =>
+                  _userRepo.updateUserAppFlyer(userService.baseUser, token),
+            );
       if (userService.baseUser != null) {
         await _analyticsService.login(
           isOnBoarded: userService?.isUserOnborded,
@@ -80,7 +100,12 @@ class LauncherViewModel extends BaseModel {
         );
       }
     } catch (e) {
-      _logger.e("Splash Screen init : " + e);
+      _logger.e("Splash Screen init : $e");
+      _internalOpsService.logFailure(
+        userService.baseUser?.uid ?? '',
+        FailType.Splash,
+        {'error': "Splash Screen init : $e"},
+      );
     }
     _httpModel.init();
     _tambolaService.init();
@@ -89,8 +114,11 @@ class LauncherViewModel extends BaseModel {
     try {
       deviceUnlock = DeviceUnlock();
     } catch (e) {
-      _logger.e(
-        e.toString(),
+      _logger.e(e.toString());
+      _internalOpsService.logFailure(
+        userService.baseUser?.uid ?? '',
+        FailType.Splash,
+        {'error': "device unlock : $e"},
       );
     }
 
@@ -99,6 +127,14 @@ class LauncherViewModel extends BaseModel {
       AppState.isUpdateScreen = true;
       navigator.currentAction =
           PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      return;
+    }
+
+    ///check for breaking update
+    if (await checkBreakingUpdate()) {
+      AppState.isUpdateScreen = true;
+      navigator.currentAction =
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
       return;
     }
 
@@ -161,8 +197,9 @@ class LauncherViewModel extends BaseModel {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentBuild = packageInfo.buildNumber;
     _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
+    String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
+        ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID
+        : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS);
     _logger.v('Min Build Required $minBuild');
     //minBuild = "50";
     try {
@@ -180,8 +217,9 @@ class LauncherViewModel extends BaseModel {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentBuild = packageInfo.buildNumber;
     _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_2);
+    String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
+        ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID_2
+        : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS_2);
     _logger.v('Min Build Required $minBuild');
     //minBuild = "50";
     try {

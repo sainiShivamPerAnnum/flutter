@@ -27,8 +27,10 @@ class InvestmentActionsRepository {
 
     try {
       final String _bearer = await _getBearerToken();
-      final response = await APIService.instance
-          .getData(_apiPaths.kGetGoldRates, token: _bearer);
+      final response = await APIService.instance.getData(
+        _apiPaths.kGetGoldRates,
+        token: _bearer,
+      );
       return ApiResponse(model: response, code: 200);
     } catch (e) {
       _logger.e(e);
@@ -59,13 +61,14 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> initiateUserDeposit(
-      {String tranId,
-      Map<String, dynamic> initAugMap,
-      Map<String, dynamic> initRzpMap,
-      double amount,
-      String couponCode,
-      String userUid}) async {
+  Future<ApiResponse<DepositResponseModel>> initiateUserDeposit({
+    String tranId,
+    Map<String, dynamic> initAugMap,
+    Map<String, dynamic> initRzpMap,
+    double amount,
+    String couponCode,
+    String userUid,
+  }) async {
     Map<String, dynamic> _body = {
       'tran_doc_id': tranId,
       'user_id': userUid,
