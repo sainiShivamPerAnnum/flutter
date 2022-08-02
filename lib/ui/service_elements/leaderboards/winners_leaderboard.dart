@@ -66,7 +66,7 @@ class WinnerboardView extends StatelessWidget {
                         width: SizeConfig.screenWidth,
                         child: NoRecordDisplayWidget(
                           asset: "images/leaderboard.png",
-                          text: "Leaderboard will be upadated soon",
+                          text: "Leaderboard will be updated soon",
                         ),
                       )
                     : Column(
@@ -148,7 +148,7 @@ class WinnerboardView extends StatelessWidget {
                                         color: UiConstants.primaryColor,
                                         png: Assets.moneyIcon,
                                         text:
-                                            "₹ ${model.winners[i].amount.toString() ?? "00"}",
+                                            "₹ ${model.winners[i].amount.toInt() ?? "00"}",
                                       ),
                                     ],
                                   ),

@@ -9,16 +9,23 @@ class FelloInfoDialog extends StatelessWidget {
   final Widget action;
   final bool showCrossIcon;
   final Widget customContent;
-  FelloInfoDialog(
-      {this.title,
-      this.asset,
-      this.subtitle,
-      this.customContent,
-      this.action,
-      this.showCrossIcon});
+  final bool isAddedToScreenStack;
+  final bool defaultPadding;
+  FelloInfoDialog({
+    this.title,
+    this.asset,
+    this.subtitle,
+    this.customContent,
+    this.action,
+    this.showCrossIcon,
+    this.defaultPadding = true,
+    this.isAddedToScreenStack = false,
+  });
   @override
   Widget build(BuildContext context) {
     return FelloDialog(
+      defaultPadding: defaultPadding,
+      isAddedToScreenStack: isAddedToScreenStack,
       content: customContent != null
           ? customContent
           : Container(

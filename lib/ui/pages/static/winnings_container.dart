@@ -18,6 +18,7 @@ class WinningsContainer extends StatelessWidget {
   final double borderRadius;
   final Color color;
   final LinearGradient gradient;
+  final bool hapticRequired;
   WinningsContainer(
       {this.child,
       @required this.shadow,
@@ -25,6 +26,7 @@ class WinningsContainer extends StatelessWidget {
       this.onTap,
       this.borderRadius,
       this.color,
+      this.hapticRequired = true,
       this.gradient});
 
   @override
@@ -33,7 +35,7 @@ class WinningsContainer extends StatelessWidget {
     return InkWell(
       onTap: onTap != null
           ? () {
-              Haptic.vibrate();
+              if (hapticRequired) Haptic.vibrate();
               onTap();
             }
           : () => AppState.delegate.appState.currentAction =

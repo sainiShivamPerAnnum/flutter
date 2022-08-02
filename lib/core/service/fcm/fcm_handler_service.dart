@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -27,6 +29,7 @@ class FcmHandler extends ChangeNotifier {
   final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
   final _txnService = locator<TransactionService>();
+  final _journeyService = locator<JourneyService>();
 
   ValueChanged<Map> notifListener;
 
@@ -62,10 +65,16 @@ class FcmHandler extends ChangeNotifier {
           if (_txnService.currentTransactionState ==
               TransactionState.idleTrasantion) showSnackbar = true;
           _txnService.fcmTransactionResponseUpdate(data['payload']);
-          log("KUNJ: FcmCommands.DEPOSIT_TRANSACTION_RESPONSE");
           break;
-        case FcmCommands.COMMAND_CRIC_GAME_END:
-          _webGameViewModel.endWebGame(data, Constants.GAME_TYPE_CRICKET);
+        case FcmCommands.COMMAND_JOURNEY_UPDATE:
+          _journeyService.updateUserJourneyStats(data);
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+          _journeyService.updateUserJourneyStats(data);
+          break;
+        case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
+          _webGameViewModel.handleCricketHeroRoundEnd(
+              data, Constants.GAME_TYPE_CRICKET);
           break;
         case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
           _webGameViewModel.handlePoolClubRoundEnd(

@@ -13,10 +13,8 @@ import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
   final PlayViewModel model;
-  final int gameIndex;
   const GOWCard({
     @required this.model,
-    this.gameIndex,
     Key key,
   }) : super(key: key);
 
@@ -28,7 +26,7 @@ class GOWCard extends StatelessWidget {
             onTap: () {
               Haptic.vibrate();
               AppState.delegate.parseRoute(
-                Uri.parse(model.gamesListData[gameIndex].route),
+                Uri.parse(model.gow.route),
               );
             },
             child: Container(
@@ -52,7 +50,7 @@ class GOWCard extends StatelessWidget {
                       color: Colors.black,
                       image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                              model.gamesListData[gameIndex].thumbnailUri),
+                              model.gow.thumbnailUri),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(SizeConfig.roundness12),
@@ -89,7 +87,7 @@ class GOWCard extends StatelessWidget {
                                   BorderRadius.circular(SizeConfig.roundness8),
                               image: DecorationImage(
                                   image: CachedNetworkImageProvider(
-                                      model.gamesListData[gameIndex].thumbnailUri),
+                                      model.gow.thumbnailUri),
                                   fit: BoxFit.cover),
                             ),
                           ),
@@ -99,17 +97,17 @@ class GOWCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              model.gamesListData[gameIndex].gameName, // 'Cricket',
+                              model.gow.gameName, // 'Cricket',
                               style: TextStyles.rajdhaniSB.title5,
                             ),
-                           GameRewards(prizeAmount: model.gamesListData[gameIndex].prizeAmount),
+                            GameRewards(prizeAmount: model.gow.prizeAmount),
                           ],
                         ),
                         Spacer(),
                         AppBarButton(
                           svgAsset: Assets.aFelloToken,
                           size: SizeConfig.padding28,
-                          coin: model.gamesListData[gameIndex].playCost.toString(),
+                          coin: model.gow.playCost.toString(),
                           borderColor: Colors.transparent,
                           onTap: () {},
                           style: TextStyles.sourceSansSB.title4,

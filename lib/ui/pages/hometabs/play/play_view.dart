@@ -17,7 +17,7 @@ class Play extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<PlayViewModel>(
       onModelReady: (model) {
-        model.loadGameLists();
+        model.init();
       },
       onModelDispose: (model) {
         model.clear();
@@ -50,12 +50,9 @@ class Play extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (model.isGOWCheck)...[
-                   GOWCard(
-                    model: model,
-                    gameIndex: model.isGOWIndex-1,
-                  ),
-              ],
+                GOWCard(
+                  model: model,
+                ),
                 GameTitle(title: 'Trending'),
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),

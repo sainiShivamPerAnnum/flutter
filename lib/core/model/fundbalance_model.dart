@@ -42,9 +42,9 @@ class FundBalanceModel {
 
   factory FundBalanceModel.fromMap(Map<String, dynamic> map) {
     return FundBalanceModel(
-      wAugBalance: map['wAugBalance'],
-      wAugPrinciple: map['wAugPrinciple'],
-      wAugQuantity: map['wAugQuantity'],
+      wAugBalance: (map['wAugBalance'] ?? 0).toDouble(),
+      wAugPrinciple: (map['wAugPrinciple'] ?? 0).toDouble(),
+      wAugQuantity: (map['wAugQuantity'] ?? 0).toDouble(),
       wLifeTimeWin: map['wLifeTimeWin'],
       wPriBalance: map['wPriBalance'],
     );

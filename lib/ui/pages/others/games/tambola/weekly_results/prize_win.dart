@@ -31,7 +31,7 @@ class _PrizeWinState extends State<PrizeWin> {
       duration: new Duration(seconds: 2),
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _confettiController.play();
     });
     super.initState();

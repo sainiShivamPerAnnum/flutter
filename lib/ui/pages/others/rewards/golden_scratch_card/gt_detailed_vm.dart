@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -116,7 +117,9 @@ class GTDetailedViewModel extends BaseModel {
   }
 
   init(GoldenTicket ticket) {
-    if (ticket.redeemedTimestamp != null) {
+    if (ticket.redeemedTimestamp != null &&
+        ticket.redeemedTimestamp !=
+            TimestampModel(seconds: 0, nanoseconds: 0)) {
       //Redeemed ticket
       changeToUnlockedUI();
     } else {

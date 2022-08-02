@@ -3,17 +3,15 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-
-    "[dart]":{
-        "editor.formatOnSave":true,
-        "editor.formatOnType":true,
-        "editor.codeActionsOnSave":{
-            "source.organizeImports":true, 
-            "source.fixAll":true
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+            "source.fixAll": true
         }
     },
     "configurations": [
-
         {
             "name": "felloapp-dev",
             "request": "launch",
@@ -23,7 +21,7 @@
                 "--flavor",
                 "dev",
                 "--debug"
-              ]
+            ]
         },
         {
             "name": "felloapp-prod",
@@ -34,7 +32,7 @@
                 "--flavor",
                 "prod",
                 "--debug"
-              ]
+            ]
         },
         {
             "name": "felloapp-dev-profile",
@@ -45,7 +43,7 @@
                 "--flavor",
                 "dev",
                 "--profile"
-              ]
+            ]
         },
         {
             "name": "felloapp-prod-profile",
@@ -56,6 +54,39 @@
                 "--flavor",
                 "prod",
                 "--profile"
+            ]
+        },
+        {
+            "name": "felloapp-qa",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_qa.dart",
+            "args": [
+                "--flavor",
+                "qa",
+                "--debug"
+            ]
+        },
+        {
+            "name": "felloapp-dev-release",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--release"
+              ]
+        },
+        {
+            "name": "felloapp-prod-release",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod",
+                "--release"
               ]
         },
         {

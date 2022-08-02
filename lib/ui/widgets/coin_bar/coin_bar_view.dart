@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -30,6 +32,7 @@ class FelloCoinBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("FLC build called");
     return BaseView<FelloCoinBarViewModel>(
       onModelReady: (model) => model.getFlc(),
       builder: (ctx, model, child) => model.state == ViewState.Busy

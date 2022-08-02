@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
@@ -117,7 +118,9 @@ class GTDetailedView extends StatelessWidget {
   }
 
   Widget setModalContent(GTDetailedViewModel model) {
-    if (ticket.redeemedTimestamp != null) {
+    if (ticket.redeemedTimestamp != null &&
+        ticket.redeemedTimestamp !=
+            TimestampModel(seconds: 0, nanoseconds: 0)) {
       //redeemed ticket -> just show the details
       return Padding(
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -163,11 +166,13 @@ class GTDetailedView extends StatelessWidget {
             Column(children: [
               bulletTiles("${ticket.note}"),
               bulletTiles("Rewards have been credited to your wallet"),
-              ticket.redeemedTimestamp != null
+              (ticket.redeemedTimestamp != null &&
+                      ticket.redeemedTimestamp !=
+                          TimestampModel(seconds: 0, nanoseconds: 0))
                   ? bulletTiles(
-                      "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
+                      "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
                   : bulletTiles(
-                      "Received on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
+                      "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
             ]),
           ],
         ),
@@ -220,11 +225,13 @@ class GTDetailedView extends StatelessWidget {
                   Column(children: [
                     bulletTiles("${ticket.note}"),
                     bulletTiles("Rewards have been credited to your wallet"),
-                    ticket.redeemedTimestamp != null
+                    (ticket.redeemedTimestamp != null &&
+                            ticket.redeemedTimestamp !=
+                                TimestampModel(seconds: 0, nanoseconds: 0))
                         ? bulletTiles(
-                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(ticket.redeemedTimestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.redeemedTimestamp.toDate())}")
+                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
                         : bulletTiles(
-                            "Received on ${DateFormat('dd MMM, yyyy').format(ticket.timestamp.toDate())} | ${DateFormat('h:mm a').format(ticket.timestamp.toDate())}")
+                            "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
                   ]),
                 ],
               ),

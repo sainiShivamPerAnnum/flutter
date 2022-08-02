@@ -1,12 +1,13 @@
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/repository/prizes_repo.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
 class PrizeService extends ChangeNotifier {
-  final _prizeRepo = locator<PrizesRepository>();
+  final _gtRepo = locator<GoldenTicketRepository>();
   PrizesModel _tambolaPrizes;
   PrizesModel _cricketPrizes;
   PrizesModel _poolClubPrizes;
@@ -49,27 +50,37 @@ class PrizeService extends ChangeNotifier {
   }
 
   fetchFootballPrizes() async {
-    footballPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
-        Constants.GAME_TYPE_FOOTBALL, "weekly");
+    footballPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_FOOTBALL,
+      "weekly",
+    );
   }
 
   fetchCandyFiestaPrizes() async {
-    candyFiestaPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
-        Constants.GAME_TYPE_CANDYFIESTA, "weekly");
+    candyFiestaPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_CANDYFIESTA,
+      "weekly",
+    );
   }
 
   fetchTambolaPrizes() async {
-    tambolaPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
-        Constants.GAME_TYPE_TAMBOLA, "weekly");
+    tambolaPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_TAMBOLA,
+      "weekly",
+    );
   }
 
   fetchCricketPrizes() async {
-    cricketPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
-        Constants.GAME_TYPE_CRICKET, "weekly");
+    cricketPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_CRICKET,
+      "weekly",
+    );
   }
 
   fetchPoolClubPrizes() async {
-    poolClubPrizes = await _prizeRepo.getPrizesPerGamePerFreq(
-        Constants.GAME_TYPE_POOLCLUB, "weekly");
+    poolClubPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_POOLCLUB,
+      "weekly",
+    );
   }
 }

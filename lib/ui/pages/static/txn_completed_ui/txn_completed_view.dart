@@ -16,8 +16,9 @@ class TxnCompletedConfirmationScreenView extends StatefulWidget {
   final String title;
   final double amount;
 
-  TxnCompletedConfirmationScreenView({@required this.amount, this.title});
-
+  final bool showAutoSavePrompt;
+  TxnCompletedConfirmationScreenView(
+      {@required this.amount, this.title, this.showAutoSavePrompt = false});
   @override
   State<TxnCompletedConfirmationScreenView> createState() =>
       _TxnCompletedConfirmationScreenViewState();
@@ -164,13 +165,23 @@ class _TxnCompletedConfirmationScreenViewState
                         child: FelloButtonLg(
                           color: UiConstants.primaryColor,
                           child: Text(
-                            "Start Playing",
+                            (widget.showAutoSavePrompt &&
+                                    !model.isAutosaveAlreadySetup)
+                                ? "Continue"
+                                : "Start playing",
                             style: TextStyles.body2.bold.colour(Colors.white),
                           ),
                           onPressed: () {
-                            AppState.delegate.appState.setCurrentTabIndex = 1;
                             while (AppState.screenStack.length > 1) {
                               AppState.backButtonDispatcher.didPopRoute();
+                            }
+                            if (!model.isAutosaveAlreadySetup &&
+                                widget.showAutoSavePrompt) {
+                              AppState.delegate.appState.setCurrentTabIndex = 0;
+                              if (widget.showAutoSavePrompt)
+                                model.showAutosavePrompt();
+                            } else {
+                              AppState.delegate.appState.setCurrentTabIndex = 1;
                             }
                           },
                         ),

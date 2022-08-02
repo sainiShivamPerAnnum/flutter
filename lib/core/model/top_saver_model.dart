@@ -1,101 +1,67 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:felloapp/core/model/timestamp_model.dart';
 
-class TopSaversModel {
-  String code;
-  String gametype;
-  // String freq;
-  Timestamp lastupdated;
-  List<TopSavers> scoreboard;
+// class TopSaverModal {
+//   TopSaverModal({
+//     this.id,
+//     this.gametype,
+//     this.code,
+//     this.lastupdated,
+//     this.scoreboard,
+//     this.freq,
+//   });
 
-  TopSaversModel({
-    this.code,
-    this.gametype,
-    // this.freq,
-    this.lastupdated,
-    this.scoreboard,
-  });
+//   String id;
+//   String gametype;
+//   String code;
+//   TimestampModel lastupdated;
+//   List<TopSaver> scoreboard;
+//   String freq;
 
-  TopSaversModel.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    gametype = json['gametype'];
-    // freq = json['freq'];
-    lastupdated = json['lastupdated'];
-    if (json['scoreboard'] != null) {
-      scoreboard = <TopSavers>[];
-      json['scoreboard'].forEach((v) {
-        scoreboard.add(new TopSavers.fromJson(v));
-      });
-    }
-  }
+//   factory TopSaverModal.fromMap(Map<String, dynamic> map) => TopSaverModal(
+//         id: map["id"],
+//         gametype: map["gametype"],
+//         code: map["code"],
+//         lastupdated: map["lastupdated"] != null
+//             ? TimestampModel.fromMap(map["lastupdated"])
+//             : null,
+//         scoreboard: map["scoreboard"] == null
+//             ? []
+//             : List<TopSaver>.from(
+//                 map["scoreboard"].map((x) => TopSaver.fromMap(x)),
+//               ),
+//         freq: map["freq"],
+//       );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['gametype'] = this.gametype;
-    // data['freq'] = this.freq;
-    data['lastupdated'] = this.lastupdated;
-    if (this.scoreboard != null) {
-      data['scoreboard'] = this.scoreboard.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+//   Map<String, dynamic> toMap() => {
+//         "id": id,
+//         "gametype": gametype,
+//         "code": code,
+//         "lastupdated": lastupdated.toMap(),
+//         "scoreboard": List<dynamic>.from(scoreboard.map((x) => x.toMap())),
+//         "freq": freq,
+//       };
+// }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'code': code,
-      'gametype': gametype,
-      // 'freq': freq,
-      'lastupdated': lastupdated.millisecondsSinceEpoch,
-      'scoreboard': scoreboard?.map((x) => x.toMap())?.toList(),
-    };
-  }
+// class TopSaver {
+//   TopSaver({
+//     this.userid,
+//     this.username,
+//     this.score,
+//   });
 
-  factory TopSaversModel.fromMap(Map<String, dynamic> map) {
-    return TopSaversModel(
-      code: map['code'],
-      gametype: map['gametype'],
-      // freq: map['freq'],
-      lastupdated: map['lastupdated'],
-      scoreboard: List<TopSavers>.from(
-          map['scoreboard']?.map((x) => TopSavers.fromMap(x))),
-    );
-  }
-}
+//   String userid;
+//   String username;
+//   double score;
 
-class TopSavers {
-  double score;
-  String userid;
-  String username;
+//   factory TopSaver.fromMap(Map<String, dynamic> map) => TopSaver(
+//         userid: map["userid"],
+//         username: map["username"],
+//         score: map["score"].toDouble(),
+//       );
 
-  TopSavers({this.score, this.userid, this.username});
-
-  TopSavers.fromJson(Map<String, dynamic> json) {
-    score = json['score'].toDouble();
-    userid = json['userid'];
-    username = json['username'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['score'] = this.score;
-    data['userid'] = this.userid;
-    data['username'] = this.username;
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'score': score,
-      'userid': userid,
-      'username': username,
-    };
-  }
-
-  factory TopSavers.fromMap(Map<String, dynamic> map) {
-    return TopSavers(
-      score: map['score'].toDouble(),
-      userid: map['userid'],
-      username: map['username'],
-    );
-  }
-}
+//   Map<String, dynamic> toMap() => {
+//         "userid": userid,
+//         "username": username,
+//         "score": score,
+//       };
+// }

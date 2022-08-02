@@ -5,14 +5,16 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -41,16 +43,17 @@ class WebHomeViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _prizeService = locator<PrizeService>();
   final _fclActionRepo = locator<FlcActionsRepo>();
-  final _userCoinService = locator<UserCoinService>();
+  final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
 
   //Local Variables
-  GameData _currentGameData;
 
   int currentPage = 0;
   int gameIndex = 0;
   double cardOpacity = 1;
   bool _isPrizesLoading = false;
+  bool _isGameLoading = false;
   String _currentGame;
   PageController pageController;
   ScrollController scrollController;
@@ -60,8 +63,8 @@ class WebHomeViewModel extends BaseModel {
   String _gameEndpoint;
   String token = "";
   bool _isLoading;
-
-  List<GameData> _gamesListData;
+  String gameCode;
+  GameModel _currentGameModel;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
       color: Color(0xff5948B2),
@@ -84,16 +87,12 @@ class WebHomeViewModel extends BaseModel {
   int get getGameIndex => this.gameIndex;
   String get message => _message;
   String get sessionID => _sessionId;
-  GameData get currentGameData => this._currentGameData;
   get isLoading => this._isLoading;
+  GameModel get currentGameModel => _currentGameModel;
 
   set isLoading(value) {
     this._isLoading = value;
     notifyListeners();
-  }
-
-  set currentGameData(value) {
-    this._currentGameData = value;
   }
 
   //Setters
@@ -107,8 +106,18 @@ class WebHomeViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set currentGameModel(GameModel value) {
+    this._currentGameModel = value;
+    notifyListeners();
+  }
+
   set isPrizesLoading(value) {
     this._isPrizesLoading = value;
+    notifyListeners();
+  }
+
+  set isGameLoading(value) {
+    this._isGameLoading = value;
     notifyListeners();
   }
 
@@ -116,12 +125,10 @@ class WebHomeViewModel extends BaseModel {
   init(String game) async {
     currentGame = game;
     isLoading = true;
-    await loadGameLists();
-    currentGameData =
-        _gamesListData.firstWhere((game) => game.code == currentGame);
-    print(currentGame);
-    scrollController = _lbService.parentController;
-    pageController = new PageController(initialPage: 0);
+    // await loadGameLists();
+    await fetchGame(game);
+    // scrollController = _lbService.parentController;
+    // pageController = new PageController(initialPage: 0);
     refreshPrizes();
     refreshLeaderboard();
     isLoading = false;
@@ -140,31 +147,33 @@ class WebHomeViewModel extends BaseModel {
         if (_prizeService.poolClubPrizes == null)
           await _prizeService.fetchPoolClubPrizes();
         prizes = _prizeService.poolClubPrizes;
+        gameCode = "PO";
 
         break;
       case Constants.GAME_TYPE_CRICKET:
         if (_prizeService.cricketPrizes == null)
           await _prizeService.fetchCricketPrizes();
         prizes = _prizeService.cricketPrizes;
+        gameCode = "CR";
 
         break;
       case Constants.GAME_TYPE_TAMBOLA:
         if (_prizeService.tambolaPrizes == null)
           await _prizeService.fetchTambolaPrizes();
         prizes = _prizeService.tambolaPrizes;
-
+        gameCode = "TA";
         break;
       case Constants.GAME_TYPE_FOOTBALL:
         if (_prizeService.footballPrizes == null)
           await _prizeService.fetchFootballPrizes();
         prizes = _prizeService.footballPrizes;
-
+        gameCode = "FO";
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
         if (_prizeService.candyFiestaPrizes == null)
           await _prizeService.fetchCandyFiestaPrizes();
         prizes = _prizeService.candyFiestaPrizes;
-
+        gameCode = "CA";
         break;
     }
     isPrizesLoading = false;
@@ -175,22 +184,7 @@ class WebHomeViewModel extends BaseModel {
 
   Future<bool> setupGame() async {
     await getBearerToken();
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        return _setupPoolClubGame();
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        return _setupCricketGame();
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        return _setupFootBallGame();
-        break;
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        return _setupCandyFiestaGame();
-        break;
-      default:
-        return false;
-    }
+    return _setupCurrentGame();
   }
 
   launchGame() {
@@ -200,26 +194,22 @@ class WebHomeViewModel extends BaseModel {
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
         _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);
-        initialUrl = _generatePoolClubGameUrl();
+
         break;
       case Constants.GAME_TYPE_CRICKET:
-        _analyticsService.track(eventName: AnalyticsEvents.startPlayingCricket);
-        initialUrl = _generateCricketGameUrl();
+        _analyticsService.track(
+            eventName: AnalyticsEvents.cricketHeroGameStarts);
         break;
       case Constants.GAME_TYPE_FOOTBALL:
         _analyticsService.track(
             eventName: AnalyticsEvents.startPlayingFootball);
-        initialUrl = _generateFootBallGameUrl();
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
         _analyticsService.track(
             eventName: AnalyticsEvents.startPlayingCandyFiesta);
-        initialUrl = _generateCandyFiestaGameUrl();
         break;
     }
-    initialUrl = currentGame == Constants.GAME_TYPE_CRICKET
-        ? initialUrl
-        : initialUrl + "&token=$token";
+    initialUrl = generateGameUrl();
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -227,132 +217,31 @@ class WebHomeViewModel extends BaseModel {
       widget: WebGameView(
         initialUrl: initialUrl,
         game: currentGame,
-        inLandscapeMode: currentGame == Constants.GAME_TYPE_POOLCLUB ||
-                (currentGame == Constants.GAME_TYPE_CRICKET)
-            ? true
-            : false,
+        inLandscapeMode:
+            currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false,
       ),
     );
   }
 
-  //Cricket Methods -------------------------------------START----------------//
-  Future<bool> _setupCricketGame() async {
+  Future<bool> _setupCurrentGame() async {
     setState(ViewState.Busy);
-    String _cricPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
-        "10";
-    int _cost = -1 * int.tryParse(_cricPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse =
-        await _fclActionRepo.substractFlc(_cost);
-    _message = _flcResponse.model.message;
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
-    } else {
-      _logger.d("Flc balance is null");
-    }
-
-    if (_flcResponse.model.sessionId != null) {
-      _sessionId = _flcResponse.model.sessionId;
-    } else {
-      _logger.d("sessionId null");
-    }
-
-    if (_flcResponse.model.gameEndpoint != null) {
-      _gameEndpoint = _flcResponse.model.gameEndpoint;
-    } else {
-      _logger.d("gameEndpoint null");
-    }
-
-    if (_flcResponse.model.canUserPlay) {
-      setState(ViewState.Idle);
-      return true;
-    } else {
-      setState(ViewState.Idle);
-      return false;
-    }
-  }
-
-  // add function for football to check game cost
-
-  String _generateCricketGameUrl() {
-    return _gameEndpoint != null
-        ? _gameEndpoint
-        : '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.CRICKET_GAME_URI)}?userId=${_userService.baseUser.uid}&userName=${_userService.baseUser.username}&sessionId=$_sessionId&stage=${FlavorConfig.getStage()}&gameId=cric2020';
-  }
-
-  //Cricket Methods -----------------------------------END--------------------//
-
-  //FootBall Methods --------------------------------START--------------------//
-  Future<bool> _setupFootBallGame() async {
-    setState(ViewState.Busy);
-    String _footballPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_footballPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
+    int _playCost = _currentGameModel.playCost;
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
+        _flcResponse.model.flcBalance >= _playCost)
       return true;
     else {
       return false;
     }
   }
 
-  String _generateFootBallGameUrl() {
-    String _footBallUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FOOTBALL_GAME_URI);
+  generateGameUrl() {
+    String _uri = currentGameModel.gameUri;
     String _loadUri =
-        "$_footBallUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+        "$_uri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
-  }
-
-  //FootBall Methods -----------------------------------END-------------------//
-
-  //CandyFiesta Methods --------------------------------START--------------------//
-  Future<bool> _setupCandyFiestaGame() async {
-    setState(ViewState.Busy);
-    String _candyFiestaCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_candyFiestaCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
-    setState(ViewState.Idle);
-    if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
-      return true;
-    else {
-      return false;
-    }
-  }
-
-  String _generateCandyFiestaGameUrl() {
-    String _candyFiestaUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.CANDYFIESTA_GAME_URI);
-    String _loadUri =
-        "$_candyFiestaUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
-    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
-    return _loadUri;
-  }
-
-  //CandyFiesta Methods -----------------------------------END-------------------//
-
-  //PoolClub Methods --------------------------------START--------------------//
-  Future<bool> _setupPoolClubGame() async {
-    setState(ViewState.Busy);
-    String _poolPlayCost = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
-        "10";
-    int _cost = int.tryParse(_poolPlayCost) ?? 10;
-    ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.getCoinBalance();
-    setState(ViewState.Idle);
-    if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _cost)
-      return true;
-    else {
-      return false;
-    }
   }
 
   getPromo() {
@@ -381,17 +270,6 @@ class WebHomeViewModel extends BaseModel {
         return null;
     }
   }
-
-  String _generatePoolClubGameUrl() {
-    String _poolClubUri = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.POOLCLUB_GAME_URI);
-    String _loadUri =
-        "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
-    if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
-    return _loadUri;
-  }
-
-  //PoolClub Methods -----------------------------------END-------------------//
 
   //Main Methods
   udpateCardOpacity() {
@@ -424,8 +302,8 @@ class WebHomeViewModel extends BaseModel {
   void viewpage(int index) {
     currentPage = index;
     print(currentPage);
-    pageController.animateToPage(currentPage,
-        duration: Duration(milliseconds: 200), curve: Curves.decelerate);
+    // pageController.animateToPage(currentPage,
+    //     duration: Duration(milliseconds: 200), curve: Curves.decelerate);
     refresh();
   }
 
@@ -433,28 +311,12 @@ class WebHomeViewModel extends BaseModel {
     await _lbService.fetchWebGameLeaderBoard(game: currentGame);
   }
 
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d('Token: $token');
-    return token;
-  }
-
-  loadGameLists() async {
-    Future.delayed(Duration(seconds: 5));
-    try {
-      final token = await _getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath().kGames,
-        token: token,
-        cBaseUrl: 'https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com',
-      );
-      final _responseModel = NewGameModel.fromJson(response);
-      _logger.d(response);
-      _gamesListData = _responseModel.data.games;
-      _logger.d('Game Length: ${_responseModel.data.games.length}');
-      _logger.d('Game Response: $response');
-    } catch (e) {
-      _logger.d('Catch Error: $e');
+  fetchGame(String game) async {
+    isGameLoading = true;
+    final response = await _gamesRepo.getGameByCode(gameCode: game);
+    if (response.isSuccess()) {
+      currentGameModel = response.model;
     }
+    isGameLoading = false;
   }
 }

@@ -16,9 +16,10 @@ import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -55,6 +56,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
   final TransactionService _txnService = locator<TransactionService>();
   final GoldenTicketService _gtService = GoldenTicketService();
+  final _internalOpsService = locator<InternalOpsService>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
@@ -197,8 +199,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
 
     if (_baseUtil.augmontDetail == null) {
-      _baseUtil.augmontDetail =
-          await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+      await _baseUtil.fetchUserAugmontDetail();
     }
 
     if (_baseUtil.augmontDetail == null && !_augmontSecondFetchDone)
@@ -215,8 +216,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   delayedAugmontCall() async {
     await Future.delayed(Duration(seconds: 2));
-    _baseUtil.augmontDetail =
-        await _dbModel.getUserAugmontDetails(_userService.baseUser.uid);
+    await _baseUtil.fetchUserAugmontDetail();
     _augmontSecondFetchDone = true;
     notifyListeners();
   }
@@ -394,11 +394,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
+    final bool restrictPaytmAppInvoke = (FlavorConfig.isDevelopment() ||
+            BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.RESTRICT_PAYTM_APP_INVOKE) ==
+                "true")
+        ? true
+        : false;
+
     final _status = await _paytmService.initiateTransactions(
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: FlavorConfig.isDevelopment());
+        restrictAppInvoke: restrictPaytmAppInvoke);
 
     isGoldBuyInProgress = false;
     resetBuyOptions();
@@ -495,7 +502,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _isGeneralUserAllowed = 1;
       }
     }
-    //TODO: looks like dead code
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
       if (_userService.baseUser.isAugmontEnabled != null &&
@@ -676,9 +682,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
 //----------------------------------------------- COUPON LOGIC -------------------------------
 
   getAvailableCoupons() async {
-    couponList = await _dbModel.getCoupons();
-    if (couponList[0].priority == 1) focusCoupon = couponList[0];
-    showCoupons = true;
+    final ApiResponse<List<CouponModel>> couponsRes =
+        await _couponRepo.getCoupons();
+    if (couponsRes.code == 200) {
+      couponList = couponsRes.model;
+      if (couponList[0].priority == 1) focusCoupon = couponList[0];
+      showCoupons = true;
+    }
   }
 
   Future applyCoupon(String couponCode) async {
@@ -718,17 +728,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   //------------------------------- TEST -------------------------------- //
 
-  showInstantTestGT() async {
-    GoldenTicketService.goldenTicketId =
-        (await _dbModel.getLatestGoldenTicket(_userService.baseUser.uid)).gtId;
-    await _gtService.fetchAndVerifyGoldenTicketByID();
-    _gtService.showInstantGoldenTicketView(
-        title: 'You have successfully saved ₹500.',
-        source: GTSOURCE.deposit,
-        amount: 500);
-  }
-
-  showTxnSuccessScreen(double amount, String title) {
+  showTxnSuccessScreen(double amount, String title,
+      {bool showAutoSavePrompt = false}) {
     AppState.screenStack.add(ScreenItem.dialog);
     Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
       PageRouteBuilder(
@@ -737,6 +738,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
             TxnCompletedConfirmationScreenView(
           amount: amount ?? 0,
           title: title ?? "Hurray, we saved ₹NA",
+          showAutoSavePrompt: showAutoSavePrompt,
         ),
       ),
     );
