@@ -1,542 +1,37 @@
-import 'dart:io';
+import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/autosave_services.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/static/blinker.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/pages/static/winnings_container.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserAutosaveDetailsView extends StatelessWidget {
   const UserAutosaveDetailsView({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-    return BaseView<UserAutosaveDetailsViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
-      child: NoTransactionsContent(),
-      builder: (ctx, model, child) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          floatingActionButton: keyboardIsOpen && Platform.isIOS
-              ? Container(
-                  margin: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: FloatingActionButton(
-                    child: Icon(
-                      Icons.done,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: UiConstants.tertiarySolid,
-                    onPressed: () => FocusScope.of(context).unfocus(),
-                  ),
-                )
-              : SizedBox(),
-          body: HomeBackground(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    FelloAppBar(
-                      leading: FelloAppBarBackButton(),
-                      title: "Autosave Details",
-                      actions: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          radius: SizeConfig.avatarRadius,
-                          child: InkWell(
-                            child: Icon(
-                              Icons.info_outline_rounded,
-                              size: SizeConfig.iconSize1,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                            onTap: () {
-                              AppState.delegate.appState.currentAction =
-                                  PageAction(
-                                state: PageState.addPage,
-                                page: AutosaveDetailsViewPageConfig,
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          color: model.isInEditMode
-                              ? Colors.white
-                              : UiConstants.scaffoldColor,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40),
-                          ),
-                        ),
-                        child: model.isInEditMode
-                            ? UpdateDetailsView(
-                                model: model,
-                              )
-                            : DetailsView(
-                                model: model,
-                              ),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class UpdateDetailsView extends StatelessWidget {
-  final UserAutosaveDetailsViewModel model;
-  UpdateDetailsView({this.model});
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Column(
-              children: [
-                SizedBox(height: SizeConfig.pageHorizontalMargins),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  child: Text(
-                    "How much would you like to save?",
-                    style: TextStyles.title3.bold,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding24),
-                Container(
-                  decoration: BoxDecoration(
-                    color: UiConstants.scaffoldColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  ),
-                  padding: EdgeInsets.all(SizeConfig.padding6),
-                  height: SizeConfig.padding54,
-                  child: Stack(
-                    children: [
-                      AnimatedPositioned(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.decelerate,
-                        left: model.isDaily
-                            ? 0
-                            : (SizeConfig.screenWidth / 2 -
-                                SizeConfig.pageHorizontalMargins -
-                                SizeConfig.padding6),
-                        child: Container(
-                          width: SizeConfig.screenWidth / 2 -
-                              SizeConfig.pageHorizontalMargins -
-                              SizeConfig.padding6,
-                          height: SizeConfig.padding54 * 0.8,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                            color: UiConstants.primaryColor,
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Haptic.vibrate();
-                                  model.isDaily = true;
-                                  model.onAmountValueChanged(
-                                      model?.amountFieldController?.text);
-                                },
-                                child: SegmentChips(
-                                  model: model,
-                                  text: "Daily",
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Haptic.vibrate();
-                                  model.isDaily = false;
-                                  model.onAmountValueChanged(
-                                      model.amountFieldController.text);
-                                },
-                                child: SegmentChips(
-                                  model: model,
-                                  text: "Weekly",
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding24),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(child: SizedBox()),
-                      IntrinsicWidth(
-                        child: Container(
-                          height: SizeConfig.screenWidth / 4.2,
-                          child: TextField(
-                            controller: model.amountFieldController,
-                            maxLines: null,
-                            // maxLength: 4,
-
-                            decoration: InputDecoration(
-                                prefixText: "₹",
-                                counterText: "",
-                                prefixStyle: GoogleFonts.sourceSansPro(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.screenWidth / 4.8,
-                                    color: Colors.black),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: -SizeConfig.padding4),
-                                isDense: true,
-                                isCollapsed: true,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none),
-                            // autofocus: true,
-                            // cursorHeight: SizeConfig.padding20,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            // enableInteractiveSelection: false,
-                            keyboardType: TextInputType.number,
-                            // cursorWidth: 0,
-                            autofocus: true,
-                            onChanged: (value) {
-                              model.onAmountValueChanged(value);
-                            },
-
-                            style: GoogleFonts.sourceSansPro(
-                                fontWeight: FontWeight.bold,
-                                height: 0.9,
-                                fontSize: SizeConfig.screenWidth / 4.8,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            model.isDaily ? '/day' : '/week',
-                            style: GoogleFonts.sourceSansPro(
-                                fontSize: SizeConfig.title3,
-                                height: 2,
-                                color: Colors.black38),
-                          ),
-                          SizedBox(height: SizeConfig.padding12)
-                        ],
-                      ),
-                      Expanded(child: SizedBox()),
-                    ],
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding12),
-                if (model.showMinAlert)
-                  Text(
-                    "Minimum investment amount is ₹ ${model.minValue}",
-                    style: TextStyles.body3.bold.colour(Colors.red[300]),
-                  ),
-                SizedBox(height: SizeConfig.padding12),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding12,
-                    horizontal: SizeConfig.pageHorizontalMargins,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.roundness12,
-                    ),
-                    color: UiConstants.tertiaryLight,
-                  ),
-                  alignment: Alignment.center,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: RichText(
-                        text: TextSpan(
-                      text: "You will be saving ",
-                      children: [
-                        TextSpan(
-                            text:
-                                "₹${model.saveAmount.toInt().toString().replaceAllMapped(model.reg, model.mathFunc)}",
-                            style: TextStyles.body2.bold
-                                .colour(UiConstants.tertiarySolid)),
-                        TextSpan(text: " every year!")
-                      ],
-                      style: TextStyles.body2.colour(Colors.black),
-                    )),
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: model.isDaily
-                        ? List.generate(
-                            model.dailyChips.length,
-                            (index) => AmountChips(
-                                  amount: model.dailyChips[index].value,
-                                  model: model,
-                                  isBestSeller: model.dailyChips[index].best,
-                                ))
-                        : List.generate(
-                            model.weeklyChips.length,
-                            (index) => AmountChips(
-                                  amount: model.weeklyChips[index].value,
-                                  model: model,
-                                  isBestSeller: model.weeklyChips[index].best,
-                                )),
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.3,
-                )
-              ],
-            ),
-          ),
-        ),
-        if (model.isInEditMode) AmountFreqUpdateButton(model: model),
-      ],
-    );
-  }
-}
-
-class AmountFreqUpdateButton extends StatelessWidget {
-  const AmountFreqUpdateButton({
-    Key key,
-    @required this.model,
-  }) : super(key: key);
-
-  final UserAutosaveDetailsViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      child: SafeArea(
-        child: Container(
-          width: SizeConfig.screenWidth,
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
-            // vertical: SizeConfig.padding16,
-          ),
-          color: Colors.white,
-          child: Column(
-            children: [
-              if (model.amountFieldController.text != null &&
-                  model.amountFieldController.text.isNotEmpty)
-                Container(
-                  margin: EdgeInsets.only(top: SizeConfig.padding16),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Every ${model.isDaily ? 'day' : 'week'} you will receive",
-                          style: TextStyles.body2.bold,
-                        ),
-                        // Divider(
-                        //   height: SizeConfig.padding24,
-                        // ),
-                        SizedBox(height: SizeConfig.padding12),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          // height: SizeConfig.padding40,
-                          child: Row(
-                              // scrollDirection: Axis.horizontal,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                AutosavePerks(
-                                  svg: 'images/svgs/gold.svg',
-                                  text: "Savings in gold",
-                                ),
-                                if (model.amountFieldController.text != null &&
-                                    model.amountFieldController.text
-                                        .isNotEmpty &&
-                                    int.tryParse(model
-                                            ?.amountFieldController?.text) >=
-                                        100)
-                                  AutosavePerks(
-                                    svg: Assets.goldenTicket,
-                                    text: "1 Golden ticket",
-                                  ),
-                                if (model.amountFieldController.text != null &&
-                                    model.amountFieldController.text
-                                        .isNotEmpty &&
-                                    int.tryParse(model
-                                                ?.amountFieldController?.text ??
-                                            '0') >=
-                                        0)
-                                  AutosavePerks(
-                                    svg: Assets.tokens,
-                                    text:
-                                        "${int.tryParse(model?.amountFieldController?.text)} Fello Tokens",
-                                  )
-                              ]),
-                        )
-                      ]),
-                ),
-              SizedBox(height: SizeConfig.padding16),
-              Container(
-                width: SizeConfig.screenWidth -
-                    SizeConfig.pageHorizontalMargins * 2,
-                child: FelloButtonLg(
-                  child: model.isSubscriptionAmountUpdateInProgress
-                      ? SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: 20,
-                        )
-                      : Text(
-                          "Update",
-                          style: TextStyles.body2.bold.colour(Colors.white),
-                        ),
-                  onPressed: () {
-                    model.setSubscriptionAmount(int.tryParse(
-                            model.amountFieldController.text.isEmpty ||
-                                    model.amountFieldController == null
-                                ? '0'
-                                : model.amountFieldController.text)
-                        .toDouble());
-                  },
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.viewInsets.bottom != 0
-                    ? 0
-                    : SizeConfig.pageHorizontalMargins,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AmountChips extends StatelessWidget {
-  final model;
-  final int amount;
-  final bool isBestSeller;
-  AmountChips({
-    this.model,
-    this.amount,
-    this.isBestSeller = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Haptic.vibrate();
-        model.amountFieldController.text = amount.toString();
-        model.onAmountValueChanged(amount.toString());
-      },
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding8,
-                horizontal: SizeConfig.padding12),
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color:
-                      int.tryParse(model.amountFieldController.text) == amount
-                          ? UiConstants.primaryColor
-                          : UiConstants.primaryLight.withOpacity(0.5),
-                  width: 1),
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.primaryLight.withOpacity(0.5),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              " ₹ ${amount.toInt()} ",
-              style: TextStyles.body3.bold,
-            ),
-          ),
-          if (isBestSeller)
-            Transform.translate(
-              offset: Offset(0, -SizeConfig.padding8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: UiConstants.primaryColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                ),
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding6,
-                    vertical: SizeConfig.padding4),
-                child: Text(
-                  'BEST',
-                  style: TextStyles.body5.bold
-                      .colour(Colors.white)
-                      .letterSpace(SizeConfig.padding2),
-                ),
-              ),
-            )
-        ],
-      ),
-    );
-  }
-}
-
-class DetailsView extends StatelessWidget {
-  final UserAutosaveDetailsViewModel model;
-  DetailsView({this.model});
 
   getFreq(String freq) {
     if (freq == "DAILY") return "/day";
@@ -546,389 +41,494 @@ class DetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        model.state == ViewState.Busy
-            ? Center(
-                child: SpinKitWave(
-                  color: UiConstants.primaryColor,
-                  size: SizeConfig.padding32,
-                ),
-              )
-            : (model.activeSubscription != null
-                ? Column(
-                    // shrinkWrap: true,
-                    // padding: EdgeInsets.symmetric(
-                    //     vertical: SizeConfig.pageHorizontalMargins),
-                    children: [
-                      SizedBox(height: SizeConfig.pageHorizontalMargins),
-                      PropertyChangeConsumer<PaytmService,
-                          PaytmServiceProperties>(
-                        properties: [PaytmServiceProperties.ActiveSubscription],
-                        builder: (context, m, property) => WinningsContainer(
-                          shadow: false,
-                          onTap: () {},
-                          gradient: AutosaveServices.getGradient(
-                              m.activeSubscription),
-                          color: UiConstants.autosaveColor,
-                          child: Container(
-                            width: SizeConfig.screenWidth,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(SizeConfig.padding8),
-                            child: (m.activeSubscription.status ==
-                                        Constants.SUBSCRIPTION_INACTIVE &&
-                                    m.activeSubscription.resumeDate.isEmpty)
-                                ? Center(
-                                    child: Text(
-                                      "Autosave Inactive",
-                                      style: TextStyles.title3.bold
-                                          .colour(Colors.white),
-                                    ),
-                                  )
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            model
-                                                .getTitle(m.activeSubscription),
-                                            style: TextStyles.body1
-                                                .colour(Colors.white),
-                                          ),
-                                          if (m.activeSubscription.status ==
-                                              Constants.SUBSCRIPTION_ACTIVE)
-                                            Container(
-                                              child: Row(
-                                                children: [
-                                                  SizedBox(
-                                                      width:
-                                                          SizeConfig.padding4),
-                                                  Icon(
-                                                    Icons.verified_rounded,
-                                                    color: UiConstants
-                                                        .primaryColor,
-                                                    size: SizeConfig.iconSize2,
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                              "₹${m.activeSubscription.autoAmount.toInt() ?? 0.0}",
-                                              style: GoogleFonts.sourceSansPro(
-                                                  fontSize: SizeConfig.title1,
-                                                  fontWeight: FontWeight.w800,
-                                                  letterSpacing: 2,
-                                                  color: Colors.white)),
-                                          Text(
-                                            getFreq(m.activeSubscription
-                                                .autoFrequency),
-                                            style: GoogleFonts.sourceSansPro(
-                                                fontSize: SizeConfig.title5,
-                                                fontWeight: FontWeight.w300,
-                                                height: 1.6,
-                                                color: Colors.white),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                          ),
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    return BaseView<UserAutosaveDetailsViewModel>(
+      onModelReady: (model) {
+        model.init();
+      },
+      // child: NoTransactionsContent(),
+      builder: (ctx, model, child) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: Text(
+              'Autopay Details',
+              style: TextStyles.rajdhaniSB.title4,
+            ),
+            centerTitle: true,
+            backgroundColor: UiConstants.kBackgroundColor,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: UiConstants.kTextColor,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          backgroundColor: UiConstants.kBackgroundColor,
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: model.state == ViewState.Busy
+                    ? Center(
+                        child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                          size: SizeConfig.padding32,
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness32),
-                          ),
-                          padding: EdgeInsets.only(
-                              top: SizeConfig.pageHorizontalMargins),
-                          child: Column(
+                      )
+                    : model.activeSubscription == null
+                        ? Center(
+                            child: NoRecordDisplayWidget(
+                              assetLottie: Assets.noData,
+                              text: "No Autosave Details available",
+                            ),
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: SizeConfig.screenWidth * 0.25,
-                                decoration: BoxDecoration(
-                                  color: UiConstants.scaffoldColor,
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness16),
+                              _buildAmountSavedCard(model),
+                              SizedBox(
+                                height: SizeConfig.padding40,
+                              ),
+                              _buildPaymentMethod(model),
+                              SizedBox(
+                                height: SizeConfig.padding32,
+                              ),
+                              Divider(
+                                height: SizeConfig.border1,
+                                color: Color(0xFF999999).withOpacity(0.4),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: SizeConfig.padding20,
+                                  top: SizeConfig.padding20,
+                                  bottom: SizeConfig.padding20,
                                 ),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16),
-                                padding: EdgeInsets.all(SizeConfig.padding24),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: UiConstants.primaryLight,
-                                      radius: SizeConfig.screenWidth * 0.067,
-                                      child: SvgPicture.asset(
-                                        "assets/vectors/icons/upi.svg",
-                                        height: SizeConfig.screenWidth * 0.067,
-
-                                        // width: SizeConfig.padding64,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding12,
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          FittedBox(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  model.activeSubscription
-                                                          .vpa ??
-                                                      "hello@upi",
-                                                  style: TextStyles.body1.bold,
-                                                ),
-                                                SizedBox(
-                                                    width: SizeConfig.padding4),
-                                                SvgPicture.asset(
-                                                  "assets/vectors/check.svg",
-                                                  height: SizeConfig.iconSize1,
-                                                  // width: SizeConfig.padding64,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(height: SizeConfig.padding4),
-                                          FittedBox(
-                                            child: Text(
-                                              "Verified UPI",
-                                              style: TextStyles.body3
-                                                  .colour(Colors.grey),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  "Recent Transaction",
+                                  style: TextStyles.rajdhaniSB.body1,
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding12),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: new TextSpan(
-                                    children: [
-                                      new TextSpan(
-                                        text: 'Your Autosave account is ',
-                                        style: TextStyles.body3
-                                            .colour(Colors.black45)
-                                            .italic,
+                              model.filteredList == null
+                                  ? Center(
+                                      child: SpinKitWave(
+                                        color: UiConstants.primaryColor,
+                                        size: SizeConfig.padding32,
                                       ),
-                                      new TextSpan(
-                                        text: model.getRichText(),
-                                        style: TextStyles.body3
-                                            .colour(model.getRichTextColor())
-                                            .bold
-                                            .italic,
-                                        // recognizer: new TapGestureRecognizer()
-                                        //   ..onTap = () {
-                                        //     Haptic.vibrate();
-
-                                        //     AppState.delegate.appState
-                                        //             .currentAction =
-                                        //         PageAction(
-                                        //             state: PageState.addPage,
-                                        //             page:
-                                        //                 AutosaveDetailsViewPageConfig);
-                                        //   },
-                                      ),
-                                      //Verified and Active
-                                      // Verified and Paused
-                                      // currently active
-                                      // new TextSpan(
-                                      //   text: ' now.',
-                                      //   style: TextStyles.body3
-                                      //       .colour(Colors.black45)
-                                      //       .italic,
-                                      // ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Divider(),
-                              Row(
-                                children: [
-                                  SizedBox(width: SizeConfig.padding20),
-                                  Text(
-                                    "Autosave History",
-                                    style: TextStyles.title3.bold,
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: model.filteredList == null
-                                    ? Center(
-                                        child: SpinKitWave(
-                                          color: UiConstants.primaryColor,
-                                          size: SizeConfig.padding32,
-                                        ),
-                                      )
-                                    : (model.filteredList?.length == 0
-                                        ? NoTransactionsContent(
-                                            width: SizeConfig.screenWidth * 0.4,
-                                          )
-                                        : ListView(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            padding: EdgeInsets.only(
-                                                top: SizeConfig
-                                                    .pageHorizontalMargins,
-                                                left: SizeConfig
-                                                        .pageHorizontalMargins /
-                                                    2,
-                                                right: SizeConfig
-                                                    .pageHorizontalMargins),
-                                            children: List.generate(
-                                              model.filteredList?.length,
-                                              (index) =>
-                                                  SubscriptionTransactionTile(
-                                                // model: model,
-                                                txn: model.filteredList[index],
-                                              ),
-                                            ),
-                                          )),
-                              ),
-                              !model.hasMoreTxns
-                                  ? SizedBox(
-                                      height: SizeConfig.padding16,
                                     )
-                                  : FelloButton(
-                                      onPressed: () {
-                                        AppState.delegate.appState
-                                            .currentAction = PageAction(
-                                          state: PageState.addPage,
-                                          page:
-                                              AutosaveTransactionsViewPageConfig,
-                                        );
-                                      },
-                                      defaultButtonText: "View All",
-                                      defaultButtonColor: Colors.white,
-                                      textStyle: TextStyles.body1.bold
-                                          .colour(UiConstants.primaryColor),
-                                    ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
-                      if (model.state == ViewState.Idle &&
-                          model.activeSubscription != null &&
-                          !model.isInEditMode)
-                        Column(
-                          children: (model.activeSubscription.status ==
-                                      Constants.SUBSCRIPTION_INACTIVE &&
-                                  model.activeSubscription.resumeDate.isEmpty)
-                              ? [
-                                  Container(
-                                    margin: EdgeInsets.all(
-                                        SizeConfig.pageHorizontalMargins),
-                                    child: FelloButtonLg(
-                                      child: Text(
-                                        "Restart Autosave",
-                                        style: TextStyles.body2.bold
-                                            .colour(Colors.white),
-                                      ),
-                                      onPressed: () {
-                                        AppState.delegate.appState.currentAction =
-                                            PageAction(
-                                                page:
-                                                    AutosaveProcessViewPageConfig,
-                                                widget: AutosaveProcessView(
-                                                    page: 2),
-                                                state: PageState.replaceWidget);
-                                      },
-                                    ),
-                                  ),
-                                ]
-                              : [
-                                  if (model.activeSubscription.status ==
-                                      Constants.SUBSCRIPTION_ACTIVE)
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal:
-                                              SizeConfig.pageHorizontalMargins),
-                                      child: FelloButtonLg(
-                                        child: Text(
-                                          "Update Autosave",
-                                          style: TextStyles.body2.bold
-                                              .colour(Colors.white),
-                                        ),
-                                        onPressed: () {
-                                          model.isInEditMode = true;
-                                        },
-                                      ),
-                                    ),
-                                  model.isResumingInProgress
-                                      ? Container(
-                                          height: SizeConfig.padding40,
-                                          child: SpinKitThreeBounce(
-                                            size: SizeConfig.padding24,
-                                            color: UiConstants.tertiarySolid,
+                                  : model.filteredList?.length == 0
+                                      ? Center(
+                                          child: NoTransactionsContent(
+                                            width: SizeConfig.screenWidth * 0.8,
                                           ),
                                         )
-                                      : TextButton(
-                                          onPressed: () =>
-                                              model.pauseResume(model),
-                                          child: Text(
-                                            model.activeSubscription.status ==
-                                                    Constants
-                                                        .SUBSCRIPTION_INACTIVE
-                                                ? "RESUME AUTOSAVE"
-                                                : "PAUSE AUTOSAVE",
-                                            style: TextStyles.body2.bold.colour(
-                                                UiConstants.tertiarySolid),
+                                      : Container(
+                                          color: Color(0xFF595F5F)
+                                              .withOpacity(0.14),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig.padding20,
+                                          ),
+                                          child: ListView.builder(
+                                            itemCount:
+                                                model.filteredList?.length,
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              return TransationTile(
+                                                isLast: index ==
+                                                    model.filteredList.length -
+                                                        1,
+                                                txn: model.filteredList[index],
+                                              );
+                                            },
                                           ),
                                         ),
-                                  SizedBox(
-                                    height: SizeConfig.viewInsets.bottom != 0
-                                        ? 0
-                                        : SizeConfig.padding12,
-                                  ),
-                                ],
-                        )
-                    ],
-                  )
-                : Center(
-                    child: NoRecordDisplayWidget(
-                      assetLottie: Assets.noData,
-                      text: "No Autosave Details available",
+                              SizedBox(
+                                height: SizeConfig.padding80 * 2,
+                              ),
+                            ],
+                          ),
+              ),
+              // Positioned(
+              //   bottom: 0,
+              //   child: Container(
+              //     width: SizeConfig.screenWidth,
+              //     height: 120,
+              //     decoration: BoxDecoration(
+              //       gradient: LinearGradient(
+              //           begin: Alignment.bottomCenter,
+              //           end: Alignment.topCenter,
+              //           colors: [
+              //             UiConstants.kSecondaryBackgroundColor
+              //                 .withOpacity(0.8),
+              //             UiConstants.kSecondaryBackgroundColor
+              //                 .withOpacity(0.2),
+              //           ],
+              //           stops: [
+              //             0.8,
+              //             1
+              //           ]),
+              //     ),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              //     ),
+              //   ),
+              // ),
+              if (model.state == ViewState.Idle &&
+                  model.activeSubscription != null &&
+                  !model.isInEditMode)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      // color: UiConstants.kSecondaryBackgroundColor,
+                      gradient: LinearGradient(
+                        colors: [
+                          UiConstants.kSecondaryBackgroundColor
+                              .withOpacity(0.2),
+                          UiConstants.kSecondaryBackgroundColor
+                              .withOpacity(0.9),
+                          UiConstants.kSecondaryBackgroundColor
+                              .withOpacity(0.2),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [
+                          0.02,
+                          0.8,
+                          1.0,
+                        ],
+                      ),
                     ),
-                  )),
-        // Align(
-        //   alignment: Alignment.bottomCenter,
-        //   child: Container(
-        //     height: SizeConfig.navBarHeight * 2,
-        //     width: SizeConfig.screenWidth,
-        //     decoration: BoxDecoration(
-        //       gradient: LinearGradient(colors: [
-        //         Colors.white,
-        //         Colors.white.withOpacity(0.0),
-        //       ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-        //     ),
-        //   ),
-        // ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding40,
+                      vertical: SizeConfig.padding10,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: (model.activeSubscription.status ==
+                                  Constants.SUBSCRIPTION_INACTIVE &&
+                              model.activeSubscription.resumeDate.isEmpty)
+                          ? _buildRestartAutoPay()
+                          : _buildUpdateAutoPay(model),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Padding _buildPaymentMethod(UserAutosaveDetailsViewModel model) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding32,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Payment Method",
+            style: TextStyles.rajdhaniSB.body1,
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: SizeConfig.padding54,
+                height: SizeConfig.padding54,
+                decoration: BoxDecoration(
+                  color: Color(0xFFC4C4C4).withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Image.asset(
+                    "assets/temp/upi_payment_logo.png",
+                    width: SizeConfig.iconSize0,
+                    height: SizeConfig.iconSize0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.padding12,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        model.activeSubscription.vpa ?? "hello@upi",
+                        style: TextStyles.sourceSans.body1,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding8,
+                      ),
+                      SvgPicture.asset(
+                        'assets/temp/verified.svg',
+                        width: SizeConfig.padding20,
+                        height: SizeConfig.padding20,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding6,
+                  ),
+                  Text(
+                    "Primary UPI",
+                    style: TextStyles.sourceSansSB.body3.setOpecity(0.5),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAmountSavedCard(UserAutosaveDetailsViewModel model) {
+    return Container(
+      // height: SizeConfig.screenWidth * 0.5433,
+      width: SizeConfig.screenWidth * 0.8426,
+      decoration: BoxDecoration(
+        color: UiConstants.kAutosaveBalanceColor.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+      ),
+      margin: EdgeInsets.only(
+        right: SizeConfig.padding32,
+        left: SizeConfig.padding32,
+        top: SizeConfig.padding10,
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding16,
+      ),
+      child: PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+        properties: [PaytmServiceProperties.ActiveSubscription],
+        builder: (context, m, property) {
+          return (m.activeSubscription.status ==
+                      Constants.SUBSCRIPTION_INACTIVE &&
+                  m.activeSubscription.resumeDate.isEmpty)
+              ? Center(
+                  child: Text(
+                    "Autosave Inactive",
+                    style: TextStyles.title3.bold.colour(Colors.white),
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding16,
+                        ),
+                        child: Text(
+                          "AMOUNT SAVED",
+                          style: TextStyles.rajdhani.body3
+                              .setOpecity(0.6)
+                              .letterSpace(SizeConfig.padding2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding32,
+                    ),
+                    Text(
+                      '₹' + model.saveAmount.toString() ?? 0.0,
+                      style: TextStyles.rajdhaniB.title1,
+                    ),
+                    Text(
+                      '₹${m.activeSubscription.autoAmount.toInt()} ${getFreq(m.activeSubscription.autoFrequency)}',
+                      style: TextStyles.sourceSans.body3.setOpecity(0.5),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
+                    Divider(
+                      height: SizeConfig.border0,
+                      color: UiConstants.kAutosaveBalanceColor.withOpacity(0.4),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Your Autosave account is ',
+                            style: TextStyles.sourceSans.body4
+                                .setOpecity(0.4)
+                                .copyWith(fontStyle: FontStyle.italic),
+                          ),
+                          TextSpan(
+                            text: model.getRichText(),
+                            style: TextStyles.sourceSans.body4
+                                .colour(
+                                  model.getRichTextColor(),
+                                )
+                                .copyWith(fontStyle: FontStyle.italic),
+                          ),
+                          // TextSpan(
+                          //   text: ' now',
+                          //   style: TextStyles.sourceSans.body4
+                          //       .setOpecity(0.4)
+                          //       .copyWith(fontStyle: FontStyle.italic),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+        },
+      ),
+    );
+  }
+
+  List<Widget> _buildRestartAutoPay() {
+    return [
+      AppPositiveBtn(
+        btnText: "Restart Autosave",
+        onPressed: () {
+          AppState.delegate.appState.currentAction = PageAction(
+            page: AutosaveProcessViewPageConfig,
+            widget: AutosaveProcessView(page: 2),
+            state: PageState.replaceWidget,
+          );
+        },
+        width: double.infinity,
+      )
+    ];
+  }
+
+  _buildUpdateAutoPay(UserAutosaveDetailsViewModel model) {
+    return [
+      if (model.activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+        AppPositiveBtn(
+          btnText: 'Update',
+          onPressed: () {
+            //NOTE: CHECK IN EDIT MODE
+            AppState.delegate.appState.currentAction = PageAction(
+              page: AutosaveProcessViewPageConfig,
+              widget: AutosaveProcessView(page: 2),
+              state: PageState.replaceWidget,
+            );
+          },
+          width: double.infinity,
+        ),
+      model.isResumingInProgress
+          ? Container(
+              height: SizeConfig.padding40,
+              child: SpinKitThreeBounce(
+                size: SizeConfig.padding24,
+                color: UiConstants.tertiarySolid,
+              ),
+            )
+          : Center(
+              child: TextButton(
+                onPressed: () => model.pauseResume(model),
+                style: ButtonStyle(
+                  padding:
+                      MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                ),
+                child: Text(
+                  model.activeSubscription.status ==
+                          Constants.SUBSCRIPTION_INACTIVE
+                      ? "RESUME AUTOSAVE"
+                      : "PAUSE AUTOSAVE",
+                  style: TextStyles.rajdhani.body3,
+                ),
+              ),
+            ),
+      // SizedBox(
+      //   height: SizeConfig.padding54,
+      // ),
+    ];
+  }
+}
+
+class TransationTile extends StatelessWidget {
+  TransationTile({
+    Key key,
+    @required this.txn,
+    @required this.isLast,
+  }) : super(key: key);
+  final bool isLast;
+  final AutosaveTransactionModel txn;
+  final _txnService = locator<TransactionService>();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding20,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    _txnService.getTileTitle(
+                      UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD,
+                    ),
+                    style: TextStyles.rajdhaniM.body2,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                  Text(
+                    _txnService.getFormattedTime(txn.createdOn),
+                    style: TextStyles.rajdhaniL.body3,
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    _txnService.getFormattedTxnAmount(txn.amount),
+                    style: TextStyles.rajdhaniSB.body2,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                  Text(
+                    txn.status,
+                    style: TextStyles.rajdhaniM.body3.colour(
+                      _txnService.getTileColor(txn.status),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (!isLast)
+          Divider(
+            height: SizeConfig.border1,
+            color: UiConstants.kTextColor.withOpacity(0.4),
+          ),
       ],
     );
   }

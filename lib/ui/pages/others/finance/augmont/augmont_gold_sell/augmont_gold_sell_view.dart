@@ -352,7 +352,8 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                                   .bold,
                                             ),
                                       onPressed: () {
-                                        if (!model.isGoldSellInProgress) {
+                                        if (!model.isGoldSellInProgress &&
+                                            !model.isQntFetching) {
                                           FocusScope.of(context).unfocus();
                                           model.initiateSell();
                                         }

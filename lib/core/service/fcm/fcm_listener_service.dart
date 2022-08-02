@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -13,7 +14,6 @@ import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 class FcmListener {
@@ -22,26 +22,13 @@ class FcmListener {
   final CustomLogger logger = locator<CustomLogger>();
   final FcmHandler _handler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
 
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
-    Freshchat.isFreshchatNotification(message.data).then((flag) {
-      if (flag) {
-        _handleFreshchatNotif(message.data);
-      } else {
-        //TODO Background message that is not Freshchat
-      }
-    });
     return Future<void>.value();
-  }
-
-  static _handleFreshchatNotif(Map<String, dynamic> freshChatData) {
-    print('background freshchat notif $freshChatData');
-    Freshchat.setNotificationConfig(
-        largeIcon: "ic_chat_support", smallIcon: "ic_fello_notif");
-    Freshchat.handlePushNotification(freshChatData);
   }
 
   Future<FirebaseMessaging> setupFcm() async {
@@ -96,17 +83,13 @@ class FcmListener {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         RemoteNotification notification = message.notification;
-        Freshchat.isFreshchatNotification(message.data).then((flag) {
-          if (flag) {
-            _handleFreshchatNotif(message.data);
-          } else if (message.data != null && message.data.isNotEmpty) {
-            _handler.handleMessage(message.data, MsgSource.Foreground);
-          } else if (notification != null) {
-            logger.d(
-                "Handle Notification: ${notification.title} ${notification.body}");
-            _handler.handleNotification(notification.title, notification.body);
-          }
-        });
+        if (message.data != null && message.data.isNotEmpty) {
+          _handler.handleMessage(message.data, MsgSource.Foreground);
+        } else if (notification != null) {
+          logger.d(
+              "Handle Notification: ${notification.title} ${notification.body}");
+          _handler.handleNotification(notification.title, notification.body);
+        }
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -129,12 +112,11 @@ class FcmListener {
       }
     } catch (e) {
       logger.e(e.toString());
-      if (_userService.isUserOnborded != null)
-        _dbModel.logFailure(
-            _userService.baseUser.uid, FailType.FcmListenerSetupFailed, {
-          "title": "FcmListener setup Failed",
-          "error": e.toString(),
-        });
+      _internalOpsService.logFailure(
+          _userService.baseUser?.uid ?? '', FailType.FcmListenerSetupFailed, {
+        "title": "FcmListener setup Failed",
+        "error": e.toString(),
+      });
     }
     return _fcm;
   }
@@ -173,12 +155,11 @@ class FcmListener {
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => logger.d("Added frequent flyer subscription"));
 
-    if (_baseUtil.userTicketWallet != null &&
-        _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
+    if (_baseUtil.ticketCount != null &&
+        _baseUtil.ticketCount > 0 &&
         _userService.baseUser.userPreferences
                 .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
             1) {
-      // if (_tambolaDrawNotifications) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
@@ -219,13 +200,10 @@ class FcmListener {
                 _userService.baseUser.client_token != fcmToken))) {
       logger.d("Updating FCM token to local and server db");
       _userService.baseUser.client_token = fcmToken;
-      Freshchat.setPushRegistrationToken(fcmToken);
-      flag = await _dbModel.updateClientToken(_userService.baseUser, fcmToken);
+      flag = await _userService.updateClientToken(fcmToken);
     }
     return flag;
   }
-
-// TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
 
   // TOGGLE THE SUBSCRIPTION
   Future<bool> toggleTambolaDrawNotificationStatus(bool val) async {
@@ -245,7 +223,7 @@ class FcmListener {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
         };
-        _dbModel.logFailure(_userService.baseUser.uid,
+        _internalOpsService.logFailure(_userService.baseUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");

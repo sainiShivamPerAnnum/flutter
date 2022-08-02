@@ -98,7 +98,6 @@ class MobileInputScreenViewState extends State<MobileInputScreenView> {
                     SizedBox(
                       height: SizeConfig.blockSizeVertical,
                     ),
-                    
                   ],
                 ),
               ),

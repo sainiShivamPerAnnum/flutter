@@ -31,8 +31,8 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   bool _isTxnLoaderInView = false;
-  Future _txnFunction;
-  Timer _txnTimer;
+  // Future _txnFunction;
+  // Timer _txnTimer;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -59,7 +59,7 @@ class AppState extends ChangeNotifier {
 
   get isTxnLoaderInView => this._isTxnLoaderInView;
 
-  Timer get txnTimer => this._txnTimer;
+  // Timer get txnTimer => this._txnTimer;
 
   set rootIndex(value) {
     this._rootIndex = value;
@@ -78,10 +78,10 @@ class AppState extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  set txnTimer(Timer timer) {
-    this._txnTimer = timer;
-    notifyListeners();
-  }
+  // set txnTimer(Timer timer) {
+  //   this._txnTimer = timer;
+  //   notifyListeners();
+  // }
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;

@@ -55,6 +55,9 @@ const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
 const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
+const String NewGameHomeViewPath = '/newGameHome';
+const String NewWebHomeViewPath = '/newWebHomeView';
+const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
 const String JourneyViewPath = '/journeyViewPath';
 
 enum Pages {
@@ -112,6 +115,8 @@ enum Pages {
   AutosaveProcessView,
   UserAutosaveDetailsView,
   AutosaveTransactionsView,
+  NewWebHomeView,
+  TopPlayerLeaderboard,
   JourneyView
 }
 
@@ -505,6 +510,19 @@ PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
     uiPage: Pages.AutosaveTransactionsView,
     name: "Autosave transaction Screen");
 
+PageConfiguration NewWebHomeViewPageConfig = PageConfiguration(
+  key: 'NewWebHomeView',
+  path: NewWebHomeViewPath,
+  uiPage: Pages.NewWebHomeView,
+  name: "New Web Home Screen",
+);
+
+PageConfiguration TopPlayerLeaderboardPageConfig = PageConfiguration(
+  key: 'TopPlayerLeaderboard',
+  path: TopPlayerLeaderboard,
+  uiPage: Pages.TopPlayerLeaderboard,
+  name: "Top Player Leaderboard Screen",
+);
 PageConfiguration JourneyViewPageConfig = PageConfiguration(
     key: 'JourneyView',
     path: JourneyViewPath,

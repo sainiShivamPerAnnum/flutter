@@ -24,31 +24,25 @@ class DailyPick {
       this.sat,
       this.sun});
 
-  DailyPick.fromMap(Map<String, dynamic> data)
-      : this(
-          weekCode: data[fldWeekCode],
-          mon: (data[fldWeekDay[0]] != null)
-              ? List.from(data[fldWeekDay[0]])
-              : null,
-          tue: (data[fldWeekDay[1]] != null)
-              ? List.from(data[fldWeekDay[1]])
-              : null,
-          wed: (data[fldWeekDay[2]] != null)
-              ? List.from(data[fldWeekDay[2]])
-              : null,
-          thu: (data[fldWeekDay[3]] != null)
-              ? List.from(data[fldWeekDay[3]])
-              : null,
-          fri: (data[fldWeekDay[4]] != null)
-              ? List.from(data[fldWeekDay[4]])
-              : null,
-          sat: (data[fldWeekDay[5]] != null)
-              ? List.from(data[fldWeekDay[5]])
-              : null,
-          sun: (data[fldWeekDay[6]] != null)
-              ? List.from(data[fldWeekDay[6]])
-              : null,
-        );
+  factory DailyPick.fromMap(Map<String, dynamic> data) {
+    return DailyPick(
+      weekCode: data[fldWeekCode],
+      mon:
+          (data[fldWeekDay[0]] != null) ? List.from(data[fldWeekDay[0]]) : null,
+      tue:
+          (data[fldWeekDay[1]] != null) ? List.from(data[fldWeekDay[1]]) : null,
+      wed:
+          (data[fldWeekDay[2]] != null) ? List.from(data[fldWeekDay[2]]) : null,
+      thu:
+          (data[fldWeekDay[3]] != null) ? List.from(data[fldWeekDay[3]]) : null,
+      fri:
+          (data[fldWeekDay[4]] != null) ? List.from(data[fldWeekDay[4]]) : null,
+      sat:
+          (data[fldWeekDay[5]] != null) ? List.from(data[fldWeekDay[5]]) : null,
+      sun:
+          (data[fldWeekDay[6]] != null) ? List.from(data[fldWeekDay[6]]) : null,
+    );
+  }
 
   List<int> getWeekdayDraws(int weekday) {
     switch (weekday) {

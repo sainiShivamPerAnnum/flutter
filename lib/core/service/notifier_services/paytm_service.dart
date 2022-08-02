@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -40,6 +42,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _paytmRepo = locator<PaytmRepository>();
   final _userService = locator<UserService>();
   final _api = locator<Api>();
+  final _getterRepo = locator<GetterRepository>();
+
   bool _isFirstTime = true;
   bool _autosaveVisible = true;
   bool get autosaveVisible => this._autosaveVisible;
@@ -231,6 +235,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
+      _logger.d("Paytm app invoke: $restrictAppInvoke");
       final response = await AllInOneSdk.startTransaction(
           mid,
           paytmSubscriptionModel.data.orderId,
@@ -337,10 +342,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     // }
   }
 
-  Future<List<AmountChipsModel>> getAmountChips(String type) async {
-    List<AmountChipsModel> data = await _api.getAmountChips(type);
-    if (data != null && data.isNotEmpty)
-      return data;
+  Future<List<AmountChipsModel>> getAmountChips({@required String freq}) async {
+    ApiResponse<List<AmountChipsModel>> data =
+        await _getterRepo.getAmountChips(freq: freq);
+    if (data != null && data.code == 200)
+      return data.model;
     else
       return defaultAmountChipList;
   }

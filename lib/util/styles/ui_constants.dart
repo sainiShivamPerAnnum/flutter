@@ -10,6 +10,7 @@ class UiConstants {
   static final Color scaffoldColor = const Color(0xffF1F6FF);
   static final Color felloBlue = const Color(0xff26A6F4);
   static final Color autosaveColor = const Color(0xff6b7AA1);
+  static final Color gameCardColor = const Color(0xff39393C);
 
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color.fromARGB(255, 58, 120, 255);
@@ -41,5 +42,57 @@ class UiConstants {
       800: const Color(0xff2EB19F),
       900: const Color(0xff2EB19F),
     },
+  );
+
+  /// New UI Colors
+  static const Color kTextColor = const Color(0xFFFFFFFF);
+  static const Color kTextColor2 = const Color(0xFF919193);
+  static const Color kYellowTextColor = const Color(0xFFFEF5DC);
+
+  static const Color kBackgroundColor = const Color(0xFF232326);
+  static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
+  static const Color kTabBorderColor = const Color(0xFF62E3C4);
+  static const Color kDividerColor = const Color(0xFF9EA1A1);
+  static const Color kBackgroundDividerColor = const Color(0xFF23272B);
+  static const Color kFirstRankPillerColor = const Color(0xFFF2B826);
+  static const Color kSecondRankPillerColor = const Color(0xF5371EE);
+  static const Color kThirdRankPillerColor = const Color(0xFF34C3A7);
+  static Color kUserRankBackgroundColor = Color(0xFF000000).withOpacity(0.3);
+  static const Color kWinnerPlayerPrimaryColor = const Color(0xFFFFD979);
+  static const Color kWinnerPlayerLightPrimaryColor = const Color(0xFFFEF5DC);
+  static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
+
+  static const Color kProfileBorderOutterColor = const Color(0xFF737373);
+  static const Color kProfileBorderColor = const Color(0xFFD9D9D9);
+  static const Color kTextFieldColor = const Color(0xFF161617);
+  static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
+  static const Color kSwitchColor = const Color(0xFF19191A);
+  static const Color kAutopayAmountActiveTabColor = const Color(0xFFF5F2ED);
+  static const Color kAutopayAmountDeactiveTabColor = const Color(0xFF39393C);
+  static const Color kBorderColor = const Color(0xFFDADADA);
+
+  // Recharge Modal Sheet
+  static const Color kRechargeModalSheetAmountSectionBackgroundColor =
+      const Color(0xFF49494C);
+
+  static const Color kpurpleTicketColor = const Color(0xFFCEC5FF);
+
+  // Autosave
+  static const Color kAutosaveBalanceColor = const Color(0xFFEFECD1);
+
+  static LinearGradient kTextFieldGradient1 = LinearGradient(
+    colors: [Color(0xff111111), Colors.transparent],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kTextFieldGradient2 = LinearGradient(
+    colors: [Color(0xff111111), UiConstants.kTextFieldColor.withOpacity(0.7)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
   );
 }

@@ -17,11 +17,11 @@ import android.net.Uri;
 import android.media.AudioAttributes;
 import io.flutter.plugins.GeneratedPluginRegistrant
 import android.content.ContentResolver;
+import android.view.View
 
 
 class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
-    private val CHANNEL_FRESHCHAT = "fello.in/dev/notifications/channel/support"
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
@@ -41,6 +41,16 @@ class MainActivity: FlutterFragmentActivity() {
                 result.notImplemented()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        window.decorView.visibility = View.VISIBLE
+    }
+
+    override fun onStop() {
+        window.decorView.visibility = View.GONE
+        super.onStop()
     }
 
 

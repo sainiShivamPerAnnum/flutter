@@ -2,6 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
+parseTimeStamp(dynamic data) {
+  if (data != null) {
+    if (data.runtimeType == Timestamp)
+      return data;
+    else
+      return Timestamp(data["_seconds"], data["_nanoseconds"]);
+  } else
+    return null;
+}
+
 class UserTransaction {
   static Log log = new Log('UserTransaction');
   String _docKey;
@@ -76,6 +86,7 @@ class UserTransaction {
   static const String TRAN_STATUS_COMPLETE = 'COMPLETE';
   static const String TRAN_STATUS_CANCELLED = 'CANCELLED';
   static const String TRAN_STATUS_REFUNDED = 'REFUNDED';
+  static const String TRAN_STATUS_FAILED = 'FAILED';
   static const String TRAN_STATUS_PROCESSING = 'PROCESSING';
 
   ///Razorpay payment status
@@ -121,22 +132,23 @@ class UserTransaction {
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
       : this(
-            documentID,
-            BaseUtil.toDouble(data[fldAmount]),
-            BaseUtil.toDouble(data[fldClosingBalance]),
-            data[fldNote],
-            data[fldSubType],
-            data[fldType],
-            data[fldRedeemType],
-            data[fldTicketUpCount],
-            data[fldUserId],
-            data[fldTranStatus],
-            data[fldIciciMap],
-            data[fldRzpMap],
-            data[fldAugmontMap],
-            data[fldTimestamp],
-            data[fldPaytmMap],
-            data[fldUpdatedTime]);
+          documentID,
+          BaseUtil.toDouble(data[fldAmount]),
+          BaseUtil.toDouble(data[fldClosingBalance]),
+          data[fldNote],
+          data[fldSubType],
+          data[fldType],
+          data[fldRedeemType],
+          data[fldTicketUpCount],
+          data[fldUserId],
+          data[fldTranStatus],
+          data[fldIciciMap],
+          data[fldRzpMap],
+          data[fldAugmontMap],
+          parseTimeStamp(data[fldTimestamp]),
+          data[fldPaytmMap],
+          parseTimeStamp(data[fldUpdatedTime]),
+        );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
       : this(

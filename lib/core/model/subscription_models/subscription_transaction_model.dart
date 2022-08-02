@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/helper_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:flutter/foundation.dart';
 
 class AutosaveTransactionModel {
@@ -16,7 +18,10 @@ class AutosaveTransactionModel {
   String note;
   AugmontDataModel augmontMap;
   double closingBalance;
-  Timestamp createdOn;
+  TimestampModel createdOn;
+  static final helper = HelperModel<AutosaveTransactionModel>(
+    (map) => AutosaveTransactionModel.fromMap(map),
+  );
   AutosaveTransactionModel({
     @required this.amount,
     @required this.status,
@@ -97,7 +102,7 @@ class AutosaveTransactionModel {
       note: map['note'] ?? '',
       augmontMap: AugmontDataModel.fromMap(map['augmontMap'] ?? {}),
       closingBalance: map['closingBalance']?.toDouble() ?? 0.0,
-      createdOn: map['createdOn'],
+      createdOn: TimestampModel.fromMap(map['createdOn']),
     );
   }
 

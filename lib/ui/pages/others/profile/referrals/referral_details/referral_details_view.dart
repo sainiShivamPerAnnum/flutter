@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -22,6 +21,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ReferralDetailsView extends StatelessWidget {
   @override
@@ -84,7 +84,7 @@ class ReferralDetailsView extends StatelessWidget {
                                               content: MoreInfoDialog(
                                                   title:
                                                       "To be eligible for referrer of the month",
-                                                  imagePath: Assets.iphone,
+                                                  imagePath: Assets.ipad,
                                                   imageSize: Size(
                                                     SizeConfig.padding80,
                                                     SizeConfig.padding80,
@@ -94,138 +94,219 @@ class ReferralDetailsView extends StatelessWidget {
                                         },
                                     ),
                                     TextSpan(
-                                        text: " wins a brand new iPhone 13!")
+                                        text: " wins a brand new iPad Air!")
                                   ]),
                             ),
                             SizedBox(height: SizeConfig.padding24),
-                            // model.loadingUrl
-                            //     ? SpinKitThreeBounce(
-                            //         color: UiConstants.spinnerColor2,
-                            //         size: 18.0,
-                            //       )
-                            //     : TextFormField(
-                            //         initialValue: model.getuserUrlPrefix(),
-                            //         style: TextStyles.body3.colour(Colors.grey),
-                            //       ),
-                            model.loadingUrl
+                            model.loadingRefCode
                                 ? SpinKitThreeBounce(
                                     color: UiConstants.spinnerColor2,
                                     size: 18.0,
                                   )
-                                : Container(
-                                    width: SizeConfig.navBarWidth,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: UiConstants.primaryColor
-                                            .withOpacity(0.5),
+                                : InkWell(
+                                    onTap: model.copyReferCode,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding24,
+                                        vertical: SizeConfig.padding8,
                                       ),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding12),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          model.userUrlPrefix,
-                                          style: TextStyles.body3,
+                                      height: SizeConfig.padding54,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          SizeConfig.padding12,
                                         ),
-                                        InkWell(
-                                          onTap: model.copyReferCode,
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding8,
-                                              vertical: SizeConfig.padding8,
-                                            ),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color:
-                                                    UiConstants.tertiarySolid),
-                                            child: Text(
-                                              model.userUrlCode,
-                                              style: TextStyles.body2.bold
-                                                  .colour(Colors.white),
-                                            ),
+                                        border: Border.all(
+                                          color: UiConstants.primaryColor
+                                              .withOpacity(0.5),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Text(model.refCode,
+                                                style: GoogleFonts.ubuntu(
+                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: SizeConfig.title3,
+                                                    color: Colors.black54,
+                                                    letterSpacing: 5)
+                                                // TextStyles.title3.bold
+                                                //     .colour(Colors.black)
+                                                //     .copyWith(letterSpacing: 5),
+                                                ),
                                           ),
-                                        )
-                                      ],
+                                          Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Tap to copy",
+                                              style: TextStyles.body2.bold
+                                                  .colour(
+                                                    UiConstants.tertiarySolid
+                                                        .withOpacity(0.7),
+                                                  )
+                                                  .letterSpace(2),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                             SizedBox(height: SizeConfig.padding24),
-                            Row(
-                              children: [
-                                if (Platform.isAndroid)
+                            if (!model.loadingRefCode)
+                              Row(
+                                children: [
+                                  if (Platform.isAndroid)
+                                    Expanded(
+                                      child: Center(
+                                        child: FelloButton(
+                                          onPressedAsync: model.shareWhatsApp,
+                                          offlineButtonUI: Container(
+                                            width:
+                                                SizeConfig.screenWidth * 0.422,
+                                            height:
+                                                SizeConfig.screenWidth * 0.144,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness12),
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  Assets.whatsapp,
+                                                  width: SizeConfig.padding20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(
+                                                    width:
+                                                        SizeConfig.padding16),
+                                                Text(
+                                                  locale.refWhatsapp,
+                                                  style: TextStyles.body2
+                                                      .colour(Colors.grey),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          loadingButtonUI: Container(
+                                            width:
+                                                SizeConfig.screenWidth * 0.422,
+                                            height:
+                                                SizeConfig.screenWidth * 0.144,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness12),
+                                              border: Border.all(
+                                                color: UiConstants.primaryColor,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: SpinKitThreeBounce(
+                                              color: UiConstants.primaryColor,
+                                              size: SizeConfig.body2,
+                                            ),
+                                          ),
+                                          activeButtonUI: Container(
+                                            width:
+                                                SizeConfig.screenWidth * 0.422,
+                                            height:
+                                                SizeConfig.screenWidth * 0.144,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness12),
+                                              border: Border.all(
+                                                color: UiConstants.primaryColor,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: model.shareWhatsappInProgress
+                                                ? SpinKitThreeBounce(
+                                                    color: UiConstants
+                                                        .primaryColor,
+                                                    size: SizeConfig.body2,
+                                                  )
+                                                : Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                        Assets.whatsapp,
+                                                        width: SizeConfig
+                                                            .padding20,
+                                                        color:
+                                                            Color(0xff25D366),
+                                                      ),
+                                                      SizedBox(
+                                                          width: SizeConfig
+                                                              .padding16),
+                                                      Text(
+                                                        locale.refWhatsapp,
+                                                        style: TextStyles.body2,
+                                                      )
+                                                    ],
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   Expanded(
                                     child: Center(
                                       child: FelloButton(
-                                        onPressedAsync: model.shareWhatsApp,
+                                        onPressedAsync: model.shareLink,
                                         offlineButtonUI: Container(
-                                          width: SizeConfig.screenWidth * 0.422,
+                                          width: Platform.isAndroid
+                                              ? SizeConfig.screenWidth * 0.422
+                                              : SizeConfig.screenWidth,
                                           height:
                                               SizeConfig.screenWidth * 0.144,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(
                                                 SizeConfig.roundness12),
-                                            border: Border.all(
-                                              color: Colors.grey,
-                                              width: 1,
-                                            ),
+                                            color: Colors.grey,
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
                                               SvgPicture.asset(
-                                                Assets.whatsapp,
+                                                Assets.plane,
+                                                color: Colors.white,
                                                 width: SizeConfig.padding20,
-                                                color: Colors.grey,
                                               ),
                                               SizedBox(
                                                   width: SizeConfig.padding16),
                                               Text(
-                                                locale.refWhatsapp,
+                                                locale.refShareLink,
                                                 style: TextStyles.body2
-                                                    .colour(Colors.grey),
+                                                    .colour(Colors.white),
                                               )
                                             ],
                                           ),
                                         ),
-                                        loadingButtonUI: Container(
-                                          width: SizeConfig.screenWidth * 0.422,
-                                          height:
-                                              SizeConfig.screenWidth * 0.144,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                SizeConfig.roundness12),
-                                            border: Border.all(
-                                              color: UiConstants.primaryColor,
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: SpinKitThreeBounce(
-                                            color: UiConstants.primaryColor,
-                                            size: SizeConfig.body2,
-                                          ),
-                                        ),
                                         activeButtonUI: Container(
-                                          width: SizeConfig.screenWidth * 0.422,
+                                          width: Platform.isAndroid
+                                              ? SizeConfig.screenWidth * 0.422
+                                              : SizeConfig.screenWidth,
                                           height:
                                               SizeConfig.screenWidth * 0.144,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(
                                                 SizeConfig.roundness12),
-                                            border: Border.all(
-                                              color: UiConstants.primaryColor,
-                                              width: 1,
-                                            ),
+                                            color: UiConstants.primaryColor,
                                           ),
-                                          child: model.shareWhatsappInProgress
+                                          child: model.shareLinkInProgress
                                               ? SpinKitThreeBounce(
-                                                  color:
-                                                      UiConstants.primaryColor,
+                                                  color: Colors.white,
                                                   size: SizeConfig.body2,
                                                 )
                                               : Row(
@@ -233,112 +314,43 @@ class ReferralDetailsView extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     SvgPicture.asset(
-                                                      Assets.whatsapp,
+                                                      Assets.plane,
+                                                      color: Colors.white,
                                                       width:
                                                           SizeConfig.padding20,
-                                                      color: Color(0xff25D366),
                                                     ),
                                                     SizedBox(
                                                         width: SizeConfig
                                                             .padding16),
                                                     Text(
-                                                      locale.refWhatsapp,
-                                                      style: TextStyles.body2,
+                                                      locale.refShareLink,
+                                                      style: TextStyles.body2
+                                                          .colour(Colors.white),
                                                     )
                                                   ],
                                                 ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                Expanded(
-                                  child: Center(
-                                    child: FelloButton(
-                                      onPressedAsync: model.shareLink,
-                                      offlineButtonUI: Container(
-                                        width: Platform.isAndroid
-                                            ? SizeConfig.screenWidth * 0.422
-                                            : SizeConfig.screenWidth,
-                                        height: SizeConfig.screenWidth * 0.144,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness12),
-                                          color: Colors.grey,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                              Assets.plane,
-                                              color: Colors.white,
-                                              width: SizeConfig.padding20,
-                                            ),
-                                            SizedBox(
-                                                width: SizeConfig.padding16),
-                                            Text(
-                                              locale.refShareLink,
-                                              style: TextStyles.body2
-                                                  .colour(Colors.white),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      activeButtonUI: Container(
-                                        width: Platform.isAndroid
-                                            ? SizeConfig.screenWidth * 0.422
-                                            : SizeConfig.screenWidth,
-                                        height: SizeConfig.screenWidth * 0.144,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness12),
-                                          color: UiConstants.primaryColor,
-                                        ),
-                                        child: model.shareLinkInProgress
-                                            ? SpinKitThreeBounce(
-                                                color: Colors.white,
-                                                size: SizeConfig.body2,
-                                              )
-                                            : Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    Assets.plane,
-                                                    color: Colors.white,
-                                                    width: SizeConfig.padding20,
-                                                  ),
-                                                  SizedBox(
-                                                      width:
-                                                          SizeConfig.padding16),
-                                                  Text(
-                                                    locale.refShareLink,
-                                                    style: TextStyles.body2
-                                                        .colour(Colors.white),
-                                                  )
-                                                ],
-                                              ),
-                                      ),
-                                      loadingButtonUI: Container(
-                                        width: Platform.isAndroid
-                                            ? SizeConfig.screenWidth * 0.422
-                                            : SizeConfig.screenWidth,
-                                        height: SizeConfig.screenWidth * 0.144,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness12),
-                                          color: UiConstants.primaryColor,
-                                        ),
-                                        child: SpinKitThreeBounce(
-                                          color: Colors.white,
-                                          size: SizeConfig.body2,
+                                        loadingButtonUI: Container(
+                                          width: Platform.isAndroid
+                                              ? SizeConfig.screenWidth * 0.422
+                                              : SizeConfig.screenWidth,
+                                          height:
+                                              SizeConfig.screenWidth * 0.144,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                SizeConfig.roundness12),
+                                            color: UiConstants.primaryColor,
+                                          ),
+                                          child: SpinKitThreeBounce(
+                                            color: Colors.white,
+                                            size: SizeConfig.body2,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             SizedBox(height: SizeConfig.padding32),
                             Text(
                               locale.refHIW,
@@ -355,7 +367,7 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             InfoTile(
                               title:
-                                  "Once your friend makes their first investment of ₹${model.unlock_referral_bonus}, you receive a new Golden Ticket.",
+                                  "Once your friend makes their first investment of ₹${model.unlockReferralBonus}, you receive a new Golden Ticket.",
                               leadingAsset: Assets.tickets,
                             ),
                             SizedBox(height: SizeConfig.padding8),

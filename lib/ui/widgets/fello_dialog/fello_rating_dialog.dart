@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,11 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class FelloRatingDialog extends StatefulWidget {
-  final int dailogShowCount;
-  FelloRatingDialog({@required this.dailogShowCount});
   static const MAX_DAILOG_SHOW_COUNT = 3;
 
   @override
@@ -29,6 +26,7 @@ class FelloRatingDialog extends StatefulWidget {
 class _FelloRatingDialogState extends State<FelloRatingDialog> {
   double rating = 0;
   final CustomLogger logger = locator<CustomLogger>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   bool showEmptyRatingError = false;
   bool showButtons = true;
 
@@ -128,11 +126,15 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                             return;
                           }
                           showLoading(true);
+                          _analyticsService.track(
+                              eventName: "App Rating",
+                              properties: {"rating": rating});
                           try {
-                            await CacheManager.writeCache(
-                                key: CacheManager.CACHE_RATING_IS_RATED,
-                                value: FcmCommands.COMMAND_USER_PRIZE_WIN,
-                                type: CacheType.string);
+                            if (rating > 3)
+                              PreferenceHelper.setBool(
+                                PreferenceHelper.CACHE_RATING_IS_RATED,
+                                true,
+                              );
                           } catch (e) {
                             showLoading(false);
                             logger.e(e.toString());
@@ -175,22 +177,12 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
                         child: Text(
-                          widget.dailogShowCount >
-                                  FelloRatingDialog.MAX_DAILOG_SHOW_COUNT
-                              ? "Don't ask again"
-                              : "Maybe later",
+                          "Maybe later",
                           style: TextStyles.body3.bold,
                         ),
-                        color: widget.dailogShowCount >
-                                FelloRatingDialog.MAX_DAILOG_SHOW_COUNT
-                            ? UiConstants.tertiarySolid
-                            : Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.5),
                         height: SizeConfig.padding54,
                         onPressed: () async {
-                          await CacheManager.writeCache(
-                              key: CacheManager.CACHE_RATING_DIALOG_OPEN_COUNT,
-                              value: (widget.dailogShowCount + 1).toString(),
-                              type: CacheType.string);
                           AppState.backButtonDispatcher.didPopRoute();
                         },
                       ),

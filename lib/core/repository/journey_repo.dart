@@ -165,7 +165,7 @@ class JourneyRepository {
     );
 
     final responseData = response["data"];
-    dev.log("Journey Response Data: $responseData");
+    // dev.log("Journey Response Data: $responseData");
     // if (responseData['status'] == true) {
     //   responseData["campaigns"].forEach((e) {
     //     events.add(EventModel.fromMap(e));
@@ -208,6 +208,25 @@ class JourneyRepository {
     } catch (e) {
       _logger.e(e.toString());
       return false;
+    }
+  }
+
+  Future<int> getUserMlIndex() async {
+    try {
+      final String _uid = _userService.baseUser.uid;
+      final _token = await _getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.journeyStats(_uid),
+        token: _token,
+        cBaseUrl: "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev",
+      );
+
+      final responseData = response["data"];
+      _logger.d("Response from get Journey stats: $response");
+      return responseData["mlIndex"];
+    } catch (e) {
+      _logger.e(e.toString());
+      return 1;
     }
   }
 

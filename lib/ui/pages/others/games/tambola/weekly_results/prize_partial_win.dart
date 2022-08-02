@@ -20,7 +20,7 @@ class _PrizePWinState extends State<PrizePWin> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
           slothOpacity = 1;

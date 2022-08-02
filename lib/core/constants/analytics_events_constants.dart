@@ -6,6 +6,7 @@ class AnalyticsEvents {
   static const signupName = "Enter gaming name @signup";
   static const signupDemo = "Save, play, win demo track";
   static const signupComplete = "Completed Signup";
+  static const termsAndConditions = "Terms And Conditions";
 
   // save section
   static const saveSection = "Save Section";
@@ -38,6 +39,8 @@ class AnalyticsEvents {
   static const candyFiestaEnds = "Candy Fiesta ends";
   static const candyFiestaStarts = "Candy Fiesta starts";
   static const footBallEnds = "Foot Ball ends";
+  static const cricketHeroGameStarts = "Cricket Hero game starts";
+  static const cricketHeroGameEnds = "Cricket Hero game ends";
   static const gamePlayStarted = "Game started";
 
   // profile section

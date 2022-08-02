@@ -179,23 +179,24 @@ class AugmontBuyCard extends StatelessWidget {
                         )
                       : Container(
                           child: InkWell(
-                              onTap: () => model.showOfferModal(model),
-                              child: RichText(
-                                text: new TextSpan(
-                                  children: [
-                                    new TextSpan(
-                                        text: 'Apply a',
-                                        style: TextStyles.body3
-                                            .colour(UiConstants.felloBlue)),
-                                    new TextSpan(
-                                      text: ' Coupon',
+                            onTap: () => model.showOfferModal(model),
+                            child: RichText(
+                              text: new TextSpan(
+                                children: [
+                                  new TextSpan(
+                                      text: 'Apply a',
                                       style: TextStyles.body3
-                                          .colour(UiConstants.felloBlue)
-                                          .bold,
-                                    ),
-                                  ],
-                                ),
-                              )),
+                                          .colour(UiConstants.felloBlue)),
+                                  new TextSpan(
+                                    text: ' Coupon',
+                                    style: TextStyles.body3
+                                        .colour(UiConstants.felloBlue)
+                                        .bold,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         )),
             ),
           SizedBox(height: SizeConfig.padding12),

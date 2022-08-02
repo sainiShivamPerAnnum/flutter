@@ -27,6 +27,7 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -80,7 +81,7 @@ Future mainInit() async {
           measurementId: "G-7GGFTPBVCX"),
     );
   } catch (e) {
-    print('$e');
+    print('Firebase initialisation error: $e');
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
 }
