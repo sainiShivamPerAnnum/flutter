@@ -240,7 +240,7 @@ class WebHomeView extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding16,
+                                height: SizeConfig.padding80 * 1.5,
                               ),
                             ],
                           ),
