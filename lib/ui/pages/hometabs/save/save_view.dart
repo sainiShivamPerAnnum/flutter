@@ -25,63 +25,71 @@ class Save extends StatelessWidget {
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) => model.init(null),
       builder: (ctx, model, child) {
-        return Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding32),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  SizedBox(height: SizeConfig.screenWidth * 0.12),
-                  Stack(
-                    children: [
-                      if (model.focusCoupon != null)
-                        FocusCouponClip(model: model),
-                      Column(
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.decelerate,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            width: SizeConfig.screenWidth / 2,
-                            height: model.appliedCoupon == null &&
-                                    model.showCoupons == true &&
-                                    model.focusCoupon != null
-                                ? SizeConfig.screenWidth * 0.12
-                                : 0,
-                          ),
-                          AugmontBuyCard(model: model),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins * 2,
-                        vertical: SizeConfig.padding20),
-                    child: CurrentPriceWidget(
-                      fetchGoldRates: model.fetchGoldRates,
-                      goldprice: model.goldRates != null
-                          ? model.goldRates.goldBuyPrice
-                          : 0.0,
-                      isFetching: model.isGoldRateFetching,
-                      mini: true,
-                    ),
-                  ),
-                  AutosaveCard(),
-                  SizedBox(height: SizeConfig.navBarHeight * 2),
-                ],
-              ),
-            ),
-            GoldBalanceContainer(
-              model: model,
-              showNavIcon: true,
-            ),
-          ],
+        return Center(
+          child: Text(
+            "Save View in Construction",
+            style: TextStyles.rajdhaniEB.body0.colour(Colors.white),
+          ),
         );
+        // SafeArea(
+        //   child: Stack(
+        //     children: [
+        //       Container(
+        //         margin: EdgeInsets.only(top: SizeConfig.padding32),
+        //         child: ListView(
+        //           padding: EdgeInsets.zero,
+        //           children: [
+        //             SizedBox(height: SizeConfig.screenWidth * 0.12),
+        //             Stack(
+        //               children: [
+        //                 if (model.focusCoupon != null)
+        //                   FocusCouponClip(model: model),
+        //                 Column(
+        //                   children: [
+        //                     AnimatedContainer(
+        //                       duration: Duration(milliseconds: 300),
+        //                       curve: Curves.decelerate,
+        //                       margin: EdgeInsets.symmetric(
+        //                           horizontal: SizeConfig.pageHorizontalMargins),
+        //                       width: SizeConfig.screenWidth / 2,
+        //                       height: model.appliedCoupon == null &&
+        //                               model.showCoupons == true &&
+        //                               model.focusCoupon != null
+        //                           ? SizeConfig.screenWidth * 0.12
+        //                           : 0,
+        //                     ),
+        //                     AugmontBuyCard(model: model),
+        //                   ],
+        //                 ),
+        //               ],
+        //             ),
+        //             Container(
+        //               alignment: Alignment.center,
+        //               width: SizeConfig.screenWidth,
+        //               margin: EdgeInsets.symmetric(
+        //                   horizontal: SizeConfig.pageHorizontalMargins * 2,
+        //                   vertical: SizeConfig.padding20),
+        //               child: CurrentPriceWidget(
+        //                 fetchGoldRates: model.fetchGoldRates,
+        //                 goldprice: model.goldRates != null
+        //                     ? model.goldRates.goldBuyPrice
+        //                     : 0.0,
+        //                 isFetching: model.isGoldRateFetching,
+        //                 mini: true,
+        //               ),
+        //             ),
+        //             AutosaveCard(),
+        //             SizedBox(height: SizeConfig.navBarHeight * 2),
+        //           ],
+        //         ),
+        //       ),
+        //       GoldBalanceContainer(
+        //         model: model,
+        //         showNavIcon: true,
+        //       ),
+        //     ],
+        //   ),
+        // );
       },
     );
   }
