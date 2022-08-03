@@ -38,6 +38,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -132,14 +133,18 @@ class RootViewModel extends BaseModel {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
       case 0:
-        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        print('journey triggered');
         break;
       case 1:
         _analyticsService.track(eventName: AnalyticsEvents.playSection);
         break;
       case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 3:
         _analyticsService.track(eventName: AnalyticsEvents.winSection);
         break;
+
       default:
     }
     _userService.buyFieldFocusNode.unfocus();

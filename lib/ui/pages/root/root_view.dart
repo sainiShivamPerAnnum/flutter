@@ -30,7 +30,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Play(), JourneyView(), Save()];
+  final pages = [JourneyView(), Play(), Save(), Win()];
 
   @override
   Widget build(BuildContext context) {
@@ -268,26 +268,30 @@ class BottomNavBar extends StatelessWidget {
           height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),
             currentIndex: AppState.delegate.appState.getCurrentTabIndex,
             items: [
-              NavBarItemData(
-                locale.navBarPlay,
-                Assets.navPlay,
-                SizeConfig.screenWidth * 0.27,
+              NavBarItemDataV2(
+                'Journey',
+                Assets.navJourneyActive,
+                Assets.navJourneyInactive,
               ),
-              NavBarItemData(
-                'Home',
-                Assets.navWin,
-                SizeConfig.screenWidth * 0.27,
+              NavBarItemDataV2(
+                'Play',
+                Assets.navPlayActive,
+                Assets.navPlayInactive,
               ),
-              NavBarItemData(
-                locale.navBarFinance,
-                Assets.navSave,
-                SizeConfig.screenWidth * 0.27,
+              NavBarItemDataV2(
+                'Save',
+                Assets.navSaveActive,
+                Assets.navSaveInactive,
+              ),
+              NavBarItemDataV2(
+                'Win',
+                Assets.navWinActive,
+                Assets.navWinInactive,
               ),
             ],
           ),
