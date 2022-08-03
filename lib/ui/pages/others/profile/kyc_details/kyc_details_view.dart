@@ -38,23 +38,19 @@ class KYCDetailsView extends StatelessWidget {
         model.init();
       },
       builder: (ctx, model, child) => Scaffold(
-        backgroundColor: UiConstants.primaryColor,
+        backgroundColor: UiConstants.backgroundColor,
         body: HomeBackground(
           child: Column(
             children: [
-              FelloAppBar(
-                leading: FelloAppBarBackButton(),
-                title: locale.dPanNkyc,
+              FelloAppBarV2(
+                leading: FelloAppBarBackButtonV2(),
+                title: 'KYC & PAN',
               ),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    ),
-                    color: Colors.white,
+                    color: UiConstants.kBackgroundColor,
                   ),
                   child: model.state == ViewState.Busy
                       ? ListLoader()
@@ -68,7 +64,9 @@ class KYCDetailsView extends StatelessWidget {
                               children: [
                                 Text(
                                   locale.kycNameLabel,
-                                  style: TextStyles.body3,
+                                  style: TextStyles.sourceSansM.copyWith(
+                                    color: UiConstants.kTextColor2,
+                                  ),
                                 ),
                                 SizedBox(height: 6),
                                 TextFormField(
@@ -80,6 +78,20 @@ class KYCDetailsView extends StatelessWidget {
                                         RegExp(r'[A-Z ]'))
                                   ],
                                   enabled: model.inEditMode,
+                                  decoration: InputDecoration(
+                                    fillColor: UiConstants.kTextFieldColor,
+                                    // focusedBorder: OutlineInputBorder(
+                                    //   borderRadius: BorderRadius.all(
+                                    //     Radius.circular(5.0),
+                                    //   ),
+                                    // ),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                    filled: true,
+                                  ),
                                   controller: model.nameController,
                                   keyboardType: TextInputType.name,
                                 ),
@@ -91,7 +103,9 @@ class KYCDetailsView extends StatelessWidget {
                               children: [
                                 Text(
                                   locale.pkPanLabel,
-                                  style: TextStyles.body3,
+                                  style: TextStyles.sourceSansM.copyWith(
+                                    color: UiConstants.kTextColor2,
+                                  ),
                                 ),
                                 SizedBox(height: 6),
                                 TextFormField(
@@ -105,6 +119,19 @@ class KYCDetailsView extends StatelessWidget {
                                         RegExp(r'^0+(?!$)')),
                                     LengthLimitingTextInputFormatter(10)
                                   ],
+                                  decoration: InputDecoration(
+                                    fillColor: UiConstants.kTextFieldColor,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide.none),
+                                    // focusedBorder: InputBorder.none,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                    filled: true,
+                                  ),
                                   textCapitalization:
                                       TextCapitalization.characters,
                                   keyboardType: model.panTextInputType,
