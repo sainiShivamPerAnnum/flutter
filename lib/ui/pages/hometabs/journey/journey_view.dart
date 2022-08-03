@@ -132,15 +132,7 @@ class _JourneyViewState extends State<JourneyView>
                           child: Stack(
                             children: [
                               Background(model: model),
-                              // ActiveMilestoneBackgroundGlow(
-                              //   radius: SizeConfig.screenWidth * 0.5,
-                              //   model: model,
-                              //   asset: model.journeyPathItemsList.firstWhere(
-                              //       (element) =>
-                              //           element.mlIndex ==
-                              //               model.avatarActiveMilestoneLevel &&
-                              //           element.isBase),
-                              // ),
+                              ActiveMilestoneBackgroundGlow(),
                               JourneyAssetPath(model: model),
                               if (model.avatarPath != null)
                                 Positioned(
@@ -153,26 +145,16 @@ class _JourneyViewState extends State<JourneyView>
                                         model.avatarPath, Colors.transparent),
                                   ),
                                 ),
-                              // ActiveMilestoneBaseGlow(
-                              //   model: model,
-                              //   base: model.journeyPathItemsList.firstWhere(
-                              //       (element) =>
-                              //           element.mlIndex ==
-                              //               model.avatarActiveMilestoneLevel &&
-                              //           element.isBase),
-                              //   color: UiConstants.primaryColor,
-                              // ),
+                              ActiveMilestoneBaseGlow(),
                               Milestones(model: model),
-                              // ActiveMilestoneFrontGlow(
-                              //   milestone: model.currentMilestoneList
-                              //       .firstWhere((element) =>
-                              //           element.index ==
-                              //           model.avatarActiveMilestoneLevel),
-                              //   model: model,
-                              // ),
+                              // ActiveMilestoneFrontGlow(),
+                              MilestoneChecks(),
                               Avatar(
                                 model: model,
                               ),
+                              LevelBlurView(
+                                model: model,
+                              )
                             ],
                           ),
                         ),
@@ -229,6 +211,113 @@ class _JourneyViewState extends State<JourneyView>
   }
 }
 
+class LevelBlurView extends StatelessWidget {
+  final JourneyPageViewModel model;
+
+  LevelBlurView({this.model});
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          bottom: (model.pageHeight * (2 - 1) + //pagno instead of 2
+              model.pageHeight * 0.443),
+          child: BlurFilter(
+            child: Container(
+              height: model.pageHeight * (1 - 0.443),
+              width: model.pageWidth,
+              alignment: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: (model.pageHeight * (2 - 1) + //pagno instead of 2
+                  model.pageHeight * 0.443) -
+              SizeConfig.avatarRadius,
+          child: Container(
+            width: model.pageWidth,
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomPaint(
+                    painter: DottedLinePainter(),
+                  ),
+                ),
+                CircleAvatar(
+                  radius: SizeConfig.avatarRadius,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.lock,
+                      size: SizeConfig.iconSize0, color: Colors.black),
+                ),
+                Expanded(
+                  child: CustomPaint(
+                    painter: DottedLinePainter(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class DottedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = new Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1
+      ..isAntiAlias = false
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.square;
+    final path = Path();
+    path.moveTo(0, size.height / 2);
+    path.lineTo(size.width, size.height / 2);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class MilestoneChecks extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.AvatarPosition],
+        builder: (context, model, properties) {
+          return SizedBox(
+            width: model.pageWidth,
+            height: model.pageHeight * 2,
+            child: Stack(
+              children: List.generate(model.avatarRemoteMlIndex - 1, (i) {
+                // if (model.currentMilestoneList.length <
+                //     model.avatarRemoteMlIndex)
+                return Positioned(
+                    left: model.pageWidth * model.currentMilestoneList[i].x,
+                    bottom: (model.pageHeight *
+                                (model.currentMilestoneList[i].page - 1) +
+                            model.pageHeight *
+                                model.currentMilestoneList[i].y) -
+                        model.pageHeight * 0.02,
+                    child: MileStoneCheck(
+                        model: model,
+                        milestone: model.currentMilestoneList[i]));
+                // else
+                //   return SizedBox();
+              }),
+            ),
+          );
+        });
+  }
+}
+
 class Avatar extends StatelessWidget {
   final JourneyPageViewModel model;
   const Avatar({Key key, this.model}) : super(key: key);
@@ -276,4 +365,32 @@ class PathPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class BlurFilter extends StatelessWidget {
+  final Widget child;
+  final double sigmaX;
+  final double sigmaY;
+  BlurFilter({this.child, this.sigmaX = 10.0, this.sigmaY = 10.0});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        child,
+        ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: sigmaX,
+              sigmaY: sigmaY,
+            ),
+            child: Opacity(
+              opacity: 0.01,
+              child: child,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

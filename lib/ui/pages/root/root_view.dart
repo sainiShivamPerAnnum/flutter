@@ -96,11 +96,20 @@ class Root extends StatelessWidget {
                     // color: Colors.red,
                   ),
                 ),
-                // actions: [
-                //   FelloCoinBar(),
-                //   SizedBox(width: 16),
-                //   NotificationButton(),
-                // ],
+                actions: [
+                  CircleAvatar(
+                    backgroundColor: Colors.black,
+                    child: IconButton(
+                      color: Colors.white,
+                      icon: model.isUploading
+                          ? CircularProgressIndicator(color: Colors.black)
+                          : Icon(Icons.download_rounded),
+                      onPressed: () {
+                        model.uploadMilestones();
+                      },
+                    ),
+                  )
+                ],
               ),
               // Positioned(
               //   bottom: 0,
@@ -268,7 +277,6 @@ class BottomNavBar extends StatelessWidget {
           height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
@@ -13,6 +14,8 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/modal_router.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/journey_page_data.dart';
@@ -241,7 +244,7 @@ class JourneyPageViewModel extends BaseModel {
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       // isBarrierDismissable: true,
-      // enableDrag: true,
+      enableDrag: false,
       useRootNavigator: true,
       context: context,
       builder: (ctx) {
@@ -260,37 +263,69 @@ class JourneyPageViewModel extends BaseModel {
                     topLeft: Radius.circular(SizeConfig.roundness24)),
                 color: Colors.black54),
             padding: EdgeInsets.only(top: SizeConfig.pageHorizontalMargins),
-            child: Column(children: [
-              ListTile(
-                onTap: () {
-                  Haptic.vibrate();
-                  AppState.backButtonDispatcher.didPopRoute();
-                  log(milestone.actionUri);
-                  AppState.delegate.parseRoute(Uri.parse(milestone.actionUri));
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.black,
-                  radius: SizeConfig.avatarRadius * 2,
-                  child: SvgPicture.asset(
-                    milestone.asset.uri,
-                    height: SizeConfig.avatarRadius * 2,
-                    width: SizeConfig.avatarRadius * 2,
-                    fit: BoxFit.contain,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    // tileColor: Colors.grey.withOpacity(0.5),
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.backButtonDispatcher.didPopRoute();
+                      log(milestone.actionUri);
+                      AppState.delegate
+                          .parseRoute(Uri.parse(milestone.actionUri));
+                    },
+                    leading: CircleAvatar(
+                        backgroundColor: Colors.black,
+                        radius: SizeConfig.avatarRadius * 2,
+                        child: SourceAdaptiveAssetView(
+                          asset: milestone.asset,
+                          height: SizeConfig.avatarRadius * 1.6,
+                          width: SizeConfig.avatarRadius * 1.6,
+                        )),
+                    title: Text(
+                      milestone.steps.first.title,
+                      style: GoogleFonts.rajdhani(
+                          fontSize: SizeConfig.title3,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      milestone.steps.first.subtitle,
+                      style: TextStyles.body3.colour(Colors.white),
+                    ),
                   ),
-                ),
-                title: Text(
-                  milestone.steps.first.title,
-                  style: GoogleFonts.rajdhani(
-                      fontSize: SizeConfig.title3,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
-                ),
-                subtitle: Text(
-                  milestone.steps.first.subtitle,
-                  style: TextStyles.body3.colour(Colors.white),
-                ),
-              )
-            ]),
+                  // CircleAvatar(
+                  //   radius: SizeConfig.avatarRadius * 2,
+                  //   child: SvgPicture.asset(
+                  //     'assets/temp/chevron_right.svg',
+                  //     width: SizeConfig.iconSize0,
+                  //     height: SizeConfig.iconSize0,
+                  //   ),
+                  // ),
+                  Spacer(),
+                  AppPositiveBtn(
+                      btnText: "Let's Go",
+                      onPressed: () {
+                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.delegate
+                            .parseRoute(Uri.parse(milestone.actionUri));
+                      },
+                      width: SizeConfig.screenWidth * 0.8),
+                  SizedBox(height: SizeConfig.padding16),
+                  AppNegativeBtn(
+                      btnText: "SKIP",
+                      onPressed: () {
+                        AppState.backButtonDispatcher.didPopRoute();
+                        BaseUtil.showPositiveAlert("You Skipped this level",
+                            "Let's see what's on the next level");
+                      },
+                      width: SizeConfig.screenWidth * 0.8),
+                  SizedBox(
+                      height: SizeConfig.viewInsets.bottom +
+                          (SizeConfig.padding40 - SizeConfig.viewInsets.bottom)
+                              .abs())
+                ]),
           ),
         );
       },

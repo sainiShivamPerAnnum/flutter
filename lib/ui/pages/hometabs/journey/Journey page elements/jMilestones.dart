@@ -42,30 +42,31 @@ class Milestones extends StatelessWidget {
       height: model.pageHeight * 2,
       child: Stack(
         children: List.generate(model.currentMilestoneList.length, (i) {
-          log("Milestone: ${model.currentMilestoneList[i].actionUri}");
-          if (model.currentMilestoneList[i].index <
-              model.avatarActiveMilestoneLevel)
+          log("Milestone: ${model.currentMilestoneList[i].actionUri} || current level: ${model.avatarActiveMilestoneLevel}");
+          if (model.currentMilestoneList[i].index ==
+              model.avatarActiveMilestoneLevel) {
+            switch (model.currentMilestoneList[i].animType) {
+              case "ROTATE":
+                return ActiveRotatingMilestone(
+                  milestone: model.currentMilestoneList[i],
+                  model: model,
+                );
+              case "FLOAT":
+                return ActiveFloatingMilestone(
+                  milestone: model.currentMilestoneList[i],
+                  model: model,
+                );
+              default:
+                return StaticMilestone(
+                  milestone: model.currentMilestoneList[i],
+                  model: model,
+                );
+            }
+          } else
             return StaticMilestone(
               milestone: model.currentMilestoneList[i],
               model: model,
             );
-          switch (model.currentMilestoneList[i].animType) {
-            case "ROTATE":
-              return ActiveRotatingMilestone(
-                milestone: model.currentMilestoneList[i],
-                model: model,
-              );
-            case "FLOAT":
-              return ActiveFloatingMilestone(
-                milestone: model.currentMilestoneList[i],
-                model: model,
-              );
-            default:
-              return StaticMilestone(
-                milestone: model.currentMilestoneList[i],
-                model: model,
-              );
-          }
         }),
       ),
     );
@@ -295,6 +296,7 @@ class StaticMilestone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("Current level: ${model.avatarActiveMilestoneLevel}");
     return Stack(
       children: [
         if (milestone.shadow != null)
@@ -338,13 +340,6 @@ class StaticMilestone extends StatelessWidget {
             ),
           ),
         ),
-        if (milestone.index < model.avatarActiveMilestoneLevel)
-          Positioned(
-              left: model.pageWidth * milestone.x,
-              bottom: (model.pageHeight * (milestone.page - 1) +
-                      model.pageHeight * milestone.y) -
-                  model.pageHeight * 0.02,
-              child: MileStoneCheck(model: model, milestone: milestone))
       ],
     );
   }

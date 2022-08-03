@@ -210,6 +210,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         .lastWhere((path) => path.mlIndex == avatarCachedMlIndex ?? 0);
     avatarPosition = Offset(pageWidth * path.coords[0],
         (pages.length - path.page) * pageHeight + pageHeight * path.coords[1]);
+    baseGlow = 1;
   }
 
   int checkForGameLevelChange() {

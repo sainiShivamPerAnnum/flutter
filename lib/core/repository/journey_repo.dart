@@ -171,11 +171,17 @@ class JourneyRepository {
     //     events.add(EventModel.fromMap(e));
     //   });
     // }
-    responseData["pages"]
-        .forEach((page) => journeyPages.add(JourneyPage.fromMap(page)));
-    journeyPages.forEach((page) {
-      page.paths.forEach((path) {});
-    });
+    int startPage = responseData["startPage"];
+    int endPage = responseData["endPage"];
+    for (int i = startPage, k = 0; i <= endPage; i++, k++) {
+      List<dynamic> page = responseData["pages"];
+      journeyPages.add(JourneyPage.fromMap(page[k], i));
+    }
+    // responseData["pages"]
+    //     .forEach((page) => journeyPages.add(JourneyPage.fromMap(page)));
+    // journeyPages.forEach((page) {
+    //   page.paths.forEach((path) {});
+    // });
 
     return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
     // } catch (e) {
