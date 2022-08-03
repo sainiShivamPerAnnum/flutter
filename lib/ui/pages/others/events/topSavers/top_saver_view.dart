@@ -11,6 +11,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -49,122 +50,143 @@ class TopSaverView extends StatelessWidget {
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: UiConstants.primaryColor,
-          body: HomeBackground(
-            child: Column(
-              children: [
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  title: model.appbarTitle,
-                ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.padding40),
-                            topRight: Radius.circular(SizeConfig.padding40),
-                          ),
-                          color: UiConstants.scaffoldColor,
-                        ),
-                        width: SizeConfig.screenWidth,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.padding40),
-                            topRight: Radius.circular(SizeConfig.padding40),
-                          ),
-                          child: model.state == ViewState.Busy
-                              ? Center(
-                                  child: ListLoader(),
-                                )
-                              : ListView(
-                                  physics: ClampingScrollPhysics(),
-                                  padding: EdgeInsets.zero,
-                                  children: [
-                                    Thumbnail(event: model.event),
-                                    if (model.showStandingsAndWinners)
-                                      EventLeaderboard(model: model),
-                                    if (model.showStandingsAndWinners)
-                                      InstructionsTab(event: model.event),
-                                    if (model.showStandingsAndWinners)
-                                      WinnersBoard(model: model),
-                                    if (!model.showStandingsAndWinners)
-                                      WinnersMarqueeStrip(
-                                        type: eventType,
-                                        winners: model.event.winners,
-                                      ),
-                                    if (!model.showStandingsAndWinners)
-                                      InstructionBoard(model: model),
-                                    if (!model.showStandingsAndWinners)
-                                      SizedBox(
-                                        height: SizeConfig.navBarHeight,
-                                      )
-                                  ],
-                                ),
-                        ),
-                      ),
-                      if (!model.showStandingsAndWinners)
-                        Positioned(
-                          bottom: 0,
-                          child: Column(
-                            children: [
-                              if (model.event.type == "NEW_FELLO")
-                                Container(
-                                  width: SizeConfig.screenWidth,
-                                  padding: EdgeInsets.only(
-                                    top: SizeConfig.padding16,
-                                    left: SizeConfig.pageHorizontalMargins,
-                                    right: SizeConfig.pageHorizontalMargins,
-                                  ),
-                                  margin: EdgeInsets.only(
-                                      bottom: SizeConfig.padding12),
-                                  child: FelloButtonLg(
-                                    color: Color(0xff495db2),
-                                    child: Text(
-                                      "Checkout new version",
-                                      style: TextStyles.body2.bold
-                                          .colour(Colors.white),
-                                    ),
-                                    onPressed: () async {
-                                      String url = model.event.url;
-                                      if (await canLaunch(url)) {
-                                        launch(url);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                child: FelloButtonLg(
-                                  child: Text(
-                                    "Share Feedback",
-                                    style: TextStyles.body2.bold
-                                        .colour(Colors.white),
-                                  ),
-                                  onPressed: () async {
-                                    String url = model.event.formUrl;
-                                    if (await canLaunch(url)) {
-                                      launch(url);
-                                    }
-                                  },
-                                ),
+          body: Stack(
+            children: [
+              HomeBackground(
+                child: Column(
+                  children: [
+                    FelloAppBar(
+                      leading: FelloAppBarBackButton(),
+                      title: model.appbarTitle,
+                    ),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(SizeConfig.padding40),
+                                topRight: Radius.circular(SizeConfig.padding40),
                               ),
-                              SizedBox(
-                                height: SizeConfig.viewInsets.bottom != 0
-                                    ? 0
-                                    : SizeConfig.pageHorizontalMargins,
-                              )
-                            ],
+                              color: UiConstants.scaffoldColor,
+                            ),
+                            width: SizeConfig.screenWidth,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(SizeConfig.padding40),
+                                topRight: Radius.circular(SizeConfig.padding40),
+                              ),
+                              child: model.state == ViewState.Busy
+                                  ? Center(
+                                      child: ListLoader(),
+                                    )
+                                  : ListView(
+                                      physics: ClampingScrollPhysics(),
+                                      padding: EdgeInsets.zero,
+                                      children: [
+                                        Thumbnail(event: model.event),
+                                        if (model.showStandingsAndWinners)
+                                          EventLeaderboard(model: model),
+                                        if (model.showStandingsAndWinners)
+                                          InstructionsTab(event: model.event),
+                                        if (model.showStandingsAndWinners)
+                                          WinnersBoard(model: model),
+                                        if (!model.showStandingsAndWinners)
+                                          WinnersMarqueeStrip(
+                                            type: eventType,
+                                            winners: model.event.winners,
+                                          ),
+                                        if (!model.showStandingsAndWinners)
+                                          InstructionBoard(model: model),
+                                        if (!model.showStandingsAndWinners)
+                                          SizedBox(
+                                            height: SizeConfig.navBarHeight,
+                                          )
+                                      ],
+                                    ),
+                            ),
                           ),
-                        )
-                    ],
-                  ),
+                          if (!model.showStandingsAndWinners)
+                            Positioned(
+                              bottom: 0,
+                              child: Column(
+                                children: [
+                                  if (model.event.type == "NEW_FELLO")
+                                    Container(
+                                      width: SizeConfig.screenWidth,
+                                      padding: EdgeInsets.only(
+                                        top: SizeConfig.padding16,
+                                        left: SizeConfig.pageHorizontalMargins,
+                                        right: SizeConfig.pageHorizontalMargins,
+                                      ),
+                                      margin: EdgeInsets.only(
+                                          bottom: SizeConfig.padding12),
+                                      child: FelloButtonLg(
+                                        color: Color(0xff495db2),
+                                        child: Text(
+                                          "Checkout new version",
+                                          style: TextStyles.body2.bold
+                                              .colour(Colors.white),
+                                        ),
+                                        onPressed: () async {
+                                          String url = model.event.url;
+                                          if (await canLaunch(url)) {
+                                            launch(url);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  Container(
+                                    width: SizeConfig.screenWidth,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.pageHorizontalMargins),
+                                    child: FelloButtonLg(
+                                      child: Text(
+                                        "Share Feedback",
+                                        style: TextStyles.body2.bold
+                                            .colour(Colors.white),
+                                      ),
+                                      onPressed: () async {
+                                        String url = model.event.formUrl;
+                                        if (await canLaunch(url)) {
+                                          launch(url);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.viewInsets.bottom != 0
+                                        ? 0
+                                        : SizeConfig.pageHorizontalMargins,
+                                  )
+                                ],
+                              ),
+                            )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              //Just the test buttonfor taking to the new screen
+              Positioned(
+                top: 20,
+                left: 100,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TopSaverViewNew(
+                              eventType: eventType,
+                              isGameRedirected: isGameRedirected,
+                            ),
+                          ));
+                    },
+                    child: child),
+              ),
+            ],
           ),
         );
       },
