@@ -36,6 +36,7 @@ class TopSaverViewModel extends BaseModel {
   String saverFreq = "daily";
 
   int _userRank = 0;
+  double _userAmount = 0;
   String winnerTitle = "Past Winners";
   EventModel event;
   bool showStandingsAndWinners = true;
@@ -58,6 +59,13 @@ class TopSaverViewModel extends BaseModel {
 
   set userRank(value) {
     this._userRank = value;
+    notifyListeners();
+  }
+
+  get userAmount => this._userAmount;
+
+  set userAmount(value) {
+    this._userAmount = value;
     notifyListeners();
   }
 
@@ -214,9 +222,12 @@ class TopSaverViewModel extends BaseModel {
               (e) => e.userid == _userService.baseUser.uid,
               orElse: () => null) !=
           null) {
+        final ScoreBoard curentUserStat = currentParticipants
+            .firstWhere((e) => e.userid == _userService.baseUser.uid);
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
+        _userAmount = curentUserStat.score * 5000; //TODO
       }
     }
   }

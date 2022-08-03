@@ -38,31 +38,10 @@ import '../../../../service_elements/user_service/profile_image.dart';
 //       (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
 // }
 
-//Method that sets the title according to the campaign type
-String setTitle(String campaignType) {
-  switch (campaignType) {
-    case Constants.HS_DAILY_SAVER:
-      return "Daily Challange";
-      break;
-    case Constants.HS_WEEKLY_SAVER:
-      return "Weekly Challange";
-      break;
-    case Constants.HS_MONTHLY_SAVER:
-      return "Monthly Challange";
-      break;
-    case Constants.BUG_BOUNTY:
-      return "Bug bounty Challange";
-      break;
-    case Constants.NEW_FELLO_UI:
-      return "Fello UI Challange";
-      break;
-  }
-}
-
-class TopSaverViewNew extends StatelessWidget {
+class CampaignView extends StatelessWidget {
   final String eventType;
   final bool isGameRedirected;
-  TopSaverViewNew({this.eventType, this.isGameRedirected = false});
+  CampaignView({this.eventType, this.isGameRedirected = false});
   @override
   Widget build(BuildContext context) {
     return BaseView<TopSaverViewModel>(
@@ -71,23 +50,21 @@ class TopSaverViewNew extends StatelessWidget {
       },
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: UiConstants.accentColor,
+          backgroundColor: UiConstants.kBackgroundColor,
           body: CustomScrollView(
             physics: BouncingScrollPhysics(),
             slivers: [
               //The App Bar
               SliverAppBar(
-                backgroundColor: Color(0xff495DB2), //TODO
+                backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
                 leading: Icon(Icons.arrow_back_ios),
-
-                expandedHeight:
-                    200, //The expandable height for the app bar //TODO
+                expandedHeight: SizeConfig.screenWidth * 0.5,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: [
                       //Background image
-                      Image.asset(
-                        "assets/images/sliver_appbar_bg.png",
+                      SvgPicture.asset(
+                        "assets/svg/visual_grid.svg",
                         fit: BoxFit.cover,
                         width: double.maxFinite,
                         height: double.maxFinite,
@@ -101,8 +78,8 @@ class TopSaverViewNew extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset(
-                                "assets/images/icons/coins.png",
+                              SvgPicture.asset(
+                                "assets/svg/coins.svg",
                                 fit: BoxFit.cover,
                               ),
                               const SizedBox(
@@ -113,13 +90,13 @@ class TopSaverViewNew extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    setTitle(model.campaignType),
+                                    model.appbarTitle,
                                     style:
-                                        TextStyles.title5.colour(Colors.white),
+                                        TextStyles.body1.colour(Colors.white),
                                   ),
                                   Text(
                                     "Save a penny a day",
-                                    style: TextStyles.title2
+                                    style: TextStyles.title3
                                         .colour(Colors.white)
                                         .bold,
                                   ),
@@ -128,7 +105,11 @@ class TopSaverViewNew extends StatelessWidget {
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.fromLTRB(0, 50, 0, 15), //TODO
+                            margin: EdgeInsets.fromLTRB(
+                                0,
+                                SizeConfig.screenWidth * 0.128,
+                                0,
+                                SizeConfig.screenWidth * 0.05),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -157,14 +138,14 @@ class TopSaverViewNew extends StatelessWidget {
               //The container for Savings, Highest Savings & Rank
               SliverToBoxAdapter(
                 child: Container(
-                  padding: EdgeInsets.all(25.0), //TODO
+                  padding: EdgeInsets.all(SizeConfig.padding34),
                   child: Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "DAY 06",
-                          style: TextStyles.title2.bold.colour(Colors.white),
+                          style: TextStyles.title3.bold.colour(Colors.white),
                         ),
                         const SizedBox(
                           height: 10,
@@ -173,7 +154,8 @@ class TopSaverViewNew extends StatelessWidget {
                           children: [
                             //YOUR SAVINGS
                             Container(
-                              height: SizeConfig.screenHeight * 0.2,
+                              height: SizeConfig.screenWidth * 0.371,
+                              width: SizeConfig.screenWidth * 0.371,
                               padding: EdgeInsets.fromLTRB(20, 0, 40, 0), //TODO
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
@@ -194,15 +176,17 @@ class TopSaverViewNew extends StatelessWidget {
                                   Text(
                                     "Your Savings",
                                     style:
-                                        TextStyles.body1.colour(Colors.white),
+                                        TextStyles.body4.colour(Colors.white),
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
                                   //TODO
                                   Text(
-                                    "₹ 500",
-                                    style: TextStyles.title3.bold
+                                    model.userAmount == 0
+                                        ? "N/A"
+                                        : model.userAmount.toString(),
+                                    style: TextStyles.body1.bold
                                         .colour(Colors.white),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -214,7 +198,7 @@ class TopSaverViewNew extends StatelessWidget {
                             //HIGHEST SAVING //RANK
                             Expanded(
                               child: Container(
-                                height: SizeConfig.screenHeight * 0.2,
+                                height: SizeConfig.screenWidth * 0.371,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(SizeConfig.roundness12),
@@ -227,9 +211,14 @@ class TopSaverViewNew extends StatelessWidget {
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.fromLTRB(
-                                            10, 0, 0, 5), //TODO
+                                            SizeConfig.screenWidth * 0.016,
+                                            0,
+                                            0,
+                                            (SizeConfig.screenWidth * 0.016) /
+                                                2), //TODO
 
-                                        padding: EdgeInsets.all(20.0), //TODO
+                                        padding: EdgeInsets.all(
+                                            SizeConfig.padding16), //TODO
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
@@ -243,14 +232,14 @@ class TopSaverViewNew extends StatelessWidget {
                                           children: [
                                             Text(
                                               "Highest\nSavings",
-                                              style: TextStyles.body3
+                                              style: TextStyles.body4
                                                   .colour(Colors.white),
                                             ),
                                             //TODO
                                             Flexible(
                                               child: Text(
                                                 "₹ 1250",
-                                                style: TextStyles.title5.bold
+                                                style: TextStyles.body1.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -264,8 +253,13 @@ class TopSaverViewNew extends StatelessWidget {
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.fromLTRB(
-                                            10, 5, 0, 0), //TODO
-                                        padding: EdgeInsets.all(20.0), //TODO
+                                            SizeConfig.screenWidth * 0.016,
+                                            (SizeConfig.screenWidth * 0.016) /
+                                                2,
+                                            0,
+                                            0), //TODO
+                                        padding: EdgeInsets.all(
+                                            SizeConfig.padding16),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
@@ -280,15 +274,15 @@ class TopSaverViewNew extends StatelessWidget {
                                             Container(
                                                 child: Row(
                                               children: [
-                                                Image.asset(
-                                                  "assets/images/rank_ic.png",
+                                                SvgPicture.asset(
+                                                  "assets/svg/rank.svg",
                                                 ),
                                                 const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
                                                   "Rank",
-                                                  style: TextStyles.body3
+                                                  style: TextStyles.body4
                                                       .colour(Colors.white),
                                                 ),
                                               ],
@@ -297,8 +291,10 @@ class TopSaverViewNew extends StatelessWidget {
                                             //TODO
                                             Flexible(
                                               child: Text(
-                                                "673",
-                                                style: TextStyles.title5.bold
+                                                model.userRank == 0
+                                                    ? "N/A"
+                                                    : model.userRank.toString(),
+                                                style: TextStyles.body1.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,
                                                 textAlign: TextAlign.end,

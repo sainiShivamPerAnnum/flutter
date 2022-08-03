@@ -16,6 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
+import '../../../../core/enums/page_state_enum.dart';
+import '../../../../navigator/app_state.dart';
+import '../../../../navigator/router/ui_pages.dart';
+
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
 
@@ -26,9 +30,20 @@ class Save extends StatelessWidget {
       onModelReady: (model) => model.init(null),
       builder: (ctx, model, child) {
         return Center(
-          child: Text(
-            "Save View in Construction",
-            style: TextStyles.rajdhaniEB.body0.colour(Colors.white),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Save View in Construction",
+                style: TextStyles.rajdhaniEB.body0.colour(Colors.white),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    AppState.delegate.appState.currentAction = PageAction(
+                        page: CampaignViewPageConfig, state: PageState.addPage);
+                  },
+                  child: Text("Test campaign page", style: TextStyles.title5))
+            ],
           ),
         );
         // SafeArea(

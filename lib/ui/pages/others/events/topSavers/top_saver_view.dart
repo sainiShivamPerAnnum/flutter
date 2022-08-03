@@ -175,14 +175,9 @@ class TopSaverView extends StatelessWidget {
                 left: 100,
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TopSaverViewNew(
-                              eventType: eventType,
-                              isGameRedirected: isGameRedirected,
-                            ),
-                          ));
+                      AppState.delegate.appState.currentAction = PageAction(
+                          page: CampaignViewPageConfig,
+                          state: PageState.addPage);
                     },
                     child: child),
               ),
