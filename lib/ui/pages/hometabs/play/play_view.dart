@@ -58,6 +58,9 @@ class Play extends StatelessWidget {
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
                 PlayInfoSection(),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 0.16,
+                )
               ],
             ),
           ),

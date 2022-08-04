@@ -167,6 +167,10 @@ class Assets {
   static final String congrats = "assets/vectors/congrats.svg";
   static final String noTickets = "assets/vectors/no_tickets.svg";
   static final String noData = "assets/lotties/no_data.json";
+  static final String snackbarWifiIcon = "assets/svg/snackbar_wifi_icon.svg";
+  static final String snackbarAlertIcon = "assets/svg/snackbar_alert_icon.svg";
+  static final String snackbarLoadingIcon =
+      "assets/svg/snackbar_loading_icon.svg";
 
   //FELLO REWARDS
   // static final String digitalGold = "images/augmont-share.png";

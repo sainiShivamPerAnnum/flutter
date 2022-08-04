@@ -40,7 +40,7 @@ class NavBar extends StatelessWidget {
     return Container(
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 15),
         child: Row(
           //Center buttons horizontally
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -108,7 +108,7 @@ class BottomNavBarItemContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 5,
+          height: 8,
         ),
         Text(
           title,
