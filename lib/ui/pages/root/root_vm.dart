@@ -225,11 +225,11 @@ class RootViewModel extends BaseModel {
   initialize() async {
     bool canExecuteStartupNotification = true;
     if (!_isInitialized) {
-      bool showSecurityPrompt = false;
-      if (_userService.showSecurityPrompt == null) {
-        showSecurityPrompt = await _lModel.showSecurityPrompt();
-        _userService.showSecurityPrompt = showSecurityPrompt;
-      }
+      // bool showSecurityPrompt = false;
+      // if (_userService.showSecurityPrompt == null) {
+      //   showSecurityPrompt = await _lModel.showSecurityPrompt();
+      //   _userService.showSecurityPrompt = showSecurityPrompt;
+      // }
 
       _isInitialized = true;
       _initAdhocNotifications();
@@ -248,18 +248,19 @@ class RootViewModel extends BaseModel {
 
       _baseUtil.getProfilePicture();
       // show security modal
-      if (showSecurityPrompt &&
-          _userService.baseUser.isAugmontOnboarded &&
-          _userService.userFundWallet.augGoldQuantity > 0 &&
-          _userService.baseUser.userPreferences
-                  .getPreference(Preferences.APPLOCK) ==
-              0) {
-        canExecuteStartupNotification = false;
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
-          _showSecurityBottomSheet();
-          _localDBModel.updateSecurityPrompt(false);
-        });
-      }
+      // if (
+      //     showSecurityPrompt &&
+      //     _userService.baseUser.isAugmontOnboarded &&
+      //         _userService.userFundWallet.augGoldQuantity > 0 &&
+      //         _userService.baseUser.userPreferences
+      //                 .getPreference(Preferences.APPLOCK) ==
+      //             0) {
+      //   canExecuteStartupNotification = false;
+      //   WidgetsBinding.instance?.addPostFrameCallback((_) {
+      //     _showSecurityBottomSheet();
+      //     _localDBModel.updateSecurityPrompt(false);
+      //   });
+      // }
 
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {

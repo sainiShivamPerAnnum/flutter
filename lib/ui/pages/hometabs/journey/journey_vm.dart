@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/modal_router.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -87,13 +88,15 @@ class JourneyPageViewModel extends BaseModel {
   //   _journeyService.fetchNetworkPages();
   // }
 
-  init(TickerProvider vsync) async {
+  journeyRepo() {
+    print(_journeyService.vsync.toString());
+  }
+
+  init(TickerProvider ticker) async {
     log("Journey VM init Called");
-    // baseGlow = 0;
     isLoading = true;
-
-    await Future.delayed(Duration(seconds: 2));
-
+    print("Journey Ticker: ${ticker.toString()}");
+    _journeyService.vsync = ticker;
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
@@ -106,13 +109,7 @@ class JourneyPageViewModel extends BaseModel {
     _journeyService.setJourneyPathItems();
     _journeyService.getAvatarCachedMilestoneIndex();
     await _journeyService.getAvatarRemoteMilestoneIndex();
-    controller = AnimationController(
-      vsync: vsync,
-      duration: Duration(
-          seconds: 2 *
-              (_journeyService.avatarRemoteMlIndex -
-                  _journeyService.avatarCachedMlIndex)),
-    );
+
     if (_journeyService.checkIfThereIsALevelChange()) {
       _journeyService.createPathForAvatarAnimation(
           _journeyService.avatarCachedMlIndex,
@@ -239,113 +236,32 @@ class JourneyPageViewModel extends BaseModel {
       MilestoneModel milestone, BuildContext context) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
-
-    // Navigator.of(context).push(TutorialOverlay());
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
-      // isBarrierDismissable: true,
+      isDismissible: true,
       enableDrag: false,
       useRootNavigator: true,
       context: context,
       builder: (ctx) {
-        return WillPopScope(
-          onWillPop: () async {
-            log("I am closing");
-            AppState.screenStack.removeLast();
-            return Future.value(true);
-          },
-          child: Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(SizeConfig.roundness24),
-                    topLeft: Radius.circular(SizeConfig.roundness24)),
-                color: Colors.black54),
-            padding: EdgeInsets.only(top: SizeConfig.pageHorizontalMargins),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                // mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    // tileColor: Colors.grey.withOpacity(0.5),
-                    onTap: () {
-                      Haptic.vibrate();
-                      AppState.backButtonDispatcher.didPopRoute();
-                      log(milestone.actionUri);
-                      AppState.delegate
-                          .parseRoute(Uri.parse(milestone.actionUri));
-                    },
-                    leading: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: SizeConfig.avatarRadius * 2,
-                        child: SourceAdaptiveAssetView(
-                          asset: milestone.asset,
-                          height: SizeConfig.avatarRadius * 1.6,
-                          width: SizeConfig.avatarRadius * 1.6,
-                        )),
-                    title: Text(
-                      milestone.steps.first.title,
-                      style: GoogleFonts.rajdhani(
-                          fontSize: SizeConfig.title3,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      milestone.steps.first.subtitle,
-                      style: TextStyles.body3.colour(Colors.white),
-                    ),
-                  ),
-                  // CircleAvatar(
-                  //   radius: SizeConfig.avatarRadius * 2,
-                  //   child: SvgPicture.asset(
-                  //     'assets/temp/chevron_right.svg',
-                  //     width: SizeConfig.iconSize0,
-                  //     height: SizeConfig.iconSize0,
-                  //   ),
-                  // ),
-                  Spacer(),
-                  AppPositiveBtn(
-                      btnText: "Let's Go",
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                        AppState.delegate
-                            .parseRoute(Uri.parse(milestone.actionUri));
-                      },
-                      width: SizeConfig.screenWidth * 0.8),
-                  SizedBox(height: SizeConfig.padding16),
-                  AppNegativeBtn(
-                      btnText: "SKIP",
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                        BaseUtil.showPositiveAlert("You Skipped this level",
-                            "Let's see what's on the next level");
-                      },
-                      width: SizeConfig.screenWidth * 0.8),
-                  SizedBox(
-                      height: SizeConfig.viewInsets.bottom +
-                          (SizeConfig.padding40 - SizeConfig.viewInsets.bottom)
-                              .abs())
-                ]),
-          ),
-        );
+        return JourneyMilestoneDetailsModalSheet(milestone: milestone);
       },
     );
   }
 
   ///---------- TEST METHODS [[ ONLY FOR DEV USE ]]  ----------///
 
-  testCreateAvatarPath(List<AvatarPathModel> pathListData) {
-    _journeyService.drawPath(pathListData);
-  }
+  // testCreateAvatarPath(List<AvatarPathModel> pathListData) {
+  //   _journeyService.drawPath(pathListData);
+  // }
 
-  void testReadyAvatarToPath() {
-    _journeyService.setAvatarPostion();
-    _journeyService.createAvatarAnimationObject();
-  }
+  // void testReadyAvatarToPath() {
+  //   _journeyService.setAvatarPostion();
+  //   _journeyService.createAvatarAnimationObject();
+  // }
 
-  void testAnimate() {
-    _journeyService.animateAvatar();
-  }
+  // void testAnimate() {
+  //   _journeyService.animateAvatar();
+  // }
   // setDimensions(BuildContext context) {
   //   JourneyPageViewModel.pageHeight = MediaQuery.of(context).size.width * 2.165;
   //   JourneyPageViewModel.pageWidth = MediaQuery.of(context).size.width;

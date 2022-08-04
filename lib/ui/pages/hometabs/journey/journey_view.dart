@@ -57,23 +57,12 @@ class _JourneyViewState extends State<JourneyView>
           ),
           // floatingActionButton: Container(
           //   margin: EdgeInsets.only(bottom: 80, left: 50),
-          //   child: Row(
-          //     children: [
-          //       FloatingActionButton(
-          //           child: Icon(Icons.stop),
-          //           onPressed: //model.controller.stop
-          //               () {
-          //             print(AppState.screenStack);
-          //             AppState.delegate.appState.currentAction = PageAction(
-          //                 page: ReferralDetailsPageConfig,
-          //                 widget: ReferralDetailsView(),
-          //                 state: PageState.addBelow);
-          //           }),
-          //       SizedBox(width: 20),
-          //       FloatingActionButton(
-          //           child: Icon(Icons.animation), onPressed: model.testAnimate),
-          //     ],
-          //   ),
+          //   child: FloatingActionButton(
+          //       child: Icon(Icons.stop),
+          //       onPressed: //model.controller.stop
+          //           () {
+          //         print(model.journeyRepo());
+          //       }),
           // ),
           body: model.isLoading && model.pages == null
               ? Container(

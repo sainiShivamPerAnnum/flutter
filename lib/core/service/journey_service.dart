@@ -42,6 +42,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int startPage;
   int pageCount;
   double _baseGlow = 0;
+  TickerProvider _vsync;
+  TickerProvider get vsync => this._vsync;
+
+  set vsync(TickerProvider value) => this._vsync = value;
 
   List<int> levels = [1, 4, 8];
 
@@ -90,7 +94,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set avatarRemoteMlIndex(value) {
     this._avatarRemoteMlIndex = value;
-    notifyListeners();
+    notifyListeners(JourneyServiceProperties.AvatarRemoteMilestoneIndex);
   }
 
   UserJourneyStatsModel _userJourneyStats;
@@ -112,7 +116,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set avatarPosition(Offset value) {
     this._avatarPosition = value;
-    notifyListeners();
+    print("Avatar x: ${_avatarPosition.dx} y: ${_avatarPosition.dy}");
+    notifyListeners(JourneyServiceProperties.AvatarPosition);
   }
 
   Future<void> init() async {
@@ -172,7 +177,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   updateUserJourneyStats(Map<String, dynamic> data) {
-    _logger.d("User journey stats update called");
+    _logger.d("User journey stats update called: $data");
     // userJourneyStats = UserJourneyStatsModel(
     //     page: 1,
     //     level: 1,
@@ -234,11 +239,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   Future<void> getAvatarRemoteMilestoneIndex() async {
-    //MAKE API CALL TO FETCH CURRENT LEVEL
-    //DUMMY LEVEL FOR TESTING
-    avatarRemoteMlIndex =
-        await _journeyRepo.getUserMlIndex() ?? avatarCachedMlIndex;
-    // int startLevel = 3;
+    final ApiResponse<UserJourneyStatsModel> userJourneyStats =
+        await _journeyRepo.getUserJourneyStats();
+    if (userJourneyStats.isSuccess())
+      avatarRemoteMlIndex = userJourneyStats.model.mlIndex;
+    else
+      avatarRemoteMlIndex = avatarCachedMlIndex;
     _logger.d("JOURNEYSERVICE: Avatar Remote Level: $avatarRemoteMlIndex");
   }
 
@@ -250,16 +256,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool checkIfThereIsALevelChange() =>
       avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
 
-  // Future<bool> getUserJourneyStats() async {
-  //   userJourneyStats = UserJourneyStatsModel(
-  //       page: 1,
-  //       level: 1,
-  //       mlIndex: 3,
-  //       mlId: "003",
-  //       nextPrizeSubtype: "AEZAKMI");
-  // }
-
   createPathForAvatarAnimation(int start, int end) {
+    baseGlow = 0;
     List<AvatarPathModel> requiredPathItems = [];
     int startPos =
         customPathDataList.lastIndexWhere((path) => path.mlIndex == start);
@@ -290,6 +288,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
             "New Milestones on your way!");
       updateAvatarLocalLevel();
+      // placeAvatarAtTheCurrentMileStone();
       baseGlow = 1;
     });
   }
@@ -349,11 +348,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   void createAvatarAnimationObject() {
+    controller = AnimationController(
+      vsync: vsync,
+      duration: Duration(
+        seconds: 2 * (avatarRemoteMlIndex - avatarCachedMlIndex),
+      ),
+    );
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeIn),
+      CurvedAnimation(parent: controller, curve: Curves.easeInOutCirc),
     )..addListener(() {
         avatarPosition = calculatePosition(avatarAnimation.value);
-        notifyListeners(JourneyServiceProperties.AvatarPosition);
         // double avatarPositionFromBottom =
         //     currentFullViewHeight - _avatarPosition.dy;
         // double scrollPostion = currentFullViewHeight - _mainController.offset;

@@ -121,7 +121,10 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.BaseGlow],
+        properties: [
+          JourneyServiceProperties.BaseGlow,
+          JourneyServiceProperties.AvatarPosition
+        ],
         builder: (context, model, properties) {
           final JourneyPathModel base = model.journeyPathItemsList.firstWhere(
               (element) =>
@@ -192,7 +195,10 @@ class ActiveMilestoneFrontGlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.BaseGlow],
+        properties: [
+          JourneyServiceProperties.BaseGlow,
+          JourneyServiceProperties.AvatarPosition
+        ],
         builder: (context, model, properties) {
           final MilestoneModel milestone = model.currentMilestoneList
               .firstWhere(

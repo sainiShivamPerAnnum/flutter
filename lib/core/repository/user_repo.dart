@@ -385,4 +385,6 @@ class UserRepository extends BaseRepo {
       );
     }
   }
+
+  Future<ApiResponse> updateUserWalkthroughCompletion() async {}
 }

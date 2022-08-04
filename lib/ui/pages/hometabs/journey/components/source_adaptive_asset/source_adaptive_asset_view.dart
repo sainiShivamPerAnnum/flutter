@@ -23,7 +23,7 @@ class SourceAdaptiveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
+    // log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
     if (asset.name == 'b7') log(asset.toString());
     return BaseView<SourceAdaptiveAssetViewModel>(onModelReady: (model) {
       model.init(asset.uri);
@@ -62,7 +62,7 @@ class FileAsset extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for FileAsset widget with height: ${asset.height}");
+    // log("ROOTVIEW: Build called for FileAsset widget with height: ${asset.height}");
     dynamic file = File(filePath);
     return SvgPicture.file(
       file,
@@ -84,7 +84,7 @@ class NetworkAsset extends StatelessWidget {
       this.width});
   @override
   Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for NetworkAsset widget");
+    // log("ROOTVIEW: Build called for NetworkAsset widget");
     return SvgPicture.network(
       networkUrl,
       height: height ?? SizeConfig.screenWidth * 2.165 * asset.height,
