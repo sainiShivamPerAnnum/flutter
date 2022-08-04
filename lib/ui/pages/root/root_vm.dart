@@ -132,6 +132,7 @@ class RootViewModel extends BaseModel {
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
+      //TODO: use the analytics event provided for journey.
       case 0:
         print('journey triggered');
         break;

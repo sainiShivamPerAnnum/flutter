@@ -57,7 +57,7 @@ class NavBarItemData {
   final String activeIconImage;
   final String inactiveIconImage;
 
-  NavBarItemData(this.title, this.activeIconImage, this.inactiveIconImage);
+  NavBarItemData({this.title, this.activeIconImage, this.inactiveIconImage});
 }
 
 class NavbarButton extends StatelessWidget {

@@ -50,6 +50,8 @@ class Assets {
   static final String navPlay = "assets/vectors/icons/support.svg";
   static final String navSave = "assets/vectors/icons/wallet.svg";
   static final String navWin = "assets/vectors/icons/medal.svg";
+
+  //NAVBAR - 4.0
   static final String navPlayActive =
       "assets/svg/BottomNavBarIcons/play_active.svg";
   static final String navPlayInactive =
