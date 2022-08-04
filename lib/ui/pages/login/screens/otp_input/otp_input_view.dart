@@ -213,31 +213,34 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                           Text("Didn't get an OTP? request in ",
                               style: TextStyles.body3.colour(Colors.black45)),
                           TweenAnimationBuilder<Duration>(
-                              duration: Duration(seconds: 30),
-                              tween: Tween(
-                                  begin: Duration(seconds: 30),
-                                  end: Duration.zero),
-                              onEnd: () {
-                                print('Timer ended');
-                                setState(() {
-                                  showResendOption = true;
-                                });
-                              },
-                              builder: (BuildContext context, Duration value,
-                                  Widget child) {
-                                final minutes = (value.inMinutes)
-                                    .toString()
-                                    .padLeft(2, '0');
-                                final seconds = (value.inSeconds % 60)
-                                    .toString()
-                                    .padLeft(2, '0');
+                            duration: Duration(seconds: 30),
+                            tween: Tween(
+                                begin: Duration(seconds: 30),
+                                end: Duration.zero),
+                            onEnd: () {
+                              print('Timer ended');
+                              setState(() {
+                                showResendOption = true;
+                              });
+                            },
+                            builder: (
+                              BuildContext context,
+                              Duration value,
+                              Widget child,
+                            ) {
+                              final minutes =
+                                  (value.inMinutes).toString().padLeft(2, '0');
+                              final seconds = (value.inSeconds % 60)
+                                  .toString()
+                                  .padLeft(2, '0');
 
-                                return Text(
-                                  "$minutes:$seconds",
-                                  style: TextStyles.body3.bold
-                                      .colour(UiConstants.primaryColor),
-                                );
-                              }),
+                              return Text(
+                                "$minutes:$seconds",
+                                style: TextStyles.body3.bold
+                                    .colour(UiConstants.primaryColor),
+                              );
+                            },
+                          ),
                         ],
                       )
                     : Container(),

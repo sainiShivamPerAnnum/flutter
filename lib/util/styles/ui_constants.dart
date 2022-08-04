@@ -59,4 +59,5 @@ class UiConstants {
   static const Color kWinnerPlayerLightPrimaryColor = const Color(0xFFFEF5DC);
   static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
   static const Color kLastUpdatedTextColor = const Color(0xFF919193);
+  static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
 }

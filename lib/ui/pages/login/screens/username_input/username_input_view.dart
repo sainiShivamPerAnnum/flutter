@@ -1,5 +1,4 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/enums/username_response_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -11,8 +10,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY, SHORT, LONG }
 
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
@@ -75,9 +72,11 @@ class UsernameState extends State<Username> {
     } else if (model.response == UsernameResponse.INVALID) {
       if (model.usernameController.text.trim().length < 4)
         return FittedBox(
-          child: Text("please enter a username with more than 3 characters.",
-              maxLines: 2,
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500)),
+          child: Text(
+            "please enter a username with more than 3 characters.",
+            maxLines: 2,
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+          ),
         );
       else if (model.usernameController.text.trim().length > 20)
         return FittedBox(
@@ -194,7 +193,8 @@ class UsernameState extends State<Username> {
                         if (val.trim().length < 3 || val.trim().length > 10)
                           return "Invalid referral code";
                         return null;
-                      })
+                      },
+                    )
                   : TextButton(
                       onPressed: () {
                         setState(() {

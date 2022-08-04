@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -13,7 +12,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -21,9 +19,11 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -56,10 +56,13 @@ class LoginControllerViewModel extends BaseModel {
   static AppState appStateProvider = AppState.delegate.appState;
 
   //Screen States
-  final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
-  final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
-  final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-  final _usernameKey = new GlobalKey<UsernameState>();
+  // final _mobileScreenKey = new GlobalKey<MobileInputScreenViewState>();
+  // final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
+  // final _nameScreenKey = new GlobalKey<NameInputScreenState>();
+  // final _usernameKey = new GlobalKey<UsernameState>();
+  final _mobileScreenKey = new GlobalKey<MobileView4State>();
+  final _otpScreenKey = new GlobalKey<OTP4State>();
+  final _usernameKey = new GlobalKey<User4State>();
 
 //Private Variables
   double _formProgress = 0.2;
@@ -105,16 +108,27 @@ class LoginControllerViewModel extends BaseModel {
     _controller.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
     _pages = [
-      MobileInputScreenView(key: _mobileScreenKey),
-      OtpInputScreen(
+      // MobileInputScreenView(key: _mobileScreenKey),
+      MobileView4(
+        key: _mobileScreenKey,
+      ),
+      // OtpInputScreen(
+      //   key: _otpScreenKey,
+      //   otpEntered: _onOtpFilled,
+      //   resendOtp: _onOtpResendRequested,
+      //   changeNumber: _onChangeNumberRequest,
+      //   mobileNo: this.userMobile,
+      // ),
+      OTP4(
         key: _otpScreenKey,
         otpEntered: _onOtpFilled,
         resendOtp: _onOtpResendRequested,
         changeNumber: _onChangeNumberRequest,
         mobileNo: this.userMobile,
       ),
-      NameInputScreen(key: _nameScreenKey),
-      Username(key: _usernameKey)
+      // NameInputScreen(key: _nameScreenKey),
+      User4(key: _usernameKey),
+      // Username(key: _usernameKey)
     ];
   }
 
@@ -178,114 +192,114 @@ class LoginControllerViewModel extends BaseModel {
           }
           break;
         }
-      case NameInputScreen.index:
-        {
-          if (_nameScreenKey.currentState.model.formKey.currentState
-              .validate()) {
-            if (!_nameScreenKey.currentState.model.validateFields()) return;
-            // if (!_nameScreenKey.currentState.model.isEmailEntered ||
-            //     _nameScreenKey.currentState.model.emailFieldController ==
-            //         null ||
-            //     _nameScreenKey
-            //         .currentState.model.emailFieldController.text.isEmpty) {
-            //   BaseUtil.showNegativeAlert(
-            //       'Email field empty', 'Please enter a valid email');
-            //   return false;
-            // }
+      // case NameInputScreen.index:
+      //   {
+      //     if (_nameScreenKey.currentState.model.formKey.currentState
+      //         .validate()) {
+      //       if (!_nameScreenKey.currentState.model.validateFields()) return;
+      //       // if (!_nameScreenKey.currentState.model.isEmailEntered ||
+      //       //     _nameScreenKey.currentState.model.emailFieldController ==
+      //       //         null ||
+      //       //     _nameScreenKey
+      //       //         .currentState.model.emailFieldController.text.isEmpty) {
+      //       //   BaseUtil.showNegativeAlert(
+      //       //       'Email field empty', 'Please enter a valid email');
+      //       //   return false;
+      //       // }
 
-            _analyticsService.track(
-              eventName: AnalyticsEvents.signupProfile,
-            );
+      //       _analyticsService.track(
+      //         eventName: AnalyticsEvents.signupProfile,
+      //       );
 
-            if (_nameScreenKey.currentState.model.selectedDate == null) {
-              BaseUtil.showNegativeAlert(
-                'Invalid Date of Birth',
-                'Please enter a valid date of birth',
-              );
-              return false;
-            } else if (!_isAdult(
-                _nameScreenKey.currentState.model.selectedDate)) {
-              BaseUtil.showNegativeAlert(
-                'Ineligible',
-                'You need to be above 18 to join',
-              );
-              return false;
-            }
-            if (_nameScreenKey.currentState.model.gen == null) {
-              BaseUtil.showNegativeAlert(
-                'Invalid details',
-                'Please enter all the fields',
-              );
-              return false;
-            }
-            if (_nameScreenKey.currentState.model.stateChosenValue == null) {
-              BaseUtil.showNegativeAlert(
-                'Invalid details',
-                'Please enter your state of residence',
-              );
-              return false;
-            }
-            FocusScope.of(_nameScreenKey.currentContext).unfocus();
-            setState(ViewState.Busy);
-            if (userService.baseUser == null) {
-              //firebase user should never be null at this point
-              userService.baseUser = BaseUser.newUser(
-                  userService.firebaseUser.uid,
-                  _formatMobileNumber(LoginControllerView.mobileno));
-            }
+      //       if (_nameScreenKey.currentState.model.selectedDate == null) {
+      //         BaseUtil.showNegativeAlert(
+      //           'Invalid Date of Birth',
+      //           'Please enter a valid date of birth',
+      //         );
+      //         return false;
+      //       } else if (!_isAdult(
+      //           _nameScreenKey.currentState.model.selectedDate)) {
+      //         BaseUtil.showNegativeAlert(
+      //           'Ineligible',
+      //           'You need to be above 18 to join',
+      //         );
+      //         return false;
+      //       }
+      //       if (_nameScreenKey.currentState.model.gen == null) {
+      //         BaseUtil.showNegativeAlert(
+      //           'Invalid details',
+      //           'Please enter all the fields',
+      //         );
+      //         return false;
+      //       }
+      //       if (_nameScreenKey.currentState.model.stateChosenValue == null) {
+      //         BaseUtil.showNegativeAlert(
+      //           'Invalid details',
+      //           'Please enter your state of residence',
+      //         );
+      //         return false;
+      //       }
+      //       FocusScope.of(_nameScreenKey.currentContext).unfocus();
+      //       setState(ViewState.Busy);
+      //       if (userService.baseUser == null) {
+      //         //firebase user should never be null at this point
+      //         userService.baseUser = BaseUser.newUser(
+      //             userService.firebaseUser.uid,
+      //             _formatMobileNumber(LoginControllerView.mobileno));
+      //       }
 
-            userService.baseUser.name =
-                _nameScreenKey.currentState.model.name.trim();
+      //       userService.baseUser.name =
+      //           _nameScreenKey.currentState.model.name.trim();
 
-            String email = _nameScreenKey.currentState.model.email.trim();
+      //       String email = _nameScreenKey.currentState.model.email.trim();
 
-            if (email != null && email.isNotEmpty) {
-              userService.baseUser.email = email;
-            }
+      //       if (email != null && email.isNotEmpty) {
+      //         userService.baseUser.email = email;
+      //       }
 
-            userService.baseUser.isEmailVerified =
-                _nameScreenKey.currentState.model.isEmailVerified;
+      //       userService.baseUser.isEmailVerified =
+      //           _nameScreenKey.currentState.model.isEmailVerified;
 
-            String dob =
-                "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
-                    .split(" ")[0];
+      //       String dob =
+      //           "${_nameScreenKey.currentState.model.selectedDate.toLocal()}"
+      //               .split(" ")[0];
 
-            userService.baseUser.dob = dob.trim();
+      //       userService.baseUser.dob = dob.trim();
 
-            int gender = _nameScreenKey.currentState.model.gen;
-            if (gender != null) {
-              if (gender == 1) {
-                userService.baseUser.gender = "M";
-              } else if (gender == 0) {
-                userService.baseUser.gender = "F";
-              } else
-                userService.baseUser.gender = "O";
-            }
+      //       int gender = _nameScreenKey.currentState.model.gen;
+      //       if (gender != null) {
+      //         if (gender == 1) {
+      //           userService.baseUser.gender = "M";
+      //         } else if (gender == 0) {
+      //           userService.baseUser.gender = "F";
+      //         } else
+      //           userService.baseUser.gender = "O";
+      //       }
 
-            cstate = _nameScreenKey.currentState.model.stateChosenValue;
+      //       cstate = _nameScreenKey.currentState.model.stateChosenValue;
 
-            await CacheManager.writeCache(
-                key: "UserAugmontState", value: cstate, type: CacheType.string);
+      //       await CacheManager.writeCache(
+      //           key: "UserAugmontState", value: cstate, type: CacheType.string);
 
-            setState(ViewState.Idle);
+      //       setState(ViewState.Idle);
 
-            _analyticsService.track(
-              eventName: AnalyticsEvents.profileInformationAdded,
-              properties: {'userId': userService?.baseUser?.uid},
-            );
+      //       _analyticsService.track(
+      //         eventName: AnalyticsEvents.profileInformationAdded,
+      //         properties: {'userId': userService?.baseUser?.uid},
+      //       );
 
-            _controller
-                .animateToPage(Username.index,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInToLinear)
-                .then((value) {
-              Future.delayed(Duration(seconds: 1), () {
-                _usernameKey.currentState.focusNode.requestFocus();
-              });
-            });
-          }
-          break;
-        }
+      //       _controller
+      //           .animateToPage(Username.index,
+      //               duration: Duration(milliseconds: 500),
+      //               curve: Curves.easeInToLinear)
+      //           .then((value) {
+      //         Future.delayed(Duration(seconds: 1), () {
+      //           _usernameKey.currentState.focusNode.requestFocus();
+      //         });
+      //       });
+      //     }
+      //     break;
+      //   }
 
       case Username.index:
         {
@@ -410,12 +424,14 @@ class LoginControllerViewModel extends BaseModel {
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
       if (source == LoginSource.FIREBASE)
-        _controller.animateToPage(NameInputScreen.index,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInToLinear);
+        _controller.animateToPage(
+          User4.index,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear,
+        );
       else if (source == LoginSource.TRUECALLER)
         _controller.jumpToPage(
-          NameInputScreen.index,
+          User4.index,
         );
       loginUsingTrueCaller = false;
       //_nameScreenKey.currentState.showEmailOptions();

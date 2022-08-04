@@ -1,16 +1,11 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-
-import 'package:truecaller_sdk/truecaller_sdk.dart';
 
 class MobileInputScreenViewModel extends BaseModel {
   final _formKey = GlobalKey<FormState>();
