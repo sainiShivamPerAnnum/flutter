@@ -49,6 +49,7 @@ class CampaignView extends StatelessWidget {
         model.init(eventType, isGameRedirected);
       },
       builder: (context, model, child) {
+        print(model.highestSavings);
         return Scaffold(
           backgroundColor: UiConstants.kBackgroundColor,
           body: CustomScrollView(
@@ -57,7 +58,11 @@ class CampaignView extends StatelessWidget {
               //The App Bar
               SliverAppBar(
                 backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
-                leading: Icon(Icons.arrow_back_ios),
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.arrow_back_ios)),
                 expandedHeight: SizeConfig.screenWidth * 0.5,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
@@ -183,9 +188,7 @@ class CampaignView extends StatelessWidget {
                                   ),
                                   //TODO
                                   Text(
-                                    model.userAmount == 0
-                                        ? "N/A"
-                                        : model.userAmount.toString(),
+                                    model.userAmount.toString(),
                                     style: TextStyles.body1.bold
                                         .colour(Colors.white),
                                     maxLines: 1,
@@ -238,7 +241,7 @@ class CampaignView extends StatelessWidget {
                                             //TODO
                                             Flexible(
                                               child: Text(
-                                                "₹ 1250",
+                                                "₹ ${model.highestSavings}",
                                                 style: TextStyles.body1.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,
@@ -292,8 +295,10 @@ class CampaignView extends StatelessWidget {
                                             Flexible(
                                               child: Text(
                                                 model.userRank == 0
-                                                    ? "N/A"
-                                                    : model.userRank.toString(),
+                                                    ? '-'
+                                                    : model.userRank
+                                                        .toString()
+                                                        .padLeft(2, '0'),
                                                 style: TextStyles.body1.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,

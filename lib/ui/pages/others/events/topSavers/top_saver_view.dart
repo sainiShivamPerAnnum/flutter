@@ -31,6 +31,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../../util/constants.dart';
+
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
       (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
@@ -48,6 +50,7 @@ class TopSaverView extends StatelessWidget {
         model.init(eventType, isGameRedirected);
       },
       builder: (context, model, child) {
+        print(model.highestSavings);
         return Scaffold(
           backgroundColor: UiConstants.primaryColor,
           body: Stack(
@@ -177,7 +180,9 @@ class TopSaverView extends StatelessWidget {
                     onPressed: () {
                       AppState.delegate.appState.currentAction = PageAction(
                           page: CampaignViewPageConfig,
-                          state: PageState.addPage);
+                          state: PageState.addWidget,
+                          widget: CampaignView(
+                              eventType: Constants.HS_DAILY_SAVER));
                     },
                     child: child),
               ),
@@ -543,7 +548,7 @@ class EventLeaderboard extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    "Your rank: ${model.userRank == 0 ? '-' : model.userRank.toString().padLeft(2, '0')} ",
+                    "Your rank: ${model.userRank == 0 ? model.highestSavings : model.userRank.toString().padLeft(2, '0')} ",
                     style: TextStyles.body3,
                   )
                 ],

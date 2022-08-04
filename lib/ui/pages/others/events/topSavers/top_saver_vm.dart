@@ -35,8 +35,11 @@ class TopSaverViewModel extends BaseModel {
 
   String saverFreq = "daily";
 
+  double goldPrice = 5000; //TODO, dummy gold price for calculation
+
   int _userRank = 0;
   double _userAmount = 0;
+  double _highestSavings = 0;
   String winnerTitle = "Past Winners";
   EventModel event;
   bool showStandingsAndWinners = true;
@@ -62,6 +65,13 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get highestSavings => this._highestSavings;
+
+  set highestSavings(value) {
+    this._highestSavings = value;
+    notifyListeners();
+  }
+
   get userAmount => this._userAmount;
 
   set userAmount(value) {
@@ -73,12 +83,14 @@ class TopSaverViewModel extends BaseModel {
     setState(ViewState.Busy);
     event = await getSingleEventDetails(eventType);
     setState(ViewState.Idle);
+
     campaignType = event.type;
     // eventService.getEventType(event.type);
     _logger
         .d("Top Saver Viewmodel initialised with saver type : ${event.type}");
     setAppbarTitle();
     fetchTopSavers();
+
     fetchPastWinners();
     // _logger.d(CodeFromFreq.getPastDayCode());
     // _logger.d(CodeFromFreq.getPastWeekCode());
@@ -155,6 +167,8 @@ class TopSaverViewModel extends BaseModel {
 
   Future<EventModel> getSingleEventDetails(String eventType) async {
     EventModel event;
+    _logger.d(eventType);
+
     final response = await _campaignRepo.getOngoingEvents();
     if (response.code == 200) {
       List<EventModel> ongoingEvents = response.model;
@@ -163,6 +177,8 @@ class TopSaverViewModel extends BaseModel {
         if (element.type == eventType) event = element;
       });
     }
+
+    _logger.d(event.toString());
     return event;
   }
 
@@ -173,6 +189,7 @@ class TopSaverViewModel extends BaseModel {
     );
     if (response.code == 200) {
       currentParticipants = LeaderboardModel.fromMap(response.model).scoreboard;
+
       getUserRankIfAny();
     } else
       currentParticipants = [];
@@ -227,8 +244,10 @@ class TopSaverViewModel extends BaseModel {
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
-        _userAmount = curentUserStat.score * 5000; //TODO
+        _userAmount = curentUserStat.score * goldPrice; //TODO
       }
+
+      fetchHighestSavings();
     }
   }
 
@@ -250,6 +269,14 @@ class TopSaverViewModel extends BaseModel {
         {
           return CodeFromFreq.getDayFromCode(code);
         }
+    }
+  }
+
+  fetchHighestSavings() {
+    for (ScoreBoard e in currentParticipants) {
+      if ((e.score * goldPrice) > _highestSavings) {
+        _highestSavings = (e.score * goldPrice);
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/paytm_service_elements/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -40,7 +42,10 @@ class Save extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     AppState.delegate.appState.currentAction = PageAction(
-                        page: CampaignViewPageConfig, state: PageState.addPage);
+                        page: CampaignViewPageConfig,
+                        state: PageState.addWidget,
+                        widget:
+                            CampaignView(eventType: Constants.HS_DAILY_SAVER));
                   },
                   child: Text("Test campaign page", style: TextStyles.title5))
             ],
