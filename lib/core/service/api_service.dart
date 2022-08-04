@@ -63,11 +63,11 @@ class APIService implements API {
       String finalPath =
           "${getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl)}$url";
       if (cBaseUrl != null) finalPath = cBaseUrl + url;
-      logger.d(finalPath);
       if (queryParams != null) {
         queryString = Uri(queryParameters: queryParams).query;
         finalPath += '?$queryString';
       }
+      logger.d("finalPath for get : $finalPath");
       final response = await http.get(
         Uri.parse(finalPath),
         headers: {
@@ -75,11 +75,13 @@ class APIService implements API {
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid,
+          'uid': userService?.firebaseUser?.uid,
         },
       );
       logger.d("response from $finalPath");
       logger.d("Full url: $finalPath");
+      logger.d("Get Response: ${response.statusCode}");
+      logger.d("Get Response: ${response.body}");
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -96,6 +98,7 @@ class APIService implements API {
       {Map<String, dynamic> body,
       String cBaseUrl,
       String token,
+      String authKey,
       bool isAuthTokenAvailable = true,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
@@ -111,6 +114,7 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid,
+        'authKey': authKey ?? ''
       };
       logger.d(_headers);
       if (token != null)
@@ -144,13 +148,13 @@ class APIService implements API {
   }
 
   @override
-  Future<dynamic> putData(
-    String url, {
-    Map<String, dynamic> body,
-    String token,
-    bool isAwsSubUrl = false,
-    bool isAwsTxnUrl = false,
-  }) async {
+  Future<dynamic> putData(String url,
+      {Map<String, dynamic> body,
+      String cBaseUrl,
+      String token,
+      bool isAwsSubUrl = false,
+      bool isAwsTxnUrl = false,
+      bool isAwsDeviceUrl = false}) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
     await metric.start();
@@ -159,9 +163,18 @@ class APIService implements API {
     // token = Preference.getString('token');
     try {
       logger.d("response from $url");
+      String _url = getBaseUrl(
+            isSubUrl: isAwsSubUrl,
+            isTxnUrl: isAwsTxnUrl,
+            isAwsDeviceUrl: isAwsDeviceUrl,
+          ) +
+          url;
+
+      if (cBaseUrl != null) _url = cBaseUrl + url;
       final response = await http.put(
         Uri.parse(
-            getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl) + url),
+          _url,
+        ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: token != null ? token : '',

@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -12,7 +12,7 @@ class UserRank extends StatelessWidget {
     @required this.currentUserRank,
   }) : super(key: key);
 
-  final Scoreboard currentUserScore;
+  final ScoreBoard currentUserScore;
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {

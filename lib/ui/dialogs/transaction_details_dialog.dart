@@ -105,7 +105,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   Color getFlagColor() {
     if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
       return UiConstants.primaryColor;
-    if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED)
+    if (widget._transaction.tranStatus ==
+            UserTransaction.TRAN_STATUS_CANCELLED ||
+        widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_FAILED)
       return Colors.red;
     if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_PENDING ||
         widget._transaction.tranStatus ==

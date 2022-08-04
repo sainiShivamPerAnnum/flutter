@@ -112,12 +112,12 @@ class _NavbarButtonState extends State<NavbarButton>
                   padding: EdgeInsets.all(SizeConfig.padding8),
                   child: SvgPicture.asset(widget.data.iconImage,
                       width: SizeConfig.screenWidth * 0.048,
-                      color: UiConstants.primaryColor),
+                      color: Colors.black),
                 )
               : SvgPicture.asset(
                   widget.data.iconImage,
                   width: SizeConfig.screenWidth * 0.077,
-                  color: Color(0xffC2EDE4),
+                  color: Colors.grey,
                 ),
         ),
         //Add some hz spacing
@@ -129,7 +129,7 @@ class _NavbarButtonState extends State<NavbarButton>
             widget.data.title,
             style: TextStyles.body2
                 .colour(
-                  widget.isSelected ? Colors.white : Color(0xffC2EDE4),
+                  widget.isSelected ? Colors.white : Colors.grey,
                 )
                 .bold,
           ),
@@ -150,7 +150,7 @@ class _NavbarButtonState extends State<NavbarButton>
       onTap: () => widget.onTap(),
       //Wrap in a bit of extra padding to make it easier to tap
       child: Container(
-        color: UiConstants.primaryColor,
+        color: Colors.black,
         margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
@@ -167,9 +167,7 @@ class _NavbarButtonState extends State<NavbarButton>
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
             border: Border.all(
-                color: widget.isSelected
-                    ? Colors.white
-                    : UiConstants.primaryColor),
+                color: widget.isSelected ? Colors.white : Colors.black),
             borderRadius: BorderRadius.all(
               Radius.circular(100),
             ),

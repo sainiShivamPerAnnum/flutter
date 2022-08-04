@@ -1,4 +1,4 @@
-import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -17,6 +17,7 @@ void main() async {
       razorpayStage: RazorpayStage.DEV,
       signzyStage: SignzyStage.PROD,
       signzyPanStage: SignzyPanStage.PROD,
+      paytmStage: PaytmStage.DEV,
       baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
       baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
       mixpanelToken: MixpanelAnalytics.PROD_TOKEN,
@@ -25,9 +26,10 @@ void main() async {
   );
   await mainInit();
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(), // Wrap your app
-    ),
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder: (context) =>
+    MyApp(), // Wrap your app
+    // ),
   );
 }

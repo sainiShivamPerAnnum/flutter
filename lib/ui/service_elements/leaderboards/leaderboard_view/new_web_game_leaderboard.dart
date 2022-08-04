@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -63,7 +64,7 @@ class NewLeaderBoardView extends StatelessWidget {
     @required this.currentUserRank,
   });
 
-  final LeaderBoardModal model;
+  final LeaderboardModel model;
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
@@ -80,7 +81,7 @@ class NewLeaderBoardView extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           SizeConfig.roundness5,
         ),
-        color: UiConstants.kLeaderBoardBackgroundColor,
+        color: UiConstants.kSecondaryBackgroundColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,9 +100,10 @@ class NewLeaderBoardView extends StatelessWidget {
               currentUserRank: currentUserRank,
             ),
           RemainingRank(model: model, userProfilePicUrl: userProfilePicUrl),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
+          if (model.scoreboard.length >= 7)
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
           if (model.scoreboard.length >= 7)
             TextButton(
               onPressed: () {
@@ -140,7 +142,7 @@ class RemainingRank extends StatelessWidget {
     @required this.model,
     @required this.userProfilePicUrl,
   }) : super(key: key);
-  final LeaderBoardModal model;
+  final LeaderboardModel model;
   final List<String> userProfilePicUrl;
   final _userService = locator<UserService>();
   @override

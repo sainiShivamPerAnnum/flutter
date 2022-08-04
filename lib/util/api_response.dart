@@ -14,6 +14,10 @@ class ApiResponse<T> {
         errorMessage = error,
         code = code;
 
+  bool isSuccess() {
+    return code == 200;
+  }
+
   @override
   String toString() =>
       'ApiResponse(model: $model, errorMessage: $errorMessage, code: $code)';

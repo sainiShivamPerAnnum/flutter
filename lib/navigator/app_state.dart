@@ -31,15 +31,14 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 1;
   bool _isTxnLoaderInView = false;
-  Future _txnFunction;
-  Timer _txnTimer;
+  // Future _txnFunction;
+  // Timer _txnTimer;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
-  static bool unsavedPrefs = false;
   static bool isWebGameLInProgress = false;
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
@@ -60,7 +59,7 @@ class AppState extends ChangeNotifier {
 
   get isTxnLoaderInView => this._isTxnLoaderInView;
 
-  Timer get txnTimer => this._txnTimer;
+  // Timer get txnTimer => this._txnTimer;
 
   set rootIndex(value) {
     this._rootIndex = value;
@@ -79,10 +78,10 @@ class AppState extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  set txnTimer(Timer timer) {
-    this._txnTimer = timer;
-    notifyListeners();
-  }
+  // set txnTimer(Timer timer) {
+  //   this._txnTimer = timer;
+  //   notifyListeners();
+  // }
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;

@@ -21,7 +21,7 @@ class NewSquareBackground extends StatelessWidget {
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
               return Divider(
-                thickness: 2,
+                thickness: 1,
                 height: SizeConfig.screenWidth * 0.1667,
                 color: UiConstants.kBackgroundDividerColor,
               );
@@ -35,7 +35,7 @@ class NewSquareBackground extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return VerticalDivider(
-                thickness: 2,
+                thickness: 1,
                 width: SizeConfig.screenWidth * 0.1667,
                 color: UiConstants.kBackgroundDividerColor,
               );

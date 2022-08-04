@@ -6,21 +6,25 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<CustomLogger>();
-  final _userRepo = locator<UserRepository>();
   final _apiCacheManager = locator<ApiCacheManager>();
+  final _userRepo = locator<UserRepository>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -169,17 +173,18 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       _logger.e(e.toString());
-      if (baseUser != null)
-        _dbModel.logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
-          "title": "UserService initialization Failed",
-          "error": e.toString(),
-        });
+      _internalOpsService
+          .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
+        "title": "UserService initialization Failed",
+        "error": e.toString(),
+      });
     }
   }
 
-  Future<bool> signout() async {
+  Future<bool> signOut(Function signOut) async {
     try {
-      await _userRepo.removeUserFCM(_baseUser.uid);
+      await signOut();
+      new CacheService().invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       await _apiCacheManager.clearCacheMemory();
@@ -203,7 +208,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     if (_firebaseUser != null) {
-      final response = await _dbModel.getUser(_firebaseUser?.uid);
+      final response = await _userRepo.getUserById(id: _firebaseUser?.uid);
       if (response.code == 400) {
         _logger.d("Unable to cast user data object.");
         return;
@@ -249,7 +254,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
-      UserFundWallet temp = await _dbModel.getUserFundWallet(baseUser.uid);
+      UserFundWallet temp = (await _userRepo.getFundBalance()).model;
       if (temp == null)
         _compileUserWallet();
       else
@@ -266,8 +271,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   checkForNewNotifications() {
     _logger.d("Looking for new notifications");
-    _dbModel.checkIfUserHasNewNotifications(baseUser.uid).then((value) {
-      if (value) hasNewNotifications = true;
+    _userRepo.checkIfUserHasNewNotifications().then((value) {
+      if (value.code == 200) {
+        if (value.model) hasNewNotifications = true;
+      }
     });
   }
 
@@ -306,9 +313,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: IosParameters(
-          bundleId: 'in.fello.felloappiOS',
-          minimumVersion: '0',
-          appStoreId: '1558445254'),
+        bundleId: 'in.fello.felloappiOS',
+        minimumVersion: '0',
+        appStoreId: '1558445254',
+      ),
     );
 
     Uri url;
@@ -320,5 +328,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
 
     return url.toString();
+  }
+
+  Future<bool> updateClientToken(String token) async {
+    ApiResponse<bool> response =
+        await _userRepo.updateFcmToken(fcmToken: token);
+    return response.model;
   }
 }

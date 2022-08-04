@@ -1,33 +1,35 @@
 //Project Imports
 import 'dart:developer';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog_landscape.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flushbar/flushbar.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
   final CustomLogger logger = locator<CustomLogger>();
-  DBModel _dbModel = locator<DBModel>();
+  final _userRepo = locator<UserRepository>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _webGameViewModel = locator<WebGameViewModel>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -61,6 +63,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    log("Back Request called");
+    if (JourneyService.isAvatarAnimationInProgress) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
     Future.delayed(Duration(milliseconds: 20), () {
@@ -70,27 +74,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         FocusManager.instance.primaryFocus.unfocus();
       }
     });
-    // if (WinViewModel().panelController.isPanelOpen) {
-    //   WinViewModel().panelController.close();
-    //   return Future.value(true);
-    // }
-    // If user is in the profile page and preferences are changed
-
-    if (AppState.unsavedPrefs) {
-      if (_baseUtil != null &&
-          _userService.baseUser != null &&
-          _userService.baseUser.uid != null &&
-          _userService.baseUser.userPreferences != null)
-        _dbModel
-            .updateUserPreferences(_userService.baseUser.uid,
-                _userService.baseUser.userPreferences)
-            .then((value) {
-          AppState.unsavedPrefs = false;
-          log("Preferences updated");
-        });
-    }
     // If the top item is anything except a scaffold
-    if (AppState.screenStack.last == ScreenItem.dialog) {
+    if (AppState.screenStack.last == ScreenItem.dialog ||
+        AppState.screenStack.last == ScreenItem.modalsheet) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
@@ -137,14 +123,15 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return _routerDelegate.popRoute();
     }
     // If the root tab is not 0 at the time of exit
+
     else if (_baseUtil.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
-        (AppState.delegate.appState.rootIndex != 1 ||
-            RootViewModel.scaffoldKey.currentState.isDrawerOpen)) {
+        (AppState.delegate.appState.rootIndex != 1)) {
       logger.w("Checking if app can be closed");
-      if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
-        RootViewModel.scaffoldKey.currentState.openEndDrawer();
-      else if (AppState.delegate.appState.rootIndex != 1)
+      // if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
+      //   RootViewModel.scaffoldKey.currentState.openEndDrawer();
+      // else
+      if (AppState.delegate.appState.rootIndex != 1)
         AppState.delegate.appState.setCurrentTabIndex = 1;
       return Future.value(true);
     }

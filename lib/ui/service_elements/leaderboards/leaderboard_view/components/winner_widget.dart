@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -16,7 +17,7 @@ class WinnerWidgets extends StatelessWidget {
     @required this.userProfilePicUrl,
     this.isSpotLightVisible = true,
   }) : super(key: key);
-  final List<Scoreboard> scoreboard;
+  final List<ScoreBoard> scoreboard;
   final List<String> userProfilePicUrl;
   final bool isSpotLightVisible;
 

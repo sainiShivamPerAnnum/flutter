@@ -53,7 +53,9 @@ class TransactionLoader extends StatelessWidget {
                       TweenAnimationBuilder<Duration>(
                           duration: Duration(seconds: 31),
                           tween: Tween(
-                              begin: Duration(seconds: 31), end: Duration.zero),
+                            begin: Duration(seconds: 31),
+                            end: Duration.zero,
+                          ),
                           onEnd: () {
                             print('Timer ended');
                             AppState.backButtonDispatcher.didPopRoute();

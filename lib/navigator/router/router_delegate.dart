@@ -4,16 +4,16 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -36,9 +36,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/others/games/web/new_web_home/new_web_home.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -52,11 +50,13 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
-import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +64,7 @@ import 'package:flutter/material.dart';
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final _analytics = locator<AnalyticsService>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final List<Page> _pages = [];
 
@@ -74,6 +75,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
     appState.addListener(() {
+      log(navigatorKey.currentState.toString());
       notifyListeners();
     });
   }
@@ -125,7 +127,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
+      _journeyService.checkIfAnyAnimationIsLeft();
       notifyListeners();
+
       return Future.value(true);
     }
     notifyListeners();
@@ -146,6 +150,29 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       name: pageConfig.path,
       arguments: pageConfig,
     );
+  }
+
+  MaterialPage _insertPage(Widget child, PageConfiguration pageConfig) {
+    return MaterialPage(
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
+  }
+
+  void _insertPageData(Widget child, PageConfiguration pageConfig,
+      {int index}) {
+    AppState.screenStack
+        .insert(index ?? AppState.screenStack.length, ScreenItem.page);
+    print("Inseted a page ${pageConfig.key} to Index $index");
+    log("Current Stack: ${AppState.screenStack}");
+    _analytics.trackScreen(screen: pageConfig.name);
+    _pages.insert(
+      index ?? _pages.length - 1,
+      _insertPage(child, pageConfig),
+    );
+    //notifyListeners();
   }
 
   void _addPageData(Widget child, PageConfiguration pageConfig) {
@@ -203,9 +230,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
-          break;
-        case Pages.ChatSupport:
-          _addPageData(ChatSupport(), ChatSupportPageConfig);
           break;
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
@@ -304,7 +328,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
           break;
-
+        case Pages.JourneyView:
+          _addPageData(JourneyView(), JourneyViewPageConfig);
+          break;
         default:
           break;
       }
@@ -348,6 +374,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     routes.forEach((route) {
       addPage(route);
     });
+  }
+
+  void pushBelow(Widget child, PageConfiguration newRoute, {int index}) {
+    _insertPageData(child, newRoute, index: index);
   }
 
   // 7
@@ -537,6 +567,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.TopPlayerLeaderboard:
         TopPlayerLeaderboardPageConfig.currentPageAction = action;
         break;
+      case Pages.JourneyView:
+        JourneyViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -570,6 +603,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         // 8
         _setPageAction(appState.currentAction);
         pushWidget(appState.currentAction.widget, appState.currentAction.page);
+        break;
+      case PageState.addBelow:
+        _setPageAction(appState.currentAction);
+        pushBelow(appState.currentAction.widget, appState.currentAction.page);
+
         break;
       case PageState.addAll:
         // 9
@@ -614,21 +652,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: 'Where is my PAN Number used?',
         );
         break;
+      case "appRating":
+        if (checkForRatingDialog()) dialogWidget = FelloRatingDialog();
+        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
       showDialog(
-          context: navigatorKey.currentContext,
-          barrierDismissible: barrierDismissable,
-          builder: (ctx) {
-            return WillPopScope(
-                onWillPop: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  print("Popped the dialog");
-                  return Future.value(true);
-                },
-                child: dialogWidget);
-          });
+        context: navigatorKey.currentContext,
+        barrierDismissible: barrierDismissable,
+        builder: (ctx) {
+          return WillPopScope(
+              onWillPop: () {
+                AppState.backButtonDispatcher.didPopRoute();
+                print("Popped the dialog");
+                return Future.value(true);
+              },
+              child: dialogWidget);
+        },
+      );
     }
   }
 
@@ -636,15 +678,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     PageConfiguration pageConfiguration;
     switch (screenKey) {
       case 'save':
-        appState.setCurrentTabIndex = 0;
-        break;
-      case 'play':
-        appState.setCurrentTabIndex = 1;
-        break;
-      case 'win':
         appState.setCurrentTabIndex = 2;
         break;
-      case 'editProfile':
+      case 'play':
+        appState.setCurrentTabIndex = 0;
+        break;
+      // case 'win':
+      //   appState.setCurrentTabIndex = 2;
+      //   break;
+      case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'augDetails':
@@ -735,6 +777,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
         break;
+      case 'goldDetails':
+        pageConfiguration = AugmontGoldDetailsPageConfig;
+        break;
       case 'autosaveDetails':
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
@@ -808,4 +853,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   //       ),
   //       page: WalkThroughConfig);
   // }
+
+  bool checkForRatingDialog() {
+    bool isUserAlreadyRated =
+        PreferenceHelper.exists(PreferenceHelper.CACHE_RATING_IS_RATED);
+    if (isUserAlreadyRated) return false;
+
+    if (PreferenceHelper.exists(
+        PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
+      int expiryTimeStampInMSE = PreferenceHelper.getInt(
+          PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);
+      if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE)
+        return false;
+    }
+    PreferenceHelper.setInt(PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+        DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch);
+    return true;
+  }
 }

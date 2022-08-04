@@ -1,9 +1,16 @@
+import 'dart:developer';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,6 +23,7 @@ import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
   final String game;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<WebHomeViewModel>(
@@ -39,12 +47,12 @@ class WebHomeView extends StatelessWidget {
                       delegate: model.isLoading
                           ? MySliverAppBar(
                               expandedHeight: SizeConfig.screenHeight * 0.32,
-                              game: model.currentGameData,
+                              game: model.currentGameModel,
                               isLoading: true,
                             )
                           : MySliverAppBar(
                               expandedHeight: SizeConfig.screenHeight * 0.32,
-                              game: model.currentGameData,
+                              game: model.currentGameModel,
                             ),
                     ),
                     SliverList(
@@ -73,7 +81,7 @@ class WebHomeView extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    model.currentGameData.gameName,
+                                    model.currentGameModel.gameName,
                                     style: TextStyles.rajdhaniB.title2,
                                   ),
                           ),
@@ -137,13 +145,14 @@ class WebHomeView extends StatelessWidget {
                                     ),
                                     GameInfoBlock(
                                       coin:
-                                          '${NumberFormat.compact().format(model.currentGameData.prizeAmount)}',
+                                          '${NumberFormat.compact().format(model.currentGameModel.prizeAmount)}',
                                       coinText: 'Win upto',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.rewardGameAsset,
                                     ),
                                     GameInfoBlock(
-                                      coin: '${model.currentGameData.playCost}',
+                                      coin:
+                                          '${model.currentGameModel.playCost}',
                                       coinText: 'Per Game',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.aFelloToken,
@@ -235,7 +244,7 @@ class WebHomeView extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding16,
+                                height: SizeConfig.padding80 * 1.5,
                               ),
                             ],
                           ),
@@ -243,6 +252,23 @@ class WebHomeView extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: SizeConfig.padding24),
+                    child: AppPositiveBtn(
+                      btnText: 'Play',
+                      onPressed: () async {
+                        Haptic.vibrate();
+                        if (await model.setupGame()) {
+                          model.launchGame();
+                        }
+                        // model.pageController.jumpToPage(1);
+                      },
+                      width: SizeConfig.screenWidth * 0.8,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -262,7 +288,17 @@ class RechargeBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return rechargeOption.isCustom
         ? InkWell(
-            onTap: () {},
+            onTap: () {
+              return BaseUtil.openModalBottomSheet(
+                addToScreenStack: true,
+                enableDrag: false,
+                hapticVibrate: true,
+                isBarrierDismissable: false,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                content: RechargeModalSheet(),
+              );
+            },
             child: Container(
               height: SizeConfig.screenWidth * 0.277,
               width: SizeConfig.screenWidth * 0.317,
@@ -287,7 +323,19 @@ class RechargeBox extends StatelessWidget {
             ),
           )
         : InkWell(
-            onTap: () {},
+            onTap: () {
+              return BaseUtil.openModalBottomSheet(
+                addToScreenStack: true,
+                enableDrag: false,
+                hapticVibrate: true,
+                isBarrierDismissable: false,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                content: RechargeModalSheet(
+                  amount: rechargeOption.amount,
+                ),
+              );
+            },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
               height: SizeConfig.screenWidth * 0.277,
@@ -404,7 +452,7 @@ class GameInfoBlock extends StatelessWidget {
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  final GameData game;
+  final GameModel game;
   final bool isLoading;
   MySliverAppBar({
     @required this.expandedHeight,

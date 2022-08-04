@@ -2,10 +2,12 @@
 //Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
+
+import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -16,36 +18,35 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
-import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,10 +59,13 @@ class BaseUtil extends ChangeNotifier {
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
+  final _userRepo = locator<UserRepository>();
+  final _gameRepo = locator<GameRepo>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
-  UserTicketWallet _userTicketWallet;
+  int _ticketCount;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
@@ -85,7 +89,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates augmontGoldRates;
 
   ///KYC global object
-  TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
@@ -105,8 +108,8 @@ class BaseUtil extends ChangeNotifier {
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
   String zeroBalanceAssetUri;
-  static List<GameModel> gamesList;
   static String manualReferralCode;
+  static String referrerUserId;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
@@ -139,12 +142,7 @@ class BaseUtil extends ChangeNotifier {
       show_game_tutorial,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest, infoSliderIndex
-
-      // _atomicTicketGenerationLeftCount,
-      //ticketGenerateCount,
-      // atomicTicketDeletionLeftCount
-      ;
+  static int ticketCountBeforeRequest, infoSliderIndex;
 
   _setRuntimeDefaults() {
     isNewUser = false;
@@ -197,12 +195,7 @@ class BaseUtil extends ChangeNotifier {
       BaseAnalytics.init();
       BaseAnalytics.analytics.logAppOpen();
 
-      //remote config for various remote variables
-      logger.i('base util remote config');
-      await BaseRemoteConfig.init();
-
       setPackageInfo();
-      setGameDefaults();
 
       ///fetch on-boarding status and User details
       firebaseUser = _userService.firebaseUser;
@@ -222,6 +215,11 @@ class BaseUtil extends ChangeNotifier {
       }
     } catch (e) {
       logger.e(e.toString());
+      _internalOpsService.logFailure(
+        _userService.baseUser?.uid ?? '',
+        FailType.Splash,
+        {'error': "base util init : $e"},
+      );
     }
   }
 
@@ -237,133 +235,12 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
-  void setGameDefaults() {
-    List<GameModel> allgamesList = [
-      GameModel(
-        gameName: "Football",
-        pageConfig: THomePageConfig,
-        tag: 'football',
-        route: "/footballHome",
-        code: 'FO',
-        gameCode: Constants.GAME_TYPE_FOOTBALL,
-        shadowColor: Color(0xff4B489E),
-        thumbnailUri: BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.FOOTBALL_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.FOOTBALL_PLAY_PRIZE) ??
-            "50000",
-        analyticEvent: AnalyticsEvents.selectPlayFootball,
-      ),
-      GameModel(
-        gameName: "Cricket",
-        pageConfig: THomePageConfig,
-        tag: 'cricket',
-        route: "/cricketHome",
-        code: 'CR',
-        gameCode: Constants.GAME_TYPE_CRICKET,
-        shadowColor: Color(0xff4B489E),
-        thumbnailUri: BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.CRICKET_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.CRICKET_PLAY_PRIZE) ??
-            "50000",
-        analyticEvent: AnalyticsEvents.selectPlayCricket,
-      ),
-      GameModel(
-        gameName: "Pool Club",
-        pageConfig: THomePageConfig,
-        tag: 'poolclub',
-        route: "/poolHome",
-        code: 'PO',
-        gameCode: Constants.GAME_TYPE_POOLCLUB,
-        shadowColor: Color(0xff00982B),
-        thumbnailUri: BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.POOLCLUB_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.POOLCLUB_PLAY_PRIZE) ??
-            "10,000",
-        analyticEvent: AnalyticsEvents.selectPlayPoolClub,
-      ),
-      GameModel(
-        gameName: "Candy Fiesta",
-        pageConfig: THomePageConfig,
-        tag: 'candyFiesta',
-        route: "/candyFiestaHome",
-        code: 'CA',
-        gameCode: Constants.GAME_TYPE_CANDYFIESTA,
-        shadowColor: Color(0xff4B489E),
-        thumbnailUri: BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.CANDYFIESTA_PLAY_PRIZE) ??
-            "50000",
-        analyticEvent: AnalyticsEvents.selectCandyFiesta,
-      ),
-      GameModel(
-        gameName: "Tambola",
-        pageConfig: THomePageConfig,
-        tag: 'tambola',
-        route: "/tambolaHome",
-        code: 'TA',
-        gameCode: Constants.GAME_TYPE_TAMBOLA,
-        shadowColor: Color(0xff1D173D),
-        thumbnailUri: BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
-        playCost: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST) ??
-            "10",
-        prizeAmount: BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.TAMBOLA_PLAY_PRIZE) ??
-            "10,000",
-        analyticEvent: AnalyticsEvents.selectPlayTambola,
-      ),
-    ];
-    //Arrange Games according to the position defined in baseremoteconfig.
-    List<String> gamePosition = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.GAME_POSITION)
-        .split('-');
-    logger.d("Games List: $gamePosition");
-    gamesList = [];
-    gamePosition.forEach((code) {
-      gamesList.add(
-        allgamesList.firstWhere((game) => game.code == code),
-      );
-    });
-  }
-
-  Future<bool> isUnreadFreshchatSupportMessages() async {
-    try {
-      var unreadCount = await Freshchat.getUnreadCountAsync;
-      return (unreadCount['count'] > 0);
-    } catch (e) {
-      logger.e('Error reading unread count variable: $e');
-      Map<String, dynamic> errorDetails = {
-        'User number': _myUser.mobile,
-        'Error Type': 'Unread message count failed'
-      };
-      _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
-      return false;
-    }
-  }
-
   Future<void> refreshFunds() async {
     //TODO: ADD LOADER
     print("-----------------> I got called");
-    return _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
-      if (aValue != null) {
-        userFundWallet = aValue;
+    return _userRepo.getFundBalance().then((aValue) {
+      if (aValue.code == 200) {
+        userFundWallet = aValue.model;
         if (userFundWallet.augGoldQuantity > 0)
           _updateAugmontBalance(); //setstate call in method
 
@@ -412,7 +289,7 @@ class BaseUtil extends ChangeNotifier {
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
@@ -427,9 +304,10 @@ class BaseUtil extends ChangeNotifier {
         message: message,
         duration: Duration(seconds: seconds),
         backgroundGradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+        ),
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -443,7 +321,7 @@ class BaseUtil extends ChangeNotifier {
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
@@ -535,12 +413,13 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  static Future<void> openDialog(
-      {Widget content,
-      bool addToScreenStack,
-      bool hapticVibrate,
-      bool isBarrierDismissable,
-      ValueChanged<dynamic> callback}) async {
+  static Future<void> openDialog({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    bool isBarrierDismissable,
+    ValueChanged<dynamic> callback,
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     CustomLogger().d("Added a dialog");
@@ -553,19 +432,23 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static Future openModalBottomSheet(
-      {Widget content,
-      bool addToScreenStack,
-      bool hapticVibrate,
-      Color backgroundColor,
-      bool isBarrierDismissable,
-      BorderRadius borderRadius,
-      bool isScrollControlled = false}) {
+  static Future openModalBottomSheet({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    Color backgroundColor,
+    bool isBarrierDismissable,
+    BorderRadius borderRadius,
+    bool isScrollControlled = false,
+    BoxConstraints boxContraints,
+    bool enableDrag = false,
+  }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     return showModalBottomSheet(
-        enableDrag: false,
+        enableDrag: enableDrag,
+        constraints: boxContraints,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
         isScrollControlled: isScrollControlled ?? false,
@@ -616,7 +499,7 @@ class BaseUtil extends ChangeNotifier {
       isNewUser = null;
       isFirstFetchDone = null;
       _userFundWallet = null;
-      _userTicketWallet = null;
+      _ticketCount = null;
       firebaseUser = null;
       baseAnalytics = null;
       feedCards = null;
@@ -631,7 +514,6 @@ class BaseUtil extends ChangeNotifier {
       _augmontDetail = null;
       augmontGoldRates = null;
       _currentAugmontTxn = null;
-      tambolaWinnersDetail = null;
       prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
@@ -647,6 +529,7 @@ class BaseUtil extends ChangeNotifier {
 
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
+      referrerUserId = null;
       _setRuntimeDefaults();
 
       return true;
@@ -654,30 +537,6 @@ class BaseUtil extends ChangeNotifier {
       logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
-  }
-
-  int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
-    if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
-      if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
-        logger.d('Requested board count is less than needed tickets');
-        int ticketCountRequired =
-            _userTicketWallet.getActiveTickets() - requestedBoards.length;
-
-        if (ticketCountRequired > 0 && !BaseUtil.ticketRequestSent) {
-          BaseUtil.ticketRequestSent = true;
-          BaseUtil.ticketCountBeforeRequest = requestedBoards.length;
-          return ticketCountRequired;
-        }
-      }
-      if (BaseUtil.ticketRequestSent) {
-        if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          logger.d(
-              'Previous request had completed and now the ticket count has increased');
-          //BaseUtil.ticketRequestSent = false; //not really needed i think
-        }
-      }
-    }
-    return 0;
   }
 
   getProfilePicture() async {
@@ -830,12 +689,20 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void refreshAugmontBalance() async {
-    _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
-      if (aValue != null) {
-        userFundWallet = aValue;
+    _userRepo.getFundBalance().then((aValue) {
+      if (aValue.code == 200) {
+        userFundWallet = aValue.model;
         if (userFundWallet.augGoldQuantity > 0) _updateAugmontBalance();
       }
     });
+  }
+
+  Future<void> fetchUserAugmontDetail() async {
+    ApiResponse<UserAugmontDetail> augmontDetailResponse =
+        await _userRepo.getUserAugmontDetails();
+    if (augmontDetailResponse.code == 200) {
+      augmontDetail = augmontDetailResponse.model;
+    }
   }
 
   Future<void> _updateAugmontBalance() async {
@@ -855,7 +722,7 @@ class BaseUtil extends ChangeNotifier {
     }).catchError((err) {
       if (_myUser.uid != null) {
         var errorDetails = {'error_msg': err.toString()};
-        _dbModel.logFailure(
+        _internalOpsService.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
       print('$err');
@@ -877,8 +744,6 @@ class BaseUtil extends ChangeNotifier {
 
   void flipSecurityValue(bool value) {
     _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
-    // saveSecurityValue(this.isSecurityEnabled);
-    AppState.unsavedPrefs = true;
     notifyListeners();
   }
 
@@ -978,10 +843,10 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime get userCreationTimestamp => _userCreationTimestamp;
 
-  UserTicketWallet get userTicketWallet => _userTicketWallet;
+  int get ticketCount => _ticketCount;
 
-  set userTicketWallet(UserTicketWallet value) {
-    _userTicketWallet = value;
+  set ticketCount(int value) {
+    _ticketCount = value;
     notifyListeners();
   }
 

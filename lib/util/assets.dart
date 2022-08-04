@@ -100,6 +100,7 @@ class Assets {
   static final String amazonClaim = "assets/images/amazon_claim.png";
   static final String iphone = "assets/images/iphone.png";
   static final String iphone2 = "assets/images/iphone2.png";
+  static final String ipad = "assets/images/ipad.png";
   static final String amazonGC = "assets/images/amazon_coupon.png";
   static final String myntraGV = "assets/images/myntra_coupon.png";
   static final String moneyBag = "assets/images/money_bag.png";

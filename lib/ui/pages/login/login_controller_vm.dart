@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -10,10 +10,12 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -34,6 +36,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
+import '../../../util/haptic.dart';
+
 enum LoginSource { FIREBASE, TRUECALLER }
 
 class LoginControllerViewModel extends BaseModel {
@@ -42,12 +46,14 @@ class LoginControllerViewModel extends BaseModel {
   final augmontProvider = locator<AugmontModel>();
   final _analyticsService = locator<AnalyticsService>();
   final userService = locator<UserService>();
+  final _userCoinService = locator<UserCoinService>();
   final logger = locator<CustomLogger>();
   final apiPaths = locator<ApiPath>();
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
   PageController _controller;
@@ -335,7 +341,7 @@ class LoginControllerViewModel extends BaseModel {
                       userService.baseUser, token, cstate);
                   logger.e(response.toString());
                   if (response.code == 400) {
-                    message =
+                    message = response.errorMessage ??
                         "Unable to create account, please try again later.";
                     _usernameKey.currentState.model.enabled = true;
                     flag = false;
@@ -398,7 +404,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User is set: " + userService.firebaseUser.uid);
 
     ApiResponse<BaseUser> user =
-        await dbProvider.getUser(userService.firebaseUser.uid);
+        await _userRepo.getUserById(id: userService.firebaseUser.uid);
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');
@@ -442,8 +448,6 @@ class LoginControllerViewModel extends BaseModel {
       if (source == LoginSource.TRUECALLER)
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
-      _userRepo.updateUserAppFlyer(
-          user.model, await userService.firebaseUser.getIdToken());
 
       _onSignUpComplete();
     }
@@ -451,6 +455,8 @@ class LoginControllerViewModel extends BaseModel {
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
+      _userRepo.updateUserAppFlyer(
+          userService.baseUser, await userService.firebaseUser.getIdToken());
       await _analyticsService.login(
           isOnBoarded: userService.isUserOnborded,
           baseUser: userService.baseUser);
@@ -465,6 +471,7 @@ class LoginControllerViewModel extends BaseModel {
 
     await BaseAnalytics.logUserProfile(userService.baseUser);
     await userService.init();
+    await _userCoinService.init();
     await baseProvider.init();
     await fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
@@ -484,12 +491,16 @@ class LoginControllerViewModel extends BaseModel {
       return;
     }
 
-    Map<String, dynamic> response = await dbProvider.initDeviceInfo();
-    final String deviceId = response["deviceId"];
-    final String platform = response["platform"];
-
-    _userRepo.setNewDeviceId(
-        uid: userService.baseUser.uid, deviceId: deviceId, platform: platform);
+    Map<String, dynamic> response = await _internalOpsService.initDeviceInfo();
+    if (response != null) {
+      final String deviceId = response["deviceId"];
+      final String platform = response["platform"];
+      _userRepo.setNewDeviceId(
+        uid: userService.baseUser.uid,
+        deviceId: deviceId,
+        platform: platform,
+      );
+    }
 
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
@@ -702,6 +713,12 @@ class LoginControllerViewModel extends BaseModel {
           "Please enter your mobile number to authenticate.");
       loginUsingTrueCaller = false;
     });
+  }
+
+  void onTermsAndConditionsClicked() {
+    Haptic.vibrate();
+    BaseUtil.launchUrl('https://fello.in/policy/tnc');
+    _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
   exit() {

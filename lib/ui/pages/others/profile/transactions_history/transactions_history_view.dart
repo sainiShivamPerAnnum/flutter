@@ -247,7 +247,7 @@ class TransactionTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        _txnService.getTileSubtitle(txn.type),
+        _txnService.getTileSubtitle(txn.assetType),
         style: TextStyle(
           color: _txnService.getTileColor(txn.tranStatus),
           fontSize: SizeConfig.smallTextSize,

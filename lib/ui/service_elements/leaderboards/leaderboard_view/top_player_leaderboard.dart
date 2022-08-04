@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -47,7 +48,7 @@ class TopPlayer extends StatelessWidget {
     @required this.isUserInTopThree,
   });
 
-  final LeaderBoardModal model;
+  final LeaderboardModel model;
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
@@ -67,7 +68,6 @@ class TopPlayer extends StatelessWidget {
   }
 
   Widget _buildTopPlayer(BuildContext context) {
-    log(SizeConfig.screenHeight.toString());
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Column(
@@ -96,7 +96,7 @@ class TopPlayer extends StatelessWidget {
                     Text(
                       "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
                       style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kLastUpdatedTextColor),
+                          .colour(UiConstants.kTextColor2),
                     ),
                   ],
                 ),
@@ -136,7 +136,7 @@ class TopPlayer extends StatelessWidget {
         right: SizeConfig.padding24,
       ),
       decoration: BoxDecoration(
-        color: UiConstants.kLeaderBoardBackgroundColor,
+        color: UiConstants.kSecondaryBackgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(SizeConfig.roundness24),
           topRight: Radius.circular(SizeConfig.roundness24),

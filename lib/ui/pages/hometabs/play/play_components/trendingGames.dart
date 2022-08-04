@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
@@ -29,15 +30,15 @@ class TrendingGamesSection extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: BouncingScrollPhysics(),
-        itemCount:
-            model.isGamesListDataLoading ? 3 : model.gamesListData.length,
+        itemCount: model.isGamesListDataLoading
+            ? 3
+            : model.trendingGamesListData.length,
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
         itemBuilder: (ctx, index) {
           return model.isGamesListDataLoading
               ? TrendingGamesShimmer()
-              :  TrendingGames(
-                  game: model.gamesListData[index],
-                  isTrending: model.gamesListData[index].isTrending,
+              : TrendingGames(
+                  game: model.trendingGamesListData[index],
                 );
         },
       ),
@@ -46,17 +47,15 @@ class TrendingGamesSection extends StatelessWidget {
 }
 
 class TrendingGames extends StatelessWidget {
-  final GameData game;
-  final bool isTrending;
+  final GameModel game;
   const TrendingGames({
     this.game,
-    this.isTrending,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return isTrending? InkWell(
+    return InkWell(
       onTap: () {
         Haptic.vibrate();
         AppState.delegate.parseRoute(
@@ -135,7 +134,7 @@ class TrendingGames extends StatelessWidget {
           ],
         ),
       ),
-    ): Container();
+    );
   }
 }
 

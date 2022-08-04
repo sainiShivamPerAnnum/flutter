@@ -1,6 +1,7 @@
-import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
@@ -65,9 +67,21 @@ Future mainInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await PreferenceHelper.initiate();
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      name: "Fello",
+      options: FirebaseOptions(
+          apiKey: "AIzaSyDx_08AOnLkIY5Ui5ENQx_wMv3VeDODwR8",
+          authDomain: "fello-dev-station.firebaseapp.com",
+          databaseURL:
+              "https://fello-dev-station-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "fello-dev-station",
+          storageBucket: "fello-dev-station.appspot.com",
+          messagingSenderId: "76548371644",
+          appId: "1:76548371644:web:6d4c05206b16118b174cb9",
+          measurementId: "G-7GGFTPBVCX"),
+    );
   } catch (e) {
-    print('$e');
+    print('Firebase initialisation error: $e');
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
 }
@@ -123,41 +137,45 @@ class _MyAppState extends State<MyApp> {
           ),
           ChangeNotifierProvider(create: (_) => appState),
         ],
-        child: PropertyChangeProvider<LeaderboardService,
-            LeaderBoardServiceProperties>(
-          value: locator<LeaderboardService>(),
-          child: PropertyChangeProvider<TransactionService,
-              TransactionServiceProperties>(
-            value: locator<TransactionService>(),
-            child: PropertyChangeProvider<UserCoinService,
-                UserCoinServiceProperties>(
-              value: locator<UserCoinService>(),
-              child: PropertyChangeProvider<UserService, UserServiceProperties>(
-                value: locator<UserService>(),
-                child: PropertyChangeProvider<WinnerService,
-                    WinnerServiceProperties>(
-                  value: locator<WinnerService>(),
-                  child: PropertyChangeProvider<PaytmService,
-                      PaytmServiceProperties>(
-                    value: locator<PaytmService>(),
-                    child: MaterialApp.router(
-                      locale: DevicePreview.locale(context),
-                      // Add the locale here
-                      useInheritedMediaQuery: FlavorConfig.isQA(),
-                      builder: DevicePreview.appBuilder,
-                      title: Constants.APP_NAME,
-                      theme: FelloTheme.lightMode(),
-                      debugShowCheckedModeBanner: false,
-                      backButtonDispatcher: backButtonDispatcher,
-                      routerDelegate: delegate,
-                      routeInformationParser: parser,
-                      localizationsDelegates: [
-                        S.delegate,
-                        GlobalMaterialLocalizations.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                      ],
-                      supportedLocales: S.delegate.supportedLocales,
+        child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
+          value: locator<JourneyService>(),
+          child: PropertyChangeProvider<LeaderboardService,
+              LeaderBoardServiceProperties>(
+            value: locator<LeaderboardService>(),
+            child: PropertyChangeProvider<TransactionService,
+                TransactionServiceProperties>(
+              value: locator<TransactionService>(),
+              child: PropertyChangeProvider<UserCoinService,
+                  UserCoinServiceProperties>(
+                value: locator<UserCoinService>(),
+                child:
+                    PropertyChangeProvider<UserService, UserServiceProperties>(
+                  value: locator<UserService>(),
+                  child: PropertyChangeProvider<WinnerService,
+                      WinnerServiceProperties>(
+                    value: locator<WinnerService>(),
+                    child: PropertyChangeProvider<PaytmService,
+                        PaytmServiceProperties>(
+                      value: locator<PaytmService>(),
+                      child: MaterialApp.router(
+                        // locale: DevicePreview.locale(context),
+                        // // Add the locale here
+                        // builder: DevicePreview.appBuilder,
+                        title: Constants.APP_NAME,
+                        theme: FelloTheme.lightMode(),
+                        useInheritedMediaQuery: true,
+                        debugShowCheckedModeBanner: false,
+                        backButtonDispatcher: backButtonDispatcher,
+                        routerDelegate: delegate,
+                        routeInformationParser: parser,
+                        localizationsDelegates: [
+                          S.delegate,
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                        ],
+                        supportedLocales: S.delegate.supportedLocales,
+                      ),
                     ),
                   ),
                 ),
