@@ -97,4 +97,12 @@ class UiConstants {
     stops: [0.0, 0.4],
     tileMode: TileMode.clamp,
   );
+
+  static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
+    colors: [Color(0xff141316), Colors.white.withOpacity(0.0)],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    stops: [0.0],
+    tileMode: TileMode.clamp,
+  );
 }

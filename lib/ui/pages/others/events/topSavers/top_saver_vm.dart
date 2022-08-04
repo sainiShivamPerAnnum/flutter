@@ -46,8 +46,15 @@ class TopSaverViewModel extends BaseModel {
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
 
+  List<String> __profileUrlList = [];
   List<ScoreBoard> currentParticipants;
   List<PastHighestSaver> _pastWinners;
+
+  List<String> get profileUrlList => __profileUrlList;
+  set profileUrlList(List<String> value) {
+    __profileUrlList = value;
+    notifyListeners();
+  }
 
   List<PastHighestSaver> get pastWinners => _pastWinners;
 
@@ -216,6 +223,8 @@ class TopSaverViewModel extends BaseModel {
           );
         }
       }
+
+      getWinnerDP();
     } else
       pastWinners = [];
 
@@ -228,9 +237,13 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Future<String> getWinnerDP(int index) async {
-    String dpUrl = await _dbModel.getUserDP(pastWinners[index].userid);
-    return dpUrl;
+  getWinnerDP() async {
+    for (int i = 0; i < pastWinners.length; i++) {
+      String dpUrl = await _dbModel.getUserDP(pastWinners[i].userid);
+      __profileUrlList.add(dpUrl);
+    }
+
+    notifyListeners();
   }
 
   getUserRankIfAny() {

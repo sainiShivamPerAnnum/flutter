@@ -322,23 +322,167 @@ class CampaignView extends StatelessWidget {
                 ),
               ),
 
+              //The banner in the mid
               SliverToBoxAdapter(
                 child: Container(
-                  color: Colors.white,
-                  margin: EdgeInsets.all(20.0),
-                  height: 300,
-                  width: 20,
+                  height: SizeConfig.screenWidth * 0.61,
+                  width: double.infinity,
+                  child: Image.asset(
+                    "assets/images/banner_trophy.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
 
+              // //The banner in the mid
+              // SliverToBoxAdapter(
+              //   child: Container(
+              //     padding: EdgeInsets.all(SizeConfig.padding34),
+              //     height: SizeConfig.screenWidth * 0.61,
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //       color: Colors.transparent,
+              //     ),
+              //     child: Row(
+              //       children: [
+              //         //The texts
+              //         Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Text(
+              //               "WIN",
+              //               style: TextStyles.body1.colour(Colors.white),
+              //             ),
+              //             Text(
+              //               "₹ 250",
+              //               style: TextStyles.title0.bold
+              //                   .colour(UiConstants.kWinnerPlayerPrimaryColor),
+              //             ),
+              //             Text(
+              //               "Win amazing rewards\nin digital gold",
+              //               style: TextStyles.body3
+              //                   .colour(UiConstants.kTextFieldTextColor),
+              //             ),
+              //           ],
+              //         ),
+              //         Expanded(
+              //           child: SvgPicture.asset(
+              //             "assets/svg/trophy.svg",
+              //             height: double.maxFinite,
+              //           ),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
+
+              //The list of past winners
               SliverToBoxAdapter(
                 child: Container(
-                  color: Colors.white,
-                  margin: EdgeInsets.all(20.0),
-                  height: 300,
-                  width: 20,
+                  padding: EdgeInsets.all(SizeConfig.padding34),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Past Winners",
+                        style: TextStyles.title3.bold.colour(Colors.white),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      model.profileUrlList.isEmpty
+                          ? ListLoader(bottomPadding: true)
+                          : ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: model.pastWinners.length < 3
+                                  ? model.pastWinners.length
+                                  : 3,
+                              scrollDirection: Axis.vertical,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding20,
+                                    horizontal: SizeConfig.padding2,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${index + 1}',
+                                              style:
+                                                  TextStyles.rajdhaniSB.body2,
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding20,
+                                            ),
+                                            ClipOval(
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    model.profileUrlList[index],
+                                                width: SizeConfig.iconSize5,
+                                                height: SizeConfig.iconSize5,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding12,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                model.pastWinners[index]
+                                                    .username,
+                                                style: TextStyles
+                                                    .sourceSans.body3
+                                                    .setOpecity(0.8),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        "${model.pastWinners[index].score} gms"
+                                            .toString(),
+                                        style: TextStyles.rajdhaniM.body3,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                      TextButton(
+                        onPressed: () {
+                          //View all the past Winners
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'See All',
+                              style: TextStyles.rajdhaniSB.body2,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding6,
+                            ),
+                            SvgPicture.asset(
+                              'assets/temp/chevron_right.svg',
+                              width: SizeConfig.iconSize1,
+                              height: SizeConfig.iconSize1,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         );
