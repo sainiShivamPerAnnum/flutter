@@ -26,48 +26,6 @@ class FelloAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth,
-      // height: SizeConfig.padding40,
-      margin: EdgeInsets.only(
-        top: SizeConfig.viewInsets.top + SizeConfig.padding12,
-        bottom: SizeConfig.padding12,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-      ),
-      child: Row(
-        children: [
-          if (leading != null) leading,
-          SizedBox(width: 16),
-          if (title != null)
-            FittedBox(
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style: TextStyles.title4.bold.colour(Colors.white),
-              ),
-            ),
-          Spacer(),
-          if (actions != null)
-            Row(
-              children: actions,
-            )
-        ],
-      ),
-    );
-  }
-}
-
-class FelloAppBarV2 extends StatelessWidget {
-  final Widget leading;
-  final List<Widget> actions;
-  final String title;
-
-  FelloAppBarV2({this.leading, this.actions, this.title, Key key})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenHeight / 8,
         color: UiConstants.kBackgroundColor,
@@ -145,52 +103,6 @@ class NotificationButton extends StatelessWidget {
                 ],
               ),
             ));
-  }
-}
-
-class FelloAppBarBackButton extends StatelessWidget {
-  final Function onBackPress;
-  final Color color;
-  FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
-      child: CircleAvatar(
-        radius: SizeConfig.avatarRadius,
-        backgroundColor: color.withOpacity(0.4),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding4),
-          child: Icon(
-            Icons.arrow_back_rounded,
-            color: UiConstants.primaryColor,
-            size: SizeConfig.iconSize1,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FelloAppBarBackButtonV2 extends StatelessWidget {
-  final Function onBackPress;
-  final Color color;
-  FelloAppBarBackButtonV2({this.onBackPress, this.color = Colors.white});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
-      child: Padding(
-        padding: EdgeInsets.all(SizeConfig.padding4),
-        child: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.white,
-          size: SizeConfig.iconSize1,
-        ),
-      ),
-    );
   }
 }
 

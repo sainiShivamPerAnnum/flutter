@@ -14,22 +14,23 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-  
+
   static S current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-      
+
       return S.current;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -369,11 +370,21 @@ class S {
 
   // skipped getter for the '-----------------------------------' key
 
+  //Journey
+  String get navBarJourney {
+    return Intl.message(
+      'Journey',
+      name: 'navBarJourney',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
-  String get navBarFinance {
+  String get navBarSave {
     return Intl.message(
       'Save',
-      name: 'navBarFinance',
+      name: 'navBarSave',
       desc: '',
       args: [],
     );
@@ -390,10 +401,10 @@ class S {
   }
 
   /// `Save`
-  String get navBarSave {
+  String get navBarWin {
     return Intl.message(
-      'Save',
-      name: 'navBarSave',
+      'Win',
+      name: 'navBarWin',
       desc: '',
       args: [],
     );
