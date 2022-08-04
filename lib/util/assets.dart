@@ -180,6 +180,14 @@ class Assets {
   static final String rewardGameAsset = 'assets/svg/reward_svg.svg';
   static final String circleGameAsset = 'assets/svg/circle_svg.svg';
 
+  //Campaign Screen
+  static final String visualGridAsset = "assets/svg/visual_grid.svg";
+  static final String coinsIconAsset = "assets/svg/coins.svg";
+  static final String rankIconAsset = "assets/svg/rank.svg";
+  static final String bannerTrophy = "assets/images/banner_trophy.png";
+
+  static final String chevronAsset = " assets/temp/chevron_right.svg";
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',

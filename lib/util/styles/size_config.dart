@@ -117,6 +117,15 @@ class SizeConfig {
   static double get roundness40 => screenWidth * 0.096; //40
   static double get roundness56 => screenWidth * 0.135; //56
 
+  //SLIVER APP BAR (Campaign Screen)
+  static double get sliverAppExpandableSize => screenWidth * 0.5;
+  static double get sliverAppBarPaddingSmall => screenWidth * 0.05;
+  static double get sliverAppBarPaddingLarge => screenWidth * 0.128;
+  static double get boxWidthLarge => screenWidth * 0.371;
+  static double get profileDPSize => screenWidth * 0.05;
+  static double get boxDividerMargins => screenWidth * 0.016;
+  static double get bannerHeight => screenWidth * 0.61;
+
   static BorderRadius get scaffoldRoundness => BorderRadius.only(
         topLeft: Radius.circular(SizeConfig.padding40),
         topRight: Radius.circular(SizeConfig.padding40),

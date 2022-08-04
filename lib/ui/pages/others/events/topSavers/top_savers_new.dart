@@ -10,6 +10,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -63,13 +64,13 @@ class CampaignView extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     icon: Icon(Icons.arrow_back_ios)),
-                expandedHeight: SizeConfig.screenWidth * 0.5,
+                expandedHeight: SizeConfig.sliverAppExpandableSize,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: [
                       //Background image
                       SvgPicture.asset(
-                        "assets/svg/visual_grid.svg",
+                        Assets.visualGridAsset,
                         fit: BoxFit.cover,
                         width: double.maxFinite,
                         height: double.maxFinite,
@@ -84,7 +85,7 @@ class CampaignView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                "assets/svg/coins.svg",
+                                Assets.coinsIconAsset,
                                 fit: BoxFit.cover,
                               ),
                               const SizedBox(
@@ -100,7 +101,7 @@ class CampaignView extends StatelessWidget {
                                         TextStyles.body1.colour(Colors.white),
                                   ),
                                   Text(
-                                    "Save a penny a day",
+                                    model.subTitle,
                                     style: TextStyles.title3
                                         .colour(Colors.white)
                                         .bold,
@@ -112,9 +113,9 @@ class CampaignView extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.fromLTRB(
                                 0,
-                                SizeConfig.screenWidth * 0.128,
+                                SizeConfig.sliverAppBarPaddingLarge,
                                 0,
-                                SizeConfig.screenWidth * 0.05),
+                                SizeConfig.sliverAppBarPaddingSmall),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -149,7 +150,7 @@ class CampaignView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "DAY 06",
+                          "Day ${model.weekDay.toString()}",
                           style: TextStyles.title3.bold.colour(Colors.white),
                         ),
                         const SizedBox(
@@ -159,21 +160,22 @@ class CampaignView extends StatelessWidget {
                           children: [
                             //YOUR SAVINGS
                             Container(
-                              height: SizeConfig.screenWidth * 0.371,
-                              width: SizeConfig.screenWidth * 0.371,
-                              padding: EdgeInsets.fromLTRB(20, 0, 40, 0), //TODO
+                              height: SizeConfig.boxWidthLarge,
+                              width: SizeConfig.boxWidthLarge,
+                              padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
+                                  0, SizeConfig.padding34, 0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(SizeConfig.roundness12),
                                 ),
-                                color: Color(0xff3B3B3B), //TODO
+                                color: UiConstants.kDarkBoxColor,
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ProfileImageSE(
-                                    radius: SizeConfig.screenWidth * 0.05,
+                                    radius: SizeConfig.profileDPSize,
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -186,7 +188,6 @@ class CampaignView extends StatelessWidget {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  //TODO
                                   Text(
                                     model.userAmount.toString(),
                                     style: TextStyles.body1.bold
@@ -201,12 +202,12 @@ class CampaignView extends StatelessWidget {
                             //HIGHEST SAVING //RANK
                             Expanded(
                               child: Container(
-                                height: SizeConfig.screenWidth * 0.371,
+                                height: SizeConfig.boxWidthLarge,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(SizeConfig.roundness12),
                                   ),
-                                  color: Colors.transparent, //TODO
+                                  color: Colors.transparent,
                                 ),
                                 child: Column(
                                   children: [
@@ -214,20 +215,18 @@ class CampaignView extends StatelessWidget {
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.fromLTRB(
-                                            SizeConfig.screenWidth * 0.016,
+                                            SizeConfig.boxDividerMargins,
                                             0,
                                             0,
-                                            (SizeConfig.screenWidth * 0.016) /
-                                                2), //TODO
-
+                                            (SizeConfig.boxDividerMargins) / 2),
                                         padding: EdgeInsets.all(
-                                            SizeConfig.padding16), //TODO
+                                            SizeConfig.padding16),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
                                                 SizeConfig.roundness16),
                                           ),
-                                          color: Color(0xff3B3B3B), //TODO
+                                          color: UiConstants.kDarkBoxColor,
                                         ),
                                         child: Row(
                                           mainAxisAlignment:
@@ -238,11 +237,10 @@ class CampaignView extends StatelessWidget {
                                               style: TextStyles.body4
                                                   .colour(Colors.white),
                                             ),
-                                            //TODO
                                             Flexible(
                                               child: Text(
-                                                "₹ ${model.highestSavings}",
-                                                style: TextStyles.body1.bold
+                                                "${model.highestSavings} gms",
+                                                style: TextStyles.body2.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -256,11 +254,10 @@ class CampaignView extends StatelessWidget {
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.fromLTRB(
-                                            SizeConfig.screenWidth * 0.016,
-                                            (SizeConfig.screenWidth * 0.016) /
-                                                2,
+                                            SizeConfig.boxDividerMargins,
+                                            (SizeConfig.boxDividerMargins) / 2,
                                             0,
-                                            0), //TODO
+                                            0),
                                         padding: EdgeInsets.all(
                                             SizeConfig.padding16),
                                         decoration: BoxDecoration(
@@ -268,7 +265,8 @@ class CampaignView extends StatelessWidget {
                                             Radius.circular(
                                                 SizeConfig.roundness12),
                                           ),
-                                          color: Color(0xff3B3B3B), //TODO
+                                          color:
+                                              UiConstants.kDarkBoxColor, //TODO
                                         ),
                                         child: Row(
                                           mainAxisAlignment:
@@ -278,7 +276,7 @@ class CampaignView extends StatelessWidget {
                                                 child: Row(
                                               children: [
                                                 SvgPicture.asset(
-                                                  "assets/svg/rank.svg",
+                                                  Assets.rankIconAsset,
                                                 ),
                                                 const SizedBox(
                                                   width: 5,
@@ -290,16 +288,14 @@ class CampaignView extends StatelessWidget {
                                                 ),
                                               ],
                                             )),
-
-                                            //TODO
                                             Flexible(
                                               child: Text(
                                                 model.userRank == 0
-                                                    ? '-'
+                                                    ? 'N/A'
                                                     : model.userRank
                                                         .toString()
                                                         .padLeft(2, '0'),
-                                                style: TextStyles.body1.bold
+                                                style: TextStyles.body2.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,
                                                 textAlign: TextAlign.end,
@@ -325,10 +321,10 @@ class CampaignView extends StatelessWidget {
               //The banner in the mid
               SliverToBoxAdapter(
                 child: Container(
-                  height: SizeConfig.screenWidth * 0.61,
+                  height: SizeConfig.bannerHeight,
                   width: double.infinity,
                   child: Image.asset(
-                    "assets/images/banner_trophy.png",
+                    Assets.bannerTrophy,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -472,7 +468,7 @@ class CampaignView extends StatelessWidget {
                               width: SizeConfig.padding6,
                             ),
                             SvgPicture.asset(
-                              'assets/temp/chevron_right.svg',
+                              Assets.chevronAsset,
                               width: SizeConfig.iconSize1,
                               height: SizeConfig.iconSize1,
                             )

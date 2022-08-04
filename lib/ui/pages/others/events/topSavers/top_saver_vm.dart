@@ -35,7 +35,9 @@ class TopSaverViewModel extends BaseModel {
 
   String saverFreq = "daily";
 
-  double goldPrice = 5000; //TODO, dummy gold price for calculation
+  String subTitle = "Save a penny a day";
+
+  int weekDay = DateTime.now().weekday;
 
   int _userRank = 0;
   double _userAmount = 0;
@@ -257,7 +259,7 @@ class TopSaverViewModel extends BaseModel {
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
-        _userAmount = curentUserStat.score * goldPrice; //TODO
+        _userAmount = curentUserStat.score; //TODO
       }
 
       fetchHighestSavings();
@@ -287,8 +289,8 @@ class TopSaverViewModel extends BaseModel {
 
   fetchHighestSavings() {
     for (ScoreBoard e in currentParticipants) {
-      if ((e.score * goldPrice) > _highestSavings) {
-        _highestSavings = (e.score * goldPrice);
+      if ((e.score) > _highestSavings) {
+        _highestSavings = (e.score);
       }
     }
   }
