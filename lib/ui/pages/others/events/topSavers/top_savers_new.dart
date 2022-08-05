@@ -33,6 +33,8 @@ import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../service_elements/user_service/profile_image.dart';
+import '../../../../widgets/faq_card/faq_card_vm.dart';
+import '../../../../widgets/faq_card/faq_new_card_view.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
 import '../../../hometabs/play/play_components/titlesGames.dart';
 
@@ -488,7 +490,13 @@ class CampaignView extends StatelessWidget {
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
                 ),
-              )
+              ),
+
+              //Following is the new FAQ Widget, just for testing purposes
+              // SliverToBoxAdapter(
+              //   child:
+              //       FAQsComponent(category: FAQCardViewModel.FAQ_CAT_GENERAL),
+              // ),
             ],
           ),
         );
