@@ -78,6 +78,9 @@ class ApiPath {
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
       "/user/$uid/gold/withdrawable";
+  static String get validateVPA => "/vpa";
+  static String get vpa => "/vpa";
+  static String get withdrawal => "/withdrawal";
 
   // Getter Apis
   static const String statistics = '/statistics';

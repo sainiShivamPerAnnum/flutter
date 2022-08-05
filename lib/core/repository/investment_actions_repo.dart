@@ -200,16 +200,16 @@ class InvestmentActionsRepository {
     }
   }
 
-  Future<ApiResponse<DepositResponseModel>> withdrawlComplete(
+  Future<ApiResponse<bool>> withdrawlComplete(
       {String tranDocId,
       double amount,
       String userUid,
       Map<String, dynamic> sellGoldMap}) async {
     Map<String, dynamic> _body = {
-      "tran_doc_id": tranDocId,
-      "user_id": userUid,
+      // "tran_doc_id": tranDocId,
+      "uid": userUid,
       "amount": amount,
-      "sell_gold_map": sellGoldMap,
+      "sellGoldMap": sellGoldMap,
     };
 
     _logger.d("withdrawComplete:: Pre encryption: $_body");
@@ -221,23 +221,26 @@ class InvestmentActionsRepository {
     }
     try {
       final String _bearer = await _getBearerToken();
-      final response = await APIService.instance
-          .postData(_apiPaths.kWithdrawlComplete, body: _body, token: _bearer);
+      final response = await APIService.instance.postData(ApiPath.withdrawal,
+          body: _body,
+          token: _bearer,
+          cBaseUrl:
+              "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev");
+      _logger.d("Response from withdrawal: $response");
+      // DepositResponseModel _investmentDepositModel =
+      //     DepositResponseModel.fromMap(response);
 
-      DepositResponseModel _investmentDepositModel =
-          DepositResponseModel.fromMap(response);
+      // _logger.d(_investmentDepositModel.toString());
 
-      _logger.d(_investmentDepositModel.toString());
+      // if (_investmentDepositModel?.note != null &&
+      //     _investmentDepositModel?.note?.title != null &&
+      //     _investmentDepositModel.note.title.isNotEmpty)
+      //   return ApiResponse(
+      //       model: _investmentDepositModel,
+      //       code: 400,
+      //       errorMessage: "Complete user withdrawal failed");
 
-      if (_investmentDepositModel?.note != null &&
-          _investmentDepositModel?.note?.title != null &&
-          _investmentDepositModel.note.title.isNotEmpty)
-        return ApiResponse(
-            model: _investmentDepositModel,
-            code: 400,
-            errorMessage: "Complete user withdrawal failed");
-
-      return ApiResponse(model: _investmentDepositModel, code: 200);
+      return ApiResponse(model: true, code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

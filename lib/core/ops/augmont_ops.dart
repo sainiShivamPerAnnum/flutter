@@ -476,21 +476,27 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    Map<String, String> _params = {
-      SubmitGoldSell.fldMobile: _userService.baseUser.mobile,
-      SubmitGoldSell.fldQuantity: quantity.toString(),
-      SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    // Map<String, String> _params = {
+    //   SubmitGoldSell.fldMobile: _userService.baseUser.mobile,
+    //   SubmitGoldSell.fldQuantity: quantity.toString(),
+    //   SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    //   SubmitGoldSell.fldBlockId: sellRates.blockId,
+    //   SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
+    //   SubmitGoldSell.fldAccHolderName:
+    //       _baseProvider.augmontDetail.bankHolderName,
+    //   SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
+    //   SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
+    //   SubmitGoldSell.fldMerchantTranId: _tranIdResponse.model
+    // };
+
+    Map<String, dynamic> _params = {
+      SubmitGoldSell.fldQuantity: quantity,
       SubmitGoldSell.fldBlockId: sellRates.blockId,
-      SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
-      SubmitGoldSell.fldAccHolderName:
-          _baseProvider.augmontDetail.bankHolderName,
-      SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
-      SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
-      SubmitGoldSell.fldMerchantTranId: _tranIdResponse.model
+      SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice,
     };
 
     _logger.d(_params);
-    ApiResponse<DepositResponseModel> _onSellCompleteResponse =
+    ApiResponse<bool> _onSellCompleteResponse =
         await _investmentActionsRepository.withdrawlComplete(
             tranDocId: _tranIdResponse.model,
             amount: -1 * _baseProvider.currentAugmontTxn.amount,
@@ -499,80 +505,87 @@ class AugmontModel extends ChangeNotifier {
 
     bool _successFlag = true;
     if (_onSellCompleteResponse.code == 200) {
-      try {
-        _baseProvider.currentAugmontTxn.tranStatus =
-            UserTransaction.TRAN_STATUS_COMPLETE;
-        _baseProvider
-                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-            _onSellCompleteResponse.model.augResponse.data.transactionId;
-        _baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldMerchantTranId] =
-            _onSellCompleteResponse
-                .model.augResponse.data.merchantTransactionId;
-        _baseProvider.currentAugmontTxn
-            .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
-                _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
-            0.0;
+      AppState.delegate.appState.isTxnLoaderInView = true;
 
-        double newAugPrinciple =
-            _onSellCompleteResponse.model.response.augmontPrinciple;
-        if (newAugPrinciple != null && newAugPrinciple > 0) {
-          _userService.augGoldPrinciple = newAugPrinciple;
-        }
-        double newAugQuantity =
-            _onSellCompleteResponse.model.response.augmontGoldQty;
-        if (newAugQuantity != null && newAugQuantity >= 0) {
-          _userService.augGoldQuantity = newAugQuantity;
-        }
-        int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-        if (newFlcBalance > 0) {
-          _userCoinService.setFlcBalance(newFlcBalance);
-        }
-        _baseProvider.currentAugmontTxn = _onSellCompleteResponse
-            .model.response.transactionDoc.transactionDetail;
-        _txnService.updateTransactions();
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      } catch (e) {
-        _successFlag = false;
-      }
+      // try {
+      //   _baseProvider.currentAugmontTxn.tranStatus =
+      //       UserTransaction.TRAN_STATUS_COMPLETE;
+      //   _baseProvider
+      //           .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+      //       _onSellCompleteResponse.model.augResponse.data.transactionId;
+      //   _baseProvider.currentAugmontTxn
+      //           .augmnt[UserTransaction.subFldMerchantTranId] =
+      //       _onSellCompleteResponse
+      //           .model.augResponse.data.merchantTransactionId;
+      //   _baseProvider.currentAugmontTxn
+      //       .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+      //           _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
+      //       0.0;
+
+      //   double newAugPrinciple =
+      //       _onSellCompleteResponse.model.response.augmontPrinciple;
+      //   if (newAugPrinciple != null && newAugPrinciple > 0) {
+      //     _userService.augGoldPrinciple = newAugPrinciple;
+      //   }
+      //   double newAugQuantity =
+      //       _onSellCompleteResponse.model.response.augmontGoldQty;
+      //   if (newAugQuantity != null && newAugQuantity >= 0) {
+      //     _userService.augGoldQuantity = newAugQuantity;
+      //   }
+      //   int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
+      //   if (newFlcBalance > 0) {
+      //     _userCoinService.setFlcBalance(newFlcBalance);
+      //   }
+      //   _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+      //       .model.response.transactionDoc.transactionDetail;
+      //   _txnService.updateTransactions();
+      //   if (_augmontTxnProcessListener != null)
+      //     _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      // } catch (e) {
+      //   _successFlag = false;
+      // }
     } else {
       _successFlag = false;
     }
 
-    if (!_successFlag) {
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
-        'message':
-            _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
-      });
+    // if (!_successFlag) {
+    //   _internalOpsService.logFailure(
+    //       _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
+    //     'message':
+    //         _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
+    //   });
 
-      if (_onSellCompleteResponse?.model != null &&
-          _onSellCompleteResponse?.model?.note != null &&
-          _onSellCompleteResponse?.model?.note?.title != null &&
-          _onSellCompleteResponse.model.note.title.isNotEmpty) {
-        final title = _onSellCompleteResponse.model.note.title;
-        String body =
-            'Your transaction is being verified and will be updated shortly';
+    //   if (_onSellCompleteResponse?.model != null &&
+    //       _onSellCompleteResponse?.model?.note != null &&
+    //       _onSellCompleteResponse?.model?.note?.title != null &&
+    //       _onSellCompleteResponse.model.note.title.isNotEmpty) {
+    //     final title = _onSellCompleteResponse.model.note.title;
+    //     String body =
+    //         'Your transaction is being verified and will be updated shortly';
 
-        if (_onSellCompleteResponse?.model?.note?.body != null &&
-            _onSellCompleteResponse.model.note.body.isNotEmpty) {
-          body = _onSellCompleteResponse.model.note.body;
-        }
+    //     if (_onSellCompleteResponse?.model?.note?.body != null &&
+    //         _onSellCompleteResponse.model.note.body.isNotEmpty) {
+    //       body = _onSellCompleteResponse.model.note.body;
+    //     }
 
-        BaseUtil.showNegativeAlert(title, body);
-      } else {
-        BaseUtil.showNegativeAlert('Verifying transaction',
-            'Your transaction is being verified and will be updated shortly');
-      }
+    //     BaseUtil.showNegativeAlert(title, body);
+    //   } else {
+    //     BaseUtil.showNegativeAlert('Verifying transaction',
+    //         'Your transaction is being verified and will be updated shortly');
+    //   }
 
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_CANCELLED;
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    //   _baseProvider.currentAugmontTxn.tranStatus =
+    //       UserTransaction.TRAN_STATUS_CANCELLED;
+    //   if (_augmontTxnProcessListener != null)
+    //     _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      AppState.backButtonDispatcher.didPopRoute();
-    }
+    //   AppState.backButtonDispatcher.didPopRoute();
+    // }
+  }
+
+  handleWithdrawalFcmResponse(Map<String, dynamic> data) {
+    AppState.delegate.appState.isTxnLoaderInView = false;
+    BaseUtil.showPositiveAlert("gold Sell successful", "Do further process");
   }
 
   ///returns path where invoice is generated and saved

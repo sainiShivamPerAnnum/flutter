@@ -31,6 +31,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   String _myUserDpUrl;
   String _myUserName;
+  String _myUpiId;
   String _dob;
   String _gender;
   String _idToken;
@@ -53,6 +54,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
+  String get upiId => _myUpiId;
 
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
@@ -88,6 +90,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.myUserName);
     _logger
         .d("My user name updated in userservice, property listeners notified");
+  }
+
+  setMyUpiId(String upi) {
+    _myUpiId = upi;
+    notifyListeners(UserServiceProperties.myUpiId);
+    _logger.d(
+        "My user upi Id updated in userservice, property listeners notified");
   }
 
   setDateOfBirth(String dob) {
@@ -199,6 +208,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
       showSecurityPrompt = null;
+      _myUpiId = null;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");

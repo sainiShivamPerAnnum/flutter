@@ -70,6 +70,7 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
   String userRegdPan;
+  String userUpi;
 
   ///Tambola global objects
   // int _dailyPickCount;
@@ -143,6 +144,7 @@ class BaseUtil extends ChangeNotifier {
       _isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
+      _isUpiInfoMissing,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int ticketCountBeforeRequest, infoSliderIndex;
@@ -180,6 +182,7 @@ class BaseUtil extends ChangeNotifier {
     isGoogleSignInProgress = false;
     isDeviceOffline = false;
     ticketRequestSent = false;
+    isUpiInfoMissing = true;
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
@@ -231,6 +234,12 @@ class BaseUtil extends ChangeNotifier {
     panService = new PanService();
     if (!checkKycMissing) {
       userRegdPan = await panService.getUserPan();
+    }
+    if (!isUpiInfoMissing) {
+      //TODO Function to get upiId
+      _userService.setMyUpiId("arabKumar1205@paytm");
+
+      isUpiInfoMissing = false;
     }
   }
 
@@ -662,6 +671,7 @@ class BaseUtil extends ChangeNotifier {
       lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
+      isUpiInfoMissing = true;
 
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
@@ -1026,6 +1036,13 @@ class BaseUtil extends ChangeNotifier {
 
   set isGoogleSignInProgress(value) {
     this._isGoogleSignInProgress = value;
+    notifyListeners();
+  }
+
+  bool get isUpiInfoMissing => this._isUpiInfoMissing;
+
+  set isUpiInfoMissing(bool value) {
+    this._isUpiInfoMissing = value;
     notifyListeners();
   }
 }

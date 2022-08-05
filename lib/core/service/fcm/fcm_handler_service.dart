@@ -1,4 +1,5 @@
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
@@ -24,6 +25,7 @@ class FcmHandler extends ChangeNotifier {
   final _webGameViewModel = locator<WebGameViewModel>();
   final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
+  final _augOps = locator<AugmontModel>();
 
   ValueChanged<Map> notifListener;
 
@@ -56,6 +58,10 @@ class FcmHandler extends ChangeNotifier {
               .fcmTransactionResponseUpdate(data['payload']);
 
           break;
+        case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
+          _augOps.handleWithdrawalFcmResponse(data);
+          break;
+
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
           _webGameViewModel.handleCricketHeroRoundEnd(
               data, Constants.GAME_TYPE_CRICKET);

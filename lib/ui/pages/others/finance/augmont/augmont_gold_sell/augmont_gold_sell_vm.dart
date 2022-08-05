@@ -38,7 +38,15 @@ class AugmontGoldSellViewModel extends BaseModel {
   final _paymentRepo = locator<PaymentRepository>();
 
   bool isGoldRateFetching = false;
-  bool isQntFetching = false;
+  bool _isQntFetching = false;
+
+  get isQntFetching => this._isQntFetching;
+
+  set isQntFetching(value) {
+    this._isQntFetching = value;
+    notifyListeners();
+  }
+
   AugmontRates goldRates;
   bool _isGoldSellInProgress = false;
   FocusNode sellFieldNode = FocusNode();
@@ -69,7 +77,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     goldAmountController = TextEditingController();
     await fetchNotices();
     fetchGoldRates();
-    fetchLockedGoldQnt();
+    await fetchLockedGoldQnt();
 
     if (_baseUtil.augmontDetail == null) {
       await _baseUtil.fetchUserAugmontDetail();
@@ -248,7 +256,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     }
     isGoldSellInProgress = true;
     _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
-    _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
+    // _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
     final totalSellAmount =
         BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
@@ -258,20 +266,20 @@ class AugmontGoldSellViewModel extends BaseModel {
     );
   }
 
-  Future<void> _onSellTransactionComplete(UserTransaction txn) async {
-    if (_baseUtil.currentAugmontTxn == null) return;
-    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE ||
-        txn.tranStatus == UserTransaction.TRAN_STATUS_PROCESSING) {
-      ///update UI
-      onSellComplete(true);
-      _augmontModel.completeTransaction();
-      return true;
-    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED ||
-        txn.tranStatus == UserTransaction.TRAN_STATUS_FAILED) {
-      onSellComplete(false);
-      _augmontModel.completeTransaction();
-    }
-  }
+  // Future<void> _onSellTransactionComplete(UserTransaction txn) async {
+  //   if (_baseUtil.currentAugmontTxn == null) return;
+  //   if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE ||
+  //       txn.tranStatus == UserTransaction.TRAN_STATUS_PROCESSING) {
+  //     ///update UI
+  //     onSellComplete(true);
+  //     _augmontModel.completeTransaction();
+  //     return true;
+  //   } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED ||
+  //       txn.tranStatus == UserTransaction.TRAN_STATUS_FAILED) {
+  //     onSellComplete(false);
+  //     _augmontModel.completeTransaction();
+  //   }
+  // }
 
   onSellComplete(bool flag) {
     // _isDepositInProgress = false;

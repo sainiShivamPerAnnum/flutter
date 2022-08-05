@@ -167,6 +167,7 @@ class Assets {
   static final String glitter = "assets/lotties/glitter.json";
   static final String gtBackground = "assets/images/gtdbg.png";
   static final String gtConfetti = "assets/lotties/confetti.json";
+  static final String upiIcon = "assets/vectors/icons/upi.svg";
 
   static final List<String> onboardingHeader = [
     'Save',

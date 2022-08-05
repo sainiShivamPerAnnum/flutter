@@ -58,6 +58,8 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/go
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/upi/upi_view.dart';
+import 'package:felloapp/ui/pages/others/finance/upi/upi_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -188,6 +190,7 @@ void setupLocator() {
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
   locator.registerFactory(() => CampaignRepo());
+  locator.registerFactory(() => UserUPIDetailsViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

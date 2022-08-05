@@ -36,10 +36,11 @@ class Transactions extends StatelessWidget {
                   children: [
                     SizedBox(height: SizeConfig.scaffoldMargin),
                     FelloBriefTile(
-                      leadingAsset: Assets.bank,
-                      title: "Bank Account Details",
+                      leadingAsset: Assets.upiIcon,
+                      title: "UPI Details",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
-                      onTap: () => onTap(EditAugBankDetailsPageConfig),
+                      coloredIcon: false,
+                      onTap: () => onTap(UserUpiDetailsViewPageConfig),
                     ),
                     FelloBriefTile(
                       leadingAsset: Assets.txnHistory,

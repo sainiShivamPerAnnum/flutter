@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -116,281 +117,307 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
       },
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        body: HomeBackground(
-          whiteBackground: WhiteBackground(
-              color: UiConstants.scaffoldColor,
-              height: SizeConfig.screenHeight * 0.08),
-          child: Column(
-            children: [
-              FelloAppBar(
-                leading: FelloAppBarBackButton(),
-                title: "Sell Digital Gold",
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  padding: EdgeInsets.all(SizeConfig.padding20),
-                  decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness32),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xff0B175F0D),
-                          blurRadius: SizeConfig.padding12,
-                          offset: Offset(0, SizeConfig.padding12),
-                          spreadRadius: SizeConfig.padding20,
-                        )
-                      ]),
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            top: 10, bottom: 0, left: 10, right: 10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Stack(
+          children: [
+            HomeBackground(
+              whiteBackground: WhiteBackground(
+                  color: UiConstants.scaffoldColor,
+                  height: SizeConfig.screenHeight * 0.08),
+              child: Column(
+                children: [
+                  FelloAppBar(
+                    leading: FelloAppBarBackButton(),
+                    title: "Sell Digital Gold",
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      padding: EdgeInsets.all(SizeConfig.padding20),
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness32),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xff0B175F0D),
+                              blurRadius: SizeConfig.padding12,
+                              offset: Offset(0, SizeConfig.padding12),
+                              spreadRadius: SizeConfig.padding20,
+                            )
+                          ]),
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 10, bottom: 0, left: 10, right: 10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  locale.saveGoldBalancelabel,
-                                  style: TextStyles.title5.light,
-                                ),
-                                PropertyChangeConsumer<UserService,
-                                    UserServiceProperties>(
-                                  properties: [
-                                    UserServiceProperties.myUserFund
-                                  ],
-                                  builder: (ctx, model, child) => Text(
-                                    locale.saveGoldBalanceValue(
-                                        model.userFundWallet.augGoldQuantity ??
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      locale.saveGoldBalancelabel,
+                                      style: TextStyles.title5.light,
+                                    ),
+                                    PropertyChangeConsumer<UserService,
+                                        UserServiceProperties>(
+                                      properties: [
+                                        UserServiceProperties.myUserFund
+                                      ],
+                                      builder: (ctx, model, child) => Text(
+                                        locale.saveGoldBalanceValue(model
+                                                .userFundWallet
+                                                .augGoldQuantity ??
                                             0.0),
-                                    style: TextStyles.title5.bold
-                                        .colour(UiConstants.tertiarySolid),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: SizeConfig.padding8),
-                            (model.sellNotice == null &&
-                                    model.nonWithdrawableQnt > 0)
-                                ? Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.padding8),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.tertiaryLight,
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness16),
-                                    ),
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding16),
-                                    child: Text(
-                                      _buildNonWithdrawString(model),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyles.body3.light,
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(height: SizeConfig.padding8),
-                            (model.sellNotice != null &&
-                                    model.sellNotice.isNotEmpty)
-                                ? Container(
-                                    width: SizeConfig.screenWidth,
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.padding8),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.primaryLight,
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness16),
-                                    ),
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding16),
-                                    child: Text(
-                                      model.sellNotice,
-                                      style: TextStyles.body3.light,
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(height: SizeConfig.padding8),
-                            Row(
-                              children: [
-                                Text(
-                                  "Sell in grams",
-                                  style: TextStyles.title4.bold,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding16,
-                            ),
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              height: SizeConfig.screenWidth * 0.135,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Color(0xffDFE4EC),
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SizedBox(width: SizeConfig.padding24),
-                                  Expanded(
-                                    child: TextField(
-                                      focusNode: model.sellFieldNode,
-                                      enabled: !model.isGoldSellInProgress,
-                                      controller: model.goldAmountController,
-                                      enableInteractiveSelection: false,
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              decimal: true, signed: true),
-                                      style: TextStyles.body2.bold,
-                                      onChanged: (val) {
-                                        model.goldSellGrams =
-                                            double.tryParse(val);
-                                        model.updateGoldAmount();
-                                      },
-                                      decoration: InputDecoration(
-                                        suffix: Text("gms  ",
-                                            style: TextStyles.body2.bold),
-                                        border: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
+                                        style: TextStyles.title5.bold
+                                            .colour(UiConstants.tertiarySolid),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.275,
-                                    height: SizeConfig.screenWidth * 0.135,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(
-                                            SizeConfig.roundness12),
-                                        bottomRight: Radius.circular(
-                                            SizeConfig.roundness12),
-                                      ),
-                                      color: UiConstants.scaffoldColor,
-                                    ),
-                                    padding: EdgeInsets.only(
-                                        left: SizeConfig.padding20),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "You receive",
-                                          style: TextStyles.body3
-                                              .colour(Colors.grey),
+                                  ],
+                                ),
+                                SizedBox(height: SizeConfig.padding8),
+                                (model.sellNotice == null &&
+                                        model.nonWithdrawableQnt > 0)
+                                    ? Container(
+                                        margin: EdgeInsets.only(
+                                            top: SizeConfig.padding8),
+                                        decoration: BoxDecoration(
+                                          color: UiConstants.tertiaryLight,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.roundness16),
                                         ),
-                                        SizedBox(
-                                            height: SizeConfig.padding4 / 2),
-                                        FittedBox(
-                                          child: Text(
-                                            "₹ ${model.goldAmountFromGrams.toStringAsFixed(2)}",
-                                            style: TextStyles.body2.bold,
+                                        padding: EdgeInsets.all(
+                                            SizeConfig.padding16),
+                                        child: Text(
+                                          _buildNonWithdrawString(model),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyles.body3.light,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: SizeConfig.padding8),
+                                (model.sellNotice != null &&
+                                        model.sellNotice.isNotEmpty)
+                                    ? Container(
+                                        width: SizeConfig.screenWidth,
+                                        margin: EdgeInsets.only(
+                                            top: SizeConfig.padding8),
+                                        decoration: BoxDecoration(
+                                          color: UiConstants.primaryLight,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.roundness16),
+                                        ),
+                                        padding: EdgeInsets.all(
+                                            SizeConfig.padding16),
+                                        child: Text(
+                                          model.sellNotice,
+                                          style: TextStyles.body3.light,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: SizeConfig.padding8),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Sell in grams",
+                                      style: TextStyles.title4.bold,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding16,
+                                ),
+                                Container(
+                                  width: SizeConfig.screenWidth,
+                                  height: SizeConfig.screenWidth * 0.135,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xffDFE4EC),
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: SizeConfig.padding24),
+                                      Expanded(
+                                        child: TextField(
+                                          focusNode: model.sellFieldNode,
+                                          enabled: !model.isGoldSellInProgress,
+                                          controller:
+                                              model.goldAmountController,
+                                          enableInteractiveSelection: false,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  decimal: true, signed: true),
+                                          style: TextStyles.body2.bold,
+                                          onChanged: (val) {
+                                            model.goldSellGrams =
+                                                double.tryParse(val);
+                                            model.updateGoldAmount();
+                                          },
+                                          decoration: InputDecoration(
+                                            suffix: Text("gms  ",
+                                                style: TextStyles.body2.bold),
+                                            border: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding24,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                model.amoutChip(model.chipAmountList[0]),
-                                model.amoutChip(model.chipAmountList[1]),
-                                model.amoutChip(model.chipAmountList[2]),
-                                // model.amoutChip(model.chipAmountList[3]),
-                              ],
-                            ),
-                            SizedBox(height: SizeConfig.padding32),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(bottom: SizeConfig.padding24),
-                              child: CurrentPriceWidget(
-                                fetchGoldRates: model.fetchGoldRates,
-                                goldprice: model.goldSellPrice ?? 0.0,
-                                isFetching: model.isGoldRateFetching,
-                              ),
-                            ),
-                            (baseProvider.checkKycMissing)
-                                ? _addKycInfoWidget()
-                                : Container(),
-                            (_checkBankInfoMissing)
-                                ? _addBankInfoWidget()
-                                : Container(),
-
-                            (baseProvider.checkKycMissing ||
-                                    _checkBankInfoMissing)
-                                ? Container()
-                                : Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.padding24),
-                                    width: SizeConfig.screenWidth,
-                                    child: FelloButtonLg(
-                                      child: model.isGoldSellInProgress
-                                          ? SpinKitThreeBounce(
-                                              color: Colors.white,
-                                              size: 20,
-                                            )
-                                          : Text(
-                                              "SELL",
-                                              style: TextStyles.body2
-                                                  .colour(Colors.white)
-                                                  .bold,
+                                      ),
+                                      Container(
+                                        width: SizeConfig.screenWidth * 0.275,
+                                        height: SizeConfig.screenWidth * 0.135,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(
+                                                SizeConfig.roundness12),
+                                            bottomRight: Radius.circular(
+                                                SizeConfig.roundness12),
+                                          ),
+                                          color: UiConstants.scaffoldColor,
+                                        ),
+                                        padding: EdgeInsets.only(
+                                            left: SizeConfig.padding20),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "You receive",
+                                              style: TextStyles.body3
+                                                  .colour(Colors.grey),
                                             ),
-                                      onPressed: () {
-                                        if (!model.isGoldSellInProgress &&
-                                            !model.isQntFetching) {
-                                          FocusScope.of(context).unfocus();
-                                          model.initiateSell();
-                                        }
-                                      },
-                                    ),
+                                            SizedBox(
+                                                height:
+                                                    SizeConfig.padding4 / 2),
+                                            FittedBox(
+                                              child: Text(
+                                                "₹ ${model.goldAmountFromGrams.toStringAsFixed(2)}",
+                                                style: TextStyles.body2.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
                                   ),
-                            SizedBox(
-                              height: SizeConfig.padding20,
-                            ),
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                text:
-                                    "Your balance will be credited to your registered bank account within ",
-                                style: TextStyles.body3.colour(Colors.grey),
-                                children: [
-                                  TextSpan(
-                                    text: "1-2 business working days",
-                                    style: TextStyles.body3.bold
-                                        .colour(UiConstants.tertiarySolid),
-                                  )
-                                ],
-                              ),
-                            ),
-                            // Text(
-                            //   "You will receive the amount within 24-48 hours",
-                            //   textAlign: TextAlign.center,
-                            //   style: TextStyles.body3.colour(Colors.grey),
-                            // ),
-                            SizedBox(height: SizeConfig.padding80),
-                          ],
-                        )),
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding24,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    model.amoutChip(model.chipAmountList[0]),
+                                    model.amoutChip(model.chipAmountList[1]),
+                                    model.amoutChip(model.chipAmountList[2]),
+                                    // model.amoutChip(model.chipAmountList[3]),
+                                  ],
+                                ),
+                                SizedBox(height: SizeConfig.padding32),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      bottom: SizeConfig.padding24),
+                                  child: CurrentPriceWidget(
+                                    fetchGoldRates: model.fetchGoldRates,
+                                    goldprice: model.goldSellPrice ?? 0.0,
+                                    isFetching: model.isGoldRateFetching,
+                                  ),
+                                ),
+                                (baseProvider.checkKycMissing)
+                                    ? _addKycInfoWidget()
+                                    : Container(),
+                                // (_checkBankInfoMissing)
+                                //     ? _addBankInfoWidget()
+                                //     : Container(),
+
+                                if (!model.isQntFetching) AddUpiTile(),
+
+                                (baseProvider.checkKycMissing ||
+                                        _checkBankInfoMissing ||
+                                        _checkUpiInfoMissing)
+                                    ? Container()
+                                    : (model.isQntFetching
+                                        ? Center(
+                                            child: SpinKitThreeBounce(
+                                                size: SizeConfig.padding32,
+                                                color:
+                                                    UiConstants.primaryColor),
+                                          )
+                                        : Container(
+                                            margin: EdgeInsets.only(
+                                                top: SizeConfig.padding24),
+                                            width: SizeConfig.screenWidth,
+                                            child: FelloButtonLg(
+                                              child: model.isGoldSellInProgress
+                                                  ? SpinKitThreeBounce(
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    )
+                                                  : Text(
+                                                      "SELL",
+                                                      style: TextStyles.body2
+                                                          .colour(Colors.white)
+                                                          .bold,
+                                                    ),
+                                              onPressed: () {
+                                                if (!model
+                                                        .isGoldSellInProgress &&
+                                                    !model.isQntFetching) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  model.initiateSell();
+                                                }
+                                              },
+                                            ),
+                                          )),
+                                SizedBox(
+                                  height: SizeConfig.padding20,
+                                ),
+                                RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    text:
+                                        "Your balance will be credited to your registered bank account within ",
+                                    style: TextStyles.body3.colour(Colors.grey),
+                                    children: [
+                                      TextSpan(
+                                        text: "1-2 business working days",
+                                        style: TextStyles.body3.bold
+                                            .colour(UiConstants.tertiarySolid),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                // Text(
+                                //   "You will receive the amount within 24-48 hours",
+                                //   textAlign: TextAlign.center,
+                                //   style: TextStyles.body3.colour(Colors.grey),
+                                // ),
+                                SizedBox(height: SizeConfig.padding80),
+                              ],
+                            )),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Consumer<AppState>(
+                builder: (ctx, m, child) =>
+                    AppState.delegate.appState.isTxnLoaderInView
+                        ? TransactionLoader()
+                        : SizedBox()),
+          ],
         ),
       ),
     );
@@ -599,6 +626,8 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
       baseProvider.augmontDetail.ifsc.isEmpty ||
       baseProvider.augmontDetail.ifsc == null);
 
+  bool get _checkUpiInfoMissing => baseProvider.isUpiInfoMissing;
+
   _buildRow(String title, String value) {
     return ListTile(
       title: Container(
@@ -722,5 +751,29 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     } catch (e) {
       return 'Please enter a valid amount';
     }
+  }
+}
+
+class AddUpiTile extends StatelessWidget {
+  const AddUpiTile({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [UserServiceProperties.myUpiId],
+        builder: (context, model, properties) {
+          return model.upiId == null || model.upiId.isEmpty
+              ? FelloBriefTile(
+                  leadingAsset: Assets.upiIcon,
+                  title: "Add UPI Id",
+                  subtitle: "For instant withdrawals",
+                  onTap: () {
+                    AppState.delegate.appState.currentAction = PageAction(
+                        page: UserUpiDetailsViewPageConfig,
+                        state: PageState.addPage);
+                  },
+                )
+              : SizedBox();
+        });
   }
 }

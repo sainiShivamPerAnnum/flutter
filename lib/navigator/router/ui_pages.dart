@@ -55,6 +55,7 @@ const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
 const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
+const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 
 enum Pages {
   Splash,
@@ -111,6 +112,7 @@ enum Pages {
   AutosaveProcessView,
   UserAutosaveDetailsView,
   AutosaveTransactionsView,
+  UserUpiDetailsView,
 }
 
 class PageConfiguration {
@@ -502,3 +504,8 @@ PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
     path: AutosaveTransactionsViewPath,
     uiPage: Pages.AutosaveTransactionsView,
     name: "Autosave transaction Screen");
+PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
+    key: 'UserUpiDetailsView',
+    path: UserUPIDetailsViewPath,
+    uiPage: Pages.UserUpiDetailsView,
+    name: "User Upi details Screen");
