@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class TitlesGames extends StatelessWidget {
-  final Widget icon,richText;
+  final Widget icon, richText;
   final bool isLast;
   TitlesGames({
     this.icon,

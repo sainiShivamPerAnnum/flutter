@@ -528,10 +528,19 @@ class EventLeaderboard extends StatelessWidget {
                     "Current Standings",
                     style: TextStyles.title5.bold,
                   ),
-                  Spacer(),s
-                  Text(
-                    "Your rank: ${model.userRank == 0 ? '-' : model.userRank.toString().padLeft(2, '0')} ",
-                    style: TextStyles.body3,
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      AppState.delegate.appState.currentAction = PageAction(
+                          page: CampaignViewPageConfig,
+                          state: PageState.addWidget,
+                          widget: CampaignView(
+                              eventType: Constants.HS_DAILY_SAVER));
+                    },
+                    child: Text(
+                      "Your rank: ${model.userRank == 0 ? '-' : model.userRank.toString().padLeft(2, '0')} ",
+                      style: TextStyles.body3,
+                    ),
                   )
                 ],
               ),

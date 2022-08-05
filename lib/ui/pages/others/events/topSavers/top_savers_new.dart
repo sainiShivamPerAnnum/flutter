@@ -33,6 +33,8 @@ import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../service_elements/user_service/profile_image.dart';
+import '../../../hometabs/play/play_components/play_info_section.dart';
+import '../../../hometabs/play/play_components/titlesGames.dart';
 
 // extension TruncateDoubles on double {
 //   double truncateToDecimalPlaces(int fractionalDigits) =>
@@ -479,6 +481,22 @@ class CampaignView extends StatelessWidget {
                   ),
                 ),
               ),
+
+              SliverToBoxAdapter(
+                child: InfoComponent(
+                  heading: "How to participate?",
+                  assetList: [
+                    Assets.singleStarAsset,
+                    Assets.singleCoinAsset,
+                    Assets.singleTmbolaTicket,
+                  ],
+                  titleList: [
+                    'Choose a product for\nsaving.',
+                    'Enter an amount you\nwant to save. ',
+                    'Play games with tokens\nearned.'
+                  ],
+                ),
+              )
             ],
           ),
         );

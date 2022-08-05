@@ -188,6 +188,11 @@ class Assets {
 
   static final String chevronAsset = " assets/temp/chevron_right.svg";
 
+  static final String singleStarAsset = "assets/svg/star_single.svg";
+  static final String singleCoinAsset = "assets/svg/coin_single.svg";
+  static final String singleTmbolaTicket =
+      "assets/svg/tambola_ticket_single.svg";
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',
