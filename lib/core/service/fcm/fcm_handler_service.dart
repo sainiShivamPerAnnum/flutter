@@ -13,6 +13,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
 
 enum MsgSource { Foreground, Background, Terminated }
 
@@ -25,7 +26,7 @@ class FcmHandler extends ChangeNotifier {
   final _webGameViewModel = locator<WebGameViewModel>();
   final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
-  final _augOps = locator<AugmontModel>();
+  final _augOps = locator<AugmontGoldSellViewModel>();
 
   ValueChanged<Map> notifListener;
 
