@@ -54,7 +54,6 @@ class CampaignView extends StatelessWidget {
         model.init(eventType, isGameRedirected);
       },
       builder: (context, model, child) {
-        print(model.highestSavings);
         return Scaffold(
           backgroundColor: UiConstants.kBackgroundColor,
           body: CustomScrollView(
@@ -65,7 +64,7 @@ class CampaignView extends StatelessWidget {
                 backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
                 leading: IconButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      AppState.backButtonDispatcher.didPopRoute();
                     },
                     icon: Icon(Icons.arrow_back_ios)),
                 expandedHeight: SizeConfig.sliverAppExpandableSize,
@@ -125,8 +124,8 @@ class CampaignView extends StatelessWidget {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(right: 10),
-                                  width: 8,
-                                  height: 8,
+                                  width: SizeConfig.padding10,
+                                  height: SizeConfig.padding10,
                                   decoration: const BoxDecoration(
                                       color: UiConstants.kPrimaryColor,
                                       shape: BoxShape.circle),
@@ -333,49 +332,6 @@ class CampaignView extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // //The banner in the mid
-              // SliverToBoxAdapter(
-              //   child: Container(
-              //     padding: EdgeInsets.all(SizeConfig.padding34),
-              //     height: SizeConfig.screenWidth * 0.61,
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       color: Colors.transparent,
-              //     ),
-              //     child: Row(
-              //       children: [
-              //         //The texts
-              //         Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: [
-              //             Text(
-              //               "WIN",
-              //               style: TextStyles.body1.colour(Colors.white),
-              //             ),
-              //             Text(
-              //               "₹ 250",
-              //               style: TextStyles.title0.bold
-              //                   .colour(UiConstants.kWinnerPlayerPrimaryColor),
-              //             ),
-              //             Text(
-              //               "Win amazing rewards\nin digital gold",
-              //               style: TextStyles.body3
-              //                   .colour(UiConstants.kTextFieldTextColor),
-              //             ),
-              //           ],
-              //         ),
-              //         Expanded(
-              //           child: SvgPicture.asset(
-              //             "assets/svg/trophy.svg",
-              //             height: double.maxFinite,
-              //           ),
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // ),
 
               //The list of past winners
               SliverToBoxAdapter(

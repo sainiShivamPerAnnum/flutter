@@ -242,7 +242,7 @@ class TopSaverViewModel extends BaseModel {
         }
       }
 
-      getWinnerDP();
+      getWinnersProfilePicList();
     } else
       pastWinners = [];
 
@@ -255,7 +255,7 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  getWinnerDP() async {
+  getWinnersProfilePicList() async {
     for (int i = 0; i < pastWinners.length; i++) {
       String dpUrl = await _dbModel.getUserDP(pastWinners[i].userid);
       __profileUrlList.add(dpUrl);

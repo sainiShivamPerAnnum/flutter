@@ -62,7 +62,7 @@ class WinnersLeaderBoardSE extends StatelessWidget {
                                     bottom: SizeConfig.padding16,
                                     left: SizeConfig.pageHorizontalMargins),
                                 child: Text(
-                                  "Leaderboardsss",
+                                  "Leaderboard",
                                   style: TextStyles.title3.bold,
                                 ),
                               ),
