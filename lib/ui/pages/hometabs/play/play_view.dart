@@ -58,17 +58,9 @@ class Play extends StatelessWidget {
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
                 InfoComponent(
-                  heading: "What to do on Play?",
-                  assetList: [
-                    Assets.ludoGameAsset,
-                    Assets.leaderboardGameAsset,
-                    Assets.giftGameAsset,
-                  ],
-                  titleList: [
-                    'Play Games with the\ntokens won',
-                    'Get listed on the game\nleaderboard',
-                    'Win coupons and cashbacks\nas rewards',
-                  ],
+                  heading: model.boxHeading,
+                  assetList: model.boxAssets,
+                  titleList: model.boxTitlles,
                 ),
                 SizedBox(
                   height: SizeConfig.padding64,

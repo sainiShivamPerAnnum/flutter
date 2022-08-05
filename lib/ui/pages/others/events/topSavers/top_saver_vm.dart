@@ -19,6 +19,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../util/assets.dart';
+
 class TopSaverViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
@@ -47,6 +49,20 @@ class TopSaverViewModel extends BaseModel {
   bool showStandingsAndWinners = true;
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
+
+  //Related to the info box/////////////////
+  String boxHeading = "How to participate?";
+  List<String> boxAssets = [
+    Assets.singleStarAsset,
+    Assets.singleCoinAsset,
+    Assets.singleTmbolaTicket,
+  ];
+  List<String> boxTitlles = [
+    'Choose a product for\nsaving.',
+    'Enter an amount you\nwant to save. ',
+    'Play games with tokens\nearned.'
+  ];
+  ////////////////////////////////////////////
 
   List<String> __profileUrlList = [];
   List<ScoreBoard> currentParticipants;

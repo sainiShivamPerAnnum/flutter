@@ -446,7 +446,7 @@ class CampaignView extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        "${model.pastWinners[index].score} gms"
+                                        "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms"
                                             .toString(),
                                         style: TextStyles.rajdhaniM.body3,
                                       ),
@@ -484,17 +484,9 @@ class CampaignView extends StatelessWidget {
 
               SliverToBoxAdapter(
                 child: InfoComponent(
-                  heading: "How to participate?",
-                  assetList: [
-                    Assets.singleStarAsset,
-                    Assets.singleCoinAsset,
-                    Assets.singleTmbolaTicket,
-                  ],
-                  titleList: [
-                    'Choose a product for\nsaving.',
-                    'Enter an amount you\nwant to save. ',
-                    'Play games with tokens\nearned.'
-                  ],
+                  heading: model.boxHeading,
+                  assetList: model.boxAssets,
+                  titleList: model.boxTitlles,
                 ),
               )
             ],
