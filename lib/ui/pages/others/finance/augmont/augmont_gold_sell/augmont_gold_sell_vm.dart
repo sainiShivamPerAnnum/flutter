@@ -322,11 +322,11 @@ class AugmontGoldSellViewModel extends BaseModel {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    "Your withdrawal is successfully being processed and will be credited to your bank within ",
+                    "Your withdrawal was successful to your bank account with UPI Id",
                 style: TextStyles.body3.colour(Colors.black54),
                 children: [
                   TextSpan(
-                    text: "1-2 business working days",
+                    text: "${_userService.upiId}",
                     style:
                         TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
                   )
