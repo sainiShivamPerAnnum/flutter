@@ -75,7 +75,7 @@ class UiConstants {
   static const Color kSnackBarPositiveContentColor = const Color(0xFF01656B);
   static const Color kSnackBarNoInternetContentColor = const Color(0xFFEFAF4E);
   static const Color kSaveDigitalGoldCardBg = const Color(0xFF495DB2);
-  static const Color kSaveStableFeloCardBg = const Color(0xFF495DB2);
+  static const Color kSaveStableFelloCardBg = const Color(0xFF01656B);
 
   // Recharge Modal Sheet
   static const Color kRechargeModalSheetAmountSectionBackgroundColor =

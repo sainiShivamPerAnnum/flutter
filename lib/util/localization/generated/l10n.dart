@@ -1076,6 +1076,36 @@ class S {
     );
   }
 
+  /// `Digital Gold` - Sace Section
+  String get digitalGoldText {
+    return Intl.message(
+      'Digital Gold',
+      name: 'digitalGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stable Fello` - Save Section
+  String get stableFelloText {
+    return Intl.message(
+      'Stable Fello',
+      name: 'stableFelloText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested` - Save Section
+  String get investedText {
+    return Intl.message(
+      'Invested',
+      name: 'investedText',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------------------' key
 
   /// `No transactions to show yet`

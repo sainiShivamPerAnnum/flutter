@@ -1,8 +1,128 @@
 import 'dart:ui' as ui;
 
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class RPSCustomPainter extends CustomPainter {
+class SaveCustomCard extends StatelessWidget {
+  final String title;
+  final Color cardBgColor;
+  final String cardAssetName;
+  final Function() onTap;
+
+  const SaveCustomCard(
+      {Key key, this.title, this.cardBgColor, this.cardAssetName, this.onTap})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S();
+    return Container(
+      height: SizeConfig.screenHeight * 0.21,
+      width: SizeConfig.screenWidth,
+      child: Stack(
+        fit: StackFit.loose,
+        children: [
+          CustomPaint(
+            size: Size(SizeConfig.screenWidth, SizeConfig.cardHeight),
+            painter: CustomSaveCardPainter(cardBgColor),
+          ),
+          Container(
+            height: SizeConfig.cardHeight,
+            width: SizeConfig.screenWidth,
+            decoration: BoxDecoration(color: Colors.transparent),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: SizeConfig.padding32),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SvgPicture.asset(cardAssetName,
+                      allowDrawingOutsideViewBox: true),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.padding28,
+                          bottom: SizeConfig.padding24,
+                          right: SizeConfig.padding28),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                title,
+                                style: TextStyles.rajdhaniSB.title5,
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: Colors.white,
+                                size: 15,
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    locale.investedText,
+                                    style: TextStyles.sourceSansM.body4,
+                                  ),
+                                  //TODO make amount dynamic
+                                  Text(
+                                    '\u20b9 2094',
+                                    style: TextStyles.sourceSansSB.title4,
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: onTap,
+                                child: Container(
+                                  height: SizeConfig.screenHeight * 0.05,
+                                  width: SizeConfig.screenWidth * 0.2,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white,
+                                          style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Center(
+                                    child: Text(
+                                      'SAVE',
+                                      style: TextStyles.rajdhaniB.body1,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomSaveCardPainter extends CustomPainter {
+  final Color containerColor;
+
+  CustomSaveCardPainter(this.containerColor);
+
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
@@ -42,7 +162,7 @@ class RPSCustomPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = Color(0xff495DB2).withOpacity(1.0);
+    paint0Fill.color = containerColor;
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -92,7 +212,7 @@ class RPSCustomPainter extends CustomPainter {
     canvas.drawPath(path_1, paint1Stroke);
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = Color(0xff000000).withOpacity(1.0);
+    paint1Fill.color = containerColor;
     canvas.drawPath(path_1, paint1Fill);
   }
 

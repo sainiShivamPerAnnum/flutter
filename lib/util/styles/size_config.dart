@@ -144,4 +144,7 @@ class SizeConfig {
 
   // Button Border Radius
   static double get buttonBorderRadius => screenWidth * 0.0139; // 5
+
+  //Card Height calculation based on width
+  static double get cardHeight => screenWidth * 0.4613333333333333;
 }

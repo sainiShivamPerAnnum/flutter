@@ -23,7 +23,13 @@ class FelloAppBar extends StatelessWidget {
   final bool showAppBar;
 
   FelloAppBar(
-      {this.leading, this.actions, this.title, this.showAppBar = true, Key key})
+      {this.leading,
+      this.actions,
+      this.title,
+      this.showAppBar = true,
+      Key key,
+      int elevation,
+      Color backgroundColor})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
