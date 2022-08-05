@@ -53,140 +53,122 @@ class TopSaverView extends StatelessWidget {
         print(model.highestSavings);
         return Scaffold(
           backgroundColor: UiConstants.primaryColor,
-          body: Stack(
-            children: [
-              HomeBackground(
-                child: Column(
-                  children: [
-                    FelloAppBar(
-                      leading: FelloAppBarBackButton(),
-                      title: model.appbarTitle,
-                    ),
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(SizeConfig.padding40),
-                                topRight: Radius.circular(SizeConfig.padding40),
-                              ),
-                              color: UiConstants.scaffoldColor,
-                            ),
-                            width: SizeConfig.screenWidth,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(SizeConfig.padding40),
-                                topRight: Radius.circular(SizeConfig.padding40),
-                              ),
-                              child: model.state == ViewState.Busy
-                                  ? Center(
-                                      child: ListLoader(),
-                                    )
-                                  : ListView(
-                                      physics: ClampingScrollPhysics(),
-                                      padding: EdgeInsets.zero,
-                                      children: [
-                                        Thumbnail(event: model.event),
-                                        if (model.showStandingsAndWinners)
-                                          EventLeaderboard(model: model),
-                                        if (model.showStandingsAndWinners)
-                                          InstructionsTab(event: model.event),
-                                        if (model.showStandingsAndWinners)
-                                          WinnersBoard(model: model),
-                                        if (!model.showStandingsAndWinners)
-                                          WinnersMarqueeStrip(
-                                            type: eventType,
-                                            winners: model.event.winners,
-                                          ),
-                                        if (!model.showStandingsAndWinners)
-                                          InstructionBoard(model: model),
-                                        if (!model.showStandingsAndWinners)
-                                          SizedBox(
-                                            height: SizeConfig.navBarHeight,
-                                          )
-                                      ],
-                                    ),
-                            ),
-                          ),
-                          if (!model.showStandingsAndWinners)
-                            Positioned(
-                              bottom: 0,
-                              child: Column(
-                                children: [
-                                  if (model.event.type == "NEW_FELLO")
-                                    Container(
-                                      width: SizeConfig.screenWidth,
-                                      padding: EdgeInsets.only(
-                                        top: SizeConfig.padding16,
-                                        left: SizeConfig.pageHorizontalMargins,
-                                        right: SizeConfig.pageHorizontalMargins,
-                                      ),
-                                      margin: EdgeInsets.only(
-                                          bottom: SizeConfig.padding12),
-                                      child: FelloButtonLg(
-                                        color: Color(0xff495db2),
-                                        child: Text(
-                                          "Checkout new version",
-                                          style: TextStyles.body2.bold
-                                              .colour(Colors.white),
-                                        ),
-                                        onPressed: () async {
-                                          String url = model.event.url;
-                                          if (await canLaunch(url)) {
-                                            launch(url);
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  Container(
-                                    width: SizeConfig.screenWidth,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins),
-                                    child: FelloButtonLg(
-                                      child: Text(
-                                        "Share Feedback",
-                                        style: TextStyles.body2.bold
-                                            .colour(Colors.white),
-                                      ),
-                                      onPressed: () async {
-                                        String url = model.event.formUrl;
-                                        if (await canLaunch(url)) {
-                                          launch(url);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.viewInsets.bottom != 0
-                                        ? 0
-                                        : SizeConfig.pageHorizontalMargins,
-                                  )
-                                ],
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                  ],
+          body: HomeBackground(
+            child: Column(
+              children: [
+                FelloAppBar(
+                  leading: FelloAppBarBackButton(),
+                  title: model.appbarTitle,
                 ),
-              ),
-              //Just the test buttonfor taking to the new screen
-              Positioned(
-                top: 20,
-                left: 100,
-                child: ElevatedButton(
-                    onPressed: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                          page: CampaignViewPageConfig,
-                          state: PageState.addWidget,
-                          widget: CampaignView(
-                              eventType: Constants.HS_DAILY_SAVER));
-                    },
-                    child: child),
-              ),
-            ],
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          color: UiConstants.scaffoldColor,
+                        ),
+                        width: SizeConfig.screenWidth,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.padding40),
+                            topRight: Radius.circular(SizeConfig.padding40),
+                          ),
+                          child: model.state == ViewState.Busy
+                              ? Center(
+                                  child: ListLoader(),
+                                )
+                              : ListView(
+                                  physics: ClampingScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  children: [
+                                    Thumbnail(event: model.event),
+                                    if (model.showStandingsAndWinners)
+                                      EventLeaderboard(model: model),
+                                    if (model.showStandingsAndWinners)
+                                      InstructionsTab(event: model.event),
+                                    if (model.showStandingsAndWinners)
+                                      WinnersBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      WinnersMarqueeStrip(
+                                        type: eventType,
+                                        winners: model.event.winners,
+                                      ),
+                                    if (!model.showStandingsAndWinners)
+                                      InstructionBoard(model: model),
+                                    if (!model.showStandingsAndWinners)
+                                      SizedBox(
+                                        height: SizeConfig.navBarHeight,
+                                      )
+                                  ],
+                                ),
+                        ),
+                      ),
+                      if (!model.showStandingsAndWinners)
+                        Positioned(
+                          bottom: 0,
+                          child: Column(
+                            children: [
+                              if (model.event.type == "NEW_FELLO")
+                                Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.only(
+                                    top: SizeConfig.padding16,
+                                    left: SizeConfig.pageHorizontalMargins,
+                                    right: SizeConfig.pageHorizontalMargins,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                      bottom: SizeConfig.padding12),
+                                  child: FelloButtonLg(
+                                    color: Color(0xff495db2),
+                                    child: Text(
+                                      "Checkout new version",
+                                      style: TextStyles.body2.bold
+                                          .colour(Colors.white),
+                                    ),
+                                    onPressed: () async {
+                                      String url = model.event.url;
+                                      if (await canLaunch(url)) {
+                                        launch(url);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: FelloButtonLg(
+                                  child: Text(
+                                    "Share Feedback",
+                                    style: TextStyles.body2.bold
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    String url = model.event.formUrl;
+                                    if (await canLaunch(url)) {
+                                      launch(url);
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.viewInsets.bottom != 0
+                                    ? 0
+                                    : SizeConfig.pageHorizontalMargins,
+                              )
+                            ],
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -546,9 +528,9 @@ class EventLeaderboard extends StatelessWidget {
                     "Current Standings",
                     style: TextStyles.title5.bold,
                   ),
-                  Spacer(),
+                  Spacer(),s
                   Text(
-                    "Your rank: ${model.userRank == 0 ? model.highestSavings : model.userRank.toString().padLeft(2, '0')} ",
+                    "Your rank: ${model.userRank == 0 ? '-' : model.userRank.toString().padLeft(2, '0')} ",
                     style: TextStyles.body3,
                   )
                 ],
