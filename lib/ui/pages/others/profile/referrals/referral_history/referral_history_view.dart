@@ -8,11 +8,10 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,8 +31,6 @@ class ReferralHistoryView extends StatefulWidget {
 class _ReferralHistoryViewState extends State<ReferralHistoryView> {
   BaseUtil baseProvider;
   DBModel dbProvider;
-  final _analyticsService = locator<AnalyticsService>();
-  final _userService = locator<UserService>();
 
   @override
   Widget build(BuildContext context) {

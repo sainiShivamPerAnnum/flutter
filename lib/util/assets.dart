@@ -111,6 +111,8 @@ class Assets {
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String processing = "assets/vectors/processing.svg";
+  static final String digitalGoldBar = 'assets/svg/save_digital_gold.svg';
+  static final String stableFello = 'assets/svg/save_stable_fello.svg';
 
   // WIN
 

@@ -1,5 +1,3 @@
-import 'package:confetti/confetti.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -10,9 +8,8 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';

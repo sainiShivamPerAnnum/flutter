@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/paytm_service_elements/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -24,11 +25,27 @@ class Save extends StatelessWidget {
     return BaseView<AugmontGoldBuyViewModel>(
       onModelReady: (model) => model.init(null),
       builder: (ctx, model, child) {
-        return Center(
-          child: Text(
-            "Save View in Construction",
-            style: TextStyles.rajdhaniEB.body0.colour(Colors.white),
-          ),
+        return Column(
+          children: [
+            SizedBox(
+              height: SizeConfig.padding54,
+            ),
+            Container(
+              height: SizeConfig.screenHeight * 0.2,
+              width: SizeConfig.screenWidth,
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(
+                        SizeConfig.screenWidth,
+                        (SizeConfig.screenWidth * 0.4613333333333333)
+                            .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                    painter: RPSCustomPainter(),
+                  )
+                ],
+              ),
+            )
+          ],
         );
       },
     );

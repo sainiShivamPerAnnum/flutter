@@ -1,10 +1,9 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -24,7 +23,6 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
   PageController _pageController;
   ValueNotifier<double> _pageNotifier;
   bool showLotties = false;
-  GoldenTicketService _gtService = GoldenTicketService();
   final _analyticsService = locator<AnalyticsService>();
   VideoPlayerController _controller1, _controller2, _controller3;
   double slidelength1 = 0, slidelength2 = 0, slidelength3 = 0;
