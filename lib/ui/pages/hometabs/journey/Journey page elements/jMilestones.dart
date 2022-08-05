@@ -52,7 +52,7 @@ class Milestones extends StatelessWidget {
                     model.avatarActiveMilestoneLevel) {
                   switch (model.currentMilestoneList[i].animType) {
                     case "ROTATE":
-                      return ActiveRotatingMilestone(
+                      return ActiveFloatingMilestone(
                         milestone: model.currentMilestoneList[i],
                         model: model,
                       );
