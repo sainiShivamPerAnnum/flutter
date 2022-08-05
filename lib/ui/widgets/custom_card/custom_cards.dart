@@ -20,7 +20,7 @@ class SaveCustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S();
     return Container(
-      height: SizeConfig.screenHeight * 0.21,
+      height: SizeConfig.screenHeight * 0.215,
       width: SizeConfig.screenWidth,
       child: Stack(
         fit: StackFit.loose,

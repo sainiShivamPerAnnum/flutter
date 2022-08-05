@@ -1150,6 +1150,26 @@ class S {
     );
   }
 
+  /// `Get started with a weekly/ daily SIP`
+  String get getStartedWithSIP {
+    return Intl.message(
+      'Get started with a weekly/ daily SIP',
+      name: 'getStartedWithSIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest safely in Gold with our Auto SIP to win tokens `
+  String get investSafelyInGoldText {
+    return Intl.message(
+      'Invest safely in Gold with our Auto SIP to win tokens',
+      name: 'investSafelyInGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{quantity, plural, one{One serving per day.} other{{formattedNumber} servings per day.}}`
   String resultsPageSafeDosageMessage(num quantity, Object formattedNumber) {
     return Intl.plural(
