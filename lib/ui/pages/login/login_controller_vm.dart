@@ -351,7 +351,7 @@ class LoginControllerViewModel extends BaseModel {
                     properties: {'userId': userService?.baseUser?.uid},
                   );
                   logger.d("User object saved successfully");
-                  userService.showOnboardingTutorial = true;
+                  // userService.showOnboardingTutorial = true;
                   _onSignUpComplete();
                 } else {
                   BaseUtil.showNegativeAlert(

@@ -52,8 +52,6 @@ class LauncherViewModel extends BaseModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _localDBModel = locator<LocalDBModel>();
 
-  final _rootViewModel = locator<RootViewModel>();
-
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
 
@@ -156,13 +154,9 @@ class LauncherViewModel extends BaseModel {
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
       _localDBModel.showHomeTutorial.then((value) {
-        if (userService.showOnboardingTutorial) {
+        if (userService.showOnboardingTutorial && value) {
           //show tutorial
-
-          _rootViewModel.canExecuteStartupNotification = false;
           userService.showOnboardingTutorial = false;
-          _localDBModel.setShowHomeTutorial = false;
-          // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           navigator.currentAction = PageAction(
             state: PageState.replaceAll,
             page: OnBoardingViewPageConfig,
@@ -178,8 +172,10 @@ class LauncherViewModel extends BaseModel {
     }
 
     ///Ceck if app needs to be open securely
+    ///NOTE: CHECK APP LOCK
     bool _unlocked = true;
-    if (userService.baseUser.userPreferences
+    if (userService.baseUser.userPreferences != null &&
+        userService.baseUser.userPreferences
                 .getPreference(Preferences.APPLOCK) ==
             1 &&
         deviceUnlock != null) {

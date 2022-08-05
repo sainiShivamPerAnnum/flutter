@@ -62,7 +62,6 @@ class RootViewModel extends BaseModel {
   BuildContext rootContext;
   bool _isInitialized = false;
   bool _isUploading = false;
-  bool canExecuteStartupNotification = false;
 
   get isUploading => this._isUploading;
   String _svgSource = '';
@@ -221,7 +220,7 @@ class RootViewModel extends BaseModel {
   }
 
   initialize() async {
-    canExecuteStartupNotification = true;
+    bool canExecuteStartupNotification = true;
     if (!_isInitialized) {
       bool showSecurityPrompt = false;
       if (_userService.showSecurityPrompt == null) {
@@ -232,17 +231,11 @@ class RootViewModel extends BaseModel {
       _isInitialized = true;
       _initAdhocNotifications();
 
-      // _localDBModel.showHomeTutorial.then((value) {
-      //   if (_userService.showOnboardingTutorial) {
-      //     //show tutorial
-      //     canExecuteStartupNotification = false;
-      //     _userService.showOnboardingTutorial = false;
-      //     _localDBModel.setShowHomeTutorial = false;
-      //     // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-      //     AppState.delegate.parseRoute(Uri.parse('/AppWalkthrough'));
-      //     notifyListeners();
-      //   }
-      // });
+      bool res = await _localDBModel.showHomeTutorial;
+      if (res) {
+        bool result = await _userService.completeOnboarding();
+        if (result) _localDBModel.setShowHomeTutorial = false;
+      }
 
       _baseUtil.getProfilePicture();
       // show security modal
