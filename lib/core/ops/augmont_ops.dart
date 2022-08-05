@@ -503,7 +503,7 @@ class AugmontModel extends ChangeNotifier {
             sellGoldMap: _params,
             userUid: _userService.baseUser.uid);
 
-    bool _successFlag = true;
+    // bool _successFlag = true;
     if (_onSellCompleteResponse.code == 200) {
       AppState.delegate.appState.isTxnLoaderInView = true;
 
@@ -545,7 +545,9 @@ class AugmontModel extends ChangeNotifier {
       //   _successFlag = false;
       // }
     } else {
-      _successFlag = false;
+      // _successFlag = false;
+      BaseUtil.showNegativeAlert(
+          _onSellCompleteResponse.errorMessage, "Please try again");
     }
 
     // if (!_successFlag) {
@@ -581,11 +583,6 @@ class AugmontModel extends ChangeNotifier {
 
     //   AppState.backButtonDispatcher.didPopRoute();
     // }
-  }
-
-  handleWithdrawalFcmResponse(Map<String, dynamic> data) {
-    AppState.delegate.appState.isTxnLoaderInView = false;
-    BaseUtil.showPositiveAlert("gold Sell successful", "Do further process");
   }
 
   ///returns path where invoice is generated and saved

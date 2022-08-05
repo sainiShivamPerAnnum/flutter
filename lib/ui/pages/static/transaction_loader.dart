@@ -57,6 +57,8 @@ class TransactionLoader extends StatelessWidget {
                           onEnd: () {
                             print('Timer ended');
                             AppState.backButtonDispatcher.didPopRoute();
+                            AppState.delegate.appState.isTxnLoaderInView =
+                                false;
                           },
                           builder: (BuildContext context, Duration value,
                               Widget child) {

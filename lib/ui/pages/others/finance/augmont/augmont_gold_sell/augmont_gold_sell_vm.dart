@@ -255,7 +255,8 @@ class AugmontGoldSellViewModel extends BaseModel {
       return;
     }
     isGoldSellInProgress = true;
-    _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
+    await _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
+    isGoldSellInProgress = false;
     // _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
     final totalSellAmount =
@@ -281,13 +282,14 @@ class AugmontGoldSellViewModel extends BaseModel {
   //   }
   // }
 
-  onSellComplete(bool flag) {
-    // _isDepositInProgress = false;
-    // setState(() {});
-    isGoldSellInProgress = false;
-    if (flag) {
+  handleWithdrawalFcmResponse(Map<String, dynamic> data) {
+    AppState.delegate.appState.isTxnLoaderInView = false;
+
+    if (data["payload"] != null &&
+        data["payload"]["status"] != null &&
+        data["payload"]["status"] == true)
       showSuccessGoldSellDialog();
-    } else {
+    else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Sell did not complete',
           'Your gold sell could not be completed at the moment',
