@@ -1,3 +1,6 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
@@ -42,7 +45,27 @@ class Play extends StatelessWidget {
               ),
               SizedBox(
                 width: SizeConfig.padding20,
-              )
+              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     AppState.delegate.appState.currentAction = PageAction(
+              //       state: PageState.addPage,
+              //       page: OnBoardingViewPageConfig,
+              //     );
+              //   },
+              //   child: Container(
+              //     width: 30,
+              //     height: 30,
+              //     decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       shape: BoxShape.circle,
+              //     ),
+              //     child: Icon(Icons.list, color: Colors.black),
+              //   ),
+              // ),
+              // SizedBox(
+              //   width: SizeConfig.padding20,
+              // ),
             ],
           ),
           body: SingleChildScrollView(

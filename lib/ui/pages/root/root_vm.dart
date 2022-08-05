@@ -62,6 +62,8 @@ class RootViewModel extends BaseModel {
   BuildContext rootContext;
   bool _isInitialized = false;
   bool _isUploading = false;
+  bool canExecuteStartupNotification = false;
+
   get isUploading => this._isUploading;
   String _svgSource = '';
 
@@ -219,7 +221,7 @@ class RootViewModel extends BaseModel {
   }
 
   initialize() async {
-    bool canExecuteStartupNotification = true;
+    canExecuteStartupNotification = true;
     if (!_isInitialized) {
       bool showSecurityPrompt = false;
       if (_userService.showSecurityPrompt == null) {
@@ -230,17 +232,17 @@ class RootViewModel extends BaseModel {
       _isInitialized = true;
       _initAdhocNotifications();
 
-      _localDBModel.showHomeTutorial.then((value) {
-        if (_userService.showOnboardingTutorial) {
-          //show tutorial
-          canExecuteStartupNotification = false;
-          _userService.showOnboardingTutorial = false;
-          _localDBModel.setShowHomeTutorial = false;
-          // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          AppState.delegate.parseRoute(Uri.parse('/AppWalkthrough'));
-          notifyListeners();
-        }
-      });
+      // _localDBModel.showHomeTutorial.then((value) {
+      //   if (_userService.showOnboardingTutorial) {
+      //     //show tutorial
+      //     canExecuteStartupNotification = false;
+      //     _userService.showOnboardingTutorial = false;
+      //     _localDBModel.setShowHomeTutorial = false;
+      //     // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+      //     AppState.delegate.parseRoute(Uri.parse('/AppWalkthrough'));
+      //     notifyListeners();
+      //   }
+      // });
 
       _baseUtil.getProfilePicture();
       // show security modal
@@ -260,10 +262,13 @@ class RootViewModel extends BaseModel {
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
         canExecuteStartupNotification = false;
-        _logger
-            .d("terminated startup message: ${AppState.startupNotifMessage}");
+        _logger.d(
+          "terminated startup message: ${AppState.startupNotifMessage}",
+        );
         _fcmListener.handleMessage(
-            AppState.startupNotifMessage, MsgSource.Terminated);
+          AppState.startupNotifMessage,
+          MsgSource.Terminated,
+        );
       }
 
       if (canExecuteStartupNotification &&

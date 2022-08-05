@@ -59,6 +59,7 @@ const String NewGameHomeViewPath = '/newGameHome';
 const String NewWebHomeViewPath = '/newWebHomeView';
 const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
 const String JourneyViewPath = '/journeyViewPath';
+const String OnBoardingPath = '/onBoardingPath';
 
 enum Pages {
   Splash,
@@ -117,7 +118,8 @@ enum Pages {
   AutosaveTransactionsView,
   NewWebHomeView,
   TopPlayerLeaderboard,
-  JourneyView
+  JourneyView,
+  OnBoardingView,
 }
 
 class PageConfiguration {
@@ -528,3 +530,10 @@ PageConfiguration JourneyViewPageConfig = PageConfiguration(
     path: JourneyViewPath,
     uiPage: Pages.JourneyView,
     name: "Journey Screen");
+
+PageConfiguration OnBoardingViewPageConfig = PageConfiguration(
+  key: 'OnBoardingView',
+  path: OnBoardingPath,
+  uiPage: Pages.OnBoardingView,
+  name: "On Boarding View",
+);

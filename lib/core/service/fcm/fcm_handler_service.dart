@@ -35,7 +35,8 @@ class FcmHandler extends ChangeNotifier {
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
     _logger.d(
-        "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data");
+      "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
+    );
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
