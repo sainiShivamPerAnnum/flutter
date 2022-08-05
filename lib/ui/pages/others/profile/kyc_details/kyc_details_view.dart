@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -45,7 +46,7 @@ class KYCDetailsView extends StatelessWidget {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: 'KYC & PAN',
+                title: locale.dPanNkyc,
               ),
               Expanded(
                 child: Container(
@@ -60,75 +61,49 @@ class KYCDetailsView extends StatelessWidget {
                           shrinkWrap: true,
                           children: [
                             SizedBox(height: SizeConfig.scaffoldMargin),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  locale.kycNameLabel,
-                                  style: TextStyles.sourceSansM.copyWith(
-                                    color: UiConstants.kTextColor2,
-                                  ),
-                                ),
-                                SizedBox(height: 6),
-                                AppTextField(
-                                  //initialValue: model.myname,
-                                  inputFormatters: [
-                                    UpperCaseTextFormatter(),
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'[A-Z ]'))
-                                  ],
-                                  isEnabled: model.inEditMode,
-                                  textEditingController: model.nameController,
-                                  validator: (String value) {
-                                    return '';
-                                  },
-                                  keyboardType: TextInputType.name,
-                                ),
+                            AppTextFieldLabel(locale.kycNameLabel,
+                                leftPadding: 0),
+                            AppTextField(
+                              inputFormatters: [
+                                UpperCaseTextFormatter(),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[A-Z ]'))
                               ],
+                              isEnabled: model.inEditMode,
+                              textEditingController: model.nameController,
+                              validator: (String value) {
+                                return '';
+                              },
+                              keyboardType: TextInputType.name,
                             ),
                             SizedBox(height: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  locale.pkPanLabel,
-                                  style: TextStyles.sourceSansM.copyWith(
-                                    color: UiConstants.kTextColor2,
-                                  ),
-                                ),
-                                SizedBox(height: 6),
-                                AppTextField(
-                                  //initialValue: model.myname,
-                                  focusNode: model.panFocusNode,
-                                  inputFormatters: [
-                                    UpperCaseTextFormatter(),
-                                    FilteringTextInputFormatter.deny(
-                                        RegExp(r'^0+(?!$)')),
-                                    LengthLimitingTextInputFormatter(10)
-                                  ],
-                                  textCapitalization:
-                                      TextCapitalization.characters,
-                                  keyboardType: model.panTextInputType,
-                                  onChanged: (val) {
-                                    // if (model.onPanEntered()) {
-                                    //   Future.delayed(Duration(milliseconds: 5),
-                                    //       () {
-                                    //     FocusScope.of(context)
-                                    //         .requestFocus(model.panFocusNode);
-                                    //   });
-                                    // }
-                                    print("val changed");
-                                    model.checkForKeyboardChange(val.trim());
-                                  },
-                                  isEnabled: model.inEditMode,
-                                  textEditingController: model.panController,
-                                  validator: (String value) {
-                                    return '';
-                                  },
-                                ),
-                              ],
+                            AppTextFieldLabel(
+                              locale.pkPanLabel,
+                              leftPadding: 0,
                             ),
-                            SizedBox(height: 20),
+                            AppTextField(
+                              focusNode: model.panFocusNode,
+                              inputFormatters: [
+                                UpperCaseTextFormatter(),
+                                FilteringTextInputFormatter.deny(
+                                    RegExp(r'^0+(?!$)')),
+                                LengthLimitingTextInputFormatter(10)
+                              ],
+                              textCapitalization: TextCapitalization.characters,
+                              keyboardType: model.panTextInputType,
+                              onChanged: (val) {
+                                print("val changed");
+                                model.checkForKeyboardChange(val.trim());
+                              },
+                              isEnabled: model.inEditMode,
+                              textEditingController: model.panController,
+                              validator: (String value) {
+                                return '';
+                              },
+                            ),
+                            SizedBox(
+                              height: SizeConfig.screenHeight * 0.46,
+                            ),
                             if (model.inEditMode)
                               Container(
                                 width: SizeConfig.screenWidth,
@@ -146,12 +121,10 @@ class KYCDetailsView extends StatelessWidget {
                                                     color: Colors.white,
                                                     size: 20,
                                                   )
-                                                : Text(
-                                                    locale.btnSumbit,
-                                                    style: TextStyles.body2
+                                                : Text(locale.btnSumbit,
+                                                    style: TextStyles.rajdhaniB
                                                         .colour(Colors.white)
-                                                        .bold,
-                                                  ),
+                                                        .title5),
                                             onPressed: () {
                                               model.panFocusNode.unfocus();
                                               model.onSubmit(context);

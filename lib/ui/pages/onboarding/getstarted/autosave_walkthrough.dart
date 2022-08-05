@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';

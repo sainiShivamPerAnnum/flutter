@@ -327,6 +327,9 @@ class BaseUtil extends ChangeNotifier {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
           .showSnackBar(SnackBar(
+              onVisible: () {
+                //TODO add onTap Function
+              },
               backgroundColor: Colors.transparent,
               elevation: 0,
               margin: EdgeInsets.all(5),

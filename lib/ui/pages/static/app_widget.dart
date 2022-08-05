@@ -111,42 +111,83 @@ class AppTextField extends StatelessWidget {
         autofocus: autoFocus,
         keyboardType: keyboardType,
         onChanged: onChanged,
-        decoration: InputDecoration(
-          prefixText: prefixText,
-          prefixStyle: prefixTextStyle,
-          suffixText: suffixText,
-          suffixStyle: suffixTextStyle,
-          suffix: suffix,
-          suffixIconConstraints: suffixIconConstraints ??
-              BoxConstraints(
-                minWidth: 35,
-                minHeight: 35,
-                maxHeight: 35,
-                maxWidth: 35,
+        decoration: inputDecoration ??
+            InputDecoration(
+              suffixIcon: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: suffixIcon,
               ),
-          errorStyle: TextStyle(
-            height: 0.75,
-            fontSize: 12,
-          ),
-          fillColor: UiConstants.kTextFieldColor,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide.none),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide.none),
-          filled: true,
-          hintText: hintText,
-          hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
-          contentPadding: contentPadding ??
-              EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-                vertical: SizeConfig.padding2,
+              prefixText: prefixText,
+              prefixStyle: prefixTextStyle,
+              suffixText: suffixText,
+              suffixStyle: suffixTextStyle,
+              suffix: suffix,
+              suffixIconConstraints: suffixIconConstraints ??
+                  BoxConstraints(
+                    minWidth: 35,
+                    minHeight: 35,
+                    maxHeight: 35,
+                    maxWidth: 35,
+                  ),
+              fillColor: fillColor ??
+                  (isEnabled
+                      ? UiConstants.kTextFieldColor
+                      : UiConstants.kTextFieldColor.withOpacity(0.7)),
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
               ),
-        ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              errorStyle: TextStyle(
+                height: 0.75,
+                fontSize: 12,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTabBorderColor,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              hintText: hintText,
+              hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
+              contentPadding: contentPadding ??
+                  EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding2,
+                  ),
+            ),
       ),
     );
   }

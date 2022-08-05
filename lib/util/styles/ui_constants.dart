@@ -99,4 +99,13 @@ class UiConstants {
     stops: [0.0, 0.4],
     tileMode: TileMode.clamp,
   );
+
+  static LinearGradient kButtonGradient = LinearGradient(
+      colors: [
+        Color(0xFF08D2AD),
+        Color(0xFF43544F),
+      ],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      tileMode: TileMode.clamp);
 }

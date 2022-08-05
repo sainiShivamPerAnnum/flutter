@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_car
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';

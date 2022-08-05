@@ -400,16 +400,6 @@ class S {
     );
   }
 
-  /// `Save`
-  String get navBarWin {
-    return Intl.message(
-      'Win',
-      name: 'navBarWin',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Win`
   String get navBarWin {
     return Intl.message(

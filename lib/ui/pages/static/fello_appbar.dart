@@ -20,16 +20,19 @@ class FelloAppBar extends StatelessWidget {
   final Widget leading;
   final List<Widget> actions;
   final String title;
+  final bool showAppBar;
 
-  FelloAppBar({this.leading, this.actions, this.title, Key key})
+  FelloAppBar(
+      {this.leading, this.actions, this.title, this.showAppBar = true, Key key})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenHeight / 8,
-        color: UiConstants.kBackgroundColor,
+        color: showAppBar ? UiConstants.kBackgroundColor : Colors.transparent,
         child: AppBar(
+          elevation: 0,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(10),
@@ -43,7 +46,9 @@ class FelloAppBar extends StatelessWidget {
                       overflow: TextOverflow.clip,
                       style: TextStyles.rajdhaniM))
               : Text(''),
-          backgroundColor: UiConstants.kSecondaryBackgroundColor,
+          backgroundColor: showAppBar
+              ? UiConstants.kSecondaryBackgroundColor
+              : Colors.transparent,
           actions: actions != null ? actions : [Container()],
         ));
   }

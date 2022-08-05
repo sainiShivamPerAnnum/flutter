@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';

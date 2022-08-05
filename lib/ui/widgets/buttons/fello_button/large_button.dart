@@ -13,14 +13,14 @@ class FelloButtonLg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: new BorderRadius.circular(SizeConfig.roundness16),
+      borderRadius: new BorderRadius.circular(SizeConfig.roundness5),
       child: FelloButton(
         activeButtonUI: Container(
           width: SizeConfig.screenWidth,
-          height: height ?? SizeConfig.screenWidth * 0.13,
+          height: height ?? SizeConfig.screenWidth * 0.14,
           decoration: BoxDecoration(
-            color: color ?? UiConstants.primaryColor,
-            borderRadius: new BorderRadius.circular(SizeConfig.roundness16),
+            gradient: UiConstants.kButtonGradient,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           ),
           child: Material(
             child: MaterialButton(
@@ -37,7 +37,7 @@ class FelloButtonLg extends StatelessWidget {
           height: 60.0,
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.5),
-            borderRadius: new BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           alignment: Alignment.center,
           child: Text(

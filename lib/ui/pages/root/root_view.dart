@@ -82,6 +82,17 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
+              FelloAppBar(
+                  key: felloAppBarKey,
+                  showAppBar: false,
+                  leading: InkWell(
+                    onTap: model.showDrawer,
+                    child: Container(
+                      width: SizeConfig.screenWidth * 0.08,
+                      height: SizeConfig.padding38,
+                      // color: Colors.red,
+                    ),
+                  )),
               Consumer<AppState>(
                   builder: (ctx, m, child) =>
                       AppState.delegate.appState.isTxnLoaderInView
@@ -129,7 +140,7 @@ class BottomNavBar extends StatelessWidget {
                 Assets.navPlayInactive,
               ),
               NavBarItemData(
-                locale.navBarPlay,
+                locale.navBarSave,
                 Assets.navSaveActive,
                 Assets.navSaveInactive,
               ),

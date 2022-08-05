@@ -40,7 +40,7 @@ class NavBar extends StatelessWidget {
     return Container(
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: Padding(
-        padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.02),
+        padding: EdgeInsets.only(top: SizeConfig.padding10),
         child: Row(
           //Center buttons horizontally
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -57,7 +57,7 @@ class NavBarItemData {
   final String activeIconImage;
   final String inactiveIconImage;
 
-  NavBarItemData({this.title, this.activeIconImage, this.inactiveIconImage});
+  NavBarItemData(this.title, this.activeIconImage, this.inactiveIconImage);
 }
 
 class NavbarButton extends StatelessWidget {
