@@ -34,6 +34,7 @@ import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/widgets/alert_snackbar/alert_snackbar.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -326,62 +327,7 @@ class BaseUtil extends ChangeNotifier {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
-          .showSnackBar(SnackBar(
-              onVisible: () {
-                //TODO add onTap Function
-              },
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              margin: EdgeInsets.all(5),
-              behavior: SnackBarBehavior.floating,
-              duration: Duration(seconds: seconds ?? 3),
-              dismissDirection: DismissDirection.down,
-              content: Container(
-                height: SizeConfig.screenHeight * 0.08,
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: UiConstants.kSnackBarBgColor,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding10),
-                  child: Row(
-                    children: [
-                      Container(
-                          height: 32,
-                          width: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color:
-                                  UiConstants.kSnackBarNoInternetContentColor),
-                          child: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: SvgPicture.asset(
-                                  Assets.snackbarLoadingIcon))),
-                      SizedBox(
-                        width: SizeConfig.screenWidth * 0.06,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style:
-                                TextStyles.body3.colour(UiConstants.textColor),
-                          ),
-                          Text(
-                            message,
-                            style:
-                                TextStyles.body4.colour(UiConstants.textColor),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              )));
+          .showSnackBar(alertSnackBar());
     });
   }
 
@@ -389,58 +335,13 @@ class BaseUtil extends ChangeNotifier {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
-          .showSnackBar(SnackBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              margin: EdgeInsets.all(5),
-              behavior: SnackBarBehavior.floating,
-              duration: Duration(seconds: seconds ?? 3),
-              dismissDirection: DismissDirection.down,
-              content: Container(
-                height: SizeConfig.screenHeight * 0.08,
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: UiConstants.kSnackBarBgColor,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding10),
-                  child: Row(
-                    children: [
-                      Container(
-                          height: 32,
-                          width: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: UiConstants.kSnackBarNegativeContentColor),
-                          child: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child:
-                                  SvgPicture.asset(Assets.snackbarAlertIcon))),
-                      SizedBox(
-                        width: SizeConfig.screenWidth * 0.06,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style:
-                                TextStyles.body3.colour(UiConstants.textColor),
-                          ),
-                          Text(
-                            message,
-                            style:
-                                TextStyles.body4.colour(UiConstants.textColor),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              )));
+          .showSnackBar(alertSnackBar(
+              message: message,
+              title: title,
+              seconds: seconds,
+              onTap: () {},
+              alertColor: UiConstants.kSnackBarNegativeContentColor,
+              alertAsset: Assets.snackbarAlertIcon));
     });
   }
 
