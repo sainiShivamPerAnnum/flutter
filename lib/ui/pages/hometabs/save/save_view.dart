@@ -57,7 +57,21 @@ class Save extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                AutoSIPSection(),
+                // -- Break --
+                SaveTitleContainer(title: 'Auto SIP'),
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
+                AutoSIPCard(),
+                // -- Break --
+                SizedBox(height: SizeConfig.padding54),
+                SaveTitleContainer(title: 'Challenges'),
+                CampaignCardSection(saveViewModel: model),
+                // -- Break --
+                SizedBox(height: SizeConfig.padding54),
+                SaveTitleContainer(title: 'Latest'),
+                SaveBlogSection(),
+                // -- Break --
                 //Extended the EOS to avoid overshadowing by navbar
                 SizedBox(
                   height: SizeConfig.screenHeight * 0.2,
@@ -67,6 +81,20 @@ class Save extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class SaveTitleContainer extends StatelessWidget {
+  final String title;
+
+  const SaveTitleContainer({Key key, @required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: SizeConfig.padding24),
+      child: Text(title, style: TextStyles.rajdhaniSB.title3),
     );
   }
 }
@@ -126,27 +154,6 @@ class SaveNetWorthSection extends StatelessWidget {
                 ],
               ),
             ));
-  }
-}
-
-class AutoSIPSection extends StatelessWidget {
-  const AutoSIPSection({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: SizeConfig.padding24),
-          child: Text('Auto SIP', style: TextStyles.rajdhaniSB.title3),
-        ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        AutoSIPCard(),
-      ],
-    );
   }
 }
 
@@ -210,6 +217,90 @@ class AutoSIPCard extends StatelessWidget {
   }
 }
 
+class CampaignCardSection extends StatelessWidget {
+  final SaveViewModel saveViewModel;
+
+  const CampaignCardSection({Key key, @required this.saveViewModel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: SizeConfig.padding24, top: SizeConfig.padding16),
+      child: Container(
+        height: SizeConfig.screenHeight * 0.25,
+        child: ListView.builder(
+            itemCount: saveViewModel.ongoingEvents.length,
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return CampiagnCard(
+                title: saveViewModel.ongoingEvents[index].title,
+                subTitle: saveViewModel.ongoingEvents[index].subtitle,
+                containerColor: Color(saveViewModel.ongoingEvents[index].color),
+                imageUrl: saveViewModel.ongoingEvents[index].image,
+              );
+            }),
+      ),
+    );
+  }
+}
+
+class CampiagnCard extends StatelessWidget {
+  final Color containerColor;
+  final String title;
+  final String subTitle;
+  final String imageUrl;
+
+  const CampiagnCard(
+      {Key key, this.containerColor, this.title, this.subTitle, this.imageUrl})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print(containerColor);
+    return Padding(
+      padding: EdgeInsets.only(right: SizeConfig.padding10),
+      child: Container(
+        width: SizeConfig.screenWidth * 0.52,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            color: containerColor),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: SizedBox(
+                  height: SizeConfig.screenHeight * 0.15,
+                  width: SizeConfig.screenHeight * 0.15,
+                  child: Image.network(imageUrl),
+                ),
+              ),
+              Text(
+                title,
+                style: TextStyles.rajdhaniSB.body0,
+              ),
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Container(
+                  width: SizeConfig.screenWidth * 0.5,
+                  child: Text(
+                    subTitle,
+                    style: TextStyles.sourceSans.body4,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class GoldBalanceContainer extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   final bool showNavIcon;
@@ -262,6 +353,59 @@ class GoldBalanceContainer extends StatelessWidget {
               ],
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SaveBlogSection extends StatelessWidget {
+  const SaveBlogSection({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: SizeConfig.padding24, top: SizeConfig.padding10),
+      child: Container(
+        height: SizeConfig.screenHeight * 0.12,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 2,
+            itemBuilder: (ctx, index) {
+              return SaveBlogTile();
+            }),
+      ),
+    );
+  }
+}
+
+class SaveBlogTile extends StatelessWidget {
+  const SaveBlogTile({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: SizeConfig.padding10),
+      child: Container(
+        width: SizeConfig.screenWidth - 80,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            color: UiConstants.kSecondaryBackgroundColor),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding6),
+          child: Row(
+            children: [
+              Container(
+                height: SizeConfig.screenHeight * 0.1,
+                width: SizeConfig.screenWidth * 0.24,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.roundness12)),
+              )
+            ],
+          ),
         ),
       ),
     );
