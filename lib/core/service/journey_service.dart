@@ -13,6 +13,7 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/journey_page_data.dart';
@@ -32,6 +33,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final CustomLogger _logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final UserService _userService = locator<UserService>();
+  final GoldenTicketService _gtService = locator<GoldenTicketService>();
   static bool isAvatarAnimationInProgress = false;
   double pageWidth;
   double pageHeight;
@@ -282,14 +284,23 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     controller.reset();
     controller.forward().whenComplete(() {
       log("Animation Complete");
-      isAvatarAnimationInProgress = false;
       int gameLevelChangeResult = checkForGameLevelChange();
       if (gameLevelChangeResult != 0)
         BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
             "New Milestones on your way!");
       updateAvatarLocalLevel();
       // placeAvatarAtTheCurrentMileStone();
+
       baseGlow = 1;
+      Future.delayed(
+          Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
+      Future.delayed(Duration(seconds: 1), () {
+        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+          if (res)
+            _gtService.showInstantGoldenTicketView(
+                title: 'Welcome to Fello', source: GTSOURCE.newuser);
+        });
+      });
     });
   }
 
