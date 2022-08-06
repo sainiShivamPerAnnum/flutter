@@ -33,8 +33,8 @@ import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../service_elements/user_service/profile_image.dart';
+import '../../../../widgets/faq_card/faq_card_view.dart';
 import '../../../../widgets/faq_card/faq_card_vm.dart';
-import '../../../../widgets/faq_card/faq_new_card_view.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
 import '../../../hometabs/play/play_components/titlesGames.dart';
 
@@ -321,14 +321,73 @@ class CampaignView extends StatelessWidget {
                 ),
               ),
 
-              //The banner in the mid
               SliverToBoxAdapter(
                 child: Container(
+                  padding: EdgeInsets.all(SizeConfig.padding38),
+                  decoration: BoxDecoration(
+                    // color: UiConstants.kBackgroundColor,
+                    gradient: UiConstants.kCampaignBannerBackgrondGradient,
+                  ),
                   height: SizeConfig.bannerHeight,
                   width: double.infinity,
-                  child: Image.asset(
-                    Assets.bannerTrophy,
-                    fit: BoxFit.cover,
+                  child: Row(
+                    children: [
+                      //The Text
+                      Expanded(
+                        child: Container(
+                          height: SizeConfig.bannerHeight,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "WIN",
+                                style:
+                                    TextStyles.title4.bold.colour(Colors.white),
+                              ),
+                              Text(
+                                "₹ 250",
+                                style: TextStyles.title0.bold.colour(
+                                    UiConstants.kWinnerPlayerPrimaryColor),
+                              ),
+                              Text(
+                                "Win amazing rewards\nin digital gold.",
+                                style: TextStyles.body3.colour(Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      //The Image
+                      Container(
+                        width: SizeConfig.screenWidth * 0.3,
+                        height: SizeConfig.bannerHeight,
+                        decoration: BoxDecoration(),
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: double.infinity,
+                                height: (SizeConfig.bannerHeight) / 3.9,
+                                decoration: BoxDecoration(
+                                    gradient: UiConstants.kTrophyBackground,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0))),
+                              ),
+                            ),
+                            SvgPicture.asset(
+                              "assets/svg/trophy_banner.svg",
+                              width: double.maxFinite,
+                              fit: BoxFit.fitWidth,
+                              height: double.maxFinite,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -448,10 +507,15 @@ class CampaignView extends StatelessWidget {
                 ),
               ),
 
-              //Following is the new FAQ Widget, just for testing purposes
+              // //Following is the new FAQ Widget, just for testing purposes
               // SliverToBoxAdapter(
-              //   child:
-              //       FAQsComponent(category: FAQCardViewModel.FAQ_CAT_GENERAL),
+              //   child: Padding(
+              //     padding: EdgeInsets.all(SizeConfig.padding24),
+              //     child: FAQCardView(
+              //       category: FAQCardViewModel.FAQ_CAT_GENERAL,
+              //       catTitle: false,
+              //     ),
+              //   ),
               // ),
             ],
           ),

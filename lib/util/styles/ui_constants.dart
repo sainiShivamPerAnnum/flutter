@@ -104,10 +104,18 @@ class UiConstants {
   );
 
   static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
-    colors: [Color(0xff141316), Colors.white.withOpacity(0.0)],
+    colors: [Color(0xff141316), UiConstants.kBackgroundColor.withOpacity(0.2)],
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
-    stops: [0.0],
+    stops: [0, 0.7],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kTrophyBackground = LinearGradient(
+    colors: [Color(0xffFFE9B1), Color(0xffFFE9B1).withOpacity(0.0)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0, 0.8],
     tileMode: TileMode.clamp,
   );
 }
