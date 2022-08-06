@@ -232,7 +232,7 @@ class InvestmentActionsRepository {
       return ApiResponse(model: true, code: 200);
     } catch (e) {
       _logger.e(e);
-      return ApiResponse.withError(message ?? e.toString(), 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

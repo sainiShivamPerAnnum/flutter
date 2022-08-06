@@ -574,8 +574,13 @@ class AugmontModel extends ChangeNotifier {
 
       // BaseUtil.showNegativeAlert(title, body);
       // } else
-      BaseUtil.showNegativeAlert('Verifying transaction',
-          'Your transaction is being verified and will be updated shortly');
+      if (_onSellCompleteResponse.errorMessage != null &&
+          _onSellCompleteResponse.errorMessage.isNotEmpty)
+        BaseUtil.showNegativeAlert(
+            _onSellCompleteResponse.errorMessage, 'Please try again!');
+      else
+        BaseUtil.showNegativeAlert('Verifying transaction',
+            'Your transaction is being verified and will be updated shortly');
 
       _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
