@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -261,7 +262,10 @@ class AugmontGoldSellViewModel extends BaseModel {
       return;
     }
     isGoldSellInProgress = true;
+    AppState.screenStack.add(ScreenItem.loader);
     await _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
+    if (AppState.screenStack.last == ScreenItem.loader)
+      AppState.screenStack.removeLast();
     isGoldSellInProgress = false;
     // _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 

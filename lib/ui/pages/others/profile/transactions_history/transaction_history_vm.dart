@@ -106,6 +106,9 @@ class TransactionsHistoryViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
+  refreshTransactions() async {
+    await _txnService.updateTransactions();
+  }
   // getTransactionsFromApi() async {
   //   ApiResponse<List<UserTransaction>> res;
   //   if (apiTxns.isNotEmpty)

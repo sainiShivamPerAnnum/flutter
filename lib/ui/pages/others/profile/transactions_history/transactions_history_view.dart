@@ -90,20 +90,26 @@ class TransactionsHistory extends StatelessWidget {
                                 Expanded(
                                   child: (model.filteredList.length == 0
                                       ? child
-                                      : ListView(
-                                          physics: BouncingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              left: SizeConfig
-                                                      .pageHorizontalMargins /
-                                                  2,
-                                              right: SizeConfig
-                                                  .pageHorizontalMargins),
-                                          controller: model.tranListController,
-                                          children: List.generate(
-                                            model.filteredList.length,
-                                            (index) => TransactionTile(
-                                              model: model,
-                                              txn: model.filteredList[index],
+                                      : RefreshIndicator(
+                                          onRefresh: () async {
+                                            model.refreshTransactions();
+                                          },
+                                          child: ListView(
+                                            physics: BouncingScrollPhysics(),
+                                            padding: EdgeInsets.only(
+                                                left: SizeConfig
+                                                        .pageHorizontalMargins /
+                                                    2,
+                                                right: SizeConfig
+                                                    .pageHorizontalMargins),
+                                            controller:
+                                                model.tranListController,
+                                            children: List.generate(
+                                              model.filteredList.length,
+                                              (index) => TransactionTile(
+                                                model: model,
+                                                txn: model.filteredList[index],
+                                              ),
                                             ),
                                           ),
                                         )),

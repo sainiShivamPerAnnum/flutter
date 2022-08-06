@@ -64,12 +64,17 @@ class NotficationsPage extends StatelessWidget {
                               itemBuilder: (context, index) => InkWell(
                                 onTap: () {
                                   model.updateHighlightStatus(index);
+                                  print("Inside alert ontap");
                                   if (model.notifications[index].actionUri !=
-                                      null) {
+                                          null &&
+                                      model.notifications[index].actionUri
+                                          .isNotEmpty) {
                                     print(model.notifications[index].actionUri
                                         .toString());
                                     AppState.delegate.parseRoute(Uri.parse(
                                         model.notifications[index].actionUri));
+                                  } else {
+                                    print("No Action Uri found");
                                   }
                                 },
                                 child: Container(

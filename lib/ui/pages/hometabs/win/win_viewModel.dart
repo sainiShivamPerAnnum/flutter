@@ -71,7 +71,6 @@ class WinViewModel extends BaseModel {
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
-    setupAutoEventScroll();
     getOngoingEvents();
   }
 
@@ -173,5 +172,6 @@ class WinViewModel extends BaseModel {
       });
     } else
       ongoingEvents = [];
+    setupAutoEventScroll();
   }
 }
