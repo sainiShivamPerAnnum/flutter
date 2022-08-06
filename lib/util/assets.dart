@@ -113,7 +113,7 @@ class Assets {
   static final String processing = "assets/vectors/processing.svg";
   static final String digitalGoldBar = 'assets/svg/save_digital_gold.svg';
   static final String stableFello = 'assets/svg/save_stable_fello.svg';
-  static final String autoSIPBag = 'assets/svg/save_auto_sip.svg';
+  static final String autoSaveDefault = 'assets/svg/save_auto_sip.svg';
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
   static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';

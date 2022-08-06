@@ -7,15 +7,12 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -114,21 +111,14 @@ class KYCDetailsView extends StatelessWidget {
                                           .myConfirmDialogViewStatus
                                     ],
                                     builder: (context, m, property) =>
-                                        FelloButtonLg(
-                                            child: model.isKycInProgress ||
-                                                    m.isConfirmationDialogOpen
-                                                ? SpinKitThreeBounce(
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  )
-                                                : Text(locale.btnSumbit,
-                                                    style: TextStyles.rajdhaniB
-                                                        .colour(Colors.white)
-                                                        .title5),
-                                            onPressed: () {
-                                              model.panFocusNode.unfocus();
-                                              model.onSubmit(context);
-                                            })),
+                                        AppPositiveBtn(
+                                          onPressed: () {
+                                            model.panFocusNode.unfocus();
+                                            model.onSubmit(context);
+                                          },
+                                          btnText: locale.btnSumbit,
+                                          width: SizeConfig.screenWidth,
+                                        )),
                               ),
                             SizedBox(height: 24),
                           ],

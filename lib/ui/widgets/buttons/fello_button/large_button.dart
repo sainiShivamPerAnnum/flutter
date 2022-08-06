@@ -13,7 +13,7 @@ class FelloButtonLg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: new BorderRadius.circular(SizeConfig.roundness5),
+      borderRadius: BorderRadius.circular(SizeConfig.roundness5),
       child: FelloButton(
         activeButtonUI: Container(
           width: SizeConfig.screenWidth,
@@ -37,7 +37,7 @@ class FelloButtonLg extends StatelessWidget {
           height: 60.0,
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
           ),
           alignment: Alignment.center,
           child: Text(

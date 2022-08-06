@@ -4,6 +4,7 @@ import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
@@ -53,12 +54,11 @@ class Save extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                AutoSIPSection(
-                  onTap: () => model.navigateToAutoSave(),
-                ),
+                AutoSIPSection(),
+                //Extended the EOS to avoid overshadowing by navbar
                 SizedBox(
                   height: SizeConfig.screenHeight * 0.2,
-                )
+                ),
               ],
             ),
           ),
@@ -77,8 +77,8 @@ class SaveNetWorthSection extends StatelessWidget {
       height: SizeConfig.screenHeight * 0.45,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15)),
+              bottomLeft: Radius.circular(SizeConfig.roundness16),
+              bottomRight: Radius.circular(SizeConfig.roundness16)),
           color: UiConstants.kSecondaryBackgroundColor),
       child: Column(
         children: [
@@ -124,9 +124,7 @@ class SaveNetWorthSection extends StatelessWidget {
 }
 
 class AutoSIPSection extends StatelessWidget {
-  final Function() onTap;
-
-  const AutoSIPSection({Key key, this.onTap}) : super(key: key);
+  const AutoSIPSection({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -140,62 +138,64 @@ class AutoSIPSection extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding10,
         ),
-        AutoSIPCard(onTap: onTap),
+        AutoSIPCard(),
       ],
     );
   }
 }
 
 class AutoSIPCard extends StatelessWidget {
-  final Function() onTap;
-
-  const AutoSIPCard({Key key, this.onTap}) : super(key: key);
+  const AutoSIPCard({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     S locale = S();
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: SizeConfig.screenHeight * 0.2,
-          width: SizeConfig.screenWidth,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: UiConstants.kSecondaryBackgroundColor),
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.padding6),
-            child: Row(
-              children: [
-                SvgPicture.asset(Assets.autoSIPBag),
-                SizedBox(
-                  width: SizeConfig.padding10,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.cover,
-                      child: Container(
-                        width: SizeConfig.screenWidth * 0.5,
-                        child: RichText(
-                            text: TextSpan(
-                                text: '${locale.getStartedWithSIP}\n',
-                                style: TextStyles.rajdhaniSB.body0,
-                                children: <TextSpan>[
-                              TextSpan(
-                                  text: locale.investSafelyInGoldText,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2))
-                            ])),
+    return BaseView<SubscriptionCardViewModel>(
+      builder: (ctx, model, builder) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+        child: GestureDetector(
+          onTap: () {
+            model.navigateToAutoSave();
+          },
+          child: Container(
+            height: SizeConfig.screenHeight * 0.2,
+            width: SizeConfig.screenWidth,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: UiConstants.kSecondaryBackgroundColor),
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.padding6),
+              child: Row(
+                children: [
+                  SvgPicture.asset(Assets.autoSaveDefault),
+                  SizedBox(
+                    width: SizeConfig.padding10,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.cover,
+                        child: Container(
+                          width: SizeConfig.screenWidth * 0.5,
+                          child: RichText(
+                              text: TextSpan(
+                                  text: '${locale.getStartedWithSIP}\n',
+                                  style: TextStyles.rajdhaniSB.body0,
+                                  children: <TextSpan>[
+                                TextSpan(
+                                    text: locale.investSafelyInGoldText,
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(UiConstants.kTextColor2))
+                              ])),
+                        ),
                       ),
-                    ),
-                    SvgPicture.asset(Assets.saveChevronRight)
-                  ],
-                ),
-              ],
+                      SvgPicture.asset(Assets.saveChevronRight)
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

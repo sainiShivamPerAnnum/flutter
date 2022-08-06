@@ -62,7 +62,7 @@ class SaveCustomCard extends StatelessWidget {
                               Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.white,
-                                size: 15,
+                                size: SizeConfig.padding16,
                               )
                             ],
                           ),

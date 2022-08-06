@@ -1,11 +1,6 @@
-import 'dart:developer';
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -22,8 +17,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -88,7 +81,7 @@ class Root extends StatelessWidget {
                   leading: InkWell(
                     onTap: model.showDrawer,
                     child: Container(
-                      width: SizeConfig.screenWidth * 0.08,
+                      width: SizeConfig.padding38,
                       height: SizeConfig.padding38,
                       // color: Colors.red,
                     ),
