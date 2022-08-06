@@ -205,6 +205,7 @@ class InvestmentActionsRepository {
       double amount,
       String userUid,
       Map<String, dynamic> sellGoldMap}) async {
+    String message = "";
     Map<String, dynamic> _body = {
       // "tran_doc_id": tranDocId,
       "uid": userUid,
@@ -227,23 +228,11 @@ class InvestmentActionsRepository {
           cBaseUrl:
               "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev");
       _logger.d("Response from withdrawal: $response");
-      // DepositResponseModel _investmentDepositModel =
-      //     DepositResponseModel.fromMap(response);
-
-      // _logger.d(_investmentDepositModel.toString());
-
-      // if (_investmentDepositModel?.note != null &&
-      //     _investmentDepositModel?.note?.title != null &&
-      //     _investmentDepositModel.note.title.isNotEmpty)
-      //   return ApiResponse(
-      //       model: _investmentDepositModel,
-      //       code: 400,
-      //       errorMessage: "Complete user withdrawal failed");
-
+      message = response["message"];
       return ApiResponse(model: true, code: 200);
     } catch (e) {
       _logger.e(e);
-      return ApiResponse.withError(e.toString(), 400);
+      return ApiResponse.withError(message ?? e.toString(), 400);
     }
   }
 

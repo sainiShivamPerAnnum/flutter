@@ -60,6 +60,7 @@ class TransactionService
     String type,
     String subtype,
   }) async {
+    _logger.d("Fetching transactions");
     if (_dBModel != null && _userService != null) {
       //fetch filtered transactions
       final response = await getUserTransactionsfromApi(

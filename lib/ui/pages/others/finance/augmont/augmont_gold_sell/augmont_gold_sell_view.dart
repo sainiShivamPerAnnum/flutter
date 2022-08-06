@@ -342,17 +342,16 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
 
                                 if (!model.isQntFetching) AddUpiTile(),
 
-                                (baseProvider.checkKycMissing ||
-                                        _checkBankInfoMissing ||
-                                        _checkUpiInfoMissing)
-                                    ? Container()
-                                    : (model.isQntFetching
-                                        ? Center(
-                                            child: SpinKitThreeBounce(
-                                                size: SizeConfig.padding32,
-                                                color:
-                                                    UiConstants.primaryColor),
-                                          )
+                                model.isQntFetching
+                                    ? Center(
+                                        child: SpinKitThreeBounce(
+                                            size: SizeConfig.padding32,
+                                            color: UiConstants.primaryColor),
+                                      )
+                                    : ((baseProvider.checkKycMissing ||
+                                            // _checkBankInfoMissing ||
+                                            baseProvider.isUpiInfoMissing)
+                                        ? Container()
                                         : Container(
                                             margin: EdgeInsets.only(
                                                 top: SizeConfig.padding24),
@@ -525,108 +524,108 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     }
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
-    LinearGradient _gradient = new LinearGradient(colors: [
-      FelloColorPalette.augmontFundPalette().secondaryColor.withBlue(800),
-      FelloColorPalette.augmontFundPalette().secondaryColor,
-      //Colors.blueGrey,
-      //Colors.blueGrey[800],
-    ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+  // Widget _buildSubmitButton(BuildContext context) {
+  //   LinearGradient _gradient = new LinearGradient(colors: [
+  //     FelloColorPalette.augmontFundPalette().secondaryColor.withBlue(800),
+  //     FelloColorPalette.augmontFundPalette().secondaryColor,
+  //     //Colors.blueGrey,
+  //     //Colors.blueGrey[800],
+  //   ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FelloButtonLg(
-          color: FelloColorPalette.augmontFundPalette().secondaryColor,
-          child: Text(
-            _checkBankInfoMissing ? 'PROCEED' : 'WITHDRAW ',
-            style: TextStyles.body2.colour(Colors.white),
-          ),
-          onPressed: () async {
-            Haptic.vibrate();
-            FocusScope.of(context).unfocus();
-            if (BaseUtil.showNoInternetAlert()) return;
-            if (baseProvider.checkKycMissing) {
-              _controller.forward().then((value) => _controller.reverse());
-            } else {
-              if (widget.withdrawableGoldQnty == 0.0) {
-                BaseUtil.showNegativeAlert(
-                  'Unable to process',
-                  'Your withdrawable balance is low',
-                );
-                return;
-              }
-              final amtErr = _validateAmount(_quantityController.text);
-              if (amtErr != null) {
-                setState(() {
-                  _amountError = amtErr;
-                });
-                return;
-              }
-              setState(() {
-                _amountError = null;
-              });
-              if (_amountError == null) {
-                baseProvider.activeGoldWithdrawalQuantity =
-                    double.parse(_quantityController.text);
-                if (_checkBankInfoMissing) {
-                  appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: EditAugBankDetailsPageConfig,
-                      widget: EditAugmontBankDetail(
-                        isWithdrawFlow: true,
-                        addBankComplete: () {
-                          baseProvider.withdrawFlowStackCount = 2;
-                          widget.onAmountConfirmed({
-                            'withdrawal_quantity':
-                                baseProvider.activeGoldWithdrawalQuantity,
-                          });
-                        },
-                      ));
-                } else {
-                  String _confirmMsg =
-                      "Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity} grams of digital gold shall be processed.";
-                  AppState.screenStack.add(ScreenItem.dialog);
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => ConfirmActionDialog(
-                      title: "Please confirm your action",
-                      description: _confirmMsg,
-                      buttonText: "Withdraw",
-                      cancelBtnText: 'Cancel',
-                      confirmAction: () {
-                        _isLoading = true;
-                        setState(() {});
-                        baseProvider.withdrawFlowStackCount = 1;
-                        widget.onAmountConfirmed({
-                          'withdrawal_quantity':
-                              baseProvider.activeGoldWithdrawalQuantity,
-                        });
-                        return true;
-                      },
-                      cancelAction: () {
-                        return false;
-                      },
-                    ),
-                  );
-                }
-              }
-            }
-          },
-        ),
-      ],
-    );
-  }
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       FelloButtonLg(
+  //         color: FelloColorPalette.augmontFundPalette().secondaryColor,
+  //         child: Text(
+  //           _checkBankInfoMissing ? 'PROCEED' : 'WITHDRAW ',
+  //           style: TextStyles.body2.colour(Colors.white),
+  //         ),
+  //         onPressed: () async {
+  //           Haptic.vibrate();
+  //           FocusScope.of(context).unfocus();
+  //           if (BaseUtil.showNoInternetAlert()) return;
+  //           if (baseProvider.checkKycMissing) {
+  //             _controller.forward().then((value) => _controller.reverse());
+  //           } else {
+  //             if (widget.withdrawableGoldQnty == 0.0) {
+  //               BaseUtil.showNegativeAlert(
+  //                 'Unable to process',
+  //                 'Your withdrawable balance is low',
+  //               );
+  //               return;
+  //             }
+  //             final amtErr = _validateAmount(_quantityController.text);
+  //             if (amtErr != null) {
+  //               setState(() {
+  //                 _amountError = amtErr;
+  //               });
+  //               return;
+  //             }
+  //             setState(() {
+  //               _amountError = null;
+  //             });
+  //             if (_amountError == null) {
+  //               baseProvider.activeGoldWithdrawalQuantity =
+  //                   double.parse(_quantityController.text);
+  //               if (_checkBankInfoMissing) {
+  //                 appState.currentAction = PageAction(
+  //                     state: PageState.addWidget,
+  //                     page: EditAugBankDetailsPageConfig,
+  //                     widget: EditAugmontBankDetail(
+  //                       isWithdrawFlow: true,
+  //                       addBankComplete: () {
+  //                         baseProvider.withdrawFlowStackCount = 2;
+  //                         widget.onAmountConfirmed({
+  //                           'withdrawal_quantity':
+  //                               baseProvider.activeGoldWithdrawalQuantity,
+  //                         });
+  //                       },
+  //                     ));
+  //               } else {
+  //                 String _confirmMsg =
+  //                     "Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity} grams of digital gold shall be processed.";
+  //                 AppState.screenStack.add(ScreenItem.dialog);
+  //                 showDialog(
+  //                   context: context,
+  //                   builder: (ctx) => ConfirmActionDialog(
+  //                     title: "Please confirm your action",
+  //                     description: _confirmMsg,
+  //                     buttonText: "Withdraw",
+  //                     cancelBtnText: 'Cancel',
+  //                     confirmAction: () {
+  //                       _isLoading = true;
+  //                       setState(() {});
+  //                       baseProvider.withdrawFlowStackCount = 1;
+  //                       widget.onAmountConfirmed({
+  //                         'withdrawal_quantity':
+  //                             baseProvider.activeGoldWithdrawalQuantity,
+  //                       });
+  //                       return true;
+  //                     },
+  //                     cancelAction: () {
+  //                       return false;
+  //                     },
+  //                   ),
+  //                 );
+  //               }
+  //             }
+  //           }
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  bool get _checkBankInfoMissing => (baseProvider.augmontDetail == null ||
-      baseProvider.augmontDetail.bankAccNo == null ||
-      baseProvider.augmontDetail.bankAccNo.isEmpty ||
-      baseProvider.augmontDetail.bankHolderName.isEmpty ||
-      baseProvider.augmontDetail.bankHolderName == null ||
-      baseProvider.augmontDetail.ifsc.isEmpty ||
-      baseProvider.augmontDetail.ifsc == null);
+  // bool get _checkBankInfoMissing => (baseProvider.augmontDetail == null ||
+  //     baseProvider.augmontDetail.bankAccNo == null ||
+  //     baseProvider.augmontDetail.bankAccNo.isEmpty ||
+  //     baseProvider.augmontDetail.bankHolderName.isEmpty ||
+  //     baseProvider.augmontDetail.bankHolderName == null ||
+  //     baseProvider.augmontDetail.ifsc.isEmpty ||
+  //     baseProvider.augmontDetail.ifsc == null);
 
-  bool get _checkUpiInfoMissing => baseProvider.isUpiInfoMissing;
+  // bool get _checkUpiInfoMissing => baseProvider.isUpiInfoMissing;
 
   _buildRow(String title, String value) {
     return ListTile(

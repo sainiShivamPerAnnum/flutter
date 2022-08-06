@@ -68,15 +68,22 @@ class UserUPIDetailsView extends StatelessWidget {
                                       TextFormField(
                                         autofocus: true,
                                         enabled: model.inEditMode,
-                                        keyboardType: TextInputType.name,
-                                        inputFormatters: [],
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[0-9a-zA-Z@.-]")),
+                                        ],
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: InputDecoration(
+                                            hintText: "hello@upi"),
                                         textCapitalization:
                                             TextCapitalization.none,
                                         controller: model.upiController,
                                         validator: (value) {
                                           return (value == null ||
                                                   value.isEmpty ||
-                                                  value.trim().length < 4)
+                                                  value.trim().length < 4 ||
+                                                  !value.contains('@'))
                                               ? 'Please enter a valid UPI Id'
                                               : null;
                                         },
@@ -126,7 +133,11 @@ class UserUPIDetailsView extends StatelessWidget {
                         child: FelloButtonLg(
                           child: (!model.isUpiVerificationInProgress)
                               ? Text(
-                                  model.inEditMode ? 'UPDATE' : 'EDIT',
+                                  model.inEditMode
+                                      ? (model.upiController.text.isEmpty
+                                          ? "ADD"
+                                          : 'UPDATE')
+                                      : 'EDIT',
                                   style: Theme.of(context)
                                       .textTheme
                                       .button

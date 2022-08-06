@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -11,6 +14,7 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -34,6 +38,8 @@ class AugmontGoldSellViewModel extends BaseModel {
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
   UserService _userService = locator<UserService>();
+  UserCoinService _userCoinService = locator<UserCoinService>();
+  TransactionService _transactionService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paymentRepo = locator<PaymentRepository>();
 
@@ -282,14 +288,21 @@ class AugmontGoldSellViewModel extends BaseModel {
   //   }
   // }
 
-  handleWithdrawalFcmResponse(Map<String, dynamic> data) {
+  handleWithdrawalFcmResponse(String data) {
+    if (AppState.delegate.appState.isTxnLoaderInView == false) return;
     AppState.delegate.appState.isTxnLoaderInView = false;
+    log(data);
 
-    if (data["payload"] != null &&
-        data["payload"]["status"] != null &&
-        data["payload"]["status"] == true)
+    final response = json.decode(data);
+    print(response['status']);
+    if (response != null &&
+        response['status'] != null &&
+        response['status'] == true) {
       showSuccessGoldSellDialog();
-    else {
+      _userCoinService.getUserCoinBalance();
+      _transactionService.updateTransactions();
+      _userService.getUserFundWalletData();
+    } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Sell did not complete',
           'Your gold sell could not be completed at the moment',
@@ -322,7 +335,7 @@ class AugmontGoldSellViewModel extends BaseModel {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    "Your withdrawal was successful to your bank account with UPI Id",
+                    "Your withdrawal was successful to your bank account with UPI Id ",
                 style: TextStyles.body3.colour(Colors.black54),
                 children: [
                   TextSpan(

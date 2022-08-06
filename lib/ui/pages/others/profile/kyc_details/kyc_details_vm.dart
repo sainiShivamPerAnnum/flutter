@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -18,6 +19,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 
 class KYCDetailsViewModel extends BaseModel {
   String stateChosenValue;
@@ -32,6 +34,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _signzyRepository = locator<SignzyRepository>();
   final _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _cacheService = new CacheService();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode panFocusNode = FocusNode();
@@ -233,6 +236,8 @@ class KYCDetailsViewModel extends BaseModel {
         if (_response.code == 200) {
           if (_response.model.gtId != null && _response.model.gtId.isNotEmpty)
             GoldenTicketService.goldenTicketId = _response.model.gtId;
+          // clear cache
+          await _cacheService.invalidateByKey(CacheKeys.USER);
           _flag = true;
         } else {
           _flag = false;

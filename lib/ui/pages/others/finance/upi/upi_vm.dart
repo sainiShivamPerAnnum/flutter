@@ -49,7 +49,9 @@ class UserUPIDetailsViewModel extends BaseModel {
     }
     setState(ViewState.Busy);
     final response = await _paymentRepo.getUserUpi();
-    if (_userService.upiId != null && response.code == 200) {
+    if (_userService.upiId != null &&
+        _userService.upiId.isNotEmpty &&
+        response.code == 200) {
       upiController.text = response.model;
       inEditMode = false;
     }
@@ -68,7 +70,8 @@ class UserUPIDetailsViewModel extends BaseModel {
       AppState.backButtonDispatcher.didPopRoute();
     } else
       BaseUtil.showNegativeAlert(
-          "Something went wrong!", "Unable to save UPI Id");
+          response.errorMessage ?? "Something went wrong!",
+          "Unable to save UPI Id");
     isUpiVerificationInProgress = false;
   }
 

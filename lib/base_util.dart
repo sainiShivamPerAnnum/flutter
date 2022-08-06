@@ -70,7 +70,6 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
   String userRegdPan;
-  String userUpi;
 
   ///Tambola global objects
   // int _dailyPickCount;
@@ -86,7 +85,6 @@ class BaseUtil extends ChangeNotifier {
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
-  UserTransaction _currentAugmontTxn;
   AugmontRates augmontGoldRates;
 
   ///KYC global object
@@ -233,13 +231,7 @@ class BaseUtil extends ChangeNotifier {
   Future<void> setUserDefaults() async {
     panService = new PanService();
     if (!checkKycMissing) {
-      userRegdPan = await panService.getUserPan();
-    }
-    if (!isUpiInfoMissing) {
-      //TODO Function to get upiId
-      _userService.setMyUpiId("arabKumar1205@paytm");
-
-      isUpiInfoMissing = false;
+      panService.getUserPan().then((value) => userRegdPan = value);
     }
   }
 
@@ -658,7 +650,6 @@ class BaseUtil extends ChangeNotifier {
       panService = null;
       _augmontDetail = null;
       augmontGoldRates = null;
-      _currentAugmontTxn = null;
       prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
@@ -1016,12 +1007,6 @@ class BaseUtil extends ChangeNotifier {
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
 
   bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
-
-  UserTransaction get currentAugmontTxn => _currentAugmontTxn;
-
-  set currentAugmontTxn(UserTransaction value) {
-    _currentAugmontTxn = value;
-  }
 
   DateTime get userCreationTimestamp => _userCreationTimestamp;
 

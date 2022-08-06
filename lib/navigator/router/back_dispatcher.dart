@@ -59,6 +59,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (AppState.delegate.appState.isTxnLoaderInView) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
     Future.delayed(Duration(milliseconds: 20), () {

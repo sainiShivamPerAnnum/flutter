@@ -3,6 +3,7 @@ import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/base_util.dart';
@@ -58,12 +59,14 @@ class PaymentRepository extends BaseRepo {
       if (message == "Vpa is valid") {
         _userService.setMyUpiId(upiId);
         _baseUtil.isUpiInfoMissing = false;
-        return ApiResponse(model: true, code: 200);
+        return ApiResponse(model: true, code: 200, errorMessage: message);
       } else
-        return ApiResponse(model: false, code: 200);
+        return ApiResponse(model: false, code: 400, errorMessage: message);
+    } on BadRequestException catch (e) {
+      return ApiResponse(model: false, code: 400, errorMessage: e.toString());
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(message, 400);
+      return ApiResponse.withError(e.toString() ?? message, 400);
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
@@ -29,10 +30,28 @@ class FcmHandler extends ChangeNotifier {
   final _augOps = locator<AugmontGoldSellViewModel>();
 
   ValueChanged<Map> notifListener;
+  // Timestamp latestFcmtimeStamp;
+  String latestFcmCommand;
 
   Future<bool> handleMessage(Map data, MsgSource source) async {
     _logger.d(
         "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data");
+    // if (latestFcmCommand == null
+    //     // || latestFcmtimeStamp == null
+    //     ) {
+    //   latestFcmCommand = data["command"];
+    //   // latestFcmtimeStamp = Timestamp.now();
+    // }
+
+    // if (latestFcmCommand != null
+    //     // && latestFcmtimeStamp != null
+    //     ) {
+    //   if (latestFcmCommand == data["command"])
+    //     return true;
+    //   else
+    //     latestFcmCommand = data["command"];
+    // }
+
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
@@ -60,7 +79,7 @@ class FcmHandler extends ChangeNotifier {
 
           break;
         case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
-          _augOps.handleWithdrawalFcmResponse(data);
+          _augOps.handleWithdrawalFcmResponse(data['payload']);
           break;
 
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:

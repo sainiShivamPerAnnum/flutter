@@ -30,7 +30,7 @@ class ApiPath {
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAmountTransfer => "/userOps/api/v3/accountTransfer";
   get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
-  get kVerifyPan => "/userOps/api/v3/verifyPan";
+  get kVerifyPan => "/verify/pan";
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static const String updateFcm = '/fcm/client_token';
