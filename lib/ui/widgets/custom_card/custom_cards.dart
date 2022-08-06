@@ -11,9 +11,15 @@ class SaveCustomCard extends StatelessWidget {
   final Color cardBgColor;
   final String cardAssetName;
   final Function() onTap;
+  final double investedAmount;
 
   const SaveCustomCard(
-      {Key key, this.title, this.cardBgColor, this.cardAssetName, this.onTap})
+      {Key key,
+      this.title,
+      this.cardBgColor,
+      this.cardAssetName,
+      this.onTap,
+      this.investedAmount = 0})
       : super(key: key);
 
   @override
@@ -79,7 +85,7 @@ class SaveCustomCard extends StatelessWidget {
                                   ),
                                   //TODO make amount dynamic
                                   Text(
-                                    '\u20b9 2094',
+                                    '\u20b9 $investedAmount',
                                     style: TextStyles.sourceSansSB.title4,
                                   ),
                                 ],

@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -17,6 +19,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -73,53 +76,56 @@ class SaveNetWorthSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight * 0.45,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(SizeConfig.roundness16),
-              bottomRight: Radius.circular(SizeConfig.roundness16)),
-          color: UiConstants.kSecondaryBackgroundColor),
-      child: Column(
-        children: [
-          SizedBox(
-            height: SizeConfig.padding10,
-          ),
-          SaveCustomCard(
-            title: 'Digital Gold',
-            cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
-            cardAssetName: Assets.digitalGoldBar,
-            onTap: () {
-              return BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                enableDrag: false,
-                hapticVibrate: true,
-                isBarrierDismissable: true,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                content: RechargeModalSheet(),
-              );
-            },
-          ),
-          SaveCustomCard(
-            title: 'Stable Fello',
-            cardBgColor: UiConstants.kSaveStableFelloCardBg,
-            cardAssetName: Assets.digitalGoldBar,
-            onTap: () {
-              return BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                enableDrag: false,
-                hapticVibrate: true,
-                isBarrierDismissable: true,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                content: RechargeModalSheet(),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [UserServiceProperties.myUserFund],
+        builder: (context, model, property) => Container(
+              height: SizeConfig.screenHeight * 0.45,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(SizeConfig.roundness16),
+                      bottomRight: Radius.circular(SizeConfig.roundness16)),
+                  color: UiConstants.kSecondaryBackgroundColor),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                  SaveCustomCard(
+                    title: 'Digital Gold',
+                    cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
+                    cardAssetName: Assets.digitalGoldBar,
+                    investedAmount: model.userFundWallet?.augGoldBalance,
+                    onTap: () {
+                      return BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        enableDrag: false,
+                        hapticVibrate: true,
+                        isBarrierDismissable: true,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        content: RechargeModalSheet(),
+                      );
+                    },
+                  ),
+                  SaveCustomCard(
+                    title: 'Stable Fello',
+                    cardBgColor: UiConstants.kSaveStableFelloCardBg,
+                    cardAssetName: Assets.digitalGoldBar,
+                    onTap: () {
+                      return BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        enableDrag: false,
+                        hapticVibrate: true,
+                        isBarrierDismissable: true,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        content: RechargeModalSheet(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ));
   }
 }
 
