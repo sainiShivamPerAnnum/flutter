@@ -127,7 +127,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
-      _journeyService.checkIfAnyAnimationIsLeft();
+      _journeyService.checkAndAnimateAvatar();
       notifyListeners();
 
       return Future.value(true);

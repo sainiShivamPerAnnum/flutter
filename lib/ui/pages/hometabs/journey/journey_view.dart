@@ -24,14 +24,29 @@ class JourneyView extends StatefulWidget {
 }
 
 class _JourneyViewState extends State<JourneyView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  AppLifecycleState _appLifecycleState;
+  JourneyPageViewModel modelInstance;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      _appLifecycleState = state;
+    });
+    modelInstance.checkIfThereIsAMilestoneLevelChange();
+    print(_appLifecycleState);
+    super.didChangeAppLifecycleState(state);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
+        WidgetsBinding.instance.addObserver(this);
+        modelInstance = model;
         await model.init(this);
       },
       onModelDispose: (model) {
+        WidgetsBinding.instance.removeObserver(this);
         model.dump();
       },
       builder: (ctx, model, child) {

@@ -150,7 +150,7 @@ class RootViewModel extends BaseModel {
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
     if (AppState.delegate.appState.getCurrentTabIndex == 1)
-      _journeyService.checkIfAnyAnimationIsLeft();
+      _journeyService.checkAndAnimateAvatar();
   }
 
   _initAdhocNotifications() {

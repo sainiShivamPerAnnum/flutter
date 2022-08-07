@@ -123,7 +123,6 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
         properties: [
           JourneyServiceProperties.BaseGlow,
-          JourneyServiceProperties.AvatarPosition
         ],
         builder: (context, model, properties) {
           final JourneyPathModel base = model.journeyPathItemsList.firstWhere(

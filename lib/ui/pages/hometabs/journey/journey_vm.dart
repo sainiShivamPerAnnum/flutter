@@ -79,14 +79,9 @@ class JourneyPageViewModel extends BaseModel {
   }
 
   dump() {
-    // _journeyService.pages = null;
     mainController?.dispose();
     controller?.dispose();
   }
-
-  // fetchJourneyPage(BuildContext context) {
-  //   _journeyService.fetchNetworkPages();
-  // }
 
   journeyRepo() {
     print(_journeyService.vsync.toString());
@@ -108,9 +103,9 @@ class JourneyPageViewModel extends BaseModel {
     _journeyService.setCustomPathItems();
     _journeyService.setJourneyPathItems();
     _journeyService.getAvatarCachedMilestoneIndex();
-    await _journeyService.getAvatarRemoteMilestoneIndex();
+    await _journeyService.updateUserJourneyStats();
 
-    if (_journeyService.checkIfThereIsALevelChange()) {
+    if (_journeyService.isThereAnyMilestoneLevelChange()) {
       _journeyService.createPathForAvatarAnimation(
           _journeyService.avatarCachedMlIndex,
           _journeyService.avatarRemoteMlIndex);
@@ -136,6 +131,10 @@ class JourneyPageViewModel extends BaseModel {
         _journeyService.animateAvatar();
       });
     });
+  }
+
+  Future<void> checkIfThereIsAMilestoneLevelChange() {
+    _journeyService.checkForMilestoneLevelChange();
   }
 
   //  (pages.length - model.page) * pageHeight +
