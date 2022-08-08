@@ -405,8 +405,10 @@ class AppDateField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         maxLength: maxlength,
+        validator: validate,
         cursorColor: UiConstants.primaryColor,
         cursorWidth: 1,
+        textAlign: TextAlign.center,
         onChanged: (val) {
           if (val.length == maxlength && maxlength == 2) {
             FocusScope.of(context).nextFocus();
@@ -432,7 +434,7 @@ class AppDateField extends StatelessWidget {
           ),
           hintText: labelText,
           hintStyle: TextStyle(
-            color: Colors.grey[400],
+            color: Colors.grey[400].withOpacity(0.5),
             letterSpacing: 2,
           ),
         ),

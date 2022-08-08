@@ -1,12 +1,13 @@
+import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
-
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Name4 extends StatelessWidget {
-  const Name4({Key key}) : super(key: key);
+  const Name4({Key key, @required this.model}) : super(key: key);
+  final Level2ViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +28,18 @@ class Name4 extends StatelessWidget {
         ),
         SizedBox(height: SizeConfig.padding64),
         //input
-        LogInTextField(
-          hintText: 'Your full name',
-          textInputType: TextInputType.number,
-          controller: null,
+        Form(
+          key: model.nameFormKey,
+          child: LogInTextField(
+            hintText: 'Your full name',
+            controller: model.nameController,
+            validator: (val) {
+              if (val.isEmpty) {
+                return 'Please enter your full name';
+              }
+              return null;
+            },
+          ),
         ),
       ],
     );

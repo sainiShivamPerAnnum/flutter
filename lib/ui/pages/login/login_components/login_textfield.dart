@@ -1,5 +1,6 @@
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -79,11 +80,25 @@ class LogInTextField extends StatelessWidget {
               borderSide: BorderSide(
                 color: Color(0xFFFFFFFF).withOpacity(0.5),
               ),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFFFFFF).withOpacity(0.5),
               ),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.5),
+              ),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.5),
+              ),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
             ),
           ),
           inputFormatters: inputFormatter ?? [],

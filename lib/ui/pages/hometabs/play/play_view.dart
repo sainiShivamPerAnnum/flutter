@@ -1,3 +1,6 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
@@ -39,6 +42,18 @@ class Play extends StatelessWidget {
               ),
               FelloCoinBar(
                 svgAsset: Assets.aFelloToken,
+              ),
+              SizedBox(
+                width: SizeConfig.padding20,
+              ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  AppState.delegate.appState.currentAction = PageAction(
+                    page: Level2ViewPageConfig,
+                    state: PageState.addPage,
+                  );
+                },
               ),
               SizedBox(
                 width: SizeConfig.padding20,
