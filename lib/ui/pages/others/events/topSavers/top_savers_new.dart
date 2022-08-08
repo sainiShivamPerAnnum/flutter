@@ -2,41 +2,19 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
-import 'package:felloapp/ui/pages/static/winnings_container.dart';
-import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../service_elements/user_service/profile_image.dart';
-import '../../../../widgets/faq_card/faq_card_view.dart';
-import '../../../../widgets/faq_card/faq_card_vm.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
-import '../../../hometabs/play/play_components/titlesGames.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
@@ -149,8 +127,9 @@ class CampaignView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Day ${model.weekDay.toString()}",
-                          style: TextStyles.title3.bold.colour(Colors.white),
+                          "DAY ${model.weekDay.toString().padLeft(2, '0')}",
+                          style:
+                              TextStyles.rajdhaniB.title5.colour(Colors.white),
                         ),
                         const SizedBox(
                           height: 10,
@@ -181,7 +160,7 @@ class CampaignView extends StatelessWidget {
                                   Text(
                                     "Your Savings",
                                     style:
-                                        TextStyles.body4.colour(Colors.white),
+                                        TextStyles.body3.colour(Colors.white),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -228,8 +207,8 @@ class CampaignView extends StatelessWidget {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              "Highest\nSavings",
-                                              style: TextStyles.body4
+                                              "Highest\nSaving",
+                                              style: TextStyles.body3
                                                   .colour(Colors.white),
                                             ),
                                             Flexible(
@@ -277,7 +256,7 @@ class CampaignView extends StatelessWidget {
                                                 ),
                                                 Text(
                                                   "Rank",
-                                                  style: TextStyles.body4
+                                                  style: TextStyles.body3
                                                       .colour(Colors.white),
                                                 ),
                                               ],
@@ -323,19 +302,19 @@ class CampaignView extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Container(
-                          height: SizeConfig.bannerHeight,
+                          // height: SizeConfig.bannerHeight,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "WIN",
-                                style:
-                                    TextStyles.title4.bold.colour(Colors.white),
+                                style: TextStyles.rajdhaniSB.body0.bold
+                                    .colour(Colors.white),
                               ),
                               Text(
                                 "₹ 250",
-                                style: TextStyles.title0.bold.colour(
+                                style: TextStyles.rajdhaniB.title0.bold.colour(
                                     UiConstants.kWinnerPlayerPrimaryColor),
                               ),
                               Text(
@@ -385,7 +364,7 @@ class CampaignView extends StatelessWidget {
                     children: [
                       Text(
                         "Past Winners",
-                        style: TextStyles.title3.bold.colour(Colors.white),
+                        style: TextStyles.body0.bold.colour(Colors.white),
                       ),
                       const SizedBox(
                         height: 10,
@@ -438,6 +417,7 @@ class CampaignView extends StatelessWidget {
                               Assets.chevronAsset,
                               width: SizeConfig.iconSize1,
                               height: SizeConfig.iconSize1,
+                              color: UiConstants.primaryColor,
                             )
                           ],
                         ),

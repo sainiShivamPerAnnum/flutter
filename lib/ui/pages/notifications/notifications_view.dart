@@ -86,7 +86,7 @@ class NotficationsPage extends StatelessWidget {
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  SizedBox(height: SizeConfig.padding12),
+                                  // SizedBox(height: SizeConfig.padding12),
                                   Row(
                                     children: [
                                       CircleAvatar(
@@ -131,13 +131,12 @@ class NotficationsPage extends StatelessWidget {
                                                 Expanded(
                                                   child: Text(
                                                     model.notifications[index]
-                                                            .title
-                                                            .toUpperCase() ??
+                                                            .title ??
                                                         "Title",
                                                     maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style: TextStyles.body3.bold
+                                                    style: TextStyles.body2.bold
                                                         .colour(Colors.white),
                                                   ),
                                                 ),
@@ -163,7 +162,7 @@ class NotficationsPage extends StatelessWidget {
                                               ],
                                             ),
                                             SizedBox(
-                                                height: SizeConfig.padding12),
+                                                height: SizeConfig.padding6),
                                             Padding(
                                               padding: EdgeInsets.only(
                                                   right: SizeConfig.padding28),

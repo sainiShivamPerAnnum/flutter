@@ -30,7 +30,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Play(), JourneyView(), Win()];
+  final pages = [Play(), JourneyView(), Save()];
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +96,12 @@ class Root extends StatelessWidget {
                     // color: Colors.red,
                   ),
                 ),
-                // actions: [
-                //   FelloCoinBar(),
-                //   SizedBox(width: 16),
-                //   NotificationButton(),
-                // ],
+                actions: [
+                  // FelloCoinBar(),
+                  // SizedBox(width: 16),
+                  if (AppState.delegate.appState.getCurrentTabIndex == 2)
+                    NotificationButton(),
+                ],
               ),
               // Positioned(
               //   bottom: 0,

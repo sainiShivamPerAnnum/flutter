@@ -30,7 +30,7 @@ class _InfoComponentState extends State<InfoComponent> {
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.screenWidth,
-      // height: SizeConfig.screenWidth * 0.981,
+      // height: SizeConfig.screenWidth * 0.184,
       margin: EdgeInsets.all(SizeConfig.padding24),
       decoration: BoxDecoration(
         color: UiConstants.kDarkBoxColor,
@@ -40,7 +40,7 @@ class _InfoComponentState extends State<InfoComponent> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: SizeConfig.padding24,
+            height: SizeConfig.padding20,
           ),
           TextButton(
             onPressed: () {
@@ -54,7 +54,7 @@ class _InfoComponentState extends State<InfoComponent> {
               children: [
                 Text(
                   widget.heading,
-                  style: TextStyles.rajdhaniSB.title4,
+                  style: TextStyles.rajdhaniSB.title5,
                 ),
                 SizedBox(
                   width: SizeConfig.padding24,
@@ -67,7 +67,7 @@ class _InfoComponentState extends State<InfoComponent> {
             ),
           ),
           SizedBox(
-            height: SizeConfig.padding24,
+            height: SizeConfig.padding20,
           ),
           isBoxOpen
               ? Column(
