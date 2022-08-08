@@ -75,35 +75,23 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-//               FelloAppBar(
-// <<<<<<< HEAD
-//                   key: felloAppBarKey,
-//                   showAppBar: false,
-//                   leading: InkWell(
-//                     onTap: model.showDrawer,
-//                     child: Container(
-//                       width: SizeConfig.padding38,
-//                       height: SizeConfig.padding38,
-//                       // color: Colors.red,
-//                     ),
-//                   )),
-// =======
-//                 key: felloAppBarKey,
-//                 leading: InkWell(
-//                   onTap: model.showDrawer,
-//                   child: Container(
-//                     width: SizeConfig.padding38,
-//                     height: SizeConfig.padding38,
-//                     // color: Colors.red,
-//                   ),
-//                 ),
-//                 actions: [
-//                   // FelloCoinBar(),
-//                   // SizedBox(width: 16),
-//                   if (AppState.delegate.appState.getCurrentTabIndex == 2)
-//                     NotificationButton(),
-//                 ],
-//               ),
+              if (AppState.delegate.appState.getCurrentTabIndex == 3)
+                FelloAppBar(
+                  showAppBar: false,
+                  leading: InkWell(
+                    onTap: model.showDrawer,
+                    child: Container(
+                      width: SizeConfig.padding38,
+                      height: SizeConfig.padding38,
+                      // color: Colors.red,
+                    ),
+                  ),
+                  actions: [
+                    // FelloCoinBar(),
+                    // SizedBox(width: 16),
+                    NotificationButton(),
+                  ],
+                ),
               // Positioned(
               //   bottom: 0,
               //   child: Container(

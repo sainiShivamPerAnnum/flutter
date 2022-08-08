@@ -125,8 +125,10 @@ class JourneyRepository {
   //Checks the existence of asset locally
   //only check in shared prefs and cannot ensure if the
   //file exists on the device or not!
-  bool checkIfAssetIsAvailableLocally(String assetKey) =>
-      PreferenceHelper.exists(assetKey);
+  bool checkIfAssetIsAvailableLocally(String assetKey) {
+    return (PreferenceHelper.exists(assetKey) &&
+        File(PreferenceHelper.getString(assetKey)).existsSync());
+  }
 
   //Returns the local filepath of the asset from Shared Prefs
   String getAssetLocalFilePath(String assetKey) =>

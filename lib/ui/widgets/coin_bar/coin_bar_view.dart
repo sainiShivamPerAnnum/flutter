@@ -52,27 +52,24 @@ class FelloCoinBar extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(SizeConfig.padding8),
                 padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding12,
-                ),
+                    horizontal: SizeConfig.padding12,
+                    vertical: SizeConfig.padding10),
                 decoration: BoxDecoration(
                   color: UiConstants.kTextFieldColor.withOpacity(0.4),
                   border: Border.all(color: borderColor ?? Colors.white10),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SvgPicture.asset(
-                        svgAsset,
-                        height: size ?? SizeConfig.padding24,
-                        width: size ?? SizeConfig.padding24,
-                      ),
-                      SizedBox(width: SizeConfig.padding4),
-                      CoinBalanceTextSE(),
-                    ],
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SvgPicture.asset(
+                      svgAsset,
+                      height: size ?? SizeConfig.padding20,
+                      width: size ?? SizeConfig.padding20,
+                    ),
+                    SizedBox(width: SizeConfig.padding4),
+                    CoinBalanceTextSE(),
+                  ],
                 ),
               ),
             ),

@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augm
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
@@ -53,12 +54,18 @@ class Save extends StatelessWidget {
               elevation: 0,
               backgroundColor: UiConstants.kSecondaryBackgroundColor,
               actions: [
-                FelloCoinBar(
-                  svgAsset: Assets.aFelloToken,
+                FelloCoinBar(svgAsset: Assets.aFelloToken),
+                SizedBox(width: SizeConfig.padding10),
+                InkWell(
+                  onTap: () {
+                    AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: UserProfileDetailsConfig,
+                    );
+                  },
+                  child: ProfileImageSE(radius: SizeConfig.avatarRadius * 0.8),
                 ),
-                SizedBox(
-                  width: SizeConfig.padding20,
-                )
+                SizedBox(width: SizeConfig.padding20)
               ],
             ),
             body: SingleChildScrollView(
