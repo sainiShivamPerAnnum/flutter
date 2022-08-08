@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -330,6 +331,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.JourneyView:
           _addPageData(JourneyView(), JourneyViewPageConfig);
+          break;
+        case Pages.JourneyView:
+          _addPageData(BlogWebView(), BlogPostWebViewConfig);
           break;
         default:
           break;

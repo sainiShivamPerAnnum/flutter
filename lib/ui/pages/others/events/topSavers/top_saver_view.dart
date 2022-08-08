@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -127,8 +128,8 @@ class TopSaverView extends StatelessWidget {
                                     ),
                                     onPressed: () async {
                                       String url = model.event.url;
-                                      if (await canLaunch(url)) {
-                                        launch(url);
+                                      if (await launch(url)) {
+                                        launchUrl(Uri.parse(url));
                                       }
                                     },
                                   ),

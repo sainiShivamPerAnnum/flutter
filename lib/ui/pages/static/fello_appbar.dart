@@ -20,41 +20,43 @@ class FelloAppBar extends StatelessWidget {
   final Widget leading;
   final List<Widget> actions;
   final String title;
+  final bool showAppBar;
 
-  FelloAppBar({this.leading, this.actions, this.title, Key key})
+  FelloAppBar(
+      {this.leading,
+      this.actions,
+      this.title,
+      this.showAppBar = true,
+      Key key,
+      int elevation,
+      Color backgroundColor})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth,
-      // height: SizeConfig.padding40,
-      margin: EdgeInsets.only(
-        top: SizeConfig.viewInsets.top + SizeConfig.padding12,
-        bottom: SizeConfig.padding12,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-      ),
-      child: Row(
-        children: [
-          if (leading != null) leading,
-          SizedBox(width: 16),
-          if (title != null)
-            FittedBox(
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style: TextStyles.title4.bold.colour(Colors.white),
-              ),
-            ),
-          Spacer(),
-          if (actions != null)
-            Row(
-              children: actions,
-            )
-        ],
-      ),
-    );
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenHeight / 8,
+        color: showAppBar ? UiConstants.kBackgroundColor : Colors.transparent,
+        child: AppBar(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))),
+          leading: leading != null ? leading : Container(),
+          centerTitle: true,
+          title: title != null
+              ? FittedBox(
+                  child: Text(title,
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      style: TextStyles.rajdhaniM))
+              : Text(''),
+          backgroundColor: showAppBar
+              ? UiConstants.kSecondaryBackgroundColor
+              : Colors.transparent,
+          actions: actions != null ? actions : [Container()],
+        ));
   }
 }
 
@@ -112,31 +114,6 @@ class NotificationButton extends StatelessWidget {
                 ],
               ),
             ));
-  }
-}
-
-class FelloAppBarBackButton extends StatelessWidget {
-  final Function onBackPress;
-  final Color color;
-  FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
-      child: CircleAvatar(
-        radius: SizeConfig.avatarRadius,
-        backgroundColor: color.withOpacity(0.4),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding4),
-          child: Icon(
-            Icons.arrow_back_rounded,
-            color: UiConstants.primaryColor,
-            size: SizeConfig.iconSize1,
-          ),
-        ),
-      ),
-    );
   }
 }
 

@@ -51,6 +51,24 @@ class Assets {
   static final String navSave = "assets/vectors/icons/wallet.svg";
   static final String navWin = "assets/vectors/icons/medal.svg";
 
+  //NAVBAR - 4.0
+  static final String navPlayActive =
+      "assets/svg/BottomNavBarIcons/play_active.svg";
+  static final String navPlayInactive =
+      "assets/svg/BottomNavBarIcons/play_inactive.svg";
+  static final String navJourneyActive =
+      "assets/svg/BottomNavBarIcons/journey_active.svg";
+  static final String navJourneyInactive =
+      "assets/svg/BottomNavBarIcons/journey_inactive.svg";
+  static final String navSaveActive =
+      "assets/svg/BottomNavBarIcons/save_active.svg";
+  static final String navSaveInactive =
+      "assets/svg/BottomNavBarIcons/save_inactive.svg";
+  static final String navWinActive =
+      "assets/svg/BottomNavBarIcons/win_active.svg";
+  static final String navWinInactive =
+      "assets/svg/BottomNavBarIcons/win_inactive.svg";
+
 // ONBOARDING
   static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
   static final String otpAuth = "assets/vectors/otp_auth2.svg";
@@ -93,6 +111,13 @@ class Assets {
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String processing = "assets/vectors/processing.svg";
+  static final String digitalGoldBar = 'assets/svg/save_digital_gold.svg';
+  static final String stableFello = 'assets/svg/save_stable_fello.svg';
+  static final String autoSaveDefault = 'assets/svg/save_auto_sip.svg';
+  static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
+  static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
+  static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';
+  static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
 
   // WIN
 
@@ -151,6 +176,10 @@ class Assets {
   static final String congrats = "assets/vectors/congrats.svg";
   static final String noTickets = "assets/vectors/no_tickets.svg";
   static final String noData = "assets/lotties/no_data.json";
+  static final String snackbarWifiIcon = "assets/svg/snackbar_wifi_icon.svg";
+  static final String snackbarAlertIcon = "assets/svg/snackbar_alert_icon.svg";
+  static final String snackbarLoadingIcon =
+      "assets/svg/snackbar_loading_icon.svg";
 
   //FELLO REWARDS
   // static final String digitalGold = "images/augmont-share.png";

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -13,9 +12,9 @@ import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vi
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -24,7 +23,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginControllerView extends StatefulWidget {
   final int initPage;

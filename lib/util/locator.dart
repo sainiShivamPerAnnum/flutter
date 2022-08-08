@@ -13,10 +13,10 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
-import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
@@ -83,6 +83,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_v
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_vm.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
@@ -152,6 +153,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
   locator.registerLazySingleton(() => SubscriptionRepo());
+  locator.registerLazySingleton(() => SaveRepo());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
@@ -205,4 +207,5 @@ void setupLocator() {
   locator.registerFactory(() => FelloCoinBarViewModel());
   locator.registerFactory(() => FAQCardViewModel());
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
+  locator.registerFactory(() => SubscriptionCardViewModel());
 }

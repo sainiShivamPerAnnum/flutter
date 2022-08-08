@@ -33,10 +33,10 @@ class Play extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             actions: [
-              FelloCoinBar(
-                svgAsset: Assets.aTambolaTicket,
-                size: SizeConfig.padding20,
-              ),
+              // FelloCoinBar(
+              //   svgAsset: Assets.aTambolaTicket,
+              //   size: SizeConfig.padding20,
+              // ),
               FelloCoinBar(
                 svgAsset: Assets.aFelloToken,
               ),
@@ -58,6 +58,9 @@ class Play extends StatelessWidget {
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
                 PlayInfoSection(),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 0.16,
+                )
               ],
             ),
           ),

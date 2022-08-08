@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_win.
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/processing.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 

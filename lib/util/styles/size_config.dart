@@ -28,6 +28,7 @@ class SizeConfig {
   static BorderRadius homeViewBorder;
   static bool isGamefirstTime;
   static EdgeInsets viewInsets;
+  static double assetCardSize;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -126,7 +127,7 @@ class SizeConfig {
   static double get navBarWidth =>
       SizeConfig.screenWidth - (SizeConfig.pageHorizontalMargins * 2);
   static double get navBarAspectRatio => 4.16;
-  static double get navBarHeight => navBarWidth / navBarAspectRatio * 0.9;
+  static double get navBarHeight => navBarWidth / navBarAspectRatio * 1.5;
   //static double get navBarHeight => screenWidth * 0.212;
 
   static double get avatarRadius => screenWidth * 0.048;
@@ -144,4 +145,7 @@ class SizeConfig {
 
   // Button Border Radius
   static double get buttonBorderRadius => screenWidth * 0.0139; // 5
+
+  //Card Height calculation based on width
+  static double get cardHeight => screenWidth * 0.4613333333333333;
 }

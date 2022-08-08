@@ -1705,7 +1705,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 122;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
 				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
@@ -2421,7 +2421,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 122;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2460,7 +2460,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 122;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
