@@ -1,5 +1,7 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
@@ -7,11 +9,15 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:lottie/lottie.dart';
 
 class WalkThroughPage extends StatefulWidget {
@@ -28,8 +34,20 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   PageController _pageController;
   ValueNotifier<double> _pageNotifier;
   bool showLotties = false;
+  bool _isLoading = false;
+
+  get isLoading => this._isLoading;
+
+  set isLoading(value) {
+    setState(() {
+      this._isLoading = value;
+    });
+  }
+
   GoldenTicketService _gtService = GoldenTicketService();
   final _analyticsService = locator<AnalyticsService>();
+  final UserRepository _userRepository = locator<UserRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   @override
   void initState() {
@@ -55,6 +73,13 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   void _pageListener() {
     print(_pageController.page);
     _pageNotifier.value = _pageController.page;
+  }
+
+  checkForMilestoneCompletion() async {
+    isLoading = true;
+    if (_journeyService.avatarRemoteMlIndex == 1)
+      await _userRepository.updateUserWalkthroughCompletion();
+    isLoading = false;
   }
 
   @override
@@ -218,21 +243,19 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                   valueListenable: _pageNotifier,
                   builder: (ctx, value, _) {
                     return FelloButtonLg(
-                      child: Text(
-                        value.toInt() == 2 ? "FINISH" : "NEXT",
-                        style: TextStyles.body2.bold.colour(Colors.white),
-                      ),
-                      onPressed: () {
+                      child: isLoading
+                          ? SpinKitThreeBounce(
+                              color: Colors.white,
+                              size: SizeConfig.padding24,
+                            )
+                          : Text(
+                              value.toInt() == 2 ? "FINISH" : "NEXT",
+                              style: TextStyles.body2.bold.colour(Colors.white),
+                            ),
+                      onPressed: () async {
                         if (value.toInt() == 2) {
+                          await checkForMilestoneCompletion();
                           AppState.backButtonDispatcher.didPopRoute();
-                          _gtService
-                              .fetchAndVerifyGoldenTicketByID()
-                              .then((bool res) {
-                            if (res)
-                              _gtService.showInstantGoldenTicketView(
-                                  title: 'Welcome to Fello',
-                                  source: GTSOURCE.newuser);
-                          });
                         } else
                           _pageController.nextPage(
                             duration: Duration(milliseconds: 400),
@@ -244,8 +267,9 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 ),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   AppState.backButtonDispatcher.didPopRoute();
+
                   _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
                     if (res)
                       _gtService.showInstantGoldenTicketView(

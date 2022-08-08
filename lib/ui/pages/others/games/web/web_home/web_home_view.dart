@@ -257,7 +257,7 @@ class WebHomeView extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Padding(
                     padding: EdgeInsets.only(bottom: SizeConfig.padding24),
-                    child: AppPositiveBtn(
+                    child: ReactivePositiveAppButton(
                       btnText: 'Play',
                       onPressed: () async {
                         Haptic.vibrate();
@@ -266,7 +266,6 @@ class WebHomeView extends StatelessWidget {
                         }
                         // model.pageController.jumpToPage(1);
                       },
-                      width: SizeConfig.screenWidth * 0.8,
                     ),
                   ),
                 ),

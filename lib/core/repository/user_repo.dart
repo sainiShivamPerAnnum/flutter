@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -20,6 +21,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 
 import 'base_repo.dart';
 
@@ -383,6 +385,30 @@ class UserRepository extends BaseRepo {
         "Unable to update fcm",
         400,
       );
+    }
+  }
+
+  Future<ApiResponse<bool>> updateUserWalkthroughCompletion() async {
+    bool isGtRewarded = false;
+    try {
+      final String _bearer = await getBearerToken();
+      final res = await APIService.instance.postData(
+          ApiPath.kWalkthrough(userService.baseUser.uid),
+          cBaseUrl: _baseUrl,
+          token: _bearer);
+      logger.d(res);
+      final responseData = res['data'];
+      logger.d(responseData);
+      if (responseData["isGtRewarded"] != null && responseData["isGtRewarded"])
+        isGtRewarded = true;
+      if (responseData["gtId"] != null &&
+          responseData["gtId"].toString().isNotEmpty)
+        GoldenTicketService.goldenTicketId = responseData["gtId"];
+      return ApiResponse(code: 200, model: isGtRewarded);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to create user account", 400);
     }
   }
 }
