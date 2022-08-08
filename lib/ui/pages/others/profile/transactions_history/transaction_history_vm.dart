@@ -108,6 +108,8 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   refreshTransactions() async {
     await _txnService.updateTransactions();
+    filteredList = _txnService.txnList;
+    notifyListeners();
   }
   // getTransactionsFromApi() async {
   //   ApiResponse<List<UserTransaction>> res;

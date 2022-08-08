@@ -92,7 +92,8 @@ class TransactionsHistory extends StatelessWidget {
                                       ? child
                                       : RefreshIndicator(
                                           onRefresh: () async {
-                                            model.refreshTransactions();
+                                            if (model.filter == 0)
+                                              model.refreshTransactions();
                                           },
                                           child: ListView(
                                             physics: BouncingScrollPhysics(),

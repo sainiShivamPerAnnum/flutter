@@ -56,12 +56,12 @@ class PaymentRepository extends BaseRepo {
       );
       logger.d(response);
       message = response["message"];
-      if (message == "Vpa is valid") {
-        _userService.setMyUpiId(upiId);
-        _baseUtil.isUpiInfoMissing = false;
-        return ApiResponse(model: true, code: 200, errorMessage: message);
-      } else
-        return ApiResponse(model: false, code: 400, errorMessage: message);
+      // if (message == "Vpa is valid") {
+      _userService.setMyUpiId(upiId);
+      _baseUtil.isUpiInfoMissing = false;
+      return ApiResponse(model: true, code: 200, errorMessage: message);
+      // } else
+      // return ApiResponse(model: false, code: 400, errorMessage: message);
     } on BadRequestException catch (e) {
       return ApiResponse(model: false, code: 400, errorMessage: e.toString());
     } catch (e) {

@@ -117,8 +117,7 @@ class NotficationsPage extends StatelessWidget {
                                                         model
                                                                 .notifications[
                                                                     index]
-                                                                .title
-                                                                .toUpperCase() ??
+                                                                .title ??
                                                             "Title",
                                                         maxLines: 2,
                                                         overflow: TextOverflow
