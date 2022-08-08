@@ -4,6 +4,8 @@ class Assets {
   static final String splashBackground = "assets/images/BG.png";
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String logoShortform = 'images/fello-short-logo.png';
+  static final String logoShortformSVG = 'assets/svg/fello-short-logo.svg';
+
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
@@ -208,6 +210,26 @@ class Assets {
   // Web Home View (GameInfoBlock Asset)
   static final String rewardGameAsset = 'assets/svg/reward_svg.svg';
   static final String circleGameAsset = 'assets/svg/circle_svg.svg';
+
+  //Campaign Screen
+  static final String visualGridAsset = "assets/svg/visual_grid.svg";
+  static final String coinsIconAsset = "assets/svg/coins.svg";
+  static final String rankIconAsset = "assets/svg/rank.svg";
+  static final String bannerTrophy = "assets/images/banner_trophy.png";
+
+  static final String chevronAsset = " assets/temp/chevron_right.svg";
+
+  static final String singleStarAsset = "assets/svg/star_single.svg";
+  static final String singleCoinAsset = "assets/svg/coin_single.svg";
+  static final String singleTmbolaTicket =
+      "assets/svg/tambola_ticket_single.svg";
+
+  //Notificatiion alert screen
+  static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
+
+  static final String goldenTicketAsset = "assets/svg/deposite_complete.svg";
+
+  static final String couponsAsset = "assets/svg/coupons.svg";
 
   static final List<String> onboardingHeader = [
     'Save',

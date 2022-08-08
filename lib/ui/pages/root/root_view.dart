@@ -75,17 +75,70 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              FelloAppBar(
-                  key: felloAppBarKey,
-                  showAppBar: false,
-                  leading: InkWell(
-                    onTap: model.showDrawer,
-                    child: Container(
-                      width: SizeConfig.padding38,
-                      height: SizeConfig.padding38,
-                      // color: Colors.red,
-                    ),
-                  )),
+//               FelloAppBar(
+// <<<<<<< HEAD
+//                   key: felloAppBarKey,
+//                   showAppBar: false,
+//                   leading: InkWell(
+//                     onTap: model.showDrawer,
+//                     child: Container(
+//                       width: SizeConfig.padding38,
+//                       height: SizeConfig.padding38,
+//                       // color: Colors.red,
+//                     ),
+//                   )),
+// =======
+//                 key: felloAppBarKey,
+//                 leading: InkWell(
+//                   onTap: model.showDrawer,
+//                   child: Container(
+//                     width: SizeConfig.padding38,
+//                     height: SizeConfig.padding38,
+//                     // color: Colors.red,
+//                   ),
+//                 ),
+//                 actions: [
+//                   // FelloCoinBar(),
+//                   // SizedBox(width: 16),
+//                   if (AppState.delegate.appState.getCurrentTabIndex == 2)
+//                     NotificationButton(),
+//                 ],
+//               ),
+              // Positioned(
+              //   bottom: 0,
+              //   child: Container(
+              //     width: SizeConfig.screenWidth,
+              //     height: SizeConfig.navBarHeight,
+              //     decoration: BoxDecoration(
+              //       gradient: LinearGradient(
+              //           begin: Alignment.bottomCenter,
+              //           end: Alignment.topCenter,
+              //           colors: [
+              //             UiConstants.scaffoldColor.withOpacity(0.8),
+              //             UiConstants.scaffoldColor.withOpacity(0.2),
+              //           ],
+              //           stops: [
+              //             0.8,
+              //             1
+              //           ]),
+              //     ),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              //     ),
+              //   ),
+              // ),
+              // if (SizeConfig.screenWidth < 600)
+              //   WantMoreTickets(
+              //     model: model,
+              //   ),
+              // if (SizeConfig.screenWidth < 600)
+              //   SaveBaseline(
+              //     model: model,
+              //   ),
+              // BottomNavBar(
+              //   model: model,
+              // ),
+// >>>>>>> campaign4.0
               Consumer<AppState>(
                   builder: (ctx, m, child) =>
                       AppState.delegate.appState.isTxnLoaderInView
