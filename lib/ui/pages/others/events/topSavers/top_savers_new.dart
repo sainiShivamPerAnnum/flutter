@@ -38,10 +38,10 @@ import '../../../../widgets/faq_card/faq_card_vm.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
 import '../../../hometabs/play/play_components/titlesGames.dart';
 
-// extension TruncateDoubles on double {
-//   double truncateToDecimalPlaces(int fractionalDigits) =>
-//       (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
-// }
+extension TruncateDoubles on double {
+  double truncateToDecimalPlaces(int fractionalDigits) =>
+      (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
+}
 
 class CampaignView extends StatelessWidget {
   final String eventType;
@@ -59,7 +59,6 @@ class CampaignView extends StatelessWidget {
           body: CustomScrollView(
             physics: BouncingScrollPhysics(),
             slivers: [
-              //The App Bar
               SliverAppBar(
                 backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
                 leading: IconButton(
@@ -71,7 +70,6 @@ class CampaignView extends StatelessWidget {
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: [
-                      //Background image
                       SvgPicture.asset(
                         Assets.visualGridAsset,
                         fit: BoxFit.cover,
@@ -143,8 +141,6 @@ class CampaignView extends StatelessWidget {
                   ),
                 ),
               ),
-
-              //The container for Savings, Highest Savings & Rank
               SliverToBoxAdapter(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.padding34),
@@ -161,7 +157,6 @@ class CampaignView extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            //YOUR SAVINGS
                             Container(
                               height: SizeConfig.boxWidthLarge,
                               width: SizeConfig.boxWidthLarge,
@@ -201,8 +196,6 @@ class CampaignView extends StatelessWidget {
                                 ],
                               ),
                             ),
-
-                            //HIGHEST SAVING //RANK
                             Expanded(
                               child: Container(
                                 height: SizeConfig.boxWidthLarge,
@@ -214,7 +207,6 @@ class CampaignView extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    //HIGHEST SAVINGS
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.fromLTRB(
@@ -268,8 +260,7 @@ class CampaignView extends StatelessWidget {
                                             Radius.circular(
                                                 SizeConfig.roundness12),
                                           ),
-                                          color:
-                                              UiConstants.kDarkBoxColor, //TODO
+                                          color: UiConstants.kDarkBoxColor,
                                         ),
                                         child: Row(
                                           mainAxisAlignment:
@@ -320,19 +311,16 @@ class CampaignView extends StatelessWidget {
                   ),
                 ),
               ),
-
               SliverToBoxAdapter(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.padding38),
                   decoration: BoxDecoration(
-                    // color: UiConstants.kBackgroundColor,
                     gradient: UiConstants.kCampaignBannerBackgrondGradient,
                   ),
                   height: SizeConfig.bannerHeight,
                   width: double.infinity,
                   child: Row(
                     children: [
-                      //The Text
                       Expanded(
                         child: Container(
                           height: SizeConfig.bannerHeight,
@@ -358,8 +346,6 @@ class CampaignView extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      //The Image
                       Container(
                         width: SizeConfig.screenWidth * 0.3,
                         height: SizeConfig.bannerHeight,
@@ -391,8 +377,6 @@ class CampaignView extends StatelessWidget {
                   ),
                 ),
               ),
-
-              //The list of past winners
               SliverToBoxAdapter(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.padding34),
@@ -417,7 +401,6 @@ class CampaignView extends StatelessWidget {
                             ),
                       TextButton(
                         onPressed: () {
-                          //View all the past Winners
                           BaseUtil.openModalBottomSheet(
                             addToScreenStack: true,
                             backgroundColor: UiConstants.kBackgroundColor,
@@ -463,7 +446,6 @@ class CampaignView extends StatelessWidget {
                   ),
                 ),
               ),
-
               SliverToBoxAdapter(
                 child: InfoComponent(
                   heading: model.boxHeading,
@@ -471,17 +453,6 @@ class CampaignView extends StatelessWidget {
                   titleList: model.boxTitlles,
                 ),
               ),
-
-              // //Following is the new FAQ Widget, just for testing purposes
-              // SliverToBoxAdapter(
-              //   child: Padding(
-              //     padding: EdgeInsets.all(SizeConfig.padding24),
-              //     child: FAQCardView(
-              //       category: FAQCardViewModel.FAQ_CAT_GENERAL,
-              //       catTitle: false,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         );
@@ -490,9 +461,6 @@ class CampaignView extends StatelessWidget {
   }
 }
 
-//Following is the generic widget that is responsible for rendering the list of past winners
-//both with image on home page
-//and without image in bottom sheet
 class PastWinnersList extends StatelessWidget {
   PastWinnersList(
       {Key key,

@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/util/constants.dart';
