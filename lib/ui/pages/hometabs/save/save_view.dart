@@ -20,6 +20,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -259,7 +260,6 @@ class CampiagnCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(containerColor);
     return Padding(
       padding: EdgeInsets.only(right: SizeConfig.padding10),
       child: Container(
@@ -365,46 +365,129 @@ class SaveBlogSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: SizeConfig.padding24, top: SizeConfig.padding10),
-      child: Container(
-        height: SizeConfig.screenHeight * 0.12,
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 2,
-            itemBuilder: (ctx, index) {
-              return SaveBlogTile();
-            }),
-      ),
-    );
+        padding: EdgeInsets.only(
+            left: SizeConfig.padding24, top: SizeConfig.padding10),
+        child: BaseView<SaveViewModel>(
+          onModelReady: (model) => model.getBlogs(),
+          builder: (ctx, model, child) => Container(
+            height: SizeConfig.screenHeight * 0.12,
+            child: model.isLoading
+                ? ListView.builder(
+                    itemCount: 2,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (ctx, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding10),
+                        child: Container(
+                          width: SizeConfig.screenWidth - 80,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness12),
+                              color: UiConstants.kSecondaryBackgroundColor),
+                          child: Padding(
+                            padding: EdgeInsets.all(SizeConfig.padding6),
+                            child: Row(
+                              children: [
+                                Shimmer.fromColors(
+                                  baseColor:
+                                      UiConstants.kUserRankBackgroundColor,
+                                  highlightColor: UiConstants.kBackgroundColor,
+                                  child: Container(
+                                    height: SizeConfig.screenHeight * 0.1,
+                                    width: SizeConfig.screenWidth * 0.24,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness12),
+                                        color: UiConstants.kBackgroundColor),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    })
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (ctx, index) {
+                      return SaveBlogTile(
+                        onTap: () => model.getBlogs(),
+                        title: model.blogPosts[index].title.rendered,
+                        description: model.blogPosts[index].acf.categories,
+                        imageUrl: model.blogPosts[index].yoastHeadJson,
+                      );
+                    }),
+          ),
+        ));
   }
 }
 
 class SaveBlogTile extends StatelessWidget {
-  const SaveBlogTile({Key key}) : super(key: key);
+  final Function() onTap;
+  final String title;
+  final String description;
+  final String imageUrl;
+  const SaveBlogTile(
+      {Key key, this.onTap, this.title, this.description, this.imageUrl})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: SizeConfig.padding10),
-      child: Container(
-        width: SizeConfig.screenWidth - 80,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            color: UiConstants.kSecondaryBackgroundColor),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding6),
-          child: Row(
-            children: [
-              Container(
-                height: SizeConfig.screenHeight * 0.1,
-                width: SizeConfig.screenWidth * 0.24,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness12)),
-              )
-            ],
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: SizeConfig.screenWidth - 80,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              color: UiConstants.kSecondaryBackgroundColor),
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.padding6),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  child: Image.network(
+                    imageUrl,
+                    height: SizeConfig.screenHeight * 0.1,
+                    width: SizeConfig.screenWidth * 0.24,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                      child: Text(
+                        description,
+                        style: TextStyles.rajdhaniM
+                            .colour(UiConstants.kBlogTitleColor),
+                      ),
+                    ),
+                    ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: SizeConfig.screenWidth * 0.4,
+                        ),
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.clip,
+                          style:
+                              TextStyles.sourceSans.body3.colour(Colors.white),
+                        )),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

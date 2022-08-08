@@ -39,6 +39,7 @@ class CampaignRepo extends BaseRepo {
               events.add(EventModel.fromMap(e));
             });
           }
+          print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
       );

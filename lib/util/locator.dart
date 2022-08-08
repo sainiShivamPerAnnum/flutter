@@ -16,6 +16,7 @@ import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
@@ -152,6 +153,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
   locator.registerLazySingleton(() => SubscriptionRepo());
+  locator.registerLazySingleton(() => SaveRepo());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());

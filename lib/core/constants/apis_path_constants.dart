@@ -42,6 +42,8 @@ class ApiPath {
   static const kDeviceId = "/device";
   static String getCoinBalance(uid) => "/$uid/wallet/coin";
   static String getFundBalance(uid) => "/$uid/wallet/fund";
+  static String getBlogs(noOfBlogs) =>
+      "/blogs?per_page=$noOfBlogs&status=publish&_fields=id,title.rendered,slug,date,yoast_head_json.og_image,acf&orderby=date&order=desc";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";

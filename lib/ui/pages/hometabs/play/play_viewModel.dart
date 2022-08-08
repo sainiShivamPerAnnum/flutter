@@ -108,9 +108,6 @@ class PlayViewModel extends BaseModel {
     isOfferListLoading = false;
   }
 
-  // void showMessage(context) {
-  //   _baseUtil.showNegativeAlert('Permission Denied', _message, context);
-  // }
   void openGame(GameModel game) {
     _analyticsService.track(eventName: game.analyticEvent);
     AppState.delegate.appState.currentAction =
