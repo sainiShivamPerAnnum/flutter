@@ -1,6 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -21,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -75,7 +81,7 @@ class Save extends StatelessWidget {
                 // -- Break --
                 //Extended the EOS to avoid overshadowing by navbar
                 SizedBox(
-                  height: SizeConfig.screenHeight * 0.2,
+                  height: SizeConfig.screenWidth * 0.8,
                 ),
               ],
             ),
@@ -108,7 +114,7 @@ class SaveNetWorthSection extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: [UserServiceProperties.myUserFund],
         builder: (context, model, property) => Container(
-              height: SizeConfig.screenHeight * 0.45,
+              height: SizeConfig.screenWidth * 1,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(SizeConfig.roundness16),
@@ -172,7 +178,7 @@ class AutoSIPCard extends StatelessWidget {
             model.navigateToAutoSave();
           },
           child: Container(
-            height: SizeConfig.screenHeight * 0.2,
+            height: SizeConfig.screenWidth * 0.42,
             width: SizeConfig.screenWidth,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -181,7 +187,7 @@ class AutoSIPCard extends StatelessWidget {
               padding: EdgeInsets.all(SizeConfig.padding6),
               child: Row(
                 children: [
-                  SvgPicture.asset(Assets.autoSaveDefault),
+                  Expanded(child: SvgPicture.asset(Assets.autoSaveDefault)),
                   SizedBox(
                     width: SizeConfig.padding10,
                   ),
@@ -192,20 +198,23 @@ class AutoSIPCard extends StatelessWidget {
                       FittedBox(
                         fit: BoxFit.cover,
                         child: Container(
-                          width: SizeConfig.screenWidth * 0.5,
+                          width: SizeConfig.screenWidth * 0.48,
                           child: RichText(
                               text: TextSpan(
                                   text: '${locale.getStartedWithSIP}\n',
-                                  style: TextStyles.rajdhaniSB.body0,
+                                  style: TextStyles.rajdhaniSB.body1,
                                   children: <TextSpan>[
                                 TextSpan(
                                     text: locale.investSafelyInGoldText,
-                                    style: TextStyles.sourceSans.body3
+                                    style: TextStyles.sourceSans.body4
                                         .colour(UiConstants.kTextColor2))
                               ])),
                         ),
                       ),
-                      SvgPicture.asset(Assets.saveChevronRight)
+                      Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding20),
+                        child: SvgPicture.asset(Assets.saveChevronRight),
+                      )
                     ],
                   ),
                 ],
@@ -230,7 +239,7 @@ class CampaignCardSection extends StatelessWidget {
       padding: EdgeInsets.only(
           left: SizeConfig.padding24, top: SizeConfig.padding16),
       child: Container(
-        height: SizeConfig.screenHeight * 0.25,
+        height: SizeConfig.screenWidth * 0.51,
         child: ListView.builder(
             itemCount: saveViewModel.ongoingEvents.length,
             physics: BouncingScrollPhysics(),
@@ -239,7 +248,8 @@ class CampaignCardSection extends StatelessWidget {
               return CampiagnCard(
                 title: saveViewModel.ongoingEvents[index].title,
                 subTitle: saveViewModel.ongoingEvents[index].subtitle,
-                containerColor: Color(saveViewModel.ongoingEvents[index].color),
+                containerColor:
+                    saveViewModel.ongoingEvents[index].bgColor.toColor(),
                 imageUrl: saveViewModel.ongoingEvents[index].image,
               );
             }),
@@ -263,7 +273,7 @@ class CampiagnCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(right: SizeConfig.padding10),
       child: Container(
-        width: SizeConfig.screenWidth * 0.52,
+        width: SizeConfig.screenWidth * 0.5,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
             color: containerColor),
@@ -272,13 +282,17 @@ class CampiagnCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: SizedBox(
-                  height: SizeConfig.screenHeight * 0.15,
-                  width: SizeConfig.screenHeight * 0.15,
-                  child: Image.network(imageUrl),
+              Padding(
+                padding: EdgeInsets.only(top: SizeConfig.padding28),
+                child: Center(
+                  child: SizedBox(
+                    height: SizeConfig.screenWidth * 0.17,
+                    width: SizeConfig.screenWidth,
+                    child: Image.network(imageUrl),
+                  ),
                 ),
               ),
+              Spacer(),
               Text(
                 title,
                 style: TextStyles.rajdhaniSB.body0,
@@ -370,7 +384,7 @@ class SaveBlogSection extends StatelessWidget {
         child: BaseView<SaveViewModel>(
           onModelReady: (model) => model.getBlogs(),
           builder: (ctx, model, child) => Container(
-            height: SizeConfig.screenHeight * 0.12,
+            height: SizeConfig.screenWidth * 0.26,
             child: model.isLoading
                 ? ListView.builder(
                     itemCount: 2,
@@ -393,8 +407,8 @@ class SaveBlogSection extends StatelessWidget {
                                       UiConstants.kUserRankBackgroundColor,
                                   highlightColor: UiConstants.kBackgroundColor,
                                   child: Container(
-                                    height: SizeConfig.screenHeight * 0.1,
-                                    width: SizeConfig.screenWidth * 0.24,
+                                    height: SizeConfig.screenWidth * 0.23,
+                                    width: SizeConfig.screenWidth * 0.25,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                             SizeConfig.roundness12),
@@ -412,7 +426,10 @@ class SaveBlogSection extends StatelessWidget {
                     itemCount: 5,
                     itemBuilder: (ctx, index) {
                       return SaveBlogTile(
-                        onTap: () => model.getBlogs(),
+                        onTap: () {
+                          model.navigateToBlogWebView(
+                              model.blogPosts[index].slug);
+                        },
                         title: model.blogPosts[index].title.rendered,
                         description: model.blogPosts[index].acf.categories,
                         imageUrl: model.blogPosts[index].yoastHeadJson,
@@ -420,6 +437,20 @@ class SaveBlogSection extends StatelessWidget {
                     }),
           ),
         ));
+  }
+}
+
+class BlogWebView extends StatelessWidget {
+  final String initialUrl;
+
+  const BlogWebView({Key key, this.initialUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: WebView(
+          initialUrl: initialUrl, javascriptMode: JavascriptMode.unrestricted),
+    );
   }
 }
 
@@ -449,13 +480,12 @@ class SaveBlogTile extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  child: Image.network(
-                    imageUrl,
-                    height: SizeConfig.screenHeight * 0.1,
-                    width: SizeConfig.screenWidth * 0.24,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.centerLeft,
-                  ),
+                  child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      height: SizeConfig.screenWidth * 0.23,
+                      width: SizeConfig.screenWidth * 0.25,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.centerLeft),
                 ),
                 SizedBox(
                   width: SizeConfig.padding10,

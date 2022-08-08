@@ -33,10 +33,10 @@ class Play extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             actions: [
-              FelloCoinBar(
-                svgAsset: Assets.aTambolaTicket,
-                size: SizeConfig.padding20,
-              ),
+              // FelloCoinBar(
+              //   svgAsset: Assets.aTambolaTicket,
+              //   size: SizeConfig.padding20,
+              // ),
               FelloCoinBar(
                 svgAsset: Assets.aFelloToken,
               ),

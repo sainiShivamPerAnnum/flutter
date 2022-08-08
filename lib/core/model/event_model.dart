@@ -16,6 +16,7 @@ class EventModel {
   String formUrl;
   String todayMatch; //Only for FPL
   List<dynamic> winners; //only for bug_Bounty and new_Fello
+  String bgColor;
   EventModel(
       {@required this.title,
       @required this.subtitle,
@@ -29,20 +30,21 @@ class EventModel {
       @required this.formUrl,
       @required this.instructions,
       @required this.winners,
-      this.todayMatch});
+      this.todayMatch,
+      @required this.bgColor});
 
-  EventModel copyWith({
-    String title,
-    String subtitle,
-    String thumbnail,
-    String type,
-    int position,
-    int color,
-    int minVersion,
-    String image,
-    List<dynamic> instructions,
-    List<dynamic> winners,
-  }) {
+  EventModel copyWith(
+      {String title,
+      String subtitle,
+      String thumbnail,
+      String type,
+      int position,
+      int color,
+      int minVersion,
+      String image,
+      List<dynamic> instructions,
+      List<dynamic> winners,
+      String bgColor}) {
     return EventModel(
         title: title ?? this.title,
         subtitle: subtitle ?? this.subtitle,
@@ -56,7 +58,8 @@ class EventModel {
         formUrl: formUrl ?? this.formUrl,
         url: url ?? this.url,
         todayMatch: todayMatch ?? this.todayMatch,
-        winners: winners ?? this.winners);
+        winners: winners ?? this.winners,
+        bgColor: bgColor ?? this.bgColor);
   }
 
   Map<String, dynamic> toMap() {
@@ -73,7 +76,8 @@ class EventModel {
       'instructions': instructions,
       'formUrl': formUrl,
       'todayMatch': todayMatch,
-      'winners': winners
+      'winners': winners,
+      'bgColor': bgColor
     };
   }
 
@@ -91,7 +95,8 @@ class EventModel {
         minVersion: map["minVersion"] ?? 0,
         instructions: map['info'] ?? ["Fello Event Instructions"],
         todayMatch: map['todayMatch'] ?? "",
-        winners: map['winners'] ?? ["ritika won ₹4000"]);
+        winners: map['winners'] ?? ["ritika won ₹4000"],
+        bgColor: map['bgColor'] ?? 'FFFFFF');
   }
 
   String toJson() => json.encode(toMap());

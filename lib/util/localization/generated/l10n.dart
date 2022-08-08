@@ -370,21 +370,11 @@ class S {
 
   // skipped getter for the '-----------------------------------' key
 
-  //Journey
+  /// 'Journey'
   String get navBarJourney {
     return Intl.message(
       'Journey',
       name: 'navBarJourney',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save`
-  String get navBarSave {
-    return Intl.message(
-      'Save',
-      name: 'navBarSave',
       desc: '',
       args: [],
     );
@@ -395,6 +385,16 @@ class S {
     return Intl.message(
       'Play',
       name: 'navBarPlay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get navBarSave {
+    return Intl.message(
+      'Save',
+      name: 'navBarSave',
       desc: '',
       args: [],
     );
@@ -1076,36 +1076,6 @@ class S {
     );
   }
 
-  /// `Digital Gold` - Sace Section
-  String get digitalGoldText {
-    return Intl.message(
-      'Digital Gold',
-      name: 'digitalGoldText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Stable Fello` - Save Section
-  String get stableFelloText {
-    return Intl.message(
-      'Stable Fello',
-      name: 'stableFelloText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invested` - Save Section
-  String get investedText {
-    return Intl.message(
-      'Invested',
-      name: 'investedText',
-      desc: '',
-      args: [],
-    );
-  }
-
   // skipped getter for the '--------------------------------------------' key
 
   /// `No transactions to show yet`
@@ -1140,11 +1110,21 @@ class S {
     );
   }
 
-  /// `Daily Safe Maximum`
-  String get resultsPageSafeDosageTitle {
+  /// `Digital Gold` - Sace Section
+  String get digitalGoldText {
     return Intl.message(
-      'Daily Safe Maximum',
-      name: 'resultsPageSafeDosageTitle',
+      'Digital Gold',
+      name: 'digitalGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stable Fello` - Save Section
+  String get stableFelloText {
+    return Intl.message(
+      'Stable Fello',
+      name: 'stableFelloText',
       desc: '',
       args: [],
     );
@@ -1165,6 +1145,26 @@ class S {
     return Intl.message(
       'Invest safely in Gold with our Auto SIP to win tokens',
       name: 'investSafelyInGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested` - Save Section
+  String get investedText {
+    return Intl.message(
+      'Invested',
+      name: 'investedText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily Safe Maximum`
+  String get resultsPageSafeDosageTitle {
+    return Intl.message(
+      'Daily Safe Maximum',
+      name: 'resultsPageSafeDosageTitle',
       desc: '',
       args: [],
     );

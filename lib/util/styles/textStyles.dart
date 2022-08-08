@@ -156,7 +156,7 @@ extension FontSize on TextStyle {
   /// Title 4 Size == 24
   TextStyle get title4 => copyWith(fontSize: SizeConfig.title4);
 
-  /// Title 5 Size == 22
+  /// Title 5 Size == 20
   TextStyle get title5 => copyWith(fontSize: SizeConfig.title5);
 
   TextStyle get body0 => copyWith(fontSize: SizeConfig.body0);

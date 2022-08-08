@@ -4,6 +4,7 @@ import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -36,11 +37,12 @@ class Root extends StatelessWidget {
       builder: (ctx, model, child) {
         model.initialize();
         return Scaffold(
-            resizeToAvoidBottomInset: false,
-            key: RootViewModel.scaffoldKey,
-            drawer: FDrawer(),
-            drawerEnableOpenDragGesture: false,
-            body: Stack(children: [
+          resizeToAvoidBottomInset: false,
+          key: RootViewModel.scaffoldKey,
+          drawer: FDrawer(),
+          drawerEnableOpenDragGesture: false,
+          body: Stack(
+            children: [
               NewSquareBackground(),
               if (FlavorConfig.isDevelopment())
                 Container(
@@ -84,7 +86,17 @@ class Root extends StatelessWidget {
                       // color: Colors.red,
                     ),
                   )),
-            ]));
+              Consumer<AppState>(
+                  builder: (ctx, m, child) =>
+                      AppState.delegate.appState.isTxnLoaderInView
+                          ? TransactionLoader()
+                          : SizedBox()),
+              BottomNavBar(
+                model: model,
+              ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -97,12 +109,13 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S();
+    //TODO change svg to better sizes and change bottomNavBar to flutter's native
     return Consumer<AppState>(
       builder: (ctx, m, child) => Positioned(
         bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
           width: SizeConfig.screenWidth,
-          height: SizeConfig.navBarHeight,
+          height: SizeConfig.navBarHeight * 0.74,
           decoration: BoxDecoration(
             color: Colors.black,
           ),

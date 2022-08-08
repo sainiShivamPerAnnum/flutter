@@ -28,6 +28,7 @@ class SizeConfig {
   static BorderRadius homeViewBorder;
   static bool isGamefirstTime;
   static EdgeInsets viewInsets;
+  static double assetCardSize;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);

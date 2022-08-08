@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -101,8 +100,8 @@ class BottomNavBarItemContent extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: SizeConfig.screenHeight * 0.04,
-          width: SizeConfig.screenHeight * 0.04,
+          height: SizeConfig.screenWidth * 0.09,
+          width: SizeConfig.screenWidth * 0.09,
           child: SvgPicture.asset(
             iconString,
           ),

@@ -25,34 +25,45 @@ class SaveCustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S();
-    return Container(
-      height: SizeConfig.screenHeight * 0.215,
-      width: SizeConfig.screenWidth,
-      child: Stack(
-        fit: StackFit.loose,
-        children: [
-          CustomPaint(
-            size: Size(SizeConfig.screenWidth, SizeConfig.cardHeight),
-            painter: CustomSaveCardPainter(cardBgColor),
-          ),
-          Container(
-            height: SizeConfig.cardHeight,
-            width: SizeConfig.screenWidth,
-            decoration: BoxDecoration(color: Colors.transparent),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding32),
+    return Padding(
+      padding: EdgeInsets.only(
+          right: SizeConfig.padding16,
+          top: SizeConfig.padding20,
+          bottom: SizeConfig.padding20),
+      child: Container(
+        height: SizeConfig.screenWidth * 0.351,
+        width: SizeConfig.screenWidth,
+        child: Stack(
+          fit: StackFit.loose,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: SizeConfig.padding16),
+              child: CustomPaint(
+                size: Size(
+                    SizeConfig.screenWidth, SizeConfig.screenWidth * 0.351),
+                painter: CustomSaveCardPainter(cardBgColor),
+              ),
+            ),
+            Container(
+              height: SizeConfig.screenWidth * 0.351,
+              width: SizeConfig.screenWidth,
+              decoration: BoxDecoration(color: Colors.transparent),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  SvgPicture.asset(cardAssetName,
-                      allowDrawingOutsideViewBox: true),
+                  //TODO add independent gold bar asset
+                  SvgPicture.asset(
+                    cardAssetName,
+                    height: SizeConfig.screenWidth * 0.4,
+                    width: SizeConfig.screenWidth * 0.4,
+                  ),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(
-                          top: SizeConfig.padding28,
-                          bottom: SizeConfig.padding24,
-                          right: SizeConfig.padding28),
+                          top: SizeConfig.padding20,
+                          bottom: SizeConfig.padding16,
+                          right: SizeConfig.padding20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,9 +94,8 @@ class SaveCustomCard extends StatelessWidget {
                                     locale.investedText,
                                     style: TextStyles.sourceSansM.body4,
                                   ),
-                                  //TODO make amount dynamic
                                   Text(
-                                    '\u20b9 $investedAmount',
+                                    '$investedAmount',
                                     style: TextStyles.sourceSansSB.title4,
                                   ),
                                 ],
@@ -93,7 +103,7 @@ class SaveCustomCard extends StatelessWidget {
                               GestureDetector(
                                 onTap: onTap,
                                 child: Container(
-                                  height: SizeConfig.screenHeight * 0.05,
+                                  height: SizeConfig.screenWidth * 0.1,
                                   width: SizeConfig.screenWidth * 0.2,
                                   decoration: BoxDecoration(
                                       border: Border.all(
@@ -117,8 +127,8 @@ class SaveCustomCard extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -132,39 +142,39 @@ class CustomSaveCardPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
-    path_0.moveTo(size.width * 0.1831709, size.height * 0.1024792);
+    path_0.moveTo(size.width * 0.1605924, size.height * 0.08818722);
     path_0.cubicTo(
-        size.width * 0.1923139,
-        size.height * 0.06398266,
-        size.width * 0.2106144,
-        size.height * 0.03978786,
-        size.width * 0.2305893,
-        size.height * 0.03978792);
-    path_0.lineTo(size.width * 0.9370587, size.height * 0.03978879);
+        size.width * 0.1703051,
+        size.height * 0.03811271,
+        size.width * 0.1897462,
+        size.height * 0.006641383,
+        size.width * 0.2109660,
+        size.height * 0.006641414);
+    path_0.lineTo(size.width * 0.9614646, size.height * 0.006642571);
     path_0.cubicTo(
-        size.width * 0.9562027,
-        size.height * 0.03978884,
-        size.width * 0.9717253,
-        size.height * 0.07343237,
-        size.width * 0.9717253,
-        size.height * 0.1149335);
-    path_0.lineTo(size.width * 0.9717253, size.height * 0.7267225);
+        size.width * 0.9818017,
+        size.height * 0.006642602,
+        size.width * 0.9982918,
+        size.height * 0.05040421,
+        size.width * 0.9982918,
+        size.height * 0.1043872);
+    path_0.lineTo(size.width * 0.9982918, size.height * 0.9001729);
     path_0.cubicTo(
-        size.width * 0.9717253,
-        size.height * 0.7682254,
-        size.width * 0.9562027,
-        size.height * 0.8018671,
-        size.width * 0.9370587,
-        size.height * 0.8018671);
-    path_0.lineTo(size.width * 0.05641440, size.height * 0.8018671);
+        size.width * 0.9982918,
+        size.height * 0.9541579,
+        size.width * 0.9818017,
+        size.height * 0.9979173,
+        size.width * 0.9614646,
+        size.height * 0.9979173);
+    path_0.lineTo(size.width * 0.02593598, size.height * 0.9979173);
     path_0.cubicTo(
-        size.width * 0.03844960,
-        size.height * 0.8018671,
-        size.width * 0.02685307,
-        size.height * 0.7606532,
-        size.width * 0.03507600,
-        size.height * 0.7260289);
-    path_0.lineTo(size.width * 0.1831709, size.height * 0.1024792);
+        size.width * 0.006851416,
+        size.height * 0.9979173,
+        size.width * -0.005467592,
+        size.height * 0.9443083,
+        size.width * 0.003267819,
+        size.height * 0.8992707);
+    path_0.lineTo(size.width * 0.1605924, size.height * 0.08818722);
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
@@ -172,47 +182,47 @@ class CustomSaveCardPainter extends CustomPainter {
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
-    path_1.moveTo(size.width * 0.1843563, size.height * 0.1038017);
+    path_1.moveTo(size.width * 0.2109660, size.height * 0.01040083);
+    path_1.lineTo(size.width * 0.9614646, size.height * 0.01040195);
     path_1.cubicTo(
-        size.width * 0.1932707,
-        size.height * 0.06626763,
-        size.width * 0.2111139,
-        size.height * 0.04267803,
-        size.width * 0.2305893,
-        size.height * 0.04267809);
-    path_1.lineTo(size.width * 0.9370587, size.height * 0.04267896);
+        size.width * 0.9810198,
+        size.height * 0.01040203,
+        size.width * 0.9968754,
+        size.height * 0.05248053,
+        size.width * 0.9968754,
+        size.height * 0.1043872);
+    path_1.lineTo(size.width * 0.9968754, size.height * 0.9001729);
     path_1.cubicTo(
-        size.width * 0.9554667,
-        size.height * 0.04267902,
-        size.width * 0.9703920,
-        size.height * 0.07502832,
-        size.width * 0.9703920,
-        size.height * 0.1149335);
-    path_1.lineTo(size.width * 0.9703920, size.height * 0.7267225);
+        size.width * 0.9968754,
+        size.height * 0.9520752,
+        size.width * 0.9810198,
+        size.height * 0.9941579,
+        size.width * 0.9614646,
+        size.height * 0.9941579);
+    path_1.lineTo(size.width * 0.02593598, size.height * 0.9941579);
     path_1.cubicTo(
-        size.width * 0.9703920,
-        size.height * 0.7666243,
-        size.width * 0.9554667,
-        size.height * 0.7989769,
-        size.width * 0.9370587,
-        size.height * 0.7989769);
-    path_1.lineTo(size.width * 0.05641440, size.height * 0.7989769);
+        size.width * 0.007911671,
+        size.height * 0.9941579,
+        size.width * -0.003722946,
+        size.height * 0.9435263,
+        size.width * 0.004527167,
+        size.height * 0.9009925);
+    path_1.lineTo(size.width * 0.1618516, size.height * 0.08990752);
     path_1.cubicTo(
-        size.width * 0.03944747,
-        size.height * 0.7989769,
-        size.width * 0.02849547,
-        size.height * 0.7600520,
-        size.width * 0.03626160,
-        size.height * 0.7273526);
-    path_1.lineTo(size.width * 0.1843563, size.height * 0.1038017);
+        size.width * 0.1713215,
+        size.height * 0.04108534,
+        size.width * 0.1902768,
+        size.height * 0.01040075,
+        size.width * 0.2109660,
+        size.height * 0.01040083);
     path_1.close();
 
     Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     paint1Stroke.shader = ui.Gradient.linear(
-        Offset(size.width * 0.7778000, size.height * -19.80607),
-        Offset(size.width * 0.3263520, size.height * 1.019052),
+        Offset(size.width * 0.7922805, size.height * -30.27406),
+        Offset(size.width * 0.3126969, size.height * 1.280421),
         [Color(0xffFFF9F9).withOpacity(1), Color(0xffFFF9F9).withOpacity(0)],
         [0, 1]);
     canvas.drawPath(path_1, paint1Stroke);

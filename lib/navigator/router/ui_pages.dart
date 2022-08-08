@@ -59,6 +59,7 @@ const String NewGameHomeViewPath = '/newGameHome';
 const String NewWebHomeViewPath = '/newWebHomeView';
 const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
 const String JourneyViewPath = '/journeyViewPath';
+const String BlogPostWebViewPath = '/blogPostWebView';
 
 enum Pages {
   Splash,
@@ -117,7 +118,8 @@ enum Pages {
   AutosaveTransactionsView,
   NewWebHomeView,
   TopPlayerLeaderboard,
-  JourneyView
+  JourneyView,
+  BlogPostWebView
 }
 
 class PageConfiguration {
@@ -527,4 +529,10 @@ PageConfiguration JourneyViewPageConfig = PageConfiguration(
     key: 'JourneyView',
     path: JourneyViewPath,
     uiPage: Pages.JourneyView,
+    name: "Journey Screen");
+
+PageConfiguration BlogPostWebViewConfig = PageConfiguration(
+    key: 'BlogPostWeb',
+    path: BlogPostWebViewPath,
+    uiPage: Pages.BlogPostWebView,
     name: "Journey Screen");

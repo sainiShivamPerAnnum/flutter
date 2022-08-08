@@ -361,7 +361,7 @@ class BaseUtil extends ChangeNotifier {
                 duration: Duration(seconds: 3),
                 dismissDirection: DismissDirection.down,
                 content: Container(
-                  height: SizeConfig.screenHeight * 0.08,
+                  height: SizeConfig.screenWidth * 0.08,
                   width: SizeConfig.screenWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
