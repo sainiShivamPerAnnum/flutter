@@ -95,22 +95,36 @@ class MilestoneModel {
 
   Map<String, dynamic> toJourneyMap() {
     return animAsset != null
-        ? <String, dynamic>{
-            'x': x,
-            'y': y,
-            'ax': ax,
-            'ay': ay,
-            'sx': shadow.x,
-            'sy': shadow.y,
-            'hFlip': hFlip ?? false
-          }
-        : <String, dynamic>{
-            'x': x,
-            'y': y,
-            'sx': shadow.x,
-            'sy': shadow.y,
-            'hFlip': hFlip ?? false,
-          };
+        ? (shadow != null
+            ? <String, dynamic>{
+                'x': x,
+                'y': y,
+                'ax': ax,
+                'ay': ay,
+                'sx': shadow.x,
+                'sy': shadow.y,
+                'hFlip': hFlip ?? false
+              }
+            : <String, dynamic>{
+                'x': x,
+                'y': y,
+                'ax': ax,
+                'ay': ay,
+                'hFlip': hFlip ?? false
+              })
+        : (shadow != null
+            ? <String, dynamic>{
+                'x': x,
+                'y': y,
+                'sx': shadow.x,
+                'sy': shadow.y,
+                'hFlip': hFlip ?? false,
+              }
+            : <String, dynamic>{
+                'x': x,
+                'y': y,
+                'hFlip': hFlip ?? false,
+              });
   }
 
   Map<String, dynamic> toMap(int page) {

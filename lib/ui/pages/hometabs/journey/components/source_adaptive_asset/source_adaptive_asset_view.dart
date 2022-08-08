@@ -13,7 +13,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SourceAdaptiveAssetView extends StatelessWidget {
   final JourneyAssetModel asset;
-  const SourceAdaptiveAssetView({this.asset});
+  final double height, width;
+  const SourceAdaptiveAssetView(
+      {@required this.asset, this.height, this.width});
 
   String generateAssetUrl(String name) {
     return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
@@ -21,7 +23,7 @@ class SourceAdaptiveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
+    // log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
     if (asset.name == 'b7') log(asset.toString());
     return BaseView<SourceAdaptiveAssetViewModel>(onModelReady: (model) {
       model.init(asset.uri);
@@ -38,10 +40,14 @@ class SourceAdaptiveAssetView extends StatelessWidget {
               ? NetworkAsset(
                   asset: asset,
                   networkUrl: model.assetUrl,
+                  height: height,
+                  width: width,
                 )
               : FileAsset(
                   asset: asset,
                   filePath: model.assetUrl,
+                  height: height,
+                  width: width,
                 );
     });
   }
@@ -50,16 +56,18 @@ class SourceAdaptiveAssetView extends StatelessWidget {
 class FileAsset extends StatelessWidget {
   final JourneyAssetModel asset;
   final String filePath;
-  const FileAsset({@required this.asset, @required this.filePath});
+  final double height, width;
+  const FileAsset(
+      {@required this.asset, @required this.filePath, this.height, this.width});
 
   @override
   Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for FileAsset widget with height: ${asset.height}");
+    // log("ROOTVIEW: Build called for FileAsset widget with height: ${asset.height}");
     dynamic file = File(filePath);
     return SvgPicture.file(
       file,
-      height: SizeConfig.screenWidth * 2.165 * asset.height,
-      width: SizeConfig.screenWidth * asset.width,
+      height: height ?? SizeConfig.screenWidth * 2.165 * asset.height,
+      width: width ?? SizeConfig.screenWidth * asset.width,
       fit: BoxFit.contain,
     );
   }
@@ -68,14 +76,19 @@ class FileAsset extends StatelessWidget {
 class NetworkAsset extends StatelessWidget {
   final JourneyAssetModel asset;
   final String networkUrl;
-  const NetworkAsset({@required this.asset, @required this.networkUrl});
+  final double height, width;
+  const NetworkAsset(
+      {@required this.asset,
+      @required this.networkUrl,
+      this.height,
+      this.width});
   @override
   Widget build(BuildContext context) {
-    log("ROOTVIEW: Build called for NetworkAsset widget");
+    // log("ROOTVIEW: Build called for NetworkAsset widget");
     return SvgPicture.network(
       networkUrl,
-      height: SizeConfig.screenWidth * 2.165 * asset.height,
-      width: SizeConfig.screenWidth * asset.width,
+      height: height ?? SizeConfig.screenWidth * 2.165 * asset.height,
+      width: width ?? SizeConfig.screenWidth * asset.width,
       fit: BoxFit.contain,
     );
   }

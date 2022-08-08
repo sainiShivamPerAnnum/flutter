@@ -99,7 +99,7 @@ class JourneyPathModel {
       ay: map['ay']?.toDouble() ?? 0.0,
       z: map['z']?.toInt() ?? 0,
       isBase: map['isBase'] ?? false,
-      mlIndex: map['level']?.toInt() ?? 0,
+      mlIndex: map['mlIndex']?.toInt() ?? 0,
       hFlip: map['hFlip'] ?? false,
       id: map['id'],
       asset: JourneyAssetModel.fromMap(map['asset'], page),
