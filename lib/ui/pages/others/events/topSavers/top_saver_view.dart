@@ -32,6 +32,7 @@ import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../util/constants.dart';
+import '../../../notifications/notifications_view.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
@@ -534,8 +535,7 @@ class EventLeaderboard extends StatelessWidget {
                       AppState.delegate.appState.currentAction = PageAction(
                           page: CampaignViewPageConfig,
                           state: PageState.addWidget,
-                          widget: CampaignView(
-                              eventType: Constants.HS_DAILY_SAVER));
+                          widget: NotficationsPage());
                     },
                     child: Text(
                       "Your rank: ${model.userRank == 0 ? '-' : model.userRank.toString().padLeft(2, '0')} ",

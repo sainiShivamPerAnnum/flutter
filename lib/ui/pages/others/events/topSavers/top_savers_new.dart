@@ -242,7 +242,7 @@ class CampaignView extends StatelessWidget {
                                             ),
                                             Flexible(
                                               child: Text(
-                                                "${model.highestSavings} gms",
+                                                "${model.highestSavings.toStringAsFixed(3)} gms",
                                                 style: TextStyles.body2.bold
                                                     .colour(Colors.white),
                                                 maxLines: 1,
@@ -408,73 +408,38 @@ class CampaignView extends StatelessWidget {
                       ),
                       model.profileUrlList.isEmpty
                           ? ListLoader(bottomPadding: true)
-                          : ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount: model.pastWinners.length < 3
+                          : PastWinnersList(
+                              model: model,
+                              listLenght: model.pastWinners.length < 3
                                   ? model.pastWinners.length
                                   : 3,
-                              scrollDirection: Axis.vertical,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding20,
-                                    horizontal: SizeConfig.padding2,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '${index + 1}',
-                                              style:
-                                                  TextStyles.rajdhaniSB.body2,
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding20,
-                                            ),
-                                            ClipOval(
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    model.profileUrlList[index],
-                                                width: SizeConfig.iconSize5,
-                                                height: SizeConfig.iconSize5,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding12,
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                model.pastWinners[index]
-                                                    .username,
-                                                style: TextStyles
-                                                    .sourceSans.body3
-                                                    .setOpecity(0.8),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Text(
-                                        "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms"
-                                            .toString(),
-                                        style: TextStyles.rajdhaniM.body3,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
+                              showProfileImage: true,
                             ),
                       TextButton(
                         onPressed: () {
                           //View all the past Winners
+                          BaseUtil.openModalBottomSheet(
+                            addToScreenStack: true,
+                            backgroundColor: UiConstants.kBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness32),
+                              topRight: Radius.circular(SizeConfig.roundness32),
+                            ),
+                            isScrollControlled: true,
+                            hapticVibrate: true,
+                            isBarrierDismissable: true,
+                            content: model.profileUrlList.isEmpty
+                                ? ListLoader(bottomPadding: true)
+                                : Container(
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding34),
+                                    child: PastWinnersList(
+                                      model: model,
+                                      listLenght: model.pastWinners.length,
+                                      showProfileImage: false,
+                                    ),
+                                  ),
+                          );
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -517,6 +482,99 @@ class CampaignView extends StatelessWidget {
               //     ),
               //   ),
               // ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+//Following is the generic widget that is responsible for rendering the list of past winners
+//both with image on home page
+//and without image in bottom sheet
+class PastWinnersList extends StatelessWidget {
+  PastWinnersList(
+      {Key key,
+      @required this.model,
+      @required this.listLenght,
+      @required this.showProfileImage})
+      : super(key: key);
+  final TopSaverViewModel model;
+  final int listLenght;
+  final bool showProfileImage;
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      itemCount: listLenght,
+      scrollDirection: Axis.vertical,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding20,
+            horizontal: SizeConfig.padding2,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      '${index + 1}',
+                      style: TextStyles.rajdhaniSB.body2,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding20,
+                    ),
+                    showProfileImage
+                        ? ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: model.profileUrlList[index],
+                              width: SizeConfig.iconSize5,
+                              height: SizeConfig.iconSize5,
+                              placeholder: (context, url) => Container(
+                                width: SizeConfig.iconSize5,
+                                height: SizeConfig.iconSize5,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              errorWidget: (a, b, c) {
+                                return Container(
+                                    width: SizeConfig.iconSize5,
+                                    height: SizeConfig.iconSize5,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      shape: BoxShape.circle,
+                                    ));
+                              },
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                    SizedBox(
+                      width: SizeConfig.padding12,
+                    ),
+                    Expanded(
+                      child: Text(
+                        model.pastWinners[index].username,
+                        style: TextStyles.sourceSans.body3.setOpecity(0.8),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Text(
+                "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms"
+                    .toString(),
+                style: TextStyles.rajdhaniM.body3,
+              ),
             ],
           ),
         );

@@ -115,4 +115,10 @@ class Constants {
   static const SUBSCRIPTION_PROCESSING = "PROCESSING";
   static const SUBSCRIPTION_INACTIVE = "INACTIVE";
   static const SUBSCRIPTION_CANCELLED = "CANCELLED";
+
+  //Notification Titles Startings
+  static const GOLDEN_TICKET_NOTIFICATION = "You won a new golden ticket";
+  static const COUPONS_APPLIED_NOTIFICATION = "Coupon Applied";
+
+  static const DEPOSIT_COMPLETE_NOTIFICATION = "Deposit Complete";
 }
