@@ -57,10 +57,21 @@ class Play extends StatelessWidget {
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
-                PlayInfoSection(),
+// <<<<<<< HEAD
+//                 PlayInfoSection(),
+//                 SizedBox(
+//                   height: SizeConfig.screenHeight * 0.16,
+//                 )
+// =======
+                InfoComponent(
+                  heading: model.boxHeading,
+                  assetList: model.boxAssets,
+                  titleList: model.boxTitlles,
+                ),
                 SizedBox(
-                  height: SizeConfig.screenHeight * 0.16,
-                )
+                  height: SizeConfig.padding64,
+                ),
+// >>>>>>> campaign4.0
               ],
             ),
           ),

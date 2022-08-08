@@ -78,6 +78,13 @@ class UiConstants {
   static const Color kSaveStableFelloCardBg = const Color(0xFF01656B);
   static const Color kBlogTitleColor = const Color(0xFF93B5FE);
 
+  static const Color kFAQsAnswerColor = const Color(0xFFA9C6D6);
+
+  static const Color kFAQDividerColor = const Color(0xFF627F8E);
+
+  static const Color kSliverAppBarBackgroundColor = Color(0xff495DB2);
+  static const Color kDarkBoxColor = const Color(0xFF3B3B3B);
+
   // Recharge Modal Sheet
   static const Color kRechargeModalSheetAmountSectionBackgroundColor =
       const Color(0xFF49494C);
@@ -111,4 +118,20 @@ class UiConstants {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       tileMode: TileMode.clamp);
+
+  static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
+    colors: [Color(0xff141316), UiConstants.kBackgroundColor.withOpacity(0.2)],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    stops: [0, 0.7],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kTrophyBackground = LinearGradient(
+    colors: [Color(0xffFFE9B1), Color(0xffFFE9B1).withOpacity(0.0)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0, 0.8],
+    tileMode: TileMode.clamp,
+  );
 }

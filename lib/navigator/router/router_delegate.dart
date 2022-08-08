@@ -23,6 +23,7 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
@@ -335,6 +336,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.JourneyView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
           break;
+        case Pages.CampaignView:
+          _addPageData(CampaignView(), CampaignViewPageConfig);
+          break;
         default:
           break;
       }
@@ -573,6 +577,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.JourneyView:
         JourneyViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.CampaignView:
+        CampaignViewPageConfig.currentPageAction = action;
         break;
       default:
         break;

@@ -60,6 +60,7 @@ const String NewWebHomeViewPath = '/newWebHomeView';
 const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
 const String JourneyViewPath = '/journeyViewPath';
 const String BlogPostWebViewPath = '/blogPostWebView';
+const String CampaignViewPath = '/campaignViewPath';
 
 enum Pages {
   Splash,
@@ -119,7 +120,8 @@ enum Pages {
   NewWebHomeView,
   TopPlayerLeaderboard,
   JourneyView,
-  BlogPostWebView
+  BlogPostWebView,
+  CampaignView,
 }
 
 class PageConfiguration {
@@ -536,3 +538,9 @@ PageConfiguration BlogPostWebViewConfig = PageConfiguration(
     path: BlogPostWebViewPath,
     uiPage: Pages.BlogPostWebView,
     name: "Journey Screen");
+PageConfiguration CampaignViewPageConfig = PageConfiguration(
+  key: 'CampaignView',
+  path: CampaignViewPath,
+  uiPage: Pages.CampaignView,
+  name: "Campaign View Screen",
+);
