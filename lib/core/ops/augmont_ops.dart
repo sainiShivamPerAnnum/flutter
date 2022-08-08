@@ -606,7 +606,8 @@ class AugmontModel extends ChangeNotifier {
   }
 
   ///returns path where invoice is generated and saved
-  Future<String> generatePurchaseInvoicePdf(String txnId) async {
+  Future<String> generatePurchaseInvoicePdf(
+      String txnId, Map<String, String> userDetails) async {
     AugmontInvoiceService _pdfService = AugmontInvoiceService();
     if (!isInit()) await _init();
     var _params = {
@@ -628,7 +629,7 @@ class AugmontModel extends ChangeNotifier {
       // final pdfFile =
       //     await PdfInvoiceApi.generate(await generateInvoiceContent());
       // return pdfFile.path;
-      String _path = await _pdfService.generateInvoice(resMap);
+      String _path = await _pdfService.generateInvoice(resMap, userDetails);
       return _path;
     }
   }

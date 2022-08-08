@@ -297,7 +297,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                           String trnId = widget._transaction
                               .augmnt[UserTransaction.subFldAugTranId];
                           augmontProvider
-                              .generatePurchaseInvoicePdf(trnId)
+                              .generatePurchaseInvoicePdf(trnId, null)
                               .then((generatedPdfFilePath) {
                             _isInvoiceLoading = false;
                             setState(() {});
