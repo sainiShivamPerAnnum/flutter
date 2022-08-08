@@ -34,11 +34,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../../util/constants.dart';
 import '../../../notifications/notifications_view.dart';
 
-extension TruncateDoubles on double {
-  double truncateToDecimalPlaces(int fractionalDigits) =>
-      (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
-}
-
 class TopSaverView extends StatelessWidget {
   final String eventType;
   final bool isGameRedirected;
