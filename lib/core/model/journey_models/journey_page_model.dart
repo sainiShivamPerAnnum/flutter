@@ -12,6 +12,7 @@ class JourneyPage {
   List<JourneyPathModel> paths;
   List<AvatarPathModel> avatarPath;
   List<MilestoneModel> milestones;
+
   JourneyPage({
     @required this.bgAsset,
     @required this.paths,
