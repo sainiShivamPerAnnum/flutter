@@ -56,6 +56,7 @@ class RootViewModel extends BaseModel {
   final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -71,6 +72,7 @@ class RootViewModel extends BaseModel {
   String _svgSource = '';
 
   String get svgSource => this._svgSource;
+  int get bottomNavBarIndex => this._bottomNavBarIndex;
 
   set svgSource(value) {
     this._svgSource = value;
@@ -79,6 +81,11 @@ class RootViewModel extends BaseModel {
 
   set isUploading(value) {
     this._isUploading = value;
+    notifyListeners();
+  }
+
+  set bottomNavBarIndex(int index) {
+    this._bottomNavBarIndex = index;
     notifyListeners();
   }
 
@@ -152,6 +159,7 @@ class RootViewModel extends BaseModel {
 
       default:
     }
+    bottomNavBarIndex = index;
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();

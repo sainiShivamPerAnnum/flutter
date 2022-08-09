@@ -27,6 +27,7 @@ class SaveCustomCard extends StatelessWidget {
     S locale = S();
     return Padding(
       padding: EdgeInsets.only(
+          left: 0,
           right: SizeConfig.padding16,
           top: SizeConfig.padding20,
           bottom: SizeConfig.padding20),
@@ -53,10 +54,10 @@ class SaveCustomCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   //TODO add independent gold bar asset
-                  SvgPicture.asset(
+                  Image.asset(
                     cardAssetName,
-                    height: SizeConfig.screenWidth * 0.4,
-                    width: SizeConfig.screenWidth * 0.4,
+                    height: SizeConfig.screenWidth * 0.38,
+                    width: SizeConfig.screenWidth * 0.38,
                   ),
                   Expanded(
                     child: Padding(

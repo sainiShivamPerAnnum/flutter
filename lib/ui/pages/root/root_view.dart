@@ -17,6 +17,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -41,6 +42,47 @@ class Root extends StatelessWidget {
           key: RootViewModel.scaffoldKey,
           drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
+          // bottomNavigationBar: BottomNavigationBar(
+          //   currentIndex: model.bottomNavBarIndex,
+          //   onTap: (index) {
+          //     model.onItemTapped(index);
+          //   },
+          //   selectedFontSize: SizeConfig.body4,
+          //   unselectedFontSize: SizeConfig.body4,
+          //   selectedLabelStyle:
+          //       TextStyles.rajdhaniSB.body4.colour(UiConstants.kTextColor),
+          //   unselectedLabelStyle:
+          //       TextStyles.rajdhaniSB.body4.colour(UiConstants.kTextColor),
+          //   unselectedItemColor: UiConstants.kTextColor2,
+          //   selectedItemColor: UiConstants.kTextColor,
+          //   backgroundColor: UiConstants.kBackgroundColor,
+          //   elevation: 0,
+          //   enableFeedback: true,
+          //   iconSize: SizeConfig.padding32,
+          //   type: BottomNavigationBarType.fixed,
+          //   items: [
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navJourneyInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navJourneyActive),
+          //         label: 'Journey'),
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navPlayInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navPlayActive),
+          //         label: 'Play'),
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navSaveInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navSaveActive),
+          //         label: 'Save'),
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navWinInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navWinActive),
+          //         label: 'Win'),
+          //   ],
+          // ),
           body: Stack(
             children: [
               NewSquareBackground(),
@@ -79,62 +121,24 @@ class Root extends StatelessWidget {
                 FelloAppBar(
                   showAppBar: false,
                   leading: InkWell(
-                    onTap: model.showDrawer,
-                    child: Container(
-                      width: SizeConfig.padding38,
-                      height: SizeConfig.padding38,
-                      // color: Colors.red,
-                    ),
-                  ),
+                      onTap: model.showDrawer,
+                      child: Container(
+                        width: SizeConfig.padding38,
+                        height: SizeConfig.padding38,
+                        // color: Colors.red,
+                      )),
                   actions: [
                     // FelloCoinBar(),
                     // SizedBox(width: 16),
                     NotificationButton(),
                   ],
                 ),
-              // Positioned(
-              //   bottom: 0,
-              //   child: Container(
-              //     width: SizeConfig.screenWidth,
-              //     height: SizeConfig.navBarHeight,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //           begin: Alignment.bottomCenter,
-              //           end: Alignment.topCenter,
-              //           colors: [
-              //             UiConstants.scaffoldColor.withOpacity(0.8),
-              //             UiConstants.scaffoldColor.withOpacity(0.2),
-              //           ],
-              //           stops: [
-              //             0.8,
-              //             1
-              //           ]),
-              //     ),
-              //     child: BackdropFilter(
-              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              //     ),
-              //   ),
-              // ),
-              // if (SizeConfig.screenWidth < 600)
-              //   WantMoreTickets(
-              //     model: model,
-              //   ),
-              // if (SizeConfig.screenWidth < 600)
-              //   SaveBaseline(
-              //     model: model,
-              //   ),
-              // BottomNavBar(
-              //   model: model,
-              // ),
-// >>>>>>> campaign4.0
               Consumer<AppState>(
                   builder: (ctx, m, child) =>
                       AppState.delegate.appState.isTxnLoaderInView
                           ? TransactionLoader()
                           : SizedBox()),
-              BottomNavBar(
-                model: model,
-              ),
+              BottomNavBar(model: model)
             ],
           ),
         );

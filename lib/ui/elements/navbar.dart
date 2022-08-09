@@ -1,6 +1,4 @@
 import 'dart:core';
-import 'dart:io';
-import 'dart:math';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -107,7 +105,7 @@ class BottomNavBarItemContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 8,
+          height: SizeConfig.screenWidth * 0.01,
         ),
         Text(title,
             style: isSelected
