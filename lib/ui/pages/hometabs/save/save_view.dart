@@ -9,13 +9,17 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -28,6 +32,10 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../../core/enums/page_state_enum.dart';
+import '../../../../navigator/app_state.dart';
+import '../../../../navigator/router/ui_pages.dart';
+
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
 
@@ -37,56 +45,61 @@ class Save extends StatelessWidget {
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
         return Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: Text(
-              'Save',
-              style: TextStyles.rajdhaniSB.title1,
-            ),
-            elevation: 0,
-            backgroundColor: UiConstants.kSecondaryBackgroundColor,
-            actions: [
-              FelloCoinBar(
-                svgAsset: Assets.aFelloToken,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: Text(
+                'Save',
+                style: TextStyles.rajdhaniSB.title1,
               ),
-              SizedBox(
-                width: SizeConfig.padding20,
-              )
-            ],
-          ),
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SaveNetWorthSection(),
-                SizedBox(
-                  height: SizeConfig.padding24,
+              elevation: 0,
+              backgroundColor: UiConstants.kSecondaryBackgroundColor,
+              actions: [
+                FelloCoinBar(svgAsset: Assets.aFelloToken),
+                SizedBox(width: SizeConfig.padding10),
+                InkWell(
+                  onTap: () {
+                    AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: UserProfileDetailsConfig,
+                    );
+                  },
+                  child: ProfileImageSE(radius: SizeConfig.avatarRadius * 0.8),
                 ),
-                // -- Break --
-                SaveTitleContainer(title: 'Auto SIP'),
-                SizedBox(
-                  height: SizeConfig.padding10,
-                ),
-                AutoSIPCard(),
-                // -- Break --
-                SizedBox(height: SizeConfig.padding54),
-                SaveTitleContainer(title: 'Challenges'),
-                CampaignCardSection(saveViewModel: model),
-                // -- Break --
-                SizedBox(height: SizeConfig.padding54),
-                SaveTitleContainer(title: 'Latest'),
-                SaveBlogSection(),
-                // -- Break --
-                //Extended the EOS to avoid overshadowing by navbar
-                SizedBox(
-                  height: SizeConfig.screenWidth * 0.8,
-                ),
+                SizedBox(width: SizeConfig.padding20)
               ],
             ),
-          ),
-        );
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SaveNetWorthSection(),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  // -- Break --
+                  SaveTitleContainer(title: 'Auto SIP'),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                  AutoSIPCard(),
+                  // -- Break --
+                  SizedBox(height: SizeConfig.padding54),
+                  SaveTitleContainer(title: 'Challenges'),
+                  CampaignCardSection(saveViewModel: model),
+                  // -- Break --
+                  SizedBox(height: SizeConfig.padding54),
+                  SaveTitleContainer(title: 'Latest'),
+                  SaveBlogSection(),
+                  // -- Break --
+                  //Extended the EOS to avoid overshadowing by navbar
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 0.8,
+                  ),
+                ],
+              ),
+            ));
       },
     );
   }
@@ -270,44 +283,53 @@ class CampiagnCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: SizeConfig.padding10),
-      child: Container(
-        width: SizeConfig.screenWidth * 0.5,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            color: containerColor),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: SizeConfig.padding28),
-                child: Center(
-                  child: SizedBox(
-                    height: SizeConfig.screenWidth * 0.17,
-                    width: SizeConfig.screenWidth,
-                    child: Image.network(imageUrl),
+    return GestureDetector(
+      onTap: () {
+        AppState.delegate.appState.currentAction = PageAction(
+          page: CampaignViewPageConfig,
+          state: PageState.addWidget,
+          widget: CampaignView(eventType: Constants.HS_DAILY_SAVER),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(right: SizeConfig.padding10),
+        child: Container(
+          width: SizeConfig.screenWidth * 0.5,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              color: containerColor),
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.padding16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: SizeConfig.padding28),
+                  child: Center(
+                    child: SizedBox(
+                      height: SizeConfig.screenWidth * 0.17,
+                      width: SizeConfig.screenWidth,
+                      child: Image.network(imageUrl),
+                    ),
                   ),
                 ),
-              ),
-              Spacer(),
-              Text(
-                title,
-                style: TextStyles.rajdhaniSB.body0,
-              ),
-              FittedBox(
-                fit: BoxFit.contain,
-                child: Container(
-                  width: SizeConfig.screenWidth * 0.5,
-                  child: Text(
-                    subTitle,
-                    style: TextStyles.sourceSans.body4,
-                  ),
+                Spacer(),
+                Text(
+                  title,
+                  style: TextStyles.rajdhaniSB.body0,
                 ),
-              )
-            ],
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Container(
+                    width: SizeConfig.screenWidth * 0.5,
+                    child: Text(
+                      subTitle,
+                      style: TextStyles.sourceSans.body4,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

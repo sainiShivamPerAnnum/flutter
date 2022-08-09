@@ -1,4 +1,3 @@
-// import 'package:device_preview/device_preview.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/main.dart';
@@ -30,11 +29,13 @@ void main() async {
   await mainInit();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-      runApp(MyApp());
-      //   DevicePreview(
-      //   enabled: !kReleaseMode,
-      //   builder: (context) => MyApp(), // Wrap your app
-      // ));
+      runApp(
+        // DevicePreview(
+        //   enabled: !kReleaseMode,
+        //   builder: (context) =>
+        MyApp(), // Wrap your app
+        // ),
+      );
     },
   );
 }

@@ -1,4 +1,3 @@
-// import 'package:device_preview/device_preview.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -61,15 +60,13 @@ import 'core/service/notifier_services/user_coin_service.dart';
 //   await mainInit();
 //   runApp(MyApp());
 // }
-
 Future mainInit() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await PreferenceHelper.initiate();
-    await Firebase.initializeApp(
-      name: "Fello",
-    );
+
+    await Firebase.initializeApp();
   } catch (e) {
     print('Firebase initialisation error: $e');
   }
@@ -149,7 +146,6 @@ class _MyAppState extends State<MyApp> {
                       value: locator<PaytmService>(),
                       child: MaterialApp.router(
                         locale: DevicePreview.locale(context),
-                        // Add the locale here
                         builder: DevicePreview.appBuilder,
                         title: Constants.APP_NAME,
                         theme: FelloTheme.lightMode(),

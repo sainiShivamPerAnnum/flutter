@@ -11,7 +11,7 @@ class CoinBalanceTextSE extends StatelessWidget {
       properties: [UserCoinServiceProperties.coinBalance],
       builder: (context, model, property) => Text(
           model.flcBalance != null ? model.flcBalance.toString() : "0",
-          style: TextStyles.sourceSansSB.body2),
+          style: TextStyles.rajdhaniSB.body2),
     );
   }
 }

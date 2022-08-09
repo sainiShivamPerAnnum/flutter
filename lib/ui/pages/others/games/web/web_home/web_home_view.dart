@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -475,10 +476,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                     color: Colors.grey,
                   ),
                 )
-              : Image.network(
-                  game.thumbnailUri,
-                  fit: BoxFit.cover,
-                ),
+              : Hero(
+                  tag: game.code,
+                  child: CachedNetworkImage(
+                    imageUrl: game.thumbnailUri,
+                    fit: BoxFit.cover,
+                  )),
         ),
         Positioned(
           top: expandedHeight -

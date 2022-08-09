@@ -313,6 +313,12 @@ class WebHomeViewModel extends BaseModel {
 
   fetchGame(String game) async {
     isGameLoading = true;
+    final GameModel gameData =
+        _gamesRepo.allgames.firstWhere((g) => g.gameCode == game, orElse: null);
+    if (gameData != null) {
+      currentGameModel = gameData;
+      return;
+    }
     final response = await _gamesRepo.getGameByCode(gameCode: game);
     if (response.isSuccess()) {
       currentGameModel = response.model;
