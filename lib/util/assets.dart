@@ -231,6 +231,8 @@ class Assets {
 
   static final String couponsAsset = "assets/svg/coupons.svg";
 
+  static final String chevRonRightArrow = "assets/svg/chevron_right_arrow.svg";
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',

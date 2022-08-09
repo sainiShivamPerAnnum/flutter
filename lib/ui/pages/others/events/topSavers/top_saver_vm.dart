@@ -50,6 +50,39 @@ class TopSaverViewModel extends BaseModel {
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
 
+  int _tabNo = 0;
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
+  PageController _pageController;
+
+  PageController get pageController => _pageController;
+
+  int get tabNo => _tabNo;
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
+
+  double get tabPosWidthFactor => _tabPosWidthFactor;
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
+
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
+  }
+
   //Related to the info box/////////////////
   String boxHeading = "How to participate?";
   List<String> boxAssets = [
@@ -64,13 +97,22 @@ class TopSaverViewModel extends BaseModel {
   ];
   ////////////////////////////////////////////
 
-  List<String> __profileUrlList = [];
+  List<String> _pastWinnerProfileList = [];
+
+  List<String> _currentParticipantsProfileList = [];
   List<ScoreBoard> currentParticipants;
   List<PastHighestSaver> _pastWinners;
 
-  List<String> get profileUrlList => __profileUrlList;
-  set profileUrlList(List<String> value) {
-    __profileUrlList = value;
+  List<String> get currentParticipantsProfileList =>
+      _currentParticipantsProfileList;
+  set currentParticipantsProfileList(List<String> value) {
+    _currentParticipantsProfileList = value;
+    notifyListeners();
+  }
+
+  List<String> get pastWinnerProfileList => _pastWinnerProfileList;
+  set pastWinnerProfileList(List<String> value) {
+    _pastWinnerProfileList = value;
     notifyListeners();
   }
 
@@ -104,9 +146,19 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
+  dispose() {
+    currentParticipants.clear();
+    pastWinners.clear();
+    currentParticipantsProfileList.clear();
+    pastWinnerProfileList.clear();
+  }
+
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
+
     event = await getSingleEventDetails(eventType);
+    _pageController = PageController(initialPage: 0);
+
     setState(ViewState.Idle);
 
     campaignType = event.type;
@@ -256,10 +308,24 @@ class TopSaverViewModel extends BaseModel {
   }
 
   getWinnersProfilePicList() async {
-    for (int i = 0; i < pastWinners.length; i++) {
-      String dpUrl = await _dbModel.getUserDP(pastWinners[i].userid);
-      __profileUrlList.add(dpUrl);
+    //for current participants
+    for (int i = 0; i < currentParticipants.length; i++) {
+      String dpUrl =
+          await _dbModel.getUserDP(currentParticipants[i].userid) ?? "";
+      _currentParticipantsProfileList.add(dpUrl);
     }
+
+    //for past winners
+    for (int i = 0; i < pastWinners.length; i++) {
+      String dpUrl = await _dbModel.getUserDP(pastWinners[i].userid) ?? "";
+      _pastWinnerProfileList.add(dpUrl);
+    }
+
+    _logger.d("Lenghths");
+    _logger.d(currentParticipants.length);
+    _logger.d(_currentParticipantsProfileList.length);
+    _logger.d(pastWinners.length);
+    _logger.d(_pastWinnerProfileList.length);
 
     notifyListeners();
   }

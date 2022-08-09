@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
@@ -145,8 +144,8 @@ class _MyAppState extends State<MyApp> {
                         PaytmServiceProperties>(
                       value: locator<PaytmService>(),
                       child: MaterialApp.router(
-                        locale: DevicePreview.locale(context),
-                        builder: DevicePreview.appBuilder,
+                        // locale: DevicePreview.locale(context),
+                        // builder: DevicePreview.appBuilder,
                         title: Constants.APP_NAME,
                         theme: FelloTheme.lightMode(),
                         useInheritedMediaQuery: true,

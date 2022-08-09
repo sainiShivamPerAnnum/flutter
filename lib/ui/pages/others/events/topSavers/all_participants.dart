@@ -1,8 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/scoreboard_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -11,103 +15,146 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AllParticipantsView extends StatelessWidget {
-  final List<ScoreBoard> participants;
-  final String type;
-  AllParticipantsView({this.participants, this.type});
-  bool isInteger(num value) => value is int || value == value.roundToDouble();
+  final TopSaverViewModel model;
+  final bool forPastWinners;
 
-  getItemCount() {
-    if (type == Constants.HS_DAILY_SAVER) {
-      if (participants.length < 30)
-        return participants.length;
-      else
-        return 30;
-    } else if (type == Constants.HS_WEEKLY_SAVER) {
-      if (participants.length < 50)
-        return participants.length;
-      else
-        return 50;
-    } else if (type == Constants.HS_MONTHLY_SAVER) {
-      if (participants.length < 80)
-        return participants.length;
-      else
-        return 80;
-    } else
-      return participants.length;
-  }
+  AllParticipantsView({
+    @required this.model,
+    @required this.forPastWinners,
+  });
+  bool isInteger(num value) => value is int || value == value.roundToDouble();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: UiConstants.primaryColor,
-        body: HomeBackground(
-          child: Column(
-            children: [
-              FelloAppBar(
-                leading: FelloAppBarBackButton(),
-                title: "Top Participants",
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.padding40),
-                      topRight: Radius.circular(SizeConfig.padding40),
-                    ),
-                    color: Colors.white,
-                  ),
-                  width: SizeConfig.screenWidth,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.padding40),
-                      topRight: Radius.circular(SizeConfig.padding40),
-                    ),
-                    child: ListView.builder(
-                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      itemCount: getItemCount(),
-                      itemBuilder: (ctx, i) => Container(
-                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.padding12),
-                          color: Colors.grey.withOpacity(0.1),
-                        ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding4,
-                              horizontal: SizeConfig.pageHorizontalMargins / 2),
-                          leading: CircleAvatar(
-                            backgroundColor: UiConstants.primaryColor,
-                            child: Text(
-                              "${i + 1}",
-                              style: TextStyles.body2.colour(Colors.white),
-                            ),
-                          ),
-                          title: Text(
-                            participants[i].username,
-                            style: TextStyles.body3.bold.colour(Colors.black54),
-                          ),
-                          // subtitle: Text("This Week"),
-                          trailing: RichText(
-                            text: TextSpan(
-                                text:
-                                    "${isInteger(participants[i].score) ? participants[i].score.toInt() : participants[i].score.truncateToDecimalPlaces(3)}",
-                                style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
-                                children: [
-                                  TextSpan(
-                                      text: " gm",
-                                      style: TextStyles.body4.light
-                                          .colour(Colors.grey))
-                                ]),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+        appBar: AppBar(
+          backgroundColor: UiConstants.kBackgroundColor,
+          elevation: 0.0,
+          title: Text(
+            forPastWinners ? 'Past Winners' : 'Top Participants',
+            maxLines: 1,
+            overflow: TextOverflow.clip,
+            style: TextStyles.title4.bold.colour(Colors.white),
           ),
+          leading: IconButton(
+              onPressed: () {
+                AppState.backButtonDispatcher.didPopRoute();
+              },
+              icon: Icon(Icons.arrow_back_ios)),
+        ),
+        backgroundColor: UiConstants.kBackgroundColor,
+        body: Stack(
+          children: [
+            NewSquareBackground(),
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                child: !forPastWinners
+                    ? ListView.builder(
+                        padding: EdgeInsets.only(top: SizeConfig.padding12),
+                        shrinkWrap: true,
+                        itemCount: model.currentParticipants.length,
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding20,
+                              horizontal: SizeConfig.padding2,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '${index + 1}',
+                                        style: TextStyles.rajdhaniSB.body2,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding20,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding12,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          model.currentParticipants[index]
+                                              .username,
+                                          style: TextStyles.sourceSans.body3
+                                              .setOpecity(0.8),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms"
+                                      .toString(),
+                                  style: TextStyles.rajdhaniM.body3,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        //Current participants
+                      )
+                    : ListView.builder(
+                        padding: EdgeInsets.only(top: SizeConfig.padding12),
+                        shrinkWrap: true,
+                        itemCount: model.pastWinners.length,
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding20,
+                              horizontal: SizeConfig.padding2,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '${index + 1}',
+                                        style: TextStyles.rajdhaniSB.body2,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding20,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding12,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          model.pastWinners[index].username,
+                                          style: TextStyles.sourceSans.body3
+                                              .setOpecity(0.8),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms"
+                                      .toString(),
+                                  style: TextStyles.rajdhaniM.body3,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ),
+          ],
         ));
   }
 }
