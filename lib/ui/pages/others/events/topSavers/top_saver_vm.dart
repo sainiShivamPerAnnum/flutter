@@ -146,13 +146,6 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  dispose() {
-    currentParticipants.clear();
-    pastWinners.clear();
-    currentParticipantsProfileList.clear();
-    pastWinnerProfileList.clear();
-  }
-
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
 

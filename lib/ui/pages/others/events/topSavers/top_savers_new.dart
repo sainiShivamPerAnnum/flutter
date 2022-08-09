@@ -390,76 +390,6 @@ class CampaignView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // SliverToBoxAdapter(
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(SizeConfig.padding34),
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Text(
-                  //           "Past Winners",
-                  //           style: TextStyles.body0.bold.colour(Colors.white),
-                  //         ),
-                  //         const SizedBox(
-                  //           height: 10,
-                  //         ),
-                  //         model.profileUrlList.isEmpty
-                  //             ? ListLoader(bottomPadding: true)
-                  //             : CampaignsListRenderingComponent(
-                  //                 model: model,
-                  //                 listLenght: model.pastWinners.length < 3
-                  //                     ? model.pastWinners.length
-                  //                     : 3,
-                  //                 showProfileImage: true,
-                  //               ),
-                  //         TextButton(
-                  //           onPressed: () {
-                  //             BaseUtil.openModalBottomSheet(
-                  //               addToScreenStack: true,
-                  //               backgroundColor: UiConstants.kBackgroundColor,
-                  //               borderRadius: BorderRadius.only(
-                  //                 topLeft: Radius.circular(SizeConfig.roundness32),
-                  //                 topRight: Radius.circular(SizeConfig.roundness32),
-                  //               ),
-                  //               isScrollControlled: true,
-                  //               hapticVibrate: true,
-                  //               isBarrierDismissable: true,
-                  //               content: model.profileUrlList.isEmpty
-                  //                   ? ListLoader(bottomPadding: true)
-                  //                   : Container(
-                  //                       padding:
-                  //                           EdgeInsets.all(SizeConfig.padding34),
-                  //                       child: CampaignsListRenderingComponent(
-                  //                         model: model,
-                  //                         listLenght: model.pastWinners.length,
-                  //                         showProfileImage: false,
-                  //                       ),
-                  //                     ),
-                  //             );
-                  //           },
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.center,
-                  //             children: [
-                  //               Text(
-                  //                 'See All',
-                  //                 style: TextStyles.rajdhaniSB.body2,
-                  //               ),
-                  //               SizedBox(
-                  //                 width: SizeConfig.padding6,
-                  //               ),
-                  //               SvgPicture.asset(
-                  //                 Assets.chevronAsset,
-                  //                 width: SizeConfig.iconSize1,
-                  //                 height: SizeConfig.iconSize1,
-                  //                 color: UiConstants.primaryColor,
-                  //               )
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                   SliverToBoxAdapter(
                     child: Container(
                       margin:
@@ -544,110 +474,17 @@ class CampaignView extends StatelessWidget {
                                                       const NeverScrollableScrollPhysics(),
                                                   itemBuilder:
                                                       (context, index) {
-                                                    return Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                        vertical: SizeConfig
-                                                            .padding20,
-                                                        horizontal:
-                                                            SizeConfig.padding2,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Row(
-                                                              children: [
-                                                                Text(
-                                                                  '${index + 1}',
-                                                                  style: TextStyles
-                                                                      .rajdhaniSB
-                                                                      .body2,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: SizeConfig
-                                                                      .padding20,
-                                                                ),
-                                                                ClipOval(
-                                                                  child:
-                                                                      CachedNetworkImage(
-                                                                    imageUrl: model
-                                                                            .currentParticipantsProfileList[
-                                                                        index],
-                                                                    width: SizeConfig
-                                                                        .iconSize5,
-                                                                    height: SizeConfig
-                                                                        .iconSize5,
-                                                                    placeholder:
-                                                                        (context,
-                                                                                url) =>
-                                                                            Container(
-                                                                      width: SizeConfig
-                                                                          .iconSize5,
-                                                                      height: SizeConfig
-                                                                          .iconSize5,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        shape: BoxShape
-                                                                            .circle,
-                                                                      ),
-                                                                    ),
-                                                                    errorWidget:
-                                                                        (a, b,
-                                                                            c) {
-                                                                      return Container(
-                                                                          width: SizeConfig
-                                                                              .iconSize5,
-                                                                          height: SizeConfig
-                                                                              .iconSize5,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Colors.grey,
-                                                                            shape:
-                                                                                BoxShape.circle,
-                                                                          ));
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: SizeConfig
-                                                                      .padding12,
-                                                                ),
-                                                                Expanded(
-                                                                  child: Text(
-                                                                    model
-                                                                        .currentParticipants[
-                                                                            index]
-                                                                        .username,
-                                                                    style: TextStyles
-                                                                        .sourceSans
-                                                                        .body3
-                                                                        .setOpecity(
-                                                                            0.8),
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    maxLines: 1,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms"
-                                                                .toString(),
-                                                            style: TextStyles
-                                                                .rajdhaniM
-                                                                .body3,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
+                                                    return ParticiapntsListItemView(
+                                                        s_no: '${index + 1}',
+                                                        imageUrl: model
+                                                                .currentParticipantsProfileList[
+                                                            index],
+                                                        username: model
+                                                            .currentParticipants[
+                                                                index]
+                                                            .username,
+                                                        score:
+                                                            "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms");
                                                   },
                                                   //Current participants
                                                 ),
@@ -725,110 +562,16 @@ class CampaignView extends StatelessWidget {
                                                       const NeverScrollableScrollPhysics(),
                                                   itemBuilder:
                                                       (context, index) {
-                                                    return Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                        vertical: SizeConfig
-                                                            .padding20,
-                                                        horizontal:
-                                                            SizeConfig.padding2,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Row(
-                                                              children: [
-                                                                Text(
-                                                                  '${index + 1}',
-                                                                  style: TextStyles
-                                                                      .rajdhaniSB
-                                                                      .body2,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: SizeConfig
-                                                                      .padding20,
-                                                                ),
-                                                                ClipOval(
-                                                                  child:
-                                                                      CachedNetworkImage(
-                                                                    imageUrl: model
-                                                                            .pastWinnerProfileList[
-                                                                        index],
-                                                                    width: SizeConfig
-                                                                        .iconSize5,
-                                                                    height: SizeConfig
-                                                                        .iconSize5,
-                                                                    placeholder:
-                                                                        (context,
-                                                                                url) =>
-                                                                            Container(
-                                                                      width: SizeConfig
-                                                                          .iconSize5,
-                                                                      height: SizeConfig
-                                                                          .iconSize5,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        shape: BoxShape
-                                                                            .circle,
-                                                                      ),
-                                                                    ),
-                                                                    errorWidget:
-                                                                        (a, b,
-                                                                            c) {
-                                                                      return Container(
-                                                                          width: SizeConfig
-                                                                              .iconSize5,
-                                                                          height: SizeConfig
-                                                                              .iconSize5,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Colors.grey,
-                                                                            shape:
-                                                                                BoxShape.circle,
-                                                                          ));
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: SizeConfig
-                                                                      .padding12,
-                                                                ),
-                                                                Expanded(
-                                                                  child: Text(
-                                                                    model
-                                                                        .pastWinners[
-                                                                            index]
-                                                                        .username,
-                                                                    style: TextStyles
-                                                                        .sourceSans
-                                                                        .body3
-                                                                        .setOpecity(
-                                                                            0.8),
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    maxLines: 1,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms"
-                                                                .toString(),
-                                                            style: TextStyles
-                                                                .rajdhaniM
-                                                                .body3,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
+                                                    return ParticiapntsListItemView(
+                                                        s_no: '${index + 1}',
+                                                        imageUrl: model
+                                                                .pastWinnerProfileList[
+                                                            index],
+                                                        username: model
+                                                            .pastWinners[index]
+                                                            .username,
+                                                        score:
+                                                            "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms");
                                                   },
                                                 ),
                                                 TextButton(
@@ -883,7 +626,6 @@ class CampaignView extends StatelessWidget {
                             ),
                     ),
                   ),
-
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.all(SizeConfig.padding34),
@@ -893,7 +635,6 @@ class CampaignView extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   SliverToBoxAdapter(
                     child: InfoComponent(
                       heading: model.boxHeading,
@@ -907,6 +648,86 @@ class CampaignView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class ParticiapntsListItemView extends StatelessWidget {
+  const ParticiapntsListItemView(
+      {Key key,
+      @required this.s_no,
+      @required this.imageUrl,
+      @required this.username,
+      @required this.score})
+      : super(key: key);
+
+  final String s_no;
+  final String imageUrl;
+  final String username;
+  final String score;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding20,
+        horizontal: SizeConfig.padding2,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Text(
+                  s_no,
+                  style: TextStyles.rajdhaniSB.body2,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding20,
+                ),
+                ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    width: SizeConfig.iconSize5,
+                    height: SizeConfig.iconSize5,
+                    placeholder: (context, url) => Container(
+                      width: SizeConfig.iconSize5,
+                      height: SizeConfig.iconSize5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    errorWidget: (a, b, c) {
+                      return Image.asset(
+                        Assets.defaultProfilePlaceholder,
+                        width: SizeConfig.iconSize5,
+                        height: SizeConfig.iconSize5,
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding12,
+                ),
+                Expanded(
+                  child: Text(
+                    username,
+                    style: TextStyles.sourceSans.body3.setOpecity(0.8),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Text(
+            score.toString(),
+            style: TextStyles.rajdhaniM.body3,
+          ),
+        ],
+      ),
     );
   }
 }

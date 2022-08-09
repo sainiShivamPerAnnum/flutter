@@ -183,6 +183,10 @@ class Assets {
   static final String snackbarLoadingIcon =
       "assets/svg/snackbar_loading_icon.svg";
 
+  //A default profile placeholder
+  static final String defaultProfilePlaceholder =
+      "assets/temp/rank_one_profile.png";
+
   //FELLO REWARDS
   // static final String digitalGold = "images/augmont-share.png";
   static final String amazonGiftVoucher = "images/amazon-share.png";
