@@ -27,7 +27,6 @@ class SaveCustomCard extends StatelessWidget {
     S locale = S();
     return Padding(
       padding: EdgeInsets.only(
-          left: 0,
           right: SizeConfig.padding16,
           top: SizeConfig.padding20,
           bottom: SizeConfig.padding20),
