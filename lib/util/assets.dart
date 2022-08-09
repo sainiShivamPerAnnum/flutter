@@ -120,6 +120,9 @@ class Assets {
   static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
   static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';
   static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
+  static final String rbiLogo = 'assets/vectors/rbi_logo.png';
+  static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';
+  static final String sebiLogo = 'assets/vectors/sebi_logo.png';
 
   // WIN
 

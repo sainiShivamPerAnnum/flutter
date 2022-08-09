@@ -10,7 +10,6 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
@@ -70,7 +69,7 @@ class Save extends StatelessWidget {
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              physics: BouncingScrollPhysics(),
+              physics: ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -93,9 +92,59 @@ class Save extends StatelessWidget {
                   SaveTitleContainer(title: 'Latest'),
                   SaveBlogSection(),
                   // -- Break --
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 0.4,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        '100% SAFE AND SECURED',
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor2),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding54),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SaveInfoSection(
+                              title: 'In Compliance with',
+                              imageAsset: Assets.sebiLogo,
+                              imageHeight: SizeConfig.screenWidth * 0.07,
+                              imageWidth: SizeConfig.screenWidth * 0.07,
+                            ),
+                            VerticalDivider(
+                              color: Colors.white,
+                              thickness: 2,
+                              width: 2,
+                            ),
+                            SaveInfoSection(
+                              title: 'RBI Approved',
+                              imageAsset: Assets.rbiLogo,
+                              imageHeight: SizeConfig.screenWidth * 0.07,
+                              imageWidth: SizeConfig.screenWidth * 0.07,
+                            ),
+                            VerticalDivider(
+                                color: Colors.white, thickness: 2, width: 2),
+                            SaveInfoSection(
+                              title: 'Banking Partner',
+                              imageAsset: Assets.iciciLogo,
+                              imageHeight: SizeConfig.screenWidth * 0.07,
+                              imageWidth: SizeConfig.screenWidth * 0.16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   //Extended the EOS to avoid overshadowing by navbar
                   SizedBox(
-                    height: SizeConfig.screenWidth * 0.8,
+                    height: SizeConfig.screenWidth * 0.4,
                   ),
                 ],
               ),
@@ -158,7 +207,7 @@ class SaveNetWorthSection extends StatelessWidget {
                   SaveCustomCard(
                     title: 'Stable Fello',
                     cardBgColor: UiConstants.kSaveStableFelloCardBg,
-                    cardAssetName: Assets.digitalGoldBar,
+                    cardAssetName: Assets.stableFello,
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -307,7 +356,7 @@ class CampiagnCard extends StatelessWidget {
                   padding: EdgeInsets.only(top: SizeConfig.padding28),
                   child: Center(
                     child: SizedBox(
-                      height: SizeConfig.screenWidth * 0.17,
+                      height: SizeConfig.screenWidth * 0.2,
                       width: SizeConfig.screenWidth,
                       child: Image.network(imageUrl),
                     ),
@@ -633,6 +682,37 @@ class SaveInfoTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SaveInfoSection extends StatelessWidget {
+  final String title;
+  final String imageAsset;
+  final double imageHeight;
+  final double imageWidth;
+
+  const SaveInfoSection(
+      {Key key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        SizedBox(
+            height: imageHeight,
+            width: imageWidth,
+            child: Image.asset(imageAsset)),
+      ],
     );
   }
 }
