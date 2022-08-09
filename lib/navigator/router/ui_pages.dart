@@ -536,10 +536,11 @@ PageConfiguration JourneyViewPageConfig = PageConfiguration(
     name: "Journey Screen");
 
 PageConfiguration Level2ViewPageConfig = PageConfiguration(
-  key: 'Level2View',
-  path: Level2ViewPath,
-  uiPage: Pages.Level2View,
-  name: "Level2 Screen",
+    key: 'Level2View',
+    path: Level2ViewPath,
+    uiPage: Pages.Level2View,
+    name: "Level2 Screen");
+
 PageConfiguration BlogPostWebViewConfig = PageConfiguration(
     key: 'BlogPostWeb',
     path: BlogPostWebViewPath,

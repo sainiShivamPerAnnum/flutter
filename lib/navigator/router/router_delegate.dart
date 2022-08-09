@@ -336,6 +336,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.Level2View:
           _addPageData(Level2View(), Level2ViewPageConfig);
+          break;
         case Pages.JourneyView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
           break;
@@ -583,6 +584,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.Level2View:
         Level2ViewPageConfig.currentPageAction = action;
+        break;
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
         break;
