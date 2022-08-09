@@ -122,7 +122,7 @@ class JourneyPageViewModel extends BaseModel {
     //         !isEnd) addPageToTop(mainController.offset);
     //   });
     isLoading = false;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       mainController.jumpTo(300);
       Future.delayed(Duration(seconds: 1), () {
         mainController.animateTo(_mainController.position.minScrollExtent,

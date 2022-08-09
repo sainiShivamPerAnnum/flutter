@@ -18,7 +18,7 @@ class _BackgroundState extends State<Background> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       setState(() {
         bgZoom = 1;
       });

@@ -155,4 +155,76 @@ class CacheService {
 
     return null;
   }
+
+  Future<ApiResponse> paginatedCachedApi(
+    String keyPrefix,
+    int start,
+    int end,
+    int ttl,
+    Future<dynamic> Function() apiReq,
+    ApiResponse Function(dynamic) parseData,
+  ) async {
+    // fetch data from cache
+    final items = [];
+    for (int i = start; i <= end; i++) {
+      final key = '$keyPrefix/$i';
+      final cachedData = await getData(key);
+      if (cachedData != null && ttl != 0)
+        items.add(json.decode(cachedData.data));
+    }
+
+    if (items.length == end - start + 1) {
+      try {
+        _logger.d('cache: data read successfully');
+        return parseData({"start": start, "end": end, "items": items});
+      } catch (e) {
+        _logger.e(
+            'cache: parsing saved cache failed, trying to fetch from API', e);
+
+        // invalidate all keys
+        for (int i = start; i <= end; i++) {
+          final key = '$keyPrefix/$i';
+          await invalidateByKey(key);
+        }
+
+        return await _processPaginatedApiAndSaveToCache(
+          keyPrefix,
+          ttl,
+          apiReq,
+          parseData,
+        );
+      }
+    }
+
+    return await _processPaginatedApiAndSaveToCache(
+      keyPrefix,
+      ttl,
+      apiReq,
+      parseData,
+    );
+  }
+
+  Future<ApiResponse> _processPaginatedApiAndSaveToCache(
+    String keyPrefix,
+    int ttl,
+    Future<dynamic> Function() apiReq,
+    ApiResponse Function(dynamic) parseData,
+  ) async {
+    final response = await apiReq();
+    final responseData = response['data'];
+    final res = parseData(responseData);
+
+    if (responseData != null && responseData.isNotEmpty && ttl != 0) {
+      final start = responseData["start"];
+      final end = responseData["end"];
+      List<dynamic> items = responseData["items"];
+
+      for (int i = start; i <= end; i++) {
+        final key = '$keyPrefix/$i';
+        await writeMap(key, ttl, items[i - start]);
+      }
+    }
+
+    return res;
+  }
 }

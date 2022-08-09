@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -104,6 +105,7 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
+
               RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
@@ -184,6 +186,7 @@ class BottomNavBar extends StatelessWidget {
                 Assets.navSaveInactive,
               ),
               NavBarItemData(
+
                 locale.navBarWin,
                 Assets.navWinActive,
                 Assets.navWinInactive,

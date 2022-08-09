@@ -215,12 +215,16 @@ class UserProfileVM extends BaseModel {
               inEditMode = false;
               notifyListeners();
               BaseUtil.showPositiveAlert(
-                  "Updated Successfully", "Profile updated successfully");
+                "Updated Successfully",
+                "Profile updated successfully",
+              );
             } else {
               isUpdaingUserDetails = false;
               notifyListeners();
               BaseUtil.showNegativeAlert(
-                  "Action failed", "Please try again in some time");
+                "Action failed",
+                "Please try again in some time",
+              );
             }
           });
         } else {
@@ -353,7 +357,7 @@ class UserProfileVM extends BaseModel {
       notifyListeners();
       return false;
     } else {
-      final originalFormatString = toOriginalFormatString(date);
+      final originalFormatString = BaseUtil.toOriginalFormatString(date);
       if (inputDate == originalFormatString) {
         selectedDate = date;
         return true;
@@ -365,52 +369,51 @@ class UserProfileVM extends BaseModel {
     }
   }
 
-  String toOriginalFormatString(DateTime dateTime) {
-    final y = dateTime.year.toString().padLeft(4, '0');
-    final m = dateTime.month.toString().padLeft(2, '0');
-    final d = dateTime.day.toString().padLeft(2, '0');
-    return "$y$m$d";
-  }
-
   handleDPOperation() async {
-    BuildContext context;
     if (await BaseUtil.showNoInternetAlert()) return;
-    var _status = await Permission.photos.status;
-    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
-      BaseUtil.openDialog(
-        isBarrierDismissable: false,
-        addToScreenStack: true,
-        content: AppDefaultDialog(
-          title: "Request Permission",
-          description:
-              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-          buttonText: "Continue",
-          asset: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Image.asset(
-              "images/gallery.png",
-              height: SizeConfig.screenWidth * 0.24,
-            ),
-          ),
-          confirmAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            _chooseprofilePicture();
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-          },
-        ),
-      );
-    } else if (_status.isGranted) {
-      await _chooseprofilePicture();
-      _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
-    } else {
-      BaseUtil.showNegativeAlert('Permission Unavailable',
-          'Please enable permission from settings to continue');
+
+    if (await _userService.checkGalleryPermission()) {
+      _chooseprofilePicture();
     }
+
+    // var _status = await Permission.photos.status;
+    // if (_status.isRestricted || _status.isLimited || _status.isDenied) {
+    //   BaseUtil.openDialog(
+    //     isBarrierDismissable: false,
+    //     addToScreenStack: true,
+    //     content: AppDefaultDialog(
+    //       title: "Request Permission",
+    //       description:
+    //           "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+    //       buttonText: "Continue",
+    //       asset: Padding(
+    //         padding: EdgeInsets.symmetric(vertical: 8),
+    //         child: Image.asset(
+    //           "images/gallery.png",
+    //           height: SizeConfig.screenWidth * 0.24,
+    //         ),
+    //       ),
+    //       confirmAction: () {
+    //         AppState.backButtonDispatcher.didPopRoute();
+    //         _chooseprofilePicture();
+    //       },
+    //       cancelAction: () {
+    //         AppState.backButtonDispatcher.didPopRoute();
+    //       },
+    //     ),
+    //   );
+    // } else if (_status.isGranted) {
+    //   await _chooseprofilePicture();
+    //   _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
+    // } else {
+    //   BaseUtil.showNegativeAlert(
+    //     'Permission Unavailable',
+    //     'Please enable permission from settings to continue',
+    //   );
+    // }
   }
 
-//Model should never user Widgets in it. We should never pass context here...
+  //Model should never user Widgets in it. We should never pass context here...
   _chooseprofilePicture() async {
     selectedProfilePicture = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
@@ -435,9 +438,9 @@ class UserProfileVM extends BaseModel {
           cancelBtnText: 'Discard',
           description: 'Are you sure you want to update your profile picture',
           confirmAction: () {
-            _updateProfilePicture().then(
-              (flag) => _postProfilePictureUpdate(flag),
-            );
+            _userService.updateProfilePicture(selectedProfilePicture).then(
+                  (flag) => _postProfilePictureUpdate(flag),
+                );
           },
           cancelAction: () {
             AppState.backButtonDispatcher.didPopRoute();
@@ -447,60 +450,6 @@ class UserProfileVM extends BaseModel {
       );
       // _rootViewModel.refresh();
       notifyListeners();
-    }
-  }
-
-  Future<bool> _updateProfilePicture() async {
-    Directory supportDir;
-    UploadTask uploadTask;
-    try {
-      supportDir = await getApplicationSupportDirectory();
-    } catch (e1) {
-      log.error('Support Directory not found');
-      log.error('$e1');
-      return false;
-    }
-
-    String imageName = selectedProfilePicture.path.split("/").last;
-    String targetPath = "${supportDir.path}/c-$imageName";
-    print("temp path: " + targetPath);
-    print("orignal path: " + selectedProfilePicture.path);
-
-    File compressedFile = File(selectedProfilePicture.path);
-
-    try {
-      FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref =
-          storage.ref().child("dps/${_userService.baseUser.uid}/image");
-      uploadTask = ref.putFile(compressedFile);
-    } catch (e2) {
-      log.error('putFile Failed. Reference Error');
-      log.error('$e2');
-      return false;
-    }
-
-    try {
-      TaskSnapshot res = await uploadTask;
-      String url = await res.ref.getDownloadURL();
-      if (url != null) {
-        await CacheManager.writeCache(
-            key: 'dpUrl', value: url, type: CacheType.string);
-        _userService.setMyUserDpUrl(url);
-        //_baseUtil.setDisplayPictureUrl(url);
-        log.debug('Final DP Uri: $url');
-        return true;
-      } else
-        return false;
-    } catch (e) {
-      if (_userService.baseUser.uid != null) {
-        Map<String, dynamic> errorDetails = {
-          'error_msg': 'Method call to upload picture failed',
-        };
-        _internalOpsService.logFailure(_userService.baseUser.uid,
-            FailType.ProfilePictureUpdateFailed, errorDetails);
-      }
-      print('$e');
-      return false;
     }
   }
 
@@ -514,7 +463,9 @@ class UserProfileVM extends BaseModel {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
       BaseUtil.showPositiveAlert(
-          'Complete', 'Your profile picture has been updated');
+        'Complete',
+        'Your profile picture has been updated',
+      );
     } else {
       BaseUtil.showNegativeAlert(
         'Failed',
