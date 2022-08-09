@@ -106,7 +106,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     ),
                   ],
                 ),
-                SizedBox(height: SizeConfig.padding40),
+                SizedBox(
+                    height: SizeConfig.screenWidth * 0.3 +
+                        SizeConfig.viewInsets.bottom),
               ],
             ),
             // if (isKeyboardOpen)

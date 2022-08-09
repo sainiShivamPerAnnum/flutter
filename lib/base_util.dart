@@ -292,35 +292,45 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.flag,
-          size: 28.0,
-          color: Colors.white,
-        ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
-        title: title,
-        message: message,
-        duration: Duration(seconds: seconds),
-        backgroundGradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
-        ),
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.positiveAlertColor,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate.navigatorKey.currentContext);
+      ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
+          .showSnackBar(alertSnackBar(
+              message: message,
+              title: title,
+              seconds: seconds,
+              onTap: () {},
+              alertColor: UiConstants.kSnackBarPositiveContentColor,
+              alertAsset: Assets.snackbarAlertIcon));
     });
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    // WidgetsBinding.instance?.addPostFrameCallback((_) {
+    //   Flushbar(
+    //     flushbarPosition: FlushbarPosition.BOTTOM,
+    //     flushbarStyle: FlushbarStyle.FLOATING,
+    //     icon: Icon(
+    //       Icons.flag,
+    //       size: 28.0,
+    //       color: Colors.white,
+    //     ),
+    //     margin: EdgeInsets.all(10),
+    //     borderRadius: 8,
+    //     title: title,
+    //     message: message,
+    //     duration: Duration(seconds: seconds),
+    //     backgroundGradient: LinearGradient(
+    //       begin: Alignment.topRight,
+    //       end: Alignment.bottomLeft,
+    //       colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+    //     ),
+    //     boxShadows: [
+    //       BoxShadow(
+    //         color: UiConstants.positiveAlertColor,
+    //         offset: Offset(0.0, 2.0),
+    //         blurRadius: 3.0,
+    //       )
+    //     ],
+    //   )..show(AppState.delegate.navigatorKey.currentContext);
+    // });
   }
 
   static showProcessingAlert(String title, String message, {int seconds}) {

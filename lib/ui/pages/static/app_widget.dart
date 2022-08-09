@@ -354,6 +354,61 @@ class AppPositiveBtn extends StatelessWidget {
   }
 }
 
+class AppPositiveCustomChildBtn extends StatelessWidget {
+  const AppPositiveCustomChildBtn({
+    Key key,
+    @required this.child,
+    @required this.onPressed,
+    @required this.width,
+  }) : super(key: key);
+  final Widget child;
+  final VoidCallback onPressed;
+  final double width;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          height: SizeConfig.screenWidth * 0.1556,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              SizeConfig.buttonBorderRadius,
+            ),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff12BC9D),
+                Color(0xff249680),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: child,
+          ),
+        ),
+        Container(
+          height: SizeConfig.padding2,
+          width: width - SizeConfig.padding4,
+          margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding2,
+          ),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: UiConstants.kTextColor,
+                offset: Offset(0, SizeConfig.padding2),
+                blurRadius: SizeConfig.padding4,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ReactivePositiveAppButton extends StatefulWidget {
   const ReactivePositiveAppButton({
     Key key,
@@ -372,7 +427,6 @@ class ReactivePositiveAppButton extends StatefulWidget {
 class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
   bool _isLoading = false;
   get isLoading => this._isLoading;
-
   set isLoading(value) {
     if (mounted)
       setState(() {

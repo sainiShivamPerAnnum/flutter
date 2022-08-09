@@ -152,10 +152,10 @@ class JourneyRepository {
       );
 
       final responseData = response["data"];
-      int startPage = responseData["startPage"];
-      int endPage = responseData["endPage"];
+      int startPage = responseData["start"];
+      int endPage = responseData["end"];
       for (int i = startPage, k = 0; i <= endPage; i++, k++) {
-        List<dynamic> page = responseData["pages"];
+        List<dynamic> page = responseData["items"];
         journeyPages.add(JourneyPage.fromMap(page[k], i));
       }
       return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);

@@ -5,6 +5,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -83,107 +84,62 @@ class _LoginControllerViewState extends State<LoginControllerView> {
             ),
             if (!keyboardIsOpen)
               Align(
-                alignment: Alignment.bottomCenter,
-                child: SafeArea(
-                  top: false,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      model.loginUsingTrueCaller
-                          ? Container(
-                              width: SizeConfig.screenWidth,
-                              padding: EdgeInsets.fromLTRB(
-                                  0, 10, 0, Platform.isIOS ? 0 : 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  new Container(
-                                    width: SizeConfig.screenWidth -
-                                        SizeConfig.pageHorizontalMargins * 2,
-                                    child: FelloButtonLg(
-                                      color: Colors.transparent,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Logging in with",
-                                            style: TextStyles.body3.bold
-                                                .colour(Color(0xff1180FF)),
-                                          ),
-                                          Image.asset(
-                                            Assets.truecaller,
-                                            height: SizeConfig.body1,
-                                          ),
-                                          SizedBox(
-                                            width: SizeConfig.padding4,
-                                          ),
-                                          SpinKitThreeBounce(
-                                            color: Color(0xff1180FF),
-                                            size: SizeConfig.body1,
-                                          )
-                                        ],
-                                      ),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenWidth * 0.2,
+                    margin: EdgeInsets.only(
+                        bottom: SizeConfig.viewInsets.bottom +
+                            SizeConfig.pageHorizontalMargins),
+                    alignment: Alignment.center,
+                    child: model.loginUsingTrueCaller
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Logging in with",
+                                style: TextStyles.body3.bold
+                                    .colour(Color(0xff1180FF)),
+                              ),
+                              Image.asset(
+                                Assets.truecaller,
+                                height: SizeConfig.body1,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding4,
+                              ),
+                              SpinKitThreeBounce(
+                                color: Color(0xff1180FF),
+                                size: SizeConfig.body1,
+                              )
+                            ],
+                          )
+                        : Container(
+                            width: SizeConfig.screenWidth,
+                            alignment: Alignment.center,
+                            child: AppPositiveCustomChildBtn(
+                              child: model.state == ViewState.Idle
+                                  ? Text(
+                                      model.currentPage ==
+                                              LoginUserNameView.index
+                                          ? 'FINISH'
+                                          : 'NEXT',
+                                      style: TextStyles.rajdhaniB.title5,
+                                    )
+                                  : SpinKitThreeBounce(
+                                      color: UiConstants.spinnerColor2,
+                                      size: 18.0,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(
-                              width: SizeConfig.screenWidth,
-                              padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom !=
-                                            0
-                                        ? 0
-                                        : SizeConfig.pageHorizontalMargins,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  new Container(
-                                    width: SizeConfig.screenWidth -
-                                        SizeConfig.pageHorizontalMargins * 2,
-                                    child: FelloButtonLg(
-                                      child: model.state == ViewState.Idle
-                                          ? Text(
-                                              model.currentPage ==
-                                                      LoginUserNameView.index
-                                                  ? 'FINISH'
-                                                  : 'NEXT',
-                                              style: TextStyles.body2
-                                                  .colour(Colors.white),
-                                            )
-                                          : SpinKitThreeBounce(
-                                              color: UiConstants.spinnerColor2,
-                                              size: 18.0,
-                                            ),
-                                      onPressed: () {
-                                        if (model.state == ViewState.Idle)
-                                          model.processScreenInput(
-                                            model.currentPage,
-                                          );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                    ],
-                  ),
-                ),
-              ),
-            if (model.state == ViewState.Busy)
-              Positioned(
-                bottom: 100,
-                right: SizeConfig.screenWidth / 2.2,
-                child: SpinKitThreeBounce(
-                  color: UiConstants.spinnerColor2,
-                  size: 18.0,
-                ),
-              ),
+                              width: SizeConfig.screenWidth * 0.78,
+                              onPressed: () {
+                                if (model.state == ViewState.Idle)
+                                  model.processScreenInput(
+                                    model.currentPage,
+                                  );
+                              },
+                            ),
+                          ),
+                  )),
             if (keyboardIsOpen)
               Positioned(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
