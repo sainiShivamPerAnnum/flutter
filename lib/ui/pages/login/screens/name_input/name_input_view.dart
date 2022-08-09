@@ -15,7 +15,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class NameInputScreen extends StatefulWidget {
-  static const int index = 2;
+  // static const int index = 2;
 
   const NameInputScreen({Key key}) : super(key: key); //pager index
 

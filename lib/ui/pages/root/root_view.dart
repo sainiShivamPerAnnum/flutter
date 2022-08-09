@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -62,6 +63,7 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
+
               RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
@@ -92,41 +94,6 @@ class Root extends StatelessWidget {
                     NotificationButton(),
                   ],
                 ),
-              // Positioned(
-              //   bottom: 0,
-              //   child: Container(
-              //     width: SizeConfig.screenWidth,
-              //     height: SizeConfig.navBarHeight,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //           begin: Alignment.bottomCenter,
-              //           end: Alignment.topCenter,
-              //           colors: [
-              //             UiConstants.scaffoldColor.withOpacity(0.8),
-              //             UiConstants.scaffoldColor.withOpacity(0.2),
-              //           ],
-              //           stops: [
-              //             0.8,
-              //             1
-              //           ]),
-              //     ),
-              //     child: BackdropFilter(
-              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              //     ),
-              //   ),
-              // ),
-              // if (SizeConfig.screenWidth < 600)
-              //   WantMoreTickets(
-              //     model: model,
-              //   ),
-              // if (SizeConfig.screenWidth < 600)
-              //   SaveBaseline(
-              //     model: model,
-              //   ),
-              // BottomNavBar(
-              //   model: model,
-              // ),
-// >>>>>>> campaign4.0
               Consumer<AppState>(
                   builder: (ctx, m, child) =>
                       AppState.delegate.appState.isTxnLoaderInView
@@ -180,6 +147,7 @@ class BottomNavBar extends StatelessWidget {
                 Assets.navSaveInactive,
               ),
               NavBarItemData(
+
                 locale.navBarWin,
                 Assets.navWinActive,
                 Assets.navWinInactive,
