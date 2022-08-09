@@ -836,7 +836,8 @@ class PendingDialog extends StatelessWidget {
               ),
               color: UiConstants.primaryColor,
               onPressed: () {
-                AppState.backButtonDispatcher.didPopRoute();
+                while (AppState.screenStack.length > 1)
+                  AppState.backButtonDispatcher.didPopRoute();
               },
             ),
           ),

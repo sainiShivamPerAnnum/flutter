@@ -75,7 +75,12 @@ class UserUPIDetailsView extends StatelessWidget {
                                         keyboardType:
                                             TextInputType.emailAddress,
                                         decoration: InputDecoration(
-                                            hintText: "hello@upi"),
+                                            hintText: "hello@upi",
+                                            suffixIcon: model.inEditMode
+                                                ? SizedBox()
+                                                : Icon(Icons.verified,
+                                                    color: UiConstants
+                                                        .primaryColor)),
                                         textCapitalization:
                                             TextCapitalization.none,
                                         controller: model.upiController,

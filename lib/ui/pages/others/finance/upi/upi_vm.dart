@@ -64,14 +64,15 @@ class UserUPIDetailsViewModel extends BaseModel {
     final response = await _paymentRepo.validateUPI(upiController.text);
     if (response.code == 200) {
       BaseUtil.showPositiveAlert(
-          "UPI Id save successfully", "Check for more details");
+          "UPI ID saved",
+          response.errorMessage ??
+              "Your UPI address has been sucessfully verified.");
       inEditMode = false;
 
       AppState.backButtonDispatcher.didPopRoute();
     } else
-      BaseUtil.showNegativeAlert(
-          response.errorMessage ?? "Something went wrong!",
-          "Unable to save UPI Id");
+      BaseUtil.showNegativeAlert("Unable to save your UPI address",
+          response.errorMessage ?? "Something went wrong!");
     isUpiVerificationInProgress = false;
   }
 

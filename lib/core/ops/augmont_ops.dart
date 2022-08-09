@@ -597,10 +597,10 @@ class AugmontModel extends ChangeNotifier {
       hapticVibrate: true,
       isBarrierDismissable: false,
       content: PendingDialog(
-        title: "We're still processing!",
+        title: "Withdrawal processing",
         subtitle:
-            "Your withdrawal is taking longer than usual. We'll get back to you in ",
-        duration: '15 minutes',
+            "The amount will be credited to your UPI registered bank account shortly.",
+        duration: '',
       ),
     );
   }

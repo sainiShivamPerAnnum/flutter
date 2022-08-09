@@ -155,13 +155,52 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                if (model.sellNotice == null &&
+                                    model.nonWithdrawableQnt > 0)
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.tertiaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    width: SizeConfig.screenWidth,
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Text(
+                                      _buildNonWithdrawString(model),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyles.body3.light,
+                                    ),
+                                  ),
+                                SizedBox(height: SizeConfig.padding8),
+                                if (model.sellNotice != null &&
+                                    model.sellNotice.isNotEmpty)
+                                  Container(
+                                    width: SizeConfig.screenWidth,
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.padding8),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.primaryLight,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding16),
+                                    child: Text(
+                                      model.sellNotice,
+                                      style: TextStyles.body3.light,
+                                    ),
+                                  ),
+                                SizedBox(height: SizeConfig.padding8),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      locale.saveGoldBalancelabel,
-                                      style: TextStyles.title5.light,
+                                      "Total Gold Balance:",
+                                      style: TextStyles.body2.light,
                                     ),
                                     PropertyChangeConsumer<UserService,
                                         UserServiceProperties>(
@@ -169,57 +208,36 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                         UserServiceProperties.myUserFund
                                       ],
                                       builder: (ctx, model, child) => Text(
-                                        locale.saveGoldBalanceValue(model
-                                                .userFundWallet
-                                                .augGoldQuantity ??
-                                            0.0),
-                                        style: TextStyles.title5.bold
-                                            .colour(UiConstants.tertiarySolid),
-                                      ),
+                                          locale.saveGoldBalanceValue(model
+                                                  .userFundWallet
+                                                  .augGoldQuantity ??
+                                              0.0),
+                                          style: TextStyles.body2
+                                          // .bold
+                                          //     .colour(UiConstants.tertiarySolid,
+                                          // ),
+                                          ),
                                     ),
                                   ],
                                 ),
                                 SizedBox(height: SizeConfig.padding8),
-                                (model.sellNotice == null &&
-                                        model.nonWithdrawableQnt > 0)
-                                    ? Container(
-                                        margin: EdgeInsets.only(
-                                            top: SizeConfig.padding8),
-                                        decoration: BoxDecoration(
-                                          color: UiConstants.tertiaryLight,
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness16),
-                                        ),
-                                        padding: EdgeInsets.all(
-                                            SizeConfig.padding16),
-                                        child: Text(
-                                          _buildNonWithdrawString(model),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyles.body3.light,
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: SizeConfig.padding8),
-                                (model.sellNotice != null &&
-                                        model.sellNotice.isNotEmpty)
-                                    ? Container(
-                                        width: SizeConfig.screenWidth,
-                                        margin: EdgeInsets.only(
-                                            top: SizeConfig.padding8),
-                                        decoration: BoxDecoration(
-                                          color: UiConstants.primaryLight,
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness16),
-                                        ),
-                                        padding: EdgeInsets.all(
-                                            SizeConfig.padding16),
-                                        child: Text(
-                                          model.sellNotice,
-                                          style: TextStyles.body3.light,
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: SizeConfig.padding8),
+                                if (model.nonWithdrawableQnt > 0)
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Withdrawable Gold Balance:",
+                                        style: TextStyles.body2.light,
+                                      ),
+                                      Text("${model.withdrawableQnt ?? 0.0} gm",
+                                          style: TextStyles.body2.bold
+                                          //     .colour(UiConstants.primaryColor),
+                                          ),
+                                    ],
+                                  ),
+                                SizedBox(height: SizeConfig.padding24),
+
                                 Row(
                                   children: [
                                     Text(
@@ -228,9 +246,21 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
+                                // Row(
+                                //   children: [
+                                //     Text("Withdrawable gold balance: ",
+                                //         style: TextStyles.body3
+                                //             .colour(Colors.grey)),
+                                //     Text(
+                                //       "${model.withdrawableQnt ?? 0.0}",
+                                //       style: TextStyles.body3.bold
+                                //           .colour(UiConstants.primaryColor),
+                                //     ),
+                                //   ],
+                                // ),
+
+                                SizedBox(height: SizeConfig.padding16),
+
                                 Container(
                                   width: SizeConfig.screenWidth,
                                   height: SizeConfig.screenWidth * 0.135,
@@ -248,6 +278,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                         child: TextField(
                                           focusNode: model.sellFieldNode,
                                           enabled: !model.isGoldSellInProgress,
+                                          autofocus: true,
                                           controller:
                                               model.goldAmountController,
                                           enableInteractiveSelection: false,
@@ -313,17 +344,17 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                 SizedBox(
                                   height: SizeConfig.padding24,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    model.amoutChip(model.chipAmountList[0]),
-                                    model.amoutChip(model.chipAmountList[1]),
-                                    model.amoutChip(model.chipAmountList[2]),
-                                    // model.amoutChip(model.chipAmountList[3]),
-                                  ],
-                                ),
-                                SizedBox(height: SizeConfig.padding32),
+                                // Row(
+                                //   mainAxisAlignment:
+                                //       MainAxisAlignment.spaceEvenly,
+                                //   children: [
+                                //     model.amoutChip(model.chipAmountList[0]),
+                                //     model.amoutChip(model.chipAmountList[1]),
+                                //     model.amoutChip(model.chipAmountList[2]),
+                                //     // model.amoutChip(model.chipAmountList[3]),
+                                //   ],
+                                // ),
+                                // SizedBox(height: SizeConfig.padding32),
                                 Container(
                                   margin: EdgeInsets.only(
                                       bottom: SizeConfig.padding24),
@@ -376,32 +407,13 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                                       .unfocus();
                                                   model.initiateSell();
                                                 }
+                                                // model.showSuccessGoldSellDialog(
+                                                //     title: "Hello World!",
+                                                //     vpa: "abc@paytm");
                                               },
                                             ),
                                           )),
-                                SizedBox(
-                                  height: SizeConfig.padding20,
-                                ),
-                                RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text:
-                                        "Your balance will be credited to your registered bank account within ",
-                                    style: TextStyles.body3.colour(Colors.grey),
-                                    children: [
-                                      TextSpan(
-                                        text: "1-2 business working days",
-                                        style: TextStyles.body3.bold
-                                            .colour(UiConstants.tertiarySolid),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                // Text(
-                                //   "You will receive the amount within 24-48 hours",
-                                //   textAlign: TextAlign.center,
-                                //   style: TextStyles.body3.colour(Colors.grey),
-                                // ),
+
                                 SizedBox(height: SizeConfig.padding80),
                               ],
                             )),
@@ -414,7 +426,11 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
             Consumer<AppState>(
                 builder: (ctx, m, child) =>
                     AppState.delegate.appState.isTxnLoaderInView
-                        ? TransactionLoader()
+                        ? TransactionLoader(
+                            title: "Processing withdrawal..",
+                            subtitle:
+                                "Please do not press back while we complete the transaction",
+                          )
                         : SizedBox()),
           ],
         ),
@@ -428,7 +444,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     String _dtStr = DateFormat("dd MMMM").format(_dt);
     int _hrs = Constants.AUG_GOLD_WITHDRAW_OFFSET * 24;
 
-    return '${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
+    return model.withdrawalbeQtyMessage.isNotEmpty
+        ? model.withdrawalbeQtyMessage
+        : ""; //'${model.nonWithdrawableQnt} grams is locked. Digital Gold can be withdrawn after $_hrs hours of successful deposit.';
   }
 
   dialogContent(BuildContext context) {
@@ -765,7 +783,7 @@ class AddUpiTile extends StatelessWidget {
               ? FelloBriefTile(
                   leadingAsset: Assets.upiIcon,
                   title: "Add UPI Id",
-                  subtitle: "For instant withdrawals",
+                  subtitle: "Required for withdrawals",
                   onTap: () {
                     AppState.delegate.appState.currentAction = PageAction(
                         page: UserUpiDetailsViewPageConfig,

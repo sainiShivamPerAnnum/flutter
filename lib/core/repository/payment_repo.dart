@@ -15,8 +15,10 @@ class PaymentRepository extends BaseRepo {
 
   final UserService _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
+  Future<ApiResponse<Map<String, dynamic>>>
+      getWithdrawableAugGoldQuantity() async {
     try {
+      String withdrawableQtyResponse = "";
       final token = await getBearerToken();
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
@@ -27,13 +29,20 @@ class PaymentRepository extends BaseRepo {
       );
 
       final quantity = quantityResponse["data"]["quantity"].toDouble();
+
+      if (quantityResponse["data"]["lockedQuantity"] != null &&
+          quantityResponse["data"]["lockedQuantity"] != 0)
+        withdrawableQtyResponse = quantityResponse["message"];
+
       if (quantityResponse["data"]["vpa"] != null &&
           quantityResponse["data"]["vpa"].toString().isNotEmpty) {
         _userService.setMyUpiId(quantityResponse["data"]["vpa"]);
         _baseUtil.isUpiInfoMissing = false;
       }
 
-      return ApiResponse(model: quantity, code: 200);
+      return ApiResponse(
+          model: {"quantity": quantity, "message": withdrawableQtyResponse},
+          code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch QUNTITY", 400);

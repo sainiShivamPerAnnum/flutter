@@ -52,7 +52,7 @@ class Transactions extends StatelessWidget {
                     ),
                     FelloBriefTile(
                       leadingAsset: Assets.txnHistory,
-                      title: "Transaction History and Invoice",
+                      title: "Transaction History",
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                       onTap: () => onTap(TransactionsHistoryPageConfig),
                     ),

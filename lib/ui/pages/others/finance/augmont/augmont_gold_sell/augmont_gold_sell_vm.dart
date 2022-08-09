@@ -64,6 +64,7 @@ class AugmontGoldSellViewModel extends BaseModel {
 
   double nonWithdrawableQnt = 0.0;
   double withdrawableQnt = 0.0;
+  String withdrawalbeQtyMessage = "";
   TextEditingController goldAmountController;
   List<double> chipAmountList = [25, 50, 100];
 
@@ -85,7 +86,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     await fetchNotices();
     fetchGoldRates();
     await fetchLockedGoldQnt();
-
+    FocusScope.of(AppState.delegate.navigatorKey.currentContext).requestFocus();
     if (_baseUtil.augmontDetail == null) {
       await _baseUtil.fetchUserAugmontDetail();
     }
@@ -150,10 +151,11 @@ class AugmontGoldSellViewModel extends BaseModel {
     isQntFetching = true;
     refresh();
     await _userService.getUserFundWalletData();
-    ApiResponse<double> qunatityApiResponse =
+    ApiResponse<Map<String, dynamic>> qunatityApiResponse =
         await _paymentRepo.getWithdrawableAugGoldQuantity();
     if (qunatityApiResponse.code == 200) {
-      withdrawableQnt = qunatityApiResponse.model;
+      withdrawableQnt = qunatityApiResponse.model["quantity"];
+      withdrawalbeQtyMessage = qunatityApiResponse.model["message"];
       if (withdrawableQnt == null || withdrawableQnt < 0) withdrawableQnt = 0.0;
       if (userFundWallet == null ||
           userFundWallet.augGoldQuantity == null ||
@@ -211,6 +213,11 @@ class AugmontGoldSellViewModel extends BaseModel {
     if (sellGramAmount < 0.0001) {
       BaseUtil.showNegativeAlert(
           "Amount too low", "Please enter a greater amount");
+      return;
+    }
+    if (sellGramAmount > 50000) {
+      BaseUtil.showNegativeAlert("Please enter a lower quantity",
+          "A maximum of 8 gms can be sold in one go");
       return;
     }
     if (sellGramAmount > userFundWallet.augGoldQuantity) {
@@ -293,28 +300,47 @@ class AugmontGoldSellViewModel extends BaseModel {
   // }
 
   handleWithdrawalFcmResponse(String data) {
-    if (AppState.delegate.appState.isTxnLoaderInView == false) return;
+    _userCoinService.getUserCoinBalance();
+    _transactionService.updateTransactions();
+    _userService.getUserFundWalletData();
+    final response = json.decode(data);
+    print(response['status']);
+    if (AppState.delegate.appState.isTxnLoaderInView == false) {
+      if (response['status'] != null) {
+        if (response['status'])
+          BaseUtil.showPositiveAlert(
+              "Your withdrawal was successful",
+              response["message"] ??
+                  "Check your transactions for more details");
+        else {
+          BaseUtil.showNegativeAlert(
+              'Sell did not complete',
+              response["message"] ??
+                  'Your gold sell could not be completed at the moment',
+              seconds: 5);
+        }
+      }
+      return;
+    }
     AppState.delegate.appState.isTxnLoaderInView = false;
     log(data);
 
-    final response = json.decode(data);
-    print(response['status']);
     if (response != null &&
         response['status'] != null &&
         response['status'] == true) {
-      showSuccessGoldSellDialog();
-      _userCoinService.getUserCoinBalance();
-      _transactionService.updateTransactions();
-      _userService.getUserFundWalletData();
+      showSuccessGoldSellDialog(
+          title: response["message"], vpa: response["vpa"]);
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert('Sell did not complete',
-          'Your gold sell could not be completed at the moment',
+      BaseUtil.showNegativeAlert(
+          'Sell did not complete',
+          response["message"] ??
+              'Your gold sell could not be completed at the moment',
           seconds: 5);
     }
   }
 
-  showSuccessGoldSellDialog() {
+  showSuccessGoldSellDialog({String title, String vpa}) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -335,19 +361,28 @@ class AugmontGoldSellViewModel extends BaseModel {
               style: TextStyles.title3.bold,
             ),
             SizedBox(height: SizeConfig.padding16),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                text:
-                    "Your withdrawal was successful to your bank account with UPI Id ",
-                style: TextStyles.body3.colour(Colors.black54),
-                children: [
-                  TextSpan(
-                    text: "${_userService.upiId}",
-                    style:
-                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
-                  )
-                ],
+            Text(title ?? "Your withdrawal was successful",
+                style: TextStyles.body3.colour(Colors.black54)),
+            SizedBox(height: SizeConfig.padding16),
+            Container(
+              decoration: BoxDecoration(
+                color: UiConstants.primaryLight.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              ),
+              child: ListTile(
+                leading: CircleAvatar(
+                    backgroundColor: Color(0xffE3F4F7),
+                    child: SvgPicture.asset(Assets.upiIcon,
+                        height: SizeConfig.iconSize1)),
+                title: Text(
+                  vpa ?? _userService.upiId,
+                  style: TextStyles.body2.bold,
+                ),
+                trailing: Icon(
+                  Icons.verified,
+                  size: SizeConfig.padding24,
+                  color: UiConstants.primaryColor,
+                ),
               ),
             ),
             SizedBox(height: SizeConfig.screenHeight * 0.02),
@@ -360,6 +395,7 @@ class AugmontGoldSellViewModel extends BaseModel {
                 ),
                 color: UiConstants.primaryColor,
                 onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
                   AppState.backButtonDispatcher.didPopRoute();
                   AppState.backButtonDispatcher.didPopRoute();
                 },
