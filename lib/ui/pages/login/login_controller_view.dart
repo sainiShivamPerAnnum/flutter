@@ -5,7 +5,6 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -62,14 +61,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[
-            Positioned(
-              bottom: 0,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight / 3,
-                color: Colors.white,
-              ),
-            ),
             Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
@@ -81,12 +72,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       scrollDirection: Axis.horizontal,
                       controller: model.controller,
                       itemCount: model.pages.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return model.pages[index];
-                      },
-                      onPageChanged: (int index) {
-                        model.currentPage = index;
-                      },
+                      itemBuilder: (BuildContext context, int index) =>
+                          model.pages[index],
+                      onPageChanged: (int index) => model.currentPage = index,
                     ),
                   ),
                 ],
