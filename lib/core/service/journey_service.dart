@@ -116,8 +116,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   Future<void> init() async {
-    // await getAvatarRemoteLevel();
-    // getAvatarLocalLevel();
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
   }

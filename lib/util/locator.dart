@@ -166,9 +166,9 @@ void setupLocator() {
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
   locator.registerFactory(() => UsernameInputScreenViewModel());
-  locator.registerFactory(() => OtpInputScreenViewModel());
+  locator.registerFactory(() => LoginOtpViewModel());
   locator.registerFactory(() => NameInputScreenViewModel());
-  locator.registerFactory(() => MobileInputScreenViewModel());
+  locator.registerFactory(() => LoginMobileViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());

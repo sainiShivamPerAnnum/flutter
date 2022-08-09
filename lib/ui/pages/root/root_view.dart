@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -87,20 +88,20 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              // FelloAppBar(
-              //   key: felloAppBarKey,
-              //   leading: InkWell(
-              //     onTap: () => model.showDrawer(),
-              //     child: ProfileImageSE(
-              //       radius: SizeConfig.avatarRadius,
-              //     ),
-              //   ),
-              //   actions: [
-              //     // FelloCoinBar(),
-              //     SizedBox(width: 16),
-              //     NotificationButton(),
-              //   ],
-              // ),
+              FelloAppBar(
+                key: felloAppBarKey,
+                leading: InkWell(
+                  onTap: () => model.showDrawer(),
+                  child: ProfileImageSE(
+                    radius: SizeConfig.avatarRadius,
+                  ),
+                ),
+                actions: [
+                  // FelloCoinBar(),
+                  SizedBox(width: 16),
+                  NotificationButton(),
+                ],
+              ),
               // Positioned(
               //   bottom: 0,
               //   child: Container(
@@ -284,7 +285,7 @@ class BottomNavBar extends StatelessWidget {
                 SizeConfig.screenWidth * 0.27,
               ),
               NavBarItemData(
-                locale.navBarFinance,
+                "Finance",
                 Assets.navSave,
                 SizeConfig.screenWidth * 0.27,
               ),

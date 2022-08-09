@@ -70,8 +70,8 @@ class LauncherViewModel extends BaseModel {
 
   initLogic() async {
     try {
-      _journeyService.init();
       await userService.init();
+      _journeyService.init();
       await _journeyRepo.init();
       await CacheService.initialize();
       await BaseRemoteConfig.init();
