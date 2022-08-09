@@ -29,7 +29,7 @@ class PageAction {
 class AppState extends ChangeNotifier {
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
-  int _rootIndex = 1;
+  int _rootIndex = 0;
   bool _isTxnLoaderInView = false;
   // Future _txnFunction;
   // Timer _txnTimer;
@@ -108,7 +108,7 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex ?? 1;
+  int get getCurrentTabIndex => _rootIndex ?? 0;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
@@ -125,7 +125,7 @@ class AppState extends ChangeNotifier {
   }
 
   returnHome() {
-    _rootIndex = 1;
+    _rootIndex = 0;
     print(_rootIndex);
 
     notifyListeners();

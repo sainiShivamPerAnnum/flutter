@@ -156,9 +156,9 @@ class _JourneyViewState extends State<JourneyView>
                               Avatar(
                                 model: model,
                               ),
-                              LevelBlurView(
-                                model: model,
-                              )
+                              // LevelBlurView(
+                              //   model: model,
+                              // )
                             ],
                           ),
                         ),

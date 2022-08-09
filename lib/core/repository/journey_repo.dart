@@ -161,7 +161,7 @@ class JourneyRepository extends BaseRepo {
                 ApiPath().kJourney,
                 token: token,
                 cBaseUrl: FlavorConfig.isDevelopment()
-                    ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
+                    ? "https://jon-massive-woman-considers.trycloudflare.com/dev"
                     : "not yet found",
                 queryParams: queryParams,
               ), (dynamic responseData) {

@@ -200,17 +200,17 @@ class LoginControllerViewModel extends BaseModel {
                     userService.firebaseUser.uid,
                     _formatMobileNumber(LoginControllerView.mobileno));
               }
-              userService.baseUser.name = "Abc";
+              // userService.baseUser.name = "Abc";
 
-              userService.baseUser.email = "abc@gmail.com";
+              // userService.baseUser.email = "abc@gmail.com";
 
-              userService.baseUser.isEmailVerified = false;
+              // userService.baseUser.isEmailVerified = false;
 
-              userService.baseUser.dob = "12-05-2000";
+              // userService.baseUser.dob = "12-05-2000";
 
-              userService.baseUser.gender = "M";
+              // userService.baseUser.gender = "M";
 
-              cstate = "AR7YPqDj";
+              // cstate = "AR7YPqDj";
 //TEST DATA ----ENDS----
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 _usernameKey.currentState.model.enabled = false;
@@ -368,7 +368,7 @@ class LoginControllerViewModel extends BaseModel {
     );
     AppState.isOnboardingInProgress = false;
     setState(ViewState.Idle);
-    appStateProvider.rootIndex = 1;
+    appStateProvider.rootIndex = 0;
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {

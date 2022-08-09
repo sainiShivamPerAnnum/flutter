@@ -126,13 +126,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     else if (_baseUtil.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
-        (AppState.delegate.appState.rootIndex != 1)) {
+        (AppState.delegate.appState.rootIndex != 0)) {
       logger.w("Checking if app can be closed");
       // if (RootViewModel.scaffoldKey.currentState.isDrawerOpen)
       //   RootViewModel.scaffoldKey.currentState.openEndDrawer();
       // else
-      if (AppState.delegate.appState.rootIndex != 1)
-        AppState.delegate.appState.setCurrentTabIndex = 1;
+      if (AppState.delegate.appState.rootIndex != 0)
+        AppState.delegate.appState.setCurrentTabIndex = 0;
       return Future.value(true);
     }
 
