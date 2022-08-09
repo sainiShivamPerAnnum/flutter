@@ -52,8 +52,8 @@ class FelloCoinBar extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(SizeConfig.padding8),
                 padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding12,
-                ),
+                    horizontal: SizeConfig.padding12,
+                    vertical: SizeConfig.padding10),
                 decoration: BoxDecoration(
                   color: UiConstants.kTextFieldColor.withOpacity(0.4),
                   border: Border.all(color: borderColor ?? Colors.white10),
@@ -64,47 +64,14 @@ class FelloCoinBar extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       svgAsset,
-                      height: size ?? SizeConfig.padding24,
-                      width: size ?? SizeConfig.padding24,
+                      height: size ?? SizeConfig.padding20,
+                      width: size ?? SizeConfig.padding20,
                     ),
                     SizedBox(width: SizeConfig.padding4),
                     CoinBalanceTextSE(),
-                    // Text(
-                    //   coin,
-                    //   style: style ?? TextStyles.sourceSansSB.body2,
-                    // ),
                   ],
                 ),
               ),
-              // child: Container(
-              //   height: SizeConfig.avatarRadius * 2,
-              //   width: SizeConfig.screenWidth * 0.258,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(100),
-              //     color: Colors.white.withOpacity(0.4),
-              //   ),
-              //   child: model.isLoadingFlc
-              //       ? SpinKitThreeBounce(
-              //           size: SizeConfig.body2,
-              //           color: Colors.white,
-              //         )
-              //       : Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //           children: [
-              //             SvgPicture.asset(
-              //               Assets.tokens,
-              //               height: SizeConfig.iconSize1,
-              //             ),
-              //            CoinBalanceTextSE(),
-              //             //  Text("200", style: TextStyles.body2.bold),
-              //             Icon(
-              //               Icons.add_circle,
-              //               size: SizeConfig.iconSize1,
-              //               color: UiConstants.primaryColor,
-              //             ),
-              //           ],
-              //         ),
-              // ),
             ),
     );
   }

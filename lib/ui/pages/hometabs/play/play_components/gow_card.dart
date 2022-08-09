@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/widgets/button4.0/appBar_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -43,18 +43,21 @@ class GOWCard extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Container(
-                    height: SizeConfig.screenWidth * 0.474,
-                    width: SizeConfig.screenWidth,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                              model.gow.thumbnailUri),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.roundness12),
-                        topRight: Radius.circular(SizeConfig.roundness12),
+                  Hero(
+                    tag: model.gow.code,
+                    child: Container(
+                      height: SizeConfig.screenWidth * 0.474,
+                      width: SizeConfig.screenWidth,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                model.gow.thumbnailUri),
+                            fit: BoxFit.cover),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.roundness12),
+                          topRight: Radius.circular(SizeConfig.roundness12),
+                        ),
                       ),
                     ),
                   ),

@@ -28,6 +28,14 @@ class WinViewModel extends BaseModel {
   final _campaignRepo = locator<CampaignRepo>();
 
   Timer _timer;
+  bool _showOldView = false;
+  bool get showOldView => this._showOldView;
+
+  set showOldView(bool value) {
+    this._showOldView = value;
+    notifyListeners();
+  }
+
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel _winners;

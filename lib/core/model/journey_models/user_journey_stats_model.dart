@@ -8,29 +8,31 @@ class UserJourneyStatsModel {
   final int level;
   final int mlIndex;
   final String mlId;
-  final String nextPrizeSubtype;
+  final String prizeSubtype;
+  final int skipCount;
   UserJourneyStatsModel({
     @required this.page,
     @required this.level,
     @required this.mlIndex,
     @required this.mlId,
-    @required this.nextPrizeSubtype,
+    @required this.prizeSubtype,
+    @required this.skipCount,
   });
 
-  UserJourneyStatsModel copyWith({
-    int page,
-    int level,
-    int mlIndex,
-    String mlId,
-    String nextPrizeSubtype,
-  }) {
+  UserJourneyStatsModel copyWith(
+      {int page,
+      int level,
+      int mlIndex,
+      String mlId,
+      String nextPrizeSubtype,
+      int skipCount}) {
     return UserJourneyStatsModel(
-      page: page ?? this.page,
-      level: level ?? this.level,
-      mlIndex: mlIndex ?? this.mlIndex,
-      mlId: mlId ?? this.mlId,
-      nextPrizeSubtype: nextPrizeSubtype ?? this.nextPrizeSubtype,
-    );
+        page: page ?? this.page,
+        level: level ?? this.level,
+        mlIndex: mlIndex ?? this.mlIndex,
+        mlId: mlId ?? this.mlId,
+        prizeSubtype: nextPrizeSubtype ?? this.prizeSubtype,
+        skipCount: skipCount ?? this.skipCount);
   }
 
   Map<String, dynamic> toMap() {
@@ -39,7 +41,8 @@ class UserJourneyStatsModel {
       'level': level,
       'mlIndex': mlIndex,
       'mlId': mlId,
-      'nextPrizeSubtype': nextPrizeSubtype,
+      'prizeSubtype': prizeSubtype,
+      "skipCount": skipCount
     };
   }
 
@@ -49,7 +52,8 @@ class UserJourneyStatsModel {
       level: map['level'] as int,
       mlIndex: map['mlIndex'] as int,
       mlId: map['mlId'] as String,
-      nextPrizeSubtype: map['nextPrizeSubtype'] as String,
+      skipCount: map["skipCount"] as int,
+      prizeSubtype: map['prizeSubtype'] as String,
     );
   }
 
@@ -61,7 +65,7 @@ class UserJourneyStatsModel {
 
   @override
   String toString() {
-    return 'UserJourneyStatsModel(page: $page, level: $level, mlIndex: $mlIndex, mlId: $mlId, nextPrizeSubtype: $nextPrizeSubtype)';
+    return 'UserJourneyStatsModel(page: $page, level: $level, mlIndex: $mlIndex, mlId: $mlId, nextPrizeSubtype: $prizeSubtype)';
   }
 
   @override
@@ -73,7 +77,7 @@ class UserJourneyStatsModel {
         other.level == level &&
         other.mlIndex == mlIndex &&
         other.mlId == mlId &&
-        other.nextPrizeSubtype == nextPrizeSubtype;
+        other.prizeSubtype == prizeSubtype;
   }
 
   @override
@@ -82,6 +86,6 @@ class UserJourneyStatsModel {
         level.hashCode ^
         mlIndex.hashCode ^
         mlId.hashCode ^
-        nextPrizeSubtype.hashCode;
+        prizeSubtype.hashCode;
   }
 }

@@ -1,11 +1,6 @@
-import 'dart:developer';
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -23,15 +18,13 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  final pages = [Play(), JourneyView(), Save()];
+  final pages = [JourneyView(), Play(), Save(), Win()];
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +69,6 @@ class Root extends StatelessWidget {
                 backgroundColor: Colors.black,
                 onRefresh: model.refresh,
                 child: Container(
-                  // margin: EdgeInsets.only(
-                  //     top: SizeConfig.screenWidth * 0.1 +
-                  //         SizeConfig.viewInsets.top +
-                  //         SizeConfig.padding32),
                   child: Consumer<AppState>(
                     builder: (ctx, m, child) => IndexedStack(
                       children: pages,
@@ -88,165 +77,33 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              FelloAppBar(
-                key: felloAppBarKey,
-                leading: InkWell(
-                  onTap: () => model.showDrawer(),
-                  child: ProfileImageSE(
-                    radius: SizeConfig.avatarRadius,
+              if (AppState.delegate.appState.getCurrentTabIndex == 3)
+                FelloAppBar(
+                  showAppBar: false,
+                  leading: InkWell(
+                    onTap: model.showDrawer,
+                    child: Container(
+                      width: SizeConfig.padding38,
+                      height: SizeConfig.padding38,
+                      // color: Colors.red,
+                    ),
                   ),
+                  actions: [
+                    // FelloCoinBar(),
+                    // SizedBox(width: 16),
+                    NotificationButton(),
+                  ],
                 ),
-                actions: [
-                  // FelloCoinBar(),
-                  SizedBox(width: 16),
-                  NotificationButton(),
-                ],
-              ),
-              // Positioned(
-              //   bottom: 0,
-              //   child: Container(
-              //     width: SizeConfig.screenWidth,
-              //     height: SizeConfig.navBarHeight,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //           begin: Alignment.bottomCenter,
-              //           end: Alignment.topCenter,
-              //           colors: [
-              //             UiConstants.scaffoldColor.withOpacity(0.8),
-              //             UiConstants.scaffoldColor.withOpacity(0.2),
-              //           ],
-              //           stops: [
-              //             0.8,
-              //             1
-              //           ]),
-              //     ),
-              //     child: BackdropFilter(
-              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              //     ),
-              //   ),
-              // ),
-              // if (SizeConfig.screenWidth < 600)
-              //   WantMoreTickets(
-              //     model: model,
-              //   ),
-              // if (SizeConfig.screenWidth < 600)
-              //   SaveBaseline(
-              //     model: model,
-              //   ),
-              // BottomNavBar(
-              //   model: model,
-              // ),
               Consumer<AppState>(
                   builder: (ctx, m, child) =>
                       AppState.delegate.appState.isTxnLoaderInView
                           ? TransactionLoader()
                           : SizedBox()),
-
-              // if (SizeConfig.screenWidth < 600)
-              //   WantMoreTickets(
-              //     model: model,
-              //   ),
-              // if (SizeConfig.screenWidth < 600)
-              //   SaveBaseline(
-              //     model: model,
-              //   ),
               BottomNavBar(
                 model: model,
               ),
-              // Consumer<AppState>(
-              //     builder: (ctx, m, child) =>
-              //         AppState.delegate.appState.isTxnLoaderInView
-              // ? TransactionLoader()
-              //             : SizedBox()),
             ],
-
-            // if (AppState.delegate.appState.getCurrentTabIndex != 1)
-            // FelloAppBar(
-            //   key: felloAppBarKey,
-            //   leading: InkWell(
-            //     onTap: () => model.showDrawer(),
-            //     child: ProfileImageSE(
-            //       radius: SizeConfig.avatarRadius,
-            //     ),
-            //   ),
-            //   actions: [
-            //     FelloCoinBar(),
-            //     SizedBox(width: 5),
-            //     NotificationButton(),
-            //     SizedBox(width: 5),
-
-            //     CircleAvatar(
-            //       backgroundColor: Colors.black,
-            //       child: IconButton(
-            //         color: Colors.white,
-            //         icon: model.isUploading
-            //             ? CircularProgressIndicator(color: Colors.black)
-            //             : Icon(Icons.upload_rounded),
-            //         onPressed: () {
-            //           model.uploadJourneyPage();
-            //         },
-            //       ),
-            //     ),
-            // SizedBox(width: 5),
-            // CircleAvatar(
-            //   backgroundColor: Colors.black,
-            //   child: IconButton(
-            //     color: Colors.white,
-            //     icon: model.isUploading
-            //         ? CircularProgressIndicator(color: Colors.black)
-            //         : Icon(Icons.download_rounded),
-            //     onPressed: () {
-            //       model.completeNViewDownloadSaveLViewAsset();
-            //     },
-            //   ),
-            // )
-            // ],
           ),
-          // Positioned(
-          //   bottom: 0,
-          //   child: Container(
-          //     width: SizeConfig.screenWidth,
-          //     height: SizeConfig.navBarHeight,
-          //     decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //           begin: Alignment.bottomCenter,
-          //           end: Alignment.topCenter,
-          //           colors: [
-          //             UiConstants.scaffoldColor.withOpacity(0.8),
-          //             UiConstants.scaffoldColor.withOpacity(0.2),
-          //           ],
-          //           stops: [
-          //             0.8,
-          //             1
-          //           ]),
-          //     ),
-          //     child: BackdropFilter(
-          //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          //     ),
-          //   ),
-          // ),
-          // if (SizeConfig.screenWidth < 600)
-          //   WantMoreTickets(
-          //     model: model,
-          //   ),
-          // if (SizeConfig.screenWidth < 600)
-          //   SaveBaseline(
-          //     model: model,
-          //   ),
-          // BottomNavBar(
-          //   model: model,
-          // ),
-          // Consumer<AppState>(
-          //     builder: (ctx, m, child) =>
-          //         AppState.delegate.appState.isTxnLoaderInView
-          //             ? TransactionLoader()
-          //             : SizedBox()),
-          // if (model.svgSource.isNotEmpty)
-          //   Positioned.fill(child: SourceAdaptiveAssetView(asset: 'b1'),)
-          // ],
-          // ),
-// >>>>>>> journey_view
-          // ),
         );
       },
     );
@@ -259,35 +116,41 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = S();
+    //TODO change svg to better sizes and change bottomNavBar to flutter's native
     return Consumer<AppState>(
       builder: (ctx, m, child) => Positioned(
         bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
           width: SizeConfig.screenWidth,
-          height: SizeConfig.navBarHeight,
+          height: SizeConfig.navBarHeight * 0.74,
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness24),
           ),
           child: NavBar(
             itemTapped: (int index) => model.onItemTapped(index),
             currentIndex: AppState.delegate.appState.getCurrentTabIndex,
             items: [
               NavBarItemData(
+                locale.navBarJourney,
+                Assets.navJourneyActive,
+                Assets.navJourneyInactive,
+              ),
+              NavBarItemData(
                 locale.navBarPlay,
-                Assets.navPlay,
-                SizeConfig.screenWidth * 0.27,
+                Assets.navPlayActive,
+                Assets.navPlayInactive,
               ),
               NavBarItemData(
-                'Home',
-                Assets.navWin,
-                SizeConfig.screenWidth * 0.27,
+                locale.navBarSave,
+                Assets.navSaveActive,
+                Assets.navSaveInactive,
               ),
               NavBarItemData(
-                "Finance",
-                Assets.navSave,
-                SizeConfig.screenWidth * 0.27,
+
+                locale.navBarWin,
+                Assets.navWinActive,
+                Assets.navWinInactive,
               ),
             ],
           ),

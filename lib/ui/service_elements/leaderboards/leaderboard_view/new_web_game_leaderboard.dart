@@ -136,6 +136,7 @@ class NewLeaderBoardView extends StatelessWidget {
   }
 }
 
+//
 class RemainingRank extends StatelessWidget {
   RemainingRank({
     Key key,

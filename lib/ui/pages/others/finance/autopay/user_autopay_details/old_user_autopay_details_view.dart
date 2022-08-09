@@ -1,5 +1,4 @@
 // import 'dart:io';
-
 // import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/core/enums/page_state_enum.dart';
 // import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -37,7 +36,6 @@
 // import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:property_change_notifier/property_change_notifier.dart';
-
 // class UserAutosaveDetailsView extends StatelessWidget {
 //   const UserAutosaveDetailsView({Key key}) : super(key: key);
 

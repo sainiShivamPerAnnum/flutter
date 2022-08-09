@@ -49,7 +49,6 @@ class UserProfileDetails extends StatelessWidget {
           actions: [
             Padding(
               padding: EdgeInsets.only(right: SizeConfig.padding16),
-
               child: !model.inEditMode
                   ? TextButton.icon(
                       icon: Icon(Icons.edit_outlined,

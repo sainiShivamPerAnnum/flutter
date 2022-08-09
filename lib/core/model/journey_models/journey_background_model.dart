@@ -33,7 +33,7 @@ class JourneyBackgroundModel {
       'colors':
           colors.map((x) => x.value.toRadixString(16).substring(2)).toList(),
       'stops': stops,
-      'asset': asset.toMap(),
+      'imageRef': asset.name,
     };
   }
 

@@ -10,30 +10,31 @@ class DateHelper {
     final date2 = DateTime.now();
     final difference = date2.difference(notificationDate);
 
-    if (difference.inDays > 8) {
-      String day = notificationDate.day.toString();
-      String month = notificationDate.month.toString();
-      String year = notificationDate.year.toString();
-      String date = "$day/$month/$year";
-      return date;
-    } else if ((difference.inDays / 7).floor() >= 1) {
-      return (numericDates) ? '1 week ago' : 'Last week';
+    // if (difference.inDays > 8) {
+    //   String day = notificationDate.day.toString();
+    //   String month = notificationDate.month.toString();
+    //   String year = notificationDate.year.toString();
+    //   String date = "$day/$month/$year";
+    //   return date;
+    // } else
+    if ((difference.inDays / 7).floor() >= 1) {
+      return (numericDates) ? '1 w' : 'Last week';
     } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} d';
     } else if (difference.inDays >= 1) {
-      return (numericDates) ? '1 day ago' : 'Yesterday';
+      return (numericDates) ? '1 d' : 'Yesterday';
     } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours ago';
+      return '${difference.inHours} h';
     } else if (difference.inHours >= 1) {
-      return (numericDates) ? '1 hour ago' : 'An hour ago';
+      return (numericDates) ? '1 h' : 'An hour ago';
     } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes ago';
+      return '${difference.inMinutes} m';
     } else if (difference.inMinutes >= 1) {
-      return (numericDates) ? '1 minute ago' : 'A minute ago';
+      return (numericDates) ? '1 m' : 'A minute ago';
     } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds ago';
+      return '${difference.inSeconds} s';
     } else {
-      return 'Just now';
+      return 'now';
     }
   }
 

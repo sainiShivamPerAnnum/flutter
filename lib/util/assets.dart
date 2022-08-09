@@ -4,6 +4,8 @@ class Assets {
   static final String splashBackground = "assets/images/BG.png";
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String logoShortform = 'images/fello-short-logo.png';
+  static final String logoShortformSVG = 'assets/svg/fello-short-logo.svg';
+
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
@@ -51,6 +53,24 @@ class Assets {
   static final String navSave = "assets/vectors/icons/wallet.svg";
   static final String navWin = "assets/vectors/icons/medal.svg";
 
+  //NAVBAR - 4.0
+  static final String navPlayActive =
+      "assets/svg/BottomNavBarIcons/play_active.svg";
+  static final String navPlayInactive =
+      "assets/svg/BottomNavBarIcons/play_inactive.svg";
+  static final String navJourneyActive =
+      "assets/svg/BottomNavBarIcons/journey_active.svg";
+  static final String navJourneyInactive =
+      "assets/svg/BottomNavBarIcons/journey_inactive.svg";
+  static final String navSaveActive =
+      "assets/svg/BottomNavBarIcons/save_active.svg";
+  static final String navSaveInactive =
+      "assets/svg/BottomNavBarIcons/save_inactive.svg";
+  static final String navWinActive =
+      "assets/svg/BottomNavBarIcons/win_active.svg";
+  static final String navWinInactive =
+      "assets/svg/BottomNavBarIcons/win_inactive.svg";
+
 // ONBOARDING
   static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
   static final String otpAuth = "assets/vectors/otp_auth2.svg";
@@ -93,6 +113,13 @@ class Assets {
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String processing = "assets/vectors/processing.svg";
+  static final String digitalGoldBar = 'assets/svg/save_digital_gold.svg';
+  static final String stableFello = 'assets/svg/save_stable_fello.svg';
+  static final String autoSaveDefault = 'assets/svg/save_auto_sip.svg';
+  static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
+  static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
+  static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';
+  static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
 
   // WIN
 
@@ -151,6 +178,10 @@ class Assets {
   static final String congrats = "assets/vectors/congrats.svg";
   static final String noTickets = "assets/vectors/no_tickets.svg";
   static final String noData = "assets/lotties/no_data.json";
+  static final String snackbarWifiIcon = "assets/svg/snackbar_wifi_icon.svg";
+  static final String snackbarAlertIcon = "assets/svg/snackbar_alert_icon.svg";
+  static final String snackbarLoadingIcon =
+      "assets/svg/snackbar_loading_icon.svg";
 
   //FELLO REWARDS
   // static final String digitalGold = "images/augmont-share.png";
@@ -179,6 +210,26 @@ class Assets {
   // Web Home View (GameInfoBlock Asset)
   static final String rewardGameAsset = 'assets/svg/reward_svg.svg';
   static final String circleGameAsset = 'assets/svg/circle_svg.svg';
+
+  //Campaign Screen
+  static final String visualGridAsset = "assets/svg/visual_grid.svg";
+  static final String coinsIconAsset = "assets/svg/coins.svg";
+  static final String rankIconAsset = "assets/svg/rank.svg";
+  static final String bannerTrophy = "assets/images/banner_trophy.png";
+
+  static final String chevronAsset = " assets/temp/chevron_right.svg";
+
+  static final String singleStarAsset = "assets/svg/star_single.svg";
+  static final String singleCoinAsset = "assets/svg/coin_single.svg";
+  static final String singleTmbolaTicket =
+      "assets/svg/tambola_ticket_single.svg";
+
+  //Notificatiion alert screen
+  static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
+
+  static final String goldenTicketAsset = "assets/svg/deposite_complete.svg";
+
+  static final String couponsAsset = "assets/svg/coupons.svg";
 
   static final List<String> onboardingHeader = [
     'Save',
