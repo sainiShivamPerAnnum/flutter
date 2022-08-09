@@ -231,12 +231,6 @@ class RootViewModel extends BaseModel {
       _isInitialized = true;
       _initAdhocNotifications();
 
-      bool res = await _localDBModel.showHomeTutorial;
-      if (res) {
-        bool result = await _userService.completeOnboarding();
-        if (result) _localDBModel.setShowHomeTutorial = false;
-      }
-
       _baseUtil.getProfilePicture();
       // show security modal
       if (showSecurityPrompt &&

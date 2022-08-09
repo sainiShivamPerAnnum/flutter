@@ -450,6 +450,13 @@ class LoginControllerViewModel extends BaseModel {
         eventName: AnalyticsEvents.signupComplete,
         properties: {'uid': userService.baseUser.uid},
       );
+
+      bool res = await lclDbProvider.showHomeTutorial;
+      if (res) {
+        bool result = await userService.completeOnboarding();
+        if (result) lclDbProvider.setShowHomeTutorial = false;
+      }
+
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 

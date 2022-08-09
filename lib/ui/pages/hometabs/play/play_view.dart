@@ -7,8 +7,10 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -46,26 +48,24 @@ class Play extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding20,
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     AppState.delegate.appState.currentAction = PageAction(
-              //       state: PageState.addPage,
-              //       page: OnBoardingViewPageConfig,
-              //     );
-              //   },
-              //   child: Container(
-              //     width: 30,
-              //     height: 30,
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       shape: BoxShape.circle,
-              //     ),
-              //     child: Icon(Icons.list, color: Colors.black),
-              //   ),
-              // ),
-              // SizedBox(
-              //   width: SizeConfig.padding20,
-              // ),
+              GestureDetector(
+                onTap: () {
+                  final rootvm = locator<RootViewModel>();
+                  rootvm.showDrawer();
+                },
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.list, color: Colors.black),
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.padding20,
+              ),
             ],
           ),
           body: SingleChildScrollView(
