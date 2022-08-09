@@ -7,7 +7,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-class MobileInputScreenViewModel extends BaseModel {
+class LoginMobileViewModel extends BaseModel {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();

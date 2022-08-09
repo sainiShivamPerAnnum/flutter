@@ -21,14 +21,14 @@ class LowerCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-class User4 extends StatefulWidget {
+class LoginUserNameView extends StatefulWidget {
   static const int index = 2;
-  const User4({Key key}) : super(key: key);
+  const LoginUserNameView({Key key}) : super(key: key);
   @override
-  State<User4> createState() => User4State();
+  State<LoginUserNameView> createState() => LoginUserNameViewState();
 }
 
-class User4State extends State<User4> {
+class LoginUserNameViewState extends State<LoginUserNameView> {
   UsernameInputScreenViewModel model;
 
   @override

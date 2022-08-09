@@ -1,9 +1,14 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 class AppTextFieldLabel extends StatelessWidget {
   final String text;
@@ -346,6 +351,84 @@ class AppPositiveBtn extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class ReactivePositiveAppButton extends StatefulWidget {
+  const ReactivePositiveAppButton({
+    Key key,
+    @required this.btnText,
+    @required this.onPressed,
+    this.width,
+  }) : super(key: key);
+  final String btnText;
+  final Function onPressed;
+  final double width;
+  @override
+  State<ReactivePositiveAppButton> createState() =>
+      _ReactivePositiveAppButtonState();
+}
+
+class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
+  bool _isLoading = false;
+  get isLoading => this._isLoading;
+
+  set isLoading(value) {
+    if (mounted)
+      setState(() {
+        this._isLoading = value;
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ConnectivityStatus>(
+        builder: (ctx, model, child) => Container(
+              height: SizeConfig.screenWidth * 0.1556,
+              width: widget.width ??
+                  SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.buttonBorderRadius,
+                ),
+                gradient: LinearGradient(
+                  colors: model == ConnectivityStatus.Offline
+                      ? [
+                          UiConstants.kTextColor,
+                          Colors.grey,
+                          Colors.black,
+                        ]
+                      : [
+                          Color.fromARGB(255, 168, 230, 219),
+                          Color(0xff12BC9D),
+                          Color(0xff249680),
+                        ],
+                  stops: [0.01, 0.3, 1],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: MaterialButton(
+                // padding: EdgeInsets.zero,
+                onPressed: model == ConnectivityStatus.Offline
+                    ? BaseUtil.showNoInternetAlert
+                    : () async {
+                        if (isLoading) return;
+                        isLoading = true;
+                        await widget.onPressed();
+                        isLoading = false;
+                      },
+                child: isLoading
+                    ? SpinKitThreeBounce(
+                        size: SizeConfig.title5,
+                        color: Colors.white,
+                      )
+                    : Text(
+                        widget.btnText.toUpperCase(),
+                        style: TextStyles.rajdhaniB.title5,
+                      ),
+              ),
+            ));
   }
 }
 

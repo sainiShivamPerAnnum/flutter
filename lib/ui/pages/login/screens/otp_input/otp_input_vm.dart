@@ -2,7 +2,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
-class OtpInputScreenViewModel extends BaseModel {
+class LoginOtpViewModel extends BaseModel {
   final pinEditingController = new TextEditingController();
   Log log = new Log("OtpInputScreen");
   FocusNode _focusNode;

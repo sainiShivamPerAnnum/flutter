@@ -1,4 +1,4 @@
-// import 'package:device_preview/device_preview.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
@@ -27,7 +27,6 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -61,25 +60,13 @@ import 'core/service/notifier_services/user_coin_service.dart';
 //   await mainInit();
 //   runApp(MyApp());
 // }
-
 Future mainInit() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await PreferenceHelper.initiate();
-    await Firebase.initializeApp(
-      name: "Fello",
-      options: FirebaseOptions(
-          apiKey: "AIzaSyDx_08AOnLkIY5Ui5ENQx_wMv3VeDODwR8",
-          authDomain: "fello-dev-station.firebaseapp.com",
-          databaseURL:
-              "https://fello-dev-station-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "fello-dev-station",
-          storageBucket: "fello-dev-station.appspot.com",
-          messagingSenderId: "76548371644",
-          appId: "1:76548371644:web:6d4c05206b16118b174cb9",
-          measurementId: "G-7GGFTPBVCX"),
-    );
+
+    await Firebase.initializeApp();
   } catch (e) {
     print('Firebase initialisation error: $e');
   }
@@ -158,9 +145,8 @@ class _MyAppState extends State<MyApp> {
                         PaytmServiceProperties>(
                       value: locator<PaytmService>(),
                       child: MaterialApp.router(
-                        // locale: DevicePreview.locale(context),
-                        // // Add the locale here
-                        // builder: DevicePreview.appBuilder,
+                        locale: DevicePreview.locale(context),
+                        builder: DevicePreview.appBuilder,
                         title: Constants.APP_NAME,
                         theme: FelloTheme.lightMode(),
                         useInheritedMediaQuery: true,

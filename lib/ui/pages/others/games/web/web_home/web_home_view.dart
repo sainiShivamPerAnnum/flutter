@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/game_model.dart';
-import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
@@ -257,7 +257,7 @@ class WebHomeView extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Padding(
                     padding: EdgeInsets.only(bottom: SizeConfig.padding24),
-                    child: AppPositiveBtn(
+                    child: ReactivePositiveAppButton(
                       btnText: 'Play',
                       onPressed: () async {
                         Haptic.vibrate();
@@ -266,7 +266,6 @@ class WebHomeView extends StatelessWidget {
                         }
                         // model.pageController.jumpToPage(1);
                       },
-                      width: SizeConfig.screenWidth * 0.8,
                     ),
                   ),
                 ),
@@ -477,10 +476,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                     color: Colors.grey,
                   ),
                 )
-              : Image.network(
-                  game.thumbnailUri,
-                  fit: BoxFit.cover,
-                ),
+              : Hero(
+                  tag: game.code,
+                  child: CachedNetworkImage(
+                    imageUrl: game.thumbnailUri,
+                    fit: BoxFit.cover,
+                  )),
         ),
         Positioned(
           top: expandedHeight -

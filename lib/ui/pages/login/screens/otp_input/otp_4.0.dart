@@ -13,14 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class OTP4 extends StatefulWidget {
+class LoginOtpView extends StatefulWidget {
   final VoidCallback otpEntered;
   final VoidCallback resendOtp;
   final VoidCallback changeNumber;
   static const int index = 1; //pager index
   final String mobileNo;
 
-  OTP4({
+  LoginOtpView({
     Key key,
     this.otpEntered,
     this.resendOtp,
@@ -29,18 +29,18 @@ class OTP4 extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<OTP4> createState() => OTP4State();
+  State<LoginOtpView> createState() => LoginOtpViewState();
 }
 
-class OTP4State extends State<OTP4> {
-  OtpInputScreenViewModel model;
+class LoginOtpViewState extends State<LoginOtpView> {
+  LoginOtpViewModel model;
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     final baseProvider = Provider.of<BaseUtil>(context, listen: true);
     final logger = locator<CustomLogger>();
-    return BaseView<OtpInputScreenViewModel>(
+    return BaseView<LoginOtpViewModel>(
       onModelReady: (model) {
         this.model = model;
         model.init(context);

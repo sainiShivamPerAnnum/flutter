@@ -1,10 +1,13 @@
 import 'dart:io';
-
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
@@ -57,83 +60,22 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
         resizeToAvoidBottomInset: false,
-        // floatingActionButton: keyboardIsOpen && Platform.isIOS
-        //     ? FloatingActionButton(
-        //         child: Icon(
-        //           Icons.done,
-        //           color: Colors.white,
-        //         ),
-        //         backgroundColor: UiConstants.tertiarySolid,
-        //         onPressed: () => FocusScope.of(context).unfocus(),
-        //       )
-        //     : SizedBox(),
         body: Stack(
           children: <Widget>[
-            Positioned(
-              bottom: 0,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight / 3,
-                color: Colors.white,
-              ),
-            ),
             Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
               child: Column(
                 children: [
-                  // ValueListenableBuilder(
-                  //   valueListenable: model.pageNotifier,
-                  //   builder: (ctx, value, child) {
-                  //     return value < 2.0
-                  //         ? SizedBox(
-                  //             height: kToolbarHeight,
-                  //           )
-                  //         : FelloAppBar(
-                  //             leading: FelloAppBarBackButton(
-                  //               onBackPress: () {
-                  //                 if (value == 3)
-                  //                   model.controller.previousPage(
-                  //                       duration: Duration(milliseconds: 600),
-                  //                       curve: Curves.easeInOut);
-                  //                 else
-                  //                   AppState.delegate.appState.currentAction =
-                  //                       PageAction(
-                  //                           state: PageState.replaceAll,
-                  //                           page: SplashPageConfig);
-                  //               },
-                  //             ),
-                  //             title: value < 3
-                  //                 ? locale.abCompleteYourProfile
-                  //                 : locale.abGamingName,
-                  //           );
-                  //   },
-                  // ),
                   Expanded(
                     child: PageView.builder(
                       physics: new NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       controller: model.controller,
                       itemCount: model.pages.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        //print(index - _controller.page);
-                        return ValueListenableBuilder(
-                          valueListenable: model.pageNotifier,
-                          builder: (ctx, value, _) {
-                            final factorChange = value - index;
-                            return Opacity(
-                              opacity: (1 - factorChange.abs()).clamp(0.0, 1.0),
-                              child: model.pages[index % model.pages.length],
-                            );
-                          },
-                        );
-                      },
-                      onPageChanged: (int index) {
-                        setState(() {
-                          model.formProgress = 0.2 * (index + 1);
-                          model.currentPage = index;
-                        });
-                      },
+                      itemBuilder: (BuildContext context, int index) =>
+                          model.pages[index],
+                      onPageChanged: (int index) => model.currentPage = index,
                     ),
                   ),
                 ],
@@ -147,120 +89,88 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // (model.currentPage == MobileInputScreenView.index)
-                      //     ? Padding(
-                      //         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      //         child: RichText(
-                      //           text: new TextSpan(
-                      //             children: [
-                      //               new TextSpan(
-                      //                 text: 'By continuing, you agree to our ',
-                      //                 style: TextStyles.body3
-                      //                     .colour(Colors.black45),
-                      //               ),
-                      //               new TextSpan(
-                      //                 text: 'Terms of Service',
-                      //                 style: TextStyles.body3
-                      //                     .colour(Colors.black45)
-                      //                     .underline,
-                      //                 recognizer: new TapGestureRecognizer()
-                      //                   ..onTap = () {
-                      //                     Haptic.vibrate();
-                      //                     BaseUtil.launchUrl(
-                      //                         'https://fello.in/policy/tnc');
-                      //                     // appStateProvider.currentAction = PageAction(
-                      //                     //     state: PageState.addPage,
-                      //                     //     page: TncPageConfig);
-                      //                   },
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       )
-                      //     : Container(),
-                      // model.loginUsingTrueCaller
-                      //     ? Container(
-                      //         width: SizeConfig.screenWidth,
-                      //         padding: EdgeInsets.fromLTRB(
-                      //             0, 10, 0, Platform.isIOS ? 0 : 20),
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.center,
-                      //           crossAxisAlignment: CrossAxisAlignment.end,
-                      //           children: <Widget>[
-                      //             new Container(
-                      //               width: SizeConfig.screenWidth -
-                      //                   SizeConfig.pageHorizontalMargins * 2,
-                      //               child: FelloButtonLg(
-                      //                 color: Colors.white,
-                      //                 child: Row(
-                      //                   mainAxisAlignment:
-                      //                       MainAxisAlignment.center,
-                      //                   children: [
-                      //                     Text(
-                      //                       "Logging in with",
-                      //                       style: TextStyles.body3.bold
-                      //                           .colour(Color(0xff1180FF)),
-                      //                     ),
-                      //                     Image.asset(
-                      //                       Assets.truecaller,
-                      //                       height: SizeConfig.body1,
-                      //                     ),
-                      //                     SizedBox(
-                      //                       width: SizeConfig.padding4,
-                      //                     ),
-                      //                     SpinKitThreeBounce(
-                      //                       color: Color(0xff1180FF),
-                      //                       size: SizeConfig.body1,
-                      //                     )
-                      //                   ],
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       )
-                      // : Container(
-                      //     width: SizeConfig.screenWidth,
-                      //     padding: EdgeInsets.fromLTRB(
-                      //       0,
-                      //       10,
-                      //       0,
-                      //       MediaQuery.of(context).viewInsets.bottom != 0
-                      //           ? 0
-                      //           : SizeConfig.pageHorizontalMargins,
-                      //     ),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       crossAxisAlignment: CrossAxisAlignment.end,
-                      //       children: <Widget>[
-                      //         new Container(
-                      //           width: SizeConfig.screenWidth -
-                      //               SizeConfig.pageHorizontalMargins * 2,
-                      //           child: FelloButtonLg(
-                      //             child: model.state == ViewState.Idle
-                      //                 ? Text(
-                      //                     model.currentPage ==
-                      //                             Username.index
-                      //                         ? 'FINISH'
-                      //                         : 'NEXT',
-                      //                     style: TextStyles.body2
-                      //                         .colour(Colors.white),
-                      //                   )
-                      //                 : SpinKitThreeBounce(
-                      //                     color: UiConstants.spinnerColor2,
-                      //                     size: 18.0,
-                      //                   ),
-                      //             onPressed: () {
-                      //               if (model.state == ViewState.Idle)
-                      //                 model.processScreenInput(
-                      //                   model.currentPage,
-                      //                 );
-                      //             },
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   )
+                      model.loginUsingTrueCaller
+                          ? Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.fromLTRB(
+                                  0, 10, 0, Platform.isIOS ? 0 : 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    child: FelloButtonLg(
+                                      color: Colors.transparent,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Logging in with",
+                                            style: TextStyles.body3.bold
+                                                .colour(Color(0xff1180FF)),
+                                          ),
+                                          Image.asset(
+                                            Assets.truecaller,
+                                            height: SizeConfig.body1,
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding4,
+                                          ),
+                                          SpinKitThreeBounce(
+                                            color: Color(0xff1180FF),
+                                            size: SizeConfig.body1,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom !=
+                                            0
+                                        ? 0
+                                        : SizeConfig.pageHorizontalMargins,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    child: FelloButtonLg(
+                                      child: model.state == ViewState.Idle
+                                          ? Text(
+                                              model.currentPage ==
+                                                      LoginUserNameView.index
+                                                  ? 'FINISH'
+                                                  : 'NEXT',
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
+                                            )
+                                          : SpinKitThreeBounce(
+                                              color: UiConstants.spinnerColor2,
+                                              size: 18.0,
+                                            ),
+                                      onPressed: () {
+                                        if (model.state == ViewState.Idle)
+                                          model.processScreenInput(
+                                            model.currentPage,
+                                          );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
                     ],
                   ),
                 ),
@@ -294,12 +204,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     ),
                     alignment: Alignment.centerRight,
                     child: Text(
-                      model.currentPage == Username.index
+                      model.currentPage == LoginUserNameView.index
                           ? 'finish'
-                          : model.currentPage == OTP4.index
+                          : model.currentPage == LoginOtpView.index
                               ? 'Done'
                               : 'next',
-                      style: model.currentPage == OTP4.index
+                      style: model.currentPage == LoginOtpView.index
                           ? TextStyles.rajdhaniB.body1
                               .colour(UiConstants.kPrimaryColor)
                           : TextStyles.rajdhaniB.body1,

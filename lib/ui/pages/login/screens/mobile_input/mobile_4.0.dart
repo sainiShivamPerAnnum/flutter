@@ -10,18 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class MobileView4 extends StatefulWidget {
+class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
-  const MobileView4({Key key}) : super(key: key);
+  const LoginMobileView({Key key}) : super(key: key);
   @override
-  State<MobileView4> createState() => MobileView4State();
+  State<LoginMobileView> createState() => LoginMobileViewState();
 }
 
-class MobileView4State extends State<MobileView4> {
-  MobileInputScreenViewModel model;
+class LoginMobileViewState extends State<LoginMobileView> {
+  LoginMobileViewModel model;
   @override
   Widget build(BuildContext context) {
-    return BaseView<MobileInputScreenViewModel>(
+    return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;
       },

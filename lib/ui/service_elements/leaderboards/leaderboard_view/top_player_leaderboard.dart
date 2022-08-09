@@ -185,6 +185,7 @@ class TopPlayer extends StatelessWidget {
     );
   }
 
+  //
   Widget _buildLeaderboardTile(int countedIndex) {
     return Padding(
       padding: EdgeInsets.symmetric(

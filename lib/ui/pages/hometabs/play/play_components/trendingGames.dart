@@ -72,17 +72,20 @@ class TrendingGames extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Container(
-              margin: EdgeInsets.all(SizeConfig.padding6),
-              height: SizeConfig.screenWidth * 0.314,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.roundness8),
-                  topRight: Radius.circular(SizeConfig.roundness8),
+            Hero(
+              tag: game.code,
+              child: Container(
+                margin: EdgeInsets.all(SizeConfig.padding6),
+                height: SizeConfig.screenWidth * 0.314,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness8),
+                    topRight: Radius.circular(SizeConfig.roundness8),
+                  ),
+                  image: DecorationImage(
+                      image: CachedNetworkImageProvider(game.thumbnailUri),
+                      fit: BoxFit.cover),
                 ),
-                image: DecorationImage(
-                    image: CachedNetworkImageProvider(game.thumbnailUri),
-                    fit: BoxFit.cover),
               ),
             ),
             Row(

@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/login/level_2/screens/dob_input/dob_4.0.dart';
 import 'package:felloapp/ui/pages/login/level_2/screens/email_input/email_4.0.dart';
 import 'package:felloapp/ui/pages/login/level_2/screens/name_input/name_4.0.dart';
 import 'package:felloapp/ui/pages/login/login_components/tm_button_4.0.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
