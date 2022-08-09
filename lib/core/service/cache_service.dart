@@ -165,18 +165,18 @@ class CacheService {
     ApiResponse Function(dynamic) parseData,
   ) async {
     // fetch data from cache
-    final pages = [];
+    final items = [];
     for (int i = start; i <= end; i++) {
       final key = '$keyPrefix/$i';
       final cachedData = await getData(key);
       if (cachedData != null && ttl != 0)
-        pages.add(json.decode(cachedData.data));
+        items.add(json.decode(cachedData.data));
     }
 
-    if (pages.length == end - start + 1) {
+    if (items.length == end - start + 1) {
       try {
         _logger.d('cache: data read successfully');
-        return parseData({start: start, end: end, pages: pages});
+        return parseData({"start": start, "end": end, "items": items});
       } catch (e) {
         _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);

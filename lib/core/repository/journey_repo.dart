@@ -168,11 +168,11 @@ class JourneyRepository extends BaseRepo {
         // parser
         final start = responseData["start"];
         final end = responseData["end"];
-        List<dynamic> page = responseData["items"];
+        List<dynamic> items = responseData["items"];
 
         List<JourneyPage> journeyPages = [];
         for (int i = start; i <= end; i++) {
-          journeyPages.add(JourneyPage.fromMap(page[i - start], i));
+          journeyPages.add(JourneyPage.fromMap(items[i - start], i));
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
