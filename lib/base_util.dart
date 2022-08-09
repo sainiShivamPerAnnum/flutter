@@ -519,7 +519,7 @@ class BaseUtil extends ChangeNotifier {
       logger.d('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
 
-      //remove fcm token from remote
+      //remove  token from remote
       //await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required

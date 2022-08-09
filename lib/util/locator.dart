@@ -49,6 +49,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
@@ -168,9 +169,9 @@ void setupLocator() {
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
   locator.registerFactory(() => UsernameInputScreenViewModel());
-  locator.registerFactory(() => OtpInputScreenViewModel());
+  locator.registerFactory(() => LoginOtpViewModel());
   locator.registerFactory(() => NameInputScreenViewModel());
-  locator.registerFactory(() => MobileInputScreenViewModel());
+  locator.registerFactory(() => LoginMobileViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());
@@ -198,6 +199,7 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
+  locator.registerFactory(() => Level2ViewModel());
   locator.registerFactory(() => CampaignRepo());
   locator.registerFactory(() => JourneyPageViewModel());
 
