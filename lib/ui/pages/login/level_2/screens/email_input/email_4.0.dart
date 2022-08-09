@@ -2,11 +2,12 @@ import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Email4 extends StatelessWidget {
-  const Email4({Key key}) : super(key: key);
-
+  const Email4({Key key, @required this.model}) : super(key: key);
+  final Level2ViewModel model;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,10 +27,23 @@ class Email4 extends StatelessWidget {
         ),
         SizedBox(height: SizeConfig.padding64),
         //input
-        LogInTextField(
-          hintText: 'Your email ID',
-          textInputType: TextInputType.number,
-          controller: null,
+        Form(
+          key: model.emailFormKey,
+          child: LogInTextField(
+            hintText: 'Your email ID',
+            textInputType: TextInputType.emailAddress,
+            controller: model.emailController,
+            validator: (val) {
+              if (val.isEmpty) {
+                return 'Please enter your email ID';
+              } else if (!RegExp(
+                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                  .hasMatch(val)) {
+                return 'Please enter a valid email ID';
+              }
+              return null;
+            },
+          ),
         ),
       ],
     );

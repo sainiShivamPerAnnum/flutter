@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -5,21 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChooseAvatar4 extends StatefulWidget {
-  const ChooseAvatar4({Key key}) : super(key: key);
+  const ChooseAvatar4({Key key, @required this.model}) : super(key: key);
+  final Level2ViewModel model;
 
   @override
   State<ChooseAvatar4> createState() => _ChooseAvatar4State();
 }
 
 class _ChooseAvatar4State extends State<ChooseAvatar4> {
-  PageController _controller;
-  int currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    _controller = PageController(
-      viewportFraction: 0.43,
-    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -38,35 +37,74 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
         SizedBox(height: SizeConfig.screenWidth * 0.15),
         Stack(
           children: [
-            FelloUserAvatar(),
+            AvatarBgRings(),
             Container(
               height: SizeConfig.screenWidth * 0.685,
               child: PageView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: 5,
-                controller: _controller,
+                controller: widget.model.avatarsPageController,
                 onPageChanged: (val) {
-                  setState(() {
-                    currentIndex = val;
-                  });
+                  if (val >= 1) {
+                    widget.model.selectedAvaterId = val;
+                  } else if (val == 0) {
+                    widget.model.selectedAvaterId = null;
+                  }
+                  widget.model.avatarsPage = val;
                 },
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (ctx, idx) {
                   return Center(
                     child: AnimatedContainer(
-                      width: currentIndex == idx
+                      width: widget.model.avatarsPage == idx
                           ? SizeConfig.screenWidth * 0.48
                           : SizeConfig.screenWidth * 0.2633,
-                      height: currentIndex == idx
-                          ? SizeConfig.screenWidth * 0.48
+                      height: widget.model.avatarsPage == idx
+                          ? SizeConfig.screenWidth * 0.42
                           : SizeConfig.screenWidth * 0.2633,
                       duration: const Duration(milliseconds: 200),
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 200),
-                        opacity: currentIndex == idx ? 1.0 : 0.4,
-                        child: SvgPicture.asset(
-                          'assets/svg/user_avatar_svg.svg',
-                        ),
+                        opacity: widget.model.avatarsPage == idx ? 1.0 : 0.4,
+                        child: idx == 0
+                            ? GestureDetector(
+                                onTap: () {
+                                  if (widget.model.selectedProfilePicture ==
+                                      null) {
+                                    widget.model.chooseProfileImage();
+                                  }
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF232326),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                    bottom: SizeConfig.padding10,
+                                    right: SizeConfig.padding8,
+                                    left: SizeConfig.padding8,
+                                  ),
+                                  child: widget.model.selectedProfilePicture ==
+                                          null
+                                      ? Center(
+                                          child: Icon(
+                                            Icons.add_rounded,
+                                            color: UiConstants.kPrimaryColor,
+                                            size: SizeConfig.iconSize7,
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: Image.file(
+                                            File(widget.model
+                                                .selectedProfilePicture.path),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                ),
+                              )
+                            : SvgPicture.asset(
+                                'assets/svg/user_avatar_svg.svg',
+                              ),
                       ),
                     ),
                   );
@@ -80,8 +118,8 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
   }
 }
 
-class FelloUserAvatar extends StatelessWidget {
-  const FelloUserAvatar({
+class AvatarBgRings extends StatelessWidget {
+  const AvatarBgRings({
     Key key,
   }) : super(key: key);
 
