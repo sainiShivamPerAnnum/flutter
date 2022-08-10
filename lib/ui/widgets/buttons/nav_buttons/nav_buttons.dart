@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,27 @@ class AppBarButton extends StatelessWidget {
               style: style ?? TextStyles.sourceSansSB.body2,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class FelloAppBarBackButton extends StatelessWidget {
+  final Function onBackPress;
+  final Color color;
+  FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
+      child: Padding(
+        padding: EdgeInsets.all(SizeConfig.padding4),
+        child: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+          size: SizeConfig.iconSize1,
         ),
       ),
     );

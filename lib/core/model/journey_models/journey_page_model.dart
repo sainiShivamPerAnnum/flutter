@@ -12,6 +12,7 @@ class JourneyPage {
   List<JourneyPathModel> paths;
   List<AvatarPathModel> avatarPath;
   List<MilestoneModel> milestones;
+
   JourneyPage({
     @required this.bgAsset,
     @required this.paths,
@@ -39,25 +40,25 @@ class JourneyPage {
 
   Map<String, dynamic> toMap() {
     return {
-      'bgImage': bgAsset.toMap(),
+      'bg': bgAsset.toMap(),
       'paths': paths.map((x) => x.toMap()).toList(),
       'avatarPath': avatarPath.map((x) => x.toMap()).toList(),
       'milestones': {
-        "startRange": 0,
+        "startRange": milestones.first.index,
         "items": milestones.map((x) => x.toJourneyMap()).toList()
       },
     };
   }
 
-  factory JourneyPage.fromMap(Map<String, dynamic> map) {
+  factory JourneyPage.fromMap(Map<String, dynamic> map, int pageNo) {
     return JourneyPage(
-      page: map["page"] ?? 0,
-      bgAsset: JourneyBackgroundModel.fromMap(map["bg"], map['page']),
+      page: pageNo ?? 0,
+      bgAsset: JourneyBackgroundModel.fromMap(map["bg"], pageNo),
       paths: List<JourneyPathModel>.from(
         map['paths']?.map(
           (x) => JourneyPathModel.fromMap(
             x,
-            map['page'],
+            pageNo,
           ),
         ),
       ),
@@ -65,7 +66,7 @@ class JourneyPage {
         map['avatarPath']?.map(
           (x) => AvatarPathModel.fromMap(
             x,
-            map['page'],
+            pageNo,
           ),
         ),
       ),
@@ -73,7 +74,7 @@ class JourneyPage {
         map['milestones']?.map(
           (x) => MilestoneModel.fromMap(
             x,
-            map['page'],
+            pageNo,
           ),
         ),
       ),
@@ -82,8 +83,8 @@ class JourneyPage {
 
   String toJson() => json.encode(toMap());
 
-  factory JourneyPage.fromJson(String source) =>
-      JourneyPage.fromMap(json.decode(source));
+  factory JourneyPage.fromJson(String source, int pageNo) =>
+      JourneyPage.fromMap(json.decode(source), pageNo);
 
   @override
   String toString() {

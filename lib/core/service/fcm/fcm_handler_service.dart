@@ -68,10 +68,12 @@ class FcmHandler extends ChangeNotifier {
           _txnService.fcmTransactionResponseUpdate(data['payload']);
           break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
-          _journeyService.updateUserJourneyStats(data);
+          log("User journey stats update fcm response");
+          _journeyService.fcmHandleJourneyUpdateStats(data);
           break;
         case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
-          _journeyService.updateUserJourneyStats(data);
+          log("Golden Ticket win update fcm response");
+          _journeyService.fcmHandleJourneyUpdateStats(data);
           break;
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
           _webGameViewModel.handleCricketHeroRoundEnd(

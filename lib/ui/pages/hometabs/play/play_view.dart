@@ -38,10 +38,10 @@ class Play extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             actions: [
-              FelloCoinBar(
-                svgAsset: Assets.aTambolaTicket,
-                size: SizeConfig.padding20,
-              ),
+              // FelloCoinBar(
+              //   svgAsset: Assets.aTambolaTicket,
+              //   size: SizeConfig.padding20,
+              // ),
               FelloCoinBar(
                 svgAsset: Assets.aFelloToken,
               ),
@@ -66,6 +66,18 @@ class Play extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding20,
               ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  AppState.delegate.appState.currentAction = PageAction(
+                    page: Level2ViewPageConfig,
+                    state: PageState.addPage,
+                  );
+                },
+              ),
+              SizedBox(
+                width: SizeConfig.padding20,
+              )
             ],
           ),
           body: SingleChildScrollView(
@@ -80,7 +92,21 @@ class Play extends StatelessWidget {
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
-                PlayInfoSection(),
+// <<<<<<< HEAD
+//                 PlayInfoSection(),
+//                 SizedBox(
+//                   height: SizeConfig.screenHeight * 0.16,
+//                 )
+// =======
+                InfoComponent(
+                  heading: model.boxHeading,
+                  assetList: model.boxAssets,
+                  titleList: model.boxTitlles,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding64,
+                ),
+// >>>>>>> campaign4.0
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+.fvm/flutter_sdk
 # Miscellaneous
 *.class
 *.log
@@ -19,6 +20,8 @@ fello.plantuml
 pubspec.lock
 ios/build/*
 ios/Podfile.lock
+ios/Runner.xcodeproj/*
+ios/Runner.xcworkspace/*
 
 # You definitely want these for CI and CD
 **/ios/*.ipa

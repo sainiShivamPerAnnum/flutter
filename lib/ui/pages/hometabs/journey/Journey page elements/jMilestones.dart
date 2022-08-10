@@ -1,10 +1,13 @@
 import 'dart:math' as math;
 import 'dart:developer';
+import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 String generateAssetUrl(String name) {
   return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
@@ -36,39 +39,43 @@ class Milestones extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("milestone build called");
-    return SizedBox(
-      width: model.pageWidth,
-      height: model.pageHeight * 2,
-      child: Stack(
-        children: List.generate(model.currentMilestoneList.length, (i) {
-          log("Milestone: ${model.currentMilestoneList[i].actionUri}");
-          if (model.currentMilestoneList[i].index <
-              model.avatarActiveMilestoneLevel)
-            return StaticMilestone(
-              milestone: model.currentMilestoneList[i],
-              model: model,
-            );
-          switch (model.currentMilestoneList[i].animType) {
-            case "ROTATE":
-              return ActiveRotatingMilestone(
-                milestone: model.currentMilestoneList[i],
-                model: model,
-              );
-            case "FLOAT":
-              return ActiveFloatingMilestone(
-                milestone: model.currentMilestoneList[i],
-                model: model,
-              );
-            default:
-              return StaticMilestone(
-                milestone: model.currentMilestoneList[i],
-                model: model,
-              );
-          }
-        }),
-      ),
-    );
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.AvatarPosition],
+        builder: (context, serviceModel, properties) {
+          return SizedBox(
+            width: model.pageWidth,
+            height: model.pageHeight * 2,
+            child: Stack(
+              children: List.generate(model.currentMilestoneList.length, (i) {
+                log("Milestone: ${model.currentMilestoneList[i].actionUri} || current level: ${model.avatarActiveMilestoneLevel}");
+                if (model.currentMilestoneList[i].index ==
+                    model.avatarActiveMilestoneLevel) {
+                  switch (model.currentMilestoneList[i].animType) {
+                    case "ROTATE":
+                      return ActiveFloatingMilestone(
+                        milestone: model.currentMilestoneList[i],
+                        model: model,
+                      );
+                    case "FLOAT":
+                      return ActiveFloatingMilestone(
+                        milestone: model.currentMilestoneList[i],
+                        model: model,
+                      );
+                    default:
+                      return StaticMilestone(
+                        milestone: model.currentMilestoneList[i],
+                        model: model,
+                      );
+                  }
+                } else
+                  return StaticMilestone(
+                    milestone: model.currentMilestoneList[i],
+                    model: model,
+                  );
+              }),
+            ),
+          );
+        });
   }
 }
 
@@ -295,6 +302,7 @@ class StaticMilestone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("Current level: ${model.avatarActiveMilestoneLevel}");
     return Stack(
       children: [
         if (milestone.shadow != null)
@@ -338,13 +346,6 @@ class StaticMilestone extends StatelessWidget {
             ),
           ),
         ),
-        if (milestone.index < model.avatarActiveMilestoneLevel)
-          Positioned(
-              left: model.pageWidth * milestone.x,
-              bottom: (model.pageHeight * (milestone.page - 1) +
-                      model.pageHeight * milestone.y) -
-                  model.pageHeight * 0.02,
-              child: MileStoneCheck(model: model, milestone: milestone))
       ],
     );
   }

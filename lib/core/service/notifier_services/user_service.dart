@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -8,15 +11,23 @@ import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
@@ -339,5 +350,102 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   Future<bool> completeOnboarding() async {
     ApiResponse response = await _userRepo.completeOnboarding();
     return response.model;
+  }
+  
+  Future<bool> checkGalleryPermission() async {
+    if (await BaseUtil.showNoInternetAlert()) return false;
+    var _status = await Permission.photos.status;
+    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "Request Permission",
+          description:
+              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+          buttonText: "Continue",
+          asset: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Image.asset(
+              "images/gallery.png",
+              height: SizeConfig.screenWidth * 0.24,
+            ),
+          ),
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return true;
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    } else if (_status.isGranted) {
+      return true;
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Permission Unavailable',
+        'Please enable permission from settings to continue',
+      );
+      return false;
+    }
+    return false;
+  }
+
+  Future<bool> updateProfilePicture(XFile selectedProfilePicture) async {
+    Directory supportDir;
+    UploadTask uploadTask;
+    try {
+      supportDir = await getApplicationSupportDirectory();
+    } catch (e1) {
+      _logger.e('Support Directory not found');
+      _logger.e('$e1');
+      return false;
+    }
+
+    String imageName = selectedProfilePicture.path.split("/").last;
+    String targetPath = "${supportDir.path}/c-$imageName";
+    print("temp path: " + targetPath);
+    print("orignal path: " + selectedProfilePicture.path);
+
+    File compressedFile = File(selectedProfilePicture.path);
+
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("dps/${baseUser.uid}/image");
+      uploadTask = ref.putFile(compressedFile);
+    } catch (e2) {
+      _logger.e('putFile Failed. Reference Error');
+      _logger.e('$e2');
+      return false;
+    }
+
+    try {
+      TaskSnapshot res = await uploadTask;
+      String url = await res.ref.getDownloadURL();
+      if (url != null) {
+        await CacheManager.writeCache(
+            key: 'dpUrl', value: url, type: CacheType.string);
+        setMyUserDpUrl(url);
+        //_baseUtil.setDisplayPictureUrl(url);
+        _logger.d('Final DP Uri: $url');
+        return true;
+      } else
+        return false;
+    } catch (e) {
+      if (baseUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'error_msg': 'Method call to upload picture failed',
+        };
+        _internalOpsService.logFailure(
+          baseUser.uid,
+          FailType.ProfilePictureUpdateFailed,
+          errorDetails,
+        );
+      }
+      print('$e');
+      return false;
+    }
   }
 }

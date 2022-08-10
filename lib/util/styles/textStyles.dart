@@ -93,6 +93,8 @@ class TextStyles {
   static TextStyle get titleFont =>
       GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
 
+  static TextStyle get title0 =>
+      titleFont.copyWith(fontSize: SizeConfig.title0);
   static TextStyle get title1 =>
       titleFont.copyWith(fontSize: SizeConfig.title1);
   static TextStyle get title2 =>

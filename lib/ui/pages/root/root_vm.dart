@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
@@ -32,12 +35,14 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -132,22 +137,27 @@ class RootViewModel extends BaseModel {
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
+      //TODO: use the analytics event provided for journey.
       case 0:
-        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        print('journey triggered');
         break;
       case 1:
         _analyticsService.track(eventName: AnalyticsEvents.playSection);
         break;
       case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 3:
         _analyticsService.track(eventName: AnalyticsEvents.winSection);
         break;
+
       default:
     }
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
     if (AppState.delegate.appState.getCurrentTabIndex == 1)
-      _journeyService.checkIfAnyAnimationIsLeft();
+      _journeyService.checkAndAnimateAvatar();
   }
 
   _initAdhocNotifications() {
@@ -169,19 +179,19 @@ class RootViewModel extends BaseModel {
     _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
 
-  // uploadJourneyPage() async {
-  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
-  //   log(json.encode(jourenyPages.last.toMap()));
-  // }
+  uploadJourneyPage() async {
+    // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
+    log(json.encode(jourenyPages.last.toMap()));
+  }
 
-  // uploadMilestones() async {
-  //   // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
-  //   //       log(milestone.toMap().toString());
-  //   //     }));
-  //   log(json.encode(jourenyPages
-  //       .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
-  //       .toList()));
-  // }
+  uploadMilestones() async {
+    // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
+    //       log(milestone.toMap().toString());
+    //     }));
+    log(json.encode(jourenyPages
+        .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
+        .toList()));
+  }
 
   // completeNViewDownloadSaveLViewAsset() async {
   //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
@@ -222,29 +232,30 @@ class RootViewModel extends BaseModel {
   initialize() async {
     bool canExecuteStartupNotification = true;
     if (!_isInitialized) {
-      bool showSecurityPrompt = false;
-      if (_userService.showSecurityPrompt == null) {
-        showSecurityPrompt = await _lModel.showSecurityPrompt();
-        _userService.showSecurityPrompt = showSecurityPrompt;
-      }
+      // bool showSecurityPrompt = false;
+      // if (_userService.showSecurityPrompt == null) {
+      //   showSecurityPrompt = await _lModel.showSecurityPrompt();
+      //   _userService.showSecurityPrompt = showSecurityPrompt;
+      // }
 
       _isInitialized = true;
       _initAdhocNotifications();
 
       _baseUtil.getProfilePicture();
       // show security modal
-      if (showSecurityPrompt &&
-          _userService.baseUser.isAugmontOnboarded &&
-          _userService.userFundWallet.augGoldQuantity > 0 &&
-          _userService.baseUser.userPreferences
-                  .getPreference(Preferences.APPLOCK) ==
-              0) {
-        canExecuteStartupNotification = false;
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
-          _showSecurityBottomSheet();
-          _localDBModel.updateSecurityPrompt(false);
-        });
-      }
+      // if (
+      //     showSecurityPrompt &&
+      //     _userService.baseUser.isAugmontOnboarded &&
+      //         _userService.userFundWallet.augGoldQuantity > 0 &&
+      //         _userService.baseUser.userPreferences
+      //                 .getPreference(Preferences.APPLOCK) ==
+      //             0) {
+      //   canExecuteStartupNotification = false;
+      //   WidgetsBinding.instance?.addPostFrameCallback((_) {
+      //     _showSecurityBottomSheet();
+      //     _localDBModel.updateSecurityPrompt(false);
+      //   });
+      // }
 
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {

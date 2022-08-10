@@ -61,16 +61,30 @@ class UiConstants {
   static const Color kWinnerPlayerPrimaryColor = const Color(0xFFFFD979);
   static const Color kWinnerPlayerLightPrimaryColor = const Color(0xFFFEF5DC);
   static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
-
+  static const Color kLastUpdatedTextColor = const Color(0xFF919193);
+  static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
   static const Color kProfileBorderOutterColor = const Color(0xFF737373);
   static const Color kProfileBorderColor = const Color(0xFFD9D9D9);
   static const Color kTextFieldColor = const Color(0xFF161617);
-  static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
   static const Color kSwitchColor = const Color(0xFF19191A);
   static const Color kAutopayAmountActiveTabColor = const Color(0xFFF5F2ED);
   static const Color kAutopayAmountDeactiveTabColor = const Color(0xFF39393C);
   static const Color kBorderColor = const Color(0xFFDADADA);
+  static const Color kLeaderBoardBackgroundColor = const Color(0xFF39393C);
+  static const Color kSnackBarBgColor = const Color(0xFFF4EDD9);
+  static const Color kSnackBarNegativeContentColor = const Color(0xFFE35833);
+  static const Color kSnackBarPositiveContentColor = const Color(0xFF01656B);
+  static const Color kSnackBarNoInternetContentColor = const Color(0xFFEFAF4E);
+  static const Color kSaveDigitalGoldCardBg = const Color(0xFF495DB2);
+  static const Color kSaveStableFelloCardBg = const Color(0xFF01656B);
+  static const Color kBlogTitleColor = const Color(0xFF93B5FE);
 
+  static const Color kFAQsAnswerColor = const Color(0xFFA9C6D6);
+
+  static const Color kFAQDividerColor = const Color(0xFF627F8E);
+
+  static const Color kSliverAppBarBackgroundColor = Color(0xff495DB2);
+  static const Color kDarkBoxColor = const Color(0xFF3B3B3B);
   // Recharge Modal Sheet
   static const Color kRechargeModalSheetAmountSectionBackgroundColor =
       const Color(0xFF49494C);
@@ -93,6 +107,31 @@ class UiConstants {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     stops: [0.0, 0.4],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kButtonGradient = LinearGradient(
+      colors: [
+        Color(0xFF08D2AD),
+        Color(0xFF43544F),
+      ],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      tileMode: TileMode.clamp);
+
+  static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
+    colors: [Color(0xff141316), UiConstants.kBackgroundColor.withOpacity(0.2)],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    stops: [0, 0.7],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient kTrophyBackground = LinearGradient(
+    colors: [Color(0xffFFE9B1), Color(0xffFFE9B1).withOpacity(0.0)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0, 0.8],
     tileMode: TileMode.clamp,
   );
 }

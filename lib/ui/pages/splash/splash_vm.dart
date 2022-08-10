@@ -74,8 +74,8 @@ class LauncherViewModel extends BaseModel {
 
   initLogic() async {
     try {
-      _journeyService.init();
       await userService.init();
+      _journeyService.init();
       await _journeyRepo.init();
       await CacheService.initialize();
       await BaseRemoteConfig.init();
@@ -87,6 +87,8 @@ class LauncherViewModel extends BaseModel {
       if (now <= BaseRemoteConfig.invalidationBefore) {
         await new CacheService().invalidateAll();
       }
+      //test
+      await new CacheService().invalidateAll();
 
       await userService.init();
       await _userCoinService.init();
@@ -192,24 +194,25 @@ class LauncherViewModel extends BaseModel {
   }
 
   Future<bool> authenticateDevice() async {
-    bool _res = false;
-    try {
-      _res = await deviceUnlock.request(
-          localizedReason:
-              'Confirm your phone screen lock pattern,PIN or password');
-    } on DeviceUnlockUnavailable {
-      BaseUtil.showPositiveAlert('No Device Authentication Found',
-          'Logging in, please enable device security to add lock');
-      _res = true;
-    } on RequestInProgress {
-      _res = false;
-      print('Request in progress');
-    } catch (e) {
-      _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
-    }
-    return _res;
+    // bool _res = false;
+    // try {
+    //   _res = await deviceUnlock.request(
+    //       localizedReason:
+    //           'Confirm your phone screen lock pattern,PIN or password');
+    // } on DeviceUnlockUnavailable {
+    //   BaseUtil.showPositiveAlert('No Device Authentication Found',
+    //       'Logging in, please enable device security to add lock');
+    //   return true;
+    // } on RequestInProgress {
+    //   _res = false;
+    //   print('Request in progress');
+    // } catch (e) {
+    //   _logger.e("error", [e]);
+    //   BaseUtil.showNegativeAlert(
+    //       'Authentication Failed', 'Please restart and try again');
+    // }
+    // return _res;
+    return true;
   }
 
   Future<bool> checkBreakingUpdate() async {
