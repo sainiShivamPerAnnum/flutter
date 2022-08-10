@@ -209,7 +209,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                     },
                   ),
                 ),
-<<<<<<< lib/ui/pages/onboarding/getstarted/walkthrough_page.dart
                 ValueListenableBuilder(
                     valueListenable: _pageNotifier,
                     builder: (ctx, value, _) {
@@ -296,9 +295,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 ),
                 SizedBox(
                   height: kToolbarHeight / 2,
-              ),
-      
-                
+                ),
               ],
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -23,7 +24,6 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-
   final pages = [JourneyView(), Play(), Save(), Win()];
 
   @override
@@ -63,7 +63,6 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
-
               RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
@@ -95,7 +94,6 @@ class Root extends StatelessWidget {
                   ],
                 ),
               Consumer<AppState>(
-
                   builder: (ctx, m, child) =>
                       AppState.delegate.appState.isTxnLoaderInView
                           ? TransactionLoader()
@@ -148,7 +146,6 @@ class BottomNavBar extends StatelessWidget {
                 Assets.navSaveInactive,
               ),
               NavBarItemData(
-
                 locale.navBarWin,
                 Assets.navWinActive,
                 Assets.navWinInactive,
