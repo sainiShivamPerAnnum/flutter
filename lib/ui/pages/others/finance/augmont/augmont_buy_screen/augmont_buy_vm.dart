@@ -195,9 +195,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
 
     //NOTE: NEED TO DISCUSS WITH ARAB
-    if (!_userService.showOnboardingTutorial) {
-      _augmontSecondFetchDone = true;
-    }
+    // if (!_userService.showOnboardingTutorial) {
+    //   _augmontSecondFetchDone = true;
+    // }
 
     if (_baseUtil.augmontDetail == null) {
       await _baseUtil.fetchUserAugmontDetail();

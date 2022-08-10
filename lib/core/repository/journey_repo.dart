@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
+import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -207,23 +208,45 @@ class JourneyRepository extends BaseRepo {
 
   // Helper Methods
   // Just the upload created journey page data
-  Future<void> uploadJourneyPage(JourneyPage page) async {
+  // Future<void> uploadJourneyPage(JourneyPage page) async {
+  //   try {
+  //     // final String _uid = _userService.baseUser.uid;
+  //     final _token = await getBearerToken();
+  //     final _body = page.toMap();
+  //     dev.log(json.encode(_body));
+  //     final response = await APIService.instance.postData(
+  //       ApiPath.getJourney(2),
+  //       token: _token,
+  //       body: _body,
+  //       cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
+  //     );
+  //     logger.d(response);
+  //     return true;
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     return false;
+  //   }
+  // }
+
+  Future<ApiResponse<List<JourneyLevel>>> getJourneyLevels() async {
     try {
-      // final String _uid = _userService.baseUser.uid;
+      List<JourneyLevel> journeylevels = [];
       final _token = await getBearerToken();
-      final _body = page.toMap();
-      dev.log(json.encode(_body));
-      final response = await APIService.instance.postData(
-        ApiPath.getJourney(2),
+      final response = await APIService.instance.getData(
+        ApiPath.kJourneyLevel,
         token: _token,
-        body: _body,
         cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
       );
-      logger.d(response);
-      return true;
+
+      final Map<int, dynamic> responseData = response["data"];
+      responseData.forEach((level, levelDetails) {
+        journeylevels.add(JourneyLevel.fromMap(levelDetails));
+      });
+      logger.d("Response from get Journey Level: $response");
+      return ApiResponse(model: journeylevels, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return false;
+      return ApiResponse.withError("Unable to fetch user stats", 400);
     }
   }
 }

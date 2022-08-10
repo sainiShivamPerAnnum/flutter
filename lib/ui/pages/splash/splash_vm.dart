@@ -75,7 +75,7 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
-      _journeyService.init();
+      await _journeyService.init();
       await _journeyRepo.init();
       await CacheService.initialize();
       await BaseRemoteConfig.init();
@@ -88,7 +88,7 @@ class LauncherViewModel extends BaseModel {
         await new CacheService().invalidateAll();
       }
       //test
-      await new CacheService().invalidateAll();
+      // await new CacheService().invalidateAll();
       await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
@@ -153,22 +153,25 @@ class LauncherViewModel extends BaseModel {
     ///check if user is onboarded
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
-      _localDBModel.showHomeTutorial.then((value) {
-        if (userService.showOnboardingTutorial && value) {
-          //show tutorial
-          userService.showOnboardingTutorial = false;
-          navigator.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: OnBoardingViewPageConfig,
-          );
-          notifyListeners();
-        } else {
-          navigator.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: LoginPageConfig,
-          );
-        }
-      });
+      return navigator.currentAction = PageAction(
+        state: PageState.replaceAll,
+        page: LoginPageConfig,
+      );
+      // _localDBModel.showHomeTutorial.then((value) {
+      //   if (userService.showOnboardingTutorial && value) {
+      //     //show tutorial
+      //     userService.showOnboardingTutorial = false;
+      //     return navigator.currentAction = PageAction(
+      //       state: PageState.replaceAll,
+      //       page: OnBoardingViewPageConfig,
+      //     );
+      //   } else {
+      //     return navigator.currentAction = PageAction(
+      //       state: PageState.replaceAll,
+      //       page: LoginPageConfig,
+      //     );
+      //   }
+      // });
     }
 
     ///Ceck if app needs to be open securely
@@ -183,7 +186,7 @@ class LauncherViewModel extends BaseModel {
     // }
 
     if (_unlocked) {
-      navigator.currentAction =
+      return navigator.currentAction =
           PageAction(state: PageState.replaceAll, page: RootPageConfig);
     } else {
       BaseUtil.showNegativeAlert(
