@@ -131,7 +131,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
-      _journeyService.checkAndAnimateAvatar();
+      // _journeyService.checkAndAnimateAvatar();
       notifyListeners();
 
       return Future.value(true);
@@ -872,6 +872,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     //   ),
     //   page: WalkThroughConfig,
     // );
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
+      page: OnBoardingViewPageConfig,
+    );
   }
 
   // openAutosaveWalkthrough() {

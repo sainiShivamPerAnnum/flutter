@@ -9,8 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+const String COMING_FROM_SPLASH = "fromSplash";
+const String COMING_FROM_HOME = "fromHome";
+
 class OnBoardingView extends StatelessWidget {
-  const OnBoardingView({Key key}) : super(key: key);
+  final String comingFrom;
+  const OnBoardingView({Key key, this.comingFrom = COMING_FROM_SPLASH})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,7 @@ class OnBoardingView extends StatelessWidget {
               if (swipeCount >= 40) {
                 if (leftSwipe) {
                   if (model.currentPage == 2) {
-                    model.onBoardingCompleted();
+                    model.registerWalkthroughCompletion(comingFrom);
                   } else {
                     model.pageController.nextPage(
                       duration: Duration(milliseconds: 500),
@@ -71,7 +76,7 @@ class OnBoardingView extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       if (model.currentPage == 2) {
-                        model.onBoardingCompleted();
+                        model.registerWalkthroughCompletion(comingFrom);
                       } else {
                         model.pageController.animateToPage(
                           2,
@@ -171,22 +176,33 @@ class OnBoardingView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: SizeConfig.padding32,
-                  right: SizeConfig.padding32,
-                  child: Container(
-                    width: SizeConfig.padding64,
-                    height: SizeConfig.padding64,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(
-                        color: Color(0xFF009D91),
-                        width: 2,
+                if (model.currentPage == 2)
+                  Positioned(
+                    bottom: SizeConfig.padding32,
+                    right: SizeConfig.padding32,
+                    child: Container(
+                      width: SizeConfig.padding64,
+                      height: SizeConfig.padding64,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border.all(
+                          color: Color(0xFF009D91),
+                          width: 2,
+                        ),
+                        shape: BoxShape.circle,
                       ),
-                      shape: BoxShape.circle,
+                      child: IconButton(
+                          icon: model.isWalkthroughRegistrationInProgress
+                              ? SpinKitThreeBounce(
+                                  color: Colors.white,
+                                  size: SizeConfig.padding16)
+                              : Icon(Icons.forward),
+                          onPressed: () {
+                            model.registerWalkthroughCompletion(comingFrom);
+                          },
+                          color: Colors.white),
                     ),
                   ),
-                ),
               ],
             ),
           ),

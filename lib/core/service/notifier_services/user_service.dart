@@ -347,11 +347,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
-  Future<bool> completeOnboarding() async {
-    ApiResponse response = await _userRepo.completeOnboarding();
-    return response.model;
-  }
-  
+  // Future<bool> completeOnboarding() async {
+  //   ApiResponse response = await _userRepo.completeOnboarding();
+  //   return response.model;
+  // }
+
   Future<bool> checkGalleryPermission() async {
     if (await BaseUtil.showNoInternetAlert()) return false;
     var _status = await Permission.photos.status;

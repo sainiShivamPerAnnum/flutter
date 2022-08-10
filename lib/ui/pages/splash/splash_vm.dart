@@ -89,8 +89,6 @@ class LauncherViewModel extends BaseModel {
       }
       //test
       await new CacheService().invalidateAll();
-
-      await userService.init();
       await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
@@ -176,13 +174,13 @@ class LauncherViewModel extends BaseModel {
     ///Ceck if app needs to be open securely
     ///NOTE: CHECK APP LOCK
     bool _unlocked = true;
-    if (userService.baseUser.userPreferences != null &&
-        userService.baseUser.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
+    // if (userService.baseUser.userPreferences != null &&
+    //     userService.baseUser.userPreferences
+    //             .getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   _unlocked = await authenticateDevice();
+    // }
 
     if (_unlocked) {
       navigator.currentAction =

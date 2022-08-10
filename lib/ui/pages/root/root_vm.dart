@@ -156,7 +156,7 @@ class RootViewModel extends BaseModel {
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
-    if (AppState.delegate.appState.getCurrentTabIndex == 1)
+    if (AppState.delegate.appState.getCurrentTabIndex == 0)
       _journeyService.checkAndAnimateAvatar();
   }
 

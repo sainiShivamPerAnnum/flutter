@@ -95,6 +95,7 @@ class JourneyPageViewModel extends BaseModel {
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
+    await _journeyService.updateUserJourneyStats();
     await _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
@@ -233,6 +234,10 @@ class JourneyPageViewModel extends BaseModel {
 
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
+    if (_journeyService.avatarRemoteMlIndex > milestone.index) {
+      return BaseUtil.showNegativeAlert(
+          "MIlestone already completed", "Completed UI still in construction");
+    }
     AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
     return showModalBottomSheet(
