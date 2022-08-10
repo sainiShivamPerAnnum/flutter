@@ -588,6 +588,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
         break;
+      case Pages.SaveAssetView:
+        SaveAssetsViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }

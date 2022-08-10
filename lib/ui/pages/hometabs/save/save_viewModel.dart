@@ -6,6 +6,7 @@ import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -65,13 +66,19 @@ class SaveViewModel extends BaseModel {
     notifyListeners();
   }
 
-  navigateToBlogWebView(String slug){
+  navigateToBlogWebView(String slug) {
     AppState.delegate.appState.currentAction = PageAction(
-                              state: PageState.addWidget,
-                              page: BlogPostWebViewConfig,
-                              widget: BlogWebView(
-                                initialUrl:
-                                    'https://fello.in/blogs/$slug?content_only=true',
-                              ));
+        state: PageState.addWidget,
+        page: BlogPostWebViewConfig,
+        widget: BlogWebView(
+          initialUrl: 'https://fello.in/blogs/$slug?content_only=true',
+        ));
+  }
+
+  navigateToSaveAssetView() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: SaveAssetsViewConfig,
+        widget: SaveAssetView());
   }
 }

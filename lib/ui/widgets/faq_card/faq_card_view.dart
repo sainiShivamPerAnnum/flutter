@@ -13,8 +13,9 @@ import 'package:lottie/lottie.dart';
 class FAQCardView extends StatelessWidget {
   final String category;
   final bool catTitle;
+  final Color bgColor;
 
-  FAQCardView({@required this.category, this.catTitle});
+  FAQCardView({@required this.category, this.catTitle, this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class FAQCardView extends StatelessWidget {
           return Container(
             width: SizeConfig.screenWidth,
             decoration: BoxDecoration(
-              color: UiConstants.kBackgroundColor,
+              color: bgColor ?? UiConstants.kBackgroundColor,
             ),
             padding: EdgeInsets.only(
                 top: SizeConfig.padding12, bottom: SizeConfig.padding24),
@@ -89,7 +90,7 @@ class FAQCardView extends StatelessWidget {
               children: List.generate(
                 model.faqHeaders.length,
                 (index) => ExpansionPanel(
-                  backgroundColor: UiConstants.kBackgroundColor,
+                  backgroundColor: bgColor ?? UiConstants.kBackgroundColor,
                   canTapOnHeader: true,
                   headerBuilder: (ctx, isOpen) =>
                       _prizeFAQHeader(model.faqHeaders[index]),
@@ -119,7 +120,8 @@ class FAQCardView extends StatelessWidget {
         top: SizeConfig.padding20,
         bottom: SizeConfig.padding20,
       ),
-      child: Text(title, style: TextStyles.body2.bold.colour(Colors.white)),
+      child:
+          Text(title, style: TextStyles.sourceSans.body2.colour(Colors.white)),
     );
   }
 }

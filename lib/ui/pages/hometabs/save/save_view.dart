@@ -73,7 +73,9 @@ class Save extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SaveNetWorthSection(),
+                  SaveNetWorthSection(
+                    saveViewModel: model,
+                  ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
@@ -169,7 +171,9 @@ class SaveTitleContainer extends StatelessWidget {
 }
 
 class SaveNetWorthSection extends StatelessWidget {
-  const SaveNetWorthSection({Key key}) : super(key: key);
+  final SaveViewModel saveViewModel;
+
+  const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +196,7 @@ class SaveNetWorthSection extends StatelessWidget {
                     cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                     cardAssetName: Assets.digitalGoldBar,
                     investedAmount: model.userFundWallet?.augGoldBalance,
+                    onCardTap: () => saveViewModel.navigateToSaveAssetView(),
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -241,7 +246,7 @@ class AutoSIPCard extends StatelessWidget {
           },
           child: Container(
             height: SizeConfig.screenWidth * 0.42,
-            width: SizeConfig.screenWidth,
+            width: SizeConfig.screenWidth * 0.87,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: UiConstants.kSecondaryBackgroundColor),

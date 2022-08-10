@@ -51,6 +51,7 @@ class UiConstants {
 
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
+  static const Color kDarkBackgroundColor = Color(0xFF18181B);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = const Color(0xFF23272B);
