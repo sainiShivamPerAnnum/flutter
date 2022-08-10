@@ -200,6 +200,8 @@ class LoginControllerViewModel extends BaseModel {
                     userService.firebaseUser.uid,
                     _formatMobileNumber(LoginControllerView.mobileno));
               }
+              // logger.d(
+              //     "Mobileno : ${_formatMobileNumber(LoginControllerView.mobileno)}");
               // userService.baseUser.name = "Abc";
 
               // userService.baseUser.email = "abc@gmail.com";
@@ -242,7 +244,7 @@ class LoginControllerViewModel extends BaseModel {
                   }
                 } catch (e) {
                   logger.d(e);
-                  _usernameKey.currentState.model.enabled = false;
+                  _usernameKey.currentState.model.enabled = true;
                   flag = false;
                 }
 
@@ -292,6 +294,7 @@ class LoginControllerViewModel extends BaseModel {
 
     ApiResponse<BaseUser> user =
         await _userRepo.getUserById(id: userService.firebaseUser.uid);
+    logger.d("User data found: ${user.model}");
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');

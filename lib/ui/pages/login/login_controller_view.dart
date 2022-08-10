@@ -82,6 +82,39 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 ],
               ),
             ),
+            if (keyboardIsOpen)
+              Positioned(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                child: GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus.unfocus();
+                    if (model.state == ViewState.Idle)
+                      model.processScreenInput(
+                        model.currentPage,
+                      );
+                  },
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: 50,
+                    color: UiConstants.kLeaderBoardBackgroundColor,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                    ),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      model.currentPage == LoginUserNameView.index
+                          ? 'finish'
+                          : model.currentPage == LoginOtpView.index
+                              ? 'Done'
+                              : 'next',
+                      style: model.currentPage == LoginOtpView.index
+                          ? TextStyles.rajdhaniB.body1
+                              .colour(UiConstants.kPrimaryColor)
+                          : TextStyles.rajdhaniB.body1,
+                    ),
+                  ),
+                ),
+              ),
             if (!keyboardIsOpen)
               Align(
                   alignment: Alignment.bottomCenter,
@@ -132,6 +165,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                     ),
                               width: SizeConfig.screenWidth * 0.78,
                               onPressed: () {
+                                print("tapped me");
                                 if (model.state == ViewState.Idle)
                                   model.processScreenInput(
                                     model.currentPage,
@@ -140,39 +174,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             ),
                           ),
                   )),
-            if (keyboardIsOpen)
-              Positioned(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                child: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    if (model.state == ViewState.Idle)
-                      model.processScreenInput(
-                        model.currentPage,
-                      );
-                  },
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: 50,
-                    color: UiConstants.kLeaderBoardBackgroundColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins,
-                    ),
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      model.currentPage == LoginUserNameView.index
-                          ? 'finish'
-                          : model.currentPage == LoginOtpView.index
-                              ? 'Done'
-                              : 'next',
-                      style: model.currentPage == LoginOtpView.index
-                          ? TextStyles.rajdhaniB.body1
-                              .colour(UiConstants.kPrimaryColor)
-                          : TextStyles.rajdhaniB.body1,
-                    ),
-                  ),
-                ),
-              ),
             if (FlavorConfig.isDevelopment())
               Container(
                 width: SizeConfig.screenWidth,
