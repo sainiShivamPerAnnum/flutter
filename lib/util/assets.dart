@@ -3,6 +3,7 @@ import 'constants.dart';
 class Assets {
   static final String splashBackground = "assets/images/BG.png";
   static final String logoMaxSize = 'images/fello_logo.png';
+  static final String logoWhite = 'assets/temp/fello_logo.png';
   static final String logoShortform = 'images/fello-short-logo.png';
   static final String logoShortformSVG = 'assets/svg/fello-short-logo.svg';
 

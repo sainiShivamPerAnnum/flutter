@@ -254,7 +254,7 @@ class LoginControllerViewModel extends BaseModel {
                     properties: {'userId': userService?.baseUser?.uid},
                   );
                   logger.d("User object saved successfully");
-                  userService.showOnboardingTutorial = true;
+                  // userService.showOnboardingTutorial = true;
                   _onSignUpComplete();
                 } else {
                   BaseUtil.showNegativeAlert(
@@ -356,6 +356,13 @@ class LoginControllerViewModel extends BaseModel {
         eventName: AnalyticsEvents.signupComplete,
         properties: {'uid': userService.baseUser.uid},
       );
+
+      bool res = await lclDbProvider.showHomeTutorial;
+      if (res) {
+        bool result = await userService.completeOnboarding();
+        if (result) lclDbProvider.setShowHomeTutorial = false;
+      }
+
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 

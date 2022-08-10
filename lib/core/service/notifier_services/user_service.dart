@@ -52,7 +52,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool _isSimpleKycVerified;
   bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
-  bool showOnboardingTutorial = false;
+  bool showOnboardingTutorial = true;
   bool showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
 
@@ -347,6 +347,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
+  Future<bool> completeOnboarding() async {
+    ApiResponse response = await _userRepo.completeOnboarding();
+    return response.model;
+  }
+  
   Future<bool> checkGalleryPermission() async {
     if (await BaseUtil.showNoInternetAlert()) return false;
     var _status = await Permission.photos.status;

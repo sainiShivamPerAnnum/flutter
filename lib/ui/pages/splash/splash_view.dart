@@ -23,100 +23,103 @@ class LauncherView extends StatelessWidget {
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {
         return Scaffold(
-            backgroundColor: Colors.black,
-            body: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenHeight,
-              color: UiConstants.backgroundColor,
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: 0,
-                    child: Image.asset(
-                      Assets.splashBackground,
-                      width: SizeConfig.screenWidth,
-                      fit: BoxFit.fitWidth,
-                    ),
+          backgroundColor: Colors.black,
+          body: Container(
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.screenHeight,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF0D4042),
+                  Color(0xFF053739),
+                ],
+              ),
+            ),
+            child: Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        Assets.logoWhite,
+                        width: SizeConfig.screenWidth / 2.5,
+                      ),
+                      // Text(
+                      //   locale.splashTagline,
+                      //   style: TextStyles.body2,
+                      // )
+                    ],
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Column(
+                ),
+                // Positioned(
+                //   bottom: SizeConfig.navBarHeight,
+                //   child: Container(
+                //     width: SizeConfig.screenWidth,
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: SizeConfig.screenWidth * 0.1,
+                //     ),
+                //     child: Column(
+                //       children: [
+                //         Text(locale.splashSecureText),
+                //         SizedBox(height: 8),
+                //         Row(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Image.asset(Assets.augmontLogo,
+                //                 color: Colors.grey,
+                //                 width: SizeConfig.screenWidth * 0.2),
+                //             SizedBox(width: 16),
+                //             Image.asset(Assets.sebiGraphic,
+                //                 color: Colors.grey,
+                //                 width: SizeConfig.screenWidth * 0.04),
+                //             SizedBox(width: 16),
+                //             Image.asset(Assets.amfiGraphic,
+                //                 color: Colors.grey,
+                //                 width: SizeConfig.screenWidth * 0.04)
+                //           ],
+                //         )
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          Assets.logoMaxSize,
-                          width: SizeConfig.screenWidth / 3,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 40),
+                          child: Visibility(
+                            maintainSize: true,
+                            maintainAnimation: true,
+                            maintainState: true,
+                            visible: model.isSlowConnection,
+                            child:
+                                connectivityStatus == ConnectivityStatus.Offline
+                                    ? Text(
+                                        locale.splashNoInternet,
+                                        style: TextStyles.body3.bold,
+                                      )
+                                    : BreathingText(
+                                        alertText: locale.splashSlowConnection,
+                                        textStyle: TextStyles.sourceSans.body2,
+                                      ),
+                          ),
                         ),
-                        Text(
-                          locale.splashTagline,
-                          style: TextStyles.body2,
-                        )
                       ],
                     ),
                   ),
-                  Positioned(
-                    bottom: SizeConfig.navBarHeight,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.screenWidth * 0.1),
-                      child: Column(
-                        children: [
-                          Text(locale.splashSecureText),
-                          SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(Assets.augmontLogo,
-                                  color: Colors.grey,
-                                  width: SizeConfig.screenWidth * 0.2),
-                              SizedBox(width: 16),
-                              Image.asset(Assets.sebiGraphic,
-                                  color: Colors.grey,
-                                  width: SizeConfig.screenWidth * 0.04),
-                              SizedBox(width: 16),
-                              Image.asset(Assets.amfiGraphic,
-                                  color: Colors.grey,
-                                  width: SizeConfig.screenWidth * 0.04)
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 40),
-                            child: Visibility(
-                              maintainSize: true,
-                              maintainAnimation: true,
-                              maintainState: true,
-                              visible: model.isSlowConnection,
-                              child: connectivityStatus ==
-                                      ConnectivityStatus.Offline
-                                  ? Text(
-                                      locale.splashNoInternet,
-                                      style: TextStyles.body3.bold,
-                                    )
-                                  : BreathingText(
-                                      alertText: locale.splashSlowConnection,
-                                      textStyle: TextStyles.body2,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ));
+                )
+              ],
+            ),
+          ),
+        );
       },
     );
   }

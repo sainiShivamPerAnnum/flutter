@@ -56,6 +56,7 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
@@ -202,6 +203,7 @@ void setupLocator() {
   locator.registerFactory(() => Level2ViewModel());
   locator.registerFactory(() => CampaignRepo());
   locator.registerFactory(() => JourneyPageViewModel());
+  locator.registerFactory(() => OnboardingViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());
