@@ -194,6 +194,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       _onboardUserAutomatically(userAugmontState);
     }
 
+    //NOTE: NEED TO DISCUSS WITH ARAB
     if (!_userService.showOnboardingTutorial) {
       _augmontSecondFetchDone = true;
     }

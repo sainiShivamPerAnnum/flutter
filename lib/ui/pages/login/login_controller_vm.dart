@@ -29,6 +29,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
@@ -49,6 +50,7 @@ class LoginControllerViewModel extends BaseModel {
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
+
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
   final _internalOpsService = locator<InternalOpsService>();
 
@@ -200,6 +202,8 @@ class LoginControllerViewModel extends BaseModel {
                     userService.firebaseUser.uid,
                     _formatMobileNumber(LoginControllerView.mobileno));
               }
+              // logger.d(
+              //     "Mobileno : ${_formatMobileNumber(LoginControllerView.mobileno)}");
               // userService.baseUser.name = "Abc";
 
               // userService.baseUser.email = "abc@gmail.com";
@@ -242,7 +246,7 @@ class LoginControllerViewModel extends BaseModel {
                   }
                 } catch (e) {
                   logger.d(e);
-                  _usernameKey.currentState.model.enabled = false;
+                  _usernameKey.currentState.model.enabled = true;
                   flag = false;
                 }
 
@@ -252,7 +256,7 @@ class LoginControllerViewModel extends BaseModel {
                     properties: {'userId': userService?.baseUser?.uid},
                   );
                   logger.d("User object saved successfully");
-                  userService.showOnboardingTutorial = true;
+                  // userService.showOnboardingTutorial = true;
                   _onSignUpComplete();
                 } else {
                   BaseUtil.showNegativeAlert(
@@ -292,6 +296,7 @@ class LoginControllerViewModel extends BaseModel {
 
     ApiResponse<BaseUser> user =
         await _userRepo.getUserById(id: userService.firebaseUser.uid);
+    logger.d("User data found: ${user.model}");
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
           'Please reach out to customer support');
@@ -331,7 +336,7 @@ class LoginControllerViewModel extends BaseModel {
     } else {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
-      logger.d("User details available: Name: " + user.model.name);
+      logger.d("User details available: Name: " + user.model.username);
       if (source == LoginSource.TRUECALLER)
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
@@ -353,6 +358,13 @@ class LoginControllerViewModel extends BaseModel {
         eventName: AnalyticsEvents.signupComplete,
         properties: {'uid': userService.baseUser.uid},
       );
+
+      // bool res = await lclDbProvider.showHomeTutorial;
+      // if (res) {
+      //   bool result = await userService.completeOnboarding();
+      //   if (result) lclDbProvider.setShowHomeTutorial = false;
+      // }
+
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 
@@ -369,6 +381,12 @@ class LoginControllerViewModel extends BaseModel {
     AppState.isOnboardingInProgress = false;
     setState(ViewState.Idle);
     appStateProvider.rootIndex = 0;
+
+    bool res =
+        PreferenceHelper.exists(PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
+    if (res != null && res == true) {
+      await _userRepo.updateUserWalkthroughCompletion();
+    }
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {

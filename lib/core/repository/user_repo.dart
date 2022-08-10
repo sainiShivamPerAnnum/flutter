@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -388,6 +390,26 @@ class UserRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<bool>> completeOnboarding() async {
+    try {
+      log("completeOnboarding");
+      final token = await getBearerToken();
+      await APIService.instance.postData(
+        ApiPath.getCompleteOnboarding(userService.baseUser.uid),
+        cBaseUrl: _baseUrl,
+        token: "Bearer $token",
+      );
+
+      return ApiResponse<bool>(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to update fcm",
+        400,
+      );
+    }
+  }
+  
   Future<ApiResponse<bool>> updateUserWalkthroughCompletion() async {
     bool isGtRewarded = false;
     try {

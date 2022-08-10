@@ -11,6 +11,7 @@ class PreferenceHelper {
   static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
+  static const CACHE_ONBOARDING_COMPLETION = "onboardingCompletion";
 
   static SharedPreferences _prefs;
 

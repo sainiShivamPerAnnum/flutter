@@ -59,6 +59,7 @@ const String NewGameHomeViewPath = '/newGameHome';
 const String NewWebHomeViewPath = '/newWebHomeView';
 const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
 const String JourneyViewPath = '/journeyViewPath';
+const String OnBoardingPath = '/onBoardingPath';
 const String Level2ViewPath = '/level2View';
 const String BlogPostWebViewPath = '/blogPostWebView';
 const String CampaignViewPath = '/campaignViewPath';
@@ -122,6 +123,7 @@ enum Pages {
   NewWebHomeView,
   TopPlayerLeaderboard,
   JourneyView,
+  OnBoardingView,
   Level2View,
   BlogPostWebView,
   CampaignView,
@@ -537,6 +539,12 @@ PageConfiguration JourneyViewPageConfig = PageConfiguration(
     uiPage: Pages.JourneyView,
     name: "Journey Screen");
 
+PageConfiguration OnBoardingViewPageConfig = PageConfiguration(
+  key: 'OnBoardingView',
+  path: OnBoardingPath,
+  uiPage: Pages.OnBoardingView,
+  name: "On Boarding View",
+);
 PageConfiguration Level2ViewPageConfig = PageConfiguration(
     key: 'Level2View',
     path: Level2ViewPath,

@@ -24,7 +24,7 @@ class JourneyView extends StatefulWidget {
 }
 
 class _JourneyViewState extends State<JourneyView>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   AppLifecycleState _appLifecycleState;
   JourneyPageViewModel modelInstance;
   @override

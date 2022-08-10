@@ -105,7 +105,6 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
-
               RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
@@ -186,7 +185,6 @@ class BottomNavBar extends StatelessWidget {
                 Assets.navSaveInactive,
               ),
               NavBarItemData(
-
                 locale.navBarWin,
                 Assets.navWinActive,
                 Assets.navWinInactive,

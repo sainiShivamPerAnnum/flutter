@@ -226,7 +226,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
 
   userIsAtJourneyScreen() => (AppState.screenStack.length == 1 &&
-      AppState.delegate.appState.getCurrentTabIndex == 1);
+      AppState.delegate.appState.getCurrentTabIndex == 0);
 
   setAvatarPostion() => avatarPosition = calculatePosition(0);
 

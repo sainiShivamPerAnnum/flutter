@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -19,6 +21,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -47,6 +50,7 @@ class LauncherViewModel extends BaseModel {
   final _journeyRepo = locator<JourneyRepository>();
   final _userCoinService = locator<UserCoinService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _localDBModel = locator<LocalDBModel>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -83,8 +87,8 @@ class LauncherViewModel extends BaseModel {
       if (now <= BaseRemoteConfig.invalidationBefore) {
         await new CacheService().invalidateAll();
       }
-
-      await userService.init();
+      //test
+      await new CacheService().invalidateAll();
       await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
 
@@ -149,19 +153,34 @@ class LauncherViewModel extends BaseModel {
     ///check if user is onboarded
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: LoginPageConfig);
-      return;
+      _localDBModel.showHomeTutorial.then((value) {
+        if (userService.showOnboardingTutorial && value) {
+          //show tutorial
+          userService.showOnboardingTutorial = false;
+          navigator.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: OnBoardingViewPageConfig,
+          );
+          notifyListeners();
+        } else {
+          navigator.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: LoginPageConfig,
+          );
+        }
+      });
     }
 
     ///Ceck if app needs to be open securely
+    ///NOTE: CHECK APP LOCK
     bool _unlocked = true;
-    if (userService.baseUser.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
+    // if (userService.baseUser.userPreferences != null &&
+    //     userService.baseUser.userPreferences
+    //             .getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   _unlocked = await authenticateDevice();
+    // }
 
     if (_unlocked) {
       navigator.currentAction =
