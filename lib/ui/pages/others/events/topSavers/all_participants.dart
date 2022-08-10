@@ -24,6 +24,46 @@ class AllParticipantsView extends StatelessWidget {
   });
   bool isInteger(num value) => value is int || value == value.roundToDouble();
 
+  getItemCountCurrentWinners() {
+    if (model.campaignType == Constants.HS_DAILY_SAVER) {
+      if (model.currentParticipants.length < 30)
+        return model.currentParticipants.length;
+      else
+        return 30;
+    } else if (model.campaignType == Constants.HS_WEEKLY_SAVER) {
+      if (model.currentParticipants.length < 50)
+        return model.currentParticipants.length;
+      else
+        return 50;
+    } else if (model.campaignType == Constants.HS_MONTHLY_SAVER) {
+      if (model.currentParticipants.length < 80)
+        return model.currentParticipants.length;
+      else
+        return 80;
+    } else
+      return model.currentParticipants.length;
+  }
+
+  getItemCountPastWinners() {
+    if (model.campaignType == Constants.HS_DAILY_SAVER) {
+      if (model.pastWinners.length < 30)
+        return model.pastWinners.length;
+      else
+        return 30;
+    } else if (model.campaignType == Constants.HS_WEEKLY_SAVER) {
+      if (model.pastWinners.length < 50)
+        return model.pastWinners.length;
+      else
+        return 50;
+    } else if (model.campaignType == Constants.HS_MONTHLY_SAVER) {
+      if (model.pastWinners.length < 80)
+        return model.pastWinners.length;
+      else
+        return 80;
+    } else
+      return model.pastWinners.length;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +93,7 @@ class AllParticipantsView extends StatelessWidget {
                     ? ListView.builder(
                         padding: EdgeInsets.only(top: SizeConfig.padding12),
                         shrinkWrap: true,
-                        itemCount: model.currentParticipants.length,
+                        itemCount: getItemCountCurrentWinners(),
                         scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
@@ -105,7 +145,7 @@ class AllParticipantsView extends StatelessWidget {
                     : ListView.builder(
                         padding: EdgeInsets.only(top: SizeConfig.padding12),
                         shrinkWrap: true,
-                        itemCount: model.pastWinners.length,
+                        itemCount: getItemCountPastWinners(),
                         scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
