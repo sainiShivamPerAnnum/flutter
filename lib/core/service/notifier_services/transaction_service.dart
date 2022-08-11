@@ -234,6 +234,12 @@ class TransactionService
     return DateFormat('yyyy-MM-dd – hh:mm a').format(now);
   }
 
+  String getFormattedDate(Timestamp time) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    return DateFormat('MMMMd').format(now);
+  }
+
   Widget getTileLead(String type) {
     IconData icon;
     Color iconColor;
@@ -282,6 +288,18 @@ class TransactionService
       return "Withdrawal";
     }
     return "";
+  }
+
+  Color getTransactionTypeColor(String type) {
+    print(type);
+    if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
+      return UiConstants.kTealTextColor;
+    } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
+      return UiConstants.kTealTextColor;
+    } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
+      return UiConstants.kPeachTextColor;
+    }
+    return UiConstants.kTextColor;
   }
 
   Color getTileColor(String type) {

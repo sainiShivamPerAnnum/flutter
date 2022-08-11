@@ -163,6 +163,7 @@ class RootViewModel extends BaseModel {
     bottomNavBarIndex = index;
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
+    Haptic.vibrate();
     notifyListeners();
     if (AppState.delegate.appState.getCurrentTabIndex == 0)
       _journeyService.checkAndAnimateAvatar();

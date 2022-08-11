@@ -420,6 +420,56 @@ class S {
     );
   }
 
+  /// `Digital Gold` - Sace Section
+  String get digitalGoldText {
+    return Intl.message(
+      'Digital Gold',
+      name: 'digitalGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stable Fello` - Save Section
+  String get stableFelloText {
+    return Intl.message(
+      'Stable Fello',
+      name: 'stableFelloText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started with a weekly/ daily SIP`
+  String get getStartedWithSIP {
+    return Intl.message(
+      'Get started with a weekly/ daily SIP',
+      name: 'getStartedWithSIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest safely in Gold with our Auto SIP to win tokens `
+  String get investSafelyInGoldText {
+    return Intl.message(
+      'Invest safely in Gold with our Auto SIP to win tokens',
+      name: 'investSafelyInGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested` - Save Section
+  String get investedText {
+    return Intl.message(
+      'Invested',
+      name: 'investedText',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '------------------------------------' key
 
   /// `Trending Games`
@@ -1107,56 +1157,6 @@ class S {
       name: 'resultsPageLethalDosageMessage',
       desc: '',
       args: [quantity, formattedNumber],
-    );
-  }
-
-  /// `Digital Gold` - Sace Section
-  String get digitalGoldText {
-    return Intl.message(
-      'Digital Gold',
-      name: 'digitalGoldText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Stable Fello` - Save Section
-  String get stableFelloText {
-    return Intl.message(
-      'Stable Fello',
-      name: 'stableFelloText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Get started with a weekly/ daily SIP`
-  String get getStartedWithSIP {
-    return Intl.message(
-      'Get started with a weekly/ daily SIP',
-      name: 'getStartedWithSIP',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invest safely in Gold with our Auto SIP to win tokens `
-  String get investSafelyInGoldText {
-    return Intl.message(
-      'Invest safely in Gold with our Auto SIP to win tokens',
-      name: 'investSafelyInGoldText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invested` - Save Section
-  String get investedText {
-    return Intl.message(
-      'Invested',
-      name: 'investedText',
-      desc: '',
-      args: [],
     );
   }
 

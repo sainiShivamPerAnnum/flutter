@@ -35,9 +35,11 @@ class NavBar extends StatelessWidget {
 
     //Create a container with a row, and add our btn widgets into the row
     return Container(
+      height: SizeConfig.navBarHeight,
+      width: SizeConfig.screenWidth,
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: Padding(
-        padding: EdgeInsets.only(top: SizeConfig.padding10),
+        padding: EdgeInsets.only(top: SizeConfig.padding2),
         child: Row(
           //Center buttons horizontally
           mainAxisAlignment: MainAxisAlignment.spaceAround,

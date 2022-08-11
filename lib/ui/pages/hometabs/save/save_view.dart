@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
@@ -195,7 +196,7 @@ class SaveNetWorthSection extends StatelessWidget {
                     title: 'Digital Gold',
                     cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                     cardAssetName: Assets.digitalGoldBar,
-                    investedAmount: model.userFundWallet?.augGoldBalance,
+                    investedAmount: model.userFundWallet?.augGoldBalance ?? 0,
                     onCardTap: () => saveViewModel.navigateToSaveAssetView(),
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
@@ -213,6 +214,7 @@ class SaveNetWorthSection extends StatelessWidget {
                     title: 'Stable Fello',
                     cardBgColor: UiConstants.kSaveStableFelloCardBg,
                     cardAssetName: Assets.stableFello,
+                    investedAmount: 0.0,
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -312,13 +314,55 @@ class CampaignCardSection extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return CampiagnCard(
-                title: saveViewModel.ongoingEvents[index].title,
-                subTitle: saveViewModel.ongoingEvents[index].subtitle,
-                containerColor:
-                    saveViewModel.ongoingEvents[index].bgColor.toColor(),
-                imageUrl: saveViewModel.ongoingEvents[index].image,
-              );
+              return saveViewModel.isLoading
+                  ? ListView.builder(
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(right: SizeConfig.padding10),
+                            child: Container(
+                              width: SizeConfig.screenWidth * 0.5,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                  color: UiConstants.kBackgroundColor),
+                              child: Padding(
+                                padding: EdgeInsets.all(SizeConfig.padding16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: SizeConfig.padding28),
+                                      child: Center(
+                                        child: Container(
+                                          height: SizeConfig.screenWidth * 0.2,
+                                          width: SizeConfig.screenWidth,
+                                          decoration: BoxDecoration(
+                                              color: UiConstants
+                                                  .kSecondaryBackgroundColor),
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          baseColor: UiConstants.kUserRankBackgroundColor,
+                          highlightColor: UiConstants.kBackgroundColor,
+                        );
+                      })
+                  : CampiagnCard(
+                      title: saveViewModel.ongoingEvents[index].title,
+                      subTitle: saveViewModel.ongoingEvents[index].subtitle,
+                      containerColor:
+                          saveViewModel.ongoingEvents[index].bgColor.toColor(),
+                      imageUrl: saveViewModel.ongoingEvents[index].image,
+                    );
             }),
       ),
     );
@@ -524,6 +568,9 @@ class BlogWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: FelloAppBarBackButton(),
+      ),
       body: WebView(
           initialUrl: initialUrl, javascriptMode: JavascriptMode.unrestricted),
     );

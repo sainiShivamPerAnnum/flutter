@@ -46,6 +46,7 @@ class SaveViewModel extends BaseModel {
   }
 
   getCampaignEvents() async {
+    updateIsLoading(true);
     final response = await _campaignRepo.getOngoingEvents();
     if (response.code == 200) {
       ongoingEvents = response.model;
@@ -55,6 +56,7 @@ class SaveViewModel extends BaseModel {
       });
     } else
       ongoingEvents = [];
+    updateIsLoading(false);
   }
 
   getBlogs() async {

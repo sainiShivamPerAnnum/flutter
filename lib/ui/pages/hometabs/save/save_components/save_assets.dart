@@ -1,6 +1,7 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
@@ -11,6 +12,8 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SaveAssetView extends StatelessWidget {
   const SaveAssetView({Key key}) : super(key: key);
@@ -216,6 +219,39 @@ class SaveAssetView extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            BaseView<AugmontGoldDetailsViewModel>(
+                onModelReady: (model) => model.fetchGoldRates(),
+                builder: (ctx, model, child) => Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding24),
+                      child: Row(children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Sell your current gold \nat current market rate',
+                              style: TextStyles.sourceSansSB.body2
+                                  .colour(Colors.grey.withOpacity(0.8)),
+                            ),
+                            model.isGoldRateFetching
+                                ? SpinKitThreeBounce(
+                                    size: SizeConfig.title5,
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    model.goldRates != null
+                                        ? "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}"
+                                        : "- gm",
+                                    style: TextStyles.body3
+                                        .colour(UiConstants.kBlogTitleColor),
+                                  ),
+                          ],
+                        )
+                      ]),
+                    )),
             SizedBox(
               height: SizeConfig.padding24,
             ),

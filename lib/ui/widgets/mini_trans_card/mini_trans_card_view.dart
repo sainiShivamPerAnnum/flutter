@@ -41,105 +41,81 @@ class MiniTransactionCard extends StatelessWidget {
                       : (m.txnList.length == 0
                           ? Container(
                               padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding20),
+                                  vertical: SizeConfig.padding24),
                               alignment: Alignment.center,
                               child: Transform.scale(
                                   scale: 0.8, child: NoTransactionsContent()),
                             )
-                          : Column(
-                              children: List.generate(
-                                m.txnList.length < 5 ? m.txnList.length : 4,
-                                (i) {
-                                  return ListTile(
-                                    onTap: () {
-                                      Haptic.vibrate();
-                                      bool freeBeerStatus = model.txnService
-                                          .getBeerTicketStatus(m.txnList[i]);
-                                      showDialog(
-                                          context: AppState.delegate
-                                              .navigatorKey.currentContext,
-                                          builder: (BuildContext context) {
-                                            AppState.screenStack
-                                                .add(ScreenItem.dialog);
-                                            return TransactionDetailsDialog(
-                                                m.txnList[i], freeBeerStatus);
-                                          });
-                                    },
-                                    dense: true,
-                                    leading: Container(
-                                      padding: EdgeInsets.all(
-                                          SizeConfig.blockSizeHorizontal * 2),
-                                      height: SizeConfig.blockSizeVertical * 5,
-                                      width: SizeConfig.blockSizeVertical * 5,
-                                      child: model.txnService
-                                          .getTileLead(m.txnList[i].tranStatus),
-                                    ),
-                                    title: Text(
-                                      model.txnService.getTileTitle(
-                                        m.txnList[i].subType.toString(),
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: SizeConfig.mediumTextSize,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      model.txnService
-                                          .getTileSubtitle(m.txnList[i].type),
-                                      style: TextStyle(
-                                        color: model.txnService.getTileColor(
-                                            m.txnList[i].tranStatus),
-                                        fontSize: SizeConfig.smallTextSize,
-                                      ),
-                                    ),
-                                    trailing: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          model.txnService
-                                              .getFormattedTxnAmount(
-                                                  m.txnList[i].amount),
-                                          style: TextStyle(
-                                            // color: model.txnService
-                                            //     .getTileColor(
-                                            //         m.txnList[i].tranStatus),
-                                            fontSize: SizeConfig.mediumTextSize,
+                          : Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding10),
+                              child: Column(
+                                children: List.generate(
+                                  m.txnList.length < 4 ? m.txnList.length : 3,
+                                  (i) {
+                                    return ListTile(
+                                      onTap: () {
+                                        Haptic.vibrate();
+                                        bool freeBeerStatus = model.txnService
+                                            .getBeerTicketStatus(m.txnList[i]);
+                                        showDialog(
+                                            context: AppState.delegate
+                                                .navigatorKey.currentContext,
+                                            builder: (BuildContext context) {
+                                              AppState.screenStack
+                                                  .add(ScreenItem.dialog);
+                                              return TransactionDetailsDialog(
+                                                  m.txnList[i], freeBeerStatus);
+                                            });
+                                      },
+                                      dense: true,
+                                      title: Text(
+                                          model.txnService.getTileSubtitle(
+                                            m.txnList[i].type.toString(),
                                           ),
-                                        ),
-                                        Text(
-                                          model.txnService.getFormattedTime(
-                                              m.txnList[i].timestamp),
-                                          style: TextStyle(
-                                              // color: model.txnService
-                                              //     .getTileColor(
-                                              //         m.txnList[i].tranStatus),
-                                              color: Colors.black45,
-                                              fontSize:
-                                                  SizeConfig.smallTextSize),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor)),
+                                      subtitle: Text(
+                                        model.txnService.getFormattedDate(
+                                            m.txnList[i].timestamp),
+                                        style: TextStyles.sourceSans.body4
+                                            .colour(UiConstants.kTextColor2),
+                                      ),
+                                      trailing: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                              model.txnService
+                                                  .getFormattedTxnAmount(
+                                                      m.txnList[i].amount),
+                                              style: TextStyles
+                                                  .sourceSansSB.body2
+                                                  .colour(model.txnService
+                                                      .getTransactionTypeColor(
+                                                          model.txnList[i]
+                                                              .type))),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             )),
                 ),
                 m.txnList != null &&
                         m.txnList.isNotEmpty &&
-                        m.txnList.length > 5
+                        m.txnList.length > 3
                     ? FelloButton(
                         onPressed: () => model.viewAllTransaction(),
-                        defaultButtonText: "View All",
+                        defaultButtonText: "See All",
                         defaultButtonColor: Colors.white,
                         textStyle: TextStyles.body1.bold
                             .colour(UiConstants.primaryColor),
                       )
                     : SizedBox(),
-                SizedBox(
-                  height: 8,
-                )
               ],
             );
           },
