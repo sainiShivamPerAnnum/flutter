@@ -39,49 +39,31 @@ class PrizeClaimCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness16),
-                      color: UiConstants.scaffoldColor,
+                      color: UiConstants.kAutopayAmountDeactiveTabColor,
                     ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding16,
-                      vertical: SizeConfig.padding20,
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.padding16,
                     ),
                     child: Column(
                       children: [
                         Container(
                           margin: EdgeInsets.symmetric(
                               vertical: SizeConfig.padding6),
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CircleAvatar(
-                                backgroundColor:
-                                    UiConstants.primaryColor.withOpacity(0.2),
-                                child: Image.asset(
-                                  Assets.moneyIcon,
-                                  width: SizeConfig.iconSize1,
-                                ),
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding12,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FittedBox(
-                                      child: Text(
-                                        "My Active Winnings: ",
-                                        style: TextStyles.body1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: SizeConfig.padding12),
                               Text(
-                                "₹${m.userFundWallet.unclaimedBalance ?? '-'}",
-                                style: TextStyles.body1.bold
-                                    .colour(UiConstants.primaryColor),
+                                "Total Cashback",
+                                style: TextStyles.body1.colour(Colors.white),
+                              ),
+                              Text(
+                                "₹ ${m.userFundWallet.unclaimedBalance ?? '-'}",
+                                style: TextStyles.rajdhaniB.bold
+                                    .colour(
+                                        UiConstants.kcashBackAmountTextColor)
+                                    .copyWith(fontSize: SizeConfig.padding54),
+                                textAlign: TextAlign.center,
                               ),
                             ],
                           ),
@@ -91,6 +73,8 @@ class PrizeClaimCard extends StatelessWidget {
                                 minWithdrawPrizeAmt &&
                             m.userFundWallet.augGoldPrinciple >= refUnlockAmt)
                           Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding16),
                             margin: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding6),
                             child: Row(
@@ -120,8 +104,7 @@ class PrizeClaimCard extends StatelessWidget {
                         if (m.userFundWallet.unclaimedBalance <
                             minWithdrawPrizeAmt)
                           Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding6),
+                            margin: EdgeInsets.only(top: SizeConfig.padding6),
                             width: SizeConfig.screenWidth,
                             height: SizeConfig.padding54,
                             padding: EdgeInsets.symmetric(
@@ -129,21 +112,19 @@ class PrizeClaimCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(SizeConfig.roundness16),
-                              color: Colors.red.withOpacity(0.05),
+                              color: Colors.white.withOpacity(0.07),
                             ),
                             child: FittedBox(
                               child: Text(
                                 "Winnings can be redeemed on reaching ₹$minWithdrawPrize",
-                                style:
-                                    TextStyles.body3.colour(Colors.redAccent),
+                                style: TextStyles.body3.colour(Colors.white),
                               ),
                             ),
                           )
                         else if (m.userFundWallet.augGoldPrinciple <
                             refUnlockAmt)
                           Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding6),
+                            margin: EdgeInsets.only(top: SizeConfig.padding6),
                             width: SizeConfig.screenWidth,
                             height: SizeConfig.padding54,
                             padding: EdgeInsets.symmetric(
@@ -151,13 +132,12 @@ class PrizeClaimCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(SizeConfig.roundness16),
-                              color: UiConstants.tertiaryLight.withOpacity(0.5),
+                              color: Colors.white.withOpacity(0.07),
                             ),
                             child: FittedBox(
                               child: Text(
                                 "Savings of ₹$refUnlock required to redeem your winnings.",
-                                style:
-                                    TextStyles.body3.colour(Colors.redAccent),
+                                style: TextStyles.body3.colour(Colors.white),
                               ),
                             ),
                           ),

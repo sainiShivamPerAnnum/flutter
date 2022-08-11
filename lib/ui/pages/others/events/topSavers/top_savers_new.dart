@@ -13,8 +13,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../../core/enums/page_state_enum.dart';
+import '../../../../../navigator/router/ui_pages.dart';
 import '../../../../service_elements/user_service/profile_image.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
+import '../../profile/my_winnings/my_winnings_view.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>

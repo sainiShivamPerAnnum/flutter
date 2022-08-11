@@ -7,6 +7,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomRectTween extends RectTween {
   CustomRectTween({
@@ -67,20 +68,16 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
   UnRedeemedGoldenScratchCard({@required this.ticket});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-      ),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          image: DecorationImage(
-              image: AssetImage(Assets.gtCover), fit: BoxFit.cover),
-        ),
-        height: SizeConfig.screenWidth * 0.6,
-        width: SizeConfig.screenWidth * 0.6,
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+      height: SizeConfig.screenWidth * 0.6,
+      width: SizeConfig.screenWidth * 0.6,
+      child: SvgPicture.asset(
+        Assets.unredemmedGoldenTicketBG,
+        width: double.maxFinite,
+        height: double.maxFinite,
+        fit: BoxFit.contain,
       ),
     );
   }
@@ -99,40 +96,31 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraint) {
-      return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        ),
+      return Container(
         child: AnimatedContainer(
           height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth * 0.6,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeIn,
-          decoration: BoxDecoration(
-            color: UiConstants.tertiaryLight,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          ),
           padding: EdgeInsets.all(width * 0.04),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
             children: [
-              Container(
-                  height: width == SizeConfig.screenWidth * 0.6
-                      ? width * 0.5
-                      : width * 0.6,
-                  alignment: Alignment.center,
-                  child: getImageAsset(ticket)),
-              SizedBox(
-                  height: width == SizeConfig.screenWidth * 0.6
-                      ? width * 0.04
-                      : width * 0.08),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-                child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: getGTContent(
-                        ticket, titleStyle, subtitleStyle, titleStyle2)),
-              )
+              SvgPicture.asset(
+                getGTBackground(ticket),
+                width: double.maxFinite,
+                height: double.maxFinite,
+                fit: BoxFit.contain,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: SizeConfig.padding24),
+                  child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: getGTContent(
+                          ticket, titleStyle, subtitleStyle, titleStyle2)),
+                ),
+              ),
             ],
           ),
         ),
@@ -165,32 +153,49 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       );
   }
 
+  String getGTBackground(GoldenTicket ticket) {
+    if (ticket.isRewarding) {
+      //CHECK FOR REWARDS
+      if (ticket.rewardArr.length == 1) {
+        //Has a single reward
+        return Assets.gt_token;
+      } else if (ticket.rewardArr.length == 2) {
+        //Both flc and cash
+        return Assets.gt_token_cashback;
+      } else {
+        //we ran out of predictions
+        return Assets.gt_token_cashback;
+      }
+    } else {
+      //RETURN BLNT
+      return Assets.gt_none;
+    }
+  }
+
   Widget getGTContent(GoldenTicket ticket, TextStyle titleStyle,
       TextStyle subtitleStyle, TextStyle titleStyle2) {
     if (ticket.isRewarding) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr.length == 1) {
         //Has a single reward
-        return Column(
-          children: [
-            singleRewardWidget(ticket.rewardArr[0], titleStyle, titleStyle2),
-            SizedBox(height: SizeConfig.padding2),
-            Text(
-              "WON",
-              style: subtitleStyle,
-            )
-          ],
+        return Padding(
+          padding: EdgeInsets.only(left: SizeConfig.padding12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              singleRewardWidget(ticket.rewardArr[0], titleStyle, titleStyle2),
+              Text('Cashback!', style: TextStyles.body4)
+            ],
+          ),
         );
       } else if (ticket.rewardArr.length == 2) {
         //Both flc and cash
         return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             doubleRewardWidget(ticket.rewardArr, titleStyle, titleStyle2),
-            SizedBox(height: SizeConfig.padding2),
-            Text(
-              "WON",
-              style: subtitleStyle,
-            )
           ],
         );
       } else {
@@ -275,16 +280,56 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     int flc =
         rewards.firstWhere((e) => e.type == 'flc', orElse: () => null).value ??
             0;
-    return RichText(
-      text: TextSpan(
-          text: '₹ ',
-          style: titleStyle2.colour(Colors.black),
-          children: [
-            TextSpan(text: "$rupee", style: textStyle.bold),
-            TextSpan(text: " and "),
-            TextSpan(text: "$flc ", style: textStyle.bold),
-            TextSpan(text: flc > 1 ? "Tokens" : "Token")
-          ]),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //Cashback
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                text: TextSpan(
+                    text: '₹ ',
+                    style: titleStyle2.colour(Colors.black),
+                    children: [
+                      TextSpan(text: "$rupee", style: textStyle.bold),
+                    ]),
+              ),
+              Text(' Cashback!', style: TextStyles.body4)
+            ],
+          ),
+        ),
+
+        SizedBox(
+          height: SizeConfig.padding4,
+        ),
+
+        //flc tokens
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    Assets.newTokenAsset,
+                    width: SizeConfig.padding16,
+                    height: SizeConfig.padding16,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding4,
+                  ),
+                  Text("$flc ", style: textStyle.bold),
+                ],
+              ),
+              Text(' Tokens Won!', style: TextStyles.body4)
+            ],
+          ),
+        )
+      ],
     );
   }
 

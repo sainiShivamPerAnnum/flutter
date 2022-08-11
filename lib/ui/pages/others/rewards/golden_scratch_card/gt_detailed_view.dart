@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
@@ -29,16 +30,24 @@ class GTDetailedView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+                icon: Icon(Icons.close),
+              )
+            ],
+          ),
+          backgroundColor: Colors.black.withOpacity(0.7),
           body: Column(
             children: [
-              FelloAppBar(
-                leading: FelloAppBarBackButton(
-                  color: Colors.black,
-                ),
-              ),
               Spacer(),
-              model.viewScratchedCard
+              (model.viewScratchedCard)
                   ? RepaintBoundary(
                       key: ticketImageKey,
                       child: GoldenTicketGridItemCard(
@@ -56,32 +65,33 @@ class GTDetailedView extends StatelessWidget {
                           createRectTween: (begin, end) {
                             return CustomRectTween(begin: begin, end: end);
                           },
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness16),
-                            child: Scratcher(
-                              accuracy: ScratchAccuracy.low,
-                              brushSize: 50,
-                              threshold: 40,
-                              key: scratchKey,
-                              onThreshold: () => model.redeemCard(ticket),
-                              image: Image.asset(
-                                Assets.gtCover,
-                                fit: BoxFit.cover,
-                                height: SizeConfig.screenWidth * 0.6,
-                                width: SizeConfig.screenWidth * 0.6,
-                              ),
-                              child: RepaintBoundary(
-                                key: ticketImageKey,
-                                child: RedeemedGoldenScratchCard(
-                                  ticket: ticket,
-                                  subtitleStyle: TextStyles.body1,
-                                  titleStyle: TextStyles.title2,
-                                  titleStyle2: TextStyles.title4,
+                          child: Column(
+                            children: [
+                              Scratcher(
+                                color: Colors.transparent,
+                                accuracy: ScratchAccuracy.low,
+                                brushSize: 50,
+                                threshold: 40,
+                                key: scratchKey,
+                                onThreshold: () => model.redeemCard(ticket),
+                                image: Image.asset(
+                                  Assets.unredemmedGoldenTicketBG_png,
+                                  fit: BoxFit.contain,
+                                  height: SizeConfig.screenWidth * 0.6,
                                   width: SizeConfig.screenWidth * 0.6,
                                 ),
+                                child: RepaintBoundary(
+                                  key: ticketImageKey,
+                                  child: RedeemedGoldenScratchCard(
+                                    ticket: ticket,
+                                    subtitleStyle: TextStyles.body1,
+                                    titleStyle: TextStyles.title2,
+                                    titleStyle2: TextStyles.title4,
+                                    width: SizeConfig.screenWidth * 0.6,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         )
                       : GoldenTicketGridItemCard(
@@ -91,19 +101,9 @@ class GTDetailedView extends StatelessWidget {
                           subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),
-              Spacer(),
               if (model.bottompadding) FelloAppBar(),
               AnimatedContainer(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [UiConstants.scaffoldColor, Colors.white],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                    // image: DecorationImage(
-                    //     image: AssetImage(Assets.splashBackground),
-                    //     fit: BoxFit.fill),
-                  ),
+                  decoration: BoxDecoration(),
                   duration: Duration(seconds: 1),
                   curve: Curves.easeIn,
                   width: SizeConfig.screenWidth,
@@ -116,82 +116,87 @@ class GTDetailedView extends StatelessWidget {
   }
 
   Widget setModalContent(GTDetailedViewModel model) {
+//
+
+//
+
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
       //redeemed ticket -> just show the details
-      return Padding(
-        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      return Column(
+        children: [
+          Text("Congratulations!",
+              style: TextStyles.rajdhaniB
+                  .colour(Colors.white)
+                  .copyWith(fontSize: SizeConfig.padding32)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+            child: Text(
+              "${ticket.note}",
+              style: TextStyles.rajdhani
+                  .colour(Colors.white)
+                  .copyWith(fontSize: SizeConfig.padding16),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding80 + SizeConfig.padding80,
+          ),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: UiConstants.kBackgroundColor.withOpacity(0.5),
+            ),
+            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Congratulations!", style: TextStyles.title3.bold),
-                Spacer(),
-                // if (model.isCardScratched &&
-                //     ticket.rewardArr != null &&
-                //     ticket.rewardArr.isNotEmpty)
-                //   InkWell(
-                //     onTap: () => model.share(ticket),
-                //     child: Container(
-                //       decoration: BoxDecoration(
-                //         border: Border.all(
-                //             width: 0.5, color: UiConstants.primaryColor),
-                //         borderRadius: BorderRadius.circular(100),
-                //       ),
-                //       padding: EdgeInsets.symmetric(
-                //           horizontal: SizeConfig.pageHorizontalMargins),
-                //       height: SizeConfig.avatarRadius * 2,
-                //       child: model.isShareLoading
-                //           ? SpinKitThreeBounce(
-                //               color: UiConstants.primaryColor,
-                //               size: SizeConfig.padding16)
-                //           : Row(children: [
-                //               Text("Share",
-                //                   style: TextStyles.body2
-                //                       .colour(UiConstants.primaryColor)),
-                //               SizedBox(width: SizeConfig.padding6),
-                //               SvgPicture.asset(Assets.plane,
-                //                   width: SizeConfig.body2,
-                //                   color: UiConstants.primaryColor)
-                //             ]),
-                //     ),
-                //   )
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      bulletTiles("Rewards have been credited to your wallet"),
+                      (ticket.redeemedTimestamp != null &&
+                              ticket.redeemedTimestamp !=
+                                  TimestampModel(seconds: 0, nanoseconds: 0))
+                          ? bulletTiles(
+                              "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                          : bulletTiles(
+                              "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+                    ]),
               ],
             ),
-            SizedBox(height: SizeConfig.padding16),
-            Column(children: [
-              bulletTiles("${ticket.note}"),
-              bulletTiles("Rewards have been credited to your wallet"),
-              (ticket.redeemedTimestamp != null &&
-                      ticket.redeemedTimestamp !=
-                          TimestampModel(seconds: 0, nanoseconds: 0))
-                  ? bulletTiles(
-                      "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
-                  : bulletTiles(
-                      "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
-            ]),
-          ],
-        ),
+          ),
+        ],
       );
     } else {
       if (model.isCardScratched) {
         if (!ticket.isRewarding ||
             ticket.rewardArr == null ||
             ticket.rewardArr.isEmpty)
-          return Padding(
-            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("No rewards won", style: TextStyles.title2.bold),
-                SizedBox(height: SizeConfig.padding16),
-                Column(children: [
-                  bulletTiles("Keep investing, keep playing and win big!"),
-                ]),
-              ],
-            ),
+          return Column(
+            children: [
+              Text("No Rewards won",
+                  style: TextStyles.rajdhaniB
+                      .colour(Colors.white)
+                      .copyWith(fontSize: SizeConfig.padding32)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                child: Text(
+                  "Keep investing, keep playing and win big!",
+                  style: TextStyles.rajdhani
+                      .colour(Colors.white)
+                      .copyWith(fontSize: SizeConfig.padding16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding80 +
+                    SizeConfig.padding80 +
+                    SizeConfig.padding80 +
+                    SizeConfig.padding80,
+              ),
+            ],
           );
         else {
           if (model.state == ViewState.Busy) {
@@ -207,32 +212,64 @@ class GTDetailedView extends StatelessWidget {
                   SizedBox(height: SizeConfig.padding12),
                   Text(
                     "Adding prize to your wallet",
-                    style: TextStyles.body2.bold,
+                    style: TextStyles.body2.bold.colour(Colors.white),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding80 +
+                        SizeConfig.padding80 +
+                        SizeConfig.padding80,
                   )
                 ],
               ),
             );
           } else {
-            return Padding(
-              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Congratulations!", style: TextStyles.title2.bold),
-                  SizedBox(height: SizeConfig.padding16),
-                  Column(children: [
-                    bulletTiles("${ticket.note}"),
-                    bulletTiles("Rewards have been credited to your wallet"),
-                    (ticket.redeemedTimestamp != null &&
-                            ticket.redeemedTimestamp !=
-                                TimestampModel(seconds: 0, nanoseconds: 0))
-                        ? bulletTiles(
-                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
-                        : bulletTiles(
-                            "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
-                  ]),
-                ],
-              ),
+            return Column(
+              children: [
+                Text("Congratulations!",
+                    style: TextStyles.rajdhaniB
+                        .colour(Colors.white)
+                        .copyWith(fontSize: SizeConfig.padding32)),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                  child: Text(
+                    "${ticket.note}",
+                    style: TextStyles.rajdhani
+                        .colour(Colors.white)
+                        .copyWith(fontSize: SizeConfig.padding16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding80 + SizeConfig.padding80,
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: UiConstants.kBackgroundColor.withOpacity(0.5),
+                  ),
+                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            bulletTiles(
+                                "Rewards have been credited to your wallet"),
+                            (ticket.redeemedTimestamp != null &&
+                                    ticket.redeemedTimestamp !=
+                                        TimestampModel(
+                                            seconds: 0, nanoseconds: 0))
+                                ? bulletTiles(
+                                    "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                                : bulletTiles(
+                                    "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+                          ]),
+                    ],
+                  ),
+                ),
+              ],
             );
           }
         }
@@ -243,20 +280,22 @@ class GTDetailedView extends StatelessWidget {
   }
 
   Widget bulletTiles(String title) {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: EdgeInsets.only(bottom: 20.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.brightness_1,
-            size: 12,
-            color: UiConstants.primaryColor,
+            size: 08,
+            color: Colors.white,
           ),
           SizedBox(width: 10),
           Expanded(
             child: Text(
               title,
-              style: TextStyles.body3,
+              style: TextStyles.body3.colour(Colors.white),
             ),
           ),
         ],

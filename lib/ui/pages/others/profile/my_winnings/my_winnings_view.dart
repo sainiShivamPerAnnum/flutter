@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
@@ -33,23 +34,35 @@ class MyWinningsView extends StatelessWidget {
       builder: (ctx, model, child) {
         return Scaffold(
           //floatingActionButton: AddTodoButton(),
-          backgroundColor: UiConstants.primaryColor,
-          body: HomeBackground(
-            child: Column(
-              children: [
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  title: "Winnings",
-                ),
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.padding40),
-                      topRight: Radius.circular(SizeConfig.padding40),
+          backgroundColor: UiConstants.kBackgroundColor,
+          body: Stack(
+            children: [
+              NewSquareBackground(),
+              Column(
+                children: [
+                  AppBar(
+                    title: Text(
+                      'My Rewards',
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      style: TextStyles.title4.bold.colour(Colors.white),
                     ),
+                    elevation: 0.0,
+                    backgroundColor: UiConstants.kBackgroundColor,
+                    leading: IconButton(
+                      onPressed: () {
+                        AppState.backButtonDispatcher.didPopRoute();
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Expanded(
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.transparent,
                         ),
                         child: NestedScrollView(
                           // allows you to build a list of elements that would be scrolled away till the body reached the top
@@ -61,112 +74,16 @@ class MyWinningsView extends StatelessWidget {
                                     PrizeClaimCard(
                                       model: model,
                                     ),
-                                    // (model.userService.userFundWallet
-                                    //                 ?.lockedPrizeBalance !=
-                                    //             null &&
-                                    //         model.userService.userFundWallet
-                                    //                 .lockedPrizeBalance >
-                                    //             0)
-                                    //     ? InkWell(
-                                    //         onTap: () {
-                                    //           AppState.delegate.appState
-                                    //                   .currentAction =
-                                    //               PageAction(
-                                    //                   state: PageState.addPage,
-                                    //                   page:
-                                    //                       ReferralDetailsPageConfig);
-                                    //         },
-                                    //         child: Container(
-                                    //           margin: EdgeInsets.only(
-                                    //               top: SizeConfig.padding8,
-                                    //               left: SizeConfig
-                                    //                   .pageHorizontalMargins,
-                                    //               right: SizeConfig
-                                    //                   .pageHorizontalMargins),
-                                    //           decoration: BoxDecoration(
-                                    //             color: UiConstants.tertiaryLight,
-                                    //             borderRadius:
-                                    //                 BorderRadius.circular(
-                                    //                     SizeConfig.roundness16),
-                                    //           ),
-                                    //           padding: EdgeInsets.all(
-                                    //               SizeConfig.padding16),
-                                    //           child: Stack(
-                                    //             children: [
-                                    //               Text(
-                                    //                 'Your Locked Balance will now be available as Golden Tickets. Click to know more',
-                                    //                 textAlign: TextAlign.center,
-                                    //                 style: TextStyles.body3.light,
-                                    //               ),
-                                    //             ],
-                                    //           ),
-                                    //         ),
-                                    //       )
-                                    //     : SizedBox(height: SizeConfig.padding2),
                                   ],
                                 ),
                               ),
                             ];
                           },
-                          body: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: SizeConfig.padding24),
-                              WinningsContainer(
-                                shadow: false,
-                                onTap: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.addPage,
-                                          page: GoldenMilestonesViewPageConfig);
-                                },
-                                child: Container(
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding16),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          Assets.giftBoxOpen,
-                                        ),
-                                        SizedBox(
-                                            width:
-                                                SizeConfig.screenWidth * 0.05),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              "Earn your next\nGolden Tickets",
-                                              style: TextStyles.body1
-                                                  .colour(Colors.white)
-                                                  .light,
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: SizeConfig.padding16,
-                                    bottom: SizeConfig.padding8,
-                                    left: SizeConfig.pageHorizontalMargins),
-                                child: Text(
-                                  "My Rewards",
-                                  style: TextStyles.title3.bold,
-                                ),
-                              ),
-                              GoldenTicketsView(
-                                openFirst: openFirst,
-                              )
-                            ],
+                          body: Container(
+                            margin: EdgeInsets.only(top: SizeConfig.padding20),
+                            child: GoldenTicketsView(
+                              openFirst: openFirst,
+                            ),
                           ),
                         )
                         //  ListView(
@@ -176,10 +93,10 @@ class MyWinningsView extends StatelessWidget {
 
                         // ),
                         ),
-                  ),
-                )
-              ],
-            ),
+                  )
+                ],
+              ),
+            ],
           ),
         );
       },

@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart'
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
