@@ -40,168 +40,7 @@ class SaveAssetView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Stack(
-                    children: [
-                      BaseView<SaveViewModel>(
-                          builder: (ctx, model, child) => Padding(
-                                padding: EdgeInsets.only(
-                                    top: SizeConfig.padding54,
-                                    left: SizeConfig.padding24,
-                                    right: SizeConfig.padding24),
-                                child: Container(
-                                  height: SizeConfig.screenWidth * 0.88,
-                                  width: SizeConfig.screenWidth * 0.87,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness32),
-                                      color:
-                                          UiConstants.kSaveDigitalGoldCardBg),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          top: SizeConfig.screenWidth * 0.25),
-                                      child: Column(
-                                        children: [
-                                          Text('Digital Gold',
-                                              style:
-                                                  TextStyles.rajdhaniB.title2),
-                                          Text('Safer way to invest',
-                                              style:
-                                                  TextStyles.sourceSans.body4),
-                                          SizedBox(
-                                            height: SizeConfig.padding40,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    SizeConfig.padding24),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  children: [
-                                                    Text(
-                                                      '\u20b9 2000',
-                                                      style: TextStyles
-                                                          .sourceSans.body0
-                                                          .colour(Colors.white),
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          SizeConfig.padding2,
-                                                    ),
-                                                    Text(
-                                                      'Invested',
-                                                      style: TextStyles
-                                                          .sourceSans.body3
-                                                          .colour(UiConstants
-                                                              .kTextColor
-                                                              .withOpacity(
-                                                                  0.8)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    UserGoldQuantitySE(
-                                                      style: TextStyles
-                                                          .sourceSans.body0
-                                                          .colour(Colors.white),
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          SizeConfig.padding2,
-                                                    ),
-                                                    Text(
-                                                      'Total Gold',
-                                                      style: TextStyles
-                                                          .sourceSans.body3
-                                                          .colour(UiConstants
-                                                              .kTextColor
-                                                              .withOpacity(
-                                                                  0.8)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    Text(
-                                                      '\u20b9 4390.8',
-                                                      style: TextStyles
-                                                          .sourceSans.body0
-                                                          .colour(Colors.white),
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          SizeConfig.padding2,
-                                                    ),
-                                                    Text(
-                                                      'Current',
-                                                      style: TextStyles
-                                                          .sourceSans.body3
-                                                          .colour(UiConstants
-                                                              .kTextColor
-                                                              .withOpacity(
-                                                                  0.8)),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: SizeConfig.padding26,
-                                          ),
-                                          Center(
-                                              child: Container(
-                                            height:
-                                                SizeConfig.screenWidth * 0.10,
-                                            width: SizeConfig.screenWidth * 0.4,
-                                            decoration: BoxDecoration(
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        SizeConfig.roundness5)),
-                                            child: Center(
-                                              child: Text(
-                                                'SAVE',
-                                                style:
-                                                    TextStyles.rajdhaniSB.body1,
-                                              ),
-                                            ),
-                                          )),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding24),
-                        child: Container(
-                          height: SizeConfig.screenWidth - 50,
-                          width: SizeConfig.screenWidth * 0.87,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Transform(
-                              alignment: Alignment.center,
-                              transform: Matrix4.rotationY(math.pi),
-                              child: Image.asset(
-                                Assets.digitalGoldBar,
-                                height: SizeConfig.screenWidth * 0.4,
-                                width: SizeConfig.screenWidth * 0.4,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  GoldAssetCard(),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
@@ -222,36 +61,12 @@ class SaveAssetView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding24,
             ),
-            BaseView<AugmontGoldDetailsViewModel>(
-                onModelReady: (model) => model.fetchGoldRates(),
-                builder: (ctx, model, child) => Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding24),
-                      child: Row(children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Sell your current gold \nat current market rate',
-                              style: TextStyles.sourceSansSB.body2
-                                  .colour(Colors.grey.withOpacity(0.8)),
-                            ),
-                            model.isGoldRateFetching
-                                ? SpinKitThreeBounce(
-                                    size: SizeConfig.title5,
-                                    color: Colors.white,
-                                  )
-                                : Text(
-                                    model.goldRates != null
-                                        ? "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}"
-                                        : "- gm",
-                                    style: TextStyles.body3
-                                        .colour(UiConstants.kBlogTitleColor),
-                                  ),
-                          ],
-                        )
-                      ]),
-                    )),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [CurrentGoldRateText(), _sellButton(onTap: () {})]),
+            ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -267,6 +82,203 @@ class SaveAssetView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  GestureDetector _sellButton({@required Function() onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: SizeConfig.screenWidth * 0.12,
+        width: SizeConfig.screenWidth * 0.29,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          border: Border.all(color: Colors.white, width: 1),
+        ),
+        child: Center(
+          child: Text(
+            'SELL',
+            style: TextStyles.rajdhaniSB.body0,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CurrentGoldRateText extends StatelessWidget {
+  const CurrentGoldRateText({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseView<AugmontGoldDetailsViewModel>(
+        onModelReady: (model) => model.fetchGoldRates(),
+        builder: (ctx, model, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sell your current gold \nat current market rate',
+                  style: TextStyles.sourceSansSB.body2
+                      .colour(Colors.grey.withOpacity(0.8)),
+                ),
+                model.isGoldRateFetching
+                    ? SpinKitThreeBounce(
+                        size: SizeConfig.title5,
+                        color: Colors.white,
+                      )
+                    : Text(
+                        model.goldRates != null
+                            ? "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}/gm ~"
+                            : "- gm",
+                        style: TextStyles.body3
+                            .colour(UiConstants.kBlogTitleColor),
+                      ),
+              ],
+            ));
+  }
+}
+
+class GoldAssetCard extends StatelessWidget {
+  const GoldAssetCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        BaseView<SaveViewModel>(
+            builder: (ctx, model, child) => Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.padding54,
+                      left: SizeConfig.padding24,
+                      right: SizeConfig.padding24),
+                  child: Container(
+                    height: SizeConfig.screenWidth * 0.88,
+                    width: SizeConfig.screenWidth * 0.87,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness32),
+                        color: UiConstants.kSaveDigitalGoldCardBg),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.only(top: SizeConfig.screenWidth * 0.25),
+                        child: Column(
+                          children: [
+                            Text('Digital Gold',
+                                style: TextStyles.rajdhaniB.title2),
+                            Text('Safer way to invest',
+                                style: TextStyles.sourceSans.body4),
+                            SizedBox(
+                              height: SizeConfig.padding40,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding24),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        '\u20b9 2000',
+                                        style: TextStyles.sourceSans.body0
+                                            .colour(Colors.white),
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.padding2,
+                                      ),
+                                      Text(
+                                        'Invested',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor
+                                                .withOpacity(0.8)),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      UserGoldQuantitySE(
+                                        style: TextStyles.sourceSans.body0
+                                            .colour(Colors.white),
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.padding2,
+                                      ),
+                                      Text(
+                                        'Total Gold',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor
+                                                .withOpacity(0.8)),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        '\u20b9 4390.8',
+                                        style: TextStyles.sourceSans.body0
+                                            .colour(Colors.white),
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.padding2,
+                                      ),
+                                      Text(
+                                        'Current',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor
+                                                .withOpacity(0.8)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding26,
+                            ),
+                            Center(
+                                child: Container(
+                              height: SizeConfig.screenWidth * 0.10,
+                              width: SizeConfig.screenWidth * 0.4,
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness5)),
+                              child: Center(
+                                child: Text(
+                                  'SAVE',
+                                  style: TextStyles.rajdhaniSB.body1,
+                                ),
+                              ),
+                            )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+          child: Container(
+            height: SizeConfig.screenWidth - 50,
+            width: SizeConfig.screenWidth * 0.87,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(math.pi),
+                child: Image.asset(
+                  Assets.digitalGoldBar,
+                  height: SizeConfig.screenWidth * 0.4,
+                  width: SizeConfig.screenWidth * 0.4,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
