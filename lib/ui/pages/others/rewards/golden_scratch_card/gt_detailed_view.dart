@@ -66,6 +66,8 @@ class GTDetailedView extends StatelessWidget {
                             return CustomRectTween(begin: begin, end: end);
                           },
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Scratcher(
                                 color: Colors.transparent,
@@ -101,7 +103,7 @@ class GTDetailedView extends StatelessWidget {
                           subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),
-              if (model.bottompadding) FelloAppBar(),
+              Spacer(),
               AnimatedContainer(
                   decoration: BoxDecoration(),
                   duration: Duration(seconds: 1),
@@ -141,7 +143,7 @@ class GTDetailedView extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: SizeConfig.padding80 + SizeConfig.padding80,
+            height: SizeConfig.padding80,
           ),
           Container(
             width: double.infinity,
@@ -190,12 +192,7 @@ class GTDetailedView extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(
-                height: SizeConfig.padding80 +
-                    SizeConfig.padding80 +
-                    SizeConfig.padding80 +
-                    SizeConfig.padding80,
-              ),
+              SizedBox(height: SizeConfig.padding80),
             ],
           );
         else {
@@ -214,11 +211,7 @@ class GTDetailedView extends StatelessWidget {
                     "Adding prize to your wallet",
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
-                  SizedBox(
-                    height: SizeConfig.padding80 +
-                        SizeConfig.padding80 +
-                        SizeConfig.padding80,
-                  )
+                  SizedBox(height: SizeConfig.padding80)
                 ],
               ),
             );
@@ -241,7 +234,7 @@ class GTDetailedView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.padding80 + SizeConfig.padding80,
+                  height: SizeConfig.padding80,
                 ),
                 Container(
                   width: double.infinity,

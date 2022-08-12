@@ -273,8 +273,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
 
   doubleRewardWidget(
       List<Reward> rewards, TextStyle textStyle, TextStyle titleStyle2) {
+    print("RESPONSE LENGTH: ${rewards[1].type}");
+
     int rupee = rewards
-            .firstWhere((e) => e.type == 'rupee', orElse: () => null)
+            .firstWhere((e) => e.type == 'rupee' || e.type == 'amt',
+                orElse: () => null)
             .value ??
         0;
     int flc =
