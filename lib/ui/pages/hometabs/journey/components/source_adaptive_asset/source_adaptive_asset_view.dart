@@ -17,14 +17,12 @@ class SourceAdaptiveAssetView extends StatelessWidget {
   const SourceAdaptiveAssetView(
       {@required this.asset, this.height, this.width});
 
-  String generateAssetUrl(String name) {
-    return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
-  }
+  // String generateAssetUrl(String name) {
+  //   return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // log("ROOTVIEW: Build called for SourceAdaptiveAsset widget");
-    if (asset.name == 'b7') log(asset.toString());
     return BaseView<SourceAdaptiveAssetViewModel>(onModelReady: (model) {
       model.init(asset.uri);
     }, onModelDispose: (model) {

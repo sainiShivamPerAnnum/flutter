@@ -238,7 +238,7 @@ class JourneyRepository extends BaseRepo {
         cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
       );
 
-      final Map<int, dynamic> responseData = response["data"];
+      final responseData = response["data"];
       responseData.forEach((level, levelDetails) {
         journeylevels.add(JourneyLevel.fromMap(levelDetails));
       });

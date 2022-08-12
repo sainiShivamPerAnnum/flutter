@@ -8,6 +8,9 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -165,6 +168,8 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
+                    JourneyAppBar(),
+                    JourneyBannersView()
                     // AnimatedPositioned(
                     //   top: (model.isLoading &&
                     //           model.pages != null &&
@@ -314,7 +319,7 @@ class MilestoneChecks extends StatelessWidget {
                                 model.currentMilestoneList[i].y) -
                         model.pageHeight * 0.02,
                     child: MileStoneCheck(
-                        model: model,
+                        // model: model,
                         milestone: model.currentMilestoneList[i]));
                 // else
                 //   return SizedBox();

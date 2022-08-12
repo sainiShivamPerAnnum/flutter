@@ -286,15 +286,15 @@ class BaseRings extends StatelessWidget {
 }
 
 class MileStoneCheck extends StatelessWidget {
-  final JourneyService model;
+  // final JourneyService model;
   final MilestoneModel milestone;
-  const MileStoneCheck({Key key, this.model, this.milestone}) : super(key: key);
+  const MileStoneCheck({Key key, this.milestone}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: model.pageWidth * 0.08,
-      height: model.pageWidth * 0.08,
+      width: SizeConfig.screenWidth * 0.08,
+      height: SizeConfig.screenWidth * 0.08,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: UiConstants.primaryColor, width: 3),

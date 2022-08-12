@@ -87,7 +87,7 @@ class LauncherViewModel extends BaseModel {
       if (now <= BaseRemoteConfig.invalidationBefore) {
         await new CacheService().invalidateAll();
       }
-      //test
+      // test
       // await new CacheService().invalidateAll();
       await _userCoinService.init();
       await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);

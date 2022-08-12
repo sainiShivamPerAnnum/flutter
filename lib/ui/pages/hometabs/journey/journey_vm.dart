@@ -250,9 +250,9 @@ class JourneyPageViewModel extends BaseModel {
 
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
+    bool isCompleted = false;
     if (_journeyService.avatarRemoteMlIndex > milestone.index) {
-      return BaseUtil.showNegativeAlert(
-          "MIlestone already completed", "Completed UI still in construction");
+      isCompleted = true;
     }
     AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
@@ -262,8 +262,12 @@ class JourneyPageViewModel extends BaseModel {
       enableDrag: false,
       useRootNavigator: true,
       context: context,
+      // isScrollControlled: true,
       builder: (ctx) {
-        return JourneyMilestoneDetailsModalSheet(milestone: milestone);
+        return JourneyMilestoneDetailsModalSheet(
+          milestone: milestone,
+          isCompleted: isCompleted,
+        );
       },
     );
   }
