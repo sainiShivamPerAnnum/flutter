@@ -128,37 +128,16 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     });
   }
 
-  Image getImageAsset(GoldenTicket ticket) {
-    if (ticket.isRewarding) {
-      Reward gold = ticket.rewardArr
-          .firstWhere((e) => e.type == 'gold', orElse: () => null);
-      if (gold != null) {
-        // return ;
-        return Image.asset(
-          Assets.augmontShare,
-          height:
-              width == SizeConfig.screenWidth * 0.6 ? width * 0.4 : width * 0.5,
-        );
-      } else
-        return Image.asset(
-          Assets.gtWon,
-          height:
-              width == SizeConfig.screenWidth * 0.6 ? width * 0.5 : width * 0.6,
-        );
-    } else
-      return Image.asset(
-        Assets.gtLose,
-        height:
-            width == SizeConfig.screenWidth * 0.6 ? width * 0.5 : width * 0.6,
-      );
-  }
-
   String getGTBackground(GoldenTicket ticket) {
     if (ticket.isRewarding) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr.length == 1) {
         //Has a single reward
-        return Assets.gt_token;
+
+        if (ticket.rewardArr[0].type == 'flc')
+          return Assets.gt_token;
+        else
+          return Assets.gt_cashback;
       } else if (ticket.rewardArr.length == 2) {
         //Both flc and cash
         return Assets.gt_token_cashback;
@@ -254,8 +233,10 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             ),
             TextSpan(text: "${reward.value} ", style: textStyle.bold),
             TextSpan(
-              text: "worth of Gold",
-            )
+                text: "wortsh of Gold",
+                style: TextStyles.rajdhani
+                    .colour(Colors.black)
+                    .copyWith(fontSize: SizeConfig.padding10))
           ],
         ),
       );
@@ -273,8 +254,6 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
 
   doubleRewardWidget(
       List<Reward> rewards, TextStyle textStyle, TextStyle titleStyle2) {
-    print("RESPONSE LENGTH: ${rewards[1].type}");
-
     int rupee = rewards
             .firstWhere((e) => e.type == 'rupee' || e.type == 'amt',
                 orElse: () => null)

@@ -103,6 +103,12 @@ class GTDetailedView extends StatelessWidget {
                           subtitleStyle: TextStyles.body1,
                           width: SizeConfig.screenWidth * 0.6,
                         )),
+              AnimatedContainer(
+                  decoration: BoxDecoration(),
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeIn,
+                  width: SizeConfig.screenWidth,
+                  child: setTicketHeader(model)),
               Spacer(),
               AnimatedContainer(
                   decoration: BoxDecoration(),
@@ -117,7 +123,7 @@ class GTDetailedView extends StatelessWidget {
     );
   }
 
-  Widget setModalContent(GTDetailedViewModel model) {
+  Widget setTicketHeader(GTDetailedViewModel model) {
 //
 
 //
@@ -142,13 +148,104 @@ class GTDetailedView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(
-            height: SizeConfig.padding80,
-          ),
+        ],
+      );
+    } else {
+      if (model.isCardScratched) {
+        if (!ticket.isRewarding ||
+            ticket.rewardArr == null ||
+            ticket.rewardArr.isEmpty)
+          return Column(
+            children: [
+              Text("No Rewards won",
+                  style: TextStyles.rajdhaniB
+                      .colour(Colors.white)
+                      .copyWith(fontSize: SizeConfig.padding32)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                child: Text(
+                  "Keep investing, keep playing and win big!",
+                  style: TextStyles.rajdhani
+                      .colour(Colors.white)
+                      .copyWith(fontSize: SizeConfig.padding16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          );
+        else {
+          if (model.state == ViewState.Busy) {
+            return SizedBox.shrink();
+          } else {
+            return Column(
+              children: [
+                Text("Congratulations!",
+                    style: TextStyles.rajdhaniB
+                        .colour(Colors.white)
+                        .copyWith(fontSize: SizeConfig.padding32)),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                  child: Text(
+                    "${ticket.note}",
+                    style: TextStyles.rajdhani
+                        .colour(Colors.white)
+                        .copyWith(fontSize: SizeConfig.padding16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            );
+          }
+        }
+      } else {
+        return Column(
+          children: [
+            Text("Hurray!",
+                style: TextStyles.rajdhaniB
+                    .colour(Colors.white)
+                    .copyWith(fontSize: SizeConfig.padding32)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              child: Text(
+                "You’ve earned a golden ticket.",
+                style: TextStyles.title5
+                    .colour(Colors.white)
+                    .copyWith(fontSize: SizeConfig.padding16),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              child: Text(
+                "Scratch and win exciting rewards",
+                style: TextStyles.rajdhani
+                    .colour(Colors.white)
+                    .copyWith(fontSize: SizeConfig.padding16),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        );
+      }
+    }
+  }
+
+  Widget setModalContent(GTDetailedViewModel model) {
+//
+
+//
+
+    if (ticket.redeemedTimestamp != null &&
+        ticket.redeemedTimestamp !=
+            TimestampModel(seconds: 0, nanoseconds: 0)) {
+      //redeemed ticket -> just show the details
+      return Column(
+        children: [
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: UiConstants.kBackgroundColor.withOpacity(0.5),
+              color: UiConstants.gameCardColor,
             ),
             padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
             child: Column(
@@ -177,30 +274,18 @@ class GTDetailedView extends StatelessWidget {
             ticket.rewardArr == null ||
             ticket.rewardArr.isEmpty)
           return Column(
-            children: [
-              Text("No Rewards won",
-                  style: TextStyles.rajdhaniB
-                      .colour(Colors.white)
-                      .copyWith(fontSize: SizeConfig.padding32)),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                child: Text(
-                  "Keep investing, keep playing and win big!",
-                  style: TextStyles.rajdhani
-                      .colour(Colors.white)
-                      .copyWith(fontSize: SizeConfig.padding16),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: SizeConfig.padding80),
-            ],
+            children: [],
           );
         else {
           if (model.state == ViewState.Busy) {
-            return Padding(
+            return Container(
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: UiConstants.gameCardColor,
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SpinKitWave(
                     color: UiConstants.primaryColor,
@@ -211,35 +296,16 @@ class GTDetailedView extends StatelessWidget {
                     "Adding prize to your wallet",
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
-                  SizedBox(height: SizeConfig.padding80)
                 ],
               ),
             );
           } else {
             return Column(
               children: [
-                Text("Congratulations!",
-                    style: TextStyles.rajdhaniB
-                        .colour(Colors.white)
-                        .copyWith(fontSize: SizeConfig.padding32)),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                  child: Text(
-                    "${ticket.note}",
-                    style: TextStyles.rajdhani
-                        .colour(Colors.white)
-                        .copyWith(fontSize: SizeConfig.padding16),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding80,
-                ),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: UiConstants.kBackgroundColor.withOpacity(0.5),
+                    color: UiConstants.gameCardColor,
                   ),
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   child: Column(

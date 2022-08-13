@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -71,12 +72,8 @@ class UpdateRequiredScreen extends StatelessWidget {
                   )),
               Padding(
                 padding: EdgeInsets.all(SizeConfig.padding34),
-                child: FelloButtonLg(
-                  child: Text(
-                    "Update Now".toUpperCase(),
-                    style: TextStyles.rajdhaniB.title5,
-                  ),
-                  color: UiConstants.primaryColor,
+                child: AppPositiveBtn(
+                  btnText: "Update Now".toUpperCase(),
                   onPressed: () {
                     try {
                       if (Platform.isIOS)
@@ -91,6 +88,7 @@ class UpdateRequiredScreen extends StatelessWidget {
                           "Something went wrong", "Please try again");
                     }
                   },
+                  width: SizeConfig.screenWidth * 0.8,
                 ),
               ),
             ],
