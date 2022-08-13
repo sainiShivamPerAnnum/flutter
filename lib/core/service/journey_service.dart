@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -18,6 +19,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -44,6 +46,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int pageCount;
   double _baseGlow = 0;
   TickerProvider _vsync;
+  Timer timer;
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
   List<AvatarPathModel> customPathDataList = [];
@@ -380,8 +383,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
     controller.reset();
+    timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
+      Haptic.strongVibrate();
+    });
     controller.forward().whenComplete(() {
       log("Animation Complete");
+      timer.cancel();
       int gameLevelChangeResult = checkForGameLevelChange();
       if (gameLevelChangeResult != 0)
         BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",

@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
@@ -9,6 +11,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAppBar extends StatelessWidget {
   const JourneyAppBar({Key key}) : super(key: key);
@@ -46,24 +49,33 @@ class JourneyAppBar extends StatelessWidget {
                         ProfileImageSE(radius: SizeConfig.avatarRadius * 1.1),
                         SizedBox(width: SizeConfig.padding12),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Hi Madmaen",
-                                style: TextStyles.rajdhaniSB.title5
-                                    .colour(Colors.white),
-                              ),
-                              Text(
-                                "Level 1",
-                                style: TextStyles.sourceSansM.body3
-                                    .colour(Colors.white.withOpacity(0.8))
-                                    .setHeight(0.8),
-                              ),
+                            child: PropertyChangeConsumer<UserService,
+                                    UserServiceProperties>(
+                                properties: [
+                              UserServiceProperties.myUserName,
+                              UserServiceProperties.myJourneyStats
                             ],
-                          ),
-                        ),
+                                builder: (context, model, properties) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Hi ${model.myUserName}",
+                                        style: TextStyles.rajdhaniSB.title5
+                                            .colour(Colors.white),
+                                      ),
+                                      Text(
+                                        "Level ${model.userJourneyStats.level}",
+                                        style: TextStyles.sourceSansM.body3
+                                            .colour(
+                                                Colors.white.withOpacity(0.8))
+                                            .setHeight(0.8),
+                                      ),
+                                    ],
+                                  );
+                                })),
                         FelloCoinBar(),
                         NotificationButton()
                       ],
