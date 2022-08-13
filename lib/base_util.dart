@@ -6,8 +6,6 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';

@@ -598,6 +598,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SaveAssetView:
         SaveAssetsViewConfig.currentPageAction = action;
         break;
+      case Pages.SellAssetView:
+        SellAssetsViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }

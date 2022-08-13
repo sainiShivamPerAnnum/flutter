@@ -7,6 +7,7 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -20,6 +21,7 @@ class SaveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S();
     return Scaffold(
       backgroundColor: UiConstants.kDarkBackgroundColor,
       appBar: AppBar(
@@ -65,8 +67,27 @@ class SaveAssetView extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [CurrentGoldRateText(), _sellButton(onTap: () {})]),
+                  children: [
+                    CurrentGoldRateText(),
+                    _sellButton(onTap: () {}, isActive: false),
+                  ]),
             ),
+            Padding(
+              padding: EdgeInsets.only(right: SizeConfig.padding24),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  locale.tokenDeductionOnTransaction,
+                  style: TextStyles.sourceSans.body4
+                      .colour(Colors.grey.withOpacity(0.7)),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            CompleteKYCSection(),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -85,7 +106,8 @@ class SaveAssetView extends StatelessWidget {
     );
   }
 
-  GestureDetector _sellButton({@required Function() onTap}) {
+  GestureDetector _sellButton(
+      {@required Function() onTap, @required bool isActive}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -93,12 +115,17 @@ class SaveAssetView extends StatelessWidget {
         width: SizeConfig.screenWidth * 0.29,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-          border: Border.all(color: Colors.white, width: 1),
+          border: Border.all(
+              color: isActive
+                  ? Colors.white
+                  : UiConstants.kSecondaryBackgroundColor,
+              width: 1),
         ),
         child: Center(
           child: Text(
             'SELL',
-            style: TextStyles.rajdhaniSB.body0,
+            style: TextStyles.rajdhaniSB.body0.colour(
+                isActive ? UiConstants.kTextColor : UiConstants.kTextColor2),
           ),
         ),
       ),
@@ -279,6 +306,81 @@ class GoldAssetCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CompleteKYCSection extends StatelessWidget {
+  final bool isKYCCompleted;
+  final bool isBankInformationComeplted;
+
+  const CompleteKYCSection(
+      {Key key, this.isKYCCompleted, this.isBankInformationComeplted})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S();
+    return BaseView<SaveViewModel>(
+        onModelReady: (model) => model.verifyVPAAddress(),
+        builder: (context, model, child) => Column(
+              children: [
+                model.userService.isSimpleKycVerified
+                    ? SellActionButton(
+                        title: locale.completeKYCText,
+                        onTap: () {
+                          model.navigateToSellAsset();
+                        },
+                      )
+                    : Container(),
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
+                SellActionButton(
+                  title: locale.addBankInformationText,
+                ),
+              ],
+            ));
+  }
+}
+
+class SellActionButton extends StatelessWidget {
+  final String title;
+  final String iconData;
+  final Function() onTap;
+  final bool isVisible;
+
+  const SellActionButton(
+      {Key key, this.title, this.iconData, this.onTap, this.isVisible = true})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+      child: Container(
+        height: SizeConfig.screenWidth * 0.16,
+        width: SizeConfig.screenWidth,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            color: UiConstants.kSecondaryBackgroundColor),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyles.rajdhaniM.body1,
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: UiConstants.kTextColor,
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

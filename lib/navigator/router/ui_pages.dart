@@ -64,6 +64,7 @@ const String Level2ViewPath = '/level2View';
 const String BlogPostWebViewPath = '/blogPostWebView';
 const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
+const String SellAssetViewPath = '/sellAssetViewPath';
 
 enum Pages {
   Splash,
@@ -127,7 +128,8 @@ enum Pages {
   Level2View,
   BlogPostWebView,
   CampaignView,
-  SaveAssetView
+  SaveAssetView,
+  SellAssetView
 }
 
 class PageConfiguration {
@@ -569,4 +571,11 @@ PageConfiguration SaveAssetsViewConfig = PageConfiguration(
   path: SaveAssetViewPath,
   uiPage: Pages.SaveAssetView,
   name: "Save Asset View",
+);
+
+PageConfiguration SellAssetsViewConfig = PageConfiguration(
+  key: 'SellAssetsView',
+  path: SellAssetViewPath,
+  uiPage: Pages.SellAssetView,
+  name: "Sell Asset View",
 );
