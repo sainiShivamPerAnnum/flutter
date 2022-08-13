@@ -232,41 +232,31 @@ class GTDetailedView extends StatelessWidget {
   }
 
   Widget setModalContent(GTDetailedViewModel model) {
-//
-
-//
-
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
       //redeemed ticket -> just show the details
-      return Column(
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: UiConstants.gameCardColor,
-            ),
-            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      bulletTiles("Rewards have been credited to your wallet"),
-                      (ticket.redeemedTimestamp != null &&
-                              ticket.redeemedTimestamp !=
-                                  TimestampModel(seconds: 0, nanoseconds: 0))
-                          ? bulletTiles(
-                              "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
-                          : bulletTiles(
-                              "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
-                    ]),
-              ],
-            ),
-          ),
-        ],
+      return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: UiConstants.gameCardColor,
+        ),
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              bulletTiles("Rewards have been credited to your wallet"),
+              (ticket.redeemedTimestamp != null &&
+                      ticket.redeemedTimestamp !=
+                          TimestampModel(seconds: 0, nanoseconds: 0))
+                  ? bulletTiles(
+                      "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                  : bulletTiles(
+                      "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+            ]),
+          ],
+        ),
       );
     } else {
       if (model.isCardScratched) {
@@ -300,35 +290,30 @@ class GTDetailedView extends StatelessWidget {
               ),
             );
           } else {
-            return Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: UiConstants.gameCardColor,
-                  ),
-                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            bulletTiles(
-                                "Rewards have been credited to your wallet"),
-                            (ticket.redeemedTimestamp != null &&
-                                    ticket.redeemedTimestamp !=
-                                        TimestampModel(
-                                            seconds: 0, nanoseconds: 0))
-                                ? bulletTiles(
-                                    "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
-                                : bulletTiles(
-                                    "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
-                          ]),
-                    ],
-                  ),
-                ),
-              ],
+            return Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: UiConstants.gameCardColor,
+              ),
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        bulletTiles(
+                            "Rewards have been credited to your wallet"),
+                        (ticket.redeemedTimestamp != null &&
+                                ticket.redeemedTimestamp !=
+                                    TimestampModel(seconds: 0, nanoseconds: 0))
+                            ? bulletTiles(
+                                "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                            : bulletTiles(
+                                "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+                      ]),
+                ],
+              ),
             );
           }
         }
@@ -341,21 +326,20 @@ class GTDetailedView extends StatelessWidget {
   Widget bulletTiles(String title) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(bottom: 20.0),
+      padding: EdgeInsets.only(bottom: SizeConfig.padding16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.brightness_1,
             size: 08,
-            color: Colors.white,
+            color: UiConstants.kTextColor2,
           ),
           SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyles.body3.colour(Colors.white),
-            ),
+          Text(
+            title,
+            style: TextStyles.body3.colour(UiConstants.kTextColor2),
           ),
         ],
       ),

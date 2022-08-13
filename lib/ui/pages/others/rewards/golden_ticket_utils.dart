@@ -164,7 +164,6 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               singleRewardWidget(ticket.rewardArr[0], titleStyle, titleStyle2),
-              Text('Cashback!', style: TextStyles.body4)
             ],
           ),
         );
@@ -203,42 +202,84 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
 
   Widget singleRewardWidget(
       Reward reward, TextStyle textStyle, TextStyle titleStyle2) {
-    if (reward.type == 'rupee') {
-      return RichText(
-        text: TextSpan(
-          text: '₹ ',
-          style: titleStyle2.colour(Colors.black),
-          children: [TextSpan(text: "${reward.value}", style: textStyle.bold)],
-        ),
+    if (reward.type == 'rupee' || reward.type == 'amt') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: '₹ ',
+              style: titleStyle2
+                  .colour(Colors.black)
+                  .copyWith(fontSize: SizeConfig.padding20),
+              children: [
+                TextSpan(
+                    text: "${reward.value}",
+                    style:
+                        textStyle.bold.copyWith(fontSize: SizeConfig.padding20))
+              ],
+            ),
+          ),
+          Text(' Cashback!', style: TextStyles.body4)
+        ],
       );
     } else if (reward.type == 'flc') {
-      return RichText(
-        text: TextSpan(
-          style: titleStyle2.colour(Colors.black),
-          children: [
-            TextSpan(text: "${reward.value} ", style: textStyle.bold),
-            TextSpan(
-              text: reward.value > 1 ? "Tokens" : "Token",
-            )
-          ],
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SvgPicture.asset(
+                Assets.newTokenAsset,
+                width: SizeConfig.padding16,
+                height: SizeConfig.padding16,
+              ),
+              SizedBox(
+                width: SizeConfig.padding4,
+              ),
+              RichText(
+                text: TextSpan(
+                  style: titleStyle2
+                      .colour(Colors.black)
+                      .copyWith(fontSize: SizeConfig.padding20),
+                  children: [
+                    TextSpan(
+                        text: "${reward.value} ",
+                        style: textStyle.bold
+                            .copyWith(fontSize: SizeConfig.padding20)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Text(
+            reward.value > 1 ? "Tokens" : "Token",
+            style: TextStyles.body4,
+          )
+        ],
       );
     } else if (reward.type == 'gold') {
-      return RichText(
-        text: TextSpan(
-          style: titleStyle2.colour(Colors.black),
-          children: [
-            TextSpan(
-              text: "₹ ",
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: titleStyle2
+                  .colour(Colors.black)
+                  .copyWith(fontSize: SizeConfig.padding20),
+              children: [
+                TextSpan(
+                  text: "₹ ",
+                ),
+                TextSpan(
+                    text: "${reward.value} ",
+                    style: textStyle.bold
+                        .copyWith(fontSize: SizeConfig.padding20)),
+              ],
             ),
-            TextSpan(text: "${reward.value} ", style: textStyle.bold),
-            TextSpan(
-                text: "wortsh of Gold",
-                style: TextStyles.rajdhani
-                    .colour(Colors.black)
-                    .copyWith(fontSize: SizeConfig.padding10))
-          ],
-        ),
+          ),
+          Text("worths of Gold", style: TextStyles.body4)
+        ],
       );
     } else
       return RichText(
@@ -275,9 +316,14 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               RichText(
                 text: TextSpan(
                     text: '₹ ',
-                    style: titleStyle2.colour(Colors.black),
+                    style: titleStyle2
+                        .colour(Colors.black)
+                        .copyWith(fontSize: SizeConfig.padding20),
                     children: [
-                      TextSpan(text: "$rupee", style: textStyle.bold),
+                      TextSpan(
+                          text: "$rupee",
+                          style: textStyle.bold
+                              .copyWith(fontSize: SizeConfig.padding20)),
                     ]),
               ),
               Text(' Cashback!', style: TextStyles.body4)
@@ -304,7 +350,9 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   SizedBox(
                     width: SizeConfig.padding4,
                   ),
-                  Text("$flc ", style: textStyle.bold),
+                  Text("$flc ",
+                      style: textStyle.bold
+                          .copyWith(fontSize: SizeConfig.padding20)),
                 ],
               ),
               Text(' Tokens Won!', style: TextStyles.body4)
