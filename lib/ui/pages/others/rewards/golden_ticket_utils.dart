@@ -157,15 +157,12 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       //CHECK FOR REWARDS
       if (ticket.rewardArr.length == 1) {
         //Has a single reward
-        return Padding(
-          padding: EdgeInsets.only(left: SizeConfig.padding12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              singleRewardWidget(ticket.rewardArr[0], titleStyle, titleStyle2),
-            ],
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            singleRewardWidget(ticket.rewardArr[0], titleStyle, titleStyle2),
+          ],
         );
       } else if (ticket.rewardArr.length == 2) {
         //Both flc and cash
@@ -209,18 +206,20 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           RichText(
             text: TextSpan(
               text: '₹ ',
-              style: titleStyle2
+              style: TextStyles.rajdhani.bold
                   .colour(Colors.black)
                   .copyWith(fontSize: SizeConfig.padding20),
               children: [
                 TextSpan(
                     text: "${reward.value}",
-                    style:
-                        textStyle.bold.copyWith(fontSize: SizeConfig.padding20))
+                    style: TextStyles.rajdhani.bold
+                        .colour(Colors.black)
+                        .copyWith(fontSize: SizeConfig.padding20))
               ],
             ),
           ),
-          Text(' Cashback!', style: TextStyles.body4)
+          Text(' Cashback!',
+              style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
     } else if (reward.type == 'flc') {
@@ -245,7 +244,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   children: [
                     TextSpan(
                         text: "${reward.value} ",
-                        style: textStyle.bold
+                        style: TextStyles.rajdhani.bold
+                            .colour(Colors.black)
                             .copyWith(fontSize: SizeConfig.padding20)),
                   ],
                 ),
@@ -254,7 +254,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           ),
           Text(
             reward.value > 1 ? "Tokens" : "Token",
-            style: TextStyles.body4,
+            style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12),
           )
         ],
       );
@@ -264,7 +264,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         children: [
           RichText(
             text: TextSpan(
-              style: titleStyle2
+              style: TextStyles.rajdhani.bold
                   .colour(Colors.black)
                   .copyWith(fontSize: SizeConfig.padding20),
               children: [
@@ -273,12 +273,14 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                 ),
                 TextSpan(
                     text: "${reward.value} ",
-                    style: textStyle.bold
+                    style: TextStyles.rajdhani.bold
+                        .colour(Colors.black)
                         .copyWith(fontSize: SizeConfig.padding20)),
               ],
             ),
           ),
-          Text("worths of Gold", style: TextStyles.body4)
+          Text("worths of Gold",
+              style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
     } else
@@ -316,17 +318,20 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               RichText(
                 text: TextSpan(
                     text: '₹ ',
-                    style: titleStyle2
+                    style: TextStyles.rajdhani.bold
                         .colour(Colors.black)
                         .copyWith(fontSize: SizeConfig.padding20),
                     children: [
                       TextSpan(
                           text: "$rupee",
-                          style: textStyle.bold
+                          style: TextStyles.rajdhani.bold
+                              .colour(Colors.black)
                               .copyWith(fontSize: SizeConfig.padding20)),
                     ]),
               ),
-              Text(' Cashback!', style: TextStyles.body4)
+              Text(' Cashback!',
+                  style:
+                      TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
             ],
           ),
         ),
@@ -351,11 +356,14 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                     width: SizeConfig.padding4,
                   ),
                   Text("$flc ",
-                      style: textStyle.bold
+                      style: TextStyles.rajdhani.bold
+                          .colour(Colors.black)
                           .copyWith(fontSize: SizeConfig.padding20)),
                 ],
               ),
-              Text(' Tokens Won!', style: TextStyles.body4)
+              Text(' Tokens Won!',
+                  style:
+                      TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
             ],
           ),
         )

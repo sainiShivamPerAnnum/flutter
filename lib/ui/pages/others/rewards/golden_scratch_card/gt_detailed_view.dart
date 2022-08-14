@@ -124,10 +124,6 @@ class GTDetailedView extends StatelessWidget {
   }
 
   Widget setTicketHeader(GTDetailedViewModel model) {
-//
-
-//
-
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
@@ -142,8 +138,8 @@ class GTDetailedView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
             child: Text(
               "${ticket.note}",
-              style: TextStyles.rajdhani
-                  .colour(Colors.white)
+              style: TextStyles.body4
+                  .colour(UiConstants.kTextColor3)
                   .copyWith(fontSize: SizeConfig.padding16),
               textAlign: TextAlign.center,
             ),
@@ -165,8 +161,8 @@ class GTDetailedView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
                 child: Text(
                   "Keep investing, keep playing and win big!",
-                  style: TextStyles.rajdhani
-                      .colour(Colors.white)
+                  style: TextStyles.body4
+                      .colour(UiConstants.kTextColor3)
                       .copyWith(fontSize: SizeConfig.padding16),
                   textAlign: TextAlign.center,
                 ),
@@ -188,8 +184,8 @@ class GTDetailedView extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
                   child: Text(
                     "${ticket.note}",
-                    style: TextStyles.rajdhani
-                        .colour(Colors.white)
+                    style: TextStyles.body4
+                        .colour(UiConstants.kTextColor3)
                         .copyWith(fontSize: SizeConfig.padding16),
                     textAlign: TextAlign.center,
                   ),
@@ -209,7 +205,7 @@ class GTDetailedView extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: Text(
                 "You’ve earned a golden ticket.",
-                style: TextStyles.title5
+                style: TextStyles.body4
                     .colour(Colors.white)
                     .copyWith(fontSize: SizeConfig.padding16),
                 textAlign: TextAlign.center,
@@ -218,10 +214,10 @@ class GTDetailedView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: Text(
-                "Scratch and win exciting rewards",
-                style: TextStyles.rajdhani
-                    .colour(Colors.white)
-                    .copyWith(fontSize: SizeConfig.padding16),
+                "Scratch and win exciting rewards.",
+                style: TextStyles.body4
+                    .colour(UiConstants.kTextColor3)
+                    .copyWith(fontSize: SizeConfig.padding12),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -242,21 +238,16 @@ class GTDetailedView extends StatelessWidget {
           color: UiConstants.gameCardColor,
         ),
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              bulletTiles("Rewards have been credited to your wallet"),
-              (ticket.redeemedTimestamp != null &&
-                      ticket.redeemedTimestamp !=
-                          TimestampModel(seconds: 0, nanoseconds: 0))
-                  ? bulletTiles(
-                      "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
-                  : bulletTiles(
-                      "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
-            ]),
-          ],
-        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          bulletTiles("Rewards have been credited to your wallet"),
+          (ticket.redeemedTimestamp != null &&
+                  ticket.redeemedTimestamp !=
+                      TimestampModel(seconds: 0, nanoseconds: 0))
+              ? bulletTiles(
+                  "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+              : bulletTiles(
+                  "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+        ]),
       );
     } else {
       if (model.isCardScratched) {
@@ -297,23 +288,17 @@ class GTDetailedView extends StatelessWidget {
               ),
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        bulletTiles(
-                            "Rewards have been credited to your wallet"),
-                        (ticket.redeemedTimestamp != null &&
-                                ticket.redeemedTimestamp !=
-                                    TimestampModel(seconds: 0, nanoseconds: 0))
-                            ? bulletTiles(
-                                "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
-                            : bulletTiles(
-                                "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
-                      ]),
-                ],
-              ),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    bulletTiles("Rewards have been credited to your wallet"),
+                    (ticket.redeemedTimestamp != null &&
+                            ticket.redeemedTimestamp !=
+                                TimestampModel(seconds: 0, nanoseconds: 0))
+                        ? bulletTiles(
+                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                        : bulletTiles(
+                            "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+                  ]),
             );
           }
         }
@@ -324,16 +309,14 @@ class GTDetailedView extends StatelessWidget {
   }
 
   Widget bulletTiles(String title) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+    return Padding(
+      padding: EdgeInsets.only(bottom: SizeConfig.padding8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.brightness_1,
-            size: 08,
+            size: 06,
             color: UiConstants.kTextColor2,
           ),
           SizedBox(width: 10),

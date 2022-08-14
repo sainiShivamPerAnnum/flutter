@@ -47,6 +47,8 @@ class UiConstants {
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);
   static const Color kTextColor2 = const Color(0xFF919193);
+  static const Color kTextColor3 = const Color(0xFFA7A7A8);
+
   static const Color kYellowTextColor = const Color(0xFFFEF5DC);
 
   static const Color kBackgroundColor = const Color(0xFF232326);
