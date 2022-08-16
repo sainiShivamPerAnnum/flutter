@@ -4,6 +4,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
@@ -473,7 +474,15 @@ class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
                               selectedReasonForSelling = x;
                             });
                             AppState.backButtonDispatcher.didPopRoute();
-                            widget.saveViewModel.navigateToSellGoldPage();
+                            BaseUtil.openModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
+                                enableDrag: true,
+                                addToScreenStack: true,
+                                isBarrierDismissable: true,
+                                content: AugmontGoldSellView());
                           },
                           title: Text(
                             x,
