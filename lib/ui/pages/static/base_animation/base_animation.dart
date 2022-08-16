@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseAnimation extends StatefulWidget {
-  const BaseAnimation({Key key, @required this.child}) : super(key: key);
+  const BaseAnimation({Key key, this.child}) : super(key: key);
   final Widget child;
 
   @override
@@ -69,7 +69,7 @@ class _BaseAnimationState extends State<BaseAnimation>
       builder: (context, child) {
         return Stack(
           children: [
-            widget.child,
+            if (widget.child != null) widget.child,
             Visibility(
               visible: _animationController.value != 1,
               child: CustomPaint(

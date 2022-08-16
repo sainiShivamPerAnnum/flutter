@@ -43,69 +43,68 @@ class Root extends StatelessWidget {
           key: RootViewModel.scaffoldKey,
           drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
-          body: BaseAnimation(
-            child: Stack(
-              children: [
-                NewSquareBackground(),
-                if (FlavorConfig.isDevelopment())
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    child: Banner(
-                      message: FlavorConfig.getStage(),
-                      location: BannerLocation.topEnd,
-                      color: FlavorConfig.instance.color,
-                    ),
+          body: Stack(
+            children: [
+              NewSquareBackground(),
+              if (FlavorConfig.isDevelopment())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
                   ),
-                if (FlavorConfig.isQA())
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    child: Banner(
-                      message: FlavorConfig.getStage(),
-                      location: BannerLocation.topEnd,
-                      color: FlavorConfig.instance.color,
-                    ),
+                ),
+              if (FlavorConfig.isQA())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
                   ),
-                RefreshIndicator(
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: model.refresh,
-                  child: Container(
-                    child: Consumer<AppState>(
-                      builder: (ctx, m, child) => IndexedStack(
-                        children: pages,
-                        index: AppState.delegate.appState.getCurrentTabIndex,
-                      ),
+                ),
+              RefreshIndicator(
+                color: UiConstants.primaryColor,
+                backgroundColor: Colors.black,
+                onRefresh: model.refresh,
+                child: Container(
+                  child: Consumer<AppState>(
+                    builder: (ctx, m, child) => IndexedStack(
+                      children: pages,
+                      index: AppState.delegate.appState.getCurrentTabIndex,
                     ),
                   ),
                 ),
-                if (AppState.delegate.appState.getCurrentTabIndex == 3)
-                  FelloAppBar(
-                    showAppBar: false,
-                    leading: InkWell(
-                      onTap: model.showDrawer,
-                      child: Container(
-                        width: SizeConfig.padding38,
-                        height: SizeConfig.padding38,
-                        // color: Colors.red,
-                      ),
+              ),
+              if (AppState.delegate.appState.getCurrentTabIndex == 3)
+                FelloAppBar(
+                  showAppBar: false,
+                  leading: InkWell(
+                    onTap: model.showDrawer,
+                    child: Container(
+                      width: SizeConfig.padding38,
+                      height: SizeConfig.padding38,
+                      // color: Colors.red,
                     ),
-                    actions: [
-                      // FelloCoinBar(),
-                      // SizedBox(width: 16),
-                      NotificationButton(),
-                    ],
                   ),
-                Consumer<AppState>(
-                  builder: (ctx, m, child) =>
-                      AppState.delegate.appState.isTxnLoaderInView
-                          ? TransactionLoader()
-                          : SizedBox(),
+                  actions: [
+                    // FelloCoinBar(),
+                    // SizedBox(width: 16),
+                    NotificationButton(),
+                  ],
                 ),
-                BottomNavBar(
-                  model: model,
-                ),
-              ],
-            ),
+              Consumer<AppState>(
+                builder: (ctx, m, child) =>
+                    AppState.delegate.appState.isTxnLoaderInView
+                        ? TransactionLoader()
+                        : SizedBox(),
+              ),
+              BottomNavBar(
+                model: model,
+              ),
+              BaseAnimation(),
+            ],
           ),
         );
       },

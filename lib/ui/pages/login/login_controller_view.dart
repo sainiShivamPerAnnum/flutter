@@ -51,151 +51,150 @@ class _LoginControllerViewState extends State<LoginControllerView> {
     S locale = S.of(context);
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    return BaseAnimation(
-      child: BaseView<LoginControllerViewModel>(
-        onModelReady: (model) {
-          model.init(initPage);
-          if (Platform.isAndroid) {
-            model.initTruecaller();
-          }
-        },
-        onModelDispose: (model) => model.exit(),
-        builder: (ctx, model, child) => Scaffold(
-          backgroundColor: UiConstants.primaryColor,
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: <Widget>[
-              Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: PageView.builder(
-                        physics: new NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        controller: model.controller,
-                        itemCount: model.pages.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            model.pages[index],
-                        onPageChanged: (int index) => model.currentPage = index,
-                      ),
+    return BaseView<LoginControllerViewModel>(
+      onModelReady: (model) {
+        model.init(initPage);
+        if (Platform.isAndroid) {
+          model.initTruecaller();
+        }
+      },
+      onModelDispose: (model) => model.exit(),
+      builder: (ctx, model, child) => Scaffold(
+        backgroundColor: UiConstants.primaryColor,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: <Widget>[
+            Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: PageView.builder(
+                      physics: new NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      controller: model.controller,
+                      itemCount: model.pages.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          model.pages[index],
+                      onPageChanged: (int index) => model.currentPage = index,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            if (keyboardIsOpen)
+              Positioned(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                child: GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus.unfocus();
+                    if (model.state == ViewState.Idle)
+                      model.processScreenInput(
+                        model.currentPage,
+                      );
+                  },
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: 50,
+                    color: UiConstants.kLeaderBoardBackgroundColor,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                    ),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      model.currentPage == LoginUserNameView.index
+                          ? 'finish'
+                          : model.currentPage == LoginOtpView.index
+                              ? 'Done'
+                              : 'next',
+                      style: model.currentPage == LoginOtpView.index
+                          ? TextStyles.rajdhaniB.body1
+                              .colour(UiConstants.kPrimaryColor)
+                          : TextStyles.rajdhaniB.body1,
+                    ),
+                  ),
                 ),
               ),
-              if (keyboardIsOpen)
-                Positioned(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusManager.instance.primaryFocus.unfocus();
-                      if (model.state == ViewState.Idle)
-                        model.processScreenInput(
-                          model.currentPage,
-                        );
-                    },
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      height: 50,
-                      color: UiConstants.kLeaderBoardBackgroundColor,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        model.currentPage == LoginUserNameView.index
-                            ? 'finish'
-                            : model.currentPage == LoginOtpView.index
-                                ? 'Done'
-                                : 'next',
-                        style: model.currentPage == LoginOtpView.index
-                            ? TextStyles.rajdhaniB.body1
-                                .colour(UiConstants.kPrimaryColor)
-                            : TextStyles.rajdhaniB.body1,
-                      ),
-                    ),
-                  ),
-                ),
-              if (!keyboardIsOpen)
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.screenWidth * 0.2,
-                      margin: EdgeInsets.only(
-                          bottom: SizeConfig.viewInsets.bottom +
-                              SizeConfig.pageHorizontalMargins),
-                      alignment: Alignment.center,
-                      child: model.loginUsingTrueCaller
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Logging in with",
-                                  style: TextStyles.body3.bold
-                                      .colour(Color(0xff1180FF)),
-                                ),
-                                Image.asset(
-                                  Assets.truecaller,
-                                  height: SizeConfig.body1,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.padding4,
-                                ),
-                                SpinKitThreeBounce(
-                                  color: Color(0xff1180FF),
-                                  size: SizeConfig.body1,
-                                )
-                              ],
-                            )
-                          : Container(
-                              width: SizeConfig.screenWidth,
-                              alignment: Alignment.center,
-                              child: AppPositiveCustomChildBtn(
-                                child: model.state == ViewState.Idle
-                                    ? Text(
-                                        model.currentPage ==
-                                                LoginUserNameView.index
-                                            ? 'FINISH'
-                                            : 'NEXT',
-                                        style: TextStyles.rajdhaniB.title5,
-                                      )
-                                    : SpinKitThreeBounce(
-                                        color: UiConstants.spinnerColor2,
-                                        size: 18.0,
-                                      ),
-                                width: SizeConfig.screenWidth * 0.78,
-                                onPressed: () {
-                                  print("tapped me");
-                                  if (model.state == ViewState.Idle)
-                                    model.processScreenInput(
-                                      model.currentPage,
-                                    );
-                                },
+            if (!keyboardIsOpen)
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenWidth * 0.2,
+                    margin: EdgeInsets.only(
+                        bottom: SizeConfig.viewInsets.bottom +
+                            SizeConfig.pageHorizontalMargins),
+                    alignment: Alignment.center,
+                    child: model.loginUsingTrueCaller
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Logging in with",
+                                style: TextStyles.body3.bold
+                                    .colour(Color(0xff1180FF)),
                               ),
+                              Image.asset(
+                                Assets.truecaller,
+                                height: SizeConfig.body1,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding4,
+                              ),
+                              SpinKitThreeBounce(
+                                color: Color(0xff1180FF),
+                                size: SizeConfig.body1,
+                              )
+                            ],
+                          )
+                        : Container(
+                            width: SizeConfig.screenWidth,
+                            alignment: Alignment.center,
+                            child: AppPositiveCustomChildBtn(
+                              child: model.state == ViewState.Idle
+                                  ? Text(
+                                      model.currentPage ==
+                                              LoginUserNameView.index
+                                          ? 'FINISH'
+                                          : 'NEXT',
+                                      style: TextStyles.rajdhaniB.title5,
+                                    )
+                                  : SpinKitThreeBounce(
+                                      color: UiConstants.spinnerColor2,
+                                      size: 18.0,
+                                    ),
+                              width: SizeConfig.screenWidth * 0.78,
+                              onPressed: () {
+                                print("tapped me");
+                                if (model.state == ViewState.Idle)
+                                  model.processScreenInput(
+                                    model.currentPage,
+                                  );
+                              },
                             ),
-                    )),
-              if (FlavorConfig.isDevelopment())
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Banner(
-                    message: FlavorConfig.getStage(),
-                    location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
-                  ),
+                          ),
+                  )),
+            if (FlavorConfig.isDevelopment())
+              Container(
+                width: SizeConfig.screenWidth,
+                child: Banner(
+                  message: FlavorConfig.getStage(),
+                  location: BannerLocation.topEnd,
+                  color: FlavorConfig.instance.color,
                 ),
-              if (FlavorConfig.isQA())
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Banner(
-                    message: FlavorConfig.getStage(),
-                    location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
-                  ),
+              ),
+            if (FlavorConfig.isQA())
+              Container(
+                width: SizeConfig.screenWidth,
+                child: Banner(
+                  message: FlavorConfig.getStage(),
+                  location: BannerLocation.topEnd,
+                  color: FlavorConfig.instance.color,
                 ),
-            ],
-          ),
+              ),
+            BaseAnimation(),
+          ],
         ),
       ),
     );
