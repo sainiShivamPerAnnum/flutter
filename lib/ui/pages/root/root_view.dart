@@ -159,7 +159,7 @@ class BottomNavBar extends StatelessWidget {
         bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
           width: SizeConfig.screenWidth,
-          height: SizeConfig.navBarHeight * 0.74,
+          height: kBottomNavigationBarHeight + SizeConfig.viewInsets.bottom,
           decoration: BoxDecoration(
             color: Colors.black,
           ),
