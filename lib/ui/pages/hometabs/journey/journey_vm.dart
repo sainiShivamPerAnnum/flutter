@@ -250,10 +250,11 @@ class JourneyPageViewModel extends BaseModel {
 
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
-    bool isCompleted = false;
-    if (_journeyService.avatarRemoteMlIndex > milestone.index) {
-      isCompleted = true;
-    }
+    JOURNEY_MILESTONE_STATUS status = JOURNEY_MILESTONE_STATUS.INCOMPLETE;
+    if (_journeyService.avatarRemoteMlIndex > milestone.index)
+      status = JOURNEY_MILESTONE_STATUS.COMPLETED;
+    else if (_journeyService.avatarRemoteMlIndex == milestone.index)
+      status = JOURNEY_MILESTONE_STATUS.ACTIVE;
     AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
     return showModalBottomSheet(
@@ -266,7 +267,7 @@ class JourneyPageViewModel extends BaseModel {
       builder: (ctx) {
         return JourneyMilestoneDetailsModalSheet(
           milestone: milestone,
-          isCompleted: isCompleted,
+          status: status,
         );
       },
     );
