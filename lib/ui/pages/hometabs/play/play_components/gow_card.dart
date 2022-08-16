@@ -22,106 +22,108 @@ class GOWCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return model.isGamesListDataLoading
         ? GameCardShimmer()
-        : InkWell(
-            onTap: () {
-              Haptic.vibrate();
-              AppState.delegate.parseRoute(
-                Uri.parse(model.gow.route),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.only(
-                top: SizeConfig.padding16,
-                left: SizeConfig.padding24,
-                right: SizeConfig.padding24,
-                bottom: SizeConfig.padding35,
-              ),
-              height: SizeConfig.screenWidth * 0.688,
-              width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              ),
-              child: Column(
-                children: [
-                  Hero(
-                    tag: model.gow.code,
-                    child: Container(
-                      height: SizeConfig.screenWidth * 0.474,
-                      width: SizeConfig.screenWidth,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                                model.gow.thumbnailUri),
-                            fit: BoxFit.cover),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness12),
-                          topRight: Radius.circular(SizeConfig.roundness12),
-                        ),
-                      ),
-                    ),
+        : (model.gow == null
+            ? SizedBox
+            : InkWell(
+                onTap: () {
+                  Haptic.vibrate();
+                  AppState.delegate.parseRoute(
+                    Uri.parse(model.gow.route),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: SizeConfig.padding16,
+                    left: SizeConfig.padding24,
+                    right: SizeConfig.padding24,
+                    bottom: SizeConfig.padding35,
                   ),
-                  Container(
-                    height: SizeConfig.screenWidth * 0.213,
-                    width: SizeConfig.screenWidth,
-                    decoration: BoxDecoration(
-                      color: UiConstants.gameCardColor,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(SizeConfig.roundness8),
-                        bottomRight: Radius.circular(SizeConfig.roundness8),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding16),
-                          child: Container(
-                            height: SizeConfig.screenWidth * 0.117,
-                            width: SizeConfig.screenWidth * 0.117,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                              color: Colors.black,
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      model.gow.thumbnailUri),
-                                  fit: BoxFit.cover),
+                  height: SizeConfig.screenWidth * 0.688,
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  ),
+                  child: Column(
+                    children: [
+                      Hero(
+                        tag: model.gow.code,
+                        child: Container(
+                          height: SizeConfig.screenWidth * 0.474,
+                          width: SizeConfig.screenWidth,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                    model.gow.thumbnailUri),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness12),
+                              topRight: Radius.circular(SizeConfig.roundness12),
                             ),
                           ),
                         ),
-                        Column(
+                      ),
+                      Container(
+                        height: SizeConfig.screenWidth * 0.213,
+                        width: SizeConfig.screenWidth,
+                        decoration: BoxDecoration(
+                          color: UiConstants.gameCardColor,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(SizeConfig.roundness8),
+                            bottomRight: Radius.circular(SizeConfig.roundness8),
+                          ),
+                        ),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              model.gow.gameName, // 'Cricket',
-                              style: TextStyles.rajdhaniSB.title5,
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding16),
+                              child: Container(
+                                height: SizeConfig.screenWidth * 0.117,
+                                width: SizeConfig.screenWidth * 0.117,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness8),
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          model.gow.thumbnailUri),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
                             ),
-                            GameRewards(prizeAmount: model.gow.prizeAmount),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  model.gow.gameName, // 'Cricket',
+                                  style: TextStyles.rajdhaniSB.title5,
+                                ),
+                                GameRewards(prizeAmount: model.gow.prizeAmount),
+                              ],
+                            ),
+                            Spacer(),
+                            AppBarButton(
+                              svgAsset: Assets.aFelloToken,
+                              size: SizeConfig.padding28,
+                              coin: model.gow.playCost.toString(),
+                              borderColor: Colors.transparent,
+                              onTap: () {},
+                              style: TextStyles.sourceSansSB.title4,
+                            ),
                           ],
                         ),
-                        Spacer(),
-                        AppBarButton(
-                          svgAsset: Assets.aFelloToken,
-                          size: SizeConfig.padding28,
-                          coin: model.gow.playCost.toString(),
-                          borderColor: Colors.transparent,
-                          onTap: () {},
-                          style: TextStyles.sourceSansSB.title4,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          );
+                ),
+              ));
   }
 }
 

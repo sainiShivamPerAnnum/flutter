@@ -1,7 +1,7 @@
 class JourneyLevel {
   int start;
   int end;
-  int breakpoint;
+  double breakpoint;
   int pageEnd;
   int level;
 

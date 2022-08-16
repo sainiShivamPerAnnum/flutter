@@ -53,7 +53,8 @@ class PlayViewModel extends BaseModel {
     if (_gamesListData != null) {
       trendingGamesListData = [];
       moreGamesListData = [];
-      gow = gamesListData?.firstWhere((game) => game.isGOW, orElse: null);
+      gow = gamesListData?.firstWhere((game) => game.isGOW,
+          orElse: () => gamesListData[0]);
       _gamesListData.forEach((game) {
         if (game.isTrending)
           trendingGamesListData.add(game);
