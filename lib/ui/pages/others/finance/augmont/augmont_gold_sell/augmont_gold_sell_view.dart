@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -107,20 +108,20 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
       onModelReady: (model) {
         model.init();
       },
-      builder: (ctx, model, child) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: SizeConfig.screenWidth * 1.5,
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding24,
-                vertical: SizeConfig.padding20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-              color: UiConstants.kModalSheetBackgroundColor,
-            ),
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+      builder: (ctx, model, child) => Container(
+        height: SizeConfig.screenHeight * 0.85,
+        width: SizeConfig.screenWidth,
+        child: Column(
+          children: [
+            Container(
+              height: SizeConfig.screenWidth * 1.8,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding24,
+                  vertical: SizeConfig.padding20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+                color: UiConstants.kModalSheetBackgroundColor,
+              ),
               child: Padding(
                   padding:
                       EdgeInsets.only(top: 10, bottom: 0, left: 10, right: 10),
@@ -310,9 +311,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding54,
-                      ),
+                      Spacer(),
                       Padding(
                           padding: EdgeInsets.only(
                               left: SizeConfig.padding34,
@@ -326,13 +325,12 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                             textAlign: TextAlign.center,
                           )),
                       SizedBox(
-                        height: SizeConfig.padding35,
+                        height: SizeConfig.padding24,
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding24),
-                        width: SizeConfig.screenWidth,
-                        child: FelloButtonLg(
+                        child: AppPositiveCustomChildBtn(
                           child: model.isGoldSellInProgress
                               ? SpinKitThreeBounce(
                                   color: Colors.white,
@@ -360,16 +358,6 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                         positiveTap: () async {
                                           AppState.backButtonDispatcher
                                               .didPopRoute();
-                                          // BaseUtil.openModalBottomSheet(
-                                          //     isBarrierDismissable: false,
-                                          //     hapticVibrate: false,
-                                          //     addToScreenStack: true,
-                                          //     content: Container(
-                                          //       height: SizeConfig.screenWidth,
-                                          //       width: SizeConfig.screenWidth,
-                                          //       child:
-                                          //           Lottie.asset(Assets.bankLottie),
-                                          //     ));
                                           await model.initiateSell();
                                         },
                                         negativeTap: () {
@@ -380,6 +368,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                   : () {};
                             }
                           },
+                          width: SizeConfig.screenWidth,
                         ),
                       ),
                       SizedBox(
@@ -388,8 +377,8 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                     ],
                   )),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
