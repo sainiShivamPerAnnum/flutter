@@ -19,6 +19,7 @@ import '../../../../../navigator/router/ui_pages.dart';
 import '../../../../service_elements/user_service/profile_image.dart';
 import '../../../../widgets/helpers/height_adaptive_pageview.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
+import '../../../hometabs/play/play_components/titlesGames.dart';
 import '../../../static/app_widget.dart';
 import '../../../static/game_card.dart';
 import '../../../static/new_square_background.dart';
@@ -42,6 +43,10 @@ class CampaignView extends StatelessWidget {
   final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
+  bool isInteger(num value) => value is int || value == value.roundToDouble();
+
+  ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return BaseView<TopSaverViewModel>(
@@ -55,92 +60,104 @@ class CampaignView extends StatelessWidget {
             children: [
               NewSquareBackground(),
               CustomScrollView(
+                controller: _controller,
                 physics: BouncingScrollPhysics(),
                 slivers: [
-                  SliverAppBar(
-                    backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
-                    leading: IconButton(
-                        onPressed: () {
-                          AppState.backButtonDispatcher.didPopRoute();
-                        },
-                        icon: Icon(Icons.arrow_back_ios)),
-                    expandedHeight: SizeConfig.sliverAppExpandableSize,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Stack(
-                        children: [
-                          SvgPicture.asset(
-                            Assets.visualGridAsset,
-                            fit: BoxFit.cover,
-                            width: double.maxFinite,
-                            height: double.maxFinite,
-                          ),
-                          //The title and sub title
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    Assets.coinsIconAsset,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        model.appbarTitle,
-                                        style: TextStyles.body1
-                                            .colour(Colors.white),
-                                      ),
-                                      Text(
-                                        model.subTitle,
-                                        style: TextStyles.title3
-                                            .colour(Colors.white)
-                                            .bold,
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(
-                                    0,
-                                    SizeConfig.sliverAppBarPaddingLarge,
-                                    0,
-                                    SizeConfig.sliverAppBarPaddingSmall),
-                                child: Row(
+                  SliverLayoutBuilder(builder: (context, constraints) {
+                    final scrolled = constraints.scrollOffset > 0;
+                    return SliverAppBar(
+                      title: scrolled
+                          ? Text(
+                              model.appbarTitle,
+                              style: TextStyles.body1.colour(Colors.white),
+                            )
+                          : SizedBox.shrink(),
+                      pinned: true,
+                      backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
+                      leading: IconButton(
+                          onPressed: () {
+                            AppState.backButtonDispatcher.didPopRoute();
+                          },
+                          icon: Icon(Icons.arrow_back_ios)),
+                      expandedHeight: SizeConfig.sliverAppExpandableSize,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Stack(
+                          children: [
+                            SvgPicture.asset(
+                              Assets.visualGridAsset,
+                              fit: BoxFit.cover,
+                              width: double.maxFinite,
+                              height: double.maxFinite,
+                            ),
+                            //The title and sub title
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      width: SizeConfig.padding10,
-                                      height: SizeConfig.padding10,
-                                      decoration: const BoxDecoration(
-                                          color: UiConstants.kPrimaryColor,
-                                          shape: BoxShape.circle),
+                                    SvgPicture.asset(
+                                      Assets.coinsIconAsset,
+                                      fit: BoxFit.cover,
                                     ),
-                                    Text(
-                                      "2K+ Participants",
-                                      style:
-                                          TextStyles.body3.colour(Colors.white),
+                                    const SizedBox(
+                                      width: 20,
                                     ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          model.appbarTitle,
+                                          style: TextStyles.body1
+                                              .colour(Colors.white),
+                                        ),
+                                        Text(
+                                          model.subTitle,
+                                          style: TextStyles.title3
+                                              .colour(Colors.white)
+                                              .bold,
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
-                              )
-                            ],
-                          )
-                        ],
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      0,
+                                      SizeConfig.sliverAppBarPaddingLarge,
+                                      0,
+                                      SizeConfig.sliverAppBarPaddingSmall),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        width: SizeConfig.padding10,
+                                        height: SizeConfig.padding10,
+                                        decoration: const BoxDecoration(
+                                            color: UiConstants.kPrimaryColor,
+                                            shape: BoxShape.circle),
+                                      ),
+                                      Text(
+                                        "2K+ Participants",
+                                        style: TextStyles.body3
+                                            .colour(Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                   SliverToBoxAdapter(
                     child: Container(
                       padding: EdgeInsets.all(SizeConfig.padding34),
@@ -225,7 +242,7 @@ class CampaignView extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(
-                                                    SizeConfig.roundness16),
+                                                    SizeConfig.roundness12),
                                               ),
                                               color: UiConstants.kDarkBoxColor,
                                             ),
@@ -391,258 +408,103 @@ class CampaignView extends StatelessWidget {
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding34),
-                      child: model.pastWinnerProfileList.isEmpty
-                          ? ListLoader(bottomPadding: true)
-                          : Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () => model.switchTab(0),
-                                        child: Text(
-                                          'LeaderBoard',
-                                          style: model.tabNo == 0
-                                              ? selectedTextStyle
-                                              : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                      child: model.state == ViewState.Idle
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding34),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () => model.switchTab(0),
+                                          child: Text(
+                                            'LeaderBoard',
+                                            style: model.tabNo == 0
+                                                ? selectedTextStyle
+                                                : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () => model.switchTab(1),
-                                        child: Text(
-                                          'Past Winners',
-                                          style: model.tabNo == 1
-                                              ? selectedTextStyle
-                                              : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () => model.switchTab(1),
+                                          child: Text(
+                                            'Past Winners',
+                                            style: model.tabNo == 1
+                                                ? selectedTextStyle
+                                                : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                          ),
                                         ),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 500),
+                                        height: 5,
+                                        width: model.tabPosWidthFactor,
                                       ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    AnimatedContainer(
-                                      duration: Duration(milliseconds: 500),
-                                      height: 5,
-                                      width: model.tabPosWidthFactor,
-                                    ),
-                                    Container(
-                                      color: UiConstants.kTabBorderColor,
-                                      height: 5,
-                                      width: SizeConfig.screenWidth * 0.4,
-                                    )
-                                  ],
-                                ),
-                                HeightAdaptivePageView(
-                                  controller: model.pageController,
-                                  onPageChanged: (int page) {
-                                    model.switchTab(page);
-                                  },
-                                  children: [
-                                    model.pastWinners.isEmpty
-                                        ? NoRecordDisplayWidget(
-                                            asset: "images/week-winners.png",
-                                            text: "Prizes will be updates soon",
-                                          )
-                                        : Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    SizeConfig.padding34),
-                                            child: Column(
-                                              children: [
-                                                ListView.builder(
-                                                  padding: EdgeInsets.only(
-                                                      top:
-                                                          SizeConfig.padding24),
-                                                  shrinkWrap: true,
-                                                  itemCount: model
-                                                              .currentParticipants
-                                                              .length >
-                                                          3
-                                                      ? 3
-                                                      : model
-                                                          .currentParticipants
-                                                          .length,
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return ParticiapntsListItemView(
-                                                        s_no: '${index + 1}',
-                                                        imageUrl: model
-                                                                .currentParticipantsProfileList[
-                                                            index],
-                                                        username: model
-                                                            .currentParticipants[
-                                                                index]
-                                                            .username,
-                                                        score:
-                                                            "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms");
-                                                  },
-                                                  //Current participants
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    AppState.delegate.appState
-                                                            .currentAction =
-                                                        PageAction(
-                                                            widget:
-                                                                AllParticipantsView(
-                                                              model: model,
-                                                              forPastWinners:
-                                                                  false,
-                                                            ),
-                                                            page:
-                                                                AllParticipantsViewPageConfig,
-                                                            state: PageState
-                                                                .addWidget);
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'See All',
-                                                        style: TextStyles
-                                                            .rajdhaniSB.body2,
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            SizeConfig.padding6,
-                                                      ),
-                                                      SvgPicture.asset(
-                                                        Assets
-                                                            .chevRonRightArrow,
-                                                        width: SizeConfig
-                                                            .iconSize1,
-                                                        height: SizeConfig
-                                                            .iconSize1,
-                                                        color: UiConstants
-                                                            .primaryColor,
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                    model.pastWinners.isEmpty
-                                        ? NoRecordDisplayWidget(
-                                            asset: "images/week-winners.png",
-                                            text: "Prizes will be updates soon",
-                                          )
-                                        : Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    SizeConfig.padding34),
-                                            child: Column(
-                                              children: [
-                                                ListView.builder(
-                                                  padding: EdgeInsets.only(
-                                                      top:
-                                                          SizeConfig.padding24),
-                                                  shrinkWrap: true,
-                                                  itemCount:
-                                                      model.pastWinners.length >
-                                                              3
-                                                          ? 3
-                                                          : model.pastWinners
-                                                              .length,
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return ParticiapntsListItemView(
-                                                        s_no: '${index + 1}',
-                                                        imageUrl: model
-                                                                .pastWinnerProfileList[
-                                                            index],
-                                                        username: model
-                                                            .pastWinners[index]
-                                                            .username,
-                                                        score:
-                                                            "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms");
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    AppState.delegate.appState
-                                                            .currentAction =
-                                                        PageAction(
-                                                            widget:
-                                                                AllParticipantsView(
-                                                              model: model,
-                                                              forPastWinners:
-                                                                  true,
-                                                            ),
-                                                            page:
-                                                                AllParticipantsViewPageConfig,
-                                                            state: PageState
-                                                                .addWidget);
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'See All',
-                                                        style: TextStyles
-                                                            .rajdhaniSB.body2,
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            SizeConfig.padding6,
-                                                      ),
-                                                      SvgPicture.asset(
-                                                        Assets
-                                                            .chevRonRightArrow,
-                                                        width: SizeConfig
-                                                            .iconSize1,
-                                                        height: SizeConfig
-                                                            .iconSize1,
-                                                        color: UiConstants
-                                                            .primaryColor,
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                    ),
-                  ),
+                                      Container(
+                                        color: UiConstants.kTabBorderColor,
+                                        height: 5,
+                                        width: SizeConfig.screenWidth * 0.38,
+                                      )
+                                    ],
+                                  ),
+                                  HeightAdaptivePageView(
+                                    controller: model.pageController,
+                                    onPageChanged: (int page) {
+                                      model.switchTab(page);
+                                    },
+                                    children: [
+                                      //Current particiapnts
+                                      CurrentParticipantsLeaderBoard(
+                                        model: model,
+                                      ),
+
+                                      //Current particiapnts
+                                      PastWinnersLeaderBoard(
+                                        model: model,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox.shrink()),
                   SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(SizeConfig.padding34),
-                      child: ReactivePositiveAppButton(
-                        btnText: 'Get Started',
-                        onPressed: () {},
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: InfoComponent(
-                      heading: model.boxHeading,
-                      assetList: model.boxAssets,
-                      titleList: model.boxTitlles,
+                    child: Column(
+                      children: [
+                        InfoComponent(
+                            heading: model.boxHeading,
+                            assetList: model.boxAssets,
+                            titleList: model.boxTitlles,
+                            onStateChanged: () {
+                              _controller.animateTo(
+                                  _controller.position.maxScrollExtent,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.ease);
+                            }),
+                        SizedBox(
+                          height: SizeConfig.padding54 + SizeConfig.padding54,
+                        )
+                      ],
                     ),
                   ),
                 ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding34),
+                  child: ReactivePositiveAppButton(
+                    btnText: 'Get Started',
+                    onPressed: () {},
+                  ),
+                ),
               ),
             ],
           ),
@@ -652,81 +514,388 @@ class CampaignView extends StatelessWidget {
   }
 }
 
-class ParticiapntsListItemView extends StatelessWidget {
-  const ParticiapntsListItemView(
-      {Key key,
-      @required this.s_no,
-      @required this.imageUrl,
-      @required this.username,
-      @required this.score})
-      : super(key: key);
+//To generate page with current participamnts list
+class CurrentParticipantsLeaderBoard extends StatelessWidget {
+  final TopSaverViewModel model;
+  CurrentParticipantsLeaderBoard({this.model});
 
-  final String s_no;
-  final String imageUrl;
-  final String username;
-  final String score;
-
+  bool isInteger(num value) => value is int || value == value.roundToDouble();
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: SizeConfig.padding20,
-        horizontal: SizeConfig.padding2,
+    return Container(
+      decoration: BoxDecoration(
+        color: UiConstants.kDarkBoxColor.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Text(
-                  s_no,
-                  style: TextStyles.rajdhaniSB.body2,
-                ),
-                SizedBox(
-                  width: SizeConfig.padding20,
-                ),
-                ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    width: SizeConfig.iconSize5,
-                    height: SizeConfig.iconSize5,
-                    placeholder: (context, url) => Container(
-                      width: SizeConfig.iconSize5,
-                      height: SizeConfig.iconSize5,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    errorWidget: (a, b, c) {
-                      return Image.asset(
-                        Assets.defaultProfilePlaceholder,
-                        width: SizeConfig.iconSize5,
-                        height: SizeConfig.iconSize5,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: SizeConfig.padding12,
-                ),
-                Expanded(
-                  child: Text(
-                    username,
-                    style: TextStyles.sourceSans.body3.setOpecity(0.8),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                )
-              ],
-            ),
-          ),
-          Text(
-            score.toString(),
-            style: TextStyles.rajdhaniM.body3,
-          ),
-        ],
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        child: Column(
+          children: [
+            SizedBox(height: SizeConfig.padding16),
+            model.currentParticipants != null
+                ? (model.currentParticipants.isNotEmpty
+                    ? Column(
+                        children: [
+                          Column(
+                            children: List.generate(
+                              // model.currentParticipants.length,
+                              model.currentParticipants.length > 3
+                                  ? 3
+                                  : model.currentParticipants.length,
+                              (index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding20,
+                                  horizontal: SizeConfig.padding2,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${index + 1}',
+                                            style: TextStyles.rajdhaniSB.body2,
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding20,
+                                          ),
+                                          FutureBuilder(
+                                            future: model.getProfileDpWithUid(
+                                                model.currentParticipants[index]
+                                                    .userid),
+                                            builder: (context, snapshot) {
+                                              if (!snapshot.hasData) {
+                                                return Image.asset(
+                                                  Assets
+                                                      .defaultProfilePlaceholder,
+                                                  width: SizeConfig.iconSize5,
+                                                  height: SizeConfig.iconSize5,
+                                                );
+                                              }
+
+                                              String imageUrl =
+                                                  snapshot.data as String;
+
+                                              return ClipOval(
+                                                child: CachedNetworkImage(
+                                                  imageUrl: imageUrl,
+                                                  width: SizeConfig.iconSize5,
+                                                  height: SizeConfig.iconSize5,
+                                                  placeholder: (context, url) =>
+                                                      Container(
+                                                    width: SizeConfig.iconSize5,
+                                                    height:
+                                                        SizeConfig.iconSize5,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  errorWidget: (a, b, c) {
+                                                    return Image.asset(
+                                                      Assets
+                                                          .defaultProfilePlaceholder,
+                                                      width:
+                                                          SizeConfig.iconSize5,
+                                                      height:
+                                                          SizeConfig.iconSize5,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding12,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              model.currentParticipants[index]
+                                                  .username,
+                                              style: TextStyles.sourceSans.body3
+                                                  .setOpecity(0.8),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms",
+                                      style: TextStyles.rajdhaniM.body3,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          (model.currentParticipants.length > 3)
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig.padding16,
+                                      top: SizeConfig.padding32),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          AppState.delegate
+                                                  .appState.currentAction =
+                                              PageAction(
+                                                  widget: AllParticipantsView(
+                                                    model: model,
+                                                    forPastWinners: false,
+                                                  ),
+                                                  page:
+                                                      AllParticipantsViewPageConfig,
+                                                  state: PageState.addWidget);
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'See All',
+                                              style:
+                                                  TextStyles.rajdhaniSB.body2,
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding6,
+                                            ),
+                                            SvgPicture.asset(
+                                              Assets.chevRonRightArrow,
+                                              width: SizeConfig.iconSize1,
+                                              height: SizeConfig.iconSize1,
+                                              color: UiConstants.primaryColor,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox(height: SizeConfig.padding8)
+                        ],
+                      )
+                    : Container(
+                        width: SizeConfig.screenWidth,
+                        margin: EdgeInsets.only(
+                            top: SizeConfig.padding16,
+                            bottom: SizeConfig.padding32),
+                        child: Opacity(
+                          opacity: 0.3,
+                          child: NoRecordDisplayWidget(
+                            asset: "images/leaderboard.png",
+                            text: "Leaderboard will be updated soon",
+                            topPadding: false,
+                            bottomPadding: true,
+                          ),
+                        ),
+                      ))
+                : ListLoader(
+                    bottomPadding: true,
+                  )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//To generate page with current participamnts list
+class PastWinnersLeaderBoard extends StatelessWidget {
+  final TopSaverViewModel model;
+  PastWinnersLeaderBoard({this.model});
+
+  bool isInteger(num value) => value is int || value == value.roundToDouble();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: UiConstants.kDarkBoxColor.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        child: Column(
+          children: [
+            SizedBox(height: SizeConfig.padding16),
+            model.pastWinners != null
+                ? (model.pastWinners.isNotEmpty
+                    ? Column(
+                        children: [
+                          Column(
+                            children: List.generate(
+                              // model.currentParticipants.length,
+                              model.pastWinners.length > 3
+                                  ? 3
+                                  : model.pastWinners.length,
+                              (index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding20,
+                                  horizontal: SizeConfig.padding2,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${index + 1}',
+                                            style: TextStyles.rajdhaniSB.body2,
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding20,
+                                          ),
+                                          FutureBuilder(
+                                            future: model.getProfileDpWithUid(
+                                                model
+                                                    .pastWinners[index].userid),
+                                            builder: (context, snapshot) {
+                                              if (!snapshot.hasData) {
+                                                return Image.asset(
+                                                  Assets
+                                                      .defaultProfilePlaceholder,
+                                                  width: SizeConfig.iconSize5,
+                                                  height: SizeConfig.iconSize5,
+                                                );
+                                              }
+
+                                              String imageUrl =
+                                                  snapshot.data as String;
+
+                                              return ClipOval(
+                                                child: CachedNetworkImage(
+                                                  imageUrl: imageUrl,
+                                                  width: SizeConfig.iconSize5,
+                                                  height: SizeConfig.iconSize5,
+                                                  placeholder: (context, url) =>
+                                                      Container(
+                                                    width: SizeConfig.iconSize5,
+                                                    height:
+                                                        SizeConfig.iconSize5,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  errorWidget: (a, b, c) {
+                                                    return Image.asset(
+                                                      Assets
+                                                          .defaultProfilePlaceholder,
+                                                      width:
+                                                          SizeConfig.iconSize5,
+                                                      height:
+                                                          SizeConfig.iconSize5,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding12,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              model.pastWinners[index].username,
+                                              style: TextStyles.sourceSans.body3
+                                                  .setOpecity(0.8),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gms",
+                                      style: TextStyles.rajdhaniM.body3,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          (model.pastWinners.length > 3)
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig.padding16,
+                                      top: SizeConfig.padding32),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          AppState.delegate
+                                                  .appState.currentAction =
+                                              PageAction(
+                                                  widget: AllParticipantsView(
+                                                    model: model,
+                                                    forPastWinners: true,
+                                                  ),
+                                                  page:
+                                                      AllParticipantsViewPageConfig,
+                                                  state: PageState.addWidget);
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'See All',
+                                              style:
+                                                  TextStyles.rajdhaniSB.body2,
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding6,
+                                            ),
+                                            SvgPicture.asset(
+                                              Assets.chevRonRightArrow,
+                                              width: SizeConfig.iconSize1,
+                                              height: SizeConfig.iconSize1,
+                                              color: UiConstants.primaryColor,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox(height: SizeConfig.padding8)
+                        ],
+                      )
+                    : Container(
+                        width: SizeConfig.screenWidth,
+                        margin: EdgeInsets.only(
+                            top: SizeConfig.padding16,
+                            bottom: SizeConfig.padding32),
+                        child: Opacity(
+                          opacity: 0.3,
+                          child: NoRecordDisplayWidget(
+                            asset: "images/leaderboard.png",
+                            text: "Leaderboard will be updated soon",
+                            topPadding: false,
+                            bottomPadding: true,
+                          ),
+                        ),
+                      ))
+                : ListLoader(
+                    bottomPadding: true,
+                  )
+          ],
+        ),
       ),
     );
   }

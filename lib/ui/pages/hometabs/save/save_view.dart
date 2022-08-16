@@ -277,9 +277,13 @@ class CampiagnCard extends StatelessWidget {
   final String subTitle;
   final String imageUrl;
 
-  const CampiagnCard(
-      {Key key, this.containerColor, this.title, this.subTitle, this.imageUrl})
-      : super(key: key);
+  const CampiagnCard({
+    Key key,
+    this.containerColor,
+    this.title,
+    this.subTitle,
+    this.imageUrl,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -56,6 +56,8 @@ class TopSaverViewModel extends BaseModel {
 
   PageController get pageController => _pageController;
 
+  bool infoBoxOpen = false;
+
   int get tabNo => _tabNo;
   set tabNo(value) {
     this._tabNo = value;
@@ -97,24 +99,8 @@ class TopSaverViewModel extends BaseModel {
   ];
   ////////////////////////////////////////////
 
-  List<String> _pastWinnerProfileList = [];
-
-  List<String> _currentParticipantsProfileList = [];
   List<ScoreBoard> currentParticipants;
   List<PastHighestSaver> _pastWinners;
-
-  List<String> get currentParticipantsProfileList =>
-      _currentParticipantsProfileList;
-  set currentParticipantsProfileList(List<String> value) {
-    _currentParticipantsProfileList = value;
-    notifyListeners();
-  }
-
-  List<String> get pastWinnerProfileList => _pastWinnerProfileList;
-  set pastWinnerProfileList(List<String> value) {
-    _pastWinnerProfileList = value;
-    notifyListeners();
-  }
 
   List<PastHighestSaver> get pastWinners => _pastWinners;
 
@@ -151,6 +137,7 @@ class TopSaverViewModel extends BaseModel {
 
     event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
+    infoBoxOpen = false;
 
     setState(ViewState.Idle);
 
@@ -235,6 +222,11 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
+  toggleInfoBox() {
+    infoBoxOpen = !infoBoxOpen;
+    notifyListeners();
+  }
+
   Future<EventModel> getSingleEventDetails(String eventType) async {
     EventModel event;
     _logger.d(eventType);
@@ -287,7 +279,7 @@ class TopSaverViewModel extends BaseModel {
         }
       }
 
-      getWinnersProfilePicList();
+      notifyListeners();
     } else
       pastWinners = [];
 
@@ -300,27 +292,8 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  getWinnersProfilePicList() async {
-    //for current participants
-    for (int i = 0; i < currentParticipants.length; i++) {
-      String dpUrl =
-          await _dbModel.getUserDP(currentParticipants[i].userid) ?? "";
-      _currentParticipantsProfileList.add(dpUrl);
-    }
-
-    //for past winners
-    for (int i = 0; i < pastWinners.length; i++) {
-      String dpUrl = await _dbModel.getUserDP(pastWinners[i].userid) ?? "";
-      _pastWinnerProfileList.add(dpUrl);
-    }
-
-    _logger.d("Lenghths");
-    _logger.d(currentParticipants.length);
-    _logger.d(_currentParticipantsProfileList.length);
-    _logger.d(pastWinners.length);
-    _logger.d(_pastWinnerProfileList.length);
-
-    notifyListeners();
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
   }
 
   getUserRankIfAny() {
