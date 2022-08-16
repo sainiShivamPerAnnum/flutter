@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/jou
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
