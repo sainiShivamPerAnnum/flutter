@@ -184,6 +184,10 @@ class Assets {
   static final String snackbarLoadingIcon =
       "assets/svg/snackbar_loading_icon.svg";
 
+  //A default profile placeholder
+  static final String defaultProfilePlaceholder =
+      "assets/temp/rank_one_profile.png";
+
   //FELLO REWARDS
   // static final String digitalGold = "images/augmont-share.png";
   static final String amazonGiftVoucher = "images/amazon-share.png";
@@ -232,6 +236,7 @@ class Assets {
 
   static final String couponsAsset = "assets/svg/coupons.svg";
 
+  static final String chevRonRightArrow = "assets/svg/chevron_right_arrow.svg";
   //Golden Tickeets screen
   static final String unredemmedGoldenTicketBG = "assets/svg/unredeemed_gt.svg";
   static final String unredemmedGoldenTicketBG_png =
