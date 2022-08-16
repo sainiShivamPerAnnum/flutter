@@ -2,11 +2,15 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -164,6 +168,8 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
+                    JourneyAppBar(),
+                    JourneyBannersView()
                     // AnimatedPositioned(
                     //   top: (model.isLoading &&
                     //           model.pages != null &&
@@ -221,50 +227,52 @@ class LevelBlurView extends StatelessWidget {
   LevelBlurView({this.model});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          bottom: (model.pageHeight * (2 - 1) + //pagno instead of 2
-              model.pageHeight * 0.443),
-          child: BlurFilter(
-            child: Container(
-              height: model.pageHeight * (1 - 0.443),
-              width: model.pageWidth,
-              alignment: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: (model.pageHeight * (2 - 1) + //pagno instead of 2
-                  model.pageHeight * 0.443) -
-              SizeConfig.avatarRadius,
-          child: Container(
-            width: model.pageWidth,
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomPaint(
-                    painter: DottedLinePainter(),
+    final JourneyLevel levelData = model.getJourneyLevelBlurData();
+
+    return levelData != null
+        ? Stack(
+            children: [
+              Positioned(
+                left: 0,
+                top: 0,
+                child: BlurFilter(
+                  child: Container(
+                    height: model.pageHeight * (1 - levelData.breakpoint),
+                    width: model.pageWidth,
+                    alignment: Alignment.bottomCenter,
                   ),
                 ),
-                CircleAvatar(
-                  radius: SizeConfig.avatarRadius,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.lock,
-                      size: SizeConfig.iconSize0, color: Colors.black),
-                ),
-                Expanded(
-                  child: CustomPaint(
-                    painter: DottedLinePainter(),
+              ),
+              Positioned(
+                top: model.pageHeight * (1 - levelData.breakpoint) +
+                    SizeConfig.avatarRadius,
+                child: Container(
+                  width: model.pageWidth,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomPaint(
+                          painter: DottedLinePainter(),
+                        ),
+                      ),
+                      CircleAvatar(
+                        radius: SizeConfig.avatarRadius,
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.lock,
+                            size: SizeConfig.iconSize0, color: Colors.black),
+                      ),
+                      Expanded(
+                        child: CustomPaint(
+                          painter: DottedLinePainter(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
+              )
+            ],
+          )
+        : SizedBox();
   }
 }
 
@@ -311,7 +319,7 @@ class MilestoneChecks extends StatelessWidget {
                                 model.currentMilestoneList[i].y) -
                         model.pageHeight * 0.02,
                     child: MileStoneCheck(
-                        model: model,
+                        // model: model,
                         milestone: model.currentMilestoneList[i]));
                 // else
                 //   return SizedBox();

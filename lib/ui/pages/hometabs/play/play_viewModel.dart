@@ -18,10 +18,7 @@ class PlayViewModel extends BaseModel {
   final _getterRepo = locator<GetterRepository>();
   final _analyticsService = locator<AnalyticsService>();
   final GameRepo gamesRepo = locator<GameRepo>();
-  final PageController promoPageController =
-      new PageController(viewportFraction: 0.9, initialPage: 0);
-  int _currentPage = 0;
-  Timer _timer;
+
   String _message;
   String _sessionId;
   bool _isOfferListLoading = true;
@@ -49,18 +46,7 @@ class PlayViewModel extends BaseModel {
 
   List<GameModel> get gamesListData => _gamesListData;
 
-  List<PromoCardModel> get offerList => _offerList;
-
-  String get message => _message;
-  String get sessionId => _sessionId;
-
-  get isOfferListLoading => this._isOfferListLoading;
   get isGamesListDataLoading => this._isGamesListDataLoading;
-
-  set isOfferListLoading(value) {
-    this._isOfferListLoading = value;
-    notifyListeners();
-  }
 
   set gamesListData(List<GameModel> games) {
     _gamesListData = games;
@@ -89,39 +75,6 @@ class PlayViewModel extends BaseModel {
     final response = await gamesRepo.getGames();
     if (response.isSuccess()) gamesListData = response.model;
     isGamesListDataLoading = false;
-  }
-
-  initiate() {
-    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
-      if (_currentPage < offerList.length - 1) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-
-      promoPageController.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 600),
-        curve: Curves.easeIn,
-      );
-    });
-  }
-
-  void clear() {
-    _timer?.cancel();
-  }
-
-  loadOfferList() async {
-    isOfferListLoading = true;
-    final response = await _getterRepo.getPromoCards();
-    if (response.code == 200) {
-      _offerList = response.model;
-    } else {
-      _offerList = [];
-    }
-    print(_offerList);
-    if (_offerList != null && offerList.length > 1) initiate();
-    isOfferListLoading = false;
   }
 
   void openGame(GameModel game) {

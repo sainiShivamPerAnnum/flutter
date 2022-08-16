@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
@@ -95,7 +96,6 @@ class JourneyPageViewModel extends BaseModel {
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
-    await _journeyService.updateUserJourneyStats();
     await _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
@@ -203,6 +203,22 @@ class JourneyPageViewModel extends BaseModel {
     _journeyService.animateAvatar();
   }
 
+  JourneyLevel getJourneyLevelBlurData() {
+    int lastMileStoneIndex = _journeyService.currentMilestoneList.last.index;
+    print(_journeyService.userJourneyStats.toString());
+    int userCurrentLevel = _journeyService.userJourneyStats.level;
+    JourneyLevel currentlevelData = _journeyService.levels.firstWhere(
+        (level) =>
+            userCurrentLevel >= level.start && userCurrentLevel <= level.end,
+        orElse: null);
+
+    if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
+      //we have some extra levels in view, need to show some blur
+      return currentlevelData;
+    } else
+      return null;
+  }
+
   // addPageToBottom(pgs) {
   //   pages.add(pgs);
   //   pageCount = pages.length;
@@ -234,9 +250,9 @@ class JourneyPageViewModel extends BaseModel {
 
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
+    bool isCompleted = false;
     if (_journeyService.avatarRemoteMlIndex > milestone.index) {
-      return BaseUtil.showNegativeAlert(
-          "MIlestone already completed", "Completed UI still in construction");
+      isCompleted = true;
     }
     AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
@@ -246,8 +262,12 @@ class JourneyPageViewModel extends BaseModel {
       enableDrag: false,
       useRootNavigator: true,
       context: context,
+      // isScrollControlled: true,
       builder: (ctx) {
-        return JourneyMilestoneDetailsModalSheet(milestone: milestone);
+        return JourneyMilestoneDetailsModalSheet(
+          milestone: milestone,
+          isCompleted: isCompleted,
+        );
       },
     );
   }

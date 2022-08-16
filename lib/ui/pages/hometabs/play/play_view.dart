@@ -24,9 +24,6 @@ class Play extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
-      onModelDispose: (model) {
-        model.clear();
-      },
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.transparent,

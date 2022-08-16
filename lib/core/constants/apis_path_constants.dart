@@ -116,4 +116,5 @@ class ApiPath {
   get kJourney => "/journey";
   static String getJourney(int page) => "/journey/$page";
   static String journeyStats(String uid) => "/user/$uid/journey/stats";
+  static String kJourneyLevel = '/levels';
 }

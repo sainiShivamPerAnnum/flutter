@@ -129,8 +129,8 @@ class TopSaverView extends StatelessWidget {
                                     ),
                                     onPressed: () async {
                                       String url = model.event.url;
-                                      if (await launch(url)) {
-                                        launchUrl(Uri.parse(url));
+                                      if (await canLaunch(url)) {
+                                        launch(url);
                                       }
                                     },
                                   ),

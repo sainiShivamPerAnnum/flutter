@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -5,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
+import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
@@ -17,6 +19,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -31,7 +34,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final CustomLogger _logger = locator<CustomLogger>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   //Local Variables
-  List<int> levels = [1, 4, 8];
+  List<JourneyLevel> levels = [];
   static bool isAvatarAnimationInProgress = false;
   double pageWidth;
   double pageHeight;
@@ -43,6 +46,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int pageCount;
   double _baseGlow = 0;
   TickerProvider _vsync;
+  Timer timer;
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
   List<AvatarPathModel> customPathDataList = [];
@@ -132,6 +136,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     await updateUserJourneyStats();
+    final res = await _journeyRepo.getJourneyLevels();
+    if (res.isSuccess()) levels = res.model;
   }
 
   //Fetching journeypages from Journey Repository
@@ -149,6 +155,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     final ApiResponse<UserJourneyStatsModel> response =
         await _journeyRepo.getUserJourneyStats();
     if (response.isSuccess()) {
+      _logger.d("Updating user journey stats");
+
       userJourneyStats = response.model;
       avatarRemoteMlIndex = userJourneyStats.mlIndex;
     } else {
@@ -192,8 +200,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int checkForGameLevelChange() {
     for (int i = 0; i < levels.length; i++) {
       log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
-      if (avatarCachedMlIndex < levels[i] && avatarRemoteMlIndex >= levels[i])
-        return levels[i];
+      if (avatarCachedMlIndex < levels[i].end &&
+          avatarRemoteMlIndex >= levels[i].start) return levels[i].level;
     }
     return 0;
   }
@@ -375,8 +383,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
     controller.reset();
+    timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
+      Haptic.strongVibrate();
+    });
     controller.forward().whenComplete(() {
       log("Animation Complete");
+      timer.cancel();
       int gameLevelChangeResult = checkForGameLevelChange();
       if (gameLevelChangeResult != 0)
         BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",

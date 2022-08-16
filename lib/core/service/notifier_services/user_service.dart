@@ -4,8 +4,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -36,6 +38,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _apiCacheManager = locator<ApiCacheManager>();
   final _userRepo = locator<UserRepository>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _journeyRepo = locator<JourneyRepository>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -47,6 +50,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String _idToken;
 
   UserFundWallet _userFundWallet;
+  UserJourneyStatsModel _userJourneyStats;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
@@ -84,6 +88,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   UserFundWallet get userFundWallet => _userFundWallet;
+  UserJourneyStatsModel get userJourneyStats => _userJourneyStats;
 
   set firebaseUser(User firebaseUser) => _firebaseUser = firebaseUser;
 
@@ -126,6 +131,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
     _logger.d("Wallet updated in userservice, property listeners notified");
+  }
+
+  set userJourneyStats(UserJourneyStatsModel stats) {
+    _userJourneyStats = stats;
+    notifyListeners(UserServiceProperties.myJourneyStats);
+    _logger
+        .d("Journey Stats updated in userservice, property listeners notified");
   }
 
   set augGoldPrinciple(double principle) {
@@ -178,7 +190,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         isEmailVerified = baseUser.isEmailVerified ?? false;
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-        await Future.wait([setProfilePicture(), getUserFundWalletData()]);
+        await Future.wait([
+          setProfilePicture(),
+          getUserFundWalletData(),
+          getUserJourneyStats()
+        ]);
         checkForNewNotifications();
         checkForUnscratchedGTStatus();
       }
@@ -270,6 +286,17 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         _compileUserWallet();
       else
         userFundWallet = temp;
+    }
+  }
+
+  Future<void> getUserJourneyStats() async {
+    if (baseUser != null) {
+      ApiResponse<UserJourneyStatsModel> res =
+          await _journeyRepo.getUserJourneyStats();
+      if (res.isSuccess())
+        userJourneyStats = res.model;
+      else
+        _logger.e("Error fetching User journey stats data");
     }
   }
 
