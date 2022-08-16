@@ -137,7 +137,9 @@ class WebHomeView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     GameInfoBlock(
-                                      coin: '2K+',
+                                      coin: model.realTimePlayingStat == ""
+                                          ? "-"
+                                          : "${model.sortPlayerNumbers(model.realTimePlayingStat)} +",
                                       coinText: 'Playing',
                                       assetHeight: SizeConfig.padding16,
                                       isDot: true,

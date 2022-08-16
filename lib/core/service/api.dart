@@ -333,4 +333,20 @@ class Api {
       return false;
     }
   }
+
+  Future<String> fetchRealTimePlayingStats(String gameType) async {
+    try {
+      final rdb.DataSnapshot data =
+          (await _realtimeDatabase.ref().child("stats").child(gameType).once())
+              .snapshot;
+      Map<Object, Object> fetchedData = data.value as Map<Object, Object>;
+      String fieldToFetch = fetchedData['field'] as String;
+
+      Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch];
+
+      return requiredTimeData['value'].toString();
+    } catch (e) {
+      return "";
+    }
+  }
 }
