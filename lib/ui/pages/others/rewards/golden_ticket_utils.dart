@@ -95,37 +95,52 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       @required this.width});
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraint) {
-      return Container(
-        child: AnimatedContainer(
-          height: SizeConfig.screenWidth * 0.6,
-          width: SizeConfig.screenWidth * 0.6,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-          padding: EdgeInsets.all(width * 0.04),
-          child: Stack(
-            children: [
-              SvgPicture.asset(
-                getGTBackground(ticket),
-                width: double.maxFinite,
-                height: double.maxFinite,
-                fit: BoxFit.contain,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: SizeConfig.padding24),
-                  child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: getGTContent(
-                          ticket, titleStyle, subtitleStyle, titleStyle2)),
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        print("I rebuilded");
+        return Container(
+          child: AnimatedContainer(
+            height: SizeConfig.screenWidth * 0.6,
+            width: SizeConfig.screenWidth * 0.6,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+            padding: EdgeInsets.all(width * 0.04),
+            child: Stack(
+              children: [
+                SvgPicture.asset(
+                  getGTBackground(ticket),
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  fit: BoxFit.contain,
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: (constraint.maxWidth == SizeConfig.screenWidth
+                          ? SizeConfig.padding32
+                          : 0),
+                    ),
+                    child: AnimatedScale(
+                      scale: (constraint.maxWidth == SizeConfig.screenWidth
+                          ? 1
+                          : 0.7),
+                      duration: Duration(milliseconds: 100),
+                      curve: Curves.easeIn,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: getGTContent(ticket, titleStyle, subtitleStyle,
+                            titleStyle2, constraint.maxWidth),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   String getGTBackground(GoldenTicket ticket) {
@@ -152,18 +167,13 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   }
 
   Widget getGTContent(GoldenTicket ticket, TextStyle titleStyle,
-      TextStyle subtitleStyle, TextStyle titleStyle2) {
+      TextStyle subtitleStyle, TextStyle titleStyle2, double maxWidth) {
     if (ticket.isRewarding) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr.length == 1) {
         //Has a single reward
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            singleRewardWidget(ticket.rewardArr[0], titleStyle, titleStyle2),
-          ],
-        );
+        return singleRewardWidget(
+            ticket.rewardArr[0], titleStyle, titleStyle2, maxWidth);
       } else if (ticket.rewardArr.length == 2) {
         //Both flc and cash
         return Column(
@@ -177,14 +187,14 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         //we ran out of predictions
         return Wrap(
           children: List.generate(
-              ticket.rewardArr.length,
-              (i) => Container(
-                    padding: EdgeInsets.all(SizeConfig.padding2),
-                    margin:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
-                    child: bulletTiles(
-                        '${ticket.rewardArr[i].type}: ${ticket.rewardArr[i].value}'),
-                  )),
+            ticket.rewardArr.length,
+            (i) => Container(
+              padding: EdgeInsets.all(SizeConfig.padding2),
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
+              child: bulletTiles(
+                  '${ticket.rewardArr[i].type}: ${ticket.rewardArr[i].value}'),
+            ),
+          ),
         );
       }
     } else {
@@ -197,25 +207,19 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     }
   }
 
-  Widget singleRewardWidget(
-      Reward reward, TextStyle textStyle, TextStyle titleStyle2) {
+  Widget singleRewardWidget(Reward reward, TextStyle textStyle,
+      TextStyle titleStyle2, double maxWidth) {
+    Widget rewardWidget;
+    bool noPaddingRequired = false;
     if (reward.type == 'rupee' || reward.type == 'amt') {
-      return Column(
+      rewardWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RichText(
             text: TextSpan(
-              text: '₹ ',
-              style: TextStyles.rajdhani.bold
-                  .colour(Colors.black)
-                  .copyWith(fontSize: SizeConfig.padding20),
-              children: [
-                TextSpan(
-                    text: "${reward.value}",
-                    style: TextStyles.rajdhani.bold
-                        .colour(Colors.black)
-                        .copyWith(fontSize: SizeConfig.padding20))
-              ],
+              text: '₹ ${reward.value}',
+              style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
           Text(' Cashback!',
@@ -223,44 +227,37 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         ],
       );
     } else if (reward.type == 'flc') {
-      return Column(
+      noPaddingRequired = true;
+      rewardWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             children: [
               SvgPicture.asset(
                 Assets.newTokenAsset,
-                width: SizeConfig.padding16,
-                height: SizeConfig.padding16,
+                width: SizeConfig.padding32,
+                height: SizeConfig.padding32,
               ),
               SizedBox(
                 width: SizeConfig.padding4,
               ),
-              RichText(
-                text: TextSpan(
-                  style: titleStyle2
-                      .colour(Colors.black)
-                      .copyWith(fontSize: SizeConfig.padding20),
-                  children: [
-                    TextSpan(
-                        text: "${reward.value} ",
-                        style: TextStyles.rajdhani.bold
-                            .colour(Colors.black)
-                            .copyWith(fontSize: SizeConfig.padding20)),
-                  ],
-                ),
+              Text(
+                "${reward.value} ",
+                style: TextStyles.rajdhaniB.title2.colour(Colors.black),
               ),
             ],
           ),
           Text(
-            reward.value > 1 ? "Tokens" : "Token",
+            reward.value > 1 ? "Tokens won!" : "Token won!",
             style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12),
           )
         ],
       );
     } else if (reward.type == 'gold') {
-      return Column(
+      rewardWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RichText(
             text: TextSpan(
@@ -269,30 +266,37 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   .copyWith(fontSize: SizeConfig.padding20),
               children: [
                 TextSpan(
-                  text: "₹ ",
-                ),
-                TextSpan(
-                    text: "${reward.value} ",
-                    style: TextStyles.rajdhani.bold
-                        .colour(Colors.black)
-                        .copyWith(fontSize: SizeConfig.padding20)),
+                    text: "₹ ${reward.value}",
+                    style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
               ],
             ),
           ),
-          Text("worths of Gold",
-              style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
+          Text(
+            "worths of Gold",
+            style: TextStyles.sourceSans.body4.colour(Colors.black),
+          )
         ],
       );
     } else
-      return RichText(
-          text: TextSpan(style: textStyle, children: [
-        TextSpan(
-            text: "${reward.value}",
-            style: textStyle.bold.colour(Colors.black)),
-        TextSpan(
-          text: "${reward.type}",
-        )
-      ]));
+      rewardWidget = RichText(
+        text: TextSpan(
+          style: textStyle,
+          children: [
+            TextSpan(
+                text: "${reward.value}",
+                style: textStyle.bold.colour(Colors.black)),
+            TextSpan(
+              text: "${reward.type}",
+            )
+          ],
+        ),
+      );
+
+    return Padding(
+        padding: maxWidth == SizeConfig.screenWidth || noPaddingRequired
+            ? EdgeInsets.zero
+            : EdgeInsets.only(left: SizeConfig.padding16),
+        child: rewardWidget);
   }
 
   doubleRewardWidget(
@@ -317,21 +321,21 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             children: [
               RichText(
                 text: TextSpan(
-                    text: '₹ ',
-                    style: TextStyles.rajdhani.bold
-                        .colour(Colors.black)
-                        .copyWith(fontSize: SizeConfig.padding20),
-                    children: [
-                      TextSpan(
-                          text: "$rupee",
-                          style: TextStyles.rajdhani.bold
-                              .colour(Colors.black)
-                              .copyWith(fontSize: SizeConfig.padding20)),
-                    ]),
+                  text: '₹ $rupee',
+                  style: TextStyles.rajdhaniSB.title4.colour(Colors.black),
+                  // children: [
+                  //   TextSpan(
+                  //       text: "$rupee",
+                  //       style: TextStyles.rajdhaniB
+                  //           .colour(Colors.black)
+                  //           .copyWith(fontSize: SizeConfig.padding20)),
+                  // ],
+                ),
               ),
-              Text(' Cashback!',
-                  style:
-                      TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
+              Text(
+                ' Cashback!',
+                style: TextStyles.sourceSans.body4.colour(Colors.black),
+              )
             ],
           ),
         ),
@@ -349,21 +353,20 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     Assets.newTokenAsset,
-                    width: SizeConfig.padding16,
-                    height: SizeConfig.padding16,
+                    width: SizeConfig.padding24,
+                    height: SizeConfig.padding24,
                   ),
                   SizedBox(
                     width: SizeConfig.padding4,
                   ),
                   Text("$flc ",
-                      style: TextStyles.rajdhani.bold
-                          .colour(Colors.black)
-                          .copyWith(fontSize: SizeConfig.padding20)),
+                      style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
                 ],
               ),
-              Text(' Tokens Won!',
-                  style:
-                      TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
+              Text(
+                ' Tokens Won!',
+                style: TextStyles.sourceSans.body4.colour(Colors.black),
+              )
             ],
           ),
         )
