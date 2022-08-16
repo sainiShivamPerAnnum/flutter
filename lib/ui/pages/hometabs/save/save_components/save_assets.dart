@@ -1,5 +1,6 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
@@ -75,16 +76,13 @@ class SaveAssetView extends StatelessWidget {
                         CurrentGoldRateText(),
                         _sellButton(
                             onTap: () {
-                              showBottomSheet(
-                                  enableDrag: true,
+                              BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
-                                  elevation: 0,
-                                  context: context,
-                                  builder: (context) {
-                                    return SellingReasonBottomSheet(
-                                      saveViewModel: model,
-                                    );
-                                  });
+                                  isBarrierDismissable: true,
+                                  addToScreenStack: true,
+                                  content: SellingReasonBottomSheet(
+                                    saveViewModel: model,
+                                  ));
                             },
                             isActive: false),
                       ]),
@@ -349,9 +347,7 @@ class CompleteKYCSection extends StatelessWidget {
                 model.userService.isSimpleKycVerified
                     ? SellActionButton(
                         title: locale.completeKYCText,
-                        onTap: () {
-                          model.navigateToSellAsset();
-                        },
+                        onTap: () {},
                         isVisible: true,
                       )
                     : Container(),
@@ -410,24 +406,39 @@ class SellActionButton extends StatelessWidget {
   }
 }
 
-class SellingReasonBottomSheet extends StatelessWidget {
+class SellingReasonBottomSheet extends StatefulWidget {
   final SaveViewModel saveViewModel;
 
   const SellingReasonBottomSheet({Key key, this.saveViewModel})
       : super(key: key);
 
   @override
+  State<SellingReasonBottomSheet> createState() =>
+      _SellingReasonBottomSheetState();
+}
+
+class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
+  List<String> _sellingReasons = [
+    'Not interested anymore',
+    'Not interested a little more',
+    'Not anymore',
+    'Others'
+  ];
+
+  String selectedReasonForSelling = '';
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      color: UiConstants.kModalSheetBackgroundColor,
+      alignment: Alignment.bottomCenter,
       child: Container(
         height: SizeConfig.screenWidth * 0.85,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.roundness12),
-                topRight: Radius.circular(SizeConfig.roundness12)),
-            color: UiConstants.kSecondaryBackgroundColor),
+                topLeft: Radius.circular(SizeConfig.roundness32),
+                topRight: Radius.circular(SizeConfig.roundness32)),
+            color: UiConstants.kModalSheetBackgroundColor),
         child: Padding(
           padding: EdgeInsets.all(SizeConfig.padding10),
           child: Column(
@@ -451,15 +462,18 @@ class SellingReasonBottomSheet extends StatelessWidget {
               ),
               Expanded(
                   child: ListView(
-                children: saveViewModel.sellingReasons
+                children: _sellingReasons
                     .map((x) => RadioListTile(
-                          selected: true,
                           toggleable: true,
-                          value: saveViewModel.selectedReasonForSelling,
-                          groupValue: saveViewModel.sellingReasons,
+                          selected: true,
+                          value: x,
+                          groupValue: selectedReasonForSelling,
                           onChanged: (value) {
-                            saveViewModel.selectedReasonForSelling = x;
-                            saveViewModel.navigateToSellGoldPage();
+                            setState(() {
+                              selectedReasonForSelling = x;
+                            });
+                            AppState.backButtonDispatcher.didPopRoute();
+                            widget.saveViewModel.navigateToSellGoldPage();
                           },
                           title: Text(
                             x,

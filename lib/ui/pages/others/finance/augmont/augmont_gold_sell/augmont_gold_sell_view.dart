@@ -1,37 +1,28 @@
 //Project Imports
-
 import 'package:felloapp/base_util.dart';
 import 'dart:math' as math;
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
-import 'package:felloapp/ui/widgets/helpers/inner_shadow.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -343,58 +334,75 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                   height: SizeConfig.screenWidth * 1.4,
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.padding34,
-                        right: SizeConfig.padding34,
-                        bottom:
-                            MediaQuery.of(context).viewInsets.bottom * 0.5 ??
-                                0),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text:
-                            "Your balance will be credited to your registered bank account within 1-2 business working days",
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.padding34,
+                          right: SizeConfig.padding34,
+                          bottom:
+                              MediaQuery.of(context).viewInsets.bottom * 0.5 ??
+                                  0),
+                      child: Text(
+                        _buildNonWithdrawString(model),
                         style: TextStyles.body4.colour(Colors.grey),
-                      ),
+                        textAlign: TextAlign.center,
+                      )),
+                ),
+                Container(
+                  height: SizeConfig.screenWidth * 1.6,
+                  alignment: Alignment.bottomCenter,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
+                  child: Container(
+                    margin: EdgeInsets.only(top: SizeConfig.padding24),
+                    width: SizeConfig.screenWidth,
+                    child: FelloButtonLg(
+                      child: model.isGoldSellInProgress
+                          ? SpinKitThreeBounce(
+                              color: Colors.white,
+                              size: 20,
+                            )
+                          : Text(
+                              "SELL",
+                              style: TextStyles.body2.colour(Colors.white).bold,
+                            ),
+                      onPressed: () async {
+                        if (!model.isGoldSellInProgress &&
+                            !model.isQntFetching) {
+                          FocusScope.of(context).unfocus();
+                          bool isDetailComplete =
+                              await model.verifyGoldSaleDetails();
+                          isDetailComplete == true
+                              ? BaseUtil.openDialog(
+                                  addToScreenStack: true,
+                                  hapticVibrate: true,
+                                  isBarrierDismissable: false,
+                                  content: _SellConfimrationDialog(
+                                    goldAmount: model.goldSellGrams,
+                                    positiveTap: () async {
+                                      AppState.backButtonDispatcher
+                                          .didPopRoute();
+                                      // BaseUtil.openModalBottomSheet(
+                                      //     isBarrierDismissable: false,
+                                      //     hapticVibrate: false,
+                                      //     addToScreenStack: true,
+                                      //     content: Container(
+                                      //       height: SizeConfig.screenWidth,
+                                      //       width: SizeConfig.screenWidth,
+                                      //       child:
+                                      //           Lottie.asset(Assets.bankLottie),
+                                      //     ));
+                                      await model.initiateSell();
+                                    },
+                                    negativeTap: () {
+                                      AppState.backButtonDispatcher
+                                          .didPopRoute();
+                                    },
+                                  ))
+                              : () {};
+                        }
+                      },
                     ),
                   ),
                 ),
-                (baseProvider.checkKycMissing)
-                    ? _addKycInfoWidget()
-                    : Container(),
-                (_checkBankInfoMissing) ? _addBankInfoWidget() : Container(),
-                (baseProvider.checkKycMissing || _checkBankInfoMissing)
-                    ? Container()
-                    : Container(
-                        height: SizeConfig.screenWidth * 1.6,
-                        alignment: Alignment.bottomCenter,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding64),
-                        child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.padding24),
-                          width: SizeConfig.screenWidth,
-                          child: FelloButtonLg(
-                            child: model.isGoldSellInProgress
-                                ? SpinKitThreeBounce(
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : Text(
-                                    "SELL",
-                                    style: TextStyles.body2
-                                        .colour(Colors.white)
-                                        .bold,
-                                  ),
-                            onPressed: () {
-                              if (!model.isGoldSellInProgress &&
-                                  !model.isQntFetching) {
-                                FocusScope.of(context).unfocus();
-                                model.initiateSell();
-                              }
-                            },
-                          ),
-                        ),
-                      ),
               ],
             ),
           ],
@@ -416,75 +424,6 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
     return;
   }
 
-  Widget _addBankInfoWidget() {
-    return FelloBriefTile(
-      leadingAsset: Assets.wmtsaveMoney,
-      title: "Add bank information",
-      onTap: () {
-        AppState.delegate.appState.currentAction = PageAction(
-            page: EditAugBankDetailsPageConfig, state: PageState.addPage);
-      },
-    );
-  }
-
-  Widget _addKycInfoWidget() {
-    return FelloBriefTile(
-      leadingIcon: Icons.verified_user,
-      title: "Complete your KYC to withdraw",
-      onTap: () {
-        AppState.delegate.appState.currentAction =
-            PageAction(page: KycDetailsPageConfig, state: PageState.addPage);
-      },
-      // onTap: () {
-      //   AppState.screenStack.add(ScreenItem.dialog);
-      //   showModalBottomSheet(
-      //       isDismissible: false,
-      //       // backgroundColor: Colors.transparent,
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.circular(16),
-      //       ),
-      //       context: context,
-      //       isScrollControlled: true,
-      //       builder: (context) {
-      //         return SimpleKycModalSheetView();
-      //       });
-      // },
-    );
-  }
-
-  Widget _getGoldAmount(String qnt) {
-    if (qnt == null || qnt.isEmpty) return Container();
-    double _gQnt = 0;
-    try {
-      _gQnt = double.parse(qnt);
-    } catch (e) {
-      return Container();
-    }
-    if (_gQnt == null || _gQnt < 0.0001)
-      return Container();
-    else {
-      double _goldAmt = BaseUtil.digitPrecision(_gQnt * widget.sellRate);
-      bool _isValid = (_goldAmt > _getTotalGoldAvailable());
-      return Text(
-        ' = ₹ ${_goldAmt.toStringAsFixed(2)}',
-        textAlign: TextAlign.start,
-        style: TextStyle(
-            color: (_isValid) ? Colors.red : Colors.black87,
-            fontSize: SizeConfig.mediumTextSize * 1.2,
-            fontWeight: FontWeight.bold),
-      );
-    }
-  }
-
-  double _getTotalGoldAvailable() {
-    if (widget.sellRate != null && widget.withdrawableGoldQnty != null) {
-      double _net = BaseUtil.digitPrecision(
-          widget.sellRate * widget.withdrawableGoldQnty);
-      return _net;
-    }
-    return 0;
-  }
-
   onTransactionProcessed(bool flag) {
     baseProvider.activeGoldWithdrawalQuantity = 0;
     _isLoading = false;
@@ -504,230 +443,107 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
           'We will inform you once the withdrawal is complete!');
     }
   }
+}
 
-  Widget _buildSubmitButton(BuildContext context) {
-    LinearGradient _gradient = new LinearGradient(colors: [
-      FelloColorPalette.augmontFundPalette().secondaryColor.withBlue(800),
-      FelloColorPalette.augmontFundPalette().secondaryColor,
-      //Colors.blueGrey,
-      //Colors.blueGrey[800],
-    ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+class _SellConfimrationDialog extends StatelessWidget {
+  final double goldAmount;
+  final Function() positiveTap;
+  final Function() negativeTap;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FelloButtonLg(
-          color: FelloColorPalette.augmontFundPalette().secondaryColor,
-          child: Text(
-            _checkBankInfoMissing ? 'PROCEED' : 'WITHDRAW ',
-            style: TextStyles.body2.colour(Colors.white),
-          ),
-          onPressed: () async {
-            Haptic.vibrate();
-            FocusScope.of(context).unfocus();
-            if (BaseUtil.showNoInternetAlert()) return;
-            if (baseProvider.checkKycMissing) {
-              _controller.forward().then((value) => _controller.reverse());
-            } else {
-              if (widget.withdrawableGoldQnty == 0.0) {
-                BaseUtil.showNegativeAlert(
-                  'Unable to process',
-                  'Your withdrawable balance is low',
-                );
-                return;
-              }
-              final amtErr = _validateAmount(_quantityController.text);
-              if (amtErr != null) {
-                setState(() {
-                  _amountError = amtErr;
-                });
-                return;
-              }
-              setState(() {
-                _amountError = null;
-              });
-              if (_amountError == null) {
-                baseProvider.activeGoldWithdrawalQuantity =
-                    double.parse(_quantityController.text);
-                if (_checkBankInfoMissing) {
-                  appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: EditAugBankDetailsPageConfig,
-                      widget: EditAugmontBankDetail(
-                        isWithdrawFlow: true,
-                        addBankComplete: () {
-                          baseProvider.withdrawFlowStackCount = 2;
-                          widget.onAmountConfirmed({
-                            'withdrawal_quantity':
-                                baseProvider.activeGoldWithdrawalQuantity,
-                          });
-                        },
-                      ));
-                } else {
-                  String _confirmMsg =
-                      "Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity} grams of digital gold shall be processed.";
-                  AppState.screenStack.add(ScreenItem.dialog);
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => ConfirmActionDialog(
-                      title: "Please confirm your action",
-                      description: _confirmMsg,
-                      buttonText: "Withdraw",
-                      cancelBtnText: 'Cancel',
-                      confirmAction: () {
-                        _isLoading = true;
-                        setState(() {});
-                        baseProvider.withdrawFlowStackCount = 1;
-                        widget.onAmountConfirmed({
-                          'withdrawal_quantity':
-                              baseProvider.activeGoldWithdrawalQuantity,
-                        });
-                        return true;
-                      },
-                      cancelAction: () {
-                        return false;
-                      },
-                    ),
-                  );
-                }
-              }
-            }
-          },
-        ),
-      ],
-    );
-  }
+  const _SellConfimrationDialog(
+      {Key key, this.goldAmount = 0, this.positiveTap, this.negativeTap})
+      : super(key: key);
 
-  bool get _checkBankInfoMissing => (baseProvider.augmontDetail == null ||
-      baseProvider.augmontDetail.bankAccNo == null ||
-      baseProvider.augmontDetail.bankAccNo.isEmpty ||
-      baseProvider.augmontDetail.bankHolderName.isEmpty ||
-      baseProvider.augmontDetail.bankHolderName == null ||
-      baseProvider.augmontDetail.ifsc.isEmpty ||
-      baseProvider.augmontDetail.ifsc == null);
-
-  _buildRow(String title, String value) {
-    return ListTile(
-      title: Container(
-        width: SizeConfig.screenWidth * 0.2,
-        child: Text(
-          '$title: ',
-          style: TextStyle(
-            color: UiConstants.accentColor,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
-        ),
-      ),
-      trailing: Container(
-        width: SizeConfig.screenWidth * 0.4,
-        child: Text(
-          value,
-          overflow: TextOverflow.clip,
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: SizeConfig.mediumTextSize,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  _buildLockedGoldRow(
-      String title, String value, AugmontGoldSellViewModel model) {
-    double _rem_gold =
-        model.userFundWallet.augGoldQuantity - widget.withdrawableGoldQnty;
-    return ListTile(
-      title: Container(
-        width: SizeConfig.screenWidth * 0.2,
-        child: Text(
-          '$title: ',
-          style: TextStyle(
-            color: UiConstants.accentColor,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
-        ),
-      ),
-      trailing: Container(
-        width: SizeConfig.screenWidth * 0.4,
-        child: GestureDetector(
-          child: Row(
-            children: [
-              Text(
-                '$value ',
-                overflow: TextOverflow.clip,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: SizeConfig.mediumTextSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Icon(
-                Icons.info_outline,
-                size: 14,
-                color: UiConstants.spinnerColor,
-              ),
-            ],
-          ),
-          onTap: () {
-            Haptic.vibrate();
-            showDialog(
-              context: context,
-              builder: (context) => new AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.cardBorderRadius),
-                ),
-                title: new Text(title),
-                content: Text(
-                    'All gold deposits are available for withdrawal after ${Constants.AUG_GOLD_WITHDRAW_OFFSET * 24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
-                actions: <Widget>[
-                  new TextButton(
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true)
-                          .pop(); // dismisses only the dialog and returns nothing
-                    },
-                    child: new Text(
-                      'OK',
-                      style: TextStyle(
-                        color: UiConstants.primaryColor,
-                      ),
-                    ),
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            gradient: LinearGradient(colors: [
+              Color(0xFFFFFFFF),
+              Color(0xFF000000),
+              Color(0xFFF5F5F5).withOpacity(0.22),
+            ], begin: Alignment(2, -2), end: Alignment(-2, 2))),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding2 / 1.8),
+          child: Container(
+            height: SizeConfig.screenWidth * 1.1,
+            width: SizeConfig.screenWidth * 0.87,
+            decoration: BoxDecoration(
+                color: UiConstants.kModalSheetBackgroundColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: SizeConfig.padding24),
+                  child: Text(
+                    'Are you sure you want\nto sell?',
+                    style: TextStyles.sourceSansSB.title5,
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              ),
-            );
-          },
+                ),
+                Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding8),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(Assets.magicalSpiritBall),
+                      SizedBox(
+                        height: SizeConfig.padding4,
+                      ),
+                      Text(
+                        'Your $goldAmount gms could have grown to\n${(goldAmount * 12).toStringAsPrecision(2)} gms by 2025',
+                        style: TextStyles.sourceSans.body3,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding12,
+                      vertical: SizeConfig.padding24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: negativeTap,
+                        child: Container(
+                          height: SizeConfig.screenWidth * 0.14,
+                          width: SizeConfig.screenWidth * 0.35,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness5),
+                              border: Border.all(color: Colors.white)),
+                          child: Center(
+                            child: Text(
+                              'CANCEL',
+                              style: TextStyles.rajdhaniSB.body0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: SizeConfig.screenWidth * 0.35,
+                        child: FelloButtonLg(
+                          onPressed: positiveTap,
+                          height: SizeConfig.screenWidth * 0.14,
+                          child: Text(
+                            'SELL',
+                            style: TextStyles.rajdhaniSB.body0,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
-  }
-
-  String _validateAmount(String value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a valid amount';
-    }
-    try {
-      Pattern pattern = "^[0-9.]*\$";
-      RegExp amRegex = RegExp(pattern);
-      if (!amRegex.hasMatch(value)) {
-        return 'Please enter a valid amount';
-      }
-      List<String> fractionalPart = value.split('.');
-      double amount = double.parse(value);
-      if (amount > widget.withdrawableGoldQnty)
-        return 'Insufficient balance';
-      else if (amount < 0.0001)
-        return 'Please enter a greater amount';
-      else if (fractionalPart != null &&
-          fractionalPart.length > 1 &&
-          fractionalPart[1] != null &&
-          fractionalPart[1].length > 4)
-        return 'Upto 4 decimals allowed';
-      else
-        return null;
-    } catch (e) {
-      return 'Please enter a valid amount';
-    }
   }
 }

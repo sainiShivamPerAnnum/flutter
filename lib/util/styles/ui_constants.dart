@@ -56,6 +56,8 @@ class UiConstants {
   static const Color kModalSheetBackgroundColor = const Color(0xFF1B262C);
   static const Color kModalSheetMutedTextBackgroundColor =
       const Color(0xFFA9C6D6);
+  static const Color kModalSheetSecondaryBackgroundColor =
+      const Color(0xFF627F8E);
   static const Color kDarkBackgroundColor = Color(0xFF18181B);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);

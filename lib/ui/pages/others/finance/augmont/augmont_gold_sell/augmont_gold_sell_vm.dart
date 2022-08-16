@@ -1,7 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -9,11 +9,11 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -171,42 +171,42 @@ class AugmontGoldSellViewModel extends BaseModel {
     refresh();
   }
 
-  initiateSell() async {
+  Future<bool> verifyGoldSaleDetails() async {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         'Portal unavailable',
         'The current rates couldn\'t be loaded. Please try again',
       );
-      return;
+      return false;
     }
 
     if (sellGramAmount == null) {
       BaseUtil.showNegativeAlert(
           "No Amount Entered", "Please enter some amount");
-      return;
+      return false;
     }
     if (!_userService.baseUser.isAugmontOnboarded) {
       BaseUtil.showNegativeAlert(
         'Not registered',
         'You have not registered for digital gold yet',
       );
-      return;
+      return false;
     }
     if (sellGramAmount < 0.0001) {
       BaseUtil.showNegativeAlert(
           "Amount too low", "Please enter a greater amount");
-      return;
+      return false;
     }
     if (sellGramAmount > userFundWallet.augGoldQuantity) {
       BaseUtil.showNegativeAlert(
           "Insufficient balance", "Please enter a lower amount");
-      return;
+      return false;
     }
     if (sellGramAmount > withdrawableQnt) {
       BaseUtil.showNegativeAlert(
           "Sell not processed", "Purchased Gold can be sold after 2 days");
-      return;
+      return false;
     }
 
     if (_baseUtil.augmontDetail == null) {
@@ -217,7 +217,7 @@ class AugmontGoldSellViewModel extends BaseModel {
         'Sell Failed',
         'Please try again in sometime or contact us',
       );
-      return;
+      return false;
     }
     List<String> fractionalPart = sellGramAmount.toString().split('.');
     if (fractionalPart != null &&
@@ -228,15 +228,14 @@ class AugmontGoldSellViewModel extends BaseModel {
         'Please try again',
         'Upto 4 decimals allowed',
       );
-      return;
+      return false;
     }
-
     if (_baseUtil.augmontDetail.isSellLocked) {
       BaseUtil.showNegativeAlert(
         'Sell Failed',
         "${sellNotice ?? 'Gold sell is currently on hold. Please try again after sometime.'}",
       );
-      return;
+      return false;
     }
     bool _disabled = await _dbModel.isAugmontSellDisabled();
     if (_disabled != null && _disabled) {
@@ -244,12 +243,16 @@ class AugmontGoldSellViewModel extends BaseModel {
         'Sell Failed',
         'Gold sell is currently on hold. Please try again after sometime.',
       );
-      return;
+      return false;
     }
+    return true;
+  }
+
+  initiateSell() async {
+    double sellGramAmount = double.tryParse(goldAmountController.text.trim());
     isGoldSellInProgress = true;
     _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
     _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
-
     final totalSellAmount =
         BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
     _analyticsService.track(
@@ -274,11 +277,9 @@ class AugmontGoldSellViewModel extends BaseModel {
   }
 
   onSellComplete(bool flag) {
-    // _isDepositInProgress = false;
-    // setState(() {});
     isGoldSellInProgress = false;
     if (flag) {
-      showSuccessGoldSellDialog();
+      navigateToSaleConfirmationView();
     } else {
       AppState.backButtonDispatcher.didPopRoute();
       BaseUtil.showNegativeAlert('Sell did not complete',
@@ -342,5 +343,15 @@ class AugmontGoldSellViewModel extends BaseModel {
         ),
       ),
     );
+  }
+
+  Future<bool> navigateToSaleConfirmationView() async {
+    try {
+      await initiateSell();
+    } on Exception catch (e) {}
+    AppState.delegate.appState.currentAction = PageAction(
+        page: SellConfirmationViewConfig,
+        widget: SellAssetsConfirmationView(),
+        state: PageState.addWidget);
   }
 }

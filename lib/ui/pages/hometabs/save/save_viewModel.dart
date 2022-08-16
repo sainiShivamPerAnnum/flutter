@@ -121,13 +121,6 @@ class SaveViewModel extends BaseModel {
         widget: SaveAssetView());
   }
 
-  navigateToSellAsset() {
-    AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: SellAssetsViewConfig,
-        widget: SellAssetsConfirmationView());
-  }
-
   navigateToSellGoldPage() {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,

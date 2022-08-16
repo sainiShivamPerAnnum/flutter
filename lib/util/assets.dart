@@ -124,6 +124,10 @@ class Assets {
   static final String rbiLogo = 'assets/vectors/rbi_logo.png';
   static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';
   static final String sebiLogo = 'assets/vectors/sebi_logo.png';
+  static final String magicalSpiritBall = 'assets/svg/magical_spirit_ball.svg';
+  static final String rippleAnimation = 'assets/lotties/ripple.json';
+  static final String saleSuccessVector =
+      'assets/vectors/sale_success_vector.png';
 
   // WIN
 

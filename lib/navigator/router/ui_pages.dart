@@ -63,7 +63,6 @@ const String Level2ViewPath = '/level2View';
 const String BlogPostWebViewPath = '/blogPostWebView';
 const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
-const String SellAssetViewPath = '/sellAssetViewPath';
 const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 
 enum Pages {
@@ -129,7 +128,6 @@ enum Pages {
   BlogPostWebView,
   CampaignView,
   SaveAssetView,
-  SellAssetView,
   SellConfirmationView
 }
 
@@ -572,13 +570,6 @@ PageConfiguration SaveAssetsViewConfig = PageConfiguration(
   path: SaveAssetViewPath,
   uiPage: Pages.SaveAssetView,
   name: "Save Asset View",
-);
-
-PageConfiguration SellAssetsViewConfig = PageConfiguration(
-  key: 'SellAssetsView',
-  path: SellAssetViewPath,
-  uiPage: Pages.SellAssetView,
-  name: "Sell Asset View",
 );
 
 PageConfiguration SellConfirmationViewConfig = PageConfiguration(
