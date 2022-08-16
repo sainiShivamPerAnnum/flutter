@@ -344,8 +344,8 @@ class Avatar extends StatelessWidget {
           key: avatarKey,
           // duration: Duration(seconds: 10),
           // curve: Curves.decelerate,
-          top: model.avatarPosition.dy,
-          left: model.avatarPosition.dx,
+          top: model.avatarPosition?.dy,
+          left: model.avatarPosition?.dx,
           child: const IgnorePointer(
             ignoring: true,
             child: CircleAvatar(

@@ -79,7 +79,7 @@ class JourneyPageViewModel extends BaseModel {
     // Map<String, dynamic> res =
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
-    await _journeyService.fetchNetworkPages();
+    // await _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
     // log("${lastDoc.id}");

@@ -143,6 +143,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     await updateUserJourneyStats();
     final res = await _journeyRepo.getJourneyLevels();
     if (res.isSuccess()) levels = res.model;
+    await fetchNetworkPages();
   }
 
   //Fetching journeypages from Journey Repository
