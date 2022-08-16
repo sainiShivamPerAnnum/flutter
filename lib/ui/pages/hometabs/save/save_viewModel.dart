@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
@@ -8,8 +9,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_assets/sell_assets_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -17,10 +19,14 @@ class SaveViewModel extends BaseModel {
   final _campaignRepo = locator<CampaignRepo>();
   final _saveRepo = locator<SaveRepo>();
   final userService = locator<UserService>();
+  BaseUtil baseProvider;
 
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
   bool _isLoading = false;
+  int _sellFlowStep = 1;
+  List<String> _sellingReasons = [];
+  String _selectedReasonForSelling = '';
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
@@ -28,6 +34,9 @@ class SaveViewModel extends BaseModel {
   List<EventModel> get ongoingEvents => this._ongoingEvents;
   List<BlogPostModel> get blogPosts => this._blogPosts;
   bool get isLoading => _isLoading;
+  int get sellFlowStep => _sellFlowStep;
+  List<String> get sellingReasons => _sellingReasons;
+  String get selectedReasonForSelling => _selectedReasonForSelling;
 
   set ongoingEvents(List<EventModel> value) {
     this._ongoingEvents = value;
@@ -39,7 +48,24 @@ class SaveViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set sellFlowStep(int val) {
+    this._sellFlowStep = val;
+    notifyListeners();
+  }
+
+  set selectedReasonForSelling(String val) {
+    this._selectedReasonForSelling = val;
+    notifyListeners();
+  }
+
   init() {
+    _sellingReasons = [
+      'Not interested anymore',
+      'Not interested anymore',
+      'Not interested anymore',
+      'Others'
+    ];
+    baseProvider = BaseUtil();
     getCampaignEvents();
     getBlogs();
   }
@@ -99,6 +125,13 @@ class SaveViewModel extends BaseModel {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SellAssetsViewConfig,
-        widget: SellAssetsView());
+        widget: SellAssetsConfirmationView());
+  }
+
+  navigateToSellGoldPage() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: AugmontGoldSellPageConfig,
+        widget: AugmontGoldSellView());
   }
 }

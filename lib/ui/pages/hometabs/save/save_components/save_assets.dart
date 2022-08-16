@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
@@ -30,79 +31,100 @@ class SaveAssetView extends StatelessWidget {
         leading: FelloAppBarBackButton(),
       ),
       body: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: SizeConfig.screenWidth * 2.4,
-              decoration: BoxDecoration(
-                  color: UiConstants.kBackgroundColor,
-                  borderRadius: BorderRadius.circular(5)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GoldAssetCard(),
-                  SizedBox(
-                    height: SizeConfig.padding24,
+          physics: ClampingScrollPhysics(),
+          child: BaseView<SaveViewModel>(
+            onModelReady: (model) => model.init(),
+            builder: (context, model, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: SizeConfig.screenWidth * 2.4,
+                  decoration: BoxDecoration(
+                      color: UiConstants.kBackgroundColor,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GoldAssetCard(),
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
+                      // -- Break --
+                      SaveTitleContainer(title: 'Auto SIP'),
+                      SizedBox(
+                        height: SizeConfig.padding10,
+                      ),
+                      AutoSIPCard(),
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
+                      SaveTitleContainer(title: 'Transactions'),
+                      MiniTransactionCard(),
+                    ],
                   ),
-                  // -- Break --
-                  SaveTitleContainer(title: 'Auto SIP'),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
-                  AutoSIPCard(),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
-                  SaveTitleContainer(title: 'Transactions'),
-                  MiniTransactionCard(),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CurrentGoldRateText(),
-                    _sellButton(onTap: () {}, isActive: false),
-                  ]),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: SizeConfig.padding24),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  locale.tokenDeductionOnTransaction,
-                  style: TextStyles.sourceSans.body4
-                      .colour(Colors.grey.withOpacity(0.7)),
-                  textAlign: TextAlign.end,
                 ),
-              ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CurrentGoldRateText(),
+                        _sellButton(
+                            onTap: () {
+                              showBottomSheet(
+                                  enableDrag: true,
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                  context: context,
+                                  builder: (context) {
+                                    return SellingReasonBottomSheet(
+                                      saveViewModel: model,
+                                    );
+                                  });
+                            },
+                            isActive: false),
+                      ]),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding24),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      locale.tokenDeductionOnTransaction,
+                      style: TextStyles.sourceSans.body4
+                          .colour(Colors.grey.withOpacity(0.7)),
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                CompleteKYCSection(
+                  isKYCCompleted:
+                      model.userService.isSimpleKycVerified ?? false,
+                  isBankInformationComeplted: true,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                  child: FAQCardView(
+                      category: 'digital_gold',
+                      bgColor: UiConstants.kDarkBackgroundColor),
+                ),
+                SizedBox(
+                  height: SizeConfig.screenWidth * 0.2,
+                )
+              ],
             ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            CompleteKYCSection(),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-              child: FAQCardView(
-                  category: 'digital_gold',
-                  bgColor: UiConstants.kDarkBackgroundColor),
-            ),
-            SizedBox(
-              height: SizeConfig.screenWidth * 0.2,
-            )
-          ],
-        ),
-      ),
+          )),
     );
   }
 
@@ -135,7 +157,6 @@ class SaveAssetView extends StatelessWidget {
 
 class CurrentGoldRateText extends StatelessWidget {
   const CurrentGoldRateText({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return BaseView<AugmontGoldDetailsViewModel>(
@@ -331,6 +352,7 @@ class CompleteKYCSection extends StatelessWidget {
                         onTap: () {
                           model.navigateToSellAsset();
                         },
+                        isVisible: true,
                       )
                     : Container(),
                 SizedBox(
@@ -358,25 +380,94 @@ class SellActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: SizeConfig.screenWidth * 0.16,
+          width: SizeConfig.screenWidth,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+              color: UiConstants.kSecondaryBackgroundColor),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyles.rajdhaniM.body1,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: UiConstants.kTextColor,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SellingReasonBottomSheet extends StatelessWidget {
+  final SaveViewModel saveViewModel;
+
+  const SellingReasonBottomSheet({Key key, this.saveViewModel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: UiConstants.kModalSheetBackgroundColor,
       child: Container(
-        height: SizeConfig.screenWidth * 0.16,
+        height: SizeConfig.screenWidth * 0.85,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness12),
+                topRight: Radius.circular(SizeConfig.roundness12)),
             color: UiConstants.kSecondaryBackgroundColor),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: EdgeInsets.all(SizeConfig.padding10),
+          child: Column(
             children: [
-              Text(
-                title,
-                style: TextStyles.rajdhaniM.body1,
-              ),
-              Icon(
-                Icons.arrow_forward_ios_rounded,
+              Divider(
+                thickness: 4,
+                height: 3,
                 color: UiConstants.kTextColor,
-              )
+                endIndent: 150,
+                indent: 150,
+              ),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+              Text(
+                'What makes you want to sell the asset?',
+                style: TextStyles.rajdhaniSB.body1,
+              ),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+              Expanded(
+                  child: ListView(
+                children: saveViewModel.sellingReasons
+                    .map((x) => RadioListTile(
+                          selected: true,
+                          toggleable: true,
+                          value: saveViewModel.selectedReasonForSelling,
+                          groupValue: saveViewModel.sellingReasons,
+                          onChanged: (value) {
+                            saveViewModel.selectedReasonForSelling = x;
+                            saveViewModel.navigateToSellGoldPage();
+                          },
+                          title: Text(
+                            x,
+                            style: TextStyles.rajdhani.body2,
+                          ),
+                        ))
+                    .toList(),
+              )),
             ],
           ),
         ),

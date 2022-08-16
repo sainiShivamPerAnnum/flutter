@@ -90,33 +90,39 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
       final token = await getBearerToken();
-      return await _cacheService.cachedApi(
-          CacheKeys.USER,
-          TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath.kGetUserById(id),
-                cBaseUrl: _baseUrl,
-                token: token,
-              ), (dynamic res) {
-        try {
-          if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final _user = BaseUser.fromMap(res["data"], id);
-            return ApiResponse<BaseUser>(model: _user, code: 200);
-          } else
-            return ApiResponse<BaseUser>(model: null, code: 200);
-        } catch (e) {
-          _internalOpsService.logFailure(
-            id,
-            FailType.UserDataCorrupted,
-            {'message': "User data corrupted"},
-          );
-          return ApiResponse.withError("User data corrupted", 400);
-        }
-      });
+      final Map<String, dynamic> res = await APIService.instance.getData(
+        ApiPath.kGetUserById(id),
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      // return await _cacheService.cachedApi(
+      //     CacheKeys.USER,
+      //     TTL.ONE_DAY,
+      //     () => APIService.instance.getData(
+      //           ApiPath.kGetUserById(id),
+      //           cBaseUrl: _baseUrl,
+      //           token: token,
+      //         ), (dynamic res) {
+      //   try {
+      if (res != null && res['data'] != null && res['data'].isNotEmpty) {
+        final _user = BaseUser.fromMap(res["data"], id);
+        return ApiResponse<BaseUser>(model: _user, code: 200);
+      } else
+        return ApiResponse<BaseUser>(model: null, code: 200);
     } catch (e) {
-      logger.d(e.toString());
-      return ApiResponse.withError("Unable to get user", 400);
+      _internalOpsService.logFailure(
+        id,
+        FailType.UserDataCorrupted,
+        {'message': "User data corrupted"},
+      );
+      return ApiResponse.withError("User data corrupted", 400);
     }
+    //   });
+    // } catch (e) {
+    //   logger.d(e.toString());
+    //   return ApiResponse.withError("Unable to get user", 400);
+    // }
   }
 
   Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
@@ -409,7 +415,7 @@ class UserRepository extends BaseRepo {
       );
     }
   }
-  
+
   Future<ApiResponse<bool>> updateUserWalkthroughCompletion() async {
     bool isGtRewarded = false;
     try {

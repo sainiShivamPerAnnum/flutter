@@ -5,7 +5,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -39,10 +38,6 @@ class FelloAppBar extends StatelessWidget {
         color: showAppBar ? UiConstants.kBackgroundColor : Colors.transparent,
         child: AppBar(
           elevation: 0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10))),
           leading: leading != null ? leading : Container(),
           centerTitle: true,
           title: title != null

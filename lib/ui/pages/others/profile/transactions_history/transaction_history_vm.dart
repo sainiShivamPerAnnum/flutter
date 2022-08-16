@@ -1,15 +1,11 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
 enum TranFilterType { Type, Subtype }
@@ -24,24 +20,20 @@ class TransactionsHistoryViewModel extends BaseModel {
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
   List<UserTransaction> apiTxns = [];
+  String _filterValue;
   List<String> _tranTypeFilterItems = [
     "All",
     "Deposits",
     "Withdrawals",
     "Prizes"
   ];
-  // Map<String, int> _tranTypeFilterItems = {
-  //   "All": 1,
-  //   "Deposit": 2,
-  //   "Withdrawal": 3,
-  //   "Prize": 4,
-  //   // "Refunded": 5,
-  // };
   List<UserTransaction> _filteredList;
   ScrollController _scrollController;
+  int _tabIndex = 0;
   double tranAnimWidth = SizeConfig.screenWidth / 3;
   //getters
   int get filter => _filter;
+  String get filterValue => _filterValue;
 
   // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
@@ -49,6 +41,7 @@ class TransactionsHistoryViewModel extends BaseModel {
   List<UserTransaction> get filteredList => _filteredList;
 
   ScrollController get tranListController => _scrollController;
+  int get tabIndex => _tabIndex;
 
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
 
@@ -68,9 +61,13 @@ class TransactionsHistoryViewModel extends BaseModel {
     notifyListeners();
   }
 
+  set filterValue(String filter) {
+    _filterValue = filter;
+    notifyListeners();
+  }
+
   init() {
     _scrollController = ScrollController();
-
     if (_txnService.txnList == null || _txnService.txnList.length < 5) {
       getTransactions().then((_) {
         WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -105,20 +102,6 @@ class TransactionsHistoryViewModel extends BaseModel {
     _filteredList = _txnService.txnList;
     setState(ViewState.Idle);
   }
-
-  // getTransactionsFromApi() async {
-  //   ApiResponse<List<UserTransaction>> res;
-  //   if (apiTxns.isNotEmpty)
-  //     res = await _txnService.getUserTransactionsfromApi(
-  //         start: apiTxns[0].docKey);
-  //   else
-  //     res = await _txnService.getUserTransactionsfromApi();
-  //   if (res.model != null && res.model.isNotEmpty)
-  //     res.model.forEach((element) {
-  //       apiTxns.add(element);
-  //     });
-  //   log("Length of Transaction List: ${apiTxns.length}");
-  // }
 
   getMoreTransactions() async {
     _logger.d("fetching more transactions...");

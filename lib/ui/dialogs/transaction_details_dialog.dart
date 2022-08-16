@@ -20,17 +20,18 @@ import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
-class TransactionDetailsDialog extends StatefulWidget {
+class TransactionDetailsBottomSheet extends StatefulWidget {
   final UserTransaction _transaction;
   final bool showBeerBanner;
 
-  TransactionDetailsDialog(this._transaction, this.showBeerBanner);
+  TransactionDetailsBottomSheet(this._transaction, this.showBeerBanner);
 
   @override
-  State createState() => TransactionDetailsDialogState();
+  State createState() => TransactionDetailsBottomSheetState();
 }
 
-class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
+class TransactionDetailsBottomSheetState
+    extends State<TransactionDetailsBottomSheet> {
   final Log log = new Log('TransactionDetailsDialog');
   final _userService = locator<UserService>();
   double _width;
@@ -70,15 +71,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         AppState.backButtonDispatcher.didPopRoute();
         return true;
       },
-      child: Dialog(
-        insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: dialogContent(context),
-      ),
+      child: dialogContent(context),
     );
   }
 
@@ -132,12 +125,12 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           height: SizeConfig.largeTextSize * 4,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
-              color: Colors.white,
-              // border: Border(
-              //   bottom: BorderSide(color: Colors.black, width: 2),
-              // ),
-
-              borderRadius: BorderRadius.circular(12)),
+            color: UiConstants.kBackgroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness5),
+              topRight: Radius.circular(SizeConfig.roundness5),
+            ),
+          ),
           child: Center(
             child: Text(
               _getTileTitle(widget._transaction.subType),
@@ -153,12 +146,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           height: getDialogCardHeight(),
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            color: UiConstants.kBackgroundColor,
           ),
           child: ListView(
             shrinkWrap: true,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -175,36 +166,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     child: Text(
                       txnService
                           .getFormattedTxnAmount(widget._transaction.amount),
-                      // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: SizeConfig.cardTitleTextSize * 2,
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    color: getFlagColor().withOpacity(0.7),
-                    height: 0,
-                    endIndent: SizeConfig.screenWidth * 0.1,
-                    indent: SizeConfig.screenWidth * 0.1,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    margin: EdgeInsets.only(bottom: 24),
-                    decoration: BoxDecoration(
-                      color: getFlagColor().withOpacity(0.7),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      widget._transaction.type.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        letterSpacing: 3,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: TextStyles.sourceSansB.title0
+                          .colour(UiConstants.kTextColor),
                     ),
                   ),
                 ],

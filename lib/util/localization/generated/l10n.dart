@@ -467,7 +467,7 @@ class S {
   /// `{goldAmount} gm`
   String saveGoldBalanceValue(Object goldAmount) {
     return Intl.message(
-      '$goldAmount gm',
+      '$goldAmount g',
       name: 'saveGoldBalanceValue',
       desc: '',
       args: [goldAmount],
@@ -1079,7 +1079,7 @@ class S {
   /// `With every transaction, some tokens will be deducted.`
   String get tokenDeductionOnTransaction {
     return Intl.message(
-      'With every transaction, some tokens will be deducted.',
+      'With every transaction, some\ntokens will be deducted.',
       name: 'tokenDeductionOnTransaction',
       desc: '',
       args: [],

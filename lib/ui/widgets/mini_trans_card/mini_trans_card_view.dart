@@ -64,7 +64,7 @@ class MiniTransactionCard extends StatelessWidget {
                                             builder: (BuildContext context) {
                                               AppState.screenStack
                                                   .add(ScreenItem.dialog);
-                                              return TransactionDetailsDialog(
+                                              return TransactionDetailsBottomSheet(
                                                   m.txnList[i], freeBeerStatus);
                                             });
                                       },

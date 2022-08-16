@@ -1,12 +1,11 @@
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -28,116 +27,129 @@ class TransactionsHistory extends StatelessWidget {
       child: NoTransactionsContent(),
       builder: (ctx, model, child) {
         return Scaffold(
-          body: HomeBackground(
-            child: Column(
-              children: [
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  title: "Transaction History",
-                ),
-                Expanded(
+          appBar: AppBar(
+            backgroundColor: UiConstants.kBackgroundColor,
+            elevation: 0,
+            leading: FelloAppBarBackButton(),
+            title: Text(
+              'Transaction History',
+              style: TextStyles.rajdhaniSB.title5,
+            ),
+          ),
+          backgroundColor: UiConstants.kBackgroundColor,
+          body: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding10,
+              ),
+              TransactionChoiceSelectionTab(),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding34),
+                child: Align(
+                  alignment: Alignment.topLeft,
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                      ),
-                    ),
-                    child: model.state == ViewState.Busy
-                        ? Center(
-                            child: SpinKitWave(
-                              color: UiConstants.primaryColor,
-                              size: SizeConfig.padding32,
-                            ),
-                          )
-                        : Container(
-                            // padding: EdgeInsets.only(
-                            //     right: SizeConfig.blockSizeHorizontal * 3),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    top: SizeConfig.pageHorizontalMargins,
-                                  ),
-                                  height: SizeConfig.padding40,
-                                  width: SizeConfig.screenWidth,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: List.generate(
-                                      model.tranTypeFilterItems.length,
-                                      (i) => TranChip(
-                                        chipId: i + 1,
-                                        title: model.tranTypeFilterItems[i],
-                                        model: model,
-                                      ),
-                                    )
-                                    // FilterOption(
-                                    //   filterItems: model.tranTypeFilterItems,
-                                    //   type: TranFilterType.Type,
-                                    // ),
-                                    ,
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                        SizeConfig.pageHorizontalMargins / 2),
-                                Divider(),
-                                Expanded(
-                                  child: (model.filteredList.length == 0
-                                      ? child
-                                      : ListView(
-                                          physics: BouncingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              left: SizeConfig
-                                                      .pageHorizontalMargins /
-                                                  2,
-                                              right: SizeConfig
-                                                  .pageHorizontalMargins),
-                                          controller: model.tranListController,
-                                          children: List.generate(
-                                            model.filteredList.length,
-                                            (index) => TransactionTile(
-                                              model: model,
-                                              txn: model.filteredList[index],
-                                            ),
-                                          ),
-                                        )),
-                                ),
-                                if (model.isMoreTxnsBeingFetched)
-                                  Container(
-                                    width: SizeConfig.screenWidth,
-                                    padding:
-                                        EdgeInsets.all(SizeConfig.padding12),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SpinKitWave(
-                                          color: UiConstants.primaryColor,
-                                          size: SizeConfig.padding16,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding4),
-                                        Text(
-                                          "Looking for more transactions, please wait ...",
-                                          style: TextStyles.body4
-                                              .colour(Colors.grey),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              ],
-                            ),
+                    height: SizeConfig.screenWidth * 0.08,
+                    width: SizeConfig.screenWidth * 0.24,
+                    child: DropdownButtonFormField<String>(
+                        iconSize: SizeConfig.padding20,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: UiConstants.kSecondaryBackgroundColor,
+                                width: 2),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness5),
                           ),
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.blue, width: 2),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness5),
+                          ),
+                          filled: true,
+                          fillColor: UiConstants.kBackgroundColor,
+                        ),
+                        iconEnabledColor: UiConstants.kTextColor,
+                        elevation: 0,
+                        icon: Icon(
+                          Icons.arrow_downward_rounded,
+                        ),
+                        hint: Text(
+                          'Type',
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kTextColor),
+                        ),
+                        isDense: true,
+                        value: model.filterValue,
+                        items: model.tranTypeFilterItems
+                            .map((e) =>
+                                DropdownMenuItem(value: e, child: Text(e)))
+                            .toList(),
+                        onChanged: (val) {
+                          model.filterValue = val;
+                        }),
                   ),
                 ),
-              ],
-            ),
+              ),
+              Expanded(
+                child: model.state == ViewState.Busy
+                    ? Center(
+                        child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                          size: SizeConfig.padding32,
+                        ),
+                      )
+                    : Container(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: SizeConfig.padding24,
+                            ),
+                            Expanded(
+                              child: (model.filteredList.length == 0
+                                  ? child
+                                  : ListView(
+                                      physics: BouncingScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding28),
+                                      controller: model.tranListController,
+                                      children: List.generate(
+                                        model.filteredList.length,
+                                        (index) => TransactionTile(
+                                          model: model,
+                                          txn: model.filteredList[index],
+                                        ),
+                                      ),
+                                    )),
+                            ),
+                            if (model.isMoreTxnsBeingFetched)
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.all(SizeConfig.padding12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SpinKitWave(
+                                      color: UiConstants.primaryColor,
+                                      size: SizeConfig.padding16,
+                                    ),
+                                    SizedBox(height: SizeConfig.padding4),
+                                    Text(
+                                      "Looking for more transactions, please wait ...",
+                                      style:
+                                          TextStyles.body4.colour(Colors.grey),
+                                    )
+                                  ],
+                                ),
+                              )
+                          ],
+                        ),
+                      ),
+              ),
+            ],
           ),
         );
       },
@@ -213,7 +225,7 @@ class NoTransactionsContent extends StatelessWidget {
 
 class TransactionTile extends StatelessWidget {
   final TransactionsHistoryViewModel model;
-  final txn;
+  final UserTransaction txn;
   final _txnService = locator<TransactionService>();
   TransactionTile({
     @required this.model,
@@ -225,49 +237,84 @@ class TransactionTile extends StatelessWidget {
       onTap: () {
         Haptic.vibrate();
         bool freeBeerStatus = _txnService.getBeerTicketStatus(txn);
-        showDialog(
+        showModalBottomSheet(
             context: AppState.delegate.navigatorKey.currentContext,
             builder: (BuildContext context) {
-              AppState.screenStack.add(ScreenItem.dialog);
-              return TransactionDetailsDialog(txn, freeBeerStatus);
+              AppState.screenStack.add(ScreenItem.modalsheet);
+              return TransactionDetailsBottomSheet(txn, freeBeerStatus);
             });
       },
       dense: true,
-      leading: Container(
-        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-        height: SizeConfig.blockSizeVertical * 5,
-        width: SizeConfig.blockSizeVertical * 5,
-        child: _txnService.getTileLead(txn.tranStatus),
-      ),
       title: Text(
-        _txnService.getTileTitle(
-          txn.subType.toString(),
-        ),
-        style: TextStyle(
-          fontSize: SizeConfig.mediumTextSize,
-        ),
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            _txnService.getFormattedTxnAmount(txn.amount),
-            style: TextStyle(
-              // color: _txnService.getTileColor(txn.tranStatus),
-              fontSize: SizeConfig.mediumTextSize,
-            ),
+          _txnService.getTileSubtitle(
+            txn.type.toString(),
           ),
-          SizedBox(height: 4),
-          Text(
-            _txnService.getFormattedTime(txn.timestamp),
-            style: TextStyle(
-                // color: _txnService.getTileColor(txn.tranStatus),
-                color: Colors.black45,
-                fontSize: SizeConfig.smallTextSize),
-          )
-        ],
+          style: TextStyles.sourceSans.body3),
+      subtitle: Text(
+        _txnService.getFormattedDate(txn.timestamp),
+        style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+      ),
+      trailing: Text(
+        _txnService.getFormattedTxnAmount(txn.amount),
+        style: TextStyles.sourceSansM.body3,
       ),
     );
+  }
+}
+
+class TransactionChoiceSelectionTab extends StatelessWidget {
+  const TransactionChoiceSelectionTab({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: SizeConfig.screenWidth * 0.09,
+        width: SizeConfig.screenWidth * 0.54,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Single', style: TextStyles.sourceSansSB.body2),
+                SizedBox(
+                  width: SizeConfig.padding64,
+                ),
+                Text('SIP', style: TextStyles.sourceSansSB.body2),
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding10),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    height: 2,
+                    color: UiConstants.kPrimaryColor,
+                    thickness: 3,
+                    indent: 10,
+                  ),
+                ),
+                Expanded(
+                  child: Divider(
+                    height: 2,
+                    color: UiConstants.kSecondaryBackgroundColor,
+                    thickness: 3,
+                    endIndent: 10,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ));
+  }
+}
+
+class TransactionTypeChoiceSelector extends StatelessWidget {
+  const TransactionTypeChoiceSelector({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
