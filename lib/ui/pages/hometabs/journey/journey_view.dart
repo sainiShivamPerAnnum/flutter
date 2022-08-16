@@ -2,8 +2,11 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
@@ -13,6 +16,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/jou
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -346,12 +350,16 @@ class Avatar extends StatelessWidget {
           // curve: Curves.decelerate,
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
-          child: const IgnorePointer(
-            ignoring: true,
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(
-                  "https://w7.pngwing.com/pngs/312/283/png-transparent-man-s-face-avatar-computer-icons-user-profile-business-user-avatar-blue-face-heroes.png"),
+          child: GestureDetector(
+            onTap: () => AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: UserProfileDetailsConfig,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 3, color: Colors.white)),
+              child: ProfileImageSE(radius: SizeConfig.padding24),
             ),
           ),
         );

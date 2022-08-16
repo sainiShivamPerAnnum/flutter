@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -259,11 +260,12 @@ class CampaignCardSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return CampiagnCard(
-                title: saveViewModel.ongoingEvents[index].title,
-                subTitle: saveViewModel.ongoingEvents[index].subtitle,
-                containerColor:
-                    saveViewModel.ongoingEvents[index].bgColor.toColor(),
-                imageUrl: saveViewModel.ongoingEvents[index].image,
+                event: saveViewModel.ongoingEvents[index],
+                // title: saveViewModel.ongoingEvents[index].title,
+                // subTitle: saveViewModel.ongoingEvents[index].subtitle,
+                // containerColor:
+                //     saveViewModel.ongoingEvents[index].bgColor.toColor(),
+                // imageUrl: saveViewModel.ongoingEvents[index].image,
               );
             }),
       ),
@@ -272,28 +274,14 @@ class CampaignCardSection extends StatelessWidget {
 }
 
 class CampiagnCard extends StatelessWidget {
-  final Color containerColor;
-  final String title;
-  final String subTitle;
-  final String imageUrl;
-
-  const CampiagnCard({
-    Key key,
-    this.containerColor,
-    this.title,
-    this.subTitle,
-    this.imageUrl,
-  }) : super(key: key);
+  final EventModel event;
+  CampiagnCard({this.event});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        AppState.delegate.appState.currentAction = PageAction(
-          page: CampaignViewPageConfig,
-          state: PageState.addWidget,
-          widget: CampaignView(eventType: Constants.HS_DAILY_SAVER),
-        );
+        AppState.delegate.openTopSaverScreen(event.type);
       },
       child: Padding(
         padding: EdgeInsets.only(right: SizeConfig.padding10),
@@ -301,7 +289,7 @@ class CampiagnCard extends StatelessWidget {
           width: SizeConfig.screenWidth * 0.5,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: containerColor),
+              color: event.bgColor.toColor()),
           child: Padding(
             padding: EdgeInsets.all(SizeConfig.padding16),
             child: Column(
@@ -313,13 +301,13 @@ class CampiagnCard extends StatelessWidget {
                     child: SizedBox(
                       height: SizeConfig.screenWidth * 0.17,
                       width: SizeConfig.screenWidth,
-                      child: Image.network(imageUrl),
+                      child: Image.network(event.image),
                     ),
                   ),
                 ),
                 Spacer(),
                 Text(
-                  title,
+                  event.title,
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 FittedBox(
@@ -327,7 +315,7 @@ class CampiagnCard extends StatelessWidget {
                   child: Container(
                     width: SizeConfig.screenWidth * 0.5,
                     child: Text(
-                      subTitle,
+                      event.subtitle,
                       style: TextStyles.sourceSans.body4,
                     ),
                   ),

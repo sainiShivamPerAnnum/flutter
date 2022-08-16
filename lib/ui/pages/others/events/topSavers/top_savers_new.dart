@@ -587,6 +587,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                               return ClipOval(
                                                 child: CachedNetworkImage(
                                                   imageUrl: imageUrl,
+                                                  fit: BoxFit.cover,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                   placeholder: (context, url) =>
@@ -781,6 +782,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                               return ClipOval(
                                                 child: CachedNetworkImage(
                                                   imageUrl: imageUrl,
+                                                  fit: BoxFit.cover,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                   placeholder: (context, url) =>

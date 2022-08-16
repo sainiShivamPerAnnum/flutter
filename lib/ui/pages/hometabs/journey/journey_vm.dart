@@ -234,6 +234,10 @@ class JourneyPageViewModel extends BaseModel {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
     AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
+
+    if (milestone.index == 1) {
+      return AppState.delegate.parseRoute(Uri.parse("AppWalkthrough"));
+    }
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       isDismissible: true,

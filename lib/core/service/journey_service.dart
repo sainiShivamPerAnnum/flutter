@@ -146,6 +146,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     await fetchNetworkPages();
   }
 
+  Future<void> dump() async {
+    userJourneyStats = null;
+    avatarRemoteMlIndex = 1;
+    avatarCachedMlIndex = 1;
+    levels = [];
+    pages.clear();
+  }
+
   //Fetching journeypages from Journey Repository
   fetchNetworkPages() async {
     if (pages == null || pages.isEmpty) {
