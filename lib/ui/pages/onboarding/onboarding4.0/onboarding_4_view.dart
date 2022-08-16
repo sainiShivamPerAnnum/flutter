@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
+import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -203,6 +204,7 @@ class OnBoardingView extends StatelessWidget {
                           color: Colors.white),
                     ),
                   ),
+                BaseAnimation(),
               ],
             ),
           ),
