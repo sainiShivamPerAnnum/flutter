@@ -47,6 +47,8 @@ class UiConstants {
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);
   static const Color kTextColor2 = const Color(0xFF919193);
+  static const Color kTextColor3 = const Color(0xFFA7A7A8);
+
   static const Color kYellowTextColor = const Color(0xFFFEF5DC);
 
   static const Color kBackgroundColor = const Color(0xFF232326);
@@ -78,6 +80,7 @@ class UiConstants {
   static const Color kSaveDigitalGoldCardBg = const Color(0xFF495DB2);
   static const Color kSaveStableFelloCardBg = const Color(0xFF01656B);
   static const Color kBlogTitleColor = const Color(0xFF93B5FE);
+  static const Color kcashBackAmountTextColor = const Color(0xFFFFE9B1);
 
   static const Color kFAQsAnswerColor = const Color(0xFFA9C6D6);
 

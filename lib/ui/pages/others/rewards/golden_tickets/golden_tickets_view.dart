@@ -57,6 +57,7 @@ class GoldenTicketsView extends StatelessWidget {
                     return model.arrangedGoldenTicketList == null ||
                             model.arrangedGoldenTicketList.length == 0
                         ? ListView(
+                            physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             children: [
                               NoRecordDisplayWidget(
@@ -66,6 +67,7 @@ class GoldenTicketsView extends StatelessWidget {
                             ],
                           )
                         : GridView.builder(
+                            physics: BouncingScrollPhysics(),
                             itemCount: model.arrangedGoldenTicketList.length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
