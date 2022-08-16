@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
@@ -13,27 +10,16 @@ import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/modal_router.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart';
 
 class JourneyPageViewModel extends BaseModel {
   final logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _journeyService = locator<JourneyService>();
-  ScrollController _mainController;
   DocumentSnapshot lastDoc;
 
   get avatarAnimation => _journeyService.avatarAnimation;
@@ -44,6 +30,7 @@ class JourneyPageViewModel extends BaseModel {
       _journeyService.currentMilestoneList;
   List<JourneyPathModel> get journeyPathItemsList =>
       _journeyService.journeyPathItemsList;
+  ScrollController get mainController => _journeyService.mainController;
 
   // set avatarAnimation(value) => this._avatarAnimation = value;
   double get pageWidth => _journeyService.pageWidth;
@@ -68,10 +55,6 @@ class JourneyPageViewModel extends BaseModel {
 
   // set controller(value) => this._controller = value;
 
-  ScrollController get mainController => this._mainController;
-
-  set mainController(value) => this._mainController = value;
-
   bool get isLoading => this._isLoading;
 
   set isLoading(bool value) {
@@ -80,7 +63,7 @@ class JourneyPageViewModel extends BaseModel {
   }
 
   dump() {
-    mainController?.dispose();
+    _journeyService.mainController?.dispose();
     controller?.dispose();
   }
 
@@ -116,27 +99,21 @@ class JourneyPageViewModel extends BaseModel {
       // baseGlow = 1;
     }
 
-    mainController = ScrollController();
+    _journeyService.mainController = ScrollController();
     //   ..addListener(() {
     //     if (mainController.offset > mainController.position.maxScrollExtent &&
     //         !isLoading &&
     //         !isEnd) addPageToTop(mainController.offset);
     //   });
     isLoading = false;
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      mainController.jumpTo(300);
-      Future.delayed(Duration(seconds: 1), () {
-        mainController.animateTo(_mainController.position.minScrollExtent,
-            duration: const Duration(seconds: 3), curve: Curves.easeOutCubic);
-      }).then((value) {
-        _journeyService.animateAvatar();
-      });
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      await _journeyService.scrollPageToAvatarPosition();
+      _journeyService.animateAvatar();
     });
   }
 
-  Future<void> checkIfThereIsAMilestoneLevelChange() {
-    _journeyService.checkForMilestoneLevelChange();
-  }
+  Future<void> checkIfThereIsAMilestoneLevelChange() =>
+      _journeyService.checkForMilestoneLevelChange();
 
   //  (pages.length - model.page) * pageHeight +
   //               pageHeight -
