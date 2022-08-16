@@ -14,12 +14,14 @@ import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/login/level_2/level_2_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/autosave_walkthrough.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
@@ -129,7 +131,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
-      _journeyService.checkAndAnimateAvatar();
+      // _journeyService.checkAndAnimateAvatar();
       notifyListeners();
 
       return Future.value(true);
@@ -332,6 +334,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.JourneyView:
           _addPageData(JourneyView(), JourneyViewPageConfig);
+          break;
+        case Pages.OnBoardingView:
+          _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
+          break;
+        case Pages.Level2View:
+          _addPageData(Level2View(), Level2ViewPageConfig);
           break;
         case Pages.JourneyView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
@@ -578,6 +586,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.JourneyView:
         JourneyViewPageConfig.currentPageAction = action;
         break;
+      case Pages.OnBoardingView:
+        OnBoardingViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.Level2View:
+        Level2ViewPageConfig.currentPageAction = action;
+        break;
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
         break;
@@ -809,6 +823,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'AutosaveWalkthrough':
         pageConfiguration = AutosaveWalkThroughConfig;
         break;
+      case 'Level2View':
+        pageConfiguration = Level2ViewPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -842,18 +859,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openAppWalkthrough() {
+    // AppState.delegate.appState.currentAction = PageAction(
+    //   state: PageState.addWidget,
+    //   widget: WalkThroughPage(
+    //     lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+    //     titleList: ["SAVE", "PLAY", "WIN"],
+    //     descList: [
+    //       "Save and invest in strong assets and earn tokens 🪙",
+    //       "Use these tokens to play fun and exciting games 🎮",
+    //       "Stand to win exclusive prizes and fun rewards 🎉"
+    //     ],
+    //   ),
+    //   page: WalkThroughConfig,
+    // );
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        widget: WalkThroughPage(
-          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
-          titleList: ["SAVE", "PLAY", "WIN"],
-          descList: [
-            "Save and invest in strong assets and earn tokens 🪙",
-            "Use these tokens to play fun and exciting games 🎮",
-            "Stand to win exclusive prizes and fun rewards 🎉"
-          ],
-        ),
-        page: WalkThroughConfig);
+      state: PageState.addWidget,
+      widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
+      page: OnBoardingViewPageConfig,
+    );
   }
 
   // openAutosaveWalkthrough() {

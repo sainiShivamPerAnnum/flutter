@@ -44,17 +44,20 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset.vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
@@ -168,9 +171,9 @@ void setupLocator() {
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
   locator.registerFactory(() => UsernameInputScreenViewModel());
-  locator.registerFactory(() => OtpInputScreenViewModel());
+  locator.registerFactory(() => LoginOtpViewModel());
   locator.registerFactory(() => NameInputScreenViewModel());
-  locator.registerFactory(() => MobileInputScreenViewModel());
+  locator.registerFactory(() => LoginMobileViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());
@@ -198,8 +201,11 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
+  locator.registerFactory(() => Level2ViewModel());
   locator.registerFactory(() => CampaignRepo());
   locator.registerFactory(() => JourneyPageViewModel());
+  locator.registerFactory(() => OnboardingViewModel());
+  locator.registerFactory(() => JourneyBannersViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

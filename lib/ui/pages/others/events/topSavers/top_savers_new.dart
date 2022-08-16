@@ -7,13 +7,13 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../../../core/enums/page_state_enum.dart';
 import '../../../../../navigator/router/ui_pages.dart';
 import '../../../../service_elements/user_service/profile_image.dart';
@@ -26,6 +26,9 @@ import '../../../static/new_square_background.dart';
 import '../../games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
 import '../../games/web/reward_leaderboard/components/reward_shimmer.dart';
 import 'all_participants.dart';
+import '../../../onboarding/blocked_user.dart';
+import '../../../onboarding/update_screen.dart';
+import '../../profile/my_winnings/my_winnings_view.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>

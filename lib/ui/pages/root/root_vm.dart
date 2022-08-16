@@ -67,6 +67,7 @@ class RootViewModel extends BaseModel {
   BuildContext rootContext;
   bool _isInitialized = false;
   bool _isUploading = false;
+
   get isUploading => this._isUploading;
   String _svgSource = '';
 
@@ -155,7 +156,7 @@ class RootViewModel extends BaseModel {
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     notifyListeners();
-    if (AppState.delegate.appState.getCurrentTabIndex == 1)
+    if (AppState.delegate.appState.getCurrentTabIndex == 0)
       _journeyService.checkAndAnimateAvatar();
   }
 
@@ -240,18 +241,6 @@ class RootViewModel extends BaseModel {
       _isInitialized = true;
       _initAdhocNotifications();
 
-      _localDBModel.showHomeTutorial.then((value) {
-        if (_userService.showOnboardingTutorial) {
-          //show tutorial
-          canExecuteStartupNotification = false;
-          _userService.showOnboardingTutorial = false;
-          _localDBModel.setShowHomeTutorial = false;
-          // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          AppState.delegate.parseRoute(Uri.parse('/AppWalkthrough'));
-          notifyListeners();
-        }
-      });
-
       _baseUtil.getProfilePicture();
       // show security modal
       // if (
@@ -271,53 +260,56 @@ class RootViewModel extends BaseModel {
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
         canExecuteStartupNotification = false;
-        _logger
-            .d("terminated startup message: ${AppState.startupNotifMessage}");
+        _logger.d(
+          "terminated startup message: ${AppState.startupNotifMessage}",
+        );
         _fcmListener.handleMessage(
-            AppState.startupNotifMessage, MsgSource.Terminated);
+          AppState.startupNotifMessage,
+          MsgSource.Terminated,
+        );
       }
 
-      if (canExecuteStartupNotification &&
-          _userService.isAnyUnscratchedGTAvailable) {
-        int lastWeekday;
-        if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
-          lastWeekday = await CacheManager.readCache(
-              key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
-        // _logger.d("Unscratched Golden Ticket Show Count: $count");
-        if (lastWeekday == null ||
-            lastWeekday == 7 ||
-            lastWeekday < DateTime.now().weekday)
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            hapticVibrate: true,
-            isBarrierDismissable: false,
-            content: FelloInfoDialog(
-              showCrossIcon: true,
-              asset: Assets.goldenTicket,
-              title: "Your Golden Tickets are waiting",
-              subtitle:
-                  "You have unopened Golden Tickets available in your rewards wallet",
-              action: FelloButtonLg(
-                child: Text(
-                  "Open Rewards",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.currentAction = PageAction(
-                    widget: MyWinningsView(openFirst: true),
-                    page: MyWinnigsPageConfig,
-                    state: PageState.addWidget,
-                  );
-                },
-              ),
-            ),
-          );
-        CacheManager.writeCache(
-            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-            value: DateTime.now().weekday,
-            type: CacheType.int);
-      }
+      // if (canExecuteStartupNotification &&
+      //     _userService.isAnyUnscratchedGTAvailable) {
+      //   int lastWeekday;
+      //   if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
+      //     lastWeekday = await CacheManager.readCache(
+      //         key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
+      //   // _logger.d("Unscratched Golden Ticket Show Count: $count");
+      //   if (lastWeekday == null ||
+      //       lastWeekday == 7 ||
+      //       lastWeekday < DateTime.now().weekday)
+      //     BaseUtil.openDialog(
+      //       addToScreenStack: true,
+      //       hapticVibrate: true,
+      //       isBarrierDismissable: false,
+      //       content: FelloInfoDialog(
+      //         showCrossIcon: true,
+      //         asset: Assets.goldenTicket,
+      //         title: "Your Golden Tickets are waiting",
+      //         subtitle:
+      //             "You have unopened Golden Tickets available in your rewards wallet",
+      //         action: FelloButtonLg(
+      //           child: Text(
+      //             "Open Rewards",
+      //             style: TextStyles.body2.bold.colour(Colors.white),
+      //           ),
+      //           onPressed: () {
+      //             AppState.backButtonDispatcher.didPopRoute();
+      //             AppState.delegate.appState.currentAction = PageAction(
+      //               widget: MyWinningsView(openFirst: true),
+      //               page: MyWinnigsPageConfig,
+      //               state: PageState.addWidget,
+      //             );
+      //           },
+      //         ),
+      //       ),
+      //     );
+      //   CacheManager.writeCache(
+      //       key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
+      //       value: DateTime.now().weekday,
+      //       type: CacheType.int);
+      // }
     }
   }
 

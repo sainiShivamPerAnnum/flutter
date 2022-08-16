@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -88,33 +90,39 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
     try {
       final token = await getBearerToken();
-      return await _cacheService.cachedApi(
-          CacheKeys.USER,
-          TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath.kGetUserById(id),
-                cBaseUrl: _baseUrl,
-                token: token,
-              ), (dynamic res) {
-        try {
-          if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final _user = BaseUser.fromMap(res["data"], id);
-            return ApiResponse<BaseUser>(model: _user, code: 200);
-          } else
-            return ApiResponse<BaseUser>(model: null, code: 200);
-        } catch (e) {
-          _internalOpsService.logFailure(
-            id,
-            FailType.UserDataCorrupted,
-            {'message': "User data corrupted"},
-          );
-          return ApiResponse.withError("User data corrupted", 400);
-        }
-      });
+      final Map<String, dynamic> res = await APIService.instance.getData(
+        ApiPath.kGetUserById(id),
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      // return await _cacheService.cachedApi(
+      //     CacheKeys.USER,
+      //     TTL.ONE_DAY,
+      //     () => APIService.instance.getData(
+      //           ApiPath.kGetUserById(id),
+      //           cBaseUrl: _baseUrl,
+      //           token: token,
+      //         ), (dynamic res) {
+      //   try {
+      if (res != null && res['data'] != null && res['data'].isNotEmpty) {
+        final _user = BaseUser.fromMap(res["data"], id);
+        return ApiResponse<BaseUser>(model: _user, code: 200);
+      } else
+        return ApiResponse<BaseUser>(model: null, code: 200);
     } catch (e) {
-      logger.d(e.toString());
-      return ApiResponse.withError("Unable to get user", 400);
+      _internalOpsService.logFailure(
+        id,
+        FailType.UserDataCorrupted,
+        {'message': "User data corrupted"},
+      );
+      return ApiResponse.withError("User data corrupted", 400);
     }
+    //   });
+    // } catch (e) {
+    //   logger.d(e.toString());
+    //   return ApiResponse.withError("Unable to get user", 400);
+    // }
   }
 
   Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
@@ -374,6 +382,26 @@ class UserRepository extends BaseRepo {
           "userId": userService.baseUser.uid,
           "token": fcmToken,
         },
+        cBaseUrl: _baseUrl,
+        token: "Bearer $token",
+      );
+
+      return ApiResponse<bool>(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(
+        "Unable to update fcm",
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<bool>> completeOnboarding() async {
+    try {
+      log("completeOnboarding");
+      final token = await getBearerToken();
+      await APIService.instance.postData(
+        ApiPath.getCompleteOnboarding(userService.baseUser.uid),
         cBaseUrl: _baseUrl,
         token: "Bearer $token",
       );

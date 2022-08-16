@@ -28,6 +28,7 @@ class BaseUser {
   UserPreferences userPreferences;
   TimestampModel createdOn;
   String appFlyerId;
+  String avatarId;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -55,6 +56,7 @@ class BaseUser {
   static final String fldKycName = "mKycName";
   static final String fldStateId = "stateId";
   static final String fldAppFlyerId = "mAppFlyerId";
+  static final String fldAvatarId = "mAvatarId";
 
   BaseUser(
       this.uid,
@@ -78,57 +80,62 @@ class BaseUser {
       this.isBlocked,
       this.userPreferences,
       this.createdOn,
-      this.appFlyerId);
+      this.appFlyerId,
+      this.avatarId);
 
   BaseUser.newUser(String id, String mobile)
       : this(
-            id,
-            mobile,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            false,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "",
-            false,
-            false,
-            UserPreferences(null),
-            TimestampModel.currentTimeStamp(),
-            null);
+          id,
+          mobile,
+          null,
+          null,
+          null,
+          null,
+          null,
+          false,
+          null,
+          false,
+          false,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "",
+          false,
+          false,
+          UserPreferences(null),
+          TimestampModel.currentTimeStamp(),
+          null,
+          null,
+        );
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
-            id,
-            data[fldMobile]?.toString(),
-            data[fldEmail]?.toString(),
-            data[fldName]?.toString(),
-            data[fldDob]?.toString(),
-            data[fldGender]?.toString()?.toUpperCase(),
-            client_token?.toString(),
-            data[fldIsInvested] ?? false,
-            data[fldIsIciciOnboarded],
-            data[fldIsAugmontOnboarded] ?? false,
-            data[fldIsSimpleKycVerified],
-            data[fldIsKycVerified],
-            data[fldKycName],
-            data[fldPendingTxnId],
-            data[fldIsIciciEnabled],
-            data[fldIsAugmontEnabled],
-            data[fldUsername]?.toString(),
-            data[fldIsEmailVerified] ?? false,
-            data[fldIsBlocked] ?? false,
-            UserPreferences(data[fldUserPrefs]),
-            TimestampModel.fromMap(data[fldCreatedOn]),
-            data[fldAppFlyerId]);
+          id,
+          data[fldMobile]?.toString(),
+          data[fldEmail]?.toString(),
+          data[fldName]?.toString(),
+          data[fldDob]?.toString(),
+          data[fldGender]?.toString()?.toUpperCase(),
+          client_token?.toString(),
+          data[fldIsInvested] ?? false,
+          data[fldIsIciciOnboarded],
+          data[fldIsAugmontOnboarded] ?? false,
+          data[fldIsSimpleKycVerified],
+          data[fldIsKycVerified],
+          data[fldKycName],
+          data[fldPendingTxnId],
+          data[fldIsIciciEnabled],
+          data[fldIsAugmontEnabled],
+          data[fldUsername]?.toString(),
+          data[fldIsEmailVerified] ?? false,
+          data[fldIsBlocked] ?? false,
+          UserPreferences(data[fldUserPrefs]),
+          TimestampModel.fromMap(data[fldCreatedOn]),
+          data[fldAppFlyerId],
+          data[fldAvatarId],
+        );
 
   //to send user object to server
   toJson() {
@@ -156,18 +163,18 @@ class BaseUser {
       userObj[fldUserPrefs] = userPreferences.toJson();
     if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
+    if (avatarId != null) userObj[fldAvatarId] = avatarId;
     return userObj;
   }
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) ||
-        (username?.isEmpty ?? true));
+    return ((mobile?.isEmpty ?? true) || (username?.isEmpty ?? true));
   }
 
   @override
   String toString() {
-    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn)';
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
   }
 }
 
