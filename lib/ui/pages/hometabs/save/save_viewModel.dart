@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -12,7 +13,8 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart
 import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
-import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/util/locator.dart';
 
 class SaveViewModel extends BaseModel {
@@ -20,11 +22,12 @@ class SaveViewModel extends BaseModel {
   final _saveRepo = locator<SaveRepo>();
   final userService = locator<UserService>();
   BaseUtil baseProvider;
+  bool _isVPAVerified = false;
+  SellService _sellService = SellService();
 
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
   bool _isLoading = false;
-  int _sellFlowStep = 1;
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
 
@@ -34,9 +37,9 @@ class SaveViewModel extends BaseModel {
   List<EventModel> get ongoingEvents => this._ongoingEvents;
   List<BlogPostModel> get blogPosts => this._blogPosts;
   bool get isLoading => _isLoading;
-  int get sellFlowStep => _sellFlowStep;
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
+  bool get isVPAVerified => _isVPAVerified;
 
   set ongoingEvents(List<EventModel> value) {
     this._ongoingEvents = value;
@@ -45,11 +48,6 @@ class SaveViewModel extends BaseModel {
 
   set blogPosts(List<BlogPostModel> value) {
     this._blogPosts = value;
-    notifyListeners();
-  }
-
-  set sellFlowStep(int val) {
-    this._sellFlowStep = val;
     notifyListeners();
   }
 
@@ -65,6 +63,7 @@ class SaveViewModel extends BaseModel {
       'Not interested anymore',
       'Others'
     ];
+    _sellService.init();
     baseProvider = BaseUtil();
     getCampaignEvents();
     getBlogs();
@@ -98,12 +97,6 @@ class SaveViewModel extends BaseModel {
     notifyListeners();
   }
 
-  verifyVPAAddress() async {
-    ApiResponse response =
-        await _saveRepo.verifyVPAAddress(userService.idToken);
-    print(response.model);
-  }
-
   /// `Navigation`
   navigateToBlogWebView(String slug) {
     AppState.delegate.appState.currentAction = PageAction(
@@ -126,5 +119,19 @@ class SaveViewModel extends BaseModel {
         state: PageState.addWidget,
         page: AugmontGoldSellPageConfig,
         widget: AugmontGoldSellView());
+  }
+
+  navigateToCompleteKYC() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: KycDetailsPageConfig,
+        widget: KYCDetailsView());
+  }
+
+  navigateToVerifyVPA() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: BankDetailsPageConfig,
+        widget: BankDetailsView());
   }
 }

@@ -128,6 +128,7 @@ class Assets {
   static final String rippleAnimation = 'assets/lotties/ripple.json';
   static final String saleSuccessVector =
       'assets/vectors/sale_success_vector.png';
+  static final String dropDownVector = 'assets/svg/drop_down_button.svg';
 
   // WIN
 

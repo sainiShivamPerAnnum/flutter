@@ -37,6 +37,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -119,6 +120,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppFlyerAnalytics());
 
   locator.registerLazySingleton(() => InternalOpsService());
+  locator.registerLazySingleton(() => SellService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());

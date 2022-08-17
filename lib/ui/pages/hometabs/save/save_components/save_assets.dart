@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -18,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class SaveAssetView extends StatelessWidget {
   const SaveAssetView({Key key}) : super(key: key);
@@ -106,7 +109,7 @@ class SaveAssetView extends StatelessWidget {
                 CompleteKYCSection(
                   isKYCCompleted:
                       model.userService.isSimpleKycVerified ?? false,
-                  isBankInformationComeplted: true,
+                  isBankInformationComeplted: model.isVPAVerified ?? false,
                 ),
                 SizedBox(
                   height: SizeConfig.padding24,
@@ -342,24 +345,41 @@ class CompleteKYCSection extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S();
     return BaseView<SaveViewModel>(
-        onModelReady: (model) => model.verifyVPAAddress(),
-        builder: (context, model, child) => Column(
-              children: [
-                model.userService.isSimpleKycVerified
-                    ? SellActionButton(
-                        title: locale.completeKYCText,
-                        onTap: () {},
-                        isVisible: true,
-                      )
-                    : Container(),
-                SizedBox(
-                  height: SizeConfig.padding10,
-                ),
-                SellActionButton(
-                  title: locale.addBankInformationText,
-                ),
-              ],
-            ));
+        builder: (context, model, child) =>
+            PropertyChangeConsumer<SellService, SellServiceProperties>(
+                properties: [
+                  SellServiceProperties.bankDetailsVerified,
+                  SellServiceProperties.kycVerified
+                ],
+                builder: (context, serviceModel, child) => Column(
+                      children: [
+                        SellActionButton(
+                          title: locale.completeKYCText,
+                          onTap: () {
+                            bool a = serviceModel.updateSellButtonVisibility();
+                            print(a);
+                            if (serviceModel.updateSellButtonVisibility()) {
+                              model.navigateToCompleteKYC();
+                            }
+                          },
+                          isVisible: serviceModel.updateSellButtonVisibility(),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        SellActionButton(
+                          title: locale.addBankInformationText,
+                          onTap: () {
+                            print('triggered');
+                            print(serviceModel.updateSellButtonVisibility());
+                            if (serviceModel.updateSellButtonVisibility()) {
+                              model.navigateToCompleteKYC();
+                            }
+                          },
+                          isVisible: serviceModel.updateSellButtonVisibility(),
+                        ),
+                      ],
+                    )));
   }
 }
 

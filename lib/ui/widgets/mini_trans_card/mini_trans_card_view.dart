@@ -56,8 +56,8 @@ class MiniTransactionCard extends StatelessWidget {
                                     return ListTile(
                                       onTap: () {
                                         Haptic.vibrate();
-                                        bool freeBeerStatus = model.txnService
-                                            .getBeerTicketStatus(m.txnList[i]);
+                                        // bool freeBeerStatus = model.txnService
+                                        //     .getBeerTicketStatus(m.txnList[i]);
                                         showDialog(
                                             context: AppState.delegate
                                                 .navigatorKey.currentContext,
@@ -65,7 +65,7 @@ class MiniTransactionCard extends StatelessWidget {
                                               AppState.screenStack
                                                   .add(ScreenItem.dialog);
                                               return TransactionDetailsBottomSheet(
-                                                  m.txnList[i], freeBeerStatus);
+                                                  transaction: m.txnList[i]);
                                             });
                                       },
                                       dense: true,

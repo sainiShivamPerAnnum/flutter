@@ -310,7 +310,9 @@ class CampaignCardSection extends StatelessWidget {
       child: Container(
         height: SizeConfig.screenWidth * 0.51,
         child: ListView.builder(
-            itemCount: saveViewModel.ongoingEvents.length,
+            itemCount: saveViewModel.isLoading
+                ? 2
+                : saveViewModel.ongoingEvents.length,
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
