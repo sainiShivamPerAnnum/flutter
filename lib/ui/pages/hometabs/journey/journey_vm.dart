@@ -97,6 +97,7 @@ class JourneyPageViewModel extends BaseModel {
     //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
     // pages = res["pages"];
     await _journeyService.fetchNetworkPages();
+    // await _journeyService.getJourneyLevels();
     logger.d("Pages length: ${_journeyService.pages.length}");
     // lastDoc = res["lastDoc"];
     // log("${lastDoc.id}");
@@ -201,22 +202,6 @@ class JourneyPageViewModel extends BaseModel {
 
   animateAvatar() {
     _journeyService.animateAvatar();
-  }
-
-  JourneyLevel getJourneyLevelBlurData() {
-    int lastMileStoneIndex = _journeyService.currentMilestoneList.last.index;
-    print(_journeyService.userJourneyStats.toString());
-    int userCurrentLevel = _journeyService.userJourneyStats.level;
-    JourneyLevel currentlevelData = _journeyService.levels.firstWhere(
-        (level) =>
-            userCurrentLevel >= level.start && userCurrentLevel <= level.end,
-        orElse: null);
-
-    if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
-      //we have some extra levels in view, need to show some blur
-      return currentlevelData;
-    } else
-      return null;
   }
 
   // addPageToBottom(pgs) {

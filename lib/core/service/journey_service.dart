@@ -32,9 +32,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Dependency Injection
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   //Local Variables
-  List<JourneyLevel> levels = [];
+  List<JourneyLevel> _levels = [];
   static bool isAvatarAnimationInProgress = false;
   double pageWidth;
   double pageHeight;
@@ -56,7 +57,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Animation _avatarAnimation;
   AnimationController controller;
   int fcmRemoteAvatarLevel;
-  UserJourneyStatsModel _userJourneyStats;
+  // UserJourneyStatsModel _userJourneyStats;
   bool _journeyBuildFailure = false;
 
   //Getters and Setters
@@ -103,12 +104,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     notifyListeners(JourneyServiceProperties.AvatarRemoteMilestoneIndex);
   }
 
-  UserJourneyStatsModel get userJourneyStats => this._userJourneyStats;
+  // UserJourneyStatsModel get userJourneyStats => this._userJourneyStats;
 
-  set userJourneyStats(value) {
-    this._userJourneyStats = value;
-    notifyListeners(JourneyServiceProperties.UserJourneyStats);
-  }
+  // set userJourneyStats(value) {
+  //   this._userJourneyStats = value;
+  //   notifyListeners(JourneyServiceProperties.UserJourneyStats);
+  // }
 
   get avatarPath => this._avatarPath;
 
@@ -131,13 +132,19 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     notifyListeners();
   }
 
+  get levels => this._levels;
+
+  set levels(value) {
+    this._levels = value;
+    _logger.d("Levels updated: ${levels[0].toString()}");
+  }
+
   // INIT MAIN
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
-    await updateUserJourneyStats();
-    final res = await _journeyRepo.getJourneyLevels();
-    if (res.isSuccess()) levels = res.model;
+    // getUserJourneyStats();
+    await getJourneyLevels();
   }
 
   //Fetching journeypages from Journey Repository
@@ -150,19 +157,23 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
   }
 
-  //Fetching User journey stats
-  updateUserJourneyStats() async {
-    final ApiResponse<UserJourneyStatsModel> response =
-        await _journeyRepo.getUserJourneyStats();
-    if (response.isSuccess()) {
-      _logger.d("Updating user journey stats");
+  //Get User journey stats from userservice
+  // getUserJourneyStats() {
+  // userJourneyStats = _userService.userJourneyStats;
+  //   avatarRemoteMlIndex = userJourneyStats.mlIndex;
+  // }
 
-      userJourneyStats = response.model;
-      avatarRemoteMlIndex = userJourneyStats.mlIndex;
-    } else {
-      avatarRemoteMlIndex = avatarCachedMlIndex;
-      journeyBuildFailure = true;
-    }
+  //Update the user Journey status
+  updateUserJourneyStats() async {
+    await _userService.getUserJourneyStats();
+    _userService.userJourneyStats = _userService.userJourneyStats;
+    avatarRemoteMlIndex = _userService.userJourneyStats.mlIndex;
+  }
+
+  //Fetch Levels of Journey
+  getJourneyLevels() async {
+    final res = await _journeyRepo.getJourneyLevels();
+    if (res.isSuccess()) levels = res.model;
   }
 
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
@@ -229,6 +240,28 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> checkForMilestoneLevelChange() async {
     updateUserJourneyStats();
     checkAndAnimateAvatar();
+  }
+
+  //Check if there is a need to blur next level milestones
+  JourneyLevel getJourneyLevelBlurData() {
+    int lastMileStoneIndex = currentMilestoneList.last.index;
+    // int userCurrentLevel = userJourneyStats.level;
+    log("Current Data Lastmilestone ${lastMileStoneIndex}");
+
+    int userCurrentMilestoneIndex = _userService.userJourneyStats.mlIndex;
+    log("levelData ${levels[0].toString()}");
+
+    JourneyLevel currentlevelData = levels.firstWhere(
+        (level) =>
+            userCurrentMilestoneIndex >= level.start &&
+            userCurrentMilestoneIndex <= level.end,
+        orElse: null);
+    log("Current level data ${currentlevelData.toString()}");
+
+    if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
+      return currentlevelData;
+    } else
+      return null;
   }
 
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
