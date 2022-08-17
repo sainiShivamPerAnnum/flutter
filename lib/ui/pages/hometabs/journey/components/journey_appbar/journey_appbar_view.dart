@@ -55,8 +55,8 @@ class JourneyAppBar extends StatelessWidget {
                             state: PageState.addPage,
                             page: UserProfileDetailsConfig,
                           ),
-                          child: ProfileImageSE(
-                              radius: SizeConfig.avatarRadius * 1.1),
+                          child:
+                              ProfileImageSE(radius: SizeConfig.avatarRadius),
                         ),
                         SizedBox(width: SizeConfig.padding12),
                         Expanded(

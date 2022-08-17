@@ -143,7 +143,7 @@ class SizeConfig {
   static double get navBarHeight => navBarWidth / navBarAspectRatio * 1.5;
   //static double get navBarHeight => screenWidth * 0.212;
 
-  static double get avatarRadius => screenWidth * 0.048;
+  static double get avatarRadius => screenWidth * 0.052;
   static double get tileAvatarRadius => screenWidth * 0.057;
   static double get notificationAvatarRadius => screenWidth * 0.06;
 

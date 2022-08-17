@@ -371,7 +371,7 @@ class Avatar extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(width: 3, color: Colors.white)),
-              child: ProfileImageSE(radius: SizeConfig.padding24),
+              child: ProfileImageSE(radius: SizeConfig.avatarRadius * 1.2),
             ),
           ),
         );

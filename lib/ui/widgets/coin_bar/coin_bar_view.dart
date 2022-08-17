@@ -44,9 +44,14 @@ class FelloCoinBar extends StatelessWidget {
                     eventName: AnalyticsEvents.addFLCTokensTopRight);
                 BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: UiConstants.gameCardColor,
                   content: WantMoreTicketsModalSheet(),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness24),
+                    topRight: Radius.circular(SizeConfig.roundness24),
+                  ),
                   hapticVibrate: true,
+                  isScrollControlled: true,
                   isBarrierDismissable: true,
                 );
               },

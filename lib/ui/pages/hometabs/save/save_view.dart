@@ -64,7 +64,7 @@ class Save extends StatelessWidget {
                       page: UserProfileDetailsConfig,
                     );
                   },
-                  child: ProfileImageSE(radius: SizeConfig.avatarRadius * 0.8),
+                  child: ProfileImageSE(radius: SizeConfig.avatarRadius),
                 ),
                 SizedBox(width: SizeConfig.padding20)
               ],
