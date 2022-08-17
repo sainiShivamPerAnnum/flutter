@@ -15,13 +15,14 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 
 class JourneyRepository extends BaseRepo {
   final _cacheService = new CacheService();
-
   //Local Variables
   static const String PAGE_DIRECTION_UP = "up";
   static const String PAGE_DIRECTION_DOWN = "down";

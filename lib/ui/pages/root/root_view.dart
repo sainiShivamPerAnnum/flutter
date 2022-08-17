@@ -46,24 +46,6 @@ class Root extends StatelessWidget {
           body: Stack(
             children: [
               NewSquareBackground(),
-              if (FlavorConfig.isDevelopment())
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Banner(
-                    message: FlavorConfig.getStage(),
-                    location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
-                  ),
-                ),
-              if (FlavorConfig.isQA())
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Banner(
-                    message: FlavorConfig.getStage(),
-                    location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
-                  ),
-                ),
               RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
@@ -88,11 +70,6 @@ class Root extends StatelessWidget {
                       // color: Colors.red,
                     ),
                   ),
-                  actions: [
-                    // FelloCoinBar(),
-                    // SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
                 ),
               Consumer<AppState>(
                 builder: (ctx, m, child) =>
@@ -104,6 +81,24 @@ class Root extends StatelessWidget {
                 model: model,
               ),
               BaseAnimation(),
+              if (FlavorConfig.isDevelopment())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
+                  ),
+                ),
+              if (FlavorConfig.isQA())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
+                  ),
+                ),
             ],
           ),
         );

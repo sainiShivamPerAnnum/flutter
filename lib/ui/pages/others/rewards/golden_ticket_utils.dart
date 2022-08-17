@@ -199,10 +199,12 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       }
     } else {
       //RETURN BLNT
-      return Column(children: [
-        Text("Oh no..", style: titleStyle.bold),
+      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text("Oh no..",
+            style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
         SizedBox(height: SizeConfig.padding2),
-        Text("Better Luck Next Time", style: subtitleStyle)
+        Text("Better Luck Next Time",
+            style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
       ]);
     }
   }

@@ -33,10 +33,21 @@ class FcmHandler extends ChangeNotifier {
 
   ValueChanged<Map> notifListener;
 
+  Map lastFcmData;
   Future<bool> handleMessage(Map data, MsgSource source) async {
     _logger.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
     );
+    if (lastFcmData != null) {
+      if (lastFcmData == data) {
+        _logger.d(
+          "Duplicate Fcm Data, exiting method",
+        );
+        return false;
+      }
+    } else {
+      lastFcmData = data;
+    }
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];

@@ -80,7 +80,7 @@ class JourneyAppBar extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Hi ${model.myUserName}",
+                                            "Hi ${model.myUserName ?? ''}",
                                             style: TextStyles.rajdhaniSB.title5
                                                 .colour(Colors.white),
                                           ),

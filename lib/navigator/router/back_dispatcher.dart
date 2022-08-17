@@ -129,7 +129,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       // // else
       // if (AppState.delegate.appState.rootIndex != 0)
       AppState.delegate.appState.setCurrentTabIndex = 0;
-      _journeyService.checkAndAnimateAvatar();
       return Future.value(true);
     }
 

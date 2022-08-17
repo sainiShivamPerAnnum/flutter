@@ -25,6 +25,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -33,7 +34,9 @@ class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   DeviceUnlock deviceUnlock;
-
+  bool _isPerformanceCollectionEnabled = false;
+  String _performanceCollectionMessage =
+      'Unknown status of performance collection.';
   final navigator = AppState.delegate.appState;
 
   // LOCATORS
@@ -52,6 +55,7 @@ class LauncherViewModel extends BaseModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _localDBModel = locator<LocalDBModel>();
 
+  FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
 
@@ -61,6 +65,7 @@ class LauncherViewModel extends BaseModel {
   }
 
   init() {
+    _togglePerformanceCollection();
     initLogic();
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
@@ -73,9 +78,12 @@ class LauncherViewModel extends BaseModel {
   }
 
   initLogic() async {
+    final Trace trace = _performance.newTrace('Splash trace start');
+    await trace.start();
+    trace.putAttribute('Spalsh', 'userservice init started');
+    await userService.init();
+    trace.putAttribute('Spalsh', 'userservice init ended');
     try {
-      await userService.init();
-
       await CacheService.initialize();
       if (userService.isUserOnborded) await _journeyService.init();
       if (userService.isUserOnborded) await _journeyRepo.init();
@@ -115,6 +123,7 @@ class LauncherViewModel extends BaseModel {
     _httpModel.init();
     _tambolaService.init();
     _timer3.cancel();
+    await trace.stop();
 
     try {
       deviceUnlock = DeviceUnlock();
@@ -193,6 +202,20 @@ class LauncherViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           'Authentication Failed', 'Please reopen and try again');
     }
+  }
+
+  Future<void> _togglePerformanceCollection() async {
+    // No-op for web.
+    await _performance
+        .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
+
+    // Always true for web.
+    final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
+
+    _isPerformanceCollectionEnabled = isEnabled;
+    _performanceCollectionMessage = _isPerformanceCollectionEnabled
+        ? 'Performance collection is enabled.'
+        : 'Performance collection is disabled.';
   }
 
   Future<bool> authenticateDevice() async {

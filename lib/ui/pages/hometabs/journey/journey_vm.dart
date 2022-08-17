@@ -216,12 +216,13 @@ class JourneyPageViewModel extends BaseModel {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
     else if (_journeyService.avatarRemoteMlIndex == milestone.index)
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
-    AppState.screenStack.add(ScreenItem.modalsheet);
     log("Current Screen Stack: ${AppState.screenStack}");
 
     if (milestone.index == 1) {
       return AppState.delegate.parseRoute(Uri.parse("AppWalkthrough"));
     }
+    AppState.screenStack.add(ScreenItem.modalsheet);
+
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       isDismissible: true,

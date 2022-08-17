@@ -207,12 +207,20 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //locks the screen and animate avatar
   //if any Golden Ticket is present at the moment, pops up after animation
   checkAndAnimateAvatar() {
+    // Future.delayed(Duration(seconds: 2), () {
     _logger.d("Checking if there is any animation left to happen");
-    if (isThereAnyMilestoneLevelChange() && userIsAtJourneyScreen()) {
+    if (isThereAnyMilestoneLevelChange() &&
+        userIsAtJourneyScreen() &&
+        !isAvatarAnimationInProgress) {
+      _logger.d("Animation possible");
       createPathForAvatarAnimation(avatarCachedMlIndex, avatarRemoteMlIndex);
       createAvatarAnimationObject();
       animateAvatar();
+    } else {
+      _logger.i(
+          "User not a Journey screen at the moment. skipping animation for now");
     }
+    // });
   }
 
   //On startup, if cached and remote mlIndex is same, then just place the avatar at the requried milestone and turn on glow
@@ -255,7 +263,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //compares it with cached mlIndex
   //if difference found, animates the avatar and process necessary changes
   Future<void> checkForMilestoneLevelChange() async {
-    updateUserJourneyStats();
+    await updateUserJourneyStats();
     checkAndAnimateAvatar();
   }
 
@@ -304,8 +312,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   setAvatarPostion() => avatarPosition = calculatePosition(0);
 
-  bool isThereAnyMilestoneLevelChange() =>
-      avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
+  bool isThereAnyMilestoneLevelChange() {
+    _logger.i(
+        "Avatar Remote Index: $avatarRemoteMlIndex && Avatar Cached Ml Index: $avatarCachedMlIndex");
+    return avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
+  }
 
 //---------------------------------|-HELPER METHODS-END-|---------------------------------
 
