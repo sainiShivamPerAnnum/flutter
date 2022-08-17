@@ -88,6 +88,8 @@ class SizeConfig {
   static double get padding8 => screenWidth * 0.019;
   static double get padding10 => screenWidth * 0.023;
   static double get padding12 => screenWidth * 0.029;
+  static double get padding14 => screenWidth * 0.033;
+
   static double get padding16 => screenWidth * 0.038;
   static double get padding20 => screenWidth * 0.048;
   static double get padding24 => screenWidth * 0.058;
@@ -141,7 +143,7 @@ class SizeConfig {
   static double get navBarHeight => navBarWidth / navBarAspectRatio * 1.5;
   //static double get navBarHeight => screenWidth * 0.212;
 
-  static double get avatarRadius => screenWidth * 0.048;
+  static double get avatarRadius => screenWidth * 0.052;
   static double get tileAvatarRadius => screenWidth * 0.057;
   static double get notificationAvatarRadius => screenWidth * 0.06;
 

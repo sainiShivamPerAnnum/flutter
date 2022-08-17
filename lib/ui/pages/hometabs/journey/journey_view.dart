@@ -2,12 +2,26 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -156,14 +170,16 @@ class _JourneyViewState extends State<JourneyView>
                               Avatar(
                                 model: model,
                               ),
-                              // LevelBlurView(
-                              //   model: model,
-                              // )
+                              LevelBlurView(
+                                model: model,
+                              )
                             ],
                           ),
                         ),
                       ),
                     ),
+                    JourneyAppBar(),
+                    JourneyBannersView()
                     // AnimatedPositioned(
                     //   top: (model.isLoading &&
                     //           model.pages != null &&
@@ -221,50 +237,59 @@ class LevelBlurView extends StatelessWidget {
   LevelBlurView({this.model});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          bottom: (model.pageHeight * (2 - 1) + //pagno instead of 2
-              model.pageHeight * 0.443),
-          child: BlurFilter(
-            child: Container(
-              height: model.pageHeight * (1 - 0.443),
-              width: model.pageWidth,
-              alignment: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: (model.pageHeight * (2 - 1) + //pagno instead of 2
-                  model.pageHeight * 0.443) -
-              SizeConfig.avatarRadius,
-          child: Container(
-            width: model.pageWidth,
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomPaint(
-                    painter: DottedLinePainter(),
-                  ),
-                ),
-                CircleAvatar(
-                  radius: SizeConfig.avatarRadius,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.lock,
-                      size: SizeConfig.iconSize0, color: Colors.black),
-                ),
-                Expanded(
-                  child: CustomPaint(
-                    painter: DottedLinePainter(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
+    final _journeyService = locator<JourneyService>();
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [UserServiceProperties.myJourneyStats],
+        builder: (context, m, properties) {
+          final JourneyLevel levelData =
+              _journeyService.getJourneyLevelBlurData();
+          log("Current Level Data ${levelData.toString()}");
+          return levelData != null
+              ? Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: BlurFilter(
+                        child: Container(
+                          height: model.pageHeight * (1 - levelData.breakpoint),
+                          width: model.pageWidth,
+                          alignment: Alignment.bottomCenter,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: model.pageHeight * (1 - levelData.breakpoint) -
+                          SizeConfig.avatarRadius,
+                      child: Container(
+                        width: model.pageWidth,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: CustomPaint(
+                                painter: DottedLinePainter(),
+                              ),
+                            ),
+                            CircleAvatar(
+                              radius: SizeConfig.avatarRadius,
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.lock,
+                                  size: SizeConfig.iconSize0,
+                                  color: Colors.black),
+                            ),
+                            Expanded(
+                              child: CustomPaint(
+                                painter: DottedLinePainter(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              : SizedBox();
+        });
   }
 }
 
@@ -311,7 +336,7 @@ class MilestoneChecks extends StatelessWidget {
                                 model.currentMilestoneList[i].y) -
                         model.pageHeight * 0.02,
                     child: MileStoneCheck(
-                        model: model,
+                        // model: model,
                         milestone: model.currentMilestoneList[i]));
                 // else
                 //   return SizedBox();
@@ -335,14 +360,18 @@ class Avatar extends StatelessWidget {
           key: avatarKey,
           // duration: Duration(seconds: 10),
           // curve: Curves.decelerate,
-          top: model.avatarPosition.dy,
-          left: model.avatarPosition.dx,
-          child: const IgnorePointer(
-            ignoring: true,
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(
-                  "https://w7.pngwing.com/pngs/312/283/png-transparent-man-s-face-avatar-computer-icons-user-profile-business-user-avatar-blue-face-heroes.png"),
+          top: model.avatarPosition?.dy,
+          left: model.avatarPosition?.dx,
+          child: GestureDetector(
+            onTap: () => AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: UserProfileDetailsConfig,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 3, color: Colors.white)),
+              child: ProfileImageSE(radius: SizeConfig.avatarRadius * 1.2),
             ),
           ),
         );

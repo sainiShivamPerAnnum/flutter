@@ -31,7 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:felloapp/core/service/journey_service.dart';
 import '../../../../../core/repository/user_repo.dart';
 
 class UserProfileVM extends BaseModel {
@@ -48,6 +48,7 @@ class UserProfileVM extends BaseModel {
   final S _locale = locator<S>();
   final BaseUtil baseProvider = locator<BaseUtil>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _journeyService = locator<JourneyService>();
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
@@ -310,6 +311,7 @@ class UserProfileVM extends BaseModel {
               if (flag) {
                 //log.debug('Sign out process complete');
                 await _baseUtil.signOut();
+                _journeyService.dump();
                 _txnService.signOut();
                 _tambolaService.signOut();
                 _analyticsService.signOut();

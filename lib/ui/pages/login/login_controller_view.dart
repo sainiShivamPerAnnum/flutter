@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -192,6 +193,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   color: FlavorConfig.instance.color,
                 ),
               ),
+            BaseAnimation(),
           ],
         ),
       ),

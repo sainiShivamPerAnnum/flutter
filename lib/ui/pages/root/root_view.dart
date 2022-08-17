@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
@@ -85,6 +86,41 @@ class Root extends StatelessWidget {
           body: Stack(
             children: [
               NewSquareBackground(),
+              RefreshIndicator(
+                color: UiConstants.primaryColor,
+                backgroundColor: Colors.black,
+                onRefresh: model.refresh,
+                child: Container(
+                  child: Consumer<AppState>(
+                    builder: (ctx, m, child) => IndexedStack(
+                      children: pages,
+                      index: AppState.delegate.appState.getCurrentTabIndex,
+                    ),
+                  ),
+                ),
+              ),
+              if (AppState.delegate.appState.getCurrentTabIndex == 3)
+                FelloAppBar(
+                  showAppBar: false,
+                  leading: InkWell(
+                    onTap: model.showDrawer,
+                    child: Container(
+                      width: SizeConfig.padding38,
+                      height: SizeConfig.padding38,
+                      // color: Colors.red,
+                    ),
+                  ),
+                ),
+              Consumer<AppState>(
+                builder: (ctx, m, child) =>
+                    AppState.delegate.appState.isTxnLoaderInView
+                        ? TransactionLoader()
+                        : SizedBox(),
+              ),
+              BottomNavBar(
+                model: model,
+              ),
+              BaseAnimation(),
               if (FlavorConfig.isDevelopment())
                 Container(
                   width: SizeConfig.screenWidth,
@@ -103,41 +139,7 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
-              RefreshIndicator(
-                color: UiConstants.primaryColor,
-                backgroundColor: Colors.black,
-                onRefresh: model.refresh,
-                child: Container(
-                  child: Consumer<AppState>(
-                    builder: (ctx, m, child) => IndexedStack(
-                      children: pages,
-                      index: AppState.delegate.appState.getCurrentTabIndex,
-                    ),
-                  ),
-                ),
-              ),
-              if (AppState.delegate.appState.getCurrentTabIndex == 3)
-                FelloAppBar(
-                  showAppBar: false,
-                  leading: InkWell(
-                      onTap: model.showDrawer,
-                      child: Container(
-                        width: SizeConfig.padding38,
-                        height: SizeConfig.padding38,
-                        // color: Colors.red,
-                      )),
-                  actions: [
-                    // FelloCoinBar(),
-                    // SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
-                ),
-              Consumer<AppState>(
-                  builder: (ctx, m, child) =>
-                      AppState.delegate.appState.isTxnLoaderInView
-                          ? TransactionLoader()
-                          : SizedBox()),
-              BottomNavBar(model: model)
+>>>>>>> lib/ui/pages/root/root_view.dart
             ],
           ),
         );

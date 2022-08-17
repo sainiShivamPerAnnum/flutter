@@ -70,6 +70,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                 Text(
                   'Come up with a unique name to get\nstarted on yoru fello journey',
                   style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+                  textAlign: TextAlign.center,
                 ),
                 AnimatedContainer(
                   duration: Duration(milliseconds: 200),
@@ -92,6 +93,9 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                     hintText: 'Your username',
                     textAlign: TextAlign.center,
                     controller: model.usernameController,
+                    inputFormatter: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9.]'))
+                    ],
                     enabled: model.enabled,
                     validator: (val) {
                       if (val == null || val.isEmpty)

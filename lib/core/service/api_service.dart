@@ -99,6 +99,7 @@ class APIService implements API {
       String cBaseUrl,
       String token,
       String authKey,
+      Map<String, dynamic> queryParams,
       bool isAuthTokenAvailable = true,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
@@ -107,6 +108,8 @@ class APIService implements API {
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
     await metric.start();
     var responseJson;
+    String queryString = '';
+
     try {
       Map<String, String> _headers = {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -130,7 +133,10 @@ class APIService implements API {
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
       logger.d("response from $_url");
-
+      if (queryParams != null) {
+        queryString = Uri(queryParameters: queryParams).query;
+        _url += '?$queryString';
+      }
       final response = await http.post(
         Uri.parse(_url),
         headers: _headers,

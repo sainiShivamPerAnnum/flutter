@@ -67,6 +67,12 @@ class Constants {
   static final String DOC_IAR_DAILY_CHIPS = "daily";
   static final String DOC_IAR_WEEKLY_CHIPS = "weekly";
 
+  //Fetch real time finance stats from rtdb
+  static final String DAILY = "daily";
+  static final String WEEKLY = "weekly";
+
+  static final String MONTHLY = "monthly";
+
   //Sub-Collection docs Collection docs
   static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
 

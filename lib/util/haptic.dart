@@ -9,4 +9,11 @@ class Haptic {
     else
       HapticFeedback.lightImpact();
   }
+
+  static void strongVibrate() {
+    if (Platform.isAndroid)
+      HapticFeedback.mediumImpact();
+    else
+      HapticFeedback.lightImpact();
+  }
 }

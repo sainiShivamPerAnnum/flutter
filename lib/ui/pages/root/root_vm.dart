@@ -278,47 +278,47 @@ class RootViewModel extends BaseModel {
         );
       }
 
-      if (canExecuteStartupNotification &&
-          _userService.isAnyUnscratchedGTAvailable) {
-        int lastWeekday;
-        if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
-          lastWeekday = await CacheManager.readCache(
-              key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
-        // _logger.d("Unscratched Golden Ticket Show Count: $count");
-        if (lastWeekday == null ||
-            lastWeekday == 7 ||
-            lastWeekday < DateTime.now().weekday)
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            hapticVibrate: true,
-            isBarrierDismissable: false,
-            content: FelloInfoDialog(
-              showCrossIcon: true,
-              asset: Assets.goldenTicket,
-              title: "Your Golden Tickets are waiting",
-              subtitle:
-                  "You have unopened Golden Tickets available in your rewards wallet",
-              action: FelloButtonLg(
-                child: Text(
-                  "Open Rewards",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.currentAction = PageAction(
-                    widget: MyWinningsView(openFirst: true),
-                    page: MyWinnigsPageConfig,
-                    state: PageState.addWidget,
-                  );
-                },
-              ),
-            ),
-          );
-        CacheManager.writeCache(
-            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-            value: DateTime.now().weekday,
-            type: CacheType.int);
-      }
+      // if (canExecuteStartupNotification &&
+      //     _userService.isAnyUnscratchedGTAvailable) {
+      //   int lastWeekday;
+      //   if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
+      //     lastWeekday = await CacheManager.readCache(
+      //         key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
+      //   // _logger.d("Unscratched Golden Ticket Show Count: $count");
+      //   if (lastWeekday == null ||
+      //       lastWeekday == 7 ||
+      //       lastWeekday < DateTime.now().weekday)
+      //     BaseUtil.openDialog(
+      //       addToScreenStack: true,
+      //       hapticVibrate: true,
+      //       isBarrierDismissable: false,
+      //       content: FelloInfoDialog(
+      //         showCrossIcon: true,
+      //         asset: Assets.goldenTicket,
+      //         title: "Your Golden Tickets are waiting",
+      //         subtitle:
+      //             "You have unopened Golden Tickets available in your rewards wallet",
+      //         action: FelloButtonLg(
+      //           child: Text(
+      //             "Open Rewards",
+      //             style: TextStyles.body2.bold.colour(Colors.white),
+      //           ),
+      //           onPressed: () {
+      //             AppState.backButtonDispatcher.didPopRoute();
+      //             AppState.delegate.appState.currentAction = PageAction(
+      //               widget: MyWinningsView(openFirst: true),
+      //               page: MyWinnigsPageConfig,
+      //               state: PageState.addWidget,
+      //             );
+      //           },
+      //         ),
+      //       ),
+      //     );
+      //   CacheManager.writeCache(
+      //       key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
+      //       value: DateTime.now().weekday,
+      //       type: CacheType.int);
+      // }
     }
   }
 
