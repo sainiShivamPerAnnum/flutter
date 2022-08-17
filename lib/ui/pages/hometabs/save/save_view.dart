@@ -261,11 +261,6 @@ class CampaignCardSection extends StatelessWidget {
             itemBuilder: (context, index) {
               return CampiagnCard(
                 event: saveViewModel.ongoingEvents[index],
-                // title: saveViewModel.ongoingEvents[index].title,
-                // subTitle: saveViewModel.ongoingEvents[index].subtitle,
-                // containerColor:
-                //     saveViewModel.ongoingEvents[index].bgColor.toColor(),
-                // imageUrl: saveViewModel.ongoingEvents[index].image,
               );
             }),
       ),

@@ -178,33 +178,12 @@ class _GTInstantViewState extends State<GTInstantView>
                 ),
                 Column(
                   children: [
-                    FelloAppBar(
-                      leading: FelloAppBarBackButton(),
-                      actions: [
-                        Container(
-                          height: SizeConfig.avatarRadius * 2,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              SvgPicture.asset(
-                                Assets.tokens,
-                                height: SizeConfig.iconSize1,
-                              ),
-                              SizedBox(width: SizeConfig.padding6),
-                              AnimatedCount(
-                                  count: model.coinsCount,
-                                  duration: Duration(seconds: 2)),
-                            ],
-                          ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: SizeConfig.pageHorizontalMargins,
                         ),
-                        SizedBox(width: 16),
-                        NotificationButton(),
+                        FelloAppBarBackButton(),
                       ],
                     ),
                     //if (model.showMainContent)
@@ -308,7 +287,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                             model.redeemTicket();
                                           },
                                           image: Image.asset(
-                                            Assets.gtCover,
+                                            Assets.unredemmedGoldenTicketBG_png,
                                             fit: BoxFit.cover,
                                             height:
                                                 SizeConfig.screenWidth * 0.6,

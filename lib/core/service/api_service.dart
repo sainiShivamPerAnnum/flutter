@@ -283,8 +283,7 @@ class APIService implements API {
       case 500:
       default:
         throw FetchDataException(
-          responseJson['message'] ??
-              'Error occured while Communication with Server with StatusCode : ${response.statusCode}',
+          'Error occured while Communication with Server with StatusCode : ${response.statusCode}',
         );
     }
   }

@@ -146,7 +146,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                     final res =
                                         await _goldenTicketRepo.skipMilestone();
                                     if (res.isSuccess()) {
-                                      await _journeyService
+                                      _journeyService
                                           .checkForMilestoneLevelChange();
                                       skippingInProgress = false;
                                       AppState.screenStack.removeLast();

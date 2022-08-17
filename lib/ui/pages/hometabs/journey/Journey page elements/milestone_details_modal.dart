@@ -161,33 +161,34 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                                       Uri.parse(milestone.actionUri));
                                 },
                                 width: SizeConfig.screenWidth),
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              alignment: Alignment.center,
-                              child: TextButton(
-                                child: Text(
-                                  "SKIP MILESTONE",
-                                  style: TextStyles.sourceSansL.body3
-                                      .colour(Colors.white),
+                            if (milestone.index != 2)
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                alignment: Alignment.center,
+                                child: TextButton(
+                                  child: Text(
+                                    "SKIP MILESTONE",
+                                    style: TextStyles.sourceSansL.body3
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    AppState.screenStack
+                                        .add(ScreenItem.modalsheet);
+                                    log("Current Screen Stack: ${AppState.screenStack}");
+                                    return showModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      isDismissible: true,
+                                      enableDrag: false,
+                                      useRootNavigator: true,
+                                      context: context,
+                                      builder: (ctx) {
+                                        return SkipMilestoneModalSheet(
+                                            milestone: milestone);
+                                      },
+                                    );
+                                  },
                                 ),
-                                onPressed: () {
-                                  AppState.screenStack
-                                      .add(ScreenItem.modalsheet);
-                                  log("Current Screen Stack: ${AppState.screenStack}");
-                                  return showModalBottomSheet(
-                                    backgroundColor: Colors.transparent,
-                                    isDismissible: true,
-                                    enableDrag: false,
-                                    useRootNavigator: true,
-                                    context: context,
-                                    builder: (ctx) {
-                                      return SkipMilestoneModalSheet(
-                                          milestone: milestone);
-                                    },
-                                  );
-                                },
                               ),
-                            ),
                           ],
                         )
                       : SizedBox(),

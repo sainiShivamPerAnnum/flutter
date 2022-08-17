@@ -196,7 +196,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
     _logger.d("fcm journey update called: $data");
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
-    GoldenTicketService.goldenTicketId = data["gtId"];
+    if (avatarRemoteMlIndex != 2)
+      GoldenTicketService.goldenTicketId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     checkAndAnimateAvatar();
   }
@@ -477,12 +478,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       baseGlow = 1;
       Future.delayed(
           Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
-      Future.delayed(Duration(seconds: 1), () {
-        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-          if (res)
-            _gtService.showInstantGoldenTicketView(
-                title: 'Welcome to Fello', source: GTSOURCE.newuser);
-        });
+
+      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+        if (res)
+          _gtService.showInstantGoldenTicketView(
+              title: 'Welcome to Fello', source: GTSOURCE.newuser);
       });
     });
   }
