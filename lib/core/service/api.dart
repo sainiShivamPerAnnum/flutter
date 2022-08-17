@@ -7,6 +7,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,11 @@ class Api {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
+
+  final db2 = rdb.FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL:
+          'https://fello-dev-station.asia-southeast1.firebasedatabase.app/');
 
   final logger = locator<CustomLogger>();
 
@@ -346,6 +352,21 @@ class Api {
 
       return requiredTimeData['value'].toString();
     } catch (e) {
+      return "";
+    }
+  }
+
+  Future<String> fetchRealTimeFinanceStats(String c) async {
+    try {
+      final rdb.DataSnapshot data =
+          (await db2.ref().child("finance-stats").once()).snapshot;
+      Map<Object, Object> fetchedData = data.value as Map<Object, Object>;
+
+      Map<Object, Object> sortedData = fetchedData[c];
+
+      return sortedData['value'].toString();
+    } catch (e) {
+      print("Ex:${e.toString()}");
       return "";
     }
   }

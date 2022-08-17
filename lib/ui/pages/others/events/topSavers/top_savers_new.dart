@@ -15,6 +15,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/enums/page_state_enum.dart';
+import '../../../../../core/service/api.dart';
 import '../../../../../navigator/router/ui_pages.dart';
 import '../../../../service_elements/user_service/profile_image.dart';
 import '../../../../widgets/helpers/height_adaptive_pageview.dart';
@@ -147,7 +148,9 @@ class CampaignView extends StatelessWidget {
                                             shape: BoxShape.circle),
                                       ),
                                       Text(
-                                        "2K+ Participants",
+                                        model.realTimeFinanceStats == ""
+                                            ? "-"
+                                            : "${model.sortPlayerNumbers(model.realTimeFinanceStats)} + Participants",
                                         style: TextStyles.body3
                                             .colour(Colors.white),
                                       ),
