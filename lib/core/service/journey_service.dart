@@ -159,6 +159,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _userService.userJourneyStats = null;
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
+    PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
     levels = [];
     pages.clear();
   }
@@ -285,7 +286,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     // int noOfPages = _journeyService.pageCount;
     int cMLIndex = avatarRemoteMlIndex;
     if (cMLIndex == 1) {
-      mainController.jumpTo(300);
+      mainController.jumpTo(300.0);
     }
     MilestoneModel cMl = currentMilestoneList
         .firstWhere((milestone) => milestone.index == cMLIndex);

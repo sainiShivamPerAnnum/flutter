@@ -246,7 +246,7 @@ class JourneyRepository extends BaseRepo {
       return ApiResponse(model: journeylevels, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch user stats", 400);
+      return ApiResponse.withError("Unable to fetch user levels", 400);
     }
   }
 }
