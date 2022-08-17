@@ -54,10 +54,7 @@ class GoldenTicketGridItemCard extends StatelessWidget {
             )
           : RedeemedGoldenScratchCard(
               ticket: ticket,
-              titleStyle: titleStyle,
-              titleStyle2: titleStyle2,
               width: width,
-              subtitleStyle: subtitleStyle,
             ),
     );
   }
@@ -85,13 +82,13 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
 
 class RedeemedGoldenScratchCard extends StatelessWidget {
   final GoldenTicket ticket;
-  final TextStyle titleStyle, subtitleStyle, titleStyle2;
+  // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
   RedeemedGoldenScratchCard(
       {@required this.ticket,
-      @required this.titleStyle,
-      @required this.subtitleStyle,
-      @required this.titleStyle2,
+      // @required this.titleStyle,
+      // @required this.subtitleStyle,
+      // @required this.titleStyle2,
       @required this.width});
   @override
   Widget build(BuildContext context) {
@@ -117,20 +114,20 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: (constraint.maxWidth == SizeConfig.screenWidth
+                      left: (constraint.maxWidth >= SizeConfig.screenWidth * 0.5
                           ? SizeConfig.padding32
                           : 0),
                     ),
                     child: AnimatedScale(
-                      scale: (constraint.maxWidth == SizeConfig.screenWidth
-                          ? 1
-                          : 0.7),
+                      scale:
+                          (constraint.maxWidth >= SizeConfig.screenWidth * 0.5
+                              ? 1
+                              : 0.7),
                       duration: Duration(milliseconds: 100),
                       curve: Curves.easeIn,
                       child: Material(
                         color: Colors.transparent,
-                        child: getGTContent(ticket, titleStyle, subtitleStyle,
-                            titleStyle2, constraint.maxWidth),
+                        child: getGTContent(ticket, constraint.maxWidth),
                       ),
                     ),
                   ),
@@ -166,21 +163,19 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     }
   }
 
-  Widget getGTContent(GoldenTicket ticket, TextStyle titleStyle,
-      TextStyle subtitleStyle, TextStyle titleStyle2, double maxWidth) {
+  Widget getGTContent(GoldenTicket ticket, double maxWidth) {
     if (ticket.isRewarding) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr.length == 1) {
         //Has a single reward
-        return singleRewardWidget(
-            ticket.rewardArr[0], titleStyle, titleStyle2, maxWidth);
+        return singleRewardWidget(ticket.rewardArr[0], maxWidth);
       } else if (ticket.rewardArr.length == 2) {
         //Both flc and cash
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            doubleRewardWidget(ticket.rewardArr, titleStyle, titleStyle2),
+            doubleRewardWidget(ticket.rewardArr),
           ],
         );
       } else {
@@ -209,8 +204,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     }
   }
 
-  Widget singleRewardWidget(Reward reward, TextStyle textStyle,
-      TextStyle titleStyle2, double maxWidth) {
+  Widget singleRewardWidget(Reward reward, double maxWidth) {
     Widget rewardWidget;
     bool noPaddingRequired = false;
     if (reward.type == 'rupee' || reward.type == 'amt') {
@@ -282,11 +276,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     } else
       rewardWidget = RichText(
         text: TextSpan(
-          style: textStyle,
+          style: TextStyles.sourceSans.body2,
           children: [
             TextSpan(
                 text: "${reward.value}",
-                style: textStyle.bold.colour(Colors.black)),
+                style: TextStyles.rajdhaniB.title4.colour(Colors.black)),
             TextSpan(
               text: "${reward.type}",
             )
@@ -302,7 +296,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   }
 
   doubleRewardWidget(
-      List<Reward> rewards, TextStyle textStyle, TextStyle titleStyle2) {
+    List<Reward> rewards,
+  ) {
     int rupee = rewards
             .firstWhere((e) => e.type == 'rupee' || e.type == 'amt',
                 orElse: () => null)

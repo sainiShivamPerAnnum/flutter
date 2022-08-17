@@ -14,22 +14,23 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-  
+
   static S current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-      
+
       return S.current;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -1165,56 +1166,6 @@ class S {
     );
   }
 
-  /// `Digital Gold` - Sace Section
-  String get digitalGoldText {
-    return Intl.message(
-      'Digital Gold',
-      name: 'digitalGoldText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Stable Fello` - Save Section
-  String get stableFelloText {
-    return Intl.message(
-      'Stable Fello',
-      name: 'stableFelloText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Get started with a weekly/ daily SIP`
-  String get getStartedWithSIP {
-    return Intl.message(
-      'Get started with a weekly/ daily SIP',
-      name: 'getStartedWithSIP',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invest safely in Gold with our Auto SIP to win tokens `
-  String get investSafelyInGoldText {
-    return Intl.message(
-      'Invest safely in Gold with our Auto SIP to win tokens',
-      name: 'investSafelyInGoldText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invested` - Save Section
-  String get investedText {
-    return Intl.message(
-      'Invested',
-      name: 'investedText',
-      desc: '',
-      args: [],
-    );
-  }
-
   // skipped getter for the '--------------------------------------------' key
 
   /// `No transactions to show yet`
@@ -1248,7 +1199,6 @@ class S {
       args: [quantity, formattedNumber],
     );
   }
-
 
   /// `Daily Safe Maximum`
   String get resultsPageSafeDosageTitle {

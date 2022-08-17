@@ -139,7 +139,6 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
->>>>>>> lib/ui/pages/root/root_view.dart
             ],
           ),
         );

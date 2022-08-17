@@ -65,35 +65,26 @@ class GTDetailedView extends StatelessWidget {
                           createRectTween: (begin, end) {
                             return CustomRectTween(begin: begin, end: end);
                           },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Scratcher(
-                                color: Colors.transparent,
-                                accuracy: ScratchAccuracy.low,
-                                brushSize: 50,
-                                threshold: 40,
-                                key: scratchKey,
-                                onThreshold: () => model.redeemCard(ticket),
-                                image: Image.asset(
-                                  Assets.unredemmedGoldenTicketBG_png,
-                                  fit: BoxFit.contain,
-                                  height: SizeConfig.screenWidth * 0.6,
-                                  width: SizeConfig.screenWidth * 0.6,
-                                ),
-                                child: RepaintBoundary(
-                                  key: ticketImageKey,
-                                  child: RedeemedGoldenScratchCard(
-                                    ticket: ticket,
-                                    subtitleStyle: TextStyles.body1,
-                                    titleStyle: TextStyles.title2,
-                                    titleStyle2: TextStyles.title4,
-                                    width: SizeConfig.screenWidth * 0.6,
-                                  ),
-                                ),
+                          child: Scratcher(
+                            color: Colors.transparent,
+                            accuracy: ScratchAccuracy.low,
+                            brushSize: 50,
+                            threshold: 40,
+                            key: scratchKey,
+                            onThreshold: () => model.redeemCard(ticket),
+                            image: Image.asset(
+                              Assets.unredemmedGoldenTicketBG_png,
+                              fit: BoxFit.contain,
+                              height: SizeConfig.screenWidth * 0.6,
+                              width: SizeConfig.screenWidth * 0.6,
+                            ),
+                            child: RepaintBoundary(
+                              key: ticketImageKey,
+                              child: RedeemedGoldenScratchCard(
+                                ticket: ticket,
+                                width: SizeConfig.screenWidth * 0.6,
                               ),
-                            ],
+                            ),
                           ),
                         )
                       : GoldenTicketGridItemCard(
@@ -109,7 +100,7 @@ class GTDetailedView extends StatelessWidget {
                   curve: Curves.easeIn,
                   width: SizeConfig.screenWidth,
                   child: setTicketHeader(model)),
-              Spacer(),
+              Spacer(flex: 2),
               AnimatedContainer(
                   decoration: BoxDecoration(),
                   duration: Duration(seconds: 1),
@@ -131,16 +122,13 @@ class GTDetailedView extends StatelessWidget {
       return Column(
         children: [
           Text("Congratulations!",
-              style: TextStyles.rajdhaniB
-                  .colour(Colors.white)
-                  .copyWith(fontSize: SizeConfig.padding32)),
+              style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
             child: Text(
               "${ticket.note}",
-              style: TextStyles.body4
-                  .colour(UiConstants.kTextColor3)
-                  .copyWith(fontSize: SizeConfig.padding16),
+              style:
+                  TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
               textAlign: TextAlign.center,
             ),
           ),
@@ -154,16 +142,13 @@ class GTDetailedView extends StatelessWidget {
           return Column(
             children: [
               Text("No Rewards won",
-                  style: TextStyles.rajdhaniB
-                      .colour(Colors.white)
-                      .copyWith(fontSize: SizeConfig.padding32)),
+                  style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
                 child: Text(
                   "Keep investing, keep playing and win big!",
-                  style: TextStyles.body4
-                      .colour(UiConstants.kTextColor3)
-                      .copyWith(fontSize: SizeConfig.padding16),
+                  style: TextStyles.sourceSans.body4
+                      .colour(UiConstants.kTextColor3),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -176,17 +161,14 @@ class GTDetailedView extends StatelessWidget {
             return Column(
               children: [
                 Text("Congratulations!",
-                    style: TextStyles.rajdhaniB
-                        .colour(Colors.white)
-                        .copyWith(fontSize: SizeConfig.padding32)),
+                    style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
                   child: Text(
                     "${ticket.note}",
-                    style: TextStyles.body4
-                        .colour(UiConstants.kTextColor3)
-                        .copyWith(fontSize: SizeConfig.padding16),
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kTextColor3),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -198,16 +180,12 @@ class GTDetailedView extends StatelessWidget {
         return Column(
           children: [
             Text("Hurray!",
-                style: TextStyles.rajdhaniB
-                    .colour(Colors.white)
-                    .copyWith(fontSize: SizeConfig.padding32)),
+                style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: Text(
                 "You’ve earned a golden ticket.",
-                style: TextStyles.body4
-                    .colour(Colors.white)
-                    .copyWith(fontSize: SizeConfig.padding16),
+                style: TextStyles.sourceSans.body4.colour(Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -215,9 +193,8 @@ class GTDetailedView extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: Text(
                 "Scratch and win exciting rewards.",
-                style: TextStyles.body4
-                    .colour(UiConstants.kTextColor3)
-                    .copyWith(fontSize: SizeConfig.padding12),
+                style:
+                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
                 textAlign: TextAlign.center,
               ),
             ),

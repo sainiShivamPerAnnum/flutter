@@ -12,6 +12,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -97,14 +98,21 @@ class JourneyAppBar extends StatelessWidget {
                                         ],
                                       ));
                                 })),
-                        // IconButton(
-                        //     onPressed: () {
-                        //       _goldenTicketService.showInstantGoldenTicketView(
-                        //           source: GTSOURCE.game,
-                        //           amount: 100,
-                        //           title: "Instant GT");
-                        //     },
-                        //     icon: Icon(Icons.abc)),
+                        IconButton(
+                            onPressed: () {
+                              GoldenTicketService.goldenTicketId =
+                                  "OnJA8O3IRbHnq1j1Assp";
+                              _goldenTicketService
+                                  .fetchAndVerifyGoldenTicketByID()
+                                  .then((bool res) {
+                                if (res)
+                                  _goldenTicketService
+                                      .showInstantGoldenTicketView(
+                                          title: 'Welcome to Fello',
+                                          source: GTSOURCE.newuser);
+                              });
+                            },
+                            icon: Icon(Icons.abc)),
                         FelloCoinBar(),
                         NotificationButton()
                       ],
@@ -159,8 +167,11 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: () {
-          BaseUtil.showPositiveAlert(
-              "You tapped on gold balance", "You should go to save view now");
+          Haptic.vibrate();
+          AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: SaveAssetsViewConfig,
+          );
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

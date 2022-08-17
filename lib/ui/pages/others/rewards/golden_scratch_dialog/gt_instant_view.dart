@@ -7,9 +7,11 @@ import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -178,13 +180,18 @@ class _GTInstantViewState extends State<GTInstantView>
                 ),
                 Column(
                   children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: SizeConfig.pageHorizontalMargins,
-                        ),
-                        FelloAppBarBackButton(),
-                      ],
+                    SafeArea(
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: SizeConfig.pageHorizontalMargins,
+                          ),
+                          FelloAppBarBackButton(),
+                          Spacer(),
+                          FelloCoinBar(),
+                          SizedBox(width: SizeConfig.padding20)
+                        ],
+                      ),
                     ),
                     //if (model.showMainContent)
                     Expanded(
@@ -195,45 +202,9 @@ class _GTInstantViewState extends State<GTInstantView>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Spacer(flex: 1),
-                            Column(
-                              children: [
-                                Container(
-                                  width: SizeConfig.screenWidth,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins,
-                                    vertical: SizeConfig.padding8,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          getGTTitle(),
-                                          style: TextStyles.title2.bold
-                                              .colour(Colors.white),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      SizedBox(height: SizeConfig.padding8),
-                                      FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          "You've earned a new golden ticket",
-                                          style: TextStyles.title5.bold
-                                              .colour(Colors.white),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Spacer(flex: 1),
+                            SizedBox(height: SizeConfig.padding80),
                             Container(
-                              height: SizeConfig.screenWidth * 0.6,
+                              height: SizeConfig.screenWidth * 0.5,
                               width: SizeConfig.screenWidth * 0.6,
                               alignment: Alignment.center,
                               child: AnimatedRotation(
@@ -247,77 +218,68 @@ class _GTInstantViewState extends State<GTInstantView>
                                       ? SizeConfig.screenWidth * 0.6
                                       : 0,
                                   height: model.showMainContent
-                                      ? SizeConfig.screenWidth * 0.6
+                                      ? SizeConfig.screenWidth * 0.5
                                       : 0,
                                   child: FittedBox(
+                                    fit: BoxFit.fitWidth,
                                     child: Transform.scale(
                                       scale: 1 - _controller.value,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness16),
-                                        child: Scratcher(
-                                          accuracy: ScratchAccuracy.low,
-                                          brushSize: 50,
-                                          enabled: model.state == ViewState.Idle
-                                              ? true
-                                              : false,
-                                          threshold: 40,
-                                          key: scratchKey,
-                                          onScratchStart: () {
-                                            model.isCardScratchStarted = true;
-                                            model.showScratchGuide = false;
-                                          },
-                                          onThreshold: () {
-                                            if (model
-                                                .goldenTicket.isRewarding) {
-                                              model.isShimmerEnabled = true;
-                                              model.confettiController.play();
+                                      child: Scratcher(
+                                        color: Colors.transparent,
+                                        accuracy: ScratchAccuracy.low,
+                                        brushSize: 50,
+                                        enabled: model.state == ViewState.Idle
+                                            ? true
+                                            : false,
+                                        threshold: 40,
+                                        key: scratchKey,
+                                        onScratchStart: () {
+                                          model.isCardScratchStarted = true;
+                                          model.showScratchGuide = false;
+                                        },
+                                        onThreshold: () {
+                                          if (model.goldenTicket.isRewarding) {
+                                            model.isShimmerEnabled = true;
+                                            model.confettiController.play();
 
-                                              Future.delayed(
-                                                  Duration(
-                                                    seconds: 3,
-                                                  ), () {
-                                                model.isShimmerEnabled = false;
-                                              });
-                                              _controller.forward().then(
-                                                  (value) =>
-                                                      _controller.reverse());
-                                            }
+                                            Future.delayed(
+                                                Duration(
+                                                  seconds: 3,
+                                                ), () {
+                                              model.isShimmerEnabled = false;
+                                            });
+                                            _controller.forward().then(
+                                                (value) =>
+                                                    _controller.reverse());
+                                          }
 
-                                            model.redeemTicket();
-                                          },
-                                          image: Image.asset(
-                                            Assets.unredemmedGoldenTicketBG_png,
-                                            fit: BoxFit.cover,
-                                            height:
-                                                SizeConfig.screenWidth * 0.6,
-                                            width: SizeConfig.screenWidth * 0.6,
-                                          ),
-                                          child: Shimmer(
-                                            color: UiConstants.tertiarySolid,
-                                            enabled: model.isShimmerEnabled,
-                                            child: model.state == ViewState.Busy
-                                                ? Container(
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.6,
-                                                    height:
-                                                        SizeConfig.screenWidth *
-                                                            0.6,
-                                                  )
-                                                : RedeemedGoldenScratchCard(
-                                                    ticket: model.goldenTicket,
-                                                    titleStyle:
-                                                        TextStyles.title2,
-                                                    titleStyle2:
-                                                        TextStyles.title4,
-                                                    subtitleStyle:
-                                                        TextStyles.body1,
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.6,
-                                                  ),
-                                          ),
+                                          model.redeemTicket();
+                                        },
+                                        image: Image.asset(
+                                          Assets.unredemmedGoldenTicketBG_png,
+                                          fit: BoxFit.contain,
+                                          height: SizeConfig.screenWidth * 0.6,
+                                          width: SizeConfig.screenWidth * 0.6,
+                                        ),
+                                        child: Shimmer(
+                                          color: UiConstants.tertiarySolid,
+                                          enabled:
+                                              false, //model.isShimmerEnabled,
+                                          child: model.state == ViewState.Busy
+                                              ? Container(
+                                                  width:
+                                                      SizeConfig.screenWidth *
+                                                          0.6,
+                                                  height:
+                                                      SizeConfig.screenWidth *
+                                                          0.5,
+                                                )
+                                              : RedeemedGoldenScratchCard(
+                                                  ticket: model.goldenTicket,
+                                                  width:
+                                                      SizeConfig.screenWidth *
+                                                          0.6,
+                                                ),
                                         ),
                                       ),
                                     ),
@@ -325,35 +287,51 @@ class _GTInstantViewState extends State<GTInstantView>
                                 ),
                               ),
                             ),
-                            Spacer(flex: 1),
+                            SizedBox(height: SizeConfig.padding24),
+                            AnimatedContainer(
+                              decoration: BoxDecoration(),
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeIn,
+                              width: SizeConfig.screenWidth,
+                              alignment: Alignment.center,
+                              child: Text(getGTTitle(),
+                                  style: TextStyles.rajdhaniB.title2
+                                      .colour(Colors.white)),
+                            ),
+                            AnimatedContainer(
+                              decoration: BoxDecoration(),
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeIn,
+                              width: SizeConfig.screenWidth,
+                              alignment: Alignment.center,
+                              child: Text(
+                                "You won a golden ticket",
+                                style: TextStyles.sourceSans.body3
+                                    .colour(Colors.grey),
+                              ),
+                            ),
                             Container(
                               margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding64,
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  Opacity(
+                                  AnimatedOpacity(
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeInCirc,
                                     opacity: model.buttonOpacity,
-                                    child: AnimatedContainer(
-                                      duration: Duration(seconds: 1),
-                                      curve: Curves.easeIn,
+                                    child: AppPositiveBtn(
                                       width: SizeConfig.screenWidth / 2,
-                                      child: FelloButtonLg(
-                                        color: UiConstants.primaryColor,
-                                        child: Text(
+                                      btnText:
                                           getButtonText(model, widget.source) ??
                                               "Continue",
-                                          style: TextStyles.body2.bold
-                                              .colour(Colors.white),
-                                        ),
-                                        onPressed: getButtonAction(
-                                                model, widget.source) ??
-                                            () {
-                                              if (!model.isCardScratched)
-                                                return;
-                                              AppState.backButtonDispatcher
-                                                  .didPopRoute();
-                                            },
-                                      ),
+                                      onPressed: getButtonAction(
+                                              model, widget.source) ??
+                                          () {
+                                            if (!model.isCardScratched) return;
+                                            AppState.backButtonDispatcher
+                                                .didPopRoute();
+                                          },
                                     ),
                                   ),
                                   SizedBox(height: 12),
@@ -380,7 +358,6 @@ class _GTInstantViewState extends State<GTInstantView>
                                 ],
                               ),
                             ),
-                            Spacer(flex: 2),
                           ],
                         ),
                       ),
@@ -388,26 +365,29 @@ class _GTInstantViewState extends State<GTInstantView>
                   ],
                 ),
                 if (model.isCardScratched && model.isShimmerEnabled)
-                  Align(
-                    alignment: Alignment.center,
+                  Positioned(
+                    top: SizeConfig.screenHeight * 0.3,
+                    left: SizeConfig.screenWidth / 2 -
+                        SizeConfig.screenWidth * 0.4,
                     child: Lottie.asset(Assets.gtConfetti,
-                        height: SizeConfig.screenWidth * 0.7),
+                        height: SizeConfig.screenWidth * 0.8,
+                        width: SizeConfig.screenWidth * 0.8),
                   ),
-                if (model.showScratchGuide && !model.isCardScratchStarted)
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      color: Color(0xffffc875),
-                      width: SizeConfig.screenWidth * 0.62,
-                      height: SizeConfig.padding40,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      child: BreathingText(
-                        alertText: "Scratch Here",
-                        textStyle: TextStyles.body2.colour(Colors.black).bold,
-                      ),
-                    ),
-                  ),
+                // if (model.showScratchGuide && !model.isCardScratchStarted)
+                //   Align(
+                //     alignment: Alignment.center,
+                //     child: Container(
+                //       color: Color(0xffffc875),
+                //       width: SizeConfig.screenWidth * 0.62,
+                //       height: SizeConfig.padding40,
+                //       padding: EdgeInsets.all(10),
+                //       alignment: Alignment.center,
+                //       child: BreathingText(
+                //         alertText: "Scratch Here",
+                //         textStyle: TextStyles.body2.colour(Colors.black).bold,
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
           ),
