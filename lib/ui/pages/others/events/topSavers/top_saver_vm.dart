@@ -19,6 +19,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/service/api.dart';
 import '../../../../../util/assets.dart';
 
 class TopSaverViewModel extends BaseModel {
@@ -49,6 +50,7 @@ class TopSaverViewModel extends BaseModel {
   bool showStandingsAndWinners = true;
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
+  String _realTimeFinanceStats = "";
 
   int _tabNo = 0;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
@@ -57,6 +59,12 @@ class TopSaverViewModel extends BaseModel {
   PageController get pageController => _pageController;
 
   bool infoBoxOpen = false;
+
+  String get realTimeFinanceStats => _realTimeFinanceStats;
+  set realTimeFinanceStats(value) {
+    this._realTimeFinanceStats = value;
+    notifyListeners();
+  }
 
   int get tabNo => _tabNo;
   set tabNo(value) {
@@ -138,6 +146,7 @@ class TopSaverViewModel extends BaseModel {
     event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
     infoBoxOpen = false;
+    fetchRealtimeFinanceStats(getPathForRealTimeFinanceStats(eventType));
 
     setState(ViewState.Idle);
 
@@ -311,6 +320,34 @@ class TopSaverViewModel extends BaseModel {
       }
 
       fetchHighestSavings();
+    }
+  }
+
+  fetchRealtimeFinanceStats(String value) async {
+    _realTimeFinanceStats = await Api().fetchRealTimeFinanceStats(value);
+    notifyListeners();
+  }
+
+  String sortPlayerNumbers(String number) {
+    double num = double.parse(number);
+
+    if (num < 1000) {
+      return num.toStringAsFixed(0);
+    } else {
+      num = num / 1000;
+      return "${num.toStringAsFixed(1)}K";
+    }
+  }
+
+  String getPathForRealTimeFinanceStats(String campaignType) {
+    if (campaignType == Constants.HS_DAILY_SAVER) {
+      return Constants.DAILY;
+    } else if (campaignType == Constants.HS_WEEKLY_SAVER) {
+      return Constants.WEEKLY;
+    } else if (campaignType == Constants.HS_MONTHLY_SAVER) {
+      return Constants.MONTHLY;
+    } else {
+      return "";
     }
   }
 

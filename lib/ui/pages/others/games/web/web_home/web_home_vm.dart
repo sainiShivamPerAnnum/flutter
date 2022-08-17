@@ -12,6 +12,7 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
@@ -64,6 +65,7 @@ class WebHomeViewModel extends BaseModel {
   String token = "";
   bool _isLoading;
   String gameCode;
+  String _realTimePlayingStat = "";
   GameModel _currentGameModel;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
@@ -89,6 +91,7 @@ class WebHomeViewModel extends BaseModel {
   String get sessionID => _sessionId;
   get isLoading => this._isLoading;
   GameModel get currentGameModel => _currentGameModel;
+  String get realTimePlayingStat => _realTimePlayingStat;
 
   set isLoading(value) {
     this._isLoading = value;
@@ -129,6 +132,7 @@ class WebHomeViewModel extends BaseModel {
     await fetchGame(game);
     // scrollController = _lbService.parentController;
     // pageController = new PageController(initialPage: 0);
+    fetchRealTimePlayingStat(game);
     refreshPrizes();
     refreshLeaderboard();
     isLoading = false;
@@ -185,6 +189,11 @@ class WebHomeViewModel extends BaseModel {
   Future<bool> setupGame() async {
     await getBearerToken();
     return _setupCurrentGame();
+  }
+
+  fetchRealTimePlayingStat(String gameType) async {
+    _realTimePlayingStat = await Api().fetchRealTimePlayingStats(gameType);
+    notifyListeners();
   }
 
   launchGame() {
@@ -324,5 +333,16 @@ class WebHomeViewModel extends BaseModel {
       currentGameModel = response.model;
     }
     isGameLoading = false;
+  }
+
+  String sortPlayerNumbers(String number) {
+    double num = double.parse(number);
+
+    if (num < 1000) {
+      return num.toStringAsFixed(0);
+    } else {
+      num = num / 1000;
+      return "${num.toStringAsFixed(1)}K";
+    }
   }
 }
