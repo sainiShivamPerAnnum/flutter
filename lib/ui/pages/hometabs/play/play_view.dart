@@ -18,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'play_components/more_games_section.dart';
 
 class Play extends StatelessWidget {
+  ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return BaseView<PlayViewModel>(
@@ -78,6 +80,7 @@ class Play extends StatelessWidget {
             ],
           ),
           body: SingleChildScrollView(
+            controller: _controller,
             physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,9 +102,14 @@ class Play extends StatelessWidget {
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
+                  onStateChanged: () {
+                    _controller.animateTo(_controller.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  },
                 ),
                 SizedBox(
-                  height: SizeConfig.padding64,
+                  height: SizeConfig.padding80,
                 ),
 // >>>>>>> campaign4.0
               ],

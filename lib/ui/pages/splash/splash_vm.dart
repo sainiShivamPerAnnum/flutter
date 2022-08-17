@@ -75,9 +75,10 @@ class LauncherViewModel extends BaseModel {
   initLogic() async {
     try {
       await userService.init();
-      await _journeyService.init();
-      await _journeyRepo.init();
+
       await CacheService.initialize();
+      if (userService.isUserOnborded) await _journeyService.init();
+      if (userService.isUserOnborded) await _journeyRepo.init();
       await BaseRemoteConfig.init();
 
       // check if cache invalidation required

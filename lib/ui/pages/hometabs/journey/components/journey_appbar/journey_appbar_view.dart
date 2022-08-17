@@ -1,6 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
@@ -46,7 +49,15 @@ class JourneyAppBar extends StatelessWidget {
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
                     child: Row(
                       children: [
-                        ProfileImageSE(radius: SizeConfig.avatarRadius * 1.1),
+                        GestureDetector(
+                          onTap: () => AppState
+                              .delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: UserProfileDetailsConfig,
+                          ),
+                          child: ProfileImageSE(
+                              radius: SizeConfig.avatarRadius * 1.1),
+                        ),
                         SizedBox(width: SizeConfig.padding12),
                         Expanded(
                             child: PropertyChangeConsumer<UserService,
@@ -56,25 +67,32 @@ class JourneyAppBar extends StatelessWidget {
                               UserServiceProperties.myJourneyStats
                             ],
                                 builder: (context, model, properties) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Hi ${model.myUserName}",
-                                        style: TextStyles.rajdhaniSB.title5
-                                            .colour(Colors.white),
-                                      ),
-                                      Text(
-                                        "Level ${model.userJourneyStats.level}",
-                                        style: TextStyles.sourceSansM.body3
-                                            .colour(
-                                                Colors.white.withOpacity(0.8))
-                                            .setHeight(0.8),
-                                      ),
-                                    ],
-                                  );
+                                  return GestureDetector(
+                                      onTap: () => AppState.delegate.appState
+                                              .currentAction = PageAction(
+                                            state: PageState.addPage,
+                                            page: UserProfileDetailsConfig,
+                                          ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Hi ${model.myUserName}",
+                                            style: TextStyles.rajdhaniSB.title5
+                                                .colour(Colors.white),
+                                          ),
+                                          Text(
+                                            "Level ${model.userJourneyStats.level}",
+                                            style: TextStyles.sourceSansM.body3
+                                                .colour(Colors.white
+                                                    .withOpacity(0.8))
+                                                .setHeight(0.8),
+                                          ),
+                                        ],
+                                      ));
                                 })),
                         FelloCoinBar(),
                         NotificationButton()

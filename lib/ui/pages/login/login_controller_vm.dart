@@ -33,6 +33,8 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 
 import '../../../util/haptic.dart';
 
@@ -50,6 +52,8 @@ class LoginControllerViewModel extends BaseModel {
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
+  final _journeyService = locator<JourneyService>();
+  final _journeyRepo = locator<JourneyRepository>();
 
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
   final _internalOpsService = locator<InternalOpsService>();
@@ -372,6 +376,8 @@ class LoginControllerViewModel extends BaseModel {
     await userService.init();
     await _userCoinService.init();
     await baseProvider.init();
+    if (userService.isUserOnborded) await _journeyService.init();
+    if (userService.isUserOnborded) await _journeyRepo.init();
     await fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
     await _analyticsService.login(

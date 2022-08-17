@@ -47,6 +47,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int pageCount;
   double _baseGlow = 0;
   TickerProvider _vsync;
+  ScrollController _mainController;
   Timer timer;
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
@@ -138,13 +139,27 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     this._levels = value;
     _logger.d("Levels updated: ${levels[0].toString()}");
   }
+  get mainController => this._mainController;
+
+  set mainController(value) => this._mainController = value;
 
   // INIT MAIN
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
-    // getUserJourneyStats();
     await getJourneyLevels();
+    await updateUserJourneyStats();
+    final res = await _journeyRepo.getJourneyLevels();
+    if (res.isSuccess()) levels = res.model;
+    await fetchNetworkPages();
+  }
+
+  Future<void> dump() async {
+    userJourneyStats = null;
+    avatarRemoteMlIndex = 1;
+    avatarCachedMlIndex = 1;
+    levels = [];
+    pages.clear();
   }
 
   //Fetching journeypages from Journey Repository
@@ -262,6 +277,22 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       return currentlevelData;
     } else
       return null;
+
+    }
+      //Scrolls Page to avatar Position
+  Future<void> scrollPageToAvatarPosition() async {
+    // int noOfPages = _journeyService.pageCount;
+    int cMLIndex = avatarRemoteMlIndex;
+    if (cMLIndex == 1) {
+      mainController.jumpTo(300);
+    }
+    MilestoneModel cMl = currentMilestoneList
+        .firstWhere((milestone) => milestone.index == cMLIndex);
+    double offset = cMl.y * pageHeight + (cMl.page - 1) * pageHeight;
+    await Future.delayed(Duration(seconds: 1), () {
+      mainController.animateTo(offset - SizeConfig.screenHeight * 0.5,
+          duration: const Duration(seconds: 2), curve: Curves.easeOutCubic);
+    });
   }
 
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
@@ -399,6 +430,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //----------------------------|-ANIMATION CREATION METHODS-START-|-----------------------
 
   void createAvatarAnimationObject() {
+    double maxRange = 0.1;
     controller = AnimationController(
       vsync: vsync,
       duration: Duration(
@@ -409,19 +441,21 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       CurvedAnimation(parent: controller, curve: Curves.easeInOutCirc),
     )..addListener(() {
         avatarPosition = calculatePosition(avatarAnimation.value);
+        print(controller.value);
+        if (controller.value > maxRange) {
+          Haptic.strongVibrate();
+          maxRange += 0.05;
+        }
       });
   }
 
-  animateAvatar() {
+  animateAvatar() async {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
     controller.reset();
-    timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
-      Haptic.strongVibrate();
-    });
+    await scrollPageToAvatarPosition();
     controller.forward().whenComplete(() {
       log("Animation Complete");
-      timer.cancel();
       int gameLevelChangeResult = checkForGameLevelChange();
       if (gameLevelChangeResult != 0)
         BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",

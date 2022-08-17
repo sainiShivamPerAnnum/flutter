@@ -17,13 +17,15 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+enum JOURNEY_MILESTONE_STATUS { COMPLETED, INCOMPLETE, ACTIVE }
+
 class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
   final MilestoneModel milestone;
-  final bool isCompleted;
+  final JOURNEY_MILESTONE_STATUS status;
   final double scaleFactor = 2.5;
   final double pageHeight = SizeConfig.screenWidth * 2.165;
   JourneyMilestoneDetailsModalSheet(
-      {@required this.milestone, @required this.isCompleted});
+      {@required this.milestone, @required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +82,7 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (isCompleted)
+                    if (status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                       Positioned(
                           bottom: SizeConfig.padding40,
                           left: SizeConfig.screenWidth / 2 -
@@ -90,7 +92,7 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                 ),
               ),
               Text(
-                "Level ${milestone.index}",
+                "Milestone ${milestone.index}",
                 style: TextStyles.sourceSansL.body3,
               ),
               SizedBox(height: SizeConfig.padding4),
@@ -100,13 +102,13 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding12),
               Text(
-                isCompleted
+                status == JOURNEY_MILESTONE_STATUS.COMPLETED
                     ? "Wohoo, you completed this milestone"
                     : milestone.steps.first.subtitle,
                 style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
               ),
               SizedBox(height: SizeConfig.padding24),
-              if (isCompleted)
+              if (status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -140,51 +142,55 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                   ],
                 ),
               SizedBox(height: SizeConfig.padding24),
-              isCompleted
-                  ? AppPositiveBtn(
-                      btnText: "Next Milestone",
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                      },
-                      width: SizeConfig.screenWidth)
-                  : Column(
-                      children: [
-                        AppPositiveBtn(
-                            btnText: "Let's Go",
-                            onPressed: () {
-                              AppState.backButtonDispatcher.didPopRoute();
-                              AppState.delegate
-                                  .parseRoute(Uri.parse(milestone.actionUri));
-                            },
-                            width: SizeConfig.screenWidth),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          alignment: Alignment.center,
-                          child: TextButton(
-                            child: Text(
-                              "SKIP MILESTONE",
-                              style: TextStyles.sourceSansL.body3
-                                  .colour(Colors.white),
-                            ),
-                            onPressed: () {
-                              AppState.screenStack.add(ScreenItem.modalsheet);
-                              log("Current Screen Stack: ${AppState.screenStack}");
-                              return showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                isDismissible: true,
-                                enableDrag: false,
-                                useRootNavigator: true,
-                                context: context,
-                                builder: (ctx) {
-                                  return SkipMilestoneModalSheet(
-                                      milestone: milestone);
+              status == JOURNEY_MILESTONE_STATUS.COMPLETED
+                  ? SizedBox()
+                  // AppPositiveBtn(
+                  //     btnText: "Next Milestone",
+                  //     onPressed: () {
+                  //       AppState.backButtonDispatcher.didPopRoute();
+                  //     },
+                  //     width: SizeConfig.screenWidth)
+                  : status == JOURNEY_MILESTONE_STATUS.ACTIVE
+                      ? Column(
+                          children: [
+                            AppPositiveBtn(
+                                btnText: "Let's Go",
+                                onPressed: () {
+                                  AppState.backButtonDispatcher.didPopRoute();
+                                  AppState.delegate.parseRoute(
+                                      Uri.parse(milestone.actionUri));
                                 },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                                width: SizeConfig.screenWidth),
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              alignment: Alignment.center,
+                              child: TextButton(
+                                child: Text(
+                                  "SKIP MILESTONE",
+                                  style: TextStyles.sourceSansL.body3
+                                      .colour(Colors.white),
+                                ),
+                                onPressed: () {
+                                  AppState.screenStack
+                                      .add(ScreenItem.modalsheet);
+                                  log("Current Screen Stack: ${AppState.screenStack}");
+                                  return showModalBottomSheet(
+                                    backgroundColor: Colors.transparent,
+                                    isDismissible: true,
+                                    enableDrag: false,
+                                    useRootNavigator: true,
+                                    context: context,
+                                    builder: (ctx) {
+                                      return SkipMilestoneModalSheet(
+                                          milestone: milestone);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
               SizedBox(
                   height: SizeConfig.viewInsets.bottom +
                       (SizeConfig.padding24 - SizeConfig.viewInsets.bottom)

@@ -50,6 +50,41 @@ class TopSaverViewModel extends BaseModel {
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
 
+  int _tabNo = 0;
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
+  PageController _pageController;
+
+  PageController get pageController => _pageController;
+
+  bool infoBoxOpen = false;
+
+  int get tabNo => _tabNo;
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
+
+  double get tabPosWidthFactor => _tabPosWidthFactor;
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
+
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
+  }
+
   //Related to the info box/////////////////
   String boxHeading = "How to participate?";
   List<String> boxAssets = [
@@ -64,15 +99,8 @@ class TopSaverViewModel extends BaseModel {
   ];
   ////////////////////////////////////////////
 
-  List<String> __profileUrlList = [];
   List<ScoreBoard> currentParticipants;
   List<PastHighestSaver> _pastWinners;
-
-  List<String> get profileUrlList => __profileUrlList;
-  set profileUrlList(List<String> value) {
-    __profileUrlList = value;
-    notifyListeners();
-  }
 
   List<PastHighestSaver> get pastWinners => _pastWinners;
 
@@ -106,7 +134,11 @@ class TopSaverViewModel extends BaseModel {
 
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
+
     event = await getSingleEventDetails(eventType);
+    _pageController = PageController(initialPage: 0);
+    infoBoxOpen = false;
+
     setState(ViewState.Idle);
 
     campaignType = event.type;
@@ -190,6 +222,11 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
+  toggleInfoBox() {
+    infoBoxOpen = !infoBoxOpen;
+    notifyListeners();
+  }
+
   Future<EventModel> getSingleEventDetails(String eventType) async {
     EventModel event;
     _logger.d(eventType);
@@ -242,7 +279,7 @@ class TopSaverViewModel extends BaseModel {
         }
       }
 
-      getWinnersProfilePicList();
+      notifyListeners();
     } else
       pastWinners = [];
 
@@ -255,13 +292,8 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  getWinnersProfilePicList() async {
-    for (int i = 0; i < pastWinners.length; i++) {
-      String dpUrl = await _dbModel.getUserDP(pastWinners[i].userid);
-      __profileUrlList.add(dpUrl);
-    }
-
-    notifyListeners();
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
   }
 
   getUserRankIfAny() {
