@@ -196,7 +196,7 @@ class SaveNetWorthSection extends StatelessWidget {
                     title: 'Digital Gold',
                     cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                     cardAssetName: Assets.digitalGoldBar,
-                    investedAmount: model.userFundWallet?.augGoldBalance ?? 0,
+                    isGoldAssets: true,
                     onCardTap: () => saveViewModel.navigateToSaveAssetView(),
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(

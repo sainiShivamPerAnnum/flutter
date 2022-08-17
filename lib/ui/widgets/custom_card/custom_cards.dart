@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -12,6 +13,7 @@ class SaveCustomCard extends StatelessWidget {
   final String cardAssetName;
   final Function() onTap;
   final double investedAmount;
+  final bool isGoldAssets;
 
   const SaveCustomCard(
       {Key key,
@@ -20,7 +22,8 @@ class SaveCustomCard extends StatelessWidget {
       this.cardAssetName,
       this.onTap,
       this.investedAmount = 0,
-      this.onCardTap})
+      this.onCardTap,
+      this.isGoldAssets = false})
       : super(key: key);
 
   @override
@@ -96,10 +99,17 @@ class SaveCustomCard extends StatelessWidget {
                                       locale.investedText,
                                       style: TextStyles.sourceSansM.body4,
                                     ),
-                                    Text(
-                                      investedAmount.toString() ?? 0.toString(),
-                                      style: TextStyles.sourceSansSB.title4,
-                                    ),
+                                    isGoldAssets
+                                        ? UserGoldQuantitySE(
+                                            style:
+                                                TextStyles.sourceSansSB.title4,
+                                          )
+                                        : Text(
+                                            investedAmount.toString() ??
+                                                0.toString(),
+                                            style:
+                                                TextStyles.sourceSansSB.title4,
+                                          ),
                                   ],
                                 ),
                                 GestureDetector(
