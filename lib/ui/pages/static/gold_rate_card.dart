@@ -68,40 +68,19 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Blinker(
-                child: CircleAvatar(
-                  backgroundColor: UiConstants.primaryColor,
-                  radius: SizeConfig.padding4,
-                ),
-              ),
-              SizedBox(width: SizeConfig.padding6),
-              Text(
-                "Current Gold Price: ",
-                style: TextStyles.body3.colour(Colors.black54),
-              ),
               widget.isFetching
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.primaryColor,
                     )
                   : // SizedBox(height: SizeConfig.padding4),
-                  Text("₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
-                      style: TextStyles.body3.extraBold.colour(Colors.black54)),
-              Spacer(),
-              RichText(
-                text: TextSpan(
-                  text: "Valid for next ",
-                  style: TextStyles.body4.colour(Colors.grey).light,
-                  children: [
-                    TextSpan(
-                      text:
-                          "${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}",
-                      style: TextStyles.body4
-                          .colour(UiConstants.primaryColor)
-                          .bold,
-                    ),
-                  ],
-                ),
+                  Text(" ₹${widget.goldprice.toStringAsFixed(2)}/gm",
+                      style: TextStyles.sourceSans.body4.colour(
+                          UiConstants.kModalSheetMutedTextBackgroundColor)),
+              Text(
+                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+                style: TextStyles.body4
+                    .colour(UiConstants.kModalSheetMutedTextBackgroundColor),
               ),
             ],
           )
@@ -133,7 +112,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                             color: UiConstants.primaryColor,
                           )
                         : Text(
-                            "₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
+                            "₹ ${widget.goldprice.toStringAsFixed(1)}/gm",
                             style: TextStyles.body1
                                 .colour(UiConstants.primaryColor)
                                 .bold,

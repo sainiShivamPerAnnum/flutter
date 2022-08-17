@@ -46,6 +46,7 @@ class ApiPath {
   static String getBlogs(noOfBlogs) =>
       "/blogs?per_page=$noOfBlogs&status=publish&_fields=id,title.rendered,slug,date,yoast_head_json.og_image,acf&orderby=date&order=desc";
   static String kWalkthrough(uid) => "/walkthrough/$uid";
+  static String kVerifyVPAAddress(uid) => '/vpa?uid=$uid';
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 

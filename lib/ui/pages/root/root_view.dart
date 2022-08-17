@@ -10,7 +10,6 @@ import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -43,6 +42,47 @@ class Root extends StatelessWidget {
           key: RootViewModel.scaffoldKey,
           drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
+          // bottomNavigationBar: BottomNavigationBar(
+          //   currentIndex: model.bottomNavBarIndex,
+          //   onTap: (index) {
+          //     model.onItemTapped(index);
+          //   },
+          //   selectedFontSize: SizeConfig.body4,
+          //   unselectedFontSize: SizeConfig.body4,
+          //   selectedLabelStyle:
+          //       TextStyles.rajdhaniSB.body4.colour(UiConstants.kTextColor),
+          //   unselectedLabelStyle:
+          //       TextStyles.rajdhaniSB.body4.colour(UiConstants.kTextColor),
+          //   unselectedItemColor: UiConstants.kTextColor2,
+          //   selectedItemColor: UiConstants.kTextColor,
+          //   backgroundColor: UiConstants.kBackgroundColor,
+          //   elevation: 0,
+          //   enableFeedback: true,
+          //   iconSize: SizeConfig.padding32,
+          //   type: BottomNavigationBarType.fixed,
+          //   items: [
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navJourneyInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navJourneyActive),
+          //         label: 'Journey'),
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navPlayInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navPlayActive),
+          //         label: 'Play'),
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navSaveInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navSaveActive),
+          //         label: 'Save'),
+          //     BottomNavigationBarItem(
+          //         backgroundColor: UiConstants.kBackgroundColor,
+          //         icon: SvgPicture.asset(Assets.navWinInactive),
+          //         activeIcon: SvgPicture.asset(Assets.navWinActive),
+          //         label: 'Win'),
+          //   ],
+          // ),
           body: Stack(
             children: [
               NewSquareBackground(),
@@ -99,6 +139,7 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance.color,
                   ),
                 ),
+>>>>>>> lib/ui/pages/root/root_view.dart
             ],
           ),
         );
@@ -120,7 +161,7 @@ class BottomNavBar extends StatelessWidget {
         bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
           width: SizeConfig.screenWidth,
-          height: SizeConfig.navBarHeight * 0.74,
+          height: kBottomNavigationBarHeight + SizeConfig.viewInsets.bottom / 2,
           decoration: BoxDecoration(
             color: Colors.black,
           ),

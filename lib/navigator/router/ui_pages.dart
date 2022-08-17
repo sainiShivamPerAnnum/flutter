@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:felloapp/navigator/app_state.dart';
 
 const String SplashPath = '/splash';
@@ -63,6 +62,8 @@ const String OnBoardingPath = '/onBoardingPath';
 const String Level2ViewPath = '/level2View';
 const String BlogPostWebViewPath = '/blogPostWebView';
 const String CampaignViewPath = '/campaignViewPath';
+const String SaveAssetViewPath = '/saveAssetViewPath';
+const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 
 enum Pages {
   Splash,
@@ -126,6 +127,8 @@ enum Pages {
   Level2View,
   BlogPostWebView,
   CampaignView,
+  SaveAssetView,
+  SellConfirmationView
 }
 
 class PageConfiguration {
@@ -554,9 +557,24 @@ PageConfiguration BlogPostWebViewConfig = PageConfiguration(
     path: BlogPostWebViewPath,
     uiPage: Pages.BlogPostWebView,
     name: "Journey Screen");
+
 PageConfiguration CampaignViewPageConfig = PageConfiguration(
   key: 'CampaignView',
   path: CampaignViewPath,
   uiPage: Pages.CampaignView,
   name: "Campaign View Screen",
+);
+
+PageConfiguration SaveAssetsViewConfig = PageConfiguration(
+  key: 'SaveAssetsView',
+  path: SaveAssetViewPath,
+  uiPage: Pages.SaveAssetView,
+  name: "Save Asset View",
+);
+
+PageConfiguration SellConfirmationViewConfig = PageConfiguration(
+  key: 'SellConfirmationView',
+  path: SellConfirmationViewPath,
+  uiPage: Pages.SellConfirmationView,
+  name: "Sell Confirmation View",
 );

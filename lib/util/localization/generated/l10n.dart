@@ -466,7 +466,7 @@ class S {
   /// `{goldAmount} gm`
   String saveGoldBalanceValue(Object goldAmount) {
     return Intl.message(
-      '$goldAmount gm',
+      '$goldAmount g',
       name: 'saveGoldBalanceValue',
       desc: '',
       args: [goldAmount],
@@ -1125,6 +1125,96 @@ class S {
     );
   }
 
+  /// `With every transaction, some tokens will be deducted.`
+  String get tokenDeductionOnTransaction {
+    return Intl.message(
+      'With every transaction, some\ntokens will be deducted.',
+      name: 'tokenDeductionOnTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To enable selling gold, complete the following:`
+  String get enableSellGold {
+    return Intl.message(
+      'To enable selling gold, complete the following:',
+      name: 'enableSellGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete KYC Text `
+  String get completeKYCText {
+    return Intl.message(
+      'Complete KYC',
+      name: 'completeKYCText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Bank information`
+  String get addBankInformationText {
+    return Intl.message(
+      'Add Bank information',
+      name: 'completeKYCText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital Gold` - Sace Section
+  String get digitalGoldText {
+    return Intl.message(
+      'Digital Gold',
+      name: 'digitalGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stable Fello` - Save Section
+  String get stableFelloText {
+    return Intl.message(
+      'Stable Fello',
+      name: 'stableFelloText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started with a weekly/ daily SIP`
+  String get getStartedWithSIP {
+    return Intl.message(
+      'Get started with a weekly/ daily SIP',
+      name: 'getStartedWithSIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest safely in Gold with our Auto SIP to win tokens `
+  String get investSafelyInGoldText {
+    return Intl.message(
+      'Invest safely in Gold with our Auto SIP to win tokens',
+      name: 'investSafelyInGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested` - Save Section
+  String get investedText {
+    return Intl.message(
+      'Invested',
+      name: 'investedText',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------------------' key
 
   /// `No transactions to show yet`
@@ -1158,6 +1248,7 @@ class S {
       args: [quantity, formattedNumber],
     );
   }
+
 
   /// `Daily Safe Maximum`
   String get resultsPageSafeDosageTitle {

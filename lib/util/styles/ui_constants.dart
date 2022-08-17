@@ -50,9 +50,17 @@ class UiConstants {
   static const Color kTextColor3 = const Color(0xFFA7A7A8);
 
   static const Color kYellowTextColor = const Color(0xFFFEF5DC);
+  static const Color kTealTextColor = const Color(0xFFA5FCE7);
+  static const Color kPeachTextColor = const Color(0xFFF79780);
 
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
+  static const Color kModalSheetBackgroundColor = const Color(0xFF1B262C);
+  static const Color kModalSheetMutedTextBackgroundColor =
+      const Color(0xFFA9C6D6);
+  static const Color kModalSheetSecondaryBackgroundColor =
+      const Color(0xFF627F8E);
+  static const Color kDarkBackgroundColor = Color(0xFF18181B);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = const Color(0xFF23272B);

@@ -11,12 +11,12 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
@@ -71,11 +71,13 @@ class Save extends StatelessWidget {
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              physics: BouncingScrollPhysics(),
+              physics: ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SaveNetWorthSection(),
+                  SaveNetWorthSection(
+                    saveViewModel: model,
+                  ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
@@ -94,9 +96,59 @@ class Save extends StatelessWidget {
                   SaveTitleContainer(title: 'Latest'),
                   SaveBlogSection(),
                   // -- Break --
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 0.4,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        '100% SAFE AND SECURED',
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor2),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding54),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SaveInfoSection(
+                              title: 'In Compliance with',
+                              imageAsset: Assets.sebiLogo,
+                              imageHeight: SizeConfig.screenWidth * 0.07,
+                              imageWidth: SizeConfig.screenWidth * 0.07,
+                            ),
+                            VerticalDivider(
+                              color: Colors.white,
+                              thickness: 2,
+                              width: 2,
+                            ),
+                            SaveInfoSection(
+                              title: 'RBI Approved',
+                              imageAsset: Assets.rbiLogo,
+                              imageHeight: SizeConfig.screenWidth * 0.07,
+                              imageWidth: SizeConfig.screenWidth * 0.07,
+                            ),
+                            VerticalDivider(
+                                color: Colors.white, thickness: 2, width: 2),
+                            SaveInfoSection(
+                              title: 'Banking Partner',
+                              imageAsset: Assets.iciciLogo,
+                              imageHeight: SizeConfig.screenWidth * 0.07,
+                              imageWidth: SizeConfig.screenWidth * 0.16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   //Extended the EOS to avoid overshadowing by navbar
                   SizedBox(
-                    height: SizeConfig.screenWidth * 0.8,
+                    height: SizeConfig.screenWidth * 0.4,
                   ),
                 ],
               ),
@@ -121,7 +173,9 @@ class SaveTitleContainer extends StatelessWidget {
 }
 
 class SaveNetWorthSection extends StatelessWidget {
-  const SaveNetWorthSection({Key key}) : super(key: key);
+  final SaveViewModel saveViewModel;
+
+  const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +197,8 @@ class SaveNetWorthSection extends StatelessWidget {
                     title: 'Digital Gold',
                     cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                     cardAssetName: Assets.digitalGoldBar,
-                    investedAmount: model.userFundWallet?.augGoldBalance,
+                    isGoldAssets: true,
+                    onCardTap: () => saveViewModel.navigateToSaveAssetView(),
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -159,7 +214,8 @@ class SaveNetWorthSection extends StatelessWidget {
                   SaveCustomCard(
                     title: 'Stable Fello',
                     cardBgColor: UiConstants.kSaveStableFelloCardBg,
-                    cardAssetName: Assets.digitalGoldBar,
+                    cardAssetName: Assets.stableFello,
+                    investedAmount: 0.0,
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -193,7 +249,7 @@ class AutoSIPCard extends StatelessWidget {
           },
           child: Container(
             height: SizeConfig.screenWidth * 0.42,
-            width: SizeConfig.screenWidth,
+            width: SizeConfig.screenWidth * 0.87,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: UiConstants.kSecondaryBackgroundColor),
@@ -255,13 +311,58 @@ class CampaignCardSection extends StatelessWidget {
       child: Container(
         height: SizeConfig.screenWidth * 0.51,
         child: ListView.builder(
-            itemCount: saveViewModel.ongoingEvents.length,
+            itemCount: saveViewModel.isLoading
+                ? 2
+                : saveViewModel.ongoingEvents.length,
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return CampiagnCard(
-                event: saveViewModel.ongoingEvents[index],
-              );
+              return saveViewModel.isLoading
+                  ? ListView.builder(
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(right: SizeConfig.padding10),
+                            child: Container(
+                              width: SizeConfig.screenWidth * 0.5,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                  color: UiConstants.kBackgroundColor),
+                              child: Padding(
+                                padding: EdgeInsets.all(SizeConfig.padding16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: SizeConfig.padding28),
+                                      child: Center(
+                                        child: Container(
+                                          height: SizeConfig.screenWidth * 0.2,
+                                          width: SizeConfig.screenWidth,
+                                          decoration: BoxDecoration(
+                                              color: UiConstants
+                                                  .kSecondaryBackgroundColor),
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          baseColor: UiConstants.kUserRankBackgroundColor,
+                          highlightColor: UiConstants.kBackgroundColor,
+                        );
+                      })
+                  : CampiagnCard(
+                                   event: saveViewModel.ongoingEvents[index],
+
+                    );
             }),
       ),
     );
@@ -294,7 +395,7 @@ class CampiagnCard extends StatelessWidget {
                   padding: EdgeInsets.only(top: SizeConfig.padding28),
                   child: Center(
                     child: SizedBox(
-                      height: SizeConfig.screenWidth * 0.17,
+                      height: SizeConfig.screenWidth * 0.2,
                       width: SizeConfig.screenWidth,
                       child: Image.network(event.image),
                     ),
@@ -457,6 +558,9 @@ class BlogWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: FelloAppBarBackButton(),
+      ),
       body: WebView(
           initialUrl: initialUrl, javascriptMode: JavascriptMode.unrestricted),
     );
@@ -620,6 +724,37 @@ class SaveInfoTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SaveInfoSection extends StatelessWidget {
+  final String title;
+  final String imageAsset;
+  final double imageHeight;
+  final double imageWidth;
+
+  const SaveInfoSection(
+      {Key key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        SizedBox(
+            height: imageHeight,
+            width: imageWidth,
+            child: Image.asset(imageAsset)),
+      ],
     );
   }
 }

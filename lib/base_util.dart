@@ -6,8 +6,6 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -292,66 +290,62 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
-          .showSnackBar(alertSnackBar(
-              message: message,
-              title: title,
-              seconds: seconds,
-              onTap: () {},
-              alertColor: UiConstants.kSnackBarPositiveContentColor,
-              alertAsset: Assets.snackbarAlertIcon));
-    });
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    // WidgetsBinding.instance?.addPostFrameCallback((_) {
-    //   Flushbar(
-    //     flushbarPosition: FlushbarPosition.BOTTOM,
-    //     flushbarStyle: FlushbarStyle.FLOATING,
-    //     icon: Icon(
-    //       Icons.flag,
-    //       size: 28.0,
-    //       color: Colors.white,
-    //     ),
-    //     margin: EdgeInsets.all(10),
-    //     borderRadius: 8,
-    //     title: title,
-    //     message: message,
-    //     duration: Duration(seconds: seconds),
-    //     backgroundGradient: LinearGradient(
-    //       begin: Alignment.topRight,
-    //       end: Alignment.bottomLeft,
-    //       colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
-    //     ),
-    //     boxShadows: [
-    //       BoxShadow(
-    //         color: UiConstants.positiveAlertColor,
-    //         offset: Offset(0.0, 2.0),
-    //         blurRadius: 3.0,
-    //       )
-    //     ],
-    //   )..show(AppState.delegate.navigatorKey.currentContext);
-    // });
-  }
-
-  static showProcessingAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
-          .showSnackBar(alertSnackBar());
+      Flushbar(
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.flag,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: title,
+        message: message,
+        duration: Duration(seconds: seconds),
+        backgroundGradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+        ),
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.positiveAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(AppState.delegate.navigatorKey.currentContext);
     });
   }
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
-          .showSnackBar(alertSnackBar(
-              message: message,
-              title: title,
-              seconds: seconds,
-              onTap: () {},
-              alertColor: UiConstants.kSnackBarNegativeContentColor,
-              alertAsset: Assets.snackbarAlertIcon));
+      Flushbar(
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.assignment_late,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: title,
+        message: message,
+        duration: Duration(seconds: seconds ?? 3),
+        backgroundColor: UiConstants.negativeAlertColor,
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.negativeAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(AppState.delegate.navigatorKey.currentContext);
     });
   }
 
@@ -361,62 +355,28 @@ class BaseUtil extends ChangeNotifier {
         listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(AppState.delegate.navigatorKey.currentContext)
-            .showSnackBar(SnackBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                margin: EdgeInsets.all(5),
-                behavior: SnackBarBehavior.floating,
-                duration: Duration(seconds: 3),
-                dismissDirection: DismissDirection.down,
-                content: Container(
-                  height: SizeConfig.screenWidth * 0.08,
-                  width: SizeConfig.screenWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    color: UiConstants.kSnackBarBgColor,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(SizeConfig.padding10),
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 32,
-                            width: 55,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color:
-                                    UiConstants.kSnackBarNegativeContentColor),
-                            child: SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: SvgPicture.asset(
-                                    Assets.snackbarAlertIcon))),
-                        SizedBox(
-                          width: SizeConfig.screenWidth * 0.06,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "No Internet",
-                              style: TextStyles.body3
-                                  .colour(UiConstants.textColor),
-                            ),
-                            Text(
-                              "Please check your network connection and try again",
-                              style: TextStyles.body4
-                                  .colour(UiConstants.textColor),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                )));
-      });
+      Flushbar(
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.error,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: "No Internet",
+        message: "Please check your network connection and try again",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.red[800],
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(AppState.delegate.navigatorKey.currentContext);
       return true;
     }
     return false;

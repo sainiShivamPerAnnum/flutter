@@ -56,21 +56,21 @@ class Assets {
 
   //NAVBAR - 4.0
   static final String navPlayActive =
-      "assets/svg/BottomNavBarIcons/play_active.svg";
+      "assets/svg/BottomNavBarIcons/nav_play_active.svg";
   static final String navPlayInactive =
-      "assets/svg/BottomNavBarIcons/play_inactive.svg";
+      "assets/svg/BottomNavBarIcons/nav_play_inactive.svg";
   static final String navJourneyActive =
-      "assets/svg/BottomNavBarIcons/journey_active.svg";
+      "assets/svg/BottomNavBarIcons/nav_journey_active.svg";
   static final String navJourneyInactive =
-      "assets/svg/BottomNavBarIcons/journey_inactive.svg";
+      "assets/svg/BottomNavBarIcons/nav_journey_inactive.svg";
   static final String navSaveActive =
-      "assets/svg/BottomNavBarIcons/save_active.svg";
+      "assets/svg/BottomNavBarIcons/nav_save_active.svg";
   static final String navSaveInactive =
-      "assets/svg/BottomNavBarIcons/save_inactive.svg";
+      "assets/svg/BottomNavBarIcons/nav_save_inactive.svg";
   static final String navWinActive =
-      "assets/svg/BottomNavBarIcons/win_active.svg";
+      "assets/svg/BottomNavBarIcons/nav_win_active.svg";
   static final String navWinInactive =
-      "assets/svg/BottomNavBarIcons/win_inactive.svg";
+      "assets/svg/BottomNavBarIcons/nav_win_inactive.svg";
 
 // ONBOARDING
   static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
@@ -114,13 +114,21 @@ class Assets {
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String processing = "assets/vectors/processing.svg";
-  static final String digitalGoldBar = 'assets/svg/save_digital_gold.svg';
-  static final String stableFello = 'assets/svg/save_stable_fello.svg';
+  static final String digitalGoldBar = 'assets/vectors/gold_bar.webp';
+  static final String stableFello = 'assets/vectors/stable_fello.webp';
   static final String autoSaveDefault = 'assets/svg/save_auto_sip.svg';
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
   static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';
   static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
+  static final String rbiLogo = 'assets/vectors/rbi_logo.png';
+  static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';
+  static final String sebiLogo = 'assets/vectors/sebi_logo.png';
+  static final String magicalSpiritBall = 'assets/svg/magical_spirit_ball.svg';
+  static final String rippleAnimation = 'assets/lotties/ripple.json';
+  static final String saleSuccessVector =
+      'assets/vectors/sale_success_vector.png';
+  static final String dropDownVector = 'assets/svg/drop_down_button.svg';
 
   // WIN
 

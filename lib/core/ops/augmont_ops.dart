@@ -45,6 +45,8 @@ class AugmontModel extends ChangeNotifier {
   final _userCoinService = locator<UserCoinService>();
   final TransactionService _txnService = locator<TransactionService>();
   final _analyticsService = locator<AnalyticsService>();
+  List<String> _sellingReasons = [];
+  String _selectedReasonForSelling = '';
 
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
@@ -53,10 +55,24 @@ class AugmontModel extends ChangeNotifier {
   String _apiKey;
   var headers;
 
+  List<String> get sellingReasons => _sellingReasons;
+  String get selectedReasonForSelling => _selectedReasonForSelling;
+
+  set selectedReasonForSelling(String val) {
+    this._selectedReasonForSelling = val;
+    notifyListeners();
+  }
+
   ApiResponse<DepositResponseModel> _initialDepositResponse;
   ApiResponse<String> _tranIdResponse;
 
   Future<bool> _init() async {
+    _sellingReasons = [
+      'Not interested anymore',
+      'Not interested anymore',
+      'Not interested anymore',
+      'Others'
+    ];
     if (_dbModel == null) return false;
     Map<String, String> cMap = await _dbModel.getActiveAwsAugmontApiKey();
     if (cMap == null) return false;

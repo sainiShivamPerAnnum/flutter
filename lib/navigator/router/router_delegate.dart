@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/pages/login/level_2/level_2_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
@@ -594,6 +595,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SaveAssetView:
+        SaveAssetsViewConfig.currentPageAction = action;
+        break;
+      case Pages.SellConfirmationView:
+        SellConfirmationViewConfig.currentPageAction = action;
         break;
       default:
         break;
