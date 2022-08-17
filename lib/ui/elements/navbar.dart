@@ -34,13 +34,11 @@ class NavBar extends StatelessWidget {
     }).toList();
 
     //Create a container with a row, and add our btn widgets into the row
-    return Container(
-      height: SizeConfig.navBarHeight,
-      width: SizeConfig.screenWidth,
-      //Clip the row of widgets, to suppress any overflow errors that might occur during animation
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
       child: Row(
         //Center buttons horizontally
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         // Inject a bunch of btn instances into our row
         children: buttonWidgets,
       ),
@@ -69,15 +67,35 @@ class NavbarButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: isSelected
-          ? BottomNavBarItemContent(
-              iconString: data.activeIconImage,
-              title: data.title,
-              isSelected: isSelected,
+          ? Expanded(
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    painter: SelectedItemBackdrop(),
+                    size: Size(
+                        data.title == 'Journey'
+                            ? SizeConfig.screenWidth * 0.12
+                            : data.title == 'Win'
+                                ? SizeConfig.screenWidth * 0.1
+                                : SizeConfig.screenWidth * 0.09,
+                        SizeConfig.screenWidth * 0.06),
+                  ),
+                  BottomNavBarItemContent(
+                    iconString: data.activeIconImage,
+                    title: data.title,
+                    isSelected: isSelected,
+                    width: SizeConfig.screenWidth * 0.09,
+                  ),
+                ],
+              ),
             )
-          : BottomNavBarItemContent(
-              iconString: data.inactiveIconImage,
-              title: data.title,
-              isSelected: isSelected,
+          : Expanded(
+              child: BottomNavBarItemContent(
+                iconString: data.inactiveIconImage,
+                title: data.title,
+                isSelected: isSelected,
+                width: SizeConfig.screenWidth * 0.09,
+              ),
             ),
     );
   }
@@ -87,9 +105,10 @@ class BottomNavBarItemContent extends StatelessWidget {
   final String iconString;
   final String title;
   final bool isSelected;
+  final double width;
 
   const BottomNavBarItemContent(
-      {Key key, this.iconString, this.title, this.isSelected})
+      {Key key, this.iconString, this.title, this.isSelected, this.width})
       : super(key: key);
 
   @override
@@ -98,7 +117,7 @@ class BottomNavBarItemContent extends StatelessWidget {
       children: [
         Container(
           height: SizeConfig.screenWidth * 0.09,
-          width: SizeConfig.screenWidth * 0.09,
+          width: width,
           child: SvgPicture.asset(
             iconString,
             fit: BoxFit.contain,
@@ -113,5 +132,38 @@ class BottomNavBarItemContent extends StatelessWidget {
                 : TextStyles.rajdhaniSB.colour(UiConstants.kTextColor2))
       ],
     );
+  }
+}
+
+class SelectedItemBackdrop extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(0, 0);
+    path_0.lineTo(size.width, 0);
+    path_0.lineTo(size.width * 0.7258065, size.height);
+    path_0.lineTo(size.width * 0.2580645, size.height);
+    path_0.lineTo(0, 0);
+    path_0.close();
+
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFF55AF95).withOpacity(0),
+          Color(0xFF55AF95),
+        ],
+      ).createShader(Rect.fromCircle(
+        center: Offset(10, 10),
+        radius: 25,
+      ));
+    canvas.drawPath(path_0, paint0Fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
