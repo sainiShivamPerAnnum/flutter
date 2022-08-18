@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -118,8 +119,9 @@ class JourneyAppBar extends StatelessWidget {
                         thickness: 0.5,
                       ),
                       JourneyAppBarAssetDetailsTile(
-                        asset: Assets.digitalGoldBar,
-                        value: UserGoldQuantitySE(
+                        asset: Assets.stableFello,
+                        value: Text(
+                          "₹ 3000",
                           style: TextStyles.sourceSansSB.body1
                               .colour(Colors.white),
                         ),
@@ -147,6 +149,8 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: () {
+          if (JourneyService.isAvatarAnimationInProgress) return;
+
           Haptic.vibrate();
           AppState.delegate.appState.currentAction = PageAction(
             state: PageState.addPage,
@@ -155,10 +159,13 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SvgPicture.asset(
+            Image.asset(
               asset,
-              height: SizeConfig.padding54,
+              height: asset == Assets.digitalGoldBar
+                  ? SizeConfig.padding38
+                  : SizeConfig.padding54,
             ),
             value,
           ],

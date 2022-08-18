@@ -58,6 +58,7 @@ class _FormDialogState extends State<AppDefaultDialog> {
           ],
         ),
       ),
+      width: SizeConfig.screenWidth,
       // height: widget.description == ''
       //     ? SizeConfig.screenWidth * 0.5278
       //     : SizeConfig.screenWidth * 0.5833,

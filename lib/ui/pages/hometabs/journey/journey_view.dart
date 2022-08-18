@@ -7,25 +7,17 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
-import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -69,22 +61,22 @@ class _JourneyViewState extends State<JourneyView>
 
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: Container(
-            margin: EdgeInsets.only(bottom: 60),
-            child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
-                    PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
-                ? FloatingActionButton(
-                    child: const Icon(
-                      Icons.replay,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.black,
-                    onPressed: () {
-                      PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
-                    },
-                  )
-                : SizedBox(),
-          ),
+          // floatingActionButton: Container(
+          //   margin: EdgeInsets.only(bottom: 60),
+          //   child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
+          //           PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
+          //       ? FloatingActionButton(
+          //           child: const Icon(
+          //             Icons.replay,
+          //             color: Colors.white,
+          //           ),
+          //           backgroundColor: Colors.black,
+          //           onPressed: () {
+          //             PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
+          //           },
+          //         )
+          //       : SizedBox(),
+          // ),
           // floatingActionButton: Container(
           //   margin: EdgeInsets.only(bottom: 80, left: 50),
           //   child: FloatingActionButton(

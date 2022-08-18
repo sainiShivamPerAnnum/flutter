@@ -148,7 +148,7 @@ class _JourneyMilestoneDetailsModalSheetState
               SizedBox(height: SizeConfig.padding24),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 isLoading
-                    ? CircularProgressIndicator()
+                    ? CircularProgressIndicator(strokeWidth: 1)
                     : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
@@ -217,25 +217,37 @@ class _JourneyMilestoneDetailsModalSheetState
               ),
               SizedBox(height: SizeConfig.padding4),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(
                   rewards.length,
                   (index) => Container(
                     margin: EdgeInsets.only(right: SizeConfig.padding12),
                     child: Row(
                       children: [
-                        SvgPicture.asset(
-                          getLeadingAsset(rewards[index].type),
-                          height: SizeConfig.padding20,
-                          width: SizeConfig.padding20,
-                        ),
+                        getLeadingAsset(rewards[index].type) == Assets.moneyIcon
+                            ? Image.asset(
+                                getLeadingAsset(rewards[index].type),
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                              )
+                            : SvgPicture.asset(
+                                getLeadingAsset(rewards[index].type),
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                              ),
                         SizedBox(width: SizeConfig.padding4),
-                        Text(getPrefix(rewards[index].type)),
+                        Text(getPrefix(rewards[index].type),
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white60)),
                         Text(
                           rewards[index].value.toString(),
-                          style: TextStyles.rajdhaniSB.body1,
+                          style: TextStyles.rajdhaniB.body1,
                         ),
-                        Text(getSuffix(rewards[index].type))
+                        Text(
+                          getSuffix(rewards[index].type),
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white60),
+                        )
                       ],
                     ),
                   ),

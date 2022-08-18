@@ -140,9 +140,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("Levels updated: ${levels[0].toString()}");
   }
 
-  get mainController => this._mainController;
+  ScrollController get mainController => this._mainController;
 
-  set mainController(value) => this._mainController = value;
+  set mainController(ScrollController value) => this._mainController = value;
 
   // INIT MAIN
   Future<void> init() async {
@@ -157,6 +157,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   Future<void> dump() async {
     _userService.userJourneyStats = null;
+    controller.dispose();
+    mainController.dispose();
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
     PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);

@@ -35,20 +35,21 @@ class ProfileImageSE extends StatelessWidget {
         return CircleAvatar(
           radius: radius,
           backgroundColor: Colors.transparent,
-          child: model.baseUser.avatarId != 'CUSTOM'
-              ? SvgPicture.asset(
-                  "assets/svg/userAvatars/${model.baseUser.avatarId}.svg",
-                  height: radius * 2,
-                  width: radius * 2,
-                )
-              : SizedBox(),
-          backgroundImage:
+          child:
               model.baseUser.avatarId != 'CUSTOM' || model.myUserDpUrl == null
-                  ? AssetImage(
-                      Assets.profilePic,
+                  ? SvgPicture.asset(
+                      "assets/svg/userAvatars/${model?.baseUser?.avatarId ?? 'AV2'}.svg",
+                      height: radius * 2,
+                      width: radius * 2,
                     )
-                  : CachedNetworkImageProvider(
+                  : SizedBox(),
+          backgroundImage:
+              model.baseUser.avatarId == 'CUSTOM' || model.myUserDpUrl != null
+                  ? CachedNetworkImageProvider(
                       model.myUserDpUrl,
+                    )
+                  : AssetImage(
+                      Assets.profilePic,
                     ),
         );
       },

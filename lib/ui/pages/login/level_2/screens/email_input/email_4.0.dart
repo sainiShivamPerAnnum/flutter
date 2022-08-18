@@ -36,6 +36,13 @@ class Email4 extends StatelessWidget {
             textInputType: TextInputType.emailAddress,
             controller: model.emailController,
             enabled: !model.isGoogleVerified,
+            suffix: model.isGoogleVerified
+                ? Icon(
+                    Icons.verified,
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.iconSize2,
+                  )
+                : SizedBox(),
             validator: (val) {
               if (val.isEmpty) {
                 return 'Please enter your email ID';

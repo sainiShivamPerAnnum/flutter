@@ -388,7 +388,6 @@ class LoginControllerViewModel extends BaseModel {
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;
-    setState(ViewState.Idle);
     appStateProvider.rootIndex = 0;
 
     bool res =
@@ -396,6 +395,7 @@ class LoginControllerViewModel extends BaseModel {
     if (res != null && res == true) {
       await _userRepo.updateUserWalkthroughCompletion();
     }
+    setState(ViewState.Idle);
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {
