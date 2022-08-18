@@ -90,7 +90,7 @@ class Save extends StatelessWidget {
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
                   SaveTitleContainer(title: 'Challenges'),
-                  CampaignCardSection(saveViewModel: model),
+                  // CampaignCardSection(saveViewModel: model),
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
                   SaveTitleContainer(title: 'Latest'),
@@ -360,8 +360,7 @@ class CampaignCardSection extends StatelessWidget {
                         );
                       })
                   : CampiagnCard(
-                                   event: saveViewModel.ongoingEvents[index],
-
+                      event: saveViewModel.ongoingEvents[index],
                     );
             }),
       ),

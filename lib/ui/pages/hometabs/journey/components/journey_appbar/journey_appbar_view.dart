@@ -64,40 +64,42 @@ class JourneyAppBar extends StatelessWidget {
                         ),
                         SizedBox(width: SizeConfig.padding12),
                         Expanded(
-                            child: PropertyChangeConsumer<UserService,
-                                    UserServiceProperties>(
-                                properties: [
+                          child: PropertyChangeConsumer<UserService,
+                              UserServiceProperties>(
+                            properties: [
                               UserServiceProperties.myUserName,
                               UserServiceProperties.myJourneyStats
                             ],
-                                builder: (context, model, properties) {
-                                  return GestureDetector(
-                                      onTap: () => AppState.delegate.appState
-                                              .currentAction = PageAction(
-                                            state: PageState.addPage,
-                                            page: UserProfileDetailsConfig,
-                                          ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Hi ${model.myUserName ?? ''}",
-                                            style: TextStyles.rajdhaniSB.title5
-                                                .colour(Colors.white),
-                                          ),
-                                          Text(
-                                            "Level ${model.userJourneyStats.level}",
-                                            style: TextStyles.sourceSansM.body3
-                                                .colour(Colors.white
-                                                    .withOpacity(0.8))
-                                                .setHeight(0.8),
-                                          ),
-                                        ],
-                                      ));
-                                })),
+                            builder: (context, model, properties) {
+                              return GestureDetector(
+                                onTap: () => AppState.delegate.appState
+                                    .currentAction = PageAction(
+                                  state: PageState.addPage,
+                                  page: UserProfileDetailsConfig,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FittedBox(
+                                      child: Text(
+                                        "Hi ${model?.myUserName?.split(" ")?.first ?? ''}",
+                                        style: TextStyles.rajdhaniSB.title5
+                                            .colour(Colors.white),
+                                      ),
+                                    ),
+                                    Text(
+                                      "Level ${model.userJourneyStats.level}",
+                                      style: TextStyles.sourceSansM.body3
+                                          .colour(Colors.white.withOpacity(0.8))
+                                          .setHeight(0.8),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                         IconButton(
                             onPressed: () {
                               GoldenTicketService.goldenTicketId =

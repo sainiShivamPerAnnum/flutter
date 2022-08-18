@@ -237,7 +237,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int checkForGameLevelChange() {
     for (int i = 0; i < levels.length; i++) {
       log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
-      if (avatarCachedMlIndex < levels[i].end &&
+      if (avatarRemoteMlIndex < levels[i].end &&
           avatarRemoteMlIndex >= levels[i].start) return levels[i].level;
     }
     return 0;
@@ -264,8 +264,23 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //compares it with cached mlIndex
   //if difference found, animates the avatar and process necessary changes
   Future<void> checkForMilestoneLevelChange() async {
-    await updateUserJourneyStats();
-    checkAndAnimateAvatar();
+    await updateUserJourneyStats().then((val) {
+      checkAndAnimateAvatar();
+    });
+  }
+
+  updateAvatarIndexDirectly() {
+    avatarRemoteMlIndex += 1;
+    final currentMilestone = currentMilestoneList
+        .firstWhere((milestone) => milestone.index == avatarRemoteMlIndex);
+    int jLevel = checkForGameLevelChange();
+    _userService.userJourneyStats = UserJourneyStatsModel(
+        page: currentMilestone.page,
+        level: jLevel,
+        mlIndex: currentMilestone.index,
+        mlId: currentMilestone.id,
+        prizeSubtype: currentMilestone.prizeSubType,
+        skipCount: _userService.userJourneyStats.skipCount + 1);
   }
 
   //Check if there is a need to blur next level milestones

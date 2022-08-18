@@ -56,7 +56,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool _isSimpleKycVerified;
   bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
-  bool showOnboardingTutorial = true;
+  // bool showOnboardingTutorial = true;
   bool showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
 

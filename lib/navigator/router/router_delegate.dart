@@ -133,7 +133,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
-      _journeyService.checkAndAnimateAvatar();
+      if (AppState.screenStack.length == 1)
+        _journeyService.checkForMilestoneLevelChange();
       notifyListeners();
 
       return Future.value(true);
@@ -713,15 +714,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void screenCheck(String screenKey) {
     PageConfiguration pageConfiguration;
     switch (screenKey) {
+      case 'journey':
+        appState.setCurrentTabIndex = 0;
+        break;
+      case 'play':
+        appState.setCurrentTabIndex = 1;
+        break;
       case 'save':
         appState.setCurrentTabIndex = 2;
         break;
-      case 'play':
-        appState.setCurrentTabIndex = 0;
+      case 'win':
+        appState.setCurrentTabIndex = 3;
         break;
-      // case 'win':
-      //   appState.setCurrentTabIndex = 2;
-      //   break;
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
@@ -814,7 +818,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher.didPopRoute();
         break;
       case 'goldDetails':
-        pageConfiguration = AugmontGoldDetailsPageConfig;
+        pageConfiguration = SaveAssetsViewConfig;
         break;
       case 'autosaveDetails':
         pageConfiguration = AutosaveDetailsViewPageConfig;

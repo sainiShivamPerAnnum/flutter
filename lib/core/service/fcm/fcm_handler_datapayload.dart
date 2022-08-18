@@ -17,7 +17,7 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
   int tab, dailogShowCount = 0;
 
   userPrizeWinPrompt() async {
-    AppState.delegate.appState.setCurrentTabIndex = 2;
+    AppState.delegate.appState.setCurrentTabIndex = 3;
     notifyListeners();
     Future.delayed(Duration(seconds: 4), () {
       BaseUtil.openDialog(

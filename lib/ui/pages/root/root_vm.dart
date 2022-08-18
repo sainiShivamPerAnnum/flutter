@@ -252,13 +252,12 @@ class RootViewModel extends BaseModel {
 
       _baseUtil.getProfilePicture();
       // show security modal
-      // if (
-      //     showSecurityPrompt &&
+      // if (showSecurityPrompt &&
       //     _userService.baseUser.isAugmontOnboarded &&
-      //         _userService.userFundWallet.augGoldQuantity > 0 &&
-      //         _userService.baseUser.userPreferences
-      //                 .getPreference(Preferences.APPLOCK) ==
-      //             0) {
+      //     _userService.userFundWallet.augGoldQuantity > 0 &&
+      //     _userService.baseUser.userPreferences
+      //             .getPreference(Preferences.APPLOCK) ==
+      //         0) {
       //   canExecuteStartupNotification = false;
       //   WidgetsBinding.instance?.addPostFrameCallback((_) {
       //     _showSecurityBottomSheet();

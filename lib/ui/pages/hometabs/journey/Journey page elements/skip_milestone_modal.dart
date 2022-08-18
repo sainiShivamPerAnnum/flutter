@@ -146,17 +146,18 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                     final res =
                                         await _goldenTicketRepo.skipMilestone();
                                     if (res.isSuccess()) {
-                                      _journeyService
-                                          .checkForMilestoneLevelChange();
                                       skippingInProgress = false;
                                       AppState.screenStack.removeLast();
-                                      AppState.backButtonDispatcher
-                                          .didPopRoute();
-                                      AppState.backButtonDispatcher
-                                          .didPopRoute();
+                                      while (AppState.screenStack.length > 1)
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
+
                                       BaseUtil.showPositiveAlert(
                                           "Milestone Skipped Successfully",
                                           "Let's get to the next milestone");
+                                      _journeyService
+                                          .updateAvatarIndexDirectly();
+                                      _journeyService.checkAndAnimateAvatar();
                                     } else {
                                       skippingInProgress = false;
                                       AppState.screenStack.removeLast();

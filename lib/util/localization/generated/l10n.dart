@@ -14,23 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -467,7 +466,7 @@ class S {
   /// `{goldAmount} gm`
   String saveGoldBalanceValue(Object goldAmount) {
     return Intl.message(
-      '$goldAmount g',
+      '$goldAmount gm',
       name: 'saveGoldBalanceValue',
       desc: '',
       args: [goldAmount],
@@ -605,6 +604,48 @@ class S {
   }
 
   // skipped getter for the '--------------------------------' key
+
+  /// `Add Bank information`
+  String get addBankInformationText {
+    return Intl.message(
+      'Add Bank information',
+      name: 'addBankInformationText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With every transaction, some\ntokens will be deducted.`
+  String get tokenDeductionOnTransaction {
+    return Intl.message(
+      'With every transaction, some\ntokens will be deducted.',
+      name: 'tokenDeductionOnTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To enable selling gold, complete the following:`
+  String get enableSellGold {
+    return Intl.message(
+      'To enable selling gold, complete the following:',
+      name: 'enableSellGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete KYC`
+  String get completeKYCText {
+    return Intl.message(
+      'Complete KYC',
+      name: 'completeKYCText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------------------' key
 
   /// `My Winnings`
   String get winMyWinnings {
@@ -1121,46 +1162,6 @@ class S {
     return Intl.message(
       'Only users with minimun savings balance of ₹ 100 are eliglble for prizes',
       name: 'tParWinsubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `With every transaction, some tokens will be deducted.`
-  String get tokenDeductionOnTransaction {
-    return Intl.message(
-      'With every transaction, some\ntokens will be deducted.',
-      name: 'tokenDeductionOnTransaction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `To enable selling gold, complete the following:`
-  String get enableSellGold {
-    return Intl.message(
-      'To enable selling gold, complete the following:',
-      name: 'enableSellGold',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Complete KYC Text `
-  String get completeKYCText {
-    return Intl.message(
-      'Complete KYC',
-      name: 'completeKYCText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add Bank information`
-  String get addBankInformationText {
-    return Intl.message(
-      'Add Bank information',
-      name: 'completeKYCText',
       desc: '',
       args: [],
     );
