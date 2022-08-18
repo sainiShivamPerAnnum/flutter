@@ -234,69 +234,6 @@ class SaveNetWorthSection extends StatelessWidget {
   }
 }
 
-class AutoSIPCard extends StatelessWidget {
-  const AutoSIPCard({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S();
-    return BaseView<SubscriptionCardViewModel>(
-      builder: (ctx, model, builder) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-        child: GestureDetector(
-          onTap: () {
-            model.navigateToAutoSave();
-          },
-          child: Container(
-            height: SizeConfig.screenWidth * 0.42,
-            width: SizeConfig.screenWidth * 0.87,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: UiConstants.kSecondaryBackgroundColor),
-            child: Padding(
-              padding: EdgeInsets.all(SizeConfig.padding6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset(Assets.autoSaveDefault)),
-                  SizedBox(
-                    width: SizeConfig.padding10,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      FittedBox(
-                        fit: BoxFit.cover,
-                        child: Container(
-                          width: SizeConfig.screenWidth * 0.48,
-                          child: RichText(
-                              text: TextSpan(
-                                  text: '${locale.getStartedWithSIP}\n',
-                                  style: TextStyles.rajdhaniSB.body1,
-                                  children: <TextSpan>[
-                                TextSpan(
-                                    text: locale.investSafelyInGoldText,
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(UiConstants.kTextColor2))
-                              ])),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding20),
-                        child: SvgPicture.asset(Assets.saveChevronRight),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
