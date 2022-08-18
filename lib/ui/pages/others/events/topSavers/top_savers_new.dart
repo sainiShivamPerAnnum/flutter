@@ -148,9 +148,11 @@ class CampaignView extends StatelessWidget {
                                             shape: BoxShape.circle),
                                       ),
                                       Text(
-                                        model.realTimeFinanceStats == ""
+                                        model.realTimeFinanceStats == "fetching"
                                             ? "-"
-                                            : "${model.sortPlayerNumbers(model.realTimeFinanceStats)} + Participants",
+                                            : model.realTimeFinanceStats == ""
+                                                ? "${model.getDeafultRealTimeStat(eventType)} Participants"
+                                                : "${model.sortPlayerNumbers(model.realTimeFinanceStats)} + Participants",
                                         style: TextStyles.body3
                                             .colour(Colors.white),
                                       ),
