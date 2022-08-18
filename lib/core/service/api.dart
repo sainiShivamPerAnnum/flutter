@@ -352,7 +352,7 @@ class Api {
 
       return requiredTimeData['value'].toString();
     } catch (e) {
-      return "";
+      return "50+";
     }
   }
 

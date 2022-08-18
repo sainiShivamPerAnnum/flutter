@@ -50,7 +50,7 @@ class TopSaverViewModel extends BaseModel {
   bool showStandingsAndWinners = true;
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
-  String _realTimeFinanceStats = "";
+  String _realTimeFinanceStats;
 
   int _tabNo = 0;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
@@ -146,6 +146,7 @@ class TopSaverViewModel extends BaseModel {
     event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
     infoBoxOpen = false;
+    _realTimeFinanceStats = "fetching";
     fetchRealtimeFinanceStats(getPathForRealTimeFinanceStats(eventType));
 
     setState(ViewState.Idle);
@@ -348,6 +349,18 @@ class TopSaverViewModel extends BaseModel {
       return Constants.MONTHLY;
     } else {
       return "";
+    }
+  }
+
+  String getDeafultRealTimeStat(String value) {
+    if (value == Constants.HS_DAILY_SAVER) {
+      return "50+";
+    } else if (value == Constants.HS_WEEKLY_SAVER) {
+      return "100+";
+    } else if (value == Constants.HS_MONTHLY_SAVER) {
+      return "1000+";
+    } else {
+      return "-";
     }
   }
 
