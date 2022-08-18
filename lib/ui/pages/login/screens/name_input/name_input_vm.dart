@@ -165,30 +165,40 @@ class NameInputScreenViewModel extends BaseModel {
             } else {
               baseProvider.isGoogleSignInProgress = false;
               BaseUtil.showNegativeAlert(
-                  "Error getting profile picture", "Please try again");
+                "Error getting profile picture",
+                "Please try again",
+              );
             }
           } catch (e) {
             baseProvider.isGoogleSignInProgress = false;
             BaseUtil.showNegativeAlert(
-                "Error uploading profile picture", "Please try again");
+              "Error uploading profile picture",
+              "Please try again",
+            );
           }
           AppState.backButtonDispatcher.didPopRoute();
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
-              "Email already registered", "Please try with another email");
+            "Email already registered",
+            "Please try with another email",
+          );
         }
       } else {
         baseProvider.isGoogleSignInProgress = false;
         notifyListeners();
         BaseUtil.showNegativeAlert(
-            "No account selected", "Please choose an account from the list");
+          "No account selected",
+          "Please choose an account from the list",
+        );
       }
     } catch (e) {
       _logger.d(e.toString());
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
-          "Unable to verify", "Please try a different method");
+        "Unable to verify",
+        "Please try a different method",
+      );
     }
   }
 

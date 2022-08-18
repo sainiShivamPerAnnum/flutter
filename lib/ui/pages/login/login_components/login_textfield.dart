@@ -82,6 +82,12 @@ class LogInTextField extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(SizeConfig.roundness5),
             ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFFFFFFF).withOpacity(0.5),
+              ),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFFFFFF).withOpacity(0.5),

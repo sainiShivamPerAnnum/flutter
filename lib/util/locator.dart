@@ -34,6 +34,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
@@ -134,6 +135,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => LeaderboardService());
   locator.registerLazySingleton(() => GoldenTicketService());
   locator.registerLazySingleton(() => JourneyService());
+  locator.registerLazySingleton(() => GoogleSignInService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());

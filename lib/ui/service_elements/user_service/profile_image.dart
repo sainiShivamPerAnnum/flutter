@@ -5,6 +5,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ProfileImageSE extends StatelessWidget {
@@ -26,18 +27,26 @@ class ProfileImageSE extends StatelessWidget {
     _userService.addListener(_listener, [UserServiceProperties.myUserDpUrl]);
 
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [UserServiceProperties.myUserDpUrl],
-        builder: (context, model, properties) {
-          return CircleAvatar(
-            radius: radius,
-            backgroundImage: model.myUserDpUrl == null
-                ? AssetImage(
-                    Assets.profilePic,
-                  )
-                : CachedNetworkImageProvider(
-                    model.myUserDpUrl,
-                  ),
-          );
-        });
+      properties: [UserServiceProperties.myUserDpUrl],
+      builder: (context, model, properties) {
+        return CircleAvatar(
+          radius: radius,
+          backgroundColor: Colors.transparent,
+          backgroundImage: model.baseUser.avatarId != 'CUSTOM'
+              ? AssetImage(
+                  'assets/images/user_avatars/' +
+                      model.baseUser.avatarId +
+                      '.png',
+                )
+              : model.myUserDpUrl == null
+                  ? AssetImage(
+                      Assets.profilePic,
+                    )
+                  : CachedNetworkImageProvider(
+                      model.myUserDpUrl,
+                    ),
+        );
+      },
+    );
   }
 }

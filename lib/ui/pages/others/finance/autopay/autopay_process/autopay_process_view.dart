@@ -70,19 +70,21 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           body: Stack(
             children: [
               NewSquareBackground(),
-              PageView(
-                controller: model.pageController,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  _buildEnterUpi(model),
-                  _buildPendingUI(model),
-                  _buildAmountSetUi(model),
-                  _buildCompleteUI(model),
-                  Center(
-                    child: Text("cancelledUI",
-                        style: TextStyles.rajdhaniSB.title4),
-                  ),
-                ],
+              SafeArea(
+                child: PageView(
+                  controller: model.pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    _buildEnterUpi(model),
+                    _buildPendingUI(model),
+                    _buildAmountSetUi(model),
+                    _buildCompleteUI(model),
+                    Center(
+                      child: Text("cancelledUI",
+                          style: TextStyles.rajdhaniSB.title4),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
