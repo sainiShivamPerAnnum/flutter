@@ -5,6 +5,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
@@ -508,7 +510,12 @@ class CampaignView extends StatelessWidget {
                   padding: EdgeInsets.all(SizeConfig.padding34),
                   child: ReactivePositiveAppButton(
                     btnText: 'Get Started',
-                    onPressed: () {},
+                    onPressed: () {
+                      AppState.delegate.appState.currentAction = PageAction(
+                          widget: SaveAssetView(),
+                          page: SaveAssetsViewConfig,
+                          state: PageState.addWidget);
+                    },
                   ),
                 ),
               ),
