@@ -22,7 +22,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAppBar extends StatelessWidget {
   JourneyAppBar({Key key}) : super(key: key);
-  final _goldenTicketService = locator<GoldenTicketService>();
+  final _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -54,11 +54,7 @@ class JourneyAppBar extends StatelessWidget {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: () => AppState
-                              .delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage,
-                            page: UserProfileDetailsConfig,
-                          ),
+                          onTap: () => _baseUtil.openProfileDetailsScreen(),
                           child:
                               ProfileImageSE(radius: SizeConfig.avatarRadius),
                         ),
@@ -72,11 +68,8 @@ class JourneyAppBar extends StatelessWidget {
                             ],
                             builder: (context, model, properties) {
                               return GestureDetector(
-                                onTap: () => AppState.delegate.appState
-                                    .currentAction = PageAction(
-                                  state: PageState.addPage,
-                                  page: UserProfileDetailsConfig,
-                                ),
+                                onTap: () =>
+                                    _baseUtil.openProfileDetailsScreen(),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -100,21 +93,6 @@ class JourneyAppBar extends StatelessWidget {
                             },
                           ),
                         ),
-                        IconButton(
-                            onPressed: () {
-                              GoldenTicketService.goldenTicketId =
-                                  "OnJA8O3IRbHnq1j1Assp";
-                              _goldenTicketService
-                                  .fetchAndVerifyGoldenTicketByID()
-                                  .then((bool res) {
-                                if (res)
-                                  _goldenTicketService
-                                      .showInstantGoldenTicketView(
-                                          title: 'Welcome to Fello',
-                                          source: GTSOURCE.newuser);
-                              });
-                            },
-                            icon: Icon(Icons.abc)),
                         FelloCoinBar(),
                         NotificationButton()
                       ],

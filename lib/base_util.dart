@@ -251,6 +251,12 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
+  openProfileDetailsScreen() {
+    if (_userService.userJourneyStats.mlIndex > 2) {
+      AppState.delegate.parseRoute(Uri.parse("profile"));
+    }
+  }
+
   static Widget getAppBar(BuildContext context, String title) {
     return AppBar(
       leading: IconButton(

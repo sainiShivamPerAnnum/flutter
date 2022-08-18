@@ -66,7 +66,7 @@ class LauncherViewModel extends BaseModel {
   }
 
   init() {
-    _togglePerformanceCollection();
+    // _togglePerformanceCollection();
     initLogic();
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
@@ -80,7 +80,7 @@ class LauncherViewModel extends BaseModel {
 
   initLogic() async {
     // final Trace trace = _performance.newTrace('Splash trace start');
-    // // await trace.start();
+    // await trace.start();
     // trace.putAttribute('Spalsh', 'userservice init started');
     await userService.init();
     // trace.putAttribute('Spalsh', 'userservice init ended');

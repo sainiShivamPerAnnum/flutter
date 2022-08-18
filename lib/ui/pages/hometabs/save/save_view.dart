@@ -58,12 +58,7 @@ class Save extends StatelessWidget {
                 FelloCoinBar(svgAsset: Assets.aFelloToken),
                 SizedBox(width: SizeConfig.padding10),
                 InkWell(
-                  onTap: () {
-                    AppState.delegate.appState.currentAction = PageAction(
-                      state: PageState.addPage,
-                      page: UserProfileDetailsConfig,
-                    );
-                  },
+                  onTap: () => model.openProfile(),
                   child: ProfileImageSE(radius: SizeConfig.avatarRadius),
                 ),
                 SizedBox(width: SizeConfig.padding20)

@@ -24,6 +24,7 @@ class SaveViewModel extends BaseModel {
   BaseUtil baseProvider;
   bool _isVPAVerified = false;
   SellService _sellService = SellService();
+  final _baseUtil = locator<BaseUtil>();
 
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
@@ -72,6 +73,10 @@ class SaveViewModel extends BaseModel {
   void updateIsLoading(bool value) {
     _isLoading = value;
     notifyListeners();
+  }
+
+  openProfile() {
+    _baseUtil.openProfileDetailsScreen();
   }
 
   getCampaignEvents() async {

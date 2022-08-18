@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
 import 'package:felloapp/ui/pages/login/level_2/screens/choose_avatar_input/choose_avatar.dart';
 
 import 'package:felloapp/ui/pages/login/level_2/screens/dob_input/dob_4.0.dart';
@@ -18,18 +18,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Level2View extends StatefulWidget {
+class CompleteProfileView extends StatefulWidget {
   final int initPage;
-  Level2View({Key key, this.initPage}) : super(key: key);
+  CompleteProfileView({Key key, this.initPage}) : super(key: key);
 
   @override
-  State<Level2View> createState() => _Level2ViewState();
+  State<CompleteProfileView> createState() => _Level2ViewState();
 }
 
-class _Level2ViewState extends State<Level2View> {
+class _Level2ViewState extends State<CompleteProfileView> {
   @override
   Widget build(BuildContext context) {
-    return BaseView<Level2ViewModel>(
+    return BaseView<CompleteProfileViewModel>(
       onModelReady: (model) {},
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,

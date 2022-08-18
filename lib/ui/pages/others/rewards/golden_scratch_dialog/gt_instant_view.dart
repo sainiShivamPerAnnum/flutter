@@ -294,9 +294,12 @@ class _GTInstantViewState extends State<GTInstantView>
                               curve: Curves.easeIn,
                               width: SizeConfig.screenWidth,
                               alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
                               child: Text(getGTTitle(),
                                   style: TextStyles.rajdhaniB.title2
-                                      .colour(Colors.white)),
+                                      .colour(Colors.white),
+                                  textAlign: TextAlign.center),
                             ),
                             AnimatedContainer(
                               decoration: BoxDecoration(),
@@ -304,11 +307,15 @@ class _GTInstantViewState extends State<GTInstantView>
                               curve: Curves.easeIn,
                               width: SizeConfig.screenWidth,
                               alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal:
+                                      SizeConfig.pageHorizontalMargins * 2),
                               child: Text(
-                                "You won a golden ticket",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(Colors.grey),
-                              ),
+                                  model.goldenTicket.note ??
+                                      "You won a golden ticket",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.grey),
+                                  textAlign: TextAlign.center),
                             ),
                             Container(
                               margin: EdgeInsets.symmetric(

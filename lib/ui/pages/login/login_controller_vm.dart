@@ -228,7 +228,7 @@ class LoginControllerViewModel extends BaseModel {
                 bool flag = false;
                 String message = "Please try again in sometime";
                 logger.d(userService.baseUser.toJson().toString());
-
+                userService.baseUser.avatarId = "AV1";
                 try {
                   final token = await _getBearerToken();
                   userService.baseUser.mobile = userMobile;

@@ -72,12 +72,7 @@ class Play extends StatelessWidget {
               //   },
               // ),
               InkWell(
-                onTap: () {
-                  AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.addPage,
-                    page: UserProfileDetailsConfig,
-                  );
-                },
+                onTap: () => model.openProfile(),
                 child: ProfileImageSE(radius: SizeConfig.avatarRadius),
               ),
               SizedBox(

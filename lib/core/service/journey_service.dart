@@ -198,6 +198,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
     if (avatarRemoteMlIndex != 2)
       GoldenTicketService.goldenTicketId = data["gtId"];
+    else
+      GoldenTicketService.goldenTicketId = null;
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     checkAndAnimateAvatar();
   }
@@ -497,7 +499,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
         if (res)
           _gtService.showInstantGoldenTicketView(
-              title: 'Welcome to Fello', source: GTSOURCE.newuser);
+              title: 'Congratulations!', source: GTSOURCE.newuser);
       });
     });
   }

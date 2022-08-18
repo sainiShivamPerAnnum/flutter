@@ -16,7 +16,7 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
-import 'package:felloapp/ui/pages/login/level_2/level_2_view.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
@@ -341,8 +341,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.OnBoardingView:
           _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
           break;
-        case Pages.Level2View:
-          _addPageData(Level2View(), Level2ViewPageConfig);
+        case Pages.CompleteProfileView:
+          _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
           break;
         case Pages.JourneyView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
@@ -595,8 +595,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.OnBoardingView:
         OnBoardingViewPageConfig.currentPageAction = action;
         break;
-      case Pages.Level2View:
-        Level2ViewPageConfig.currentPageAction = action;
+      case Pages.CompleteProfileView:
+        CompleteProfileViewPageConfig.currentPageAction = action;
         break;
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
@@ -838,8 +838,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'AutosaveWalkthrough':
         pageConfiguration = AutosaveWalkThroughConfig;
         break;
-      case 'Level2View':
-        pageConfiguration = Level2ViewPageConfig;
+      case 'completeProfile':
+        pageConfiguration = CompleteProfileViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

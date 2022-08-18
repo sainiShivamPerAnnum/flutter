@@ -78,6 +78,7 @@ class ApiPath {
       "/user/$uid/gt/$goldenTicketId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
+  static prizeBySubtype(String uid) => '/user/$uid/gt';
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>

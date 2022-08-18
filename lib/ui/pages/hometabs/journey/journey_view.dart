@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
@@ -349,7 +350,8 @@ class MilestoneChecks extends StatelessWidget {
 
 class Avatar extends StatelessWidget {
   final JourneyPageViewModel model;
-  const Avatar({Key key, this.model}) : super(key: key);
+  Avatar({Key key, this.model}) : super(key: key);
+  final _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     print(model.avatarPosition);
@@ -363,10 +365,7 @@ class Avatar extends StatelessWidget {
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
           child: GestureDetector(
-            onTap: () => AppState.delegate.appState.currentAction = PageAction(
-              state: PageState.addPage,
-              page: UserProfileDetailsConfig,
-            ),
+            onTap: () => _baseUtil.openProfileDetailsScreen(),
             child: Container(
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
