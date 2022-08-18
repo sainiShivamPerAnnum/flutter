@@ -33,102 +33,106 @@ class _Level2ViewState extends State<Level2View> {
       onModelReady: (model) {},
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            NewSquareBackground(),
-            if (model.currentPage != 0)
-              Container(
-                height: SizeConfig.screenHeight * 0.5,
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xff135756),
-                      UiConstants.kBackgroundColor,
-                    ],
+        body: SafeArea(
+          child: Stack(
+            children: [
+              NewSquareBackground(),
+              if (model.currentPage != 0)
+                Container(
+                  height: SizeConfig.screenHeight * 0.5,
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xff135756),
+                        UiConstants.kBackgroundColor,
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: SizeConfig.screenWidth * 1.8,
-                  child: PageView(
-                    controller: model.pageController,
-                    physics: NeverScrollableScrollPhysics(),
-                    onPageChanged: (val) {
-                      model.currentPage = val;
-                    },
-                    children: [
-                      ChooseAvatar4(model: model),
-                      Name4(model: model),
-                      Email4(model: model),
-                      DOB4(model: model),
-                    ],
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 1.8,
+                    child: PageView(
+                      controller: model.pageController,
+                      physics: NeverScrollableScrollPhysics(),
+                      onPageChanged: (val) {
+                        model.currentPage = val;
+                      },
+                      children: [
+                        ChooseAvatar4(model: model),
+                        Name4(model: model),
+                        Email4(model: model),
+                        DOB4(model: model),
+                      ],
+                    ),
                   ),
-                ),
-                Spacer(),
-                if (model.currentPage == 0)
-                  GestureDetector(
-                    onTap: () async {
-                      model.handleNextButtonTap();
-                    },
-                    child: Center(
-                      child: Container(
-                        width: SizeConfig.screenWidth * 0.136,
-                        height: SizeConfig.screenWidth * 0.136,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF01656B),
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            'assets/svg/arrow_svg.svg',
-                            height: SizeConfig.screenWidth * 0.066,
-                            width: SizeConfig.screenWidth * 0.069,
-                            fit: BoxFit.cover,
+                  Spacer(),
+                  if (model.currentPage == 0)
+                    GestureDetector(
+                      onTap: () async {
+                        model.handleNextButtonTap();
+                      },
+                      child: Center(
+                        child: Container(
+                          width: SizeConfig.screenWidth * 0.136,
+                          height: SizeConfig.screenWidth * 0.136,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFF01656B),
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/svg/arrow_svg.svg',
+                              height: SizeConfig.screenWidth * 0.066,
+                              width: SizeConfig.screenWidth * 0.069,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                if (model.currentPage == 1 ||
-                    model.currentPage == 2 ||
-                    model.currentPage == 3)
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding35,
+                  if (model.currentPage == 1 ||
+                      model.currentPage == 2 ||
+                      model.currentPage == 3)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding35,
+                      ),
+                      child: model.isUpdaingUserDetails ||
+                              model.isSigningInWithGoogle
+                          ? SpinKitThreeBounce(
+                              color: Colors.white,
+                              size: SizeConfig.iconSize0,
+                            )
+                          : AppPositiveBtn(
+                              btnText:
+                                  model.currentPage == 3 ? 'Finish' : 'Next',
+                              onPressed: () {
+                                model.handleNextButtonTap();
+                              },
+                              width: SizeConfig.screenWidth,
+                            ),
                     ),
-                    child: model.isUpdaingUserDetails
-                        ? SpinKitThreeBounce(
-                            color: Colors.white,
-                            size: SizeConfig.iconSize0,
-                          )
-                        : AppPositiveBtn(
-                            btnText: model.currentPage == 3 ? 'Finish' : 'Next',
-                            onPressed: () {
-                              model.handleNextButtonTap();
-                            },
-                            width: SizeConfig.screenWidth,
-                          ),
+                  SizedBox(
+                    height: SizeConfig.padding32,
                   ),
-                SizedBox(
-                  height: SizeConfig.padding32,
-                ),
-              ],
-            ),
-            Positioned(
-              top: SizeConfig.padding32,
-              left: SizeConfig.padding24,
-              child: Text(
-                "${model.currentPage + 1}/4",
-                style: TextStyles.sourceSans.body3.setOpecity(0.7),
+                ],
               ),
-            ),
-          ],
+              Positioned(
+                top: SizeConfig.padding32,
+                left: SizeConfig.padding24,
+                child: Text(
+                  "${model.currentPage + 1}/4",
+                  style: TextStyles.sourceSans.body3.setOpecity(0.7),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

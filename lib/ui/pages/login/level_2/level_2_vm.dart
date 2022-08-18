@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -17,6 +16,7 @@ class Level2ViewModel extends BaseModel {
         viewportFraction: 0.43,
       );
   final _userService = locator<UserService>();
+  final _googleSignInService = locator<GoogleSignInService>();
   XFile _selectedProfilePicture;
   int _selectedAvaterId, _currentPage = 0, _avatarsPage = 0;
   DateTime selectedDate;
@@ -35,7 +35,9 @@ class Level2ViewModel extends BaseModel {
 
   String _dateInputError = "";
 
-  bool _isUpdaingUserDetails = false;
+  bool _isUpdaingUserDetails = false,
+      _isSigningInWithGoogle = false,
+      _isGoogleVerified = false;
 
   int get currentPage => _currentPage;
 
@@ -76,6 +78,20 @@ class Level2ViewModel extends BaseModel {
 
   set isUpdaingUserDetails(bool val) {
     _isUpdaingUserDetails = val;
+    notifyListeners();
+  }
+
+  bool get isSigningInWithGoogle => _isSigningInWithGoogle;
+
+  set isSigningInWithGoogle(bool val) {
+    _isSigningInWithGoogle = val;
+    notifyListeners();
+  }
+
+  bool get isGoogleVerified => _isGoogleVerified;
+
+  set isGoogleVerified(bool val) {
+    _isGoogleVerified = val;
     notifyListeners();
   }
 
@@ -135,6 +151,10 @@ class Level2ViewModel extends BaseModel {
   }
 
   void handleNextButtonTap() {
+    if (isSigningInWithGoogle || isUpdaingUserDetails) {
+      return;
+    }
+
     if (currentPage == 0) {
       if (selectedProfilePicture == null && selectedAvaterId == null) {
         BaseUtil.showNegativeAlert(
@@ -198,5 +218,15 @@ class Level2ViewModel extends BaseModel {
         return false;
       }
     }
+  }
+
+  void handleSignInWithGoogle() async {
+    isSigningInWithGoogle = true;
+    String email = await _googleSignInService.signInWithGoogle();
+    if (email != null) {
+      emailController.text = email;
+      isGoogleVerified = true;
+    }
+    isSigningInWithGoogle = false;
   }
 }

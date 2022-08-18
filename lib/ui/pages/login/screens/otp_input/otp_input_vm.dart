@@ -21,27 +21,27 @@ class LoginOtpViewModel extends BaseModel {
   get autoDetectingOtp => _autoDetectingOtp;
   bool get showResendOption => _showResendOption;
   String get otp => pinEditingController.text;
-  FocusNode get focusNode => _focusNode;
+  // FocusNode get focusNode => _focusNode;
 
   set showResendOption(bool val) {
     _showResendOption = val;
     notifyListeners();
   }
 
-  set focusNode(FocusNode val) {
-    _focusNode = val;
-    notifyListeners();
-  }
+  // set focusNode(FocusNode val) {
+  //   _focusNode = val;
+  //   notifyListeners();
+  // }
 
   init(BuildContext context) {
-    focusNode = new FocusNode();
-    focusNode.addListener(
-      () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'),
-    );
+    // focusNode = new FocusNode();
+    // focusNode.addListener(
+    //   () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'),
+    // );
 
-    Future.delayed(Duration(seconds: 2), () {
-      FocusScope.of(context).requestFocus(focusNode);
-    });
+    // Future.delayed(Duration(seconds: 2), () {
+    //   FocusScope.of(context).requestFocus(focusNode);
+    // });
 
     Future.delayed(Duration(seconds: 30), () {
       try {
@@ -52,9 +52,9 @@ class LoginOtpViewModel extends BaseModel {
     });
   }
 
-  modelDispose() {
-    focusNode.dispose();
-  }
+  // modelDispose() {
+  //   focusNode.dispose();
+  // }
 
   onOtpReceived() {
     _otpFieldEnabled = false;

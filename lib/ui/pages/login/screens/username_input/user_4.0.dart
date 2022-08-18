@@ -107,7 +107,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                     },
                   ),
                 ),
-                SizedBox(height: SizeConfig.padding20),
+                // SizedBox(height: SizeConfig.padding20),
                 Container(
                   margin: EdgeInsets.only(top: SizeConfig.padding16),
                   padding: EdgeInsets.only(
@@ -116,53 +116,51 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                   ),
                   child: model.showResult(),
                 ),
+                SizedBox(height: SizeConfig.padding20),
+                model.hasReferralCode
+                    ? LogInTextField(
+                        controller: model.referralCodeController,
+                        onChanged: (val) {},
+                        maxLength: 10,
+                        // decoration: InputDecoration(
+                        hintText: "Enter your referral code here",
+                        //   hintStyle: TextStyles.body3.colour(Colors.grey),
+                        // ),
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9]'),
+                          )
+                        ],
+                        validator: (val) {
+                          if (val.trim().length == 0 || val == null)
+                            return null;
+                          if (val.trim().length < 3 || val.trim().length > 10)
+                            return "Invalid referral code";
+                          return null;
+                        },
+                      )
+                    : TextButton(
+                        onPressed: () {
+                          model.hasReferralCode = true;
+                        },
+                        child: Center(
+                          child: Text(
+                            "Have a referral code?",
+                            style: TextStyles.body2.bold
+                                .colour(UiConstants.kPrimaryColor),
+                          ),
+                        ),
+                      ),
+                if (model.hasReferralCode)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Referral codes are case-sensitive",
+                      textAlign: TextAlign.start,
+                      style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
+                    ),
+                  ),
                 Spacer(),
-                // model.hasReferralCode
-                //     ? TextFormField(
-                //         controller: model.referralCodeController,
-                //         onChanged: (val) {},
-                //         //maxLength: 10,
-                //         decoration: InputDecoration(
-                //           hintText: "Enter your referral code here",
-                //           hintStyle: TextStyles.body3.colour(Colors.grey),
-                //         ),
-                //         inputFormatters: [
-                //           FilteringTextInputFormatter.allow(
-                //               RegExp(r'[a-zA-Z0-9]'))
-                //         ],
-                //         validator: (val) {
-                //           if (val.trim().length == 0 || val == null)
-                //             return null;
-                //           if (val.trim().length < 3 ||
-                //               val.trim().length > 10)
-                //             return "Invalid referral code";
-                //           return null;
-                //         },
-                //       )
-                //     : TextButton(
-                //         onPressed: () {
-                //           setState(() {
-                //             model.hasReferralCode = true;
-                //           });
-                //         },
-                //         child: Center(
-                //           child: Text(
-                //             "Have a referral code?",
-                //             style: TextStyles.body2.bold
-                //                 .colour(UiConstants.primaryColor),
-                //           ),
-                //         ),
-                //       ),
-                // if (model.hasReferralCode)
-                //   Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Text(
-                //       "Referral codes are case-sensitive",
-                //       textAlign: TextAlign.start,
-                //       style: TextStyles.body4.colour(Colors.black54),
-                //     ),
-                //   ),
-                // SizedBox(height: SizeConfig.padding20),
                 // Container(
                 //   width: SizeConfig.screenWidth * 0.189,
                 //   height: SizeConfig.screenWidth * 0.189,
@@ -189,7 +187,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                 //     ),
                 //   ),
                 // ),
-                SizedBox(height: SizeConfig.padding20),
+                // SizedBox(height: SizeConfig.padding20),
               ],
             ),
           ],

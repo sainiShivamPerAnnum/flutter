@@ -21,7 +21,7 @@ class UsernameInputScreenViewModel extends BaseModel {
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
-  bool hasReferralCode = false;
+  bool _hasReferralCode = false;
   final _formKey = GlobalKey<FormState>();
 
   final FocusNode _focusNode = FocusNode();
@@ -31,6 +31,13 @@ class UsernameInputScreenViewModel extends BaseModel {
 
   get formKey => _formKey;
   FocusNode get focusNode => _focusNode;
+
+  set hasReferralCode(bool val) {
+    _hasReferralCode = val;
+    notifyListeners();
+  }
+
+  bool get hasReferralCode => _hasReferralCode;
 
   UsernameResponse response;
 

@@ -455,6 +455,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
         setMyUserDpUrl(url);
+        baseUser.avatarId = 'CUSTOM';
         //_baseUtil.setDisplayPictureUrl(url);
         _logger.d('Final DP Uri: $url');
         return true;

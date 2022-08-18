@@ -61,31 +61,33 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.primaryColor,
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[
-            Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenHeight,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: PageView.builder(
-                      physics: new NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      controller: model.controller,
-                      itemCount: model.pages.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          model.pages[index],
-                      onPageChanged: (int index) => model.currentPage = index,
+            SingleChildScrollView(
+              child: Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView.builder(
+                        physics: new NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        controller: model.controller,
+                        itemCount: model.pages.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            model.pages[index],
+                        onPageChanged: (int index) => model.currentPage = index,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             if (keyboardIsOpen)
               Positioned(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+                bottom: 0,
                 child: GestureDetector(
                   onTap: () {
                     FocusManager.instance.primaryFocus.unfocus();
@@ -108,7 +110,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           : model.currentPage == LoginOtpView.index
                               ? 'Done'
                               : 'next',
-                      style: model.currentPage == LoginOtpView.index
+                      style: model.currentPage == LoginOtpView.index ||
+                              model.currentPage == LoginUserNameView.index
                           ? TextStyles.rajdhaniB.body1
                               .colour(UiConstants.kPrimaryColor)
                           : TextStyles.rajdhaniB.body1,
