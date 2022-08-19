@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
@@ -82,13 +83,11 @@ class Save extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   // -- Break --
-                  SaveTitleContainer(title: 'Auto SIP'),
+                  AutosaveCard(),
                   SizedBox(
-                    height: SizeConfig.padding10,
+                    height: SizeConfig.padding20,
                   ),
-                  AutoSIPCard(),
                   // -- Break --
-                  SizedBox(height: SizeConfig.padding54),
                   SaveTitleContainer(title: 'Challenges'),
                   CampaignCardSection(saveViewModel: model),
                   // -- Break --
@@ -246,62 +245,55 @@ class CampaignCardSection extends StatelessWidget {
       padding: EdgeInsets.only(
           left: SizeConfig.padding24, top: SizeConfig.padding16),
       child: Container(
-        height: SizeConfig.screenWidth * 0.51,
-        child: ListView.builder(
-            itemCount: saveViewModel.isLoading
-                ? 2
-                : saveViewModel.ongoingEvents.length,
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return saveViewModel.isLoading
-                  ? ListView.builder(
-                      itemCount: 2,
-                      itemBuilder: (context, index) {
-                        return Shimmer.fromColors(
-                          child: Padding(
-                            padding:
-                                EdgeInsets.only(right: SizeConfig.padding10),
-                            child: Container(
-                              width: SizeConfig.screenWidth * 0.5,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness12),
-                                  color: UiConstants.kBackgroundColor),
-                              child: Padding(
-                                padding: EdgeInsets.all(SizeConfig.padding16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: SizeConfig.padding28),
-                                      child: Center(
-                                        child: Container(
-                                          height: SizeConfig.screenWidth * 0.2,
-                                          width: SizeConfig.screenWidth,
-                                          decoration: BoxDecoration(
-                                              color: UiConstants
-                                                  .kSecondaryBackgroundColor),
-                                        ),
+          height: SizeConfig.screenWidth * 0.51,
+          child: ListView.builder(
+              itemCount: saveViewModel.isLoading
+                  ? 2
+                  : saveViewModel.ongoingEvents.length,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return saveViewModel.isLoading
+                    ? Shimmer.fromColors(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: SizeConfig.padding10),
+                          child: Container(
+                            width: SizeConfig.screenWidth * 0.5,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
+                                color: UiConstants.kBackgroundColor),
+                            child: Padding(
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: SizeConfig.padding28),
+                                    child: Center(
+                                      child: Container(
+                                        height: SizeConfig.screenWidth * 0.2,
+                                        width: SizeConfig.screenWidth,
+                                        decoration: BoxDecoration(
+                                            color: UiConstants
+                                                .kSecondaryBackgroundColor),
                                       ),
                                     ),
-                                    Spacer(),
-                                  ],
-                                ),
+                                  ),
+                                  Spacer(),
+                                ],
                               ),
                             ),
                           ),
-                          baseColor: UiConstants.kUserRankBackgroundColor,
-                          highlightColor: UiConstants.kBackgroundColor,
-                        );
-                      })
-                  : CampiagnCard(
-                                   event: saveViewModel.ongoingEvents[index],
-
-                    );
-            }),
-      ),
+                        ),
+                        baseColor: UiConstants.kUserRankBackgroundColor,
+                        highlightColor: UiConstants.kBackgroundColor,
+                      )
+                    : CampiagnCard(
+                        event: saveViewModel.ongoingEvents[index],
+                      );
+              })),
     );
   }
 }

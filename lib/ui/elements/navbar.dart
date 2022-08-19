@@ -67,35 +67,31 @@ class NavbarButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: isSelected
-          ? Expanded(
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    painter: SelectedItemBackdrop(),
-                    size: Size(
-                        data.title == 'Journey'
-                            ? SizeConfig.screenWidth * 0.12
-                            : data.title == 'Win'
-                                ? SizeConfig.screenWidth * 0.1
-                                : SizeConfig.screenWidth * 0.09,
-                        SizeConfig.screenWidth * 0.06),
-                  ),
-                  BottomNavBarItemContent(
-                    iconString: data.activeIconImage,
-                    title: data.title,
-                    isSelected: isSelected,
-                    width: SizeConfig.screenWidth * 0.09,
-                  ),
-                ],
-              ),
+          ? Stack(
+              children: [
+                CustomPaint(
+                  painter: SelectedItemBackdrop(),
+                  size: Size(
+                      data.title == 'Journey'
+                          ? SizeConfig.screenWidth * 0.12
+                          : data.title == 'Win'
+                              ? SizeConfig.screenWidth * 0.1
+                              : SizeConfig.screenWidth * 0.09,
+                      SizeConfig.screenWidth * 0.06),
+                ),
+                BottomNavBarItemContent(
+                  iconString: data.activeIconImage,
+                  title: data.title,
+                  isSelected: isSelected,
+                  width: SizeConfig.screenWidth * 0.09,
+                ),
+              ],
             )
-          : Expanded(
-              child: BottomNavBarItemContent(
-                iconString: data.inactiveIconImage,
-                title: data.title,
-                isSelected: isSelected,
-                width: SizeConfig.screenWidth * 0.09,
-              ),
+          : BottomNavBarItemContent(
+              iconString: data.inactiveIconImage,
+              title: data.title,
+              isSelected: isSelected,
+              width: SizeConfig.screenWidth * 0.09,
             ),
     );
   }
@@ -115,21 +111,25 @@ class BottomNavBarItemContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: SizeConfig.screenWidth * 0.09,
-          width: width,
-          child: SvgPicture.asset(
-            iconString,
-            fit: BoxFit.contain,
+        Expanded(
+          child: Container(
+            height: SizeConfig.screenWidth * 0.09,
+            width: width,
+            child: SvgPicture.asset(
+              iconString,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         SizedBox(
           height: SizeConfig.screenWidth * 0.01,
         ),
-        Text(title,
-            style: isSelected
-                ? TextStyles.rajdhaniSB.colour(UiConstants.kTextColor)
-                : TextStyles.rajdhaniSB.colour(UiConstants.kTextColor2))
+        Expanded(
+          child: Text(title,
+              style: isSelected
+                  ? TextStyles.rajdhaniSB.colour(UiConstants.kTextColor)
+                  : TextStyles.rajdhaniSB.colour(UiConstants.kTextColor2)),
+        )
       ],
     );
   }

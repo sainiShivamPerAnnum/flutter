@@ -467,7 +467,7 @@ class S {
   /// `{goldAmount} gm`
   String saveGoldBalanceValue(Object goldAmount) {
     return Intl.message(
-      '$goldAmount g',
+      '$goldAmount gm',
       name: 'saveGoldBalanceValue',
       desc: '',
       args: [goldAmount],
@@ -564,10 +564,10 @@ class S {
     );
   }
 
-  /// `Invest safely in Gold with our Auto SIP to win tokens`
+  /// `Invest safely in Gold\nwith our Auto SIP to win tokens`
   String get investSafelyInGoldText {
     return Intl.message(
-      'Invest safely in Gold with our Auto SIP to win tokens',
+      'Invest safely in Gold\nwith our Auto SIP to win tokens',
       name: 'investSafelyInGoldText',
       desc: '',
       args: [],
@@ -1121,46 +1121,6 @@ class S {
     return Intl.message(
       'Only users with minimun savings balance of ₹ 100 are eliglble for prizes',
       name: 'tParWinsubtitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `With every transaction, some tokens will be deducted.`
-  String get tokenDeductionOnTransaction {
-    return Intl.message(
-      'With every transaction, some\ntokens will be deducted.',
-      name: 'tokenDeductionOnTransaction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `To enable selling gold, complete the following:`
-  String get enableSellGold {
-    return Intl.message(
-      'To enable selling gold, complete the following:',
-      name: 'enableSellGold',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Complete KYC Text `
-  String get completeKYCText {
-    return Intl.message(
-      'Complete KYC',
-      name: 'completeKYCText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add Bank information`
-  String get addBankInformationText {
-    return Intl.message(
-      'Add Bank information',
-      name: 'completeKYCText',
       desc: '',
       args: [],
     );
