@@ -10,7 +10,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
@@ -41,6 +41,7 @@ class SaveViewModel extends BaseModel {
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
   bool get isVPAVerified => _isVPAVerified;
+  SellService get sellService => _sellService;
 
   set ongoingEvents(List<EventModel> value) {
     this._ongoingEvents = value;
@@ -64,7 +65,6 @@ class SaveViewModel extends BaseModel {
       'Not interested anymore',
       'Others'
     ];
-    _sellService.init();
     baseProvider = BaseUtil();
     getCampaignEvents();
     getBlogs();
@@ -138,5 +138,12 @@ class SaveViewModel extends BaseModel {
         state: PageState.addWidget,
         page: BankDetailsPageConfig,
         widget: BankDetailsView());
+  }
+
+  navigateToViewAllBlogs() {
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: ViewAllBlogsViewConfig,
+        widget: ViewAllBlogsView());
   }
 }

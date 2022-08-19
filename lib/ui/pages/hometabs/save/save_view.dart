@@ -10,20 +10,16 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
-import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -59,7 +55,12 @@ class Save extends StatelessWidget {
                 FelloCoinBar(svgAsset: Assets.aFelloToken),
                 SizedBox(width: SizeConfig.padding10),
                 InkWell(
-                  onTap: () => model.openProfile(),
+                  onTap: () {
+                    AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: UserProfileDetailsConfig,
+                    );
+                  },
                   child: ProfileImageSE(radius: SizeConfig.avatarRadius),
                 ),
                 SizedBox(width: SizeConfig.padding20)
@@ -79,67 +80,42 @@ class Save extends StatelessWidget {
                   ),
                   // -- Break --
                   AutosaveCard(),
-                  SizedBox(
-                    height: SizeConfig.padding20,
-                  ),
                   // -- Break --
                   SaveTitleContainer(title: 'Challenges'),
                   CampaignCardSection(saveViewModel: model),
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
-                  SaveTitleContainer(title: 'Latest'),
+                  GestureDetector(
+                    onTap: () {
+                      model.navigateToViewAllBlogs();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SaveTitleContainer(title: 'Fin-gyan'),
+                        Padding(
+                          padding: EdgeInsets.only(right: SizeConfig.padding12),
+                          child: Row(
+                            children: [
+                              Text('View All',
+                                  style: TextStyles.rajdhaniSB.body2),
+                              SvgPicture.asset(
+                                Assets.chevRonRightArrow,
+                                height: SizeConfig.padding32,
+                                width: SizeConfig.padding32,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   SaveBlogSection(),
                   // -- Break --
                   SizedBox(
                     height: SizeConfig.screenWidth * 0.4,
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        '100% SAFE AND SECURED',
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding20,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding54),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SaveInfoSection(
-                              title: 'In Compliance with',
-                              imageAsset: Assets.sebiLogo,
-                              imageHeight: SizeConfig.screenWidth * 0.07,
-                              imageWidth: SizeConfig.screenWidth * 0.07,
-                            ),
-                            VerticalDivider(
-                              color: Colors.white,
-                              thickness: 2,
-                              width: 2,
-                            ),
-                            SaveInfoSection(
-                              title: 'RBI Approved',
-                              imageAsset: Assets.rbiLogo,
-                              imageHeight: SizeConfig.screenWidth * 0.07,
-                              imageWidth: SizeConfig.screenWidth * 0.07,
-                            ),
-                            VerticalDivider(
-                                color: Colors.white, thickness: 2, width: 2),
-                            SaveInfoSection(
-                              title: 'Banking Partner',
-                              imageAsset: Assets.iciciLogo,
-                              imageHeight: SizeConfig.screenWidth * 0.07,
-                              imageWidth: SizeConfig.screenWidth * 0.16,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  SaveAssetsFooter(),
                   //Extended the EOS to avoid overshadowing by navbar
                   SizedBox(
                     height: SizeConfig.screenWidth * 0.4,
@@ -418,7 +394,7 @@ class SaveBlogSection extends StatelessWidget {
         child: BaseView<SaveViewModel>(
           onModelReady: (model) => model.getBlogs(),
           builder: (ctx, model, child) => Container(
-            height: SizeConfig.screenWidth * 0.26,
+            height: SizeConfig.screenWidth * 0.4,
             child: model.isLoading
                 ? ListView.builder(
                     itemCount: 2,
@@ -457,7 +433,7 @@ class SaveBlogSection extends StatelessWidget {
                     })
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 5,
+                    itemCount: model.blogPosts.length,
                     itemBuilder: (ctx, index) {
                       return SaveBlogTile(
                         onTap: () {
@@ -508,89 +484,76 @@ class SaveBlogTile extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: SizeConfig.screenWidth - 80,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.kSecondaryBackgroundColor),
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.padding6),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      height: SizeConfig.screenWidth * 0.23,
-                      width: SizeConfig.screenWidth * 0.25,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.centerLeft),
-                ),
-                SizedBox(
-                  width: SizeConfig.padding10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding4),
-                      child: Text(
-                        description,
-                        style: TextStyles.rajdhaniM
-                            .colour(UiConstants.kBlogTitleColor),
-                      ),
-                    ),
-                    ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: SizeConfig.screenWidth * 0.4,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                    height: SizeConfig.screenWidth * 0.4,
+                    width: SizeConfig.padding20,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(SizeConfig.roundness12),
+                          bottomRight: Radius.circular(SizeConfig.roundness12),
                         ),
-                        child: Text(
-                          title,
-                          maxLines: 2,
-                          overflow: TextOverflow.clip,
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
-                        )),
-                  ],
-                )
-              ],
-            ),
+                        //TODO make color dynamic
+                        color: Colors.red)),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    height: SizeConfig.screenWidth * 0.4,
+                    width: SizeConfig.screenWidth * 0.36,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.centerLeft),
+              ),
+              Positioned(
+                left: SizeConfig.screenWidth * 0.32,
+                child: Container(
+                  height: SizeConfig.screenWidth * 0.4,
+                  width: SizeConfig.screenWidth * 0.45,
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                      color: Colors.black),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding10,
+                        horizontal: SizeConfig.padding20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: SizeConfig.screenWidth * 0.34,
+                          ),
+                          child: Text(
+                            description,
+                            style: TextStyles.rajdhaniSB.body2
+                                .colour(UiConstants.kTextColor),
+                          ),
+                        ),
+                        ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: SizeConfig.screenWidth * 0.34,
+                            ),
+                            child: Text(
+                              title,
+                              maxLines: 2,
+                              overflow: TextOverflow.clip,
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.grey.shade200),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class Goldlinks extends StatelessWidget {
-  AugmontGoldBuyViewModel model;
-
-  Goldlinks({this.model});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.24,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          SaveInfoTile(
-            svg: 'images/svgs/gold.svg',
-            title: "About digital Gold",
-            onPressed: () {
-              model.navigateToAboutGold();
-            },
-          ),
-          SaveInfoTile(
-            png: Assets.augmontShare,
-            title: "Learn more about Augmont",
-            onPressed: () {
-              model.openAugmontWebUri();
-            },
-          ),
-        ],
       ),
     );
   }
@@ -678,6 +641,58 @@ class SaveInfoSection extends StatelessWidget {
             height: imageHeight,
             width: imageWidth,
             child: Image.asset(imageAsset)),
+      ],
+    );
+  }
+}
+
+class SaveAssetsFooter extends StatelessWidget {
+  const SaveAssetsFooter({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          '100% SAFE AND SECURED',
+          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SaveInfoSection(
+                title: 'In Compliance with',
+                imageAsset: Assets.sebiLogo,
+                imageHeight: SizeConfig.screenWidth * 0.07,
+                imageWidth: SizeConfig.screenWidth * 0.07,
+              ),
+              VerticalDivider(
+                color: Colors.white,
+                thickness: 2,
+                width: 2,
+              ),
+              SaveInfoSection(
+                title: 'RBI Approved',
+                imageAsset: Assets.rbiLogo,
+                imageHeight: SizeConfig.screenWidth * 0.07,
+                imageWidth: SizeConfig.screenWidth * 0.07,
+              ),
+              VerticalDivider(color: Colors.white, thickness: 2, width: 2),
+              SaveInfoSection(
+                title: 'Banking Partner',
+                imageAsset: Assets.iciciLogo,
+                imageHeight: SizeConfig.screenWidth * 0.07,
+                imageWidth: SizeConfig.screenWidth * 0.16,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

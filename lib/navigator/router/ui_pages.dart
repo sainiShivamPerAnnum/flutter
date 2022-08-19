@@ -64,6 +64,7 @@ const String BlogPostWebViewPath = '/blogPostWebView';
 const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
 const String SellConfirmationViewPath = '/sellConfirmationViewPath';
+const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
 
 enum Pages {
   Splash,
@@ -128,7 +129,8 @@ enum Pages {
   BlogPostWebView,
   CampaignView,
   SaveAssetView,
-  SellConfirmationView
+  SellConfirmationView,
+  ViewAllBlogsView
 }
 
 class PageConfiguration {
@@ -577,4 +579,11 @@ PageConfiguration SellConfirmationViewConfig = PageConfiguration(
   path: SellConfirmationViewPath,
   uiPage: Pages.SellConfirmationView,
   name: "Sell Confirmation View",
+);
+
+PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
+  key: 'SellConfirmationView',
+  path: ViewAllBlogsViewPath,
+  uiPage: Pages.ViewAllBlogsView,
+  name: "View All Blogs View",
 );

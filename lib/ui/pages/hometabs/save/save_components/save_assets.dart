@@ -90,7 +90,7 @@ class SaveAssetView extends StatelessWidget {
                                     saveViewModel: model,
                                   ));
                             },
-                            isActive: false),
+                            isActive: model.sellService.isKYCVerified),
                       ]),
                 ),
                 Padding(
@@ -135,7 +135,7 @@ class SaveAssetView extends StatelessWidget {
   GestureDetector _sellButton(
       {@required Function() onTap, @required bool isActive}) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isActive ? onTap : () {},
       child: Container(
         height: SizeConfig.screenWidth * 0.12,
         width: SizeConfig.screenWidth * 0.29,
@@ -359,8 +359,8 @@ class CompleteKYCSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S();
     return BaseView<SaveViewModel>(
+        onModelReady: (model) => model.sellService.init(),
         builder: (context, model, child) =>
             PropertyChangeConsumer<SellService, SellServiceProperties>(
                 properties: [
@@ -372,13 +372,11 @@ class CompleteKYCSection extends StatelessWidget {
                         SellActionButton(
                           title: 'Complete KYC',
                           onTap: () {
-                            bool a = serviceModel.updateSellButtonVisibility();
-                            print(a);
-                            if (serviceModel.updateSellButtonVisibility()) {
+                            if (!serviceModel.isKYCVerified) {
                               model.navigateToCompleteKYC();
                             }
                           },
-                          isVisible: serviceModel.updateSellButtonVisibility(),
+                          isVisible: serviceModel.isKYCVerified,
                         ),
                         SizedBox(
                           height: SizeConfig.padding10,
@@ -386,16 +384,41 @@ class CompleteKYCSection extends StatelessWidget {
                         SellActionButton(
                           title: 'Add Bank Information',
                           onTap: () {
-                            print('triggered');
-                            print(serviceModel.updateSellButtonVisibility());
-                            if (serviceModel.updateSellButtonVisibility()) {
-                              model.navigateToCompleteKYC();
+                            if (!serviceModel.isVPAVerified) {
+                              model.navigateToVerifyVPA();
                             }
                           },
-                          isVisible: serviceModel.updateSellButtonVisibility(),
+                          isVisible: serviceModel.isVPAVerified,
                         ),
                       ],
                     )));
+  }
+}
+
+class AugmontDownCard extends StatelessWidget {
+  const AugmontDownCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class OngoingTransactionCard extends StatelessWidget {
+  const OngoingTransactionCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class GoldLockedInCard extends StatelessWidget {
+  const GoldLockedInCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -430,10 +453,15 @@ class SellActionButton extends StatelessWidget {
                   title,
                   style: TextStyles.rajdhaniM.body1,
                 ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: UiConstants.kTextColor,
-                )
+                isVisible
+                    ? Icon(
+                        Icons.check_circle,
+                        color: UiConstants.darkPrimaryColor,
+                      )
+                    : Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: UiConstants.kTextColor,
+                      )
               ],
             ),
           ),

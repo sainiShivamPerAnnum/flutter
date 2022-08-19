@@ -20,32 +20,32 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   bool get isKYCVerified => _isKYCVerified;
   bool get isVPAVerified => _isVPAVerified;
-  bool get isGoldSaleActive => _isVPAVerified;
-  bool get isOngoingTransaction => _isVPAVerified;
-  bool get isLockInReached => _isVPAVerified;
-  bool get isSellButtonVisible => _isVPAVerified;
+  bool get isGoldSaleActive => _isGoldSaleActive;
+  bool get isOngoingTransaction => _isOngoingTransaction;
+  bool get isLockInReached => _isLockInReached;
+  bool get isSellButtonVisible => _isSellButtonVisible;
 
-  set isKYCVerified(bool val) {
+  set setKYCVerified(bool val) {
     _isKYCVerified = val;
     notifyListeners(SellServiceProperties.kycVerified);
   }
 
-  set isVPAVerified(bool val) {
+  set setVPAVerified(bool val) {
     _isVPAVerified = val;
     notifyListeners(SellServiceProperties.bankDetailsVerified);
   }
 
-  set isGoldSaleActive(bool val) {
+  set setGoldSaleActive(bool val) {
     _isGoldSaleActive = val;
     notifyListeners(SellServiceProperties.augmontSellDisabled);
   }
 
-  set isLockInReached(bool val) {
+  set setLockInReached(bool val) {
     _isLockInReached = val;
     notifyListeners(SellServiceProperties.reachedLockIn);
   }
 
-  set isOngoingTransaction(bool val) {
+  set setOngoingTransaction(bool val) {
     _isOngoingTransaction = val;
     notifyListeners(SellServiceProperties.ongoingTransaction);
   }
@@ -59,30 +59,36 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     ApiResponse response =
         await _saveRepo.verifyVPAAddress(_userService.firebaseUser.uid);
     if (response.code == 200) {
-      isVPAVerified = true;
-      _logger.d('vpa verified! $_isVPAVerified');
+      setVPAVerified = true;
+      print(_isVPAVerified);
+      _logger.d('vpa verified! $isVPAVerified');
     }
   }
 
   verifyKYCStatus() {
-    isKYCVerified = _userService.isSimpleKycVerified;
-    _logger.d('kyc verified! $_isKYCVerified');
+    setKYCVerified = _userService.isSimpleKycVerified;
+    print(_isKYCVerified);
+    _logger.d('kyc verified! $isKYCVerified');
   }
 
-  bool updateSellButtonVisibility() {
-    print(isKYCVerified && isVPAVerified);
+  bool getSellButtonVisibility() {
+    print(_isKYCVerified && _isVPAVerified);
     //Both KYC and VPA is verified
-    if (isKYCVerified && isVPAVerified) {
-      return false;
-    }
-    //Kyc is verified but VPA is not verified
-    if (isKYCVerified && !isVPAVerified) {
+    if (_isKYCVerified && _isVPAVerified) {
       return true;
     }
-    //Kyc is not verified but VPA is verified
-    if (!isKYCVerified && isVPAVerified) {
+    if (_isKYCVerified && _isVPAVerified) {
+      if (_isGoldSaleActive) {
+        return true;
+      }
+      if (_isLockInReached) {
+        return true;
+      }
+      if (_isOngoingTransaction) {
+        return true;
+      }
       return true;
     }
-    return true;
+    return false;
   }
 }
