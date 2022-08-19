@@ -344,7 +344,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.CompleteProfileView:
           _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
           break;
-        case Pages.JourneyView:
+        case Pages.BlogPostWebView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
           break;
         case Pages.CampaignView:

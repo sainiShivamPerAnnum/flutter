@@ -149,7 +149,9 @@ class _JourneyMilestoneDetailsModalSheetState
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 isLoading
                     ? CircularProgressIndicator(strokeWidth: 1)
-                    : rewardWidget(ticket.rewardArr),
+                    : ticket == null
+                        ? SizedBox()
+                        : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()

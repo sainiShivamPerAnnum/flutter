@@ -85,7 +85,7 @@ class Save extends StatelessWidget {
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
                   SaveTitleContainer(title: 'Challenges'),
-                  // CampaignCardSection(saveViewModel: model),
+                  CampaignCardSection(saveViewModel: model),
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
                   SaveTitleContainer(title: 'Latest'),
