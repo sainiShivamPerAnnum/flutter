@@ -22,7 +22,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: SizeConfig.screenWidth * 0.570),
+        Spacer(),
         Text(
           'What avatar suits you the best?',
           style: TextStyles.rajdhaniSB.title5,
@@ -120,6 +120,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
             ),
           ],
         ),
+        Spacer(),
       ],
     );
   }
