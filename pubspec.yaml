@@ -15,7 +15,7 @@ dependencies:
   connectivity_plus: ^2.2.0
   device_info_plus: ^3.2.2
   device_unlock: ^1.1.2
-  # device_preview: ^1.1.0
+  device_preview: ^1.1.0
   encrypt: ^5.0.0
   firebase_analytics: ^9.0.5
   firebase_auth: ^3.0.1

@@ -36,7 +36,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
 //Pub imports
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:device_preview/device_preview.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -152,8 +152,8 @@ class _MyAppState extends State<MyApp> {
                           SellServiceProperties>(
                         value: locator<SellService>(),
                         child: MaterialApp.router(
-                          // locale: DevicePreview.locale(context),
-                          // builder: DevicePreview.appBuilder,
+                          locale: DevicePreview.locale(context),
+                          builder: DevicePreview.appBuilder,
                           title: Constants.APP_NAME,
                           theme: FelloTheme.lightMode(),
                           useInheritedMediaQuery: true,
