@@ -157,13 +157,15 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   Future<void> dump() async {
     _userService.userJourneyStats = null;
-    controller.dispose();
-    mainController.dispose();
+    controller?.dispose();
+    mainController?.dispose();
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
     PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
     levels = [];
+    vsync = null;
     pages.clear();
+    log("Journey Service dumped");
   }
 
   //Fetching journeypages from Journey Repository
@@ -381,6 +383,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //----------------------------|-PATH CREATION METHODS-START-|----------------------------
 
   createPathForAvatarAnimation(int start, int end) {
+    if (end - start > 4) {
+      start = end - 4;
+    }
     baseGlow = 0;
     List<AvatarPathModel> requiredPathItems = [];
     int startPos =
@@ -464,12 +469,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   void createAvatarAnimationObject() {
     double maxRange = 0.1;
+    int duration = avatarRemoteMlIndex - avatarCachedMlIndex > 4
+        ? 6
+        : 2 * (avatarRemoteMlIndex - avatarCachedMlIndex);
     controller = AnimationController(
       vsync: vsync,
       duration: Duration(
-        seconds: 2 * (avatarRemoteMlIndex - avatarCachedMlIndex),
+        seconds: duration,
       ),
     );
+
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeInOutCirc),
     )..addListener(() {

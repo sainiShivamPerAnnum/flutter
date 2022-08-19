@@ -83,7 +83,7 @@ class JourneyAppBar extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Level ${model.userJourneyStats.level}",
+                                      "Level ${model.userJourneyStats?.level}",
                                       style: TextStyles.sourceSansM.body3
                                           .colour(Colors.white.withOpacity(0.8))
                                           .setHeight(0.8),

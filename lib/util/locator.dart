@@ -169,6 +169,7 @@ void setupLocator() {
   locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
+  locator.registerFactory(() => JourneyPageViewModel());
   locator.registerFactory(() => RootViewModel());
 
   //REST
@@ -207,7 +208,6 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveTransactionsViewModel());
   locator.registerFactory(() => CompleteProfileViewModel());
   locator.registerFactory(() => CampaignRepo());
-  locator.registerFactory(() => JourneyPageViewModel());
   locator.registerFactory(() => OnboardingViewModel());
   locator.registerFactory(() => JourneyBannersViewModel());
 

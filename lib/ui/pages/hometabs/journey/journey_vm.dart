@@ -63,8 +63,7 @@ class JourneyPageViewModel extends BaseModel {
   }
 
   dump() {
-    _journeyService.mainController?.dispose();
-    controller?.dispose();
+    log("Journey View model dispose called");
   }
 
   journeyRepo() {

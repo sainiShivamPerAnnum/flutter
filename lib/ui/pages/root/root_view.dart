@@ -53,6 +53,7 @@ class Root extends StatelessWidget {
                   child: Consumer<AppState>(
                     builder: (ctx, m, child) => IndexedStack(
                       children: pages,
+                      // controller: AppState.homeTabPageController,
                       index: AppState.delegate.appState.getCurrentTabIndex,
                     ),
                   ),

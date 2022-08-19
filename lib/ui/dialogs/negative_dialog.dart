@@ -11,9 +11,10 @@ class AppNegativeDialog extends StatelessWidget {
     Key key,
     @required this.btnText,
     @required this.title,
+    this.subtitle,
     @required this.btnAction,
   }) : super(key: key);
-  final String title, btnText;
+  final String title, btnText, subtitle;
   final VoidCallback btnAction;
 
   @override
@@ -43,19 +44,20 @@ class AppNegativeDialog extends StatelessWidget {
           ],
         ),
       ),
-      height: SizeConfig.screenWidth * 0.4167,
+      // height: SizeConfig.screenWidth * 0.4167,
       child: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-          constraints: BoxConstraints(
-            maxHeight: SizeConfig.screenWidth * 0.4111,
-            minHeight: SizeConfig.screenWidth * 0.4111,
-          ),
+          // constraints: BoxConstraints(
+          //   // maxHeight: SizeConfig.screenWidth * 0.4111,
+          //   minHeight: SizeConfig.screenWidth * 0.4111,
+          // ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             color: UiConstants.kSecondaryBackgroundColor,
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -63,13 +65,25 @@ class AppNegativeDialog extends StatelessWidget {
                 height: SizeConfig.padding32,
               ),
               SizedBox(
-                width: SizeConfig.screenWidth * 0.5,
+                width: SizeConfig.screenWidth -
+                    SizeConfig.pageHorizontalMargins * 2,
                 child: Text(
                   title,
                   style: TextStyles.sourceSansSB.title4,
                   textAlign: TextAlign.center,
                 ),
               ),
+              if (subtitle != null)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding12,
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.sourceSans.body3.colour(Colors.white60),
+                  ),
+                ),
               SizedBox(
                 height: SizeConfig.padding32,
               ),
@@ -81,6 +95,9 @@ class AppNegativeDialog extends StatelessWidget {
                   AppState.backButtonDispatcher.didPopRoute();
                   return btnAction();
                 },
+              ),
+              SizedBox(
+                height: SizeConfig.padding32,
               ),
             ],
           ),
