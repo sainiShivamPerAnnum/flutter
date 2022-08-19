@@ -95,15 +95,9 @@ class JourneyPageViewModel extends BaseModel {
       _journeyService.createAvatarAnimationObject();
     } else {
       _journeyService.placeAvatarAtTheCurrentMileStone();
-      // baseGlow = 1;
     }
 
     _journeyService.mainController = ScrollController();
-    //   ..addListener(() {
-    //     if (mainController.offset > mainController.position.maxScrollExtent &&
-    //         !isLoading &&
-    //         !isEnd) addPageToTop(mainController.offset);
-    //   });
     isLoading = false;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       await _journeyService.scrollPageToAvatarPosition();
