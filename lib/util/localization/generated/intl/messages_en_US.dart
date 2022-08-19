@@ -57,7 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "digitalGoldText" : MessageLookupByLibrary.simpleMessage("Digital Gold"),
     "enableSellGold" : MessageLookupByLibrary.simpleMessage("To enable selling gold, complete the following:"),
     "getStartedWithSIP" : MessageLookupByLibrary.simpleMessage("Get started with a weekly/ daily SIP"),
-    "investSafelyInGoldText" : MessageLookupByLibrary.simpleMessage("Invest safely in Gold with our Auto SIP to win tokens"),
+    "investSafelyInGoldText" : MessageLookupByLibrary.simpleMessage("Invest safely in Gold\nwith our Auto SIP to win tokens"),
     "investedText" : MessageLookupByLibrary.simpleMessage("Invested"),
     "kycNameLabel" : MessageLookupByLibrary.simpleMessage("Name as per your PAN Card"),
     "navBarJourney" : MessageLookupByLibrary.simpleMessage("Journey"),

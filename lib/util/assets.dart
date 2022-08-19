@@ -42,6 +42,10 @@ class Assets {
   static final String autosaveSlide1 = "assets/videos/asanim-1.mp4";
   static final String autosaveSlide2 = "assets/videos/asanim-2.mp4";
   static final String autosaveSlide3 = "assets/videos/asanim-3.mp4";
+  static final String autoSaveDefault = 'assets/svg/auto_save_start.svg';
+  static final String autoSavePaused = 'assets/svg/auto_save_paused.svg';
+  static final String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
+  static final String upiSvg = 'assets/svg/upi.png';
 
   //APPBAR
 
@@ -116,7 +120,6 @@ class Assets {
   static final String processing = "assets/vectors/processing.svg";
   static final String digitalGoldBar = 'assets/vectors/gold_bar.webp';
   static final String stableFello = 'assets/vectors/stable_fello.webp';
-  static final String autoSaveDefault = 'assets/svg/save_auto_sip.svg';
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
   static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';

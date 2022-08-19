@@ -9,9 +9,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SubscriptionCardViewModel extends BaseModel {
@@ -57,7 +54,7 @@ class SubscriptionCardViewModel extends BaseModel {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "Set up";
+      return "Start an SIP";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
       return "View";
@@ -76,44 +73,6 @@ class SubscriptionCardViewModel extends BaseModel {
         }
       }
       return "Details";
-    }
-  }
-
-  getIcon(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return SizedBox();
-    }
-    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return Icon(
-        Icons.run_circle,
-        color: UiConstants.tertiarySolid,
-        size: SizeConfig.iconSize1,
-      );
-    } else {
-      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return Icon(
-          Icons.verified_rounded,
-          color: UiConstants.primaryColor,
-          size: SizeConfig.iconSize1,
-        );
-      }
-      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
-          return Icon(
-            Icons.verified_rounded,
-            color: UiConstants.primaryColor,
-            size: SizeConfig.iconSize1,
-          );
-        else {
-          if (subscription.resumeDate.isEmpty)
-            return SizedBox();
-          else
-            return SizedBox();
-        }
-      }
-      return SizedBox();
     }
   }
 
@@ -217,10 +176,10 @@ class SubscriptionCardViewModel extends BaseModel {
       return "Savings on autopilot with";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "Your Fello Autosave is currently";
+      return "AUTO SIP";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "Your Autosave is Active";
+        return "AUTO SIP";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         if (subscription.autoAmount == 0.0)
@@ -230,6 +189,32 @@ class SubscriptionCardViewModel extends BaseModel {
             return "Savings on autopilot with";
           else
             return "Your Autosave is Paused till";
+        }
+      }
+      return "Autosave";
+    }
+  }
+
+  String getActivityStatus(ActiveSubscriptionModel subscription) {
+    if (subscription == null ||
+        (subscription.status == Constants.SUBSCRIPTION_INIT ||
+            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+      return "Cancelled";
+    }
+    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
+      return "Processing";
+    } else {
+      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        return "Active";
+      }
+      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
+        if (subscription.autoAmount == 0.0)
+          return "Paused";
+        else {
+          if (subscription.resumeDate.isEmpty)
+            return "";
+          else
+            return "";
         }
       }
       return "Autosave";

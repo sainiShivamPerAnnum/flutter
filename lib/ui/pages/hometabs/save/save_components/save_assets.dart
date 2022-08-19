@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
@@ -60,7 +61,7 @@ class SaveAssetView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding10,
                       ),
-                      AutoSIPCard(),
+                      AutosaveCard(),
                       SizedBox(
                         height: SizeConfig.padding24,
                       ),
@@ -97,7 +98,7 @@ class SaveAssetView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      locale.tokenDeductionOnTransaction,
+                      'To enable selling gold,\ncomplete the following:',
                       style: TextStyles.sourceSans.body4
                           .colour(Colors.grey.withOpacity(0.7)),
                       textAlign: TextAlign.end,
@@ -369,7 +370,7 @@ class CompleteKYCSection extends StatelessWidget {
                 builder: (context, serviceModel, child) => Column(
                       children: [
                         SellActionButton(
-                          title: locale.completeKYCText,
+                          title: 'Complete KYC',
                           onTap: () {
                             bool a = serviceModel.updateSellButtonVisibility();
                             print(a);
@@ -383,7 +384,7 @@ class CompleteKYCSection extends StatelessWidget {
                           height: SizeConfig.padding10,
                         ),
                         SellActionButton(
-                          title: locale.addBankInformationText,
+                          title: 'Add Bank Information',
                           onTap: () {
                             print('triggered');
                             print(serviceModel.updateSellButtonVisibility());

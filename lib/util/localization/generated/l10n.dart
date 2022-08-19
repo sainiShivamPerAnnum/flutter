@@ -563,10 +563,10 @@ class S {
     );
   }
 
-  /// `Invest safely in Gold with our Auto SIP to win tokens`
+  /// `Invest safely in Gold\nwith our Auto SIP to win tokens`
   String get investSafelyInGoldText {
     return Intl.message(
-      'Invest safely in Gold with our Auto SIP to win tokens',
+      'Invest safely in Gold\nwith our Auto SIP to win tokens',
       name: 'investSafelyInGoldText',
       desc: '',
       args: [],
