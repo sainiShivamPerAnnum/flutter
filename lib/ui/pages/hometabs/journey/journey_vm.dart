@@ -112,7 +112,7 @@ class JourneyPageViewModel extends BaseModel {
     });
   }
 
-  Future<void> checkIfThereIsAMilestoneLevelChange() =>
+  Future<void> checkIfThereIsAMilestoneLevelChange() async =>
       _journeyService.checkForMilestoneLevelChange();
 
   //  (pages.length - model.page) * pageHeight +

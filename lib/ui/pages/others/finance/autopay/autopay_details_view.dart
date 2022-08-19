@@ -45,120 +45,122 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
           onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: SizeConfig.screenWidth * 0.2747,
-          ),
-          Center(
-            child: Text(
-              "How it works?",
-              style: TextStyles.rajdhaniSB.title4,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.2747,
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.screenWidth * 0.12,
-          ),
-          _buildAutosaveStepTile(
-            image: Image.asset(
-              'assets/temp/upi_payment_logo.png',
-              height: SizeConfig.screenWidth * 0.0667,
-              width: SizeConfig.screenWidth * 0.0667,
+            Center(
+              child: Text(
+                "How it works?",
+                style: TextStyles.rajdhaniSB.title4,
+              ),
             ),
-            title: "Enter UPI ID",
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Make sure your bank supports autopay.",
-                  style: TextStyles.sourceSans.body4.colour(
-                    UiConstants.kTextColor2,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Haptic.vibrate();
-                    BaseUtil.launchUrl(
-                      'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay',
-                    );
-                  },
-                  child: Text(
-                    "Check here",
-                    style: TextStyles.sourceSans.body4.colour(
-                      UiConstants.kTabBorderColor,
-                    ),
-                  ),
-                ),
-              ],
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.12,
             ),
-          ),
-          _buildAutosaveStepTile(
-            image: SvgPicture.asset(
-              'assets/temp/verified.svg',
-              height: SizeConfig.screenWidth * 0.112,
-              width: SizeConfig.screenWidth * 0.112,
-            ),
-            title: "Approve Request on UPI app",
-            subtitle: RichText(
-              text: TextSpan(
+            _buildAutosaveStepTile(
+              image: Image.asset(
+                'assets/temp/upi_payment_logo.png',
+                height: SizeConfig.screenWidth * 0.0667,
+                width: SizeConfig.screenWidth * 0.0667,
+              ),
+              title: "Enter UPI ID",
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextSpan(
-                    text: "Check your ",
+                  Text(
+                    "Make sure your bank supports autopay.",
                     style: TextStyles.sourceSans.body4.colour(
                       UiConstants.kTextColor2,
                     ),
                   ),
-                  TextSpan(
-                    text: "Pending UPI transactions",
-                    style: TextStyles.sourceSansSB.body4.colour(
-                      UiConstants.kTextColor2,
-                    ),
-                  ),
-                  TextSpan(
-                    text: " for the request.",
-                    style: TextStyles.sourceSans.body4.colour(
-                      UiConstants.kTextColor2,
+                  InkWell(
+                    onTap: () {
+                      Haptic.vibrate();
+                      BaseUtil.launchUrl(
+                        'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay',
+                      );
+                    },
+                    child: Text(
+                      "Check here",
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTabBorderColor,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          _buildAutosaveStepTile(
-            image: SvgPicture.asset(
-              'assets/temp/indian_rupee.svg',
-              height: SizeConfig.screenWidth * 0.064,
-              width: SizeConfig.screenWidth * 0.064,
-            ),
-            title: "Set an amount you want to invest",
-            subtitle: Text(
-              "You can change the amount anytime. ",
-              style: TextStyles.sourceSans.body4.colour(
-                UiConstants.kTextColor2,
+            _buildAutosaveStepTile(
+              image: SvgPicture.asset(
+                'assets/temp/verified.svg',
+                height: SizeConfig.screenWidth * 0.112,
+                width: SizeConfig.screenWidth * 0.112,
+              ),
+              title: "Approve Request on UPI app",
+              subtitle: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Check your ",
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor2,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "Pending UPI transactions",
+                      style: TextStyles.sourceSansSB.body4.colour(
+                        UiConstants.kTextColor2,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " for the request.",
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Spacer(),
-          AppPositiveBtn(
-            btnText: 'Get Started',
-            onPressed: () {
-              Haptic.vibrate();
-              _analyticsService.track(
-                eventName: AnalyticsEvents.autosaveSetupViewed,
-              );
-              AppState.delegate.appState.currentAction = PageAction(
-                page: AutosaveProcessViewPageConfig,
-                state: PageState.replace,
-              );
-            },
-            width: SizeConfig.screenWidth * 0.784,
-          ),
-          SizedBox(
-            height: SizeConfig.screenWidth * 0.1893,
-          ),
-        ],
+            _buildAutosaveStepTile(
+              image: SvgPicture.asset(
+                'assets/temp/indian_rupee.svg',
+                height: SizeConfig.screenWidth * 0.064,
+                width: SizeConfig.screenWidth * 0.064,
+              ),
+              title: "Set an amount you want to invest",
+              subtitle: Text(
+                "You can change the amount anytime. ",
+                style: TextStyles.sourceSans.body4.colour(
+                  UiConstants.kTextColor2,
+                ),
+              ),
+            ),
+            Spacer(),
+            AppPositiveBtn(
+              btnText: 'Get Started',
+              onPressed: () {
+                Haptic.vibrate();
+                _analyticsService.track(
+                  eventName: AnalyticsEvents.autosaveSetupViewed,
+                );
+                AppState.delegate.appState.currentAction = PageAction(
+                  page: AutosaveProcessViewPageConfig,
+                  state: PageState.replace,
+                );
+              },
+              width: SizeConfig.screenWidth * 0.784,
+            ),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.1893,
+            ),
+          ],
+        ),
       ),
     );
   }

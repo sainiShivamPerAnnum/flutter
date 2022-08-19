@@ -106,4 +106,25 @@ class GoldenTicketRepository extends BaseRepo {
       return ApiResponse.withError(message ?? "Unable to skip milestone", 400);
     }
   }
+
+  Future<ApiResponse<GoldenTicket>> getGTByPrizeSubtype(
+      String prizeSubtype) async {
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.prizeBySubtype(userService.baseUser.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'subType': prizeSubtype,
+        },
+        token: token,
+      );
+
+      final goldenTicket = GoldenTicket.fromJson(prizeResponse["data"], "");
+      return ApiResponse<GoldenTicket>(model: goldenTicket, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch ticket", 400);
+    }
+  }
 }

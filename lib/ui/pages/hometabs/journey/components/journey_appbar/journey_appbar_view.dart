@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -22,7 +23,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAppBar extends StatelessWidget {
   JourneyAppBar({Key key}) : super(key: key);
-  final _goldenTicketService = locator<GoldenTicketService>();
+  final _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -54,65 +55,45 @@ class JourneyAppBar extends StatelessWidget {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: () => AppState
-                              .delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage,
-                            page: UserProfileDetailsConfig,
-                          ),
+                          onTap: () => _baseUtil.openProfileDetailsScreen(),
                           child:
                               ProfileImageSE(radius: SizeConfig.avatarRadius),
                         ),
                         SizedBox(width: SizeConfig.padding12),
                         Expanded(
-                            child: PropertyChangeConsumer<UserService,
-                                    UserServiceProperties>(
-                                properties: [
+                          child: PropertyChangeConsumer<UserService,
+                              UserServiceProperties>(
+                            properties: [
                               UserServiceProperties.myUserName,
                               UserServiceProperties.myJourneyStats
                             ],
-                                builder: (context, model, properties) {
-                                  return GestureDetector(
-                                      onTap: () => AppState.delegate.appState
-                                              .currentAction = PageAction(
-                                            state: PageState.addPage,
-                                            page: UserProfileDetailsConfig,
-                                          ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Hi ${model.myUserName ?? ''}",
-                                            style: TextStyles.rajdhaniSB.title5
-                                                .colour(Colors.white),
-                                          ),
-                                          Text(
-                                            "Level ${model.userJourneyStats.level}",
-                                            style: TextStyles.sourceSansM.body3
-                                                .colour(Colors.white
-                                                    .withOpacity(0.8))
-                                                .setHeight(0.8),
-                                          ),
-                                        ],
-                                      ));
-                                })),
-                        IconButton(
-                            onPressed: () {
-                              GoldenTicketService.goldenTicketId =
-                                  "OnJA8O3IRbHnq1j1Assp";
-                              _goldenTicketService
-                                  .fetchAndVerifyGoldenTicketByID()
-                                  .then((bool res) {
-                                if (res)
-                                  _goldenTicketService
-                                      .showInstantGoldenTicketView(
-                                          title: 'Welcome to Fello',
-                                          source: GTSOURCE.newuser);
-                              });
+                            builder: (context, model, properties) {
+                              return GestureDetector(
+                                onTap: () =>
+                                    _baseUtil.openProfileDetailsScreen(),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FittedBox(
+                                      child: Text(
+                                        "Hi ${model?.myUserName?.split(" ")?.first ?? ''}",
+                                        style: TextStyles.rajdhaniSB.title5
+                                            .colour(Colors.white),
+                                      ),
+                                    ),
+                                    Text(
+                                      "Level ${model.userJourneyStats.level}",
+                                      style: TextStyles.sourceSansM.body3
+                                          .colour(Colors.white.withOpacity(0.8))
+                                          .setHeight(0.8),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
-                            icon: Icon(Icons.abc)),
+                          ),
+                        ),
                         FelloCoinBar(),
                         NotificationButton()
                       ],
@@ -138,8 +119,9 @@ class JourneyAppBar extends StatelessWidget {
                         thickness: 0.5,
                       ),
                       JourneyAppBarAssetDetailsTile(
-                        asset: Assets.digitalGoldBar,
-                        value: UserGoldQuantitySE(
+                        asset: Assets.stableFello,
+                        value: Text(
+                          "₹ 3000",
                           style: TextStyles.sourceSansSB.body1
                               .colour(Colors.white),
                         ),
@@ -167,6 +149,8 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: () {
+          if (JourneyService.isAvatarAnimationInProgress) return;
+
           Haptic.vibrate();
           AppState.delegate.appState.currentAction = PageAction(
             state: PageState.addPage,
@@ -175,10 +159,13 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SvgPicture.asset(
+            Image.asset(
               asset,
-              height: SizeConfig.padding54,
+              height: asset == Assets.digitalGoldBar
+                  ? SizeConfig.padding38
+                  : SizeConfig.padding54,
             ),
             value,
           ],

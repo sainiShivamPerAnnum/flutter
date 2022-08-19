@@ -228,12 +228,15 @@ class LoginControllerViewModel extends BaseModel {
                 bool flag = false;
                 String message = "Please try again in sometime";
                 logger.d(userService.baseUser.toJson().toString());
-
+                userService.baseUser.avatarId = "AV1";
                 try {
                   final token = await _getBearerToken();
                   userService.baseUser.mobile = userMobile;
                   final ApiResponse response = await _userRepo.setNewUser(
-                      userService.baseUser, token, cstate);
+                    userService.baseUser,
+                    token,
+                    cstate,
+                  );
                   logger.e(response.toString());
                   if (response.code == 400) {
                     message = response.errorMessage ??
@@ -385,7 +388,6 @@ class LoginControllerViewModel extends BaseModel {
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;
-    setState(ViewState.Idle);
     appStateProvider.rootIndex = 0;
 
     bool res =
@@ -393,6 +395,7 @@ class LoginControllerViewModel extends BaseModel {
     if (res != null && res == true) {
       await _userRepo.updateUserWalkthroughCompletion();
     }
+    setState(ViewState.Idle);
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {

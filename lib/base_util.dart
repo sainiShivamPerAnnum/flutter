@@ -27,6 +27,7 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -249,6 +250,16 @@ class BaseUtil extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  openProfileDetailsScreen() {
+    if (JourneyService.isAvatarAnimationInProgress) return;
+    if (_userService.userJourneyStats.mlIndex > 2) {
+      AppState.delegate.parseRoute(Uri.parse("profile"));
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Proflie locked", "Complete milestone 2 to unlock profile");
+    }
   }
 
   static Widget getAppBar(BuildContext context, String title) {

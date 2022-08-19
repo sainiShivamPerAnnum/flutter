@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -64,6 +65,8 @@ class NotificationButton extends StatelessWidget {
         properties: [UserServiceProperties.myNotificationStatus],
         builder: (context, model, property) => InkWell(
               onTap: () {
+                if (JourneyService.isAvatarAnimationInProgress) return;
+
                 Haptic.vibrate();
                 _analytics.track(eventName: AnalyticsEvents.notifications);
                 model.hasNewNotifications = false;

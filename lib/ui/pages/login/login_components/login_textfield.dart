@@ -14,6 +14,7 @@ class LogInTextField extends StatelessWidget {
     this.inputFormatter,
     this.maxLength = 100,
     this.onTap,
+    this.suffix,
     this.validator,
     this.onFieldSubmitted,
     this.onChanged,
@@ -35,6 +36,7 @@ class LogInTextField extends StatelessWidget {
   final Key textFieldKey;
   final bool enabled;
   final FocusNode focusNode;
+  final Widget suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,7 @@ class LogInTextField extends StatelessWidget {
           keyboardType: textInputType,
           decoration: InputDecoration(
             counterText: '',
+            suffix: suffix,
             contentPadding: EdgeInsets.all(12.0),
             hintText: hintText,
             hintStyle: TextStyles.body2.colour(
@@ -77,6 +80,12 @@ class LogInTextField extends StatelessWidget {
             filled: true,
             fillColor: Color(0xff6E6E7E).withOpacity(0.5),
             enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFFFFFFF).withOpacity(0.5),
+              ),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            ),
+            disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFFFFFF).withOpacity(0.5),
               ),

@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -58,15 +59,14 @@ class MiniTransactionCard extends StatelessWidget {
                                         Haptic.vibrate();
                                         // bool freeBeerStatus = model.txnService
                                         //     .getBeerTicketStatus(m.txnList[i]);
-                                        showDialog(
-                                            context: AppState.delegate
-                                                .navigatorKey.currentContext,
-                                            builder: (BuildContext context) {
-                                              AppState.screenStack
-                                                  .add(ScreenItem.dialog);
-                                              return TransactionDetailsBottomSheet(
-                                                  transaction: m.txnList[i]);
-                                            });
+                                        BaseUtil.openModalBottomSheet(
+                                            addToScreenStack: true,
+                                            isBarrierDismissable: true,
+                                            isScrollControlled: true,
+                                            backgroundColor: Colors.transparent,
+                                            content:
+                                                TransactionDetailsBottomSheet(
+                                                    transaction: m.txnList[i]));
                                       },
                                       dense: true,
                                       title: Text(

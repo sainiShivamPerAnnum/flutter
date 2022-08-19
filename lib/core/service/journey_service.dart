@@ -140,9 +140,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("Levels updated: ${levels[0].toString()}");
   }
 
-  get mainController => this._mainController;
+  ScrollController get mainController => this._mainController;
 
-  set mainController(value) => this._mainController = value;
+  set mainController(ScrollController value) => this._mainController = value;
 
   // INIT MAIN
   Future<void> init() async {
@@ -157,6 +157,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   Future<void> dump() async {
     _userService.userJourneyStats = null;
+    controller.dispose();
+    mainController.dispose();
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
     PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
@@ -198,6 +200,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
     if (avatarRemoteMlIndex != 2)
       GoldenTicketService.goldenTicketId = data["gtId"];
+    else
+      GoldenTicketService.goldenTicketId = null;
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     checkAndAnimateAvatar();
   }
@@ -237,7 +241,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int checkForGameLevelChange() {
     for (int i = 0; i < levels.length; i++) {
       log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
-      if (avatarCachedMlIndex < levels[i].end &&
+      if (avatarRemoteMlIndex < levels[i].end &&
           avatarRemoteMlIndex >= levels[i].start) return levels[i].level;
     }
     return 0;
@@ -264,8 +268,23 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //compares it with cached mlIndex
   //if difference found, animates the avatar and process necessary changes
   Future<void> checkForMilestoneLevelChange() async {
-    await updateUserJourneyStats();
-    checkAndAnimateAvatar();
+    await updateUserJourneyStats().then((val) {
+      checkAndAnimateAvatar();
+    });
+  }
+
+  updateAvatarIndexDirectly() {
+    avatarRemoteMlIndex += 1;
+    final currentMilestone = currentMilestoneList
+        .firstWhere((milestone) => milestone.index == avatarRemoteMlIndex);
+    int jLevel = checkForGameLevelChange();
+    _userService.userJourneyStats = UserJourneyStatsModel(
+        page: currentMilestone.page,
+        level: jLevel,
+        mlIndex: currentMilestone.index,
+        mlId: currentMilestone.id,
+        prizeSubtype: currentMilestone.prizeSubType,
+        skipCount: _userService.userJourneyStats.skipCount + 1);
   }
 
   //Check if there is a need to blur next level milestones
@@ -482,7 +501,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
         if (res)
           _gtService.showInstantGoldenTicketView(
-              title: 'Welcome to Fello', source: GTSOURCE.newuser);
+              title: 'Congratulations!', source: GTSOURCE.newuser);
       });
     });
   }

@@ -294,9 +294,12 @@ class _GTInstantViewState extends State<GTInstantView>
                               curve: Curves.easeIn,
                               width: SizeConfig.screenWidth,
                               alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
                               child: Text(getGTTitle(),
                                   style: TextStyles.rajdhaniB.title2
-                                      .colour(Colors.white)),
+                                      .colour(Colors.white),
+                                  textAlign: TextAlign.center),
                             ),
                             AnimatedContainer(
                               decoration: BoxDecoration(),
@@ -304,11 +307,15 @@ class _GTInstantViewState extends State<GTInstantView>
                               curve: Curves.easeIn,
                               width: SizeConfig.screenWidth,
                               alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal:
+                                      SizeConfig.pageHorizontalMargins * 2),
                               child: Text(
-                                "You won a golden ticket",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(Colors.grey),
-                              ),
+                                  model.goldenTicket.note ??
+                                      "You won a golden ticket",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.grey),
+                                  textAlign: TextAlign.center),
                             ),
                             Container(
                               margin: EdgeInsets.symmetric(
@@ -409,29 +416,29 @@ class _GTInstantViewState extends State<GTInstantView>
 
   Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {
     Function onPressed;
-    if (source == GTSOURCE.cricket ||
-        source == GTSOURCE.panVerify ||
-        source == GTSOURCE.poolClub ||
-        source == GTSOURCE.footBall ||
-        source == GTSOURCE.candyFiesta ||
-        source == GTSOURCE.game) {
-      onPressed = () {
-        if (!model.isCardScratched) return;
-        AppState.backButtonDispatcher.didPopRoute();
-      };
-    } else {
-      onPressed = () {
-        if (!model.isCardScratched) return;
-        while (AppState.screenStack.length > 1) {
-          AppState.backButtonDispatcher.didPopRoute();
-        }
-        if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
-          AppState.delegate.appState.setCurrentTabIndex = 0;
-          model.showAutosavePrompt();
-        } else
-          AppState.delegate.appState.setCurrentTabIndex = 1;
-      };
-    }
+    // if (source == GTSOURCE.cricket ||
+    //     source == GTSOURCE.panVerify ||
+    //     source == GTSOURCE.poolClub ||
+    //     source == GTSOURCE.footBall ||
+    //     source == GTSOURCE.candyFiesta ||
+    //     source == GTSOURCE.game) {
+    onPressed = () {
+      if (!model.isCardScratched) return;
+      AppState.backButtonDispatcher.didPopRoute();
+    };
+    // } else {
+    //   onPressed = () {
+    //     if (!model.isCardScratched) return;
+    //     while (AppState.screenStack.length > 1) {
+    //       AppState.backButtonDispatcher.didPopRoute();
+    //     }
+    //     if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
+    //       AppState.delegate.appState.setCurrentTabIndex = 0;
+    //       model.showAutosavePrompt();
+    //     } else
+    //       AppState.delegate.appState.setCurrentTabIndex = 1;
+    //   };
+    // }
     return onPressed;
   }
 
