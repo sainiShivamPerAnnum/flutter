@@ -28,63 +28,68 @@ class MyWinningsView extends StatelessWidget {
           body: Stack(
             children: [
               NewSquareBackground(),
-              Column(
-                children: [
-                  AppBar(
-                    title: Text(
-                      'My Rewards',
-                      maxLines: 1,
-                      overflow: TextOverflow.clip,
-                      style: TextStyles.title4.bold.colour(Colors.white),
-                    ),
-                    elevation: 0.0,
-                    backgroundColor: UiConstants.kBackgroundColor,
-                    leading: IconButton(
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                      },
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
+              Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight,
+                child: Column(
+                  children: [
+                    AppBar(
+                      title: Text(
+                        'My Rewards',
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
+                        style: TextStyles.title4.bold.colour(Colors.white),
+                      ),
+                      elevation: 0.0,
+                      backgroundColor: UiConstants.kBackgroundColor,
+                      leading: IconButton(
+                        onPressed: () {
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                        ),
-                        child: NestedScrollView(
-                          // allows you to build a list of elements that would be scrolled away till the body reached the top
-                          headerSliverBuilder: (context, _) {
-                            return [
-                              SliverList(
-                                delegate: SliverChildListDelegate(
-                                  [
-                                    PrizeClaimCard(
-                                      model: model,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ];
-                          },
-                          body: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.padding20),
-                            child: GoldenTicketsView(
-                              openFirst: openFirst,
-                            ),
+                    Expanded(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
                           ),
-                        )
-                        //  ListView(
-                        //   padding: EdgeInsets.zero,
-                        //   // crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
+                          child: NestedScrollView(
+                            // allows you to build a list of elements that would be scrolled away till the body reached the top
+                            headerSliverBuilder: (context, _) {
+                              return [
+                                SliverList(
+                                  delegate: SliverChildListDelegate(
+                                    [
+                                      PrizeClaimCard(
+                                        model: model,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ];
+                            },
+                            body: Container(
+                              margin:
+                                  EdgeInsets.only(top: SizeConfig.padding20),
+                              child: GoldenTicketsView(
+                                openFirst: openFirst,
+                              ),
+                            ),
+                          )
+                          //  ListView(
+                          //   padding: EdgeInsets.zero,
+                          //   // crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
 
-                        // ),
-                        ),
-                  )
-                ],
+                          // ),
+                          ),
+                    )
+                  ],
+                ),
               ),
             ],
           ),

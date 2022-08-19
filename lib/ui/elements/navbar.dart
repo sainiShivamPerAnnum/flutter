@@ -63,6 +63,7 @@ class NavbarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return isSelected
         ? Container(
+            color: Colors.black,
             width: SizeConfig.screenWidth * 0.22,
             alignment: Alignment.center,
             child: Stack(
@@ -89,6 +90,7 @@ class NavbarButton extends StatelessWidget {
         : GestureDetector(
             onTap: onTap,
             child: Container(
+              color: Colors.black,
               width: SizeConfig.screenWidth * 0.22,
               alignment: Alignment.center,
               child: BottomNavBarItemContent(

@@ -155,112 +155,112 @@ class BottomNavBar extends StatelessWidget {
   }
 }
 
-class WantMoreTickets extends StatelessWidget {
-  final RootViewModel model;
-  WantMoreTickets({
-    @required this.model,
-  });
+// class WantMoreTickets extends StatelessWidget {
+//   final RootViewModel model;
+//   WantMoreTickets({
+//     @required this.model,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Consumer<AppState>(
-        builder: (ctx, m, c) => AnimatedPositioned(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.decelerate,
-              bottom: SizeConfig.pageHorizontalMargins,
-              left: SizeConfig.pageHorizontalMargins,
-              right: SizeConfig.pageHorizontalMargins,
-              child: InkWell(
-                onTap: model.earnMoreTokens,
-                child: Shimmer(
-                  duration: Duration(seconds: 5),
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.decelerate,
-                    height: AppState.delegate.appState.getCurrentTabIndex == 1
-                        ? SizeConfig.navBarHeight * 1.5
-                        : SizeConfig.navBarHeight,
-                    width: SizeConfig.navBarWidth,
-                    decoration: BoxDecoration(
-                      color: UiConstants.primaryLight,
-                      borderRadius: BorderRadius.circular(
-                        SizeConfig.roundness24,
-                      ),
-                    ),
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      height: SizeConfig.navBarHeight * 0.5,
-                      alignment: Alignment.center,
-                      child: Shimmer(
-                        duration: Duration(seconds: 1),
-                        interval: Duration(seconds: 4),
-                        child: Text(
-                          locale.navWMT,
-                          style: TextStyles.body1
-                              .colour(UiConstants.primaryColor)
-                              .bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     S locale = S.of(context);
+//     return Consumer<AppState>(
+//         builder: (ctx, m, c) => AnimatedPositioned(
+//               duration: Duration(milliseconds: 300),
+//               curve: Curves.decelerate,
+//               bottom: SizeConfig.pageHorizontalMargins,
+//               left: SizeConfig.pageHorizontalMargins,
+//               right: SizeConfig.pageHorizontalMargins,
+//               child: InkWell(
+//                 onTap: model.earnMoreTokens,
+//                 child: Shimmer(
+//                   duration: Duration(seconds: 5),
+//                   child: AnimatedContainer(
+//                     duration: Duration(milliseconds: 300),
+//                     curve: Curves.decelerate,
+//                     height: AppState.delegate.appState.getCurrentTabIndex == 1
+//                         ? SizeConfig.navBarHeight * 1.5
+//                         : SizeConfig.navBarHeight,
+//                     width: SizeConfig.navBarWidth,
+//                     decoration: BoxDecoration(
+//                       color: UiConstants.primaryLight,
+//                       borderRadius: BorderRadius.circular(
+//                         SizeConfig.roundness24,
+//                       ),
+//                     ),
+//                     alignment: Alignment.topCenter,
+//                     child: Container(
+//                       height: SizeConfig.navBarHeight * 0.5,
+//                       alignment: Alignment.center,
+//                       child: Shimmer(
+//                         duration: Duration(seconds: 1),
+//                         interval: Duration(seconds: 4),
+//                         child: Text(
+//                           locale.navWMT,
+//                           style: TextStyles.body1
+//                               .colour(UiConstants.primaryColor)
+//                               .bold,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ));
+//   }
+// }
 
-class SaveBaseline extends StatelessWidget {
-  final RootViewModel model;
-  SaveBaseline({
-    @required this.model,
-  });
+// class SaveBaseline extends StatelessWidget {
+//   final RootViewModel model;
+//   SaveBaseline({
+//     @required this.model,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Consumer<AppState>(
-      builder: (ctx, m, c) => AnimatedPositioned(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.decelerate,
-        bottom: SizeConfig.pageHorizontalMargins,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-        child: InkWell(
-          onTap: model.focusBuyField,
-          child: Shimmer(
-            duration: Duration(seconds: 5),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.decelerate,
-              height: AppState.delegate.appState.getCurrentTabIndex == 0
-                  ? SizeConfig.navBarHeight * 1.5
-                  : SizeConfig.navBarHeight,
-              width: SizeConfig.navBarWidth,
-              decoration: BoxDecoration(
-                color: UiConstants.tertiaryLight,
-                borderRadius: BorderRadius.circular(
-                  SizeConfig.roundness24,
-                ),
-              ),
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: SizeConfig.navBarHeight * 0.5,
-                alignment: Alignment.center,
-                child: Shimmer(
-                  duration: Duration(seconds: 1),
-                  interval: Duration(seconds: 4),
-                  child: Text(
-                    locale.saveBaseline,
-                    style:
-                        TextStyles.body1.colour(UiConstants.tertiarySolid).bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     S locale = S.of(context);
+//     return Consumer<AppState>(
+//       builder: (ctx, m, c) => AnimatedPositioned(
+//         duration: Duration(milliseconds: 300),
+//         curve: Curves.decelerate,
+//         bottom: SizeConfig.pageHorizontalMargins,
+//         left: SizeConfig.pageHorizontalMargins,
+//         right: SizeConfig.pageHorizontalMargins,
+//         child: InkWell(
+//           onTap: model.focusBuyField,
+//           child: Shimmer(
+//             duration: Duration(seconds: 5),
+//             child: AnimatedContainer(
+//               duration: Duration(milliseconds: 300),
+//               curve: Curves.decelerate,
+//               height: AppState.delegate.appState.getCurrentTabIndex == 0
+//                   ? SizeConfig.navBarHeight * 1.5
+//                   : SizeConfig.navBarHeight,
+//               width: SizeConfig.navBarWidth,
+//               decoration: BoxDecoration(
+//                 color: UiConstants.tertiaryLight,
+//                 borderRadius: BorderRadius.circular(
+//                   SizeConfig.roundness24,
+//                 ),
+//               ),
+//               alignment: Alignment.topCenter,
+//               child: Container(
+//                 height: SizeConfig.navBarHeight * 0.5,
+//                 alignment: Alignment.center,
+//                 child: Shimmer(
+//                   duration: Duration(seconds: 1),
+//                   interval: Duration(seconds: 4),
+//                   child: Text(
+//                     locale.saveBaseline,
+//                     style:
+//                         TextStyles.body1.colour(UiConstants.tertiarySolid).bold,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

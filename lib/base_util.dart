@@ -256,6 +256,9 @@ class BaseUtil extends ChangeNotifier {
     if (JourneyService.isAvatarAnimationInProgress) return;
     if (_userService.userJourneyStats.mlIndex > 2) {
       AppState.delegate.parseRoute(Uri.parse("profile"));
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Proflie locked", "Complete milestone 2 to unlock profile");
     }
   }
 

@@ -107,7 +107,6 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                     },
                   ),
                 ),
-                // SizedBox(height: SizeConfig.padding20),
                 Container(
                   margin: EdgeInsets.only(top: SizeConfig.padding16),
                   padding: EdgeInsets.only(
@@ -116,7 +115,6 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                   ),
                   child: model.showResult(),
                 ),
-                SizedBox(height: SizeConfig.padding20),
                 model.hasReferralCode
                     ? LogInTextField(
                         controller: model.referralCodeController,
