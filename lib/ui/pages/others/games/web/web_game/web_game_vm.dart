@@ -21,6 +21,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -116,11 +118,14 @@ class WebGameViewModel extends BaseModel {
       Future.delayed(Duration(milliseconds: 700), () async {
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
-          content: WantMoreTicketsModalSheet(
-            isInsufficientBalance: true,
+          backgroundColor: UiConstants.gameCardColor,
+          content: WantMoreTicketsModalSheet(isInsufficientBalance: true),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness24),
+            topRight: Radius.circular(SizeConfig.roundness24),
           ),
           hapticVibrate: true,
-          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
           isBarrierDismissable: true,
         );
       });

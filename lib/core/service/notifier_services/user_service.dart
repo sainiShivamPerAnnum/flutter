@@ -56,7 +56,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool _isSimpleKycVerified;
   bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
-  bool showOnboardingTutorial = true;
+  // bool showOnboardingTutorial = true;
   bool showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
 
@@ -455,6 +455,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
         setMyUserDpUrl(url);
+        baseUser.avatarId = 'CUSTOM';
         //_baseUtil.setDisplayPictureUrl(url);
         _logger.d('Final DP Uri: $url');
         return true;

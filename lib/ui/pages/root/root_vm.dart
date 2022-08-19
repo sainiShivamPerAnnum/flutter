@@ -38,6 +38,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -132,14 +133,14 @@ class RootViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
   }
 
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
-  }
+  // showTicketModal(BuildContext context) {
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (ctx) {
+  //         return WantMoreTicketsModalSheet();
+  //       });
+  // }
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
@@ -252,13 +253,12 @@ class RootViewModel extends BaseModel {
 
       _baseUtil.getProfilePicture();
       // show security modal
-      // if (
-      //     showSecurityPrompt &&
+      // if (showSecurityPrompt &&
       //     _userService.baseUser.isAugmontOnboarded &&
-      //         _userService.userFundWallet.augGoldQuantity > 0 &&
-      //         _userService.baseUser.userPreferences
-      //                 .getPreference(Preferences.APPLOCK) ==
-      //             0) {
+      //     _userService.userFundWallet.augGoldQuantity > 0 &&
+      //     _userService.baseUser.userPreferences
+      //             .getPreference(Preferences.APPLOCK) ==
+      //         0) {
       //   canExecuteStartupNotification = false;
       //   WidgetsBinding.instance?.addPostFrameCallback((_) {
       //     _showSecurityBottomSheet();
@@ -522,16 +522,21 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  void earnMoreTokens() {
-    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(),
-      hapticVibrate: true,
-      backgroundColor: Colors.transparent,
-      isBarrierDismissable: true,
-    );
-  }
+  // void earnMoreTokens() {
+  //   _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+  //        BaseUtil.openModalBottomSheet(
+  //                     addToScreenStack: true,
+  //                     backgroundColor: UiConstants.gameCardColor,
+  //                     content: WantMoreTicketsModalSheet(),
+  //                     borderRadius: BorderRadius.only(
+  //                       topLeft: Radius.circular(SizeConfig.roundness24),
+  //                       topRight: Radius.circular(SizeConfig.roundness24),
+  //                     ),
+  //                     hapticVibrate: true,
+  //                     isScrollControlled: true,
+  //                     isBarrierDismissable: true,
+  //                   );
+  // }
 
   // addJourneyPage() async {
   //   isUploading = true;

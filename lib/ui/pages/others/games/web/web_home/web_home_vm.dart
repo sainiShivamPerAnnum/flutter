@@ -27,6 +27,8 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class RechargeOption {
@@ -299,11 +301,14 @@ class WebHomeViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(
-        isInsufficientBalance: true,
+      backgroundColor: UiConstants.gameCardColor,
+      content: WantMoreTicketsModalSheet(isInsufficientBalance: true),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness24),
+        topRight: Radius.circular(SizeConfig.roundness24),
       ),
       hapticVibrate: true,
-      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       isBarrierDismissable: true,
     );
   }

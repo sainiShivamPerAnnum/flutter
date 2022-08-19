@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/sell_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
@@ -289,21 +290,35 @@ class GoldAssetCard extends StatelessWidget {
                             SizedBox(
                               height: SizeConfig.padding26,
                             ),
-                            Center(
-                                child: Container(
-                              height: SizeConfig.screenWidth * 0.10,
-                              width: SizeConfig.screenWidth * 0.4,
-                              decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness5)),
+                            InkWell(
+                              onTap: () {
+                                return BaseUtil.openModalBottomSheet(
+                                  addToScreenStack: true,
+                                  enableDrag: false,
+                                  hapticVibrate: true,
+                                  isBarrierDismissable: true,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  content: RechargeModalSheet(),
+                                );
+                              },
                               child: Center(
-                                child: Text(
-                                  'SAVE',
-                                  style: TextStyles.rajdhaniSB.body1,
+                                child: Container(
+                                  height: SizeConfig.screenWidth * 0.10,
+                                  width: SizeConfig.screenWidth * 0.4,
+                                  decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.8),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness5)),
+                                  child: Center(
+                                    child: Text(
+                                      'SAVE',
+                                      style: TextStyles.rajdhaniSB.body1,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            )),
+                            ),
                           ],
                         ),
                       ),

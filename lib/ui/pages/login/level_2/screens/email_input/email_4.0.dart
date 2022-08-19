@@ -1,13 +1,15 @@
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Email4 extends StatelessWidget {
   const Email4({Key key, @required this.model}) : super(key: key);
-  final Level2ViewModel model;
+  final CompleteProfileViewModel model;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,16 +35,57 @@ class Email4 extends StatelessWidget {
             hintText: 'Your email ID',
             textInputType: TextInputType.emailAddress,
             controller: model.emailController,
+            enabled: !model.isGoogleVerified,
+            suffix: model.isGoogleVerified
+                ? Icon(
+                    Icons.verified,
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.iconSize2,
+                  )
+                : SizedBox(),
             validator: (val) {
               if (val.isEmpty) {
                 return 'Please enter your email ID';
               } else if (!RegExp(
-                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                  .hasMatch(val)) {
+                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+              ).hasMatch(val)) {
                 return 'Please enter a valid email ID';
               }
               return null;
             },
+          ),
+        ),
+        SizedBox(height: SizeConfig.padding14),
+        Text(
+          "OR",
+          style: TextStyles.sourceSans.body3.setOpecity(0.6),
+        ),
+        SizedBox(height: SizeConfig.padding14),
+        GestureDetector(
+          onTap: () {
+            model.handleSignInWithGoogle();
+          },
+          child: Container(
+            width: SizeConfig.screenWidth * 0.8,
+            height: SizeConfig.padding54,
+            decoration: BoxDecoration(
+              color: UiConstants.kTextFieldColor.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(SizeConfig.padding6),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'images/svgs/google.svg',
+                  height: SizeConfig.padding24,
+                ),
+                SizedBox(width: SizeConfig.padding12),
+                Text(
+                  'Sign in with Google',
+                  style: TextStyles.sourceSans.body3.setOpecity(0.6),
+                ),
+              ],
+            ),
           ),
         ),
       ],
