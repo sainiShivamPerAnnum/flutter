@@ -158,8 +158,6 @@ class CampaignView extends StatelessWidget {
                                             color: UiConstants.kPrimaryColor,
                                             shape: BoxShape.circle),
                                       ),
-                                      //Stream Builder
-
                                       StreamBuilder(
                                         stream:
                                             model.getRealTimeFinanceStream(),
@@ -180,37 +178,48 @@ class CampaignView extends StatelessWidget {
                                             );
                                           }
 
-                                          final fetchedData =
-                                              Map<dynamic, dynamic>.from(
-                                                  (snapshot.data
-                                                              as DatabaseEvent)
-                                                          .snapshot
-                                                          .value
-                                                      as Map<dynamic, dynamic>);
+                                          if ((snapshot.data
+                                                      as rdb.DatabaseEvent)
+                                                  .snapshot
+                                                  .value !=
+                                              null) {
+                                            final fetchedData = Map<dynamic,
+                                                    dynamic>.from(
+                                                (snapshot.data as DatabaseEvent)
+                                                        .snapshot
+                                                        .value
+                                                    as Map<dynamic, dynamic>);
 
-                                          Map<dynamic, dynamic> sortedData =
-                                              fetchedData[model
-                                                  .getPathForRealTimeFinanceStats(
-                                                      eventType)];
+                                            Map<dynamic, dynamic> sortedData =
+                                                fetchedData[model
+                                                    .getPathForRealTimeFinanceStats(
+                                                        eventType)];
 
-                                          return AnimatedSwitcher(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            transitionBuilder: (Widget child,
-                                                Animation<double> animation) {
-                                              return ScaleTransition(
-                                                  scale: animation,
-                                                  child: child);
-                                            },
-                                            child: Text(
-                                              "${model.sortPlayerNumbers(sortedData['value'].toString())}+  Participants",
+                                            return AnimatedSwitcher(
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              transitionBuilder: (Widget child,
+                                                  Animation<double> animation) {
+                                                return ScaleTransition(
+                                                    scale: animation,
+                                                    child: child);
+                                              },
+                                              child: Text(
+                                                "${model.sortPlayerNumbers(sortedData['value'].toString())}+  Participants",
+                                                style: TextStyles.body3
+                                                    .colour(Colors.white),
+                                                key: ValueKey<String>(
+                                                    sortedData['value']
+                                                        .toString()),
+                                              ),
+                                            );
+                                          } else {
+                                            return Text(
+                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
                                               style: TextStyles.body3
                                                   .colour(Colors.white),
-                                              key: ValueKey<String>(
-                                                  sortedData['value']
-                                                      .toString()),
-                                            ),
-                                          );
+                                            );
+                                          }
                                         },
                                       ),
                                     ],

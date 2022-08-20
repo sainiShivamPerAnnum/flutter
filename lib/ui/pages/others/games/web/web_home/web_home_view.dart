@@ -151,38 +151,53 @@ class WebHomeView extends StatelessWidget {
                                           );
                                         }
 
-                                        Map<Object, Object> fetchedData =
-                                            Map<dynamic, dynamic>.from(
-                                                (snapshot.data as DatabaseEvent)
-                                                        .snapshot
-                                                        .value
-                                                    as Map<dynamic, dynamic>);
-                                        String fieldToFetch =
-                                            fetchedData['field'] as String;
+                                        if ((snapshot.data as DatabaseEvent)
+                                                .snapshot
+                                                .value !=
+                                            null) {
+                                          Map<Object, Object> fetchedData =
+                                              Map<dynamic, dynamic>.from(
+                                                  (snapshot.data
+                                                              as DatabaseEvent)
+                                                          .snapshot
+                                                          .value
+                                                      as Map<dynamic, dynamic>);
+                                          String fieldToFetch =
+                                              fetchedData['field'] as String;
 
-                                        Map<Object, Object> requiredTimeData =
-                                            fetchedData[fieldToFetch];
+                                          Map<Object, Object> requiredTimeData =
+                                              fetchedData[fieldToFetch];
 
-                                        return AnimatedSwitcher(
-                                          duration:
-                                              const Duration(milliseconds: 500),
-                                          transitionBuilder: (Widget child,
-                                              Animation<double> animation) {
-                                            return ScaleTransition(
-                                                scale: animation, child: child);
-                                          },
-                                          child: GameInfoBlock(
-                                            coin:
-                                                "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+                                          return AnimatedSwitcher(
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            transitionBuilder: (Widget child,
+                                                Animation<double> animation) {
+                                              return ScaleTransition(
+                                                  scale: animation,
+                                                  child: child);
+                                            },
+                                            child: GameInfoBlock(
+                                              coin:
+                                                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+                                              coinText: 'Playing',
+                                              assetHeight: SizeConfig.padding16,
+                                              isDot: true,
+                                              assetUrl: Assets.circleGameAsset,
+                                              key: ValueKey<String>(
+                                                  requiredTimeData['value']
+                                                      .toString()),
+                                            ),
+                                          );
+                                        } else {
+                                          return GameInfoBlock(
+                                            coin: "50+",
                                             coinText: 'Playing',
                                             assetHeight: SizeConfig.padding16,
                                             isDot: true,
                                             assetUrl: Assets.circleGameAsset,
-                                            key: ValueKey<String>(
-                                                requiredTimeData['value']
-                                                    .toString()),
-                                          ),
-                                        );
+                                          );
+                                        }
                                       },
                                     ),
                                     GameInfoBlock(

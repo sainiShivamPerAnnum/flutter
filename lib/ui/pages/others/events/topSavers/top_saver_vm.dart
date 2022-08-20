@@ -351,7 +351,7 @@ class TopSaverViewModel extends BaseModel {
     } else if (value == Constants.HS_WEEKLY_SAVER) {
       return "100+";
     } else if (value == Constants.HS_MONTHLY_SAVER) {
-      return "1000+";
+      return "1K+";
     } else {
       return "-";
     }
