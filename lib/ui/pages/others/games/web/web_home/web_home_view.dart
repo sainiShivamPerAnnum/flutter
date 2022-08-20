@@ -14,6 +14,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -136,14 +137,53 @@ class WebHomeView extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    GameInfoBlock(
-                                      coin: model.realTimePlayingStat == ""
-                                          ? "-"
-                                          : "${model.sortPlayerNumbers(model.realTimePlayingStat)} +",
-                                      coinText: 'Playing',
-                                      assetHeight: SizeConfig.padding16,
-                                      isDot: true,
-                                      assetUrl: Assets.circleGameAsset,
+                                    StreamBuilder(
+                                      stream:
+                                          model.getRealTimePlayingStream(game),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return GameInfoBlock(
+                                            coin: "-",
+                                            coinText: 'Playing',
+                                            assetHeight: SizeConfig.padding16,
+                                            isDot: true,
+                                            assetUrl: Assets.circleGameAsset,
+                                          );
+                                        }
+
+                                        Map<Object, Object> fetchedData =
+                                            Map<dynamic, dynamic>.from(
+                                                (snapshot.data as DatabaseEvent)
+                                                        .snapshot
+                                                        .value
+                                                    as Map<dynamic, dynamic>);
+                                        String fieldToFetch =
+                                            fetchedData['field'] as String;
+
+                                        Map<Object, Object> requiredTimeData =
+                                            fetchedData[fieldToFetch];
+
+                                        return AnimatedSwitcher(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          transitionBuilder: (Widget child,
+                                              Animation<double> animation) {
+                                            return ScaleTransition(
+                                                scale: animation, child: child);
+                                          },
+                                          child: GameInfoBlock(
+                                            coin:
+                                                "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+                                            coinText: 'Playing',
+                                            assetHeight: SizeConfig.padding16,
+                                            isDot: true,
+                                            assetUrl: Assets.circleGameAsset,
+                                            key: ValueKey<String>(
+                                                requiredTimeData['value']
+                                                    .toString()),
+                                          ),
+                                        );
+                                      },
                                     ),
                                     GameInfoBlock(
                                       coin:

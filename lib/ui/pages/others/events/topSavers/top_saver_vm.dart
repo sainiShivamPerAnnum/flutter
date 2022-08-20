@@ -17,6 +17,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/service/api.dart';
@@ -50,7 +51,8 @@ class TopSaverViewModel extends BaseModel {
   bool showStandingsAndWinners = true;
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
-  String _realTimeFinanceStats;
+
+  bool isStreamLoading = true;
 
   int _tabNo = 0;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
@@ -59,12 +61,6 @@ class TopSaverViewModel extends BaseModel {
   PageController get pageController => _pageController;
 
   bool infoBoxOpen = false;
-
-  String get realTimeFinanceStats => _realTimeFinanceStats;
-  set realTimeFinanceStats(value) {
-    this._realTimeFinanceStats = value;
-    notifyListeners();
-  }
 
   int get tabNo => _tabNo;
   set tabNo(value) {
@@ -146,9 +142,7 @@ class TopSaverViewModel extends BaseModel {
     event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
     infoBoxOpen = false;
-    _realTimeFinanceStats = "fetching";
-    fetchRealtimeFinanceStats(getPathForRealTimeFinanceStats(eventType));
-
+    getRealTimeFinanceStream();
     setState(ViewState.Idle);
 
     campaignType = event.type;
@@ -324,9 +318,8 @@ class TopSaverViewModel extends BaseModel {
     }
   }
 
-  fetchRealtimeFinanceStats(String value) async {
-    _realTimeFinanceStats = await Api().fetchRealTimeFinanceStats(value);
-    notifyListeners();
+  Stream<DatabaseEvent> getRealTimeFinanceStream() {
+    return Api().fetchRealTimeFinanceStats();
   }
 
   String sortPlayerNumbers(String number) {
