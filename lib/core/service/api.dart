@@ -340,34 +340,25 @@ class Api {
     }
   }
 
-  Future<String> fetchRealTimePlayingStats(String gameType) async {
+  Stream<rdb.DatabaseEvent> fetchRealTimePlayingStats(String gameType) {
     try {
-      final rdb.DataSnapshot data =
-          (await _realtimeDatabase.ref().child("stats").child(gameType).once())
-              .snapshot;
-      Map<Object, Object> fetchedData = data.value as Map<Object, Object>;
-      String fieldToFetch = fetchedData['field'] as String;
+      var data = _realtimeDatabase.ref().child("stats").child(gameType).onValue;
 
-      Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch];
-
-      return requiredTimeData['value'].toString();
+      return data;
     } catch (e) {
-      return "50+";
+      print("Exception:${e.toString()}");
+      return null;
     }
   }
 
-  Future<String> fetchRealTimeFinanceStats(String c) async {
+  Stream<rdb.DatabaseEvent> fetchRealTimeFinanceStats() {
     try {
-      final rdb.DataSnapshot data =
-          (await db2.ref().child("finance-stats").once()).snapshot;
-      Map<Object, Object> fetchedData = data.value as Map<Object, Object>;
+      var data = db2.ref().child("finance-stats").onValue;
 
-      Map<Object, Object> sortedData = fetchedData[c];
-
-      return sortedData['value'].toString();
+      return data;
     } catch (e) {
-      print("Ex:${e.toString()}");
-      return "";
+      print("Exception:${e.toString()}");
+      return null;
     }
   }
 }

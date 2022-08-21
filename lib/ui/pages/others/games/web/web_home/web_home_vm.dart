@@ -29,6 +29,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class RechargeOption {
@@ -67,7 +68,6 @@ class WebHomeViewModel extends BaseModel {
   String token = "";
   bool _isLoading;
   String gameCode;
-  String _realTimePlayingStat = "";
   GameModel _currentGameModel;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
@@ -93,7 +93,6 @@ class WebHomeViewModel extends BaseModel {
   String get sessionID => _sessionId;
   get isLoading => this._isLoading;
   GameModel get currentGameModel => _currentGameModel;
-  String get realTimePlayingStat => _realTimePlayingStat;
 
   set isLoading(value) {
     this._isLoading = value;
@@ -134,7 +133,6 @@ class WebHomeViewModel extends BaseModel {
     await fetchGame(game);
     // scrollController = _lbService.parentController;
     // pageController = new PageController(initialPage: 0);
-    fetchRealTimePlayingStat(game);
     refreshPrizes();
     refreshLeaderboard();
     isLoading = false;
@@ -193,9 +191,8 @@ class WebHomeViewModel extends BaseModel {
     return _setupCurrentGame();
   }
 
-  fetchRealTimePlayingStat(String gameType) async {
-    _realTimePlayingStat = await Api().fetchRealTimePlayingStats(gameType);
-    notifyListeners();
+  Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
+    return Api().fetchRealTimePlayingStats(game);
   }
 
   launchGame() {

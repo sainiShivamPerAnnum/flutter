@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart' as rdb;
+
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -14,6 +18,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/enums/page_state_enum.dart';
@@ -39,6 +44,8 @@ extension TruncateDoubles on double {
 }
 
 class CampaignView extends StatelessWidget {
+  StreamController controller = StreamController();
+
   final String eventType;
   final bool isGameRedirected;
   CampaignView({this.eventType, this.isGameRedirected = false});
@@ -52,6 +59,8 @@ class CampaignView extends StatelessWidget {
   bool isInteger(num value) => value is int || value == value.roundToDouble();
 
   ScrollController _controller = ScrollController();
+
+  bool showStreamBuilder = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,14 +158,69 @@ class CampaignView extends StatelessWidget {
                                             color: UiConstants.kPrimaryColor,
                                             shape: BoxShape.circle),
                                       ),
-                                      Text(
-                                        model.realTimeFinanceStats == "fetching"
-                                            ? "-"
-                                            : model.realTimeFinanceStats == ""
-                                                ? "${model.getDeafultRealTimeStat(eventType)} Participants"
-                                                : "${model.sortPlayerNumbers(model.realTimeFinanceStats)} + Participants",
-                                        style: TextStyles.body3
-                                            .colour(Colors.white),
+                                      StreamBuilder(
+                                        stream:
+                                            model.getRealTimeFinanceStream(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasError) {
+                                            return Text(
+                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
+                                              style: TextStyles.body3
+                                                  .colour(Colors.white),
+                                            );
+                                          }
+
+                                          if (!snapshot.hasData) {
+                                            return Text(
+                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
+                                              style: TextStyles.body3
+                                                  .colour(Colors.white),
+                                            );
+                                          }
+
+                                          if ((snapshot.data
+                                                      as rdb.DatabaseEvent)
+                                                  .snapshot
+                                                  .value !=
+                                              null) {
+                                            final fetchedData = Map<dynamic,
+                                                    dynamic>.from(
+                                                (snapshot.data as DatabaseEvent)
+                                                        .snapshot
+                                                        .value
+                                                    as Map<dynamic, dynamic>);
+
+                                            Map<dynamic, dynamic> sortedData =
+                                                fetchedData[model
+                                                    .getPathForRealTimeFinanceStats(
+                                                        eventType)];
+
+                                            return AnimatedSwitcher(
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              transitionBuilder: (Widget child,
+                                                  Animation<double> animation) {
+                                                return ScaleTransition(
+                                                    scale: animation,
+                                                    child: child);
+                                              },
+                                              child: Text(
+                                                "${model.sortPlayerNumbers(sortedData['value'].toString())}+  Participants",
+                                                style: TextStyles.body3
+                                                    .colour(Colors.white),
+                                                key: ValueKey<String>(
+                                                    sortedData['value']
+                                                        .toString()),
+                                              ),
+                                            );
+                                          } else {
+                                            return Text(
+                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
+                                              style: TextStyles.body3
+                                                  .colour(Colors.white),
+                                            );
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
