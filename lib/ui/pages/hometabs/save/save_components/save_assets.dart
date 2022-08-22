@@ -14,7 +14,6 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -22,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class SaveAssetView extends StatelessWidget {
@@ -89,29 +89,43 @@ class SaveAssetView extends StatelessWidget {
                                     saveViewModel: model,
                                   ));
                             },
-                            isActive: model.isKYCVerified),
+                            isActive: model.getButtonAvailibility()),
                       ]),
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding24),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      'To enable selling gold,\ncomplete the following:',
-                      style: TextStyles.sourceSans.body4
-                          .colour(Colors.grey.withOpacity(0.7)),
-                      textAlign: TextAlign.end,
-                    ),
+                    child: model.isKYCVerified && model.isVPAVerified
+                        ? SizedBox()
+                        : Text(
+                            'To enable selling gold,\ncomplete the following:',
+                            style: TextStyles.sourceSans.body4
+                                .colour(Colors.grey.withOpacity(0.7)),
+                            textAlign: TextAlign.end,
+                          ),
                   ),
                 ),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                CompleteKYCSection(
-                  isKYCCompleted:
-                      model.userService.isSimpleKycVerified ?? false,
-                  isBankInformationComeplted: model.isVPAVerified ?? false,
-                ),
+                //Complete KYC section
+                model.isKYCVerified && model.isVPAVerified
+                    ? SizedBox()
+                    : CompleteKYCSection(
+                        isKYCCompleted:
+                            model.userService.isSimpleKycVerified ?? false,
+                        isBankInformationComeplted:
+                            model.isVPAVerified ?? false,
+                      ),
+                //Lock in reached section
+                model.isLockInReached
+                    ? SizedBox()
+                    : SellPreventionReasonCard(
+                        iconString: Assets.alertTriangle,
+                        content:
+                            '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                      ),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
@@ -457,8 +471,8 @@ class SellActionButton extends StatelessWidget {
                 ),
                 isVisible
                     ? Icon(
-                        Icons.check_circle,
-                        color: UiConstants.darkPrimaryColor,
+                        Icons.check_circle_rounded,
+                        color: UiConstants.kTealTextColor,
                       )
                     : Icon(
                         Icons.arrow_forward_ios_rounded,
@@ -558,6 +572,47 @@ class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
                     .toList(),
               )),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SellPreventionReasonCard extends StatelessWidget {
+  final String iconString;
+  final String content;
+
+  const SellPreventionReasonCard({Key key, this.iconString, this.content})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+      child: Container(
+        height: SizeConfig.screenWidth * 0.21,
+        width: SizeConfig.screenWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          color: UiConstants.kSecondaryBackgroundColor,
+        ),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.padding10),
+            child: Row(
+              children: [
+                SvgPicture.asset(iconString),
+                ConstrainedBox(
+                  constraints:
+                      BoxConstraints(maxWidth: SizeConfig.screenWidth * 0.74),
+                  child: Text(
+                    content,
+                    style: TextStyles.sourceSans.body4,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
