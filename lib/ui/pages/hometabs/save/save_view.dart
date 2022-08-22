@@ -392,7 +392,7 @@ class SaveBlogSection extends StatelessWidget {
         padding: EdgeInsets.only(
             left: SizeConfig.padding24, top: SizeConfig.padding10),
         child: BaseView<SaveViewModel>(
-          onModelReady: (model) => model.getBlogs(),
+          onModelReady: (model) => model.getSaveViewBlogs(),
           builder: (ctx, model, child) => Container(
             height: SizeConfig.screenWidth * 0.4,
             child: model.isLoading
@@ -435,14 +435,19 @@ class SaveBlogSection extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: model.blogPosts.length,
                     itemBuilder: (ctx, index) {
-                      return SaveBlogTile(
-                        onTap: () {
-                          model.navigateToBlogWebView(
-                              model.blogPosts[index].slug);
-                        },
-                        title: model.blogPosts[index].title.rendered,
-                        description: model.blogPosts[index].acf.categories,
-                        imageUrl: model.blogPosts[index].yoastHeadJson,
+                      return Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding10),
+                        child: SaveBlogTile(
+                          isFullScreen: false,
+                          onTap: () {
+                            model.navigateToBlogWebView(
+                                model.blogPosts[index].slug);
+                          },
+                          blogSideFlagColor: model.getRandomColor(),
+                          title: model.blogPosts[index].title.rendered,
+                          description: model.blogPosts[index].acf.categories,
+                          imageUrl: model.blogPosts[index].yoastHeadJson,
+                        ),
                       );
                     }),
           ),
@@ -472,87 +477,100 @@ class SaveBlogTile extends StatelessWidget {
   final String title;
   final String description;
   final String imageUrl;
+  final bool isFullScreen;
+  final Color blogSideFlagColor;
   const SaveBlogTile(
-      {Key key, this.onTap, this.title, this.description, this.imageUrl})
+      {Key key,
+      this.onTap,
+      this.title,
+      this.description,
+      this.imageUrl,
+      this.isFullScreen = false,
+      this.blogSideFlagColor = Colors.red})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: SizeConfig.padding10),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: SizeConfig.screenWidth - 80,
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                    height: SizeConfig.screenWidth * 0.4,
-                    width: SizeConfig.padding20,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(SizeConfig.roundness12),
-                          bottomRight: Radius.circular(SizeConfig.roundness12),
-                        ),
-                        //TODO make color dynamic
-                        color: Colors.red)),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    height: SizeConfig.screenWidth * 0.4,
-                    width: SizeConfig.screenWidth * 0.36,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.centerLeft),
-              ),
-              Positioned(
-                left: SizeConfig.screenWidth * 0.32,
-                child: Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width:
+            isFullScreen ? SizeConfig.screenWidth : SizeConfig.screenWidth - 80,
+        child: Stack(
+          children: [
+            Positioned(
+              right: 0,
+              child: Container(
                   height: SizeConfig.screenWidth * 0.4,
-                  width: SizeConfig.screenWidth * 0.45,
+                  width: SizeConfig.padding28,
                   decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                      color: Colors.black),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding10,
-                        horizontal: SizeConfig.padding20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ConstrainedBox(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(SizeConfig.roundness12),
+                        bottomRight: Radius.circular(SizeConfig.roundness12),
+                      ),
+                      //TODO make color dynamic
+                      color: blogSideFlagColor)),
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  height: SizeConfig.screenWidth * 0.4,
+                  width: isFullScreen
+                      ? SizeConfig.screenWidth * 0.5
+                      : SizeConfig.screenWidth * 0.4,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerLeft),
+            ),
+            Positioned(
+              left: isFullScreen
+                  ? SizeConfig.screenWidth * 0.34
+                  : SizeConfig.screenWidth * 0.32,
+              child: Container(
+                height: SizeConfig.screenWidth * 0.4,
+                width: isFullScreen
+                    ? SizeConfig.screenWidth * 0.525
+                    : SizeConfig.screenWidth * 0.45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                    color: Colors.black),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding10,
+                      horizontal: SizeConfig.padding20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: isFullScreen
+                              ? SizeConfig.screenWidth * 0.42
+                              : SizeConfig.screenWidth * 0.34,
+                        ),
+                        child: Text(
+                          description,
+                          style: TextStyles.rajdhaniSB.body2
+                              .colour(UiConstants.kTextColor),
+                        ),
+                      ),
+                      ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: SizeConfig.screenWidth * 0.34,
                           ),
                           child: Text(
-                            description,
-                            style: TextStyles.rajdhaniSB.body2
-                                .colour(UiConstants.kTextColor),
-                          ),
-                        ),
-                        ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: SizeConfig.screenWidth * 0.34,
-                            ),
-                            child: Text(
-                              title,
-                              maxLines: 2,
-                              overflow: TextOverflow.clip,
-                              style: TextStyles.sourceSans.body3
-                                  .colour(Colors.grey.shade200),
-                            )),
-                      ],
-                    ),
+                            title,
+                            maxLines: 2,
+                            overflow: TextOverflow.clip,
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.grey.shade200),
+                          )),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

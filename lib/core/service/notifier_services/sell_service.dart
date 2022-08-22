@@ -1,6 +1,9 @@
 import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -10,6 +13,8 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _saveRepo = locator<SaveRepo>();
+  DBModel _dbModel = locator<DBModel>();
+  final _paymentRepo = locator<PaymentRepository>();
 
   bool _isKYCVerified = false;
   bool _isVPAVerified = false;
@@ -39,20 +44,25 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     _isGoldSaleActive = val;
     notifyListeners(SellServiceProperties.augmontSellDisabled);
   }
+  //AugmontService - saleDisabled
 
   set setLockInReached(bool val) {
     _isLockInReached = val;
     notifyListeners(SellServiceProperties.reachedLockIn);
   }
+  //Lock in - sellVM(witharwable quantity)
 
   set setOngoingTransaction(bool val) {
     _isOngoingTransaction = val;
     notifyListeners(SellServiceProperties.ongoingTransaction);
   }
+  //Transaction - check last transaction status(TransactionService)
 
   init() {
     verifyVPAAddress();
     verifyKYCStatus();
+    verifyAugmontSellStatus();
+    verifyLockIn();
   }
 
   verifyVPAAddress() async {
@@ -69,6 +79,22 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     setKYCVerified = _userService.isSimpleKycVerified;
     print(_isKYCVerified);
     _logger.d('kyc verified! $isKYCVerified');
+  }
+
+  verifyAugmontSellStatus() async {
+    setGoldSaleActive = await _dbModel.isAugmontSellDisabled();
+  }
+
+  verifyOngoingTransaction() {}
+
+  verifyLockIn() async {
+    var response = await _paymentRepo.getWithdrawableAugGoldQuantity();
+    double lockIn = response.model;
+    if (lockIn > 0) {
+      setLockInReached = true;
+    } else {
+      setLockInReached = false;
+    }
   }
 
   bool getSellButtonVisibility() {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/blog_model.dart';
@@ -16,21 +18,36 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmo
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
 
 class SaveViewModel extends BaseModel {
   final _campaignRepo = locator<CampaignRepo>();
   final _saveRepo = locator<SaveRepo>();
   final userService = locator<UserService>();
   BaseUtil baseProvider;
-  bool _isVPAVerified = false;
-  SellService _sellService = SellService();
+  final SellService _sellService = locator<SellService>();
   final _baseUtil = locator<BaseUtil>();
+  final List<Color> randomBlogCardCornerColors = [
+    UiConstants.kBlogCardRandomColor1,
+    UiConstants.kBlogCardRandomColor2,
+    UiConstants.kBlogCardRandomColor3,
+    UiConstants.kBlogCardRandomColor4,
+    UiConstants.kBlogCardRandomColor5
+  ];
 
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
   bool _isLoading = false;
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
+  Map<String, dynamic> _filteredList = {};
+  bool _isKYCVerified = false;
+  bool _isVPAVerified = false;
+  bool _isGoldSaleActive = false;
+  bool _isOngoingTransaction = false;
+  bool _isLockInReached = false;
+  bool _isSellButtonVisible = false;
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
@@ -40,8 +57,13 @@ class SaveViewModel extends BaseModel {
   bool get isLoading => _isLoading;
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
+  Map<String, dynamic> get filteredBlogList => _filteredList;
+  bool get isKYCVerified => _isKYCVerified;
   bool get isVPAVerified => _isVPAVerified;
-  SellService get sellService => _sellService;
+  bool get isGoldSaleActive => _isGoldSaleActive;
+  bool get isOngoingTransaction => _isOngoingTransaction;
+  bool get isLockInReached => _isLockInReached;
+  bool get isSellButtonVisible => _isSellButtonVisible;
 
   set ongoingEvents(List<EventModel> value) {
     this._ongoingEvents = value;
@@ -67,7 +89,12 @@ class SaveViewModel extends BaseModel {
     ];
     baseProvider = BaseUtil();
     getCampaignEvents();
-    getBlogs();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _sellService.init();
+      updateSellButtonDetails();
+    });
+    getSaveViewBlogs();
+    notifyListeners();
   }
 
   void updateIsLoading(bool value) {
@@ -77,6 +104,14 @@ class SaveViewModel extends BaseModel {
 
   openProfile() {
     _baseUtil.openProfileDetailsScreen();
+  }
+
+  updateSellButtonDetails() {
+    _isKYCVerified = _sellService.isKYCVerified;
+    _isVPAVerified = _sellService.isVPAVerified;
+    _isGoldSaleActive = _sellService.isGoldSaleActive;
+    _isLockInReached = _sellService.isLockInReached;
+    _isOngoingTransaction = _sellService.isOngoingTransaction;
   }
 
   getCampaignEvents() async {
@@ -93,10 +128,25 @@ class SaveViewModel extends BaseModel {
     updateIsLoading(false);
   }
 
-  getBlogs() async {
+  Color getRandomColor() {
+    Random random = Random();
+    return randomBlogCardCornerColors[random.nextInt(5)];
+  }
+
+  getSaveViewBlogs() async {
     updateIsLoading(true);
-    final response = await _saveRepo.getBlogs();
+    final response = await _saveRepo.getBlogs(5);
     blogPosts = response.model;
+    print(blogPosts.length);
+    updateIsLoading(false);
+    notifyListeners();
+  }
+
+  getAllBlogs() async {
+    updateIsLoading(true);
+    final response = await _saveRepo.getBlogs(30);
+    blogPosts = response.model;
+    blogPosts.sort(((a, b) => a.acf.categories.compareTo(b.acf.categories)));
     print(blogPosts.length);
     updateIsLoading(false);
     notifyListeners();

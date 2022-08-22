@@ -43,7 +43,7 @@ class SubscriptionCardViewModel extends BaseModel {
           if (subscription.resumeDate.isEmpty)
             return "Fello Autosave";
           else
-            return "${getResumeDate()}";
+            return "till ${getResumeDate()}";
         }
       }
       return "0.0/day";
@@ -173,13 +173,13 @@ class SubscriptionCardViewModel extends BaseModel {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "Savings on autopilot with";
+      return "Start an SIP with Fello Autosave";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
       return "AUTO SIP";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "AUTO SIP";
+        return "Active";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         if (subscription.autoAmount == 0.0)
@@ -188,7 +188,7 @@ class SubscriptionCardViewModel extends BaseModel {
           if (subscription.resumeDate.isEmpty)
             return "Savings on autopilot with";
           else
-            return "Your Autosave is Paused till";
+            return "Paused";
         }
       }
       return "Autosave";

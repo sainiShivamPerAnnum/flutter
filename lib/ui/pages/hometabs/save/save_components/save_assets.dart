@@ -29,7 +29,6 @@ class SaveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S();
     return Scaffold(
       backgroundColor: UiConstants.kDarkBackgroundColor,
       appBar: AppBar(
@@ -90,7 +89,7 @@ class SaveAssetView extends StatelessWidget {
                                     saveViewModel: model,
                                   ));
                             },
-                            isActive: model.sellService.isKYCVerified),
+                            isActive: model.isKYCVerified),
                       ]),
                 ),
                 Padding(
@@ -360,12 +359,15 @@ class CompleteKYCSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<SaveViewModel>(
-        onModelReady: (model) => model.sellService.init(),
+        onModelReady: (model) => model.init(),
         builder: (context, model, child) =>
             PropertyChangeConsumer<SellService, SellServiceProperties>(
                 properties: [
                   SellServiceProperties.bankDetailsVerified,
-                  SellServiceProperties.kycVerified
+                  SellServiceProperties.kycVerified,
+                  SellServiceProperties.augmontSellDisabled,
+                  SellServiceProperties.reachedLockIn,
+                  SellServiceProperties.ongoingTransaction
                 ],
                 builder: (context, serviceModel, child) => Column(
                       children: [
