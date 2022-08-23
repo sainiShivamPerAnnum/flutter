@@ -73,7 +73,7 @@ class KYCDetailsView extends StatelessWidget {
                               },
                               keyboardType: TextInputType.name,
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: SizeConfig.padding24),
                             AppTextFieldLabel(
                               locale.pkPanLabel,
                               leftPadding: 0,
@@ -120,7 +120,7 @@ class KYCDetailsView extends StatelessWidget {
                                           width: SizeConfig.screenWidth,
                                         )),
                               ),
-                            SizedBox(height: 24),
+                            SizedBox(height: SizeConfig.padding24),
                           ],
                         ),
                 ),

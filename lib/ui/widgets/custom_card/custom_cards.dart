@@ -60,8 +60,8 @@ class SaveCustomCard extends StatelessWidget {
                   children: [
                     Image.asset(
                       cardAssetName,
-                      height: SizeConfig.screenWidth * 0.38,
-                      width: SizeConfig.screenWidth * 0.38,
+                      height: SizeConfig.screenWidth * 0.3,
+                      width: SizeConfig.screenWidth * 0.3,
                     ),
                     Expanded(
                       child: Padding(

@@ -607,6 +607,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
         break;
+      case Pages.ViewAllBlogsView:
+        ViewAllBlogsViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }

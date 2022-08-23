@@ -288,67 +288,10 @@ class AugmontGoldSellViewModel extends BaseModel {
     }
   }
 
-  showSuccessGoldSellDialog() {
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      hapticVibrate: true,
-      isBarrierDismissable: false,
-      content: FelloInfoDialog(
-        customContent: Column(
-          children: [
-            SizedBox(height: SizeConfig.screenHeight * 0.04),
-            SvgPicture.asset(
-              Assets.prizeClaimConfirm,
-              height: SizeConfig.screenHeight * 0.16,
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.04,
-            ),
-            Text(
-              "Successful!",
-              style: TextStyles.title3.bold,
-            ),
-            SizedBox(height: SizeConfig.padding16),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                text:
-                    "Your withdrawal is successfully being processed and will be credited to your bank within ",
-                style: TextStyles.body3.colour(Colors.black54),
-                children: [
-                  TextSpan(
-                    text: "1-2 business working days",
-                    style:
-                        TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: SizeConfig.screenHeight * 0.02),
-            Container(
-              width: SizeConfig.screenWidth,
-              child: FelloButtonLg(
-                child: Text(
-                  "OK",
-                  style: TextStyles.body3.colour(Colors.white),
-                ),
-                color: UiConstants.primaryColor,
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.backButtonDispatcher.didPopRoute();
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<bool> navigateToSaleConfirmationView() async {
+  Future navigateToSaleConfirmationView() async {
     try {
       await initiateSell();
-    } on Exception catch (e) {}
+    } catch (e) {}
     AppState.delegate.appState.currentAction = PageAction(
         page: SellConfirmationViewConfig,
         widget: SellAssetsConfirmationView(),

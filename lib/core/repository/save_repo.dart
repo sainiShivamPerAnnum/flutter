@@ -10,13 +10,15 @@ class SaveRepo extends BaseRepo {
   final String _baseUrl =
       'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev';
 
-  Future<ApiResponse<List<BlogPostModel>>> getBlogs() async {
+  Future<ApiResponse<List<BlogPostModel>>> getBlogs(int noOfBlogs) async {
     List<BlogPostModel> blogs = <BlogPostModel>[];
     try {
       var token =
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsIm5hbWUiOiJzaG91cnlhIiwiaWF0IjoxNjU5NzgwMDkyLCJleHAiOjE4MTc0NjAwOTJ9.J6fUbS_lqi-4fldnA2lDQWPjrAI19czO5C6cwRecjwo';
-      List responseData = await APIService.instance
-          .getData(ApiPath.getBlogs(5), token: token, cBaseUrl: _blogUrl);
+      List responseData = await APIService.instance.getData(
+          ApiPath.getBlogs(noOfBlogs),
+          token: token,
+          cBaseUrl: _blogUrl);
       responseData.forEach((e) {
         blogs.add(BlogPostModel.fromMap(e));
       });

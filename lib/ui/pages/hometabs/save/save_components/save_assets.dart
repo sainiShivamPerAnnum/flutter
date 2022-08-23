@@ -14,7 +14,6 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -22,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class SaveAssetView extends StatelessWidget {
@@ -29,7 +29,6 @@ class SaveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S();
     return Scaffold(
       backgroundColor: UiConstants.kDarkBackgroundColor,
       appBar: AppBar(
@@ -78,8 +77,9 @@ class SaveAssetView extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CurrentGoldRateText(),
+                        SellGoldText(),
                         _sellButton(
                             onTap: () {
                               BaseUtil.openModalBottomSheet(
@@ -90,29 +90,65 @@ class SaveAssetView extends StatelessWidget {
                                     saveViewModel: model,
                                   ));
                             },
-                            isActive: false),
+                            isActive: model.getButtonAvailibility()),
                       ]),
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding24),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      'To enable selling gold,\ncomplete the following:',
-                      style: TextStyles.sourceSans.body4
-                          .colour(Colors.grey.withOpacity(0.7)),
-                      textAlign: TextAlign.end,
-                    ),
+                    child: model.isKYCVerified && model.isVPAVerified
+                        ? SizedBox()
+                        : Text(
+                            'To enable selling gold,\ncomplete the following:',
+                            style: TextStyles.sourceSans.body4
+                                .colour(Colors.grey.withOpacity(0.7)),
+                            textAlign: TextAlign.end,
+                          ),
                   ),
                 ),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                CompleteKYCSection(
-                  isKYCCompleted:
-                      model.userService.isSimpleKycVerified ?? false,
-                  isBankInformationComeplted: model.isVPAVerified ?? false,
-                ),
+                //Complete KYC section
+                model.isKYCVerified && model.isVPAVerified
+                    ? SizedBox()
+                    : CompleteKYCSection(
+                        isKYCCompleted:
+                            model.userService.isSimpleKycVerified ?? false,
+                        isBankInformationComeplted:
+                            model.isVPAVerified ?? false,
+                      ),
+                //Lock in reached section
+                model.isLockInReached
+                    ? SizedBox()
+                    : SellPreventionReasonCard(
+                        iconString: Assets.alertTriangle,
+                        content:
+                            '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                      ),
+                model.isGoldSaleActive
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding10),
+                        child: SellPreventionReasonCard(
+                          iconString: Assets.alertTriangle,
+                          content:
+                              'Selling of DIgital Gold is currently on hold. Please try again later.',
+                        ),
+                      )
+                    : SizedBox(),
+                model.isOngoingTransaction
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding10),
+                        child: SellPreventionReasonCard(
+                          iconString: Assets.loadingSvg,
+                          content:
+                              'Your Digital Gold withdrawal is being processsed',
+                        ),
+                      )
+                    : SizedBox(),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
@@ -135,7 +171,7 @@ class SaveAssetView extends StatelessWidget {
   GestureDetector _sellButton(
       {@required Function() onTap, @required bool isActive}) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isActive ? onTap : () {},
       child: Container(
         height: SizeConfig.screenWidth * 0.12,
         width: SizeConfig.screenWidth * 0.29,
@@ -159,8 +195,8 @@ class SaveAssetView extends StatelessWidget {
   }
 }
 
-class CurrentGoldRateText extends StatelessWidget {
-  const CurrentGoldRateText({Key key}) : super(key: key);
+class SellGoldText extends StatelessWidget {
+  const SellGoldText({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BaseView<AugmontGoldDetailsViewModel>(
@@ -173,18 +209,15 @@ class CurrentGoldRateText extends StatelessWidget {
                   style: TextStyles.sourceSansSB.body2
                       .colour(Colors.grey.withOpacity(0.8)),
                 ),
-                model.isGoldRateFetching
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.title5,
-                        color: Colors.white,
-                      )
-                    : Text(
-                        model.goldRates != null
-                            ? "₹ ${model.goldRates.goldSellPrice.toStringAsFixed(2)}/gm ~"
-                            : "- gm",
-                        style: TextStyles.body3
-                            .colour(UiConstants.kBlogTitleColor),
-                      ),
+                ConstrainedBox(
+                  constraints:
+                      BoxConstraints(maxWidth: SizeConfig.screenWidth / 2),
+                  child: Text(
+                    "With every transaction, some tokens will be deducted.",
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kBlogTitleColor),
+                  ),
+                ),
               ],
             ));
   }
@@ -359,26 +392,27 @@ class CompleteKYCSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S();
     return BaseView<SaveViewModel>(
+        onModelReady: (model) => model.init(),
         builder: (context, model, child) =>
             PropertyChangeConsumer<SellService, SellServiceProperties>(
                 properties: [
                   SellServiceProperties.bankDetailsVerified,
-                  SellServiceProperties.kycVerified
+                  SellServiceProperties.kycVerified,
+                  SellServiceProperties.augmontSellDisabled,
+                  SellServiceProperties.reachedLockIn,
+                  SellServiceProperties.ongoingTransaction
                 ],
                 builder: (context, serviceModel, child) => Column(
                       children: [
                         SellActionButton(
                           title: 'Complete KYC',
                           onTap: () {
-                            bool a = serviceModel.updateSellButtonVisibility();
-                            print(a);
-                            if (serviceModel.updateSellButtonVisibility()) {
+                            if (!serviceModel.isKYCVerified) {
                               model.navigateToCompleteKYC();
                             }
                           },
-                          isVisible: serviceModel.updateSellButtonVisibility(),
+                          isVisible: serviceModel.isKYCVerified,
                         ),
                         SizedBox(
                           height: SizeConfig.padding10,
@@ -386,16 +420,41 @@ class CompleteKYCSection extends StatelessWidget {
                         SellActionButton(
                           title: 'Add Bank Information',
                           onTap: () {
-                            print('triggered');
-                            print(serviceModel.updateSellButtonVisibility());
-                            if (serviceModel.updateSellButtonVisibility()) {
-                              model.navigateToCompleteKYC();
+                            if (!serviceModel.isVPAVerified) {
+                              model.navigateToVerifyVPA();
                             }
                           },
-                          isVisible: serviceModel.updateSellButtonVisibility(),
+                          isVisible: serviceModel.isVPAVerified,
                         ),
                       ],
                     )));
+  }
+}
+
+class AugmontDownCard extends StatelessWidget {
+  const AugmontDownCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class OngoingTransactionCard extends StatelessWidget {
+  const OngoingTransactionCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class GoldLockedInCard extends StatelessWidget {
+  const GoldLockedInCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -430,10 +489,15 @@ class SellActionButton extends StatelessWidget {
                   title,
                   style: TextStyles.rajdhaniM.body1,
                 ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: UiConstants.kTextColor,
-                )
+                isVisible
+                    ? Icon(
+                        Icons.check_circle_rounded,
+                        color: UiConstants.kTealTextColor,
+                      )
+                    : Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: UiConstants.kTextColor,
+                      )
               ],
             ),
           ),
@@ -528,6 +592,51 @@ class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
                     .toList(),
               )),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SellPreventionReasonCard extends StatelessWidget {
+  final String iconString;
+  final String content;
+
+  const SellPreventionReasonCard({Key key, this.iconString, this.content})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+      child: Container(
+        height: SizeConfig.screenWidth * 0.2,
+        width: SizeConfig.screenWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          color: UiConstants.kSecondaryBackgroundColor,
+        ),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.padding10),
+            child: Row(
+              children: [
+                SvgPicture.asset(iconString),
+                SizedBox(
+                  width: SizeConfig.padding10,
+                ),
+                ConstrainedBox(
+                  constraints:
+                      BoxConstraints(maxWidth: SizeConfig.screenWidth * 0.74),
+                  child: Text(
+                    content,
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
