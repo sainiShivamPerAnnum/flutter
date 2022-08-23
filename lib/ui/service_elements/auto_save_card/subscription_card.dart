@@ -29,6 +29,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
     return BaseView<SubscriptionCardViewModel>(
+        onModelReady: (model) async => await model.init(),
         builder: (context, subscriptionModel, child) =>
             PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
               builder: (context, model, property) => model.autosaveVisible
@@ -144,7 +145,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
         builder: (context, model, property) => Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.padding24,
-                  vertical: SizeConfig.padding10),
+                  vertical: SizeConfig.padding20),
               child: Container(
                 height: SizeConfig.screenWidth * 0.34,
                 width: SizeConfig.screenWidth,
