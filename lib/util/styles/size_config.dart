@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class SizeConfig {
   // reference
@@ -25,10 +26,7 @@ class SizeConfig {
   static double cardBorderRadius;
   static double globalMargin;
   static double scaffoldMargin;
-  static BorderRadius homeViewBorder;
-  static bool isGamefirstTime;
   static EdgeInsets viewInsets;
-  static double assetCardSize;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -49,13 +47,6 @@ class SizeConfig {
     cardBorderRadius = 12;
     globalMargin = blockSizeHorizontal * 3;
     scaffoldMargin = blockSizeHorizontal * 5;
-    isGamefirstTime = true;
-    homeViewBorder = BorderRadius.only(
-      bottomLeft: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
-      bottomRight: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
-    );
-    print("Screen Height: $screenHeight");
-    print("Screen Width: $screenWidth");
   }
 
   // TEXT SIZES
@@ -130,19 +121,15 @@ class SizeConfig {
   static double get boxDividerMargins => screenWidth * 0.016;
   static double get bannerHeight => screenWidth * 0.61;
 
-  static BorderRadius get scaffoldRoundness => BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.padding40),
-        topRight: Radius.circular(SizeConfig.padding40),
-      );
-
-  //SPECIFIC
-
+  //Navbar
   static double get navBarWidth =>
       SizeConfig.screenWidth - (SizeConfig.pageHorizontalMargins * 2);
   static double get navBarAspectRatio => 4.16;
-  static double get navBarHeight => navBarWidth / navBarAspectRatio * 1.5;
-  //static double get navBarHeight => screenWidth * 0.212;
+  static double get navBarHeight =>
+      kBottomNavigationBarHeight +
+      math.max(SizeConfig.viewInsets.bottom / 2, SizeConfig.padding8);
 
+  //Avatar
   static double get avatarRadius => screenWidth * 0.052;
   static double get tileAvatarRadius => screenWidth * 0.057;
   static double get notificationAvatarRadius => screenWidth * 0.06;
@@ -160,6 +147,4 @@ class SizeConfig {
   // Button Border Radius
   static double get buttonBorderRadius => screenWidth * 0.0139; // 5
 
-  //Card Height calculation based on width
-  static double get cardHeight => screenWidth * 0.4613333333333333;
 }

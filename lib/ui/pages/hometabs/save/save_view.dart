@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -43,9 +45,12 @@ class Save extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Save view build called");
+
     return BaseView<SaveViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
+        log("ROOT: Save view baseview build called");
         return Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(

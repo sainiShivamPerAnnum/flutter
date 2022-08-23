@@ -13,6 +13,7 @@ import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -40,6 +41,7 @@ class TransactionService
   final _userCoinService = locator<UserCoinService>();
   final DBModel _dbModel = locator<DBModel>();
   final GoldenTicketService _gtService = GoldenTicketService();
+  final JourneyService _journeyService = locator<JourneyService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   final _baseUrl = FlavorConfig.isDevelopment()
@@ -361,6 +363,7 @@ class TransactionService
   // BUY LOGIC
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
+
     _logger.i("Updating response value.");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     // AppState.delegate.appState.txnTimer.cancel();
@@ -368,6 +371,7 @@ class TransactionService
     _logger.d("timer cancelled");
 
     try {
+      _journeyService.checkForMilestoneLevelChange();
       depositFcmResponseModel =
           DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
