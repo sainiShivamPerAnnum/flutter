@@ -33,7 +33,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
         builder: (context, subscriptionModel, child) =>
             PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
               builder: (context, model, property) => model.autosaveVisible
-                  ? InkWell(
+                  ? GestureDetector(
                       onTap: () async {
                         if (connectivityStatus == ConnectivityStatus.Offline)
                           return BaseUtil.showNoInternetAlert();
@@ -49,15 +49,15 @@ class _AutosaveCardState extends State<AutosaveCard> {
                       child: (model.activeSubscription != null &&
                               model.activeSubscription.status ==
                                   Constants.SUBSCRIPTION_ACTIVE)
-                          ? InitAutosaveCard(
-                              onTap: () {
-                                subscriptionModel.navigateToAutoSave();
-                              },
-                            )
-                          : ActiveOrPausedAutosaveCard(
+                          ? ActiveOrPausedAutosaveCard(
                               isLoading: isLoading,
                               isResumingInProgress: isResumingInProgress,
                               subscriptionModel: subscriptionModel,
+                            )
+                          : InitAutosaveCard(
+                              onTap: () {
+                                subscriptionModel.navigateToAutoSave();
+                              },
                             ))
                   : SizedBox(),
             ));
@@ -112,6 +112,9 @@ class InitAutosaveCard extends StatelessWidget {
                     children: [
                       Text('Start an SIP'.toUpperCase(),
                           style: TextStyles.rajdhaniSB.body3),
+                      SizedBox(
+                        height: SizeConfig.padding4,
+                      ),
                       SvgPicture.asset(
                         Assets.chevRonRightArrow,
                       )
