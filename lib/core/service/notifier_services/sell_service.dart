@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/sell_service_enum.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -11,7 +11,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _saveRepo = locator<SaveRepo>();
-  DBModel _dbModel = locator<DBModel>();
+  final _txnService = locator<TransactionService>();
 
   bool _isKYCVerified = false;
   bool _isVPAVerified = false;
@@ -42,6 +42,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   init() async {
     verifyVPAAddress();
     verifyKYCStatus();
+    verifyOngoingTransaction();
   }
 
   verifyVPAAddress() async {
@@ -60,16 +61,8 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     _logger.d('kyc verified! $isKYCVerified');
   }
 
-  // verifyAugmontSellStatus() async {
-  //   setGoldSaleActive = await _dbModel.isAugmontSellDisabled();
-  // }
-
-  bool getSellButtonVisibility() {
-    print(_isKYCVerified && _isVPAVerified);
-    //Both KYC and VPA is verified
-    if (_isKYCVerified && _isVPAVerified) {
-      return true;
-    }
-    return false;
+  verifyOngoingTransaction() async {
+    await _txnService.updateTransactions();
+    _isOngoingTransaction = _txnService.txnList[0].tranStatus == "COMPLETE";
   }
 }

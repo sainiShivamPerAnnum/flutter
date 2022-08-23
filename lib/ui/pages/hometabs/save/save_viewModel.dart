@@ -16,9 +16,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -91,12 +89,6 @@ class SaveViewModel extends BaseModel {
   }
 
   init() {
-    _sellingReasons = [
-      'Not interested anymore',
-      'Not interested anymore',
-      'Not interested anymore',
-      'Others'
-    ];
     baseProvider = BaseUtil();
     getCampaignEvents();
     fetchLockedGoldQnt();
@@ -117,12 +109,13 @@ class SaveViewModel extends BaseModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
-  updateSellButtonDetails() {
+  updateSellButtonDetails() async {
     _isKYCVerified = _sellService.isKYCVerified;
     _isVPAVerified = _sellService.isVPAVerified;
     if (withdrawableQnt < nonWithdrawableQnt) {
       _isLockInReached = true;
     }
+    _isGoldSaleActive = _baseUtil.augmontDetail.isSellLocked;
     _isOngoingTransaction = _sellService.isOngoingTransaction;
     notifyListeners();
   }

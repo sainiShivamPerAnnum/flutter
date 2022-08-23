@@ -46,8 +46,8 @@ class Assets {
   static final String autoSavePaused = 'assets/svg/auto_save_paused.svg';
   static final String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
   static final String upiSvg = 'assets/svg/upi.png';
-  static final String alertTriangle = 'assets/svg/alert_triangle.png';
-  static final String loadingSvg = 'assets/svg/loader.png';
+  static final String alertTriangle = 'assets/svg/alert_triangle.svg';
+  static final String loadingSvg = 'assets/svg/loader.svg';
 
   //APPBAR
 

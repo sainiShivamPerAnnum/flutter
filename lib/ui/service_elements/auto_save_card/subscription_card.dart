@@ -10,7 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
@@ -46,10 +45,14 @@ class _AutosaveCardState extends State<AutosaveCard> {
                           isLoading = false;
                         });
                       },
-                      child: model.activeSubscription != null &&
+                      child: (model.activeSubscription != null &&
                               model.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_ACTIVE
-                          ? InitAutosaveCard()
+                                  Constants.SUBSCRIPTION_ACTIVE)
+                          ? InitAutosaveCard(
+                              onTap: () {
+                                subscriptionModel.navigateToAutoSave();
+                              },
+                            )
                           : ActiveOrPausedAutosaveCard(
                               isLoading: isLoading,
                               isResumingInProgress: isResumingInProgress,
@@ -61,11 +64,65 @@ class _AutosaveCardState extends State<AutosaveCard> {
 }
 
 class InitAutosaveCard extends StatelessWidget {
-  const InitAutosaveCard({Key key}) : super(key: key);
+  final Function() onTap;
+
+  const InitAutosaveCard({Key key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: SizeConfig.screenWidth * 0.4,
+        width: SizeConfig.screenWidth,
+        color: UiConstants.kBackgroundColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding24, horizontal: SizeConfig.padding38),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Fello Autosave',
+                    style: TextStyles.sourceSansSB.body0,
+                  ),
+                  ConstrainedBox(
+                      constraints:
+                          BoxConstraints(maxWidth: SizeConfig.screenWidth / 2),
+                      child: Text(
+                          'Invest safely in Gold with our Auto SIP to win tokens',
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kTextColor2)))
+                ],
+              ),
+              Column(
+                children: [
+                  SvgPicture.asset(Assets.autoSaveDefault,
+                      height: SizeConfig.screenWidth * 0.22,
+                      width: SizeConfig.screenWidth * 0.22),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  Row(
+                    children: [
+                      Text('Start an SIP'.toUpperCase(),
+                          style: TextStyles.rajdhaniSB.body3),
+                      SvgPicture.asset(
+                        Assets.chevRonRightArrow,
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -99,136 +156,145 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            model.activeSubscription != null &&
-                                    model.activeSubscription.status ==
-                                        Constants.SUBSCRIPTION_ACTIVE
-                                ? Assets.autoSaveOngoing
-                                : Assets.autoSavePaused,
-                            height: SizeConfig.padding80,
-                            width: SizeConfig.padding80,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding10,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  subscriptionModel
-                                      .getActiveTitle(model.activeSubscription),
-                                  style: TextStyles.rajdhaniM.body3
-                                      .colour(UiConstants.kTextColor),
-                                  textAlign: TextAlign.left,
-                                ),
-                                model.activeSubscription != null
-                                    ? Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: SizeConfig.padding4),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: SizeConfig.padding20,
-                                              width: SizeConfig.padding20,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          SizeConfig.padding44),
-                                                  color: UiConstants
-                                                      .kBackgroundColor),
-                                              child: Center(
-                                                child: Image.asset(
-                                                  Assets.upiSvg,
-                                                  height: SizeConfig.padding14,
-                                                  width: SizeConfig.padding14,
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding10),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              model.activeSubscription != null &&
+                                      model.activeSubscription.status ==
+                                          Constants.SUBSCRIPTION_ACTIVE
+                                  ? Assets.autoSaveOngoing
+                                  : Assets.autoSavePaused,
+                              height: SizeConfig.padding80,
+                              width: SizeConfig.padding80,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding10,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    subscriptionModel.getActiveTitle(
+                                        model.activeSubscription),
+                                    style: TextStyles.rajdhaniM.body3
+                                        .colour(UiConstants.kTextColor),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  model.activeSubscription != null
+                                      ? Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding4),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                height: SizeConfig.padding20,
+                                                width: SizeConfig.padding20,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            SizeConfig
+                                                                .padding44),
+                                                    color: UiConstants
+                                                        .kBackgroundColor),
+                                                child: Center(
+                                                  child: Image.asset(
+                                                    Assets.upiSvg,
+                                                    height:
+                                                        SizeConfig.padding14,
+                                                    width: SizeConfig.padding14,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding6,
-                                            ),
-                                            Text(
-                                              model.activeSubscription.vpa,
-                                              style: TextStyles.sourceSans.body4
-                                                  .colour(
-                                                      UiConstants.kTextColor2),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                model.activeSubscription != null &&
-                                        model.activeSubscription.status ==
-                                            Constants.SUBSCRIPTION_ACTIVE
-                                    ? Text(
-                                        subscriptionModel.getActivityStatus(
-                                            model.activeSubscription),
-                                        style: TextStyles.rajdhani.body3
-                                            .colour(UiConstants.kTextColor),
-                                        textAlign: TextAlign.left,
-                                      )
-                                    : SizedBox(),
-                                // model.activeSubscription != null &&
-                                //         model.activeSubscription.status ==
-                                //             Constants.SUBSCRIPTION_ACTIVE
-                                //     ? Container()
-                                //     : Text(
-                                //         subscriptionModel.getactiveSubtitle(
-                                //             model.activeSubscription),
-                                //         style: TextStyles.sourceSans.body4,
-                                //       ),
-                                Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Investing',
-                                          style: TextStyles.sourceSans.body4
-                                              .colour(UiConstants.kTextColor2),
-                                        ),
-                                        Text(
-                                          '${model.activeSubscription.autoAmount} ${subscriptionModel.getFreq(model.activeSubscription.autoFrequency)}',
-                                          style: TextStyles.sourceSansSB.body0
+                                              SizedBox(
+                                                width: SizeConfig.padding6,
+                                              ),
+                                              Text(
+                                                model.activeSubscription.vpa,
+                                                style: TextStyles
+                                                    .sourceSans.body4
+                                                    .colour(UiConstants
+                                                        .kTextColor2),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                  model.activeSubscription != null &&
+                                          model.activeSubscription.status ==
+                                              Constants.SUBSCRIPTION_ACTIVE
+                                      ? Text(
+                                          subscriptionModel.getActivityStatus(
+                                              model.activeSubscription),
+                                          style: TextStyles.rajdhani.body3
                                               .colour(UiConstants.kTextColor),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding24,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Invested',
-                                          style: TextStyles.sourceSans.body4
-                                              .colour(UiConstants.kTextColor2),
-                                        ),
-                                        Text(
-                                          '\u20b9 ${model.activeSubscription.maxAmount}',
-                                          style: TextStyles.sourceSansSB.body0
-                                              .colour(UiConstants.kTextColor),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
+                                          textAlign: TextAlign.left,
+                                        )
+                                      : SizedBox(),
+                                  // model.activeSubscription != null &&
+                                  //         model.activeSubscription.status ==
+                                  //             Constants.SUBSCRIPTION_ACTIVE
+                                  //     ? Container()
+                                  //     : Text(
+                                  //         subscriptionModel.getactiveSubtitle(
+                                  //             model.activeSubscription),
+                                  //         style: TextStyles.sourceSans.body4,
+                                  //       ),
+                                  Spacer(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Investing',
+                                            style: TextStyles.sourceSans.body4
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                          Text(
+                                            '${model.activeSubscription?.autoAmount ?? 0} ${subscriptionModel.getFreq(model.activeSubscription?.autoFrequency ?? "")}',
+                                            style: TextStyles.sourceSansSB.body0
+                                                .colour(UiConstants.kTextColor),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding24,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Invested',
+                                            style: TextStyles.sourceSans.body4
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                          Text(
+                                            '\u20b9 ${model.activeSubscription?.maxAmount ?? 0}',
+                                            style: TextStyles.sourceSansSB.body0
+                                                .colour(UiConstants.kTextColor),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       // FittedBox(
                       //   fit: BoxFit.scaleDown,
