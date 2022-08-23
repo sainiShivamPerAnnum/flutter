@@ -166,7 +166,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                       Uri.parse(widget.milestone.actionUri));
                                 },
                                 width: SizeConfig.screenWidth),
-                            if (widget.milestone.index != 2)
+                            if (widget.milestone.skipCost != null)
                               Container(
                                 width: SizeConfig.screenWidth,
                                 alignment: Alignment.center,

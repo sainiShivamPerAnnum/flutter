@@ -14,12 +14,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class NewAugmontBuyView extends StatelessWidget {
   final int amount;
-  const NewAugmontBuyView({Key key, this.amount}) : super(key: key);
+  final bool skipMl;
+  const NewAugmontBuyView({Key key, this.amount, this.skipMl})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BaseView<AugmontGoldBuyViewModel>(
-        onModelReady: (model) => model.init(amount),
+        onModelReady: (model) => model.init(amount, skipMl),
         builder: (ctx, model, child) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,

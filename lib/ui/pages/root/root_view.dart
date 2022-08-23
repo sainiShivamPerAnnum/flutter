@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -22,12 +23,13 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
+final pages = [JourneyView(), Play(), Save(), Win()];
 
 class Root extends StatelessWidget {
-  final pages = [JourneyView(), Play(), Save(), Win()];
-
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Root view build called");
+
     return BaseView<RootViewModel>(
       onModelReady: (model) {
         model.onInit();
@@ -36,7 +38,8 @@ class Root extends StatelessWidget {
         model.onDispose();
       },
       builder: (ctx, model, child) {
-        model.initialize();
+        log("ROOT: Root view baseview build called");
+
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
@@ -46,6 +49,7 @@ class Root extends StatelessWidget {
             children: [
               NewSquareBackground(),
               RefreshIndicator(
+                triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
                 onRefresh: model.refresh,
@@ -53,7 +57,6 @@ class Root extends StatelessWidget {
                   child: Consumer<AppState>(
                     builder: (ctx, m, child) => IndexedStack(
                       children: pages,
-                      // controller: AppState.homeTabPageController,
                       index: AppState.delegate.appState.getCurrentTabIndex,
                     ),
                   ),
@@ -119,7 +122,7 @@ class BottomNavBar extends StatelessWidget {
         bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
           width: SizeConfig.screenWidth,
-          height: kBottomNavigationBarHeight + SizeConfig.viewInsets.bottom / 2,
+          height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
             color: Colors.black,
           ),

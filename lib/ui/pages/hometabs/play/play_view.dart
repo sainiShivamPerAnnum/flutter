@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -23,11 +25,14 @@ class Play extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Play view build called");
+
     return BaseView<PlayViewModel>(
       onModelReady: (model) {
         model.init();
       },
       builder: (ctx, model, child) {
+        log("ROOT: Play view baseview build called");
         return Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(

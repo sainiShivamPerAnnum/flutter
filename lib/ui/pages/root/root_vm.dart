@@ -101,6 +101,7 @@ class RootViewModel extends BaseModel {
     txnService.signOut();
     _paytmService.getActiveSubscriptionDetails();
     await txnService.fetchTransactions();
+    await _journeyService.checkForMilestoneLevelChange();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -113,6 +114,7 @@ class RootViewModel extends BaseModel {
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
+    initialize();
   }
 
   onDispose() {
@@ -189,19 +191,19 @@ class RootViewModel extends BaseModel {
     _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
 
-  uploadJourneyPage() async {
-    // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
-    log(json.encode(jourenyPages.last.toMap()));
-  }
+  // uploadJourneyPage() async {
+  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
+  //   log(json.encode(jourenyPages.last.toMap()));
+  // }
 
-  uploadMilestones() async {
-    // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
-    //       log(milestone.toMap().toString());
-    //     }));
-    log(json.encode(jourenyPages
-        .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
-        .toList()));
-  }
+  // uploadMilestones() async {
+  //   // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
+  //   //       log(milestone.toMap().toString());
+  //   //     }));
+  //   log(json.encode(jourenyPages
+  //       .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
+  //       .toList()));
+  // }
 
   // completeNViewDownloadSaveLViewAsset() async {
   //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
@@ -240,15 +242,15 @@ class RootViewModel extends BaseModel {
   }
 
   initialize() async {
-    bool canExecuteStartupNotification = true;
-    if (!_isInitialized) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      bool canExecuteStartupNotification = true;
+
       // bool showSecurityPrompt = false;
       // if (_userService.showSecurityPrompt == null) {
       //   showSecurityPrompt = await _lModel.showSecurityPrompt();
       //   _userService.showSecurityPrompt = showSecurityPrompt;
       // }
 
-      _isInitialized = true;
       _initAdhocNotifications();
 
       _baseUtil.getProfilePicture();
@@ -319,7 +321,7 @@ class RootViewModel extends BaseModel {
       //       value: DateTime.now().weekday,
       //       type: CacheType.int);
       // }
-    }
+    });
   }
 
   Future<dynamic> _verifyReferral(BuildContext context) async {

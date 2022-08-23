@@ -172,6 +172,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       {double amount,
       AugmontRates augmontRates,
       String couponCode,
+      bool skipMl,
       bool restrictAppInvoke = false}) async {
     if (augmontRates == null) return false;
 
@@ -189,8 +190,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     };
 
     final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse =
-        await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
+        paytmSubscriptionApiResponse = await _paytmRepo.createPaytmTransaction(
+            amount, augMap, couponCode, skipMl);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);

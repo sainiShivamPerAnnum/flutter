@@ -46,6 +46,7 @@ class _JourneyViewState extends State<JourneyView>
 
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Journey view build called");
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
         WidgetsBinding.instance?.addObserver(this);
@@ -57,7 +58,7 @@ class _JourneyViewState extends State<JourneyView>
         model.dump();
       },
       builder: (ctx, model, child) {
-        log("Journey View BUILD called");
+        log("ROOT: Journey view baseview build called");
 
         return Scaffold(
           backgroundColor: Colors.black,

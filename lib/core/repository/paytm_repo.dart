@@ -25,7 +25,10 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createPaytmTransaction(
-      double amount, Map<String, dynamic> augMap, String couponCode) async {
+      double amount,
+      Map<String, dynamic> augMap,
+      String couponCode,
+      bool skipMl) async {
     try {
       final String _uid = _userService.baseUser.uid;
       final Map<String, dynamic> _body = {
@@ -33,6 +36,7 @@ class PaytmRepository {
         "txnAmount": amount,
         "augMap": augMap,
         "couponcode": couponCode,
+        "skipMl": skipMl
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
