@@ -71,24 +71,30 @@ class OnBoardingView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: SizeConfig.padding46,
-                  right: SizeConfig.padding24,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (model.currentPage == 2) {
+                Visibility(
+                  visible: model.currentPage != 2,
+                  child: Positioned(
+                    top: SizeConfig.padding46,
+                    right: SizeConfig.padding24,
+                    child: GestureDetector(
+                      onTap: () {
+                        // if (model.currentPage == 2) {
                         model.registerWalkthroughCompletion(comingFrom);
-                      } else {
-                        model.pageController.animateToPage(
-                          2,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeIn,
-                        );
-                      }
-                    },
-                    child: Text(
-                      model.currentPage == 2 ? "FINISH" : "SKIP",
-                      style: TextStyles.rajdhaniSB.body1,
+                        // } else {
+                        //   model.pageController.animateToPage(
+                        //     2,
+                        //     duration: Duration(milliseconds: 500),
+                        //     curve: Curves.easeIn,
+                        //   );
+                        // }
+                      },
+                      child: model.isWalkthroughRegistrationInProgress
+                          ? SpinKitThreeBounce(
+                              color: Colors.white, size: SizeConfig.padding16)
+                          : Text(
+                              "SKIP",
+                              style: TextStyles.rajdhaniSB.body1,
+                            ),
                     ),
                   ),
                 ),

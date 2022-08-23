@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -209,14 +210,20 @@ class Level2ViewModel extends BaseModel {
       return false;
     } else {
       final originalFormatString = BaseUtil.toOriginalFormatString(date);
-      if (inputDate == originalFormatString) {
-        selectedDate = date;
-        return true;
-      } else {
+
+      if (inputDate != originalFormatString) {
         dateInputError = "Invalid date";
         notifyListeners();
         return false;
       }
+
+      if (!DateHelper.isAdult(date)) {
+        dateInputError = "You need to be above 18 to join";
+        notifyListeners();
+        return false;
+      }
+      selectedDate = date;
+      return true;
     }
   }
 

@@ -1,7 +1,9 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
+import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -41,151 +43,113 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
       onModelReady: (model) => this.model = model,
       onModelDispose: (model) => model.disposeModel(),
       builder: (ctx, model, child) {
-        return Stack(
-          alignment: AlignmentDirectional.center,
+        return ListView(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          shrinkWrap: true,
           children: [
-            NewSquareBackground(),
-            Positioned(
-              top: 0,
-              child: CustomPaint(
-                painter: HeaderPainter(),
-                size: Size(
-                  SizeConfig.screenWidth,
-                  SizeConfig.screenWidth * 0.74,
-                ),
+            SizedBox(height: SizeConfig.padding80),
+            Text(
+              'What do we call you?',
+              style: TextStyles.rajdhaniB.title2,
+              textAlign: TextAlign.center,
+            ),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              height: SizeConfig.screenWidth * 0.05,
+            ),
+            Text(
+              'Come up with a unique name to get\nstarted on yoru fello journey',
+              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+              textAlign: TextAlign.center,
+            ),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              height: isKeyboardOpen
+                  ? SizeConfig.screenWidth * 0.03
+                  : SizeConfig.screenWidth * 0.186,
+            ),
+            FelloUserAvatar(),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              height: isKeyboardOpen
+                  ? SizeConfig.screenWidth * 0.023
+                  : SizeConfig.screenWidth * 0.101,
+            ),
+            //input
+            Form(
+              key: model.formKey,
+              child: LogInTextField(
+                focusNode: model.focusNode,
+                hintText: 'Your username',
+                onTap: () {},
+                textAlign: TextAlign.center,
+                controller: model.usernameController,
+                enabled: model.enabled,
+                validator: (val) {
+                  if (val == null || val.isEmpty)
+                    return "username cannot be empty";
+                  return null;
+                },
+                onChanged: (value) {
+                  model.validate();
+                },
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: SizeConfig.padding80),
-                Text(
-                  'What do we call you?',
-                  style: TextStyles.rajdhaniB.title2,
-                ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: SizeConfig.screenWidth * 0.05,
-                ),
-                Text(
-                  'Come up with a unique name to get\nstarted on yoru fello journey',
-                  style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-                ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: isKeyboardOpen
-                      ? SizeConfig.screenWidth * 0.03
-                      : SizeConfig.screenWidth * 0.186,
-                ),
-                FelloUserAvatar(),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: isKeyboardOpen
-                      ? SizeConfig.screenWidth * 0.023
-                      : SizeConfig.screenWidth * 0.101,
-                ),
-                //input
-                Form(
-                  key: model.formKey,
-                  child: LogInTextField(
-                    focusNode: model.focusNode,
-                    hintText: 'Your username',
+            // SizedBox(height: SizeConfig.padding20),
+            Container(
+              // margin: EdgeInsets.only(top: SizeConfig.padding16),
+              padding: EdgeInsets.only(
+                bottom: SizeConfig.padding24,
+                left: SizeConfig.padding12,
+              ),
+              child: model.showResult(),
+            ),
+            SizedBox(height: SizeConfig.padding20),
+            model.hasReferralCode
+                ? LogInTextField(
+                    controller: model.referralCodeController,
+                    onChanged: (val) {},
+                    maxLength: 10,
+                    // decoration: InputDecoration(
+                    hintText: "Enter your referral code here",
                     textAlign: TextAlign.center,
-                    controller: model.usernameController,
-                    enabled: model.enabled,
+                    //   hintStyle: TextStyles.body3.colour(Colors.grey),
+                    // ),
+                    inputFormatter: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'[a-zA-Z0-9]'),
+                      )
+                    ],
                     validator: (val) {
-                      if (val == null || val.isEmpty)
-                        return "username cannot be empty";
+                      if (val.trim().length == 0 || val == null) return null;
+                      if (val.trim().length < 3 || val.trim().length > 10)
+                        return "Invalid referral code";
                       return null;
                     },
-                    onChanged: (value) {
-                      model.validate();
+                  )
+                : TextButton(
+                    onPressed: () {
+                      model.hasReferralCode = true;
                     },
-                  ),
-                ),
-                // SizedBox(height: SizeConfig.padding20),
-                Container(
-                  margin: EdgeInsets.only(top: SizeConfig.padding16),
-                  padding: EdgeInsets.only(
-                    bottom: SizeConfig.padding24,
-                    left: SizeConfig.padding12,
-                  ),
-                  child: model.showResult(),
-                ),
-                SizedBox(height: SizeConfig.padding20),
-                model.hasReferralCode
-                    ? LogInTextField(
-                        controller: model.referralCodeController,
-                        onChanged: (val) {},
-                        maxLength: 10,
-                        // decoration: InputDecoration(
-                        hintText: "Enter your referral code here",
-                        //   hintStyle: TextStyles.body3.colour(Colors.grey),
-                        // ),
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'[a-zA-Z0-9]'),
-                          )
-                        ],
-                        validator: (val) {
-                          if (val.trim().length == 0 || val == null)
-                            return null;
-                          if (val.trim().length < 3 || val.trim().length > 10)
-                            return "Invalid referral code";
-                          return null;
-                        },
-                      )
-                    : TextButton(
-                        onPressed: () {
-                          model.hasReferralCode = true;
-                        },
-                        child: Center(
-                          child: Text(
-                            "Have a referral code?",
-                            style: TextStyles.body2.bold
-                                .colour(UiConstants.kPrimaryColor),
-                          ),
-                        ),
+                    child: Center(
+                      child: Text(
+                        "Have a referral code?",
+                        style: TextStyles.body2.bold
+                            .colour(UiConstants.kPrimaryColor),
+                        textAlign: TextAlign.center,
                       ),
-                if (model.hasReferralCode)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Referral codes are case-sensitive",
-                      textAlign: TextAlign.start,
-                      style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
                     ),
                   ),
-                Spacer(),
-                // Container(
-                //   width: SizeConfig.screenWidth * 0.189,
-                //   height: SizeConfig.screenWidth * 0.189,
-                //   decoration: BoxDecoration(
-                //     shape: BoxShape.circle,
-                //     color: Color(0xFF919193).withOpacity(0.10),
-                //   ),
-                //   child: Center(
-                //     child: Container(
-                //       width: SizeConfig.screenWidth * 0.136,
-                //       height: SizeConfig.screenWidth * 0.136,
-                //       decoration: BoxDecoration(
-                //         shape: BoxShape.circle,
-                //         color: Color(0xFF919193).withOpacity(0.20),
-                //       ),
-                //       child: Center(
-                //         child: SvgPicture.asset(
-                //           'assets/svg/arrow_svg.svg',
-                //           height: SizeConfig.screenWidth * 0.066,
-                //           width: SizeConfig.screenWidth * 0.069,
-                //           fit: BoxFit.cover,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(height: SizeConfig.padding20),
-              ],
-            ),
+            if (model.hasReferralCode)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Referral codes are case-sensitive",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
+                ),
+              ),
+            SizedBox(height: SizeConfig.padding80 * 1.4),
           ],
         );
       },

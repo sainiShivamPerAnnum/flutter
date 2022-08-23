@@ -65,7 +65,7 @@ class UserRank extends StatelessWidget {
                     style: TextStyles.rajdhani.body3,
                   ),
                   TextSpan(
-                    text: "${currentUserScore.score} points",
+                    text: "${(currentUserScore.score).toInt()} points",
                     style: TextStyles.rajdhaniSB.body3,
                   ),
                 ],

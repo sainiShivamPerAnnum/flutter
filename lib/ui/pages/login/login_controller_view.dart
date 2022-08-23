@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -7,6 +8,7 @@ import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -50,7 +52,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
         model.init(initPage);
@@ -59,75 +60,121 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         }
       },
       onModelDispose: (model) => model.exit(),
-      builder: (ctx, model, child) => Scaffold(
-        backgroundColor: UiConstants.primaryColor,
-        // resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight,
+      builder: (ctx, model, child) {
+        dev.log(model.currentPage.toString());
+        return Scaffold(
+          // backgroundColor: UiConstants.primaryColor,
+          // resizeToAvoidBottomInset: false,
+
+          body: Stack(
+            children: <Widget>[
+              NewSquareBackground(),
+              // if (model.currentPage == 1 || model.currentPage == 0)
+              Positioned(
+                top: 0,
+                child: Container(
+                  height: SizeConfig.screenHeight * 0.5,
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF135756),
+                        UiConstants.kBackgroundColor,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // if (model.currentPage == 2)
+              //   Positioned(
+              //     top: 0,
+              //     child: CustomPaint(
+              //       painter: HeaderPainter(),
+              //       size: Size(
+              //         SizeConfig.screenWidth,
+              //         SizeConfig.screenWidth * 0.74,
+              //       ),
+              //     ),
+              //   ),
+              SingleChildScrollView(
+                reverse: true,
                 child: Column(
                   children: [
-                    Expanded(
-                      child: PageView.builder(
-                        physics: new NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        controller: model.controller,
-                        itemCount: model.pages.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            model.pages[index],
-                        onPageChanged: (int index) => model.currentPage = index,
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenHeight,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: PageView.builder(
+                              physics: new NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              controller: model.controller,
+                              itemCount: model.pages.length,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  model.pages[index],
+                              onPageChanged: (int index) =>
+                                  model.currentPage = index,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AnimatedContainer(
+                      height: keyboardIsOpen ? SizeConfig.padding54 : 0,
+                      duration: Duration(
+                        milliseconds: 200,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            if (keyboardIsOpen)
-              Positioned(
-                bottom: 0,
-                child: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    if (model.state == ViewState.Idle)
-                      model.processScreenInput(
-                        model.currentPage,
-                      );
-                  },
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: 50,
-                    color: UiConstants.kLeaderBoardBackgroundColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins,
-                    ),
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      model.currentPage == LoginUserNameView.index
-                          ? 'finish'
-                          : model.currentPage == LoginOtpView.index
-                              ? 'Done'
-                              : 'next',
-                      style: model.currentPage == LoginOtpView.index ||
-                              model.currentPage == LoginUserNameView.index
-                          ? TextStyles.rajdhaniB.body1
-                              .colour(UiConstants.kPrimaryColor)
-                          : TextStyles.rajdhaniB.body1,
+              if (keyboardIsOpen)
+                Positioned(
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus.unfocus();
+                      if (model.state == ViewState.Idle)
+                        model.processScreenInput(
+                          model.currentPage,
+                        );
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      height: 50,
+                      color: UiConstants.kLeaderBoardBackgroundColor,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        model.currentPage == LoginUserNameView.index
+                            ? 'finish'
+                            : model.currentPage == LoginOtpView.index
+                                ? 'Done'
+                                : 'next',
+                        style: model.currentPage == LoginOtpView.index ||
+                                model.currentPage == LoginUserNameView.index
+                            ? TextStyles.rajdhaniB.body1
+                                .colour(UiConstants.kPrimaryColor)
+                            : TextStyles.rajdhaniB.body1,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            if (!keyboardIsOpen)
-              Align(
+              if (!keyboardIsOpen)
+                Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenWidth * 0.2,
                     margin: EdgeInsets.only(
-                        bottom: SizeConfig.viewInsets.bottom +
-                            SizeConfig.pageHorizontalMargins),
+                      bottom: SizeConfig.viewInsets.bottom +
+                          SizeConfig.pageHorizontalMargins,
+                    ),
                     alignment: Alignment.center,
                     child: model.loginUsingTrueCaller
                         ? Row(
@@ -177,29 +224,31 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               },
                             ),
                           ),
-                  )),
-            if (FlavorConfig.isDevelopment())
-              Container(
-                width: SizeConfig.screenWidth,
-                child: Banner(
-                  message: FlavorConfig.getStage(),
-                  location: BannerLocation.topEnd,
-                  color: FlavorConfig.instance.color,
+                  ),
                 ),
-              ),
-            if (FlavorConfig.isQA())
-              Container(
-                width: SizeConfig.screenWidth,
-                child: Banner(
-                  message: FlavorConfig.getStage(),
-                  location: BannerLocation.topEnd,
-                  color: FlavorConfig.instance.color,
+              if (FlavorConfig.isDevelopment())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
+                  ),
                 ),
-              ),
-            BaseAnimation(),
-          ],
-        ),
-      ),
+              if (FlavorConfig.isQA())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
+                  ),
+                ),
+              BaseAnimation(),
+            ],
+          ),
+        );
+      },
     );
   }
 }

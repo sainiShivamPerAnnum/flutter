@@ -28,114 +28,68 @@ class LoginMobileViewState extends State<LoginMobileView> {
       },
       onModelDispose: (model) {},
       builder: (ctx, model, child) {
-        return Stack(
-          alignment: AlignmentDirectional.center,
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            NewSquareBackground(),
-            Positioned(
-              top: 0,
-              child: Container(
-                height: SizeConfig.screenHeight * 0.5,
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF135756),
-                      UiConstants.kBackgroundColor,
-                    ],
-                  ),
-                ),
+            SizedBox(height: SizeConfig.padding80),
+            SvgPicture.asset('assets/svg/flag_svg.svg'),
+            SizedBox(height: SizeConfig.padding80),
+            Text(
+              'Hey!',
+              style: TextStyles.rajdhaniB.title2,
+            ),
+            SizedBox(height: SizeConfig.padding12),
+            Text(
+              'Enter mobile number to sign up',
+              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+            ),
+            SizedBox(height: SizeConfig.padding40),
+            //input
+            Form(
+              key: model.formKey,
+              child: LogInTextField(
+                hintText: '0000000000',
+                textFieldKey: model.phoneFieldKey,
+                textInputType: TextInputType.phone,
+                inputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                maxLength: 10,
+                controller: model.mobileController,
+                onTap: model.showAvailablePhoneNumbers,
+                validator: (value) => model.validateMobile(),
+                // onChanged: (val) {
+                //   if (val.length == 10) FocusScope.of(context).unfocus();
+                // },
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Spacer(),
+            Text(
+              '100% Safe & Secure',
+              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: SizeConfig.padding80),
-                SvgPicture.asset('assets/svg/flag_svg.svg'),
-                SizedBox(height: SizeConfig.padding80),
-                Text(
-                  'Hey!',
-                  style: TextStyles.rajdhaniB.title2,
+                BankingLogo(
+                  asset: 'assets/images/augmont_logo.png',
                 ),
-                SizedBox(height: SizeConfig.padding12),
-                Text(
-                  'Enter mobile number to sign up',
-                  style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+                BankingLogo(
+                  asset: 'assets/images/icici_logo.png',
                 ),
-                SizedBox(height: SizeConfig.padding40),
-                //input
-                Form(
-                  key: model.formKey,
-                  child: LogInTextField(
-                    hintText: '0000000000',
-                    textFieldKey: model.phoneFieldKey,
-                    textInputType: TextInputType.phone,
-                    inputFormatter: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    maxLength: 10,
-                    controller: model.mobileController,
-                    onTap: model.showAvailablePhoneNumbers,
-                    validator: (value) => model.validateMobile(),
-                    // onChanged: (val) {
-                    //   if (val.length == 10) FocusScope.of(context).unfocus();
-                    // },
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                  ),
+                BankingLogo(
+                  asset: 'assets/images/cbi_logo.png',
                 ),
-                Spacer(),
-                Text(
-                  '100% Safe & Secure',
-                  style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-                ),
-                SizedBox(height: SizeConfig.padding16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    BankingLogo(
-                      asset: 'assets/images/augmont_logo.png',
-                    ),
-                    BankingLogo(
-                      asset: 'assets/images/icici_logo.png',
-                    ),
-                    BankingLogo(
-                      asset: 'assets/images/cbi_logo.png',
-                    ),
-                  ],
-                ),
-                SizedBox(
-                    height: SizeConfig.screenWidth * 0.3 +
-                        SizeConfig.viewInsets.bottom),
               ],
             ),
-            // if (isKeyboardOpen)
-            // Positioned(
-            //   bottom: MediaQuery.of(context).viewInsets.bottom,
-
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       FocusManager.instance.primaryFocus.unfocus();
-            //     },
-            //     child: Container(
-            //       width: SizeConfig.screenWidth,
-            //       height: 50,
-            //       color: Colors.black54,
-            //       padding: EdgeInsets.symmetric(
-            //         horizontal: SizeConfig.pageHorizontalMargins,
-            //       ),
-            //       alignment: Alignment.centerRight,
-            //       child: Text(
-            //         "Next",
-            //         style: TextStyles.body2.bold
-            //             .colour(UiConstants.primaryColor),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            SizedBox(
+              height:
+                  SizeConfig.screenWidth * 0.3 + SizeConfig.viewInsets.bottom,
+            ),
           ],
         );
       },

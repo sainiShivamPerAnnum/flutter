@@ -164,7 +164,7 @@ class SaveNetWorthSection extends StatelessWidget {
                         addToScreenStack: true,
                         enableDrag: false,
                         hapticVibrate: true,
-                        isBarrierDismissable: true,
+                        isBarrierDismissable: false,
                         backgroundColor: Colors.transparent,
                         isScrollControlled: true,
                         content: RechargeModalSheet(),
