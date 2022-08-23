@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -225,8 +226,9 @@ class InvestmentActionsRepository {
       final response = await APIService.instance.postData(ApiPath.withdrawal,
           body: _body,
           token: _bearer,
-          cBaseUrl:
-              "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev");
+          cBaseUrl: FlavorConfig.isDevelopment()
+              ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
+              : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod");
       _logger.d("Response from withdrawal: $response");
       message = response["message"];
       return ApiResponse(model: true, code: 200);
