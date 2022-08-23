@@ -200,9 +200,11 @@ class GTInstantViewModel extends BaseModel {
   }
 
   initNormalFlow() {
-    coinsCount = _coinService.flcBalance;
-    showMainContent = true;
-    notifyListeners();
+    Future.delayed(Duration(milliseconds: 500), () {
+      coinsCount = _coinService.flcBalance;
+      showMainContent = true;
+      notifyListeners();
+    });
   }
 }
 

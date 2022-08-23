@@ -38,6 +38,7 @@ import 'package:felloapp/core/service/notifier_services/google_sign_in_service.d
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -51,7 +52,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
@@ -121,6 +122,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppFlyerAnalytics());
 
   locator.registerLazySingleton(() => InternalOpsService());
+  locator.registerLazySingleton(() => SellService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
@@ -167,6 +169,7 @@ void setupLocator() {
   locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
+  locator.registerFactory(() => JourneyPageViewModel());
   locator.registerFactory(() => RootViewModel());
 
   //REST
@@ -203,9 +206,8 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
-  locator.registerFactory(() => Level2ViewModel());
+  locator.registerFactory(() => CompleteProfileViewModel());
   locator.registerFactory(() => CampaignRepo());
-  locator.registerFactory(() => JourneyPageViewModel());
   locator.registerFactory(() => OnboardingViewModel());
   locator.registerFactory(() => JourneyBannersViewModel());
 

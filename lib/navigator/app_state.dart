@@ -31,6 +31,7 @@ class AppState extends ChangeNotifier {
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 0;
   bool _isTxnLoaderInView = false;
+  static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
   // Timer _txnTimer;
   static Map<String, dynamic> startupNotifMessage;
@@ -112,6 +113,7 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
+    // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
       _winnerService.fetchTopWinner();
       _lbService.fetchReferralLeaderBoard();

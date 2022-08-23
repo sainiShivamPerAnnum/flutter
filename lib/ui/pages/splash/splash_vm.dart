@@ -25,6 +25,8 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -33,7 +35,9 @@ class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   DeviceUnlock deviceUnlock;
-
+  bool _isPerformanceCollectionEnabled = false;
+  String _performanceCollectionMessage =
+      'Unknown status of performance collection.';
   final navigator = AppState.delegate.appState;
 
   // LOCATORS
@@ -52,6 +56,7 @@ class LauncherViewModel extends BaseModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _localDBModel = locator<LocalDBModel>();
 
+  FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
 
@@ -61,6 +66,7 @@ class LauncherViewModel extends BaseModel {
   }
 
   init() {
+    // _togglePerformanceCollection();
     initLogic();
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
@@ -73,11 +79,15 @@ class LauncherViewModel extends BaseModel {
   }
 
   initLogic() async {
+    // final Trace trace = _performance.newTrace('Splash trace start');
+    // await trace.start();
+    // trace.putAttribute('Spalsh', 'userservice init started');
+    await userService.init();
+    // trace.putAttribute('Spalsh', 'userservice init ended');
     try {
-      await userService.init();
-      await _journeyService.init();
-      await _journeyRepo.init();
       await CacheService.initialize();
+      if (userService.isUserOnborded) await _journeyService.init();
+      if (userService.isUserOnborded) await _journeyRepo.init();
       await BaseRemoteConfig.init();
 
       // check if cache invalidation required
@@ -114,6 +124,7 @@ class LauncherViewModel extends BaseModel {
     _httpModel.init();
     _tambolaService.init();
     _timer3.cancel();
+    // await trace.stop();
 
     try {
       deviceUnlock = DeviceUnlock();
@@ -153,36 +164,36 @@ class LauncherViewModel extends BaseModel {
     ///check if user is onboarded
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
-      return navigator.currentAction = PageAction(
-        state: PageState.replaceAll,
-        page: LoginPageConfig,
-      );
+      bool showOnboarding = PreferenceHelper.getBool(
+          PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
       // _localDBModel.showHomeTutorial.then((value) {
-      //   if (userService.showOnboardingTutorial && value) {
-      //     //show tutorial
-      //     userService.showOnboardingTutorial = false;
-      //     return navigator.currentAction = PageAction(
-      //       state: PageState.replaceAll,
-      //       page: OnBoardingViewPageConfig,
-      //     );
-      //   } else {
-      //     return navigator.currentAction = PageAction(
-      //       state: PageState.replaceAll,
-      //       page: LoginPageConfig,
-      //     );
-      //   }
+      if (showOnboarding == null || showOnboarding == false //&& value
+          ) {
+        //show tutorial
+        PreferenceHelper.setBool(
+            PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
+        return navigator.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: OnBoardingViewPageConfig,
+        );
+      } else {
+        return navigator.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: LoginPageConfig,
+        );
+      }
       // });
     }
 
     ///Ceck if app needs to be open securely
     ///NOTE: CHECK APP LOCK
-    bool _unlocked = true;
+    bool _unlocked = false;
     // if (userService.baseUser.userPreferences != null &&
     //     userService.baseUser.userPreferences
     //             .getPreference(Preferences.APPLOCK) ==
     //         1 &&
     //     deviceUnlock != null) {
-    //   _unlocked = await authenticateDevice();
+    _unlocked = await authenticateDevice();
     // }
 
     if (_unlocked) {
@@ -192,6 +203,20 @@ class LauncherViewModel extends BaseModel {
       BaseUtil.showNegativeAlert(
           'Authentication Failed', 'Please reopen and try again');
     }
+  }
+
+  Future<void> _togglePerformanceCollection() async {
+    // No-op for web.
+    await _performance
+        .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
+
+    // Always true for web.
+    final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
+
+    _isPerformanceCollectionEnabled = isEnabled;
+    _performanceCollectionMessage = _isPerformanceCollectionEnabled
+        ? 'Performance collection is enabled.'
+        : 'Performance collection is disabled.';
   }
 
   Future<bool> authenticateDevice() async {

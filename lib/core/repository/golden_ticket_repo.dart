@@ -77,4 +77,54 @@ class GoldenTicketRepository extends BaseRepo {
       return ApiResponse.withError("Unable to fetch ticket", 400);
     }
   }
+
+  //Skip milestone
+  Future<ApiResponse<bool>> skipMilestone() async {
+    String message = "";
+    try {
+      final Map<String, int> _body = {
+        "mlIndex": userService.userJourneyStats.mlIndex
+      };
+      final queryParams = {"uid": userService.baseUser.uid};
+      final token = await getBearerToken();
+      final response = await APIService.instance.postData(
+        ApiPath.kSkipMilestone(userService.baseUser.uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+        body: _body,
+        queryParams: queryParams,
+      );
+      if (response != null) {
+        final responseData = response["data"];
+        logger.d("Response from skip milestone API: $responseData");
+        return ApiResponse(model: true, code: 200);
+      } else
+        return ApiResponse(model: false, code: 400);
+    } catch (e) {
+      logger.e(e.toString());
+      message = e.toString();
+      return ApiResponse.withError(message ?? "Unable to skip milestone", 400);
+    }
+  }
+
+  Future<ApiResponse<GoldenTicket>> getGTByPrizeSubtype(
+      String prizeSubtype) async {
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.prizeBySubtype(userService.baseUser.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'subType': prizeSubtype,
+        },
+        token: token,
+      );
+
+      final goldenTicket = GoldenTicket.fromJson(prizeResponse["data"], "");
+      return ApiResponse<GoldenTicket>(model: goldenTicket, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch ticket", 400);
+    }
+  }
 }

@@ -625,9 +625,8 @@ class EventLeaderboard extends StatelessWidget {
                                                     .appState.currentAction =
                                                 PageAction(
                                                     widget: AllParticipantsView(
-                                                      participants: model
-                                                          .currentParticipants,
-                                                      type: model.campaignType,
+                                                      model: model,
+                                                      forPastWinners: false,
                                                     ),
                                                     page:
                                                         AllParticipantsViewPageConfig,

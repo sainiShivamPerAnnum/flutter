@@ -33,6 +33,8 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 
 import '../../../util/haptic.dart';
 
@@ -50,6 +52,8 @@ class LoginControllerViewModel extends BaseModel {
   final baseProvider = locator<BaseUtil>();
   final dbProvider = locator<DBModel>();
   final _userRepo = locator<UserRepository>();
+  final _journeyService = locator<JourneyService>();
+  final _journeyRepo = locator<JourneyRepository>();
 
   static LocalDBModel lclDbProvider = locator<LocalDBModel>();
   final _internalOpsService = locator<InternalOpsService>();
@@ -224,7 +228,7 @@ class LoginControllerViewModel extends BaseModel {
                 bool flag = false;
                 String message = "Please try again in sometime";
                 logger.d(userService.baseUser.toJson().toString());
-
+                userService.baseUser.avatarId = "AV1";
                 try {
                   final token = await _getBearerToken();
                   userService.baseUser.mobile = userMobile;
@@ -375,6 +379,8 @@ class LoginControllerViewModel extends BaseModel {
     await userService.init();
     await _userCoinService.init();
     await baseProvider.init();
+    if (userService.isUserOnborded) await _journeyService.init();
+    if (userService.isUserOnborded) await _journeyRepo.init();
     await fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
     await _analyticsService.login(
@@ -382,7 +388,6 @@ class LoginControllerViewModel extends BaseModel {
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;
-    setState(ViewState.Idle);
     appStateProvider.rootIndex = 0;
 
     bool res =
@@ -390,6 +395,7 @@ class LoginControllerViewModel extends BaseModel {
     if (res != null && res == true) {
       await _userRepo.updateUserWalkthroughCompletion();
     }
+    setState(ViewState.Idle);
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {
@@ -414,7 +420,7 @@ class LoginControllerViewModel extends BaseModel {
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
-      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.name}',
+      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.username}',
     );
     //process complete
   }

@@ -5,15 +5,20 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 
 class SaveRepo extends BaseRepo {
-  final _baseUrl = "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
+  final String _blogUrl =
+      "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
+  final String _baseUrl =
+      'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev';
 
-  Future<ApiResponse<List<BlogPostModel>>> getBlogs() async {
+  Future<ApiResponse<List<BlogPostModel>>> getBlogs(int noOfBlogs) async {
     List<BlogPostModel> blogs = <BlogPostModel>[];
     try {
       var token =
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsIm5hbWUiOiJzaG91cnlhIiwiaWF0IjoxNjU5NzgwMDkyLCJleHAiOjE4MTc0NjAwOTJ9.J6fUbS_lqi-4fldnA2lDQWPjrAI19czO5C6cwRecjwo';
-      List responseData = await APIService.instance
-          .getData(ApiPath.getBlogs(5), token: token, cBaseUrl: _baseUrl);
+      List responseData = await APIService.instance.getData(
+          ApiPath.getBlogs(noOfBlogs),
+          token: token,
+          cBaseUrl: _blogUrl);
       responseData.forEach((e) {
         blogs.add(BlogPostModel.fromMap(e));
       });
@@ -21,6 +26,18 @@ class SaveRepo extends BaseRepo {
       return ApiResponse(code: 200, model: blogs);
     } catch (e) {
       return ApiResponse(code: 404, errorMessage: 'No Blogs Found');
+    }
+  }
+
+  Future<ApiResponse> verifyVPAAddress(String uid) async {
+    try {
+      var response = await APIService.instance
+          .getData(ApiPath.kVerifyVPAAddress(uid), cBaseUrl: _baseUrl);
+      print(response);
+      return ApiResponse(code: 200, model: response['data']);
+    } catch (e) {
+      return ApiResponse(
+          code: 404, errorMessage: 'Couldn\'t verify VPA address');
     }
   }
 }

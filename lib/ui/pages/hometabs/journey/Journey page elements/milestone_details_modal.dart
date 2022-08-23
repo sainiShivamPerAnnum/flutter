@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/skip_milestone_modal.dart';
@@ -11,6 +14,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -19,13 +23,47 @@ import 'package:flutter_svg/svg.dart';
 
 enum JOURNEY_MILESTONE_STATUS { COMPLETED, INCOMPLETE, ACTIVE }
 
-class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
+class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
   final MilestoneModel milestone;
   final JOURNEY_MILESTONE_STATUS status;
-  final double scaleFactor = 2.5;
-  final double pageHeight = SizeConfig.screenWidth * 2.165;
+
   JourneyMilestoneDetailsModalSheet(
       {@required this.milestone, @required this.status});
+  @override
+  State<JourneyMilestoneDetailsModalSheet> createState() =>
+      _JourneyMilestoneDetailsModalSheetState();
+}
+
+class _JourneyMilestoneDetailsModalSheetState
+    extends State<JourneyMilestoneDetailsModalSheet> {
+  final double scaleFactor = 2.5;
+  final double pageHeight = SizeConfig.screenWidth * 2.165;
+  final GoldenTicketRepository _gtService = locator<GoldenTicketRepository>();
+  bool _isLoading = false;
+  GoldenTicket ticket;
+
+  get isLoading => this._isLoading;
+
+  set isLoading(value) {
+    setState(() {
+      this._isLoading = value;
+    });
+  }
+
+  Future<void> fetchMilestoneRewards() async {
+    if (widget.status != JOURNEY_MILESTONE_STATUS.COMPLETED) return;
+    isLoading = true;
+    final res =
+        await _gtService.getGTByPrizeSubtype(widget.milestone.prizeSubType);
+    if (res.isSuccess()) ticket = res.model;
+    isLoading = false;
+  }
+
+  @override
+  void didChangeDependencies() {
+    fetchMilestoneRewards();
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,22 +90,22 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 child: Stack(
                   children: [
-                    if (milestone.shadow != null)
+                    if (widget.milestone.shadow != null)
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           height: SizeConfig.padding54,
                           alignment: Alignment.bottomCenter,
                           child: SourceAdaptiveAssetView(
-                            asset: milestone.shadow.asset,
+                            asset: widget.milestone.shadow.asset,
                             height: SizeConfig.screenWidth *
                                 0.2 *
-                                (milestone.shadow.asset.height /
-                                    milestone.asset.height),
+                                (widget.milestone.shadow.asset.height /
+                                    widget.milestone.asset.height),
                             width: SizeConfig.screenWidth *
                                 0.2 *
-                                (milestone.shadow.asset.width /
-                                    milestone.asset.width),
+                                (widget.milestone.shadow.asset.width /
+                                    widget.milestone.asset.width),
                           ),
                         ),
                       ),
@@ -76,13 +114,13 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                       child: Transform.translate(
                         offset: Offset(0, -SizeConfig.padding54),
                         child: SourceAdaptiveAssetView(
-                          asset: milestone.asset,
+                          asset: widget.milestone.asset,
                           height: SizeConfig.screenWidth * 0.2,
                           width: SizeConfig.screenWidth * 0.2,
                         ),
                       ),
                     ),
-                    if (status == JOURNEY_MILESTONE_STATUS.COMPLETED)
+                    if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                       Positioned(
                           bottom: SizeConfig.padding40,
                           left: SizeConfig.screenWidth / 2 -
@@ -92,65 +130,32 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                 ),
               ),
               Text(
-                "Milestone ${milestone.index}",
+                "Milestone ${widget.milestone.index}",
                 style: TextStyles.sourceSansL.body3,
               ),
               SizedBox(height: SizeConfig.padding4),
               Text(
-                milestone.steps.first.title,
+                widget.milestone.steps.first.title,
                 style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding12),
               Text(
-                status == JOURNEY_MILESTONE_STATUS.COMPLETED
-                    ? "Wohoo, you completed this milestone"
-                    : milestone.steps.first.subtitle,
+                widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
+                    ? "Wohoo, you completed this widget.milestone"
+                    : widget.milestone.steps.first.subtitle,
                 style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
               ),
               SizedBox(height: SizeConfig.padding24),
-              if (status == JOURNEY_MILESTONE_STATUS.COMPLETED)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: SizeConfig.padding24),
-                    Text(
-                      "YOU WON",
-                      style:
-                          TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
-                    ),
-                    SizedBox(height: SizeConfig.padding4),
-                    Row(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SvgPicture.asset(
-                              Assets.aFelloToken,
-                              height: SizeConfig.padding20,
-                              width: SizeConfig.padding20,
-                            ),
-                            SizedBox(width: SizeConfig.padding4),
-                            Text(
-                              "200",
-                              style: TextStyles.rajdhaniSB.body1,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding24),
-                  ],
-                ),
+              if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
+                isLoading
+                    ? CircularProgressIndicator(strokeWidth: 1)
+                    : ticket == null
+                        ? SizedBox()
+                        : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
-              status == JOURNEY_MILESTONE_STATUS.COMPLETED
+              widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()
-                  // AppPositiveBtn(
-                  //     btnText: "Next Milestone",
-                  //     onPressed: () {
-                  //       AppState.backButtonDispatcher.didPopRoute();
-                  //     },
-                  //     width: SizeConfig.screenWidth)
-                  : status == JOURNEY_MILESTONE_STATUS.ACTIVE
+                  : widget.status == JOURNEY_MILESTONE_STATUS.ACTIVE
                       ? Column(
                           children: [
                             AppPositiveBtn(
@@ -158,36 +163,37 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
                                 onPressed: () {
                                   AppState.backButtonDispatcher.didPopRoute();
                                   AppState.delegate.parseRoute(
-                                      Uri.parse(milestone.actionUri));
+                                      Uri.parse(widget.milestone.actionUri));
                                 },
                                 width: SizeConfig.screenWidth),
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              alignment: Alignment.center,
-                              child: TextButton(
-                                child: Text(
-                                  "SKIP MILESTONE",
-                                  style: TextStyles.sourceSansL.body3
-                                      .colour(Colors.white),
+                            if (widget.milestone.skipCost != null)
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                alignment: Alignment.center,
+                                child: TextButton(
+                                  child: Text(
+                                    "SKIP MILESTONE",
+                                    style: TextStyles.sourceSansL.body3
+                                        .colour(Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    AppState.screenStack
+                                        .add(ScreenItem.modalsheet);
+                                    log("Current Screen Stack: ${AppState.screenStack}");
+                                    return showModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      isDismissible: true,
+                                      enableDrag: false,
+                                      useRootNavigator: true,
+                                      context: context,
+                                      builder: (ctx) {
+                                        return SkipMilestoneModalSheet(
+                                            milestone: widget.milestone);
+                                      },
+                                    );
+                                  },
                                 ),
-                                onPressed: () {
-                                  AppState.screenStack
-                                      .add(ScreenItem.modalsheet);
-                                  log("Current Screen Stack: ${AppState.screenStack}");
-                                  return showModalBottomSheet(
-                                    backgroundColor: Colors.transparent,
-                                    isDismissible: true,
-                                    enableDrag: false,
-                                    useRootNavigator: true,
-                                    context: context,
-                                    builder: (ctx) {
-                                      return SkipMilestoneModalSheet(
-                                          milestone: milestone);
-                                    },
-                                  );
-                                },
                               ),
-                            ),
                           ],
                         )
                       : SizedBox(),
@@ -198,5 +204,98 @@ class JourneyMilestoneDetailsModalSheet extends StatelessWidget {
             ]),
       ),
     );
+  }
+
+  Widget rewardWidget(List<Reward> rewards) {
+    return (rewards == null || rewards.isEmpty)
+        ? SizedBox()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: SizeConfig.padding24),
+              Text(
+                "YOU WON",
+                style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
+              ),
+              SizedBox(height: SizeConfig.padding4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: List.generate(
+                  rewards.length,
+                  (index) => Container(
+                    margin: EdgeInsets.only(right: SizeConfig.padding12),
+                    child: Row(
+                      children: [
+                        getLeadingAsset(rewards[index].type) == Assets.moneyIcon
+                            ? Image.asset(
+                                getLeadingAsset(rewards[index].type),
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                              )
+                            : SvgPicture.asset(
+                                getLeadingAsset(rewards[index].type),
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                              ),
+                        SizedBox(width: SizeConfig.padding4),
+                        Text(getPrefix(rewards[index].type),
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white60)),
+                        Text(
+                          rewards[index].value.toString(),
+                          style: TextStyles.rajdhaniB.body1,
+                        ),
+                        Text(
+                          getSuffix(rewards[index].type),
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white60),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: SizeConfig.padding24),
+            ],
+          );
+  }
+
+  getLeadingAsset(String type) {
+    switch (type) {
+      case 'flc':
+        return Assets.aFelloToken;
+      case 'amt':
+        return Assets.moneyIcon;
+      case 'rupee':
+        return Assets.moneyIcon;
+      case 'gold':
+        return Assets.digitalGoldBar;
+    }
+  }
+
+  getSuffix(String type) {
+    switch (type) {
+      case 'flc':
+        return " tokens";
+      case 'amt':
+        return "";
+      case 'rupee':
+        return "";
+      case 'gold':
+        return " worth of gold";
+    }
+  }
+
+  getPrefix(String type) {
+    switch (type) {
+      case 'flc':
+        return "";
+      case 'amt':
+        return "₹ ";
+      case 'rupee':
+        return "₹ ";
+      case 'gold':
+        return "₹ ";
+    }
   }
 }

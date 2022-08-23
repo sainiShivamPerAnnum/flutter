@@ -1,6 +1,4 @@
 import 'dart:core';
-import 'dart:io';
-import 'dart:math';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,33 +19,27 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //For each item in our list of data, create a NavBtn widget
-    List<Widget> buttonWidgets = items.map((data) {
-      //Create a button, and add the onTap listener
-      return NavbarButton(
+    List<Widget> buttonWidgets = items.map(
+      (data) {
+        return NavbarButton(
           data: data,
           isSelected: data == selectedItem,
           onTap: () {
-            //Get the index for the clicked data
             var index = items.indexOf(data);
-            //Notify any listeners that we've been tapped, we rely on a parent widget to change our selectedIndex and redraw
             itemTapped(index);
-          });
-    }).toList();
+          },
+        );
+      },
+    ).toList();
 
     //Create a container with a row, and add our btn widgets into the row
-    return Container(
-      //Clip the row of widgets, to suppress any overflow errors that might occur during animation
-      child: Padding(
-        padding: EdgeInsets.only(top: SizeConfig.padding10),
+    return Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.04),
         child: Row(
-          //Center buttons horizontally
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          // Inject a bunch of btn instances into our row
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: buttonWidgets,
-        ),
-      ),
-    );
+        ));
   }
 }
 
@@ -69,20 +61,45 @@ class NavbarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: isSelected
-          ? BottomNavBarItemContent(
-              iconString: data.activeIconImage,
-              title: data.title,
-              isSelected: isSelected,
-            )
-          : BottomNavBarItemContent(
-              iconString: data.inactiveIconImage,
-              title: data.title,
-              isSelected: isSelected,
+    return isSelected
+        ? Container(
+            color: Colors.black,
+            width: SizeConfig.screenWidth * 0.22,
+            alignment: Alignment.center,
+            child: Stack(
+              children: [
+                CustomPaint(
+                  painter: SelectedItemBackdrop(),
+                  size: Size(
+                      data.title == 'Journey'
+                          ? SizeConfig.screenWidth * 0.12
+                          : data.title == 'Win'
+                              ? SizeConfig.screenWidth * 0.1
+                              : SizeConfig.screenWidth * 0.09,
+                      SizeConfig.screenWidth * 0.06),
+                ),
+                BottomNavBarItemContent(
+                  iconString: data.activeIconImage,
+                  title: data.title,
+                  isSelected: isSelected,
+                  width: SizeConfig.screenWidth * 0.09,
+                ),
+              ],
             ),
-    );
+          )
+        : GestureDetector(
+            onTap: onTap,
+            child: Container(
+              color: Colors.black,
+              width: SizeConfig.screenWidth * 0.22,
+              alignment: Alignment.center,
+              child: BottomNavBarItemContent(
+                iconString: data.inactiveIconImage,
+                title: data.title,
+                isSelected: isSelected,
+                width: SizeConfig.screenWidth * 0.09,
+              ),
+            ));
   }
 }
 
@@ -90,9 +107,10 @@ class BottomNavBarItemContent extends StatelessWidget {
   final String iconString;
   final String title;
   final bool isSelected;
+  final double width;
 
   const BottomNavBarItemContent(
-      {Key key, this.iconString, this.title, this.isSelected})
+      {Key key, this.iconString, this.title, this.isSelected, this.width})
       : super(key: key);
 
   @override
@@ -101,13 +119,14 @@ class BottomNavBarItemContent extends StatelessWidget {
       children: [
         Container(
           height: SizeConfig.screenWidth * 0.09,
-          width: SizeConfig.screenWidth * 0.09,
+          width: width,
           child: SvgPicture.asset(
             iconString,
+            fit: BoxFit.contain,
           ),
         ),
         SizedBox(
-          height: 8,
+          height: SizeConfig.screenWidth * 0.01,
         ),
         Text(title,
             style: isSelected
@@ -118,20 +137,35 @@ class BottomNavBarItemContent extends StatelessWidget {
   }
 }
 
-//Hides the overflow of a child, preventing the Flutter framework from throwing errors
-class ClippedView extends StatelessWidget {
-  final Widget child;
-  final Axis clipDirection;
+class SelectedItemBackdrop extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(0, 0);
+    path_0.lineTo(size.width, 0);
+    path_0.lineTo(size.width * 0.7258065, size.height);
+    path_0.lineTo(size.width * 0.2580645, size.height);
+    path_0.lineTo(0, 0);
+    path_0.close();
 
-  const ClippedView({Key key, this.child, this.clipDirection = Axis.horizontal})
-      : super(key: key);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFF55AF95).withOpacity(0),
+          Color(0xFF55AF95),
+        ],
+      ).createShader(Rect.fromCircle(
+        center: Offset(10, 10),
+        radius: 25,
+      ));
+    canvas.drawPath(path_0, paint0Fill);
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      scrollDirection: clipDirection,
-      child: child,
-    );
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }

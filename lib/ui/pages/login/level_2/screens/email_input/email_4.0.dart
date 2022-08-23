@@ -4,13 +4,13 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
 import 'package:flutter/services.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Email4 extends StatelessWidget {
   const Email4({Key key, @required this.model}) : super(key: key);
-  final Level2ViewModel model;
+  final CompleteProfileViewModel model;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,6 +37,13 @@ class Email4 extends StatelessWidget {
             textInputType: TextInputType.emailAddress,
             controller: model.emailController,
             enabled: !model.isGoogleVerified,
+            suffix: model.isGoogleVerified
+                ? Icon(
+                    Icons.verified,
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.iconSize2,
+                  )
+                : SizedBox(),
             validator: (val) {
               if (val.isEmpty) {
                 return 'Please enter your email ID';

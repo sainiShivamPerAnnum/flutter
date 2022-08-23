@@ -32,9 +32,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Dependency Injection
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   //Local Variables
-  List<JourneyLevel> levels = [];
+  List<JourneyLevel> _levels = [];
   static bool isAvatarAnimationInProgress = false;
   double pageWidth;
   double pageHeight;
@@ -46,6 +47,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int pageCount;
   double _baseGlow = 0;
   TickerProvider _vsync;
+  ScrollController _mainController;
   Timer timer;
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
@@ -56,7 +58,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Animation _avatarAnimation;
   AnimationController controller;
   int fcmRemoteAvatarLevel;
-  UserJourneyStatsModel _userJourneyStats;
+  // UserJourneyStatsModel _userJourneyStats;
   bool _journeyBuildFailure = false;
 
   //Getters and Setters
@@ -103,12 +105,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     notifyListeners(JourneyServiceProperties.AvatarRemoteMilestoneIndex);
   }
 
-  UserJourneyStatsModel get userJourneyStats => this._userJourneyStats;
+  // UserJourneyStatsModel get userJourneyStats => this._userJourneyStats;
 
-  set userJourneyStats(value) {
-    this._userJourneyStats = value;
-    notifyListeners(JourneyServiceProperties.UserJourneyStats);
-  }
+  // set userJourneyStats(value) {
+  //   this._userJourneyStats = value;
+  //   notifyListeners(JourneyServiceProperties.UserJourneyStats);
+  // }
 
   get avatarPath => this._avatarPath;
 
@@ -131,13 +133,39 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     notifyListeners();
   }
 
+  get levels => this._levels;
+
+  set levels(value) {
+    this._levels = value;
+    _logger.d("Levels updated: ${levels[0].toString()}");
+  }
+
+  ScrollController get mainController => this._mainController;
+
+  set mainController(ScrollController value) => this._mainController = value;
+
   // INIT MAIN
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
+    await getJourneyLevels();
     await updateUserJourneyStats();
     final res = await _journeyRepo.getJourneyLevels();
     if (res.isSuccess()) levels = res.model;
+    await fetchNetworkPages();
+  }
+
+  Future<void> dump() async {
+    _userService.userJourneyStats = null;
+    controller?.dispose();
+    mainController?.dispose();
+    avatarRemoteMlIndex = 1;
+    avatarCachedMlIndex = 1;
+    PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
+    levels = [];
+    vsync = null;
+    pages.clear();
+    log("Journey Service dumped");
   }
 
   //Fetching journeypages from Journey Repository
@@ -150,25 +178,32 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
   }
 
-  //Fetching User journey stats
-  updateUserJourneyStats() async {
-    final ApiResponse<UserJourneyStatsModel> response =
-        await _journeyRepo.getUserJourneyStats();
-    if (response.isSuccess()) {
-      _logger.d("Updating user journey stats");
+  //Get User journey stats from userservice
+  // getUserJourneyStats() {
+  // userJourneyStats = _userService.userJourneyStats;
+  //   avatarRemoteMlIndex = userJourneyStats.mlIndex;
+  // }
 
-      userJourneyStats = response.model;
-      avatarRemoteMlIndex = userJourneyStats.mlIndex;
-    } else {
-      avatarRemoteMlIndex = avatarCachedMlIndex;
-      journeyBuildFailure = true;
-    }
+  //Update the user Journey status
+  updateUserJourneyStats() async {
+    await _userService.getUserJourneyStats();
+    _userService.userJourneyStats = _userService.userJourneyStats;
+    avatarRemoteMlIndex = _userService.userJourneyStats.mlIndex;
+  }
+
+  //Fetch Levels of Journey
+  getJourneyLevels() async {
+    final res = await _journeyRepo.getJourneyLevels();
+    if (res.isSuccess()) levels = res.model;
   }
 
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
     _logger.d("fcm journey update called: $data");
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
-    GoldenTicketService.goldenTicketId = data["gtId"];
+    if (avatarRemoteMlIndex != 2)
+      GoldenTicketService.goldenTicketId = data["gtId"];
+    else
+      GoldenTicketService.goldenTicketId = null;
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     checkAndAnimateAvatar();
   }
@@ -179,12 +214,20 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //locks the screen and animate avatar
   //if any Golden Ticket is present at the moment, pops up after animation
   checkAndAnimateAvatar() {
+    // Future.delayed(Duration(seconds: 2), () {
     _logger.d("Checking if there is any animation left to happen");
-    if (isThereAnyMilestoneLevelChange() && userIsAtJourneyScreen()) {
+    if (isThereAnyMilestoneLevelChange() &&
+        userIsAtJourneyScreen() &&
+        !isAvatarAnimationInProgress) {
+      _logger.d("Animation possible");
       createPathForAvatarAnimation(avatarCachedMlIndex, avatarRemoteMlIndex);
       createAvatarAnimationObject();
       animateAvatar();
+    } else {
+      _logger.i(
+          "User not a Journey screen at the moment. skipping animation for now");
     }
+    // });
   }
 
   //On startup, if cached and remote mlIndex is same, then just place the avatar at the requried milestone and turn on glow
@@ -200,7 +243,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int checkForGameLevelChange() {
     for (int i = 0; i < levels.length; i++) {
       log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
-      if (avatarCachedMlIndex < levels[i].end &&
+      if (avatarRemoteMlIndex < levels[i].end &&
           avatarRemoteMlIndex >= levels[i].start) return levels[i].level;
     }
     return 0;
@@ -227,8 +270,61 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //compares it with cached mlIndex
   //if difference found, animates the avatar and process necessary changes
   Future<void> checkForMilestoneLevelChange() async {
-    updateUserJourneyStats();
-    checkAndAnimateAvatar();
+    await updateUserJourneyStats().then((val) {
+      checkAndAnimateAvatar();
+    });
+  }
+
+  updateAvatarIndexDirectly() {
+    avatarRemoteMlIndex += 1;
+    final currentMilestone = currentMilestoneList
+        .firstWhere((milestone) => milestone.index == avatarRemoteMlIndex);
+    int jLevel = checkForGameLevelChange();
+    _userService.userJourneyStats = UserJourneyStatsModel(
+        page: currentMilestone.page,
+        level: jLevel,
+        mlIndex: currentMilestone.index,
+        mlId: currentMilestone.id,
+        prizeSubtype: currentMilestone.prizeSubType,
+        skipCount: _userService.userJourneyStats.skipCount + 1);
+  }
+
+  //Check if there is a need to blur next level milestones
+  JourneyLevel getJourneyLevelBlurData() {
+    int lastMileStoneIndex = currentMilestoneList.last.index;
+    // int userCurrentLevel = userJourneyStats.level;
+    log("Current Data Lastmilestone ${lastMileStoneIndex}");
+
+    int userCurrentMilestoneIndex = _userService.userJourneyStats.mlIndex;
+    log("levelData ${levels[0].toString()}");
+
+    JourneyLevel currentlevelData = levels.firstWhere(
+        (level) =>
+            userCurrentMilestoneIndex >= level.start &&
+            userCurrentMilestoneIndex <= level.end,
+        orElse: null);
+    log("Current level data ${currentlevelData.toString()}");
+
+    if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
+      return currentlevelData;
+    } else
+      return null;
+  }
+
+  //Scrolls Page to avatar Position
+  Future<void> scrollPageToAvatarPosition() async {
+    // int noOfPages = _journeyService.pageCount;
+    int cMLIndex = avatarRemoteMlIndex;
+    if (cMLIndex == 1) {
+      mainController.jumpTo(300.0);
+    }
+    MilestoneModel cMl = currentMilestoneList
+        .firstWhere((milestone) => milestone.index == cMLIndex);
+    double offset = cMl.y * pageHeight + (cMl.page - 1) * pageHeight;
+    await Future.delayed(Duration(seconds: 1), () {
+      mainController.animateTo(offset - SizeConfig.screenHeight * 0.5,
+          duration: const Duration(seconds: 2), curve: Curves.easeOutCubic);
+    });
   }
 
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
@@ -238,8 +334,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   setAvatarPostion() => avatarPosition = calculatePosition(0);
 
-  bool isThereAnyMilestoneLevelChange() =>
-      avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
+  bool isThereAnyMilestoneLevelChange() {
+    _logger.i(
+        "Avatar Remote Index: $avatarRemoteMlIndex && Avatar Cached Ml Index: $avatarCachedMlIndex");
+    return avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
+  }
 
 //---------------------------------|-HELPER METHODS-END-|---------------------------------
 
@@ -284,6 +383,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //----------------------------|-PATH CREATION METHODS-START-|----------------------------
 
   createPathForAvatarAnimation(int start, int end) {
+    if (end - start > 4) {
+      start = end - 4;
+    }
     baseGlow = 0;
     List<AvatarPathModel> requiredPathItems = [];
     int startPos =
@@ -366,29 +468,36 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //----------------------------|-ANIMATION CREATION METHODS-START-|-----------------------
 
   void createAvatarAnimationObject() {
+    double maxRange = 0.1;
+    int duration = avatarRemoteMlIndex - avatarCachedMlIndex > 4
+        ? 6
+        : 2 * (avatarRemoteMlIndex - avatarCachedMlIndex);
     controller = AnimationController(
       vsync: vsync,
       duration: Duration(
-        seconds: 2 * (avatarRemoteMlIndex - avatarCachedMlIndex),
+        seconds: duration,
       ),
     );
+
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeInOutCirc),
     )..addListener(() {
         avatarPosition = calculatePosition(avatarAnimation.value);
+        print(controller.value);
+        if (controller.value > maxRange) {
+          Haptic.strongVibrate();
+          maxRange += 0.05;
+        }
       });
   }
 
-  animateAvatar() {
+  animateAvatar() async {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
     controller.reset();
-    timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
-      Haptic.strongVibrate();
-    });
+    await scrollPageToAvatarPosition();
     controller.forward().whenComplete(() {
       log("Animation Complete");
-      timer.cancel();
       int gameLevelChangeResult = checkForGameLevelChange();
       if (gameLevelChangeResult != 0)
         BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
@@ -397,12 +506,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       baseGlow = 1;
       Future.delayed(
           Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
-      Future.delayed(Duration(seconds: 1), () {
-        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-          if (res)
-            _gtService.showInstantGoldenTicketView(
-                title: 'Welcome to Fello', source: GTSOURCE.newuser);
-        });
+
+      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+        if (res)
+          _gtService.showInstantGoldenTicketView(
+              title: 'Congratulations!', source: GTSOURCE.newuser);
       });
     });
   }

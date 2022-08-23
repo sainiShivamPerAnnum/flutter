@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.3.1+117
+version: 3.3.1+118
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -14,8 +14,8 @@ dependencies:
   confetti: ^0.6.0
   connectivity_plus: ^2.2.0
   device_info_plus: ^3.2.2
-  device_preview: ^1.1.0
   device_unlock: ^1.1.2
+  device_preview: ^1.1.0
   encrypt: ^5.0.0
   firebase_analytics: ^9.0.5
   firebase_auth: ^3.0.1
@@ -77,6 +77,7 @@ dependencies:
   shimmer: ^2.0.0
   animations: ^2.0.2
   flutter_inset_box_shadow: ^1.0.8
+  space_fixer: ^0.1.1
 
   isar: ^2.4.0
   isar_flutter_libs: 2.4.0
@@ -100,7 +101,7 @@ flutter:
     - resources/public.key
     - assets/images/
     - assets/images/icons/
-    - assets/images/user_avatars/
+    - assets/svg/userAvatars/
     - assets/vectors/
     - assets/vectors/icons/
     - assets/vectors/drawer/

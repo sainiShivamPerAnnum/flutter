@@ -13,8 +13,9 @@ import 'package:lottie/lottie.dart';
 class FAQCardView extends StatelessWidget {
   final String category;
   final bool catTitle;
+  final Color bgColor;
 
-  FAQCardView({@required this.category, this.catTitle});
+  FAQCardView({@required this.category, this.catTitle, this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class FAQCardView extends StatelessWidget {
           return Container(
             width: SizeConfig.screenWidth,
             decoration: BoxDecoration(
-              color: UiConstants.kBackgroundColor,
+              color: bgColor ?? UiConstants.kBackgroundColor,
             ),
             padding: EdgeInsets.only(
                 top: SizeConfig.padding12, bottom: SizeConfig.padding24),
@@ -53,7 +54,7 @@ class FAQCardView extends StatelessWidget {
                         ),
                       )
                     : (model.faqHeaders != null && model.faqHeaders.length > 0
-                        ? _buildItems(model)
+                        ? _buildItems(model, context)
                         : Container(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -74,38 +75,48 @@ class FAQCardView extends StatelessWidget {
         });
   }
 
-  _buildItems(FAQCardViewModel model) {
+  _buildItems(FAQCardViewModel model, BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       child: Container(
         width: SizeConfig.screenWidth,
         child: Column(
           children: [
-            ExpansionPanelList(
-              animationDuration: Duration(milliseconds: 600),
-              expandedHeaderPadding: EdgeInsets.all(0),
-              dividerColor: UiConstants.kDividerColor,
-              elevation: 0,
-              children: List.generate(
-                model.faqHeaders.length,
-                (index) => ExpansionPanel(
-                  backgroundColor: UiConstants.kBackgroundColor,
-                  canTapOnHeader: true,
-                  headerBuilder: (ctx, isOpen) =>
-                      _prizeFAQHeader(model.faqHeaders[index]),
-                  isExpanded: model.detStatus[index],
-                  body: Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(model.faqResponses[index],
-                        textAlign: TextAlign.start,
-                        style: TextStyles.body2
-                            .colour(UiConstants.kFAQsAnswerColor)),
+            Theme(
+              data: Theme.of(context).copyWith(
+                unselectedWidgetColor: Colors.white, // here for close state
+                colorScheme: ColorScheme.light(
+                  primary: Colors.white,
+                ), // here for open state in replacement of deprecated accentColor
+                dividerColor:
+                    Colors.transparent, // if you want to remove the border
+              ),
+              child: ExpansionPanelList(
+                animationDuration: Duration(milliseconds: 600),
+                expandedHeaderPadding: EdgeInsets.all(0),
+                dividerColor: UiConstants.kDividerColor,
+                elevation: 0,
+                children: List.generate(
+                  model.faqHeaders.length,
+                  (index) => ExpansionPanel(
+                    backgroundColor: bgColor ?? UiConstants.kBackgroundColor,
+                    canTapOnHeader: true,
+                    headerBuilder: (ctx, isOpen) =>
+                        _prizeFAQHeader(model.faqHeaders[index]),
+                    isExpanded: model.detStatus[index],
+                    body: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(model.faqResponses[index],
+                          textAlign: TextAlign.start,
+                          style: TextStyles.body2
+                              .colour(UiConstants.kFAQsAnswerColor)),
+                    ),
                   ),
                 ),
+                expansionCallback: (i, isOpen) {
+                  model.updateDetStatus(i, !isOpen);
+                },
               ),
-              expansionCallback: (i, isOpen) {
-                model.updateDetStatus(i, !isOpen);
-              },
             ),
           ],
         ),
@@ -119,7 +130,8 @@ class FAQCardView extends StatelessWidget {
         top: SizeConfig.padding20,
         bottom: SizeConfig.padding20,
       ),
-      child: Text(title, style: TextStyles.body2.bold.colour(Colors.white)),
+      child:
+          Text(title, style: TextStyles.sourceSans.body2.colour(Colors.white)),
     );
   }
 }

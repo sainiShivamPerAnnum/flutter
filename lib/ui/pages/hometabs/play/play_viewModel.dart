@@ -11,13 +11,14 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-
+import 'package:felloapp/base_util.dart';
 import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseModel {
   final _getterRepo = locator<GetterRepository>();
   final _analyticsService = locator<AnalyticsService>();
   final GameRepo gamesRepo = locator<GameRepo>();
+  final _baseUtil = locator<BaseUtil>();
 
   String _message;
   String _sessionId;
@@ -69,6 +70,10 @@ class PlayViewModel extends BaseModel {
   set isGamesListDataLoading(value) {
     this._isGamesListDataLoading = value;
     notifyListeners();
+  }
+
+  openProfile() {
+    _baseUtil.openProfileDetailsScreen();
   }
 
   init() async {

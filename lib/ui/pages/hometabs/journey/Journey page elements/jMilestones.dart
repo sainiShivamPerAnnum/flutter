@@ -302,7 +302,6 @@ class StaticMilestone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("Current level: ${model.avatarActiveMilestoneLevel}");
     return Stack(
       children: [
         if (milestone.shadow != null)

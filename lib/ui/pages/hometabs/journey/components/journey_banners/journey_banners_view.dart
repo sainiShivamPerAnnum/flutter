@@ -16,7 +16,7 @@ class JourneyBannersView extends StatelessWidget {
       onModelReady: (model) => model.loadOfferList(),
       builder: (ctx, model, child) {
         return Positioned(
-          bottom: SizeConfig.navBarHeight * 0.74,
+          bottom: SizeConfig.navBarHeight,
           child: SafeArea(
             child: Container(
               width: SizeConfig.screenWidth,

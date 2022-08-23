@@ -1,21 +1,23 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
-import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -44,6 +46,7 @@ class _JourneyViewState extends State<JourneyView>
 
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Journey view build called");
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
         WidgetsBinding.instance?.addObserver(this);
@@ -55,26 +58,26 @@ class _JourneyViewState extends State<JourneyView>
         model.dump();
       },
       builder: (ctx, model, child) {
-        log("Journey View BUILD called");
+        log("ROOT: Journey view baseview build called");
 
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: Container(
-            margin: EdgeInsets.only(bottom: 60),
-            child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
-                    PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
-                ? FloatingActionButton(
-                    child: const Icon(
-                      Icons.replay,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.black,
-                    onPressed: () {
-                      PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
-                    },
-                  )
-                : SizedBox(),
-          ),
+          // floatingActionButton: Container(
+          //   margin: EdgeInsets.only(bottom: 60),
+          //   child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
+          //           PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
+          //       ? FloatingActionButton(
+          //           child: const Icon(
+          //             Icons.replay,
+          //             color: Colors.white,
+          //           ),
+          //           backgroundColor: Colors.black,
+          //           onPressed: () {
+          //             PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
+          //           },
+          //         )
+          //       : SizedBox(),
+          // ),
           // floatingActionButton: Container(
           //   margin: EdgeInsets.only(bottom: 80, left: 50),
           //   child: FloatingActionButton(
@@ -161,9 +164,9 @@ class _JourneyViewState extends State<JourneyView>
                               Avatar(
                                 model: model,
                               ),
-                              // LevelBlurView(
-                              //   model: model,
-                              // )
+                              LevelBlurView(
+                                model: model,
+                              )
                             ],
                           ),
                         ),
@@ -228,52 +231,59 @@ class LevelBlurView extends StatelessWidget {
   LevelBlurView({this.model});
   @override
   Widget build(BuildContext context) {
-    final JourneyLevel levelData = model.getJourneyLevelBlurData();
-
-    return levelData != null
-        ? Stack(
-            children: [
-              Positioned(
-                left: 0,
-                top: 0,
-                child: BlurFilter(
-                  child: Container(
-                    height: model.pageHeight * (1 - levelData.breakpoint),
-                    width: model.pageWidth,
-                    alignment: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: model.pageHeight * (1 - levelData.breakpoint) +
-                    SizeConfig.avatarRadius,
-                child: Container(
-                  width: model.pageWidth,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CustomPaint(
-                          painter: DottedLinePainter(),
+    final _journeyService = locator<JourneyService>();
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [UserServiceProperties.myJourneyStats],
+        builder: (context, m, properties) {
+          final JourneyLevel levelData =
+              _journeyService.getJourneyLevelBlurData();
+          log("Current Level Data ${levelData.toString()}");
+          return levelData != null
+              ? Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: BlurFilter(
+                        child: Container(
+                          height: model.pageHeight * (1 - levelData.breakpoint),
+                          width: model.pageWidth,
+                          alignment: Alignment.bottomCenter,
                         ),
                       ),
-                      CircleAvatar(
-                        radius: SizeConfig.avatarRadius,
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.lock,
-                            size: SizeConfig.iconSize0, color: Colors.black),
-                      ),
-                      Expanded(
-                        child: CustomPaint(
-                          painter: DottedLinePainter(),
+                    ),
+                    Positioned(
+                      top: model.pageHeight * (1 - levelData.breakpoint) -
+                          SizeConfig.avatarRadius,
+                      child: Container(
+                        width: model.pageWidth,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: CustomPaint(
+                                painter: DottedLinePainter(),
+                              ),
+                            ),
+                            CircleAvatar(
+                              radius: SizeConfig.avatarRadius,
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.lock,
+                                  size: SizeConfig.iconSize0,
+                                  color: Colors.black),
+                            ),
+                            Expanded(
+                              child: CustomPaint(
+                                painter: DottedLinePainter(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          )
-        : SizedBox();
+                    )
+                  ],
+                )
+              : SizedBox();
+        });
   }
 }
 
@@ -333,7 +343,8 @@ class MilestoneChecks extends StatelessWidget {
 
 class Avatar extends StatelessWidget {
   final JourneyPageViewModel model;
-  const Avatar({Key key, this.model}) : super(key: key);
+  Avatar({Key key, this.model}) : super(key: key);
+  final _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     print(model.avatarPosition);
@@ -344,14 +355,15 @@ class Avatar extends StatelessWidget {
           key: avatarKey,
           // duration: Duration(seconds: 10),
           // curve: Curves.decelerate,
-          top: model.avatarPosition.dy,
-          left: model.avatarPosition.dx,
-          child: const IgnorePointer(
-            ignoring: true,
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(
-                  "https://w7.pngwing.com/pngs/312/283/png-transparent-man-s-face-avatar-computer-icons-user-profile-business-user-avatar-blue-face-heroes.png"),
+          top: model.avatarPosition?.dy,
+          left: model.avatarPosition?.dx,
+          child: GestureDetector(
+            onTap: () => _baseUtil.openProfileDetailsScreen(),
+            child: Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 3, color: Colors.white)),
+              child: ProfileImageSE(radius: SizeConfig.avatarRadius * 1.2),
             ),
           ),
         );

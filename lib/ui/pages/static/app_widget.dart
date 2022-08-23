@@ -20,12 +20,11 @@ class AppTextFieldLabel extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         bottom: SizeConfig.padding6,
-        top: SizeConfig.padding16,
         left: leftPadding ?? SizeConfig.padding16,
       ),
       child: Text(
         text,
-        style: TextStyles.body3.colour(UiConstants.kTextColor2),
+        style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
       ),
     );
   }

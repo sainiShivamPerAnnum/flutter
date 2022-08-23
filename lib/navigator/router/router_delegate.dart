@@ -14,7 +14,9 @@ import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/login/level_2/level_2_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
@@ -131,7 +133,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
-      // _journeyService.checkAndAnimateAvatar();
+      if (AppState.screenStack.length == 1)
+        _journeyService.checkForMilestoneLevelChange();
       notifyListeners();
 
       return Future.value(true);
@@ -338,14 +341,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.OnBoardingView:
           _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
           break;
-        case Pages.Level2View:
-          _addPageData(Level2View(), Level2ViewPageConfig);
+        case Pages.CompleteProfileView:
+          _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
           break;
-        case Pages.JourneyView:
+        case Pages.BlogPostWebView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
           break;
         case Pages.CampaignView:
           _addPageData(CampaignView(), CampaignViewPageConfig);
+          break;
+        case Pages.SaveAssetView:
+          _addPageData(SaveAssetView(), SaveAssetsViewConfig);
           break;
         default:
           break;
@@ -589,11 +595,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.OnBoardingView:
         OnBoardingViewPageConfig.currentPageAction = action;
         break;
-      case Pages.Level2View:
-        Level2ViewPageConfig.currentPageAction = action;
+      case Pages.CompleteProfileView:
+        CompleteProfileViewPageConfig.currentPageAction = action;
         break;
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SaveAssetView:
+        SaveAssetsViewConfig.currentPageAction = action;
+        break;
+      case Pages.SellConfirmationView:
+        SellConfirmationViewConfig.currentPageAction = action;
+        break;
+      case Pages.ViewAllBlogsView:
+        ViewAllBlogsViewConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -702,15 +717,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void screenCheck(String screenKey) {
     PageConfiguration pageConfiguration;
     switch (screenKey) {
+      case 'journey':
+        appState.setCurrentTabIndex = 0;
+        break;
+      case 'play':
+        appState.setCurrentTabIndex = 1;
+        break;
       case 'save':
         appState.setCurrentTabIndex = 2;
         break;
-      case 'play':
-        appState.setCurrentTabIndex = 0;
+      case 'win':
+        appState.setCurrentTabIndex = 3;
         break;
-      // case 'win':
-      //   appState.setCurrentTabIndex = 2;
-      //   break;
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
@@ -803,7 +821,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher.didPopRoute();
         break;
       case 'goldDetails':
-        pageConfiguration = AugmontGoldDetailsPageConfig;
+        pageConfiguration = SaveAssetsViewConfig;
         break;
       case 'autosaveDetails':
         pageConfiguration = AutosaveDetailsViewPageConfig;
@@ -823,8 +841,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'AutosaveWalkthrough':
         pageConfiguration = AutosaveWalkThroughConfig;
         break;
-      case 'Level2View':
-        pageConfiguration = Level2ViewPageConfig;
+      case 'completeProfile':
+        pageConfiguration = CompleteProfileViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {
@@ -835,11 +853,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   openTopSaverScreen(String eventType) {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        widget: TopSaverView(
-          eventType: eventType,
-        ),
-        page: TopSaverViewPageConfig);
+      page: CampaignViewPageConfig,
+      state: PageState.addWidget,
+      widget: CampaignView(eventType: eventType),
+    );
   }
 
   // NOTE: UNCOMMENT THIS FUNCTION FOR OLD VIEW

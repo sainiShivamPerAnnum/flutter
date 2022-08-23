@@ -12,12 +12,14 @@ class InfoComponent extends StatefulWidget {
     @required this.heading,
     @required this.assetList,
     @required this.titleList,
+    @required this.onStateChanged,
     Key key,
   }) : super(key: key);
 
   String heading;
   List<String> assetList;
   List<String> titleList;
+  Function onStateChanged;
 
   @override
   State<InfoComponent> createState() => _InfoComponentState();
@@ -45,8 +47,13 @@ class _InfoComponentState extends State<InfoComponent> {
           TextButton(
             onPressed: () {
               //Chaning the state of the box on click
+
               setState(() {
                 isBoxOpen = !isBoxOpen;
+              });
+
+              Future.delayed(const Duration(milliseconds: 200), () {
+                widget.onStateChanged();
               });
             },
             child: Row(

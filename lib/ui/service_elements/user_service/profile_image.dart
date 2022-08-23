@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -29,21 +31,25 @@ class ProfileImageSE extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserDpUrl],
       builder: (context, model, properties) {
+        log("Avatar Id: ${model.baseUser.avatarId}");
         return CircleAvatar(
           radius: radius,
           backgroundColor: Colors.transparent,
-          backgroundImage: model.baseUser.avatarId != 'CUSTOM'
-              ? AssetImage(
-                  'assets/images/user_avatars/' +
-                      model.baseUser.avatarId +
-                      '.png',
-                )
-              : model.myUserDpUrl == null
-                  ? AssetImage(
-                      Assets.profilePic,
+          child:
+              model.baseUser.avatarId != 'CUSTOM' || model.myUserDpUrl == null
+                  ? SvgPicture.asset(
+                      "assets/svg/userAvatars/${model?.baseUser?.avatarId ?? 'AV2'}.svg",
+                      height: radius * 2,
+                      width: radius * 2,
                     )
-                  : CachedNetworkImageProvider(
+                  : SizedBox(),
+          backgroundImage:
+              model.baseUser.avatarId == 'CUSTOM' || model.myUserDpUrl != null
+                  ? CachedNetworkImageProvider(
                       model.myUserDpUrl,
+                    )
+                  : AssetImage(
+                      Assets.profilePic,
                     ),
         );
       },

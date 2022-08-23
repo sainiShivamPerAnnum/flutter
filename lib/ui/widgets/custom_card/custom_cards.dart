@@ -1,17 +1,19 @@
 import 'dart:ui' as ui;
 
+import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SaveCustomCard extends StatelessWidget {
   final String title;
+  final Function() onCardTap;
   final Color cardBgColor;
   final String cardAssetName;
   final Function() onTap;
   final double investedAmount;
+  final bool isGoldAssets;
 
   const SaveCustomCard(
       {Key key,
@@ -19,7 +21,9 @@ class SaveCustomCard extends StatelessWidget {
       this.cardBgColor,
       this.cardAssetName,
       this.onTap,
-      this.investedAmount = 0})
+      this.investedAmount = 0,
+      this.onCardTap,
+      this.isGoldAssets = false})
       : super(key: key);
 
   @override
@@ -30,104 +34,113 @@ class SaveCustomCard extends StatelessWidget {
           right: SizeConfig.padding16,
           top: SizeConfig.padding20,
           bottom: SizeConfig.padding20),
-      child: Container(
-        height: SizeConfig.screenWidth * 0.351,
-        width: SizeConfig.screenWidth,
-        child: Stack(
-          fit: StackFit.loose,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: SizeConfig.padding16),
-              child: CustomPaint(
-                size: Size(
-                    SizeConfig.screenWidth, SizeConfig.screenWidth * 0.351),
-                painter: CustomSaveCardPainter(cardBgColor),
+      child: GestureDetector(
+        onTap: onCardTap,
+        child: Container(
+          height: SizeConfig.screenWidth * 0.351,
+          width: SizeConfig.screenWidth,
+          child: Stack(
+            fit: StackFit.loose,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.padding16),
+                child: CustomPaint(
+                  size: Size(
+                      SizeConfig.screenWidth, SizeConfig.screenWidth * 0.351),
+                  painter: CustomSaveCardPainter(cardBgColor),
+                ),
               ),
-            ),
-            Container(
-              height: SizeConfig.screenWidth * 0.351,
-              width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(color: Colors.transparent),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  //TODO add independent gold bar asset
-                  SvgPicture.asset(
-                    cardAssetName,
-                    height: SizeConfig.screenWidth * 0.4,
-                    width: SizeConfig.screenWidth * 0.4,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.padding20,
-                          bottom: SizeConfig.padding16,
-                          right: SizeConfig.padding20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                title,
-                                style: TextStyles.rajdhaniSB.title5,
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.white,
-                                size: SizeConfig.padding16,
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    locale.investedText,
-                                    style: TextStyles.sourceSansM.body4,
-                                  ),
-                                  Text(
-                                    '$investedAmount',
-                                    style: TextStyles.sourceSansSB.title4,
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: onTap,
-                                child: Container(
-                                  height: SizeConfig.screenWidth * 0.1,
-                                  width: SizeConfig.screenWidth * 0.2,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white,
-                                          style: BorderStyle.solid),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Center(
-                                    child: Text(
-                                      'SAVE',
-                                      style: TextStyles.rajdhaniB.body1,
+              Container(
+                height: SizeConfig.screenWidth * 0.351,
+                width: SizeConfig.screenWidth,
+                decoration: BoxDecoration(color: Colors.transparent),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Image.asset(
+                      cardAssetName,
+                      height: SizeConfig.screenWidth * 0.3,
+                      width: SizeConfig.screenWidth * 0.3,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: SizeConfig.padding20,
+                            bottom: SizeConfig.padding16,
+                            right: SizeConfig.padding20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  title,
+                                  style: TextStyles.rajdhaniSB.title5,
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.white,
+                                  size: SizeConfig.padding16,
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      locale.investedText,
+                                      style: TextStyles.sourceSansM.body4,
+                                    ),
+                                    isGoldAssets
+                                        ? UserGoldQuantitySE(
+                                            style:
+                                                TextStyles.sourceSansSB.title4,
+                                          )
+                                        : Text(
+                                            investedAmount.toString() ??
+                                                0.toString(),
+                                            style:
+                                                TextStyles.sourceSansSB.title4,
+                                          ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: onTap,
+                                  child: Container(
+                                    height: SizeConfig.screenWidth * 0.1,
+                                    width: SizeConfig.screenWidth * 0.2,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white,
+                                            style: BorderStyle.solid),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: Text(
+                                        'SAVE',
+                                        style: TextStyles.rajdhaniB.body1,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -50,9 +50,17 @@ class UiConstants {
   static const Color kTextColor3 = const Color(0xFFA7A7A8);
 
   static const Color kYellowTextColor = const Color(0xFFFEF5DC);
+  static const Color kTealTextColor = const Color(0xFFA5FCE7);
+  static const Color kPeachTextColor = const Color(0xFFF79780);
 
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
+  static const Color kModalSheetBackgroundColor = const Color(0xFF1B262C);
+  static const Color kModalSheetMutedTextBackgroundColor =
+      const Color(0xFFA9C6D6);
+  static const Color kModalSheetSecondaryBackgroundColor =
+      const Color(0xFF627F8E);
+  static const Color kDarkBackgroundColor = Color(0xFF18181B);
   static const Color kTabBorderColor = const Color(0xFF62E3C4);
   static const Color kDividerColor = const Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = const Color(0xFF23272B);
@@ -140,4 +148,10 @@ class UiConstants {
 
   static Color kAnimationBackGroundColor = Color(0xFF1B262C);
   static Color kAnimationRingColor = Color(0xFF0C5A59);
+
+  static Color kBlogCardRandomColor1 = Color(0xFFF79780);
+  static Color kBlogCardRandomColor2 = Color(0xFF62E3C4);
+  static Color kBlogCardRandomColor3 = Color(0xFF495DB2);
+  static Color kBlogCardRandomColor4 = Color(0xFFFFD979);
+  static Color kBlogCardRandomColor5 = Color(0xFFA5E4FF);
 }

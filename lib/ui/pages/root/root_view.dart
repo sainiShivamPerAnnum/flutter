@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -10,7 +11,6 @@ import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -23,12 +23,13 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
+final pages = [JourneyView(), Play(), Save(), Win()];
 
 class Root extends StatelessWidget {
-  final pages = [JourneyView(), Play(), Save(), Win()];
-
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Root view build called");
+
     return BaseView<RootViewModel>(
       onModelReady: (model) {
         model.onInit();
@@ -37,7 +38,8 @@ class Root extends StatelessWidget {
         model.onDispose();
       },
       builder: (ctx, model, child) {
-        model.initialize();
+        log("ROOT: Root view baseview build called");
+
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
@@ -46,25 +48,8 @@ class Root extends StatelessWidget {
           body: Stack(
             children: [
               NewSquareBackground(),
-              if (FlavorConfig.isDevelopment())
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Banner(
-                    message: FlavorConfig.getStage(),
-                    location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
-                  ),
-                ),
-              if (FlavorConfig.isQA())
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: Banner(
-                    message: FlavorConfig.getStage(),
-                    location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
-                  ),
-                ),
               RefreshIndicator(
+                triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
                 onRefresh: model.refresh,
@@ -88,11 +73,6 @@ class Root extends StatelessWidget {
                       // color: Colors.red,
                     ),
                   ),
-                  actions: [
-                    // FelloCoinBar(),
-                    // SizedBox(width: 16),
-                    NotificationButton(),
-                  ],
                 ),
               Consumer<AppState>(
                 builder: (ctx, m, child) =>
@@ -104,6 +84,24 @@ class Root extends StatelessWidget {
                 model: model,
               ),
               BaseAnimation(),
+              if (FlavorConfig.isDevelopment())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
+                  ),
+                ),
+              if (FlavorConfig.isQA())
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: Banner(
+                    message: FlavorConfig.getStage(),
+                    location: BannerLocation.topEnd,
+                    color: FlavorConfig.instance.color,
+                  ),
+                ),
             ],
           ),
         );
@@ -119,13 +117,12 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S();
-    //TODO change svg to better sizes and change bottomNavBar to flutter's native
     return Consumer<AppState>(
       builder: (ctx, m, child) => Positioned(
         bottom: 0, //SizeConfig.pageHorizontalMargins / 2,
         child: Container(
           width: SizeConfig.screenWidth,
-          height: SizeConfig.navBarHeight * 0.74,
+          height: SizeConfig.navBarHeight,
           decoration: BoxDecoration(
             color: Colors.black,
           ),
@@ -154,116 +151,6 @@ class BottomNavBar extends StatelessWidget {
                 Assets.navWinInactive,
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class WantMoreTickets extends StatelessWidget {
-  final RootViewModel model;
-  WantMoreTickets({
-    @required this.model,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Consumer<AppState>(
-        builder: (ctx, m, c) => AnimatedPositioned(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.decelerate,
-              bottom: SizeConfig.pageHorizontalMargins,
-              left: SizeConfig.pageHorizontalMargins,
-              right: SizeConfig.pageHorizontalMargins,
-              child: InkWell(
-                onTap: model.earnMoreTokens,
-                child: Shimmer(
-                  duration: Duration(seconds: 5),
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.decelerate,
-                    height: AppState.delegate.appState.getCurrentTabIndex == 1
-                        ? SizeConfig.navBarHeight * 1.5
-                        : SizeConfig.navBarHeight,
-                    width: SizeConfig.navBarWidth,
-                    decoration: BoxDecoration(
-                      color: UiConstants.primaryLight,
-                      borderRadius: BorderRadius.circular(
-                        SizeConfig.roundness24,
-                      ),
-                    ),
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      height: SizeConfig.navBarHeight * 0.5,
-                      alignment: Alignment.center,
-                      child: Shimmer(
-                        duration: Duration(seconds: 1),
-                        interval: Duration(seconds: 4),
-                        child: Text(
-                          locale.navWMT,
-                          style: TextStyles.body1
-                              .colour(UiConstants.primaryColor)
-                              .bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ));
-  }
-}
-
-class SaveBaseline extends StatelessWidget {
-  final RootViewModel model;
-  SaveBaseline({
-    @required this.model,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Consumer<AppState>(
-      builder: (ctx, m, c) => AnimatedPositioned(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.decelerate,
-        bottom: SizeConfig.pageHorizontalMargins,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-        child: InkWell(
-          onTap: model.focusBuyField,
-          child: Shimmer(
-            duration: Duration(seconds: 5),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.decelerate,
-              height: AppState.delegate.appState.getCurrentTabIndex == 0
-                  ? SizeConfig.navBarHeight * 1.5
-                  : SizeConfig.navBarHeight,
-              width: SizeConfig.navBarWidth,
-              decoration: BoxDecoration(
-                color: UiConstants.tertiaryLight,
-                borderRadius: BorderRadius.circular(
-                  SizeConfig.roundness24,
-                ),
-              ),
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: SizeConfig.navBarHeight * 0.5,
-                alignment: Alignment.center,
-                child: Shimmer(
-                  duration: Duration(seconds: 1),
-                  interval: Duration(seconds: 4),
-                  child: Text(
-                    locale.saveBaseline,
-                    style:
-                        TextStyles.body1.colour(UiConstants.tertiarySolid).bold,
-                  ),
-                ),
-              ),
-            ),
           ),
         ),
       ),

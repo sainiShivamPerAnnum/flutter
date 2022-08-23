@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class Name4 extends StatelessWidget {
   const Name4({Key key, @required this.model}) : super(key: key);
-  final Level2ViewModel model;
+  final CompleteProfileViewModel model;
 
   @override
   Widget build(BuildContext context) {

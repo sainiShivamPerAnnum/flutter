@@ -31,120 +31,131 @@ class PrizeClaimCard extends StatelessWidget {
         properties: [UserServiceProperties.myUserFund],
         builder: (context, m, property) => Column(
               children: [
-                if (m.userFundWallet.isPrizeBalanceUnclaimed())
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.padding24,
-                        left: SizeConfig.pageHorizontalMargins,
-                        right: SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
-                      color: UiConstants.kAutopayAmountDeactiveTabColor,
-                    ),
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.padding16,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding6),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Total Cashback",
-                                style: TextStyles.body1.colour(Colors.white),
-                              ),
-                              Text(
-                                "₹ ${m.userFundWallet.unclaimedBalance ?? '-'}",
-                                style: TextStyles.rajdhaniB.bold
-                                    .colour(
-                                        UiConstants.kcashBackAmountTextColor)
-                                    .copyWith(fontSize: SizeConfig.padding54),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
+                (m.userFundWallet.isPrizeBalanceUnclaimed())
+                    ? Container(
+                        margin: EdgeInsets.only(
+                            top: SizeConfig.padding24,
+                            left: SizeConfig.pageHorizontalMargins,
+                            right: SizeConfig.pageHorizontalMargins),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness16),
+                          color: UiConstants.kAutopayAmountDeactiveTabColor,
                         ),
-                        SizedBox(height: SizeConfig.padding8),
-                        if (m.userFundWallet.unclaimedBalance >=
-                                minWithdrawPrizeAmt &&
-                            m.userFundWallet.augGoldPrinciple >= refUnlockAmt)
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding16),
-                            margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding6),
-                            child: Row(
-                              children: [
-                                _isAmazonVoucherRedemptionAvailable()
-                                    ? ClaimButton(
-                                        color: Color(0xff11192B),
-                                        image: Assets.amazonClaim,
-                                        onTap: () => model.showConfirmDialog(
-                                            PrizeClaimChoice.AMZ_VOUCHER),
-                                        text: "Redeem as Amazon Pay Gift Card",
-                                      )
-                                    : SizedBox(),
-                                _isAmazonVoucherRedemptionAvailable()
-                                    ? SizedBox(width: SizeConfig.padding12)
-                                    : SizedBox(),
-                                ClaimButton(
-                                  color: UiConstants.tertiarySolid,
-                                  image: Assets.augmontShare,
-                                  onTap: () => model.showConfirmDialog(
-                                      PrizeClaimChoice.GOLD_CREDIT),
-                                  text: "Redeem as Digital Gold",
-                                )
-                              ],
-                            ),
-                          ),
-                        if (m.userFundWallet.unclaimedBalance <
-                            minWithdrawPrizeAmt)
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.padding6),
-                            width: SizeConfig.screenWidth,
-                            height: SizeConfig.padding54,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding32),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness16),
-                              color: Colors.white.withOpacity(0.07),
-                            ),
-                            child: FittedBox(
-                              child: Text(
-                                "Winnings can be redeemed on reaching ₹$minWithdrawPrize",
-                                style: TextStyles.body3.colour(Colors.white),
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.padding16,
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding6),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Total Cashback",
+                                    style:
+                                        TextStyles.body1.colour(Colors.white),
+                                  ),
+                                  Text(
+                                    "₹ ${m.userFundWallet.unclaimedBalance ?? '-'}",
+                                    style: TextStyles.rajdhaniB.bold
+                                        .colour(UiConstants
+                                            .kcashBackAmountTextColor)
+                                        .copyWith(
+                                            fontSize: SizeConfig.padding54),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
-                          )
-                        else if (m.userFundWallet.augGoldPrinciple <
-                            refUnlockAmt)
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.padding6),
-                            width: SizeConfig.screenWidth,
-                            height: SizeConfig.padding54,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding32),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness16),
-                              color: Colors.white.withOpacity(0.07),
-                            ),
-                            child: FittedBox(
-                              child: Text(
-                                "Savings of ₹$refUnlock required to redeem your winnings.",
-                                style: TextStyles.body3.colour(Colors.white),
+                            SizedBox(height: SizeConfig.padding8),
+                            if (m.userFundWallet.unclaimedBalance >=
+                                    minWithdrawPrizeAmt &&
+                                m.userFundWallet.augGoldPrinciple >=
+                                    refUnlockAmt)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding16),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding6),
+                                child: Row(
+                                  children: [
+                                    _isAmazonVoucherRedemptionAvailable()
+                                        ? ClaimButton(
+                                            color: Color(0xff11192B),
+                                            image: Assets.amazonClaim,
+                                            onTap: () =>
+                                                model.showConfirmDialog(
+                                                    PrizeClaimChoice
+                                                        .AMZ_VOUCHER),
+                                            text:
+                                                "Redeem as Amazon Pay Gift Card",
+                                          )
+                                        : SizedBox(),
+                                    _isAmazonVoucherRedemptionAvailable()
+                                        ? SizedBox(width: SizeConfig.padding12)
+                                        : SizedBox(),
+                                    ClaimButton(
+                                      color: UiConstants.tertiarySolid,
+                                      image: Assets.augmontShare,
+                                      onTap: () => model.showConfirmDialog(
+                                          PrizeClaimChoice.GOLD_CREDIT),
+                                      text: "Redeem as Digital Gold",
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+                            if (m.userFundWallet.unclaimedBalance <
+                                minWithdrawPrizeAmt)
+                              Container(
+                                margin:
+                                    EdgeInsets.only(top: SizeConfig.padding6),
+                                width: SizeConfig.screenWidth,
+                                height: SizeConfig.padding54,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding32),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness16),
+                                  color: Colors.white.withOpacity(0.07),
+                                ),
+                                child: FittedBox(
+                                  child: Text(
+                                    "Winnings can be redeemed on reaching ₹$minWithdrawPrize",
+                                    style:
+                                        TextStyles.body3.colour(Colors.white),
+                                  ),
+                                ),
+                              )
+                            else if (m.userFundWallet.augGoldPrinciple <
+                                refUnlockAmt)
+                              Container(
+                                margin:
+                                    EdgeInsets.only(top: SizeConfig.padding6),
+                                width: SizeConfig.screenWidth,
+                                height: SizeConfig.padding54,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding32),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness16),
+                                  color: Colors.white.withOpacity(0.07),
+                                ),
+                                child: FittedBox(
+                                  child: Text(
+                                    "Savings of ₹$refUnlock required to redeem your winnings.",
+                                    style:
+                                        TextStyles.body3.colour(Colors.white),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(height: SizeConfig.padding2),
               ],
             ));
   }

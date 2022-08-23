@@ -51,9 +51,14 @@ SnackBar alertSnackBar(
                     title,
                     style: TextStyles.body3.colour(UiConstants.textColor),
                   ),
-                  Text(
-                    message,
-                    style: TextStyles.body4.colour(UiConstants.textColor),
+                  ConstrainedBox(
+                    constraints:
+                        BoxConstraints(maxWidth: SizeConfig.screenWidth * 0.6),
+                    child: Text(
+                      message,
+                      style: TextStyles.body4.colour(UiConstants.textColor),
+                      maxLines: 2,
+                    ),
                   ),
                 ],
               )

@@ -46,6 +46,7 @@ class ApiPath {
   static String getBlogs(noOfBlogs) =>
       "/blogs?per_page=$noOfBlogs&status=publish&_fields=id,title.rendered,slug,date,yoast_head_json.og_image,acf&orderby=date&order=desc";
   static String kWalkthrough(uid) => "/walkthrough/$uid";
+  static String kVerifyVPAAddress(uid) => '/vpa?uid=$uid';
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 
@@ -77,6 +78,7 @@ class ApiPath {
       "/user/$uid/gt/$goldenTicketId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
+  static prizeBySubtype(String uid) => '/user/$uid/gt';
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
@@ -117,4 +119,5 @@ class ApiPath {
   static String getJourney(int page) => "/journey/$page";
   static String journeyStats(String uid) => "/user/$uid/journey/stats";
   static String kJourneyLevel = '/levels';
+  static String kSkipMilestone(String uid) => "/user/$uid/skip/milestone";
 }

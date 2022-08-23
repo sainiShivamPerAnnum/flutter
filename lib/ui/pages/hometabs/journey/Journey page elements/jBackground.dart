@@ -44,18 +44,25 @@ class _BackgroundState extends State<Background> {
           padding: EdgeInsets.zero,
           itemBuilder: (ctx, i) {
             return Container(
-                width: widget.model.pageWidth,
-                height: widget.model.pageHeight,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: widget.model.pages[i].bgAsset.colors,
-                      stops: widget.model.pages[i].bgAsset.stops,
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter),
-                ),
-                child: SourceAdaptiveAssetView(
-                  asset: widget.model.pages[i].bgAsset.asset,
-                ));
+              width: widget.model.pageWidth,
+              height: widget.model.pageHeight,
+              decoration: BoxDecoration(
+                // backgroundBlendMode: BlendMode.dstATop,
+                color: widget.model.pages[i].bgAsset.colors.last,
+                // border: Border(
+                //   top: BorderSide(
+                //       color: widget.model.pages[i].bgAsset.colors.first),
+                // ),
+                gradient: LinearGradient(
+                    colors: widget.model.pages[i].bgAsset.colors,
+                    stops: widget.model.pages[i].bgAsset.stops,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
+              ),
+              child: SourceAdaptiveAssetView(
+                asset: widget.model.pages[i].bgAsset.asset,
+              ),
+            );
           },
         ),
       ),

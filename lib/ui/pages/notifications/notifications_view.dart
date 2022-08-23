@@ -65,6 +65,7 @@ class NotficationsPage extends StatelessWidget {
                           color: UiConstants.kBackgroundColor,
                         ),
                         child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
                           controller: model.scrollController,
                           padding: EdgeInsets.zero,
                           itemCount: model.notifications?.length ?? 0,
@@ -72,7 +73,9 @@ class NotficationsPage extends StatelessWidget {
                             onTap: () {
                               model.updateHighlightStatus(index);
                               if (model.notifications[index].actionUri !=
-                                  null) {
+                                      null &&
+                                  model.notifications[index].actionUri
+                                      .isNotEmpty) {
                                 print(model.notifications[index].actionUri
                                     .toString());
                                 AppState.delegate.parseRoute(Uri.parse(
@@ -83,11 +86,14 @@ class NotficationsPage extends StatelessWidget {
                               color: model.notifications[index].isHighlighted
                                   ? UiConstants.primaryLight.withOpacity(0.3)
                                   : UiConstants.kBackgroundColor,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              padding: EdgeInsets.fromLTRB(
+                                  SizeConfig.pageHorizontalMargins,
+                                  SizeConfig.padding16,
+                                  SizeConfig.pageHorizontalMargins,
+                                  0),
                               child: Column(
                                 children: [
-                                  // SizedBox(height: SizeConfig.padding12),
+                                  SizedBox(height: SizeConfig.padding12),
                                   Row(
                                     children: [
                                       CircleAvatar(
@@ -182,8 +188,8 @@ class NotficationsPage extends StatelessWidget {
                                   ),
                                   index != model.notifications.length
                                       ? Container(
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: SizeConfig.padding24),
+                                          margin: EdgeInsets.only(
+                                              top: SizeConfig.padding24),
                                           width: double.infinity,
                                           height: 0.2,
                                           color: Colors.white.withOpacity(0.7),

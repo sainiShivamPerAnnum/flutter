@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -9,19 +12,16 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
-import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -41,9 +41,12 @@ class Save extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("ROOT: Save view build called");
+
     return BaseView<SaveViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
+        log("ROOT: Save view baseview build called");
         return Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
@@ -63,39 +66,64 @@ class Save extends StatelessWidget {
                       page: UserProfileDetailsConfig,
                     );
                   },
-                  child: ProfileImageSE(radius: SizeConfig.avatarRadius * 0.8),
+                  child: ProfileImageSE(radius: SizeConfig.avatarRadius),
                 ),
                 SizedBox(width: SizeConfig.padding20)
               ],
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              physics: BouncingScrollPhysics(),
+              physics: ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SaveNetWorthSection(),
+                  SaveNetWorthSection(
+                    saveViewModel: model,
+                  ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
                   // -- Break --
-                  SaveTitleContainer(title: 'Auto SIP'),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
-                  AutoSIPCard(),
+                  AutosaveCard(),
                   // -- Break --
-                  SizedBox(height: SizeConfig.padding54),
                   SaveTitleContainer(title: 'Challenges'),
                   CampaignCardSection(saveViewModel: model),
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
-                  SaveTitleContainer(title: 'Latest'),
+                  GestureDetector(
+                    onTap: () {
+                      model.navigateToViewAllBlogs();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SaveTitleContainer(title: 'Fin-gyan'),
+                        Padding(
+                          padding: EdgeInsets.only(right: SizeConfig.padding12),
+                          child: Row(
+                            children: [
+                              Text('View All',
+                                  style: TextStyles.rajdhaniSB.body2),
+                              SvgPicture.asset(
+                                Assets.chevRonRightArrow,
+                                height: SizeConfig.padding32,
+                                width: SizeConfig.padding32,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   SaveBlogSection(),
                   // -- Break --
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 0.4,
+                  ),
+                  SaveAssetsFooter(),
                   //Extended the EOS to avoid overshadowing by navbar
                   SizedBox(
-                    height: SizeConfig.screenWidth * 0.8,
+                    height: SizeConfig.screenWidth * 0.4,
                   ),
                 ],
               ),
@@ -120,7 +148,9 @@ class SaveTitleContainer extends StatelessWidget {
 }
 
 class SaveNetWorthSection extends StatelessWidget {
-  const SaveNetWorthSection({Key key}) : super(key: key);
+  final SaveViewModel saveViewModel;
+
+  const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +172,8 @@ class SaveNetWorthSection extends StatelessWidget {
                     title: 'Digital Gold',
                     cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                     cardAssetName: Assets.digitalGoldBar,
-                    investedAmount: model.userFundWallet?.augGoldBalance,
+                    isGoldAssets: true,
+                    onCardTap: () => saveViewModel.navigateToSaveAssetView(),
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -158,7 +189,8 @@ class SaveNetWorthSection extends StatelessWidget {
                   SaveCustomCard(
                     title: 'Stable Fello',
                     cardBgColor: UiConstants.kSaveStableFelloCardBg,
-                    cardAssetName: Assets.digitalGoldBar,
+                    cardAssetName: Assets.stableFello,
+                    investedAmount: 0.0,
                     onTap: () {
                       return BaseUtil.openModalBottomSheet(
                         addToScreenStack: true,
@@ -177,69 +209,6 @@ class SaveNetWorthSection extends StatelessWidget {
   }
 }
 
-class AutoSIPCard extends StatelessWidget {
-  const AutoSIPCard({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S();
-    return BaseView<SubscriptionCardViewModel>(
-      builder: (ctx, model, builder) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-        child: GestureDetector(
-          onTap: () {
-            model.navigateToAutoSave();
-          },
-          child: Container(
-            height: SizeConfig.screenWidth * 0.42,
-            width: SizeConfig.screenWidth,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: UiConstants.kSecondaryBackgroundColor),
-            child: Padding(
-              padding: EdgeInsets.all(SizeConfig.padding6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset(Assets.autoSaveDefault)),
-                  SizedBox(
-                    width: SizeConfig.padding10,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      FittedBox(
-                        fit: BoxFit.cover,
-                        child: Container(
-                          width: SizeConfig.screenWidth * 0.48,
-                          child: RichText(
-                              text: TextSpan(
-                                  text: '${locale.getStartedWithSIP}\n',
-                                  style: TextStyles.rajdhaniSB.body1,
-                                  children: <TextSpan>[
-                                TextSpan(
-                                    text: locale.investSafelyInGoldText,
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(UiConstants.kTextColor2))
-                              ])),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding20),
-                        child: SvgPicture.asset(Assets.saveChevronRight),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
@@ -252,44 +221,68 @@ class CampaignCardSection extends StatelessWidget {
       padding: EdgeInsets.only(
           left: SizeConfig.padding24, top: SizeConfig.padding16),
       child: Container(
-        height: SizeConfig.screenWidth * 0.51,
-        child: ListView.builder(
-            itemCount: saveViewModel.ongoingEvents.length,
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return CampiagnCard(
-                title: saveViewModel.ongoingEvents[index].title,
-                subTitle: saveViewModel.ongoingEvents[index].subtitle,
-                containerColor:
-                    saveViewModel.ongoingEvents[index].bgColor.toColor(),
-                imageUrl: saveViewModel.ongoingEvents[index].image,
-              );
-            }),
-      ),
+          height: SizeConfig.screenWidth * 0.51,
+          child: ListView.builder(
+              itemCount: saveViewModel.isLoading
+                  ? 2
+                  : saveViewModel.ongoingEvents.length,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return saveViewModel.isLoading
+                    ? Shimmer.fromColors(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: SizeConfig.padding10),
+                          child: Container(
+                            width: SizeConfig.screenWidth * 0.5,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
+                                color: UiConstants.kBackgroundColor),
+                            child: Padding(
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: SizeConfig.padding28),
+                                    child: Center(
+                                      child: Container(
+                                        height: SizeConfig.screenWidth * 0.2,
+                                        width: SizeConfig.screenWidth,
+                                        decoration: BoxDecoration(
+                                            color: UiConstants
+                                                .kSecondaryBackgroundColor),
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        baseColor: UiConstants.kUserRankBackgroundColor,
+                        highlightColor: UiConstants.kBackgroundColor,
+                      )
+                    : CampiagnCard(
+                        event: saveViewModel.ongoingEvents[index],
+                      );
+              })),
     );
   }
 }
 
 class CampiagnCard extends StatelessWidget {
-  final Color containerColor;
-  final String title;
-  final String subTitle;
-  final String imageUrl;
-
-  const CampiagnCard(
-      {Key key, this.containerColor, this.title, this.subTitle, this.imageUrl})
-      : super(key: key);
+  final EventModel event;
+  CampiagnCard({this.event});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        AppState.delegate.appState.currentAction = PageAction(
-          page: CampaignViewPageConfig,
-          state: PageState.addWidget,
-          widget: CampaignView(eventType: Constants.HS_DAILY_SAVER),
-        );
+        AppState.delegate.openTopSaverScreen(event.type);
       },
       child: Padding(
         padding: EdgeInsets.only(right: SizeConfig.padding10),
@@ -297,7 +290,7 @@ class CampiagnCard extends StatelessWidget {
           width: SizeConfig.screenWidth * 0.5,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: containerColor),
+              color: event.bgColor.toColor()),
           child: Padding(
             padding: EdgeInsets.all(SizeConfig.padding16),
             child: Column(
@@ -307,15 +300,15 @@ class CampiagnCard extends StatelessWidget {
                   padding: EdgeInsets.only(top: SizeConfig.padding28),
                   child: Center(
                     child: SizedBox(
-                      height: SizeConfig.screenWidth * 0.17,
+                      height: SizeConfig.screenWidth * 0.2,
                       width: SizeConfig.screenWidth,
-                      child: Image.network(imageUrl),
+                      child: Image.network(event.image),
                     ),
                   ),
                 ),
                 Spacer(),
                 Text(
-                  title,
+                  event.title,
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 FittedBox(
@@ -323,7 +316,7 @@ class CampiagnCard extends StatelessWidget {
                   child: Container(
                     width: SizeConfig.screenWidth * 0.5,
                     child: Text(
-                      subTitle,
+                      event.subtitle,
                       style: TextStyles.sourceSans.body4,
                     ),
                   ),
@@ -404,9 +397,9 @@ class SaveBlogSection extends StatelessWidget {
         padding: EdgeInsets.only(
             left: SizeConfig.padding24, top: SizeConfig.padding10),
         child: BaseView<SaveViewModel>(
-          onModelReady: (model) => model.getBlogs(),
+          onModelReady: (model) => model.getSaveViewBlogs(),
           builder: (ctx, model, child) => Container(
-            height: SizeConfig.screenWidth * 0.26,
+            height: SizeConfig.screenWidth * 0.4,
             child: model.isLoading
                 ? ListView.builder(
                     itemCount: 2,
@@ -445,16 +438,21 @@ class SaveBlogSection extends StatelessWidget {
                     })
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 5,
+                    itemCount: model.blogPosts.length,
                     itemBuilder: (ctx, index) {
-                      return SaveBlogTile(
-                        onTap: () {
-                          model.navigateToBlogWebView(
-                              model.blogPosts[index].slug);
-                        },
-                        title: model.blogPosts[index].title.rendered,
-                        description: model.blogPosts[index].acf.categories,
-                        imageUrl: model.blogPosts[index].yoastHeadJson,
+                      return Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding10),
+                        child: SaveBlogTile(
+                          isFullScreen: false,
+                          onTap: () {
+                            model.navigateToBlogWebView(
+                                model.blogPosts[index].slug);
+                          },
+                          blogSideFlagColor: model.getRandomColor(),
+                          title: model.blogPosts[index].title.rendered,
+                          description: model.blogPosts[index].acf.categories,
+                          imageUrl: model.blogPosts[index].yoastHeadJson,
+                        ),
                       );
                     }),
           ),
@@ -470,6 +468,9 @@ class BlogWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: FelloAppBarBackButton(),
+      ),
       body: WebView(
           initialUrl: initialUrl, javascriptMode: JavascriptMode.unrestricted),
     );
@@ -481,101 +482,101 @@ class SaveBlogTile extends StatelessWidget {
   final String title;
   final String description;
   final String imageUrl;
+  final bool isFullScreen;
+  final Color blogSideFlagColor;
   const SaveBlogTile(
-      {Key key, this.onTap, this.title, this.description, this.imageUrl})
+      {Key key,
+      this.onTap,
+      this.title,
+      this.description,
+      this.imageUrl,
+      this.isFullScreen = false,
+      this.blogSideFlagColor = Colors.red})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: SizeConfig.padding10),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: SizeConfig.screenWidth - 80,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.kSecondaryBackgroundColor),
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.padding6),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      height: SizeConfig.screenWidth * 0.23,
-                      width: SizeConfig.screenWidth * 0.25,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.centerLeft),
-                ),
-                SizedBox(
-                  width: SizeConfig.padding10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding4),
-                      child: Text(
-                        description,
-                        style: TextStyles.rajdhaniM
-                            .colour(UiConstants.kBlogTitleColor),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width:
+            isFullScreen ? SizeConfig.screenWidth : SizeConfig.screenWidth - 80,
+        child: Stack(
+          children: [
+            Positioned(
+              right: 0,
+              child: Container(
+                  height: SizeConfig.screenWidth * 0.4,
+                  width: SizeConfig.padding28,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(SizeConfig.roundness12),
+                        bottomRight: Radius.circular(SizeConfig.roundness12),
                       ),
-                    ),
-                    ConstrainedBox(
+                      //TODO make color dynamic
+                      color: blogSideFlagColor)),
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  height: SizeConfig.screenWidth * 0.4,
+                  width: isFullScreen
+                      ? SizeConfig.screenWidth * 0.5
+                      : SizeConfig.screenWidth * 0.4,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.centerLeft),
+            ),
+            Positioned(
+              left: isFullScreen
+                  ? SizeConfig.screenWidth * 0.34
+                  : SizeConfig.screenWidth * 0.32,
+              child: Container(
+                height: SizeConfig.screenWidth * 0.4,
+                width: isFullScreen
+                    ? SizeConfig.screenWidth * 0.525
+                    : SizeConfig.screenWidth * 0.45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                    color: Colors.black),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding10,
+                      horizontal: SizeConfig.padding20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxWidth: SizeConfig.screenWidth * 0.4,
+                          maxWidth: isFullScreen
+                              ? SizeConfig.screenWidth * 0.42
+                              : SizeConfig.screenWidth * 0.34,
                         ),
                         child: Text(
-                          title,
-                          maxLines: 2,
-                          overflow: TextOverflow.clip,
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
-                        )),
-                  ],
-                )
-              ],
+                          description,
+                          style: TextStyles.rajdhaniSB.body2
+                              .colour(UiConstants.kTextColor),
+                        ),
+                      ),
+                      ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: SizeConfig.screenWidth * 0.34,
+                          ),
+                          child: Text(
+                            title,
+                            maxLines: 2,
+                            overflow: TextOverflow.clip,
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.grey.shade200),
+                          )),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class Goldlinks extends StatelessWidget {
-  AugmontGoldBuyViewModel model;
-
-  Goldlinks({this.model});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.24,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          SaveInfoTile(
-            svg: 'images/svgs/gold.svg',
-            title: "About digital Gold",
-            onPressed: () {
-              model.navigateToAboutGold();
-            },
-          ),
-          SaveInfoTile(
-            png: Assets.augmontShare,
-            title: "Learn more about Augmont",
-            onPressed: () {
-              model.openAugmontWebUri();
-            },
-          ),
-        ],
       ),
     );
   }
@@ -633,6 +634,89 @@ class SaveInfoTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SaveInfoSection extends StatelessWidget {
+  final String title;
+  final String imageAsset;
+  final double imageHeight;
+  final double imageWidth;
+
+  const SaveInfoSection(
+      {Key key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        SizedBox(
+            height: imageHeight,
+            width: imageWidth,
+            child: Image.asset(imageAsset)),
+      ],
+    );
+  }
+}
+
+class SaveAssetsFooter extends StatelessWidget {
+  const SaveAssetsFooter({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          '100% SAFE AND SECURED',
+          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SaveInfoSection(
+                title: 'In Compliance with',
+                imageAsset: Assets.sebiLogo,
+                imageHeight: SizeConfig.screenWidth * 0.07,
+                imageWidth: SizeConfig.screenWidth * 0.07,
+              ),
+              VerticalDivider(
+                color: Colors.white,
+                thickness: 2,
+                width: 2,
+              ),
+              SaveInfoSection(
+                title: 'RBI Approved',
+                imageAsset: Assets.rbiLogo,
+                imageHeight: SizeConfig.screenWidth * 0.07,
+                imageWidth: SizeConfig.screenWidth * 0.07,
+              ),
+              VerticalDivider(color: Colors.white, thickness: 2, width: 2),
+              SaveInfoSection(
+                title: 'Banking Partner',
+                imageAsset: Assets.iciciLogo,
+                imageHeight: SizeConfig.screenWidth * 0.07,
+                imageWidth: SizeConfig.screenWidth * 0.16,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

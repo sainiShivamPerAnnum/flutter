@@ -38,6 +38,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -56,6 +57,7 @@ class RootViewModel extends BaseModel {
   final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
   final txnService = locator<TransactionService>();
@@ -72,6 +74,7 @@ class RootViewModel extends BaseModel {
   String _svgSource = '';
 
   String get svgSource => this._svgSource;
+  int get bottomNavBarIndex => this._bottomNavBarIndex;
 
   set svgSource(value) {
     this._svgSource = value;
@@ -80,6 +83,11 @@ class RootViewModel extends BaseModel {
 
   set isUploading(value) {
     this._isUploading = value;
+    notifyListeners();
+  }
+
+  set bottomNavBarIndex(int index) {
+    this._bottomNavBarIndex = index;
     notifyListeners();
   }
 
@@ -93,6 +101,7 @@ class RootViewModel extends BaseModel {
     txnService.signOut();
     _paytmService.getActiveSubscriptionDetails();
     await txnService.fetchTransactions();
+    await _journeyService.checkForMilestoneLevelChange();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -105,6 +114,7 @@ class RootViewModel extends BaseModel {
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
+    initialize();
   }
 
   onDispose() {
@@ -125,14 +135,14 @@ class RootViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
   }
 
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
-  }
+  // showTicketModal(BuildContext context) {
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (ctx) {
+  //         return WantMoreTicketsModalSheet();
+  //       });
+  // }
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
@@ -153,8 +163,10 @@ class RootViewModel extends BaseModel {
 
       default:
     }
+    bottomNavBarIndex = index;
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
+    Haptic.vibrate();
     notifyListeners();
     if (AppState.delegate.appState.getCurrentTabIndex == 0)
       _journeyService.checkAndAnimateAvatar();
@@ -179,19 +191,19 @@ class RootViewModel extends BaseModel {
     _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
 
-  uploadJourneyPage() async {
-    // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
-    log(json.encode(jourenyPages.last.toMap()));
-  }
+  // uploadJourneyPage() async {
+  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
+  //   log(json.encode(jourenyPages.last.toMap()));
+  // }
 
-  uploadMilestones() async {
-    // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
-    //       log(milestone.toMap().toString());
-    //     }));
-    log(json.encode(jourenyPages
-        .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
-        .toList()));
-  }
+  // uploadMilestones() async {
+  //   // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
+  //   //       log(milestone.toMap().toString());
+  //   //     }));
+  //   log(json.encode(jourenyPages
+  //       .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
+  //       .toList()));
+  // }
 
   // completeNViewDownloadSaveLViewAsset() async {
   //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
@@ -230,26 +242,25 @@ class RootViewModel extends BaseModel {
   }
 
   initialize() async {
-    bool canExecuteStartupNotification = true;
-    if (!_isInitialized) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      bool canExecuteStartupNotification = true;
+
       // bool showSecurityPrompt = false;
       // if (_userService.showSecurityPrompt == null) {
       //   showSecurityPrompt = await _lModel.showSecurityPrompt();
       //   _userService.showSecurityPrompt = showSecurityPrompt;
       // }
 
-      _isInitialized = true;
       _initAdhocNotifications();
 
       _baseUtil.getProfilePicture();
       // show security modal
-      // if (
-      //     showSecurityPrompt &&
+      // if (showSecurityPrompt &&
       //     _userService.baseUser.isAugmontOnboarded &&
-      //         _userService.userFundWallet.augGoldQuantity > 0 &&
-      //         _userService.baseUser.userPreferences
-      //                 .getPreference(Preferences.APPLOCK) ==
-      //             0) {
+      //     _userService.userFundWallet.augGoldQuantity > 0 &&
+      //     _userService.baseUser.userPreferences
+      //             .getPreference(Preferences.APPLOCK) ==
+      //         0) {
       //   canExecuteStartupNotification = false;
       //   WidgetsBinding.instance?.addPostFrameCallback((_) {
       //     _showSecurityBottomSheet();
@@ -310,7 +321,7 @@ class RootViewModel extends BaseModel {
       //       value: DateTime.now().weekday,
       //       type: CacheType.int);
       // }
-    }
+    });
   }
 
   Future<dynamic> _verifyReferral(BuildContext context) async {
@@ -513,16 +524,21 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  void earnMoreTokens() {
-    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(),
-      hapticVibrate: true,
-      backgroundColor: Colors.transparent,
-      isBarrierDismissable: true,
-    );
-  }
+  // void earnMoreTokens() {
+  //   _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+  //        BaseUtil.openModalBottomSheet(
+  //                     addToScreenStack: true,
+  //                     backgroundColor: UiConstants.gameCardColor,
+  //                     content: WantMoreTicketsModalSheet(),
+  //                     borderRadius: BorderRadius.only(
+  //                       topLeft: Radius.circular(SizeConfig.roundness24),
+  //                       topRight: Radius.circular(SizeConfig.roundness24),
+  //                     ),
+  //                     hapticVibrate: true,
+  //                     isScrollControlled: true,
+  //                     isBarrierDismissable: true,
+  //                   );
+  // }
 
   // addJourneyPage() async {
   //   isUploading = true;

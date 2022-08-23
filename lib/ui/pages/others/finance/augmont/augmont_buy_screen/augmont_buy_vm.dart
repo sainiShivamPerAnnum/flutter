@@ -23,6 +23,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
@@ -61,7 +63,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
-
+  double incomingAmount;
   int _status = 0;
   int lastTappedChipIndex = 1;
   CouponModel _focusCoupon;
@@ -70,6 +72,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _skipMl = false;
+
   // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
@@ -176,10 +180,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init(int amount) async {
+  bool get skipMl => this._skipMl;
+
+  set skipMl(bool value) {
+    this._skipMl = value;
+  }
+
+  init(int amount, bool isSkipMilestone) async {
     setState(ViewState.Busy);
     // buyFieldNode = _userService.buyFieldFocusNode;
-    goldBuyAmount = chipAmountList[1];
+    skipMl = isSkipMilestone;
+    incomingAmount = amount?.toDouble() ?? 0;
+    goldBuyAmount = amount.toDouble() ?? chipAmountList[1];
     goldAmountController = TextEditingController(
         text: amount.toString() ?? chipAmountList[1].toInt().toString());
     fetchGoldRates();
@@ -376,6 +388,24 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
 
+    if (skipMl && buyAmount < incomingAmount) {
+      return BaseUtil.openDialog(
+          addToScreenStack: true,
+          content: AppDefaultDialog(
+            title: "Alert!",
+            description:
+                "Buy amount is less than skip cost. You can still buy gold but milestone won't be skipped",
+            asset: Icon(Icons.warning_rounded,
+                color: Colors.amber, size: SizeConfig.padding54),
+            buttonText: "Continue",
+            cancelAction: () => AppState.backButtonDispatcher.didPopRoute(),
+            confirmAction: () => AppState.backButtonDispatcher.didPopRoute(),
+            cancelBtnText: "Cancle",
+          ),
+          isBarrierDismissable: false,
+          hapticVibrate: true);
+    }
+
     if (_baseUtil.augmontDetail.isDepLocked) {
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
@@ -406,6 +436,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
+        skipMl: skipMl,
         restrictAppInvoke: restrictPaytmAppInvoke);
 
     isGoldBuyInProgress = false;
@@ -754,52 +785,59 @@ class PendingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FelloInfoDialog(
-      customContent: Column(
-        children: [
-          SizedBox(height: SizeConfig.screenHeight * 0.04),
-          SvgPicture.asset(
-            Assets.processing,
-            height: SizeConfig.screenHeight * 0.16,
-          ),
-          SizedBox(
-            height: SizeConfig.screenHeight * 0.04,
-          ),
-          Text(
-            title,
-            style: TextStyles.title3.bold,
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              text: subtitle,
-              style: TextStyles.body3.colour(Colors.black54),
-              children: [
-                TextSpan(
-                  text: duration,
-                  style:
-                      TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: SizeConfig.screenHeight * 0.02),
-          Container(
-            width: SizeConfig.screenWidth,
-            child: FelloButtonLg(
-              child: Text(
-                "OK",
-                style: TextStyles.body3.colour(Colors.white),
-              ),
-              color: UiConstants.primaryColor,
-              onPressed: () {
-                AppState.backButtonDispatcher.didPopRoute();
-              },
-            ),
-          ),
-        ],
-      ),
+    return AppNegativeDialog(
+      btnAction: () {
+        AppState.backButtonDispatcher.didPopRoute();
+      },
+      btnText: "OK",
+      title: "We're still Processing",
+      subtitle: subtitle + duration,
+
+      // customContent: Column(
+      //   children: [
+      //     SizedBox(height: SizeConfig.screenHeight * 0.04),
+      //     SvgPicture.asset(
+      //       Assets.processing,
+      //       height: SizeConfig.screenHeight * 0.16,
+      //     ),
+      //     SizedBox(
+      //       height: SizeConfig.screenHeight * 0.04,
+      //     ),
+      //     Text(
+      //       title,
+      //       style: TextStyles.title3.bold,
+      //     ),
+      //     SizedBox(height: SizeConfig.padding16),
+      //     RichText(
+      //       textAlign: TextAlign.center,
+      //       text: TextSpan(
+      //         text: subtitle,
+      //         style: TextStyles.body3.colour(Colors.black54),
+      //         children: [
+      //           TextSpan(
+      //             text: duration,
+      //             style:
+      //                 TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
+      //           )
+      //         ],
+      //       ),
+      //     ),
+      //     SizedBox(height: SizeConfig.screenHeight * 0.02),
+      //     Container(
+      //       width: SizeConfig.screenWidth,
+      //       child: FelloButtonLg(
+      //         child: Text(
+      //           "OK",
+      //           style: TextStyles.body3.colour(Colors.white),
+      //         ),
+      //         color: UiConstants.primaryColor,
+      //         onPressed: () {
+      //           AppState.backButtonDispatcher.didPopRoute();
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

@@ -14,7 +14,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class RechargeModalSheet extends StatelessWidget {
   final int amount;
-  const RechargeModalSheet({Key key, this.amount = 0}) : super(key: key);
+  final bool skipMl;
+  const RechargeModalSheet({Key key, this.amount = 0, this.skipMl = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,7 @@ class RechargeModalSheet extends StatelessWidget {
 
   Widget _getView(TransactionService txnService) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return NewAugmontBuyView(amount: amount);
+      return NewAugmontBuyView(amount: amount, skipMl: skipMl);
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
       return RechargeLoadingView();

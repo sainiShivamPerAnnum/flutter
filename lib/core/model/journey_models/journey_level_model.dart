@@ -11,7 +11,7 @@ class JourneyLevel {
   JourneyLevel.fromMap(Map<String, dynamic> map) {
     start = map['start'];
     end = map['end'];
-    breakpoint = map['breakpoint'];
+    breakpoint = map['breakpoint'].toDouble();
     pageEnd = map['pageEnd'];
     level = map['level'];
   }

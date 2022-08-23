@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:felloapp/ui/pages/login/level_2/level_2_vm.dart';
+import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ChooseAvatar4 extends StatefulWidget {
   const ChooseAvatar4({Key key, @required this.model}) : super(key: key);
-  final Level2ViewModel model;
+  final CompleteProfileViewModel model;
 
   @override
   State<ChooseAvatar4> createState() => _ChooseAvatar4State();
@@ -22,7 +22,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: SizeConfig.screenWidth * 0.570),
+        Spacer(),
         Text(
           'What avatar suits you the best?',
           style: TextStyles.rajdhaniSB.title5,
@@ -42,7 +42,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
               height: SizeConfig.screenWidth * 0.685,
               child: PageView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: 5,
+                itemCount: 6,
                 controller: widget.model.avatarsPageController,
                 onPageChanged: (val) {
                   if (val >= 1) {
@@ -102,8 +102,15 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
                                         ),
                                 ),
                               )
-                            : SvgPicture.asset(
-                                'assets/svg/user_avatar_svg.svg',
+                            : Container(
+                                margin: EdgeInsets.only(
+                                  bottom: SizeConfig.padding10,
+                                  right: SizeConfig.padding8,
+                                  left: SizeConfig.padding8,
+                                ),
+                                child: SvgPicture.asset(
+                                    'assets/svg/userAvatars/AV$idx.svg',
+                                    fit: BoxFit.cover),
                               ),
                       ),
                     ),
@@ -113,6 +120,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
             ),
           ],
         ),
+        Spacer(),
       ],
     );
   }

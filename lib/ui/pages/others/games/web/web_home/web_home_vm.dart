@@ -12,6 +12,7 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
@@ -26,6 +27,9 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class RechargeOption {
@@ -187,6 +191,10 @@ class WebHomeViewModel extends BaseModel {
     return _setupCurrentGame();
   }
 
+  Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
+    return Api().fetchRealTimePlayingStats(game);
+  }
+
   launchGame() {
     String initialUrl;
     viewpage(1);
@@ -290,11 +298,14 @@ class WebHomeViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(
-        isInsufficientBalance: true,
+      backgroundColor: UiConstants.gameCardColor,
+      content: WantMoreTicketsModalSheet(isInsufficientBalance: true),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness24),
+        topRight: Radius.circular(SizeConfig.roundness24),
       ),
       hapticVibrate: true,
-      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       isBarrierDismissable: true,
     );
   }
@@ -324,5 +335,16 @@ class WebHomeViewModel extends BaseModel {
       currentGameModel = response.model;
     }
     isGameLoading = false;
+  }
+
+  String sortPlayerNumbers(String number) {
+    double num = double.parse(number);
+
+    if (num < 1000) {
+      return num.toStringAsFixed(0);
+    } else {
+      num = num / 1000;
+      return "${num.toStringAsFixed(1)}K";
+    }
   }
 }

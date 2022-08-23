@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:felloapp/core/model/journey_models/milestone_shadow_model.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -16,6 +17,7 @@ class MilestoneModel {
   final double ax;
   final double ay;
   List<Reward> rewards;
+  Map<String, dynamic> skipCost;
   final List<MlSteps> steps;
   final String actionUri;
   final String animType;
@@ -37,6 +39,7 @@ class MilestoneModel {
     this.ay,
     this.rewards,
     this.tooltip,
+    this.skipCost,
     this.prizeSubType,
     @required this.steps,
     @required this.actionUri,
@@ -57,6 +60,7 @@ class MilestoneModel {
     double y,
     double ax,
     double ay,
+    Map<String, dynamic> skipCost,
     List<Reward> rewards,
     List<MlSteps> description,
     String actionUri,
@@ -81,6 +85,7 @@ class MilestoneModel {
       rewards: rewards ?? this.rewards,
       steps: description ?? this.steps,
       actionUri: actionUri ?? this.actionUri,
+      skipCost: skipCost ?? this.skipCost,
       animType: animType ?? this.animType,
       tooltip: tooltip ?? this.tooltip,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -94,83 +99,104 @@ class MilestoneModel {
   }
 
   Map<String, dynamic> toJourneyMap() {
-    return animAsset != null
-        ? (shadow != null
-            ? <String, dynamic>{
-                'x': x,
-                'y': y,
-                'ax': ax,
-                'ay': ay,
-                'sx': shadow.x,
-                'sy': shadow.y,
-                'hFlip': hFlip ?? false
-              }
-            : <String, dynamic>{
-                'x': x,
-                'y': y,
-                'ax': ax,
-                'ay': ay,
-                'hFlip': hFlip ?? false
-              })
-        : (shadow != null
-            ? <String, dynamic>{
-                'x': x,
-                'y': y,
-                'sx': shadow.x,
-                'sy': shadow.y,
-                'hFlip': hFlip ?? false,
-              }
-            : <String, dynamic>{
-                'x': x,
-                'y': y,
-                'hFlip': hFlip ?? false,
-              });
+    return <String, dynamic>{
+      'x': x,
+      'y': y,
+      if (animAsset != null) 'ax': ax,
+      if (animAsset != null) 'ay': ay,
+      if (shadow != null) 'sx': shadow.x,
+      if (shadow != null) 'sy': shadow.y,
+      'hFlip': hFlip ?? false
+    };
+    // animAsset != null
+    //     ? (shadow != null
+    //         ? <String, dynamic>{
+    //             'x': x,
+    //             'y': y,
+    //             'ax': ax,
+    //             'ay': ay,
+    //             'sx': shadow.x,
+    //             'sy': shadow.y,
+    //             'hFlip': hFlip ?? false
+    //           }
+    //         : <String, dynamic>{
+    //             'x': x,
+    //             'y': y,
+    //             'ax': ax,
+    //             'ay': ay,
+    //             'hFlip': hFlip ?? false
+    //           })
+    //     : (shadow != null
+    //         ? <String, dynamic>{
+    //             'x': x,
+    //             'y': y,
+    //             'sx': shadow.x,
+    //             'sy': shadow.y,
+    //             'hFlip': hFlip ?? false,
+    //           }
+    //         : <String, dynamic>{
+    //             'x': x,
+    //             'y': y,
+    //             'hFlip': hFlip ?? false,
+    //           });
   }
 
   Map<String, dynamic> toMap(int page) {
-    return shadow != null
-        ? (animAsset != null
-            ? <String, dynamic>{
-                'assetRef': asset.name,
-                'animRef': animAsset.name,
-                'animType': animType ?? "none",
-                'actionUri': actionUri ?? '',
-                'toolTip': tooltip ?? '',
-                'page': page,
-                'steps': steps.map((x) => x.toMap()).toList(),
-                'prizeSubType': prizeSubType ?? '',
-                'shadow': {'assetRef': shadow.name},
-              }
-            : <String, dynamic>{
-                'assetRef': asset.name,
-                'animType': animType ?? "none",
-                'actionUri': actionUri ?? '',
-                'toolTip': tooltip ?? '',
-                'page': page,
-                'steps': steps.map((x) => x.toMap()).toList(),
-                'prizeSubType': prizeSubType ?? '',
-                'shadow': {'assetRef': shadow.name},
-              })
-        : (animAsset != null
-            ? <String, dynamic>{
-                'assetRef': asset.name,
-                'animAssetRef': animAsset.name,
-                'animType': animType ?? "none",
-                'actionUri': actionUri ?? '',
-                'toolTip': tooltip ?? '',
-                'page': page,
-                'steps': steps.map((x) => x.toMap()).toList(),
-                'prizeSubType': prizeSubType ?? '',
-              }
-            : <String, dynamic>{
-                'assetRef': asset.name,
-                'animType': animType ?? "none",
-                'actionUri': actionUri ?? '',
-                'toolTip': tooltip ?? '',
-                'page': page,
-                'steps': steps.map((x) => x.toMap()).toList(),
-                'prizeSubType': prizeSubType ?? '',
-              });
+    return <String, dynamic>{
+      'assetRef': asset.name,
+      if (animAsset != null) 'animRef': animAsset.name,
+      'animType': animType ?? "none",
+      'actionUri': actionUri ?? '',
+      'toolTip': tooltip ?? '',
+      'page': page,
+      'steps': steps.map((x) => x.toMap()).toList(),
+      'prizeSubType': prizeSubType ?? '',
+      if (shadow != null) 'shadow': {'assetRef': shadow.name},
+    };
+
+    // shadow != null
+    //     ? (animAsset != null
+    //         ? <String, dynamic>{
+    //             'assetRef': asset.name,
+    //             'animRef': animAsset.name,
+    //             'animType': animType ?? "none",
+    //             'actionUri': actionUri ?? '',
+    //             'toolTip': tooltip ?? '',
+    //             'page': page,
+    //             'steps': steps.map((x) => x.toMap()).toList(),
+    //             'prizeSubType': prizeSubType ?? '',
+    //             'shadow': {'assetRef': shadow.name},
+    //           }
+    //         : <String, dynamic>{
+    //             'assetRef': asset.name,
+    //             'animType': animType ?? "none",
+    //             'actionUri': actionUri ?? '',
+    //             'toolTip': tooltip ?? '',
+    //             'page': page,
+    //             'steps': steps.map((x) => x.toMap()).toList(),
+    //             'prizeSubType': prizeSubType ?? '',
+    //             'shadow': {'assetRef': shadow.name},
+    //           })
+    //     : (animAsset != null
+    //         ? <String, dynamic>{
+    //             'assetRef': asset.name,
+    //             'animAssetRef': animAsset.name,
+    //             'animType': animType ?? "none",
+    //             'actionUri': actionUri ?? '',
+    //             'toolTip': tooltip ?? '',
+    //             'page': page,
+    //             'steps': steps.map((x) => x.toMap()).toList(),
+    //             'prizeSubType': prizeSubType ?? '',
+    //           }
+    //         : <String, dynamic>{
+    //             'assetRef': asset.name,
+    //             'animType': animType ?? "none",
+    //             'actionUri': actionUri ?? '',
+    //             'toolTip': tooltip ?? '',
+    //             'page': page,
+    //             'steps': steps.map((x) => x.toMap()).toList(),
+    //             'prizeSubType': prizeSubType ?? '',
+    //           });
   }
 
   factory MilestoneModel.fromMap(Map<String, dynamic> map, int page) {
@@ -187,6 +213,7 @@ class MilestoneModel {
           (x) => MlSteps.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      skipCost: map['skipCost'] ?? {},
       prizeSubType: map['prizeSubType'] as String,
       animType: map['animType'] as String,
       actionUri: map['actionUri'] as String,
@@ -236,6 +263,7 @@ class MilestoneModel {
         other.ay == ay &&
         listEquals(other.rewards, rewards) &&
         listEquals(other.steps, steps) &&
+        other.skipCost == skipCost &&
         other.actionUri == actionUri &&
         other.animType == animType &&
         other.tooltip == tooltip &&
@@ -260,6 +288,7 @@ class MilestoneModel {
         rewards.hashCode ^
         steps.hashCode ^
         actionUri.hashCode ^
+        skipCost.hashCode ^
         animType.hashCode ^
         tooltip.hashCode ^
         isCompleted.hashCode ^
@@ -268,130 +297,6 @@ class MilestoneModel {
         index.hashCode ^
         shadow.hashCode ^
         hFlip.hashCode ^
-        vFlip.hashCode;
-  }
-}
-
-class MilestoneShadowModel {
-  final String id;
-  final String name;
-  final JourneyAssetModel asset;
-  final double x, y;
-  final String animType;
-  final bool isCompleted;
-  final int page;
-  final int index;
-  final bool hFlip, vFlip;
-  MilestoneShadowModel({
-    @required this.id,
-    @required this.name,
-    @required this.asset,
-    @required this.y,
-    @required this.x,
-    this.animType = "none",
-    this.isCompleted = false,
-    @required this.page,
-    @required this.index,
-    this.vFlip = false,
-    this.hFlip = false,
-  });
-
-  MilestoneShadowModel copyWith({
-    String id,
-    JourneyAssetModel asset,
-    double dx,
-    String name,
-    dy,
-    double width,
-    height,
-    String animType,
-    bool isCompleted,
-    int page,
-    int level,
-    bool aligment,
-    bool hFlip,
-    bool vFlip,
-  }) {
-    return MilestoneShadowModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      asset: asset ?? this.asset,
-      y: dy ?? this.y,
-      x: dx ?? this.x,
-      animType: animType ?? this.animType,
-      isCompleted: isCompleted ?? this.isCompleted,
-      page: page ?? this.page,
-      index: level ?? this.index,
-      vFlip: vFlip ?? this.vFlip,
-      hFlip: hFlip ?? this.hFlip,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      // 'id': id,
-      'name': name,
-      'asset': asset.toMap(),
-      'dy': y,
-      'dx': x,
-      'animType': animType,
-      'isCompleted': isCompleted,
-      // 'page': page,
-      'level': index,
-      'vFlip': vFlip,
-      'hFlip': hFlip
-    };
-  }
-
-  factory MilestoneShadowModel.fromMap(
-      Map<String, dynamic> map, Map<String, dynamic> parentMap, int page) {
-    return MilestoneShadowModel(
-      id: map['id'] ?? '',
-      x: map['x'],
-      y: map['y'],
-      name: map['assetRef'] ?? '',
-      asset: JourneyAssetModel.fromMap(map['asset'], page),
-      animType: parentMap['animType'] ?? '',
-      isCompleted: parentMap['isCompleted'] ?? false,
-      page: page ?? 0,
-      index: parentMap['index']?.toInt() ?? 0,
-      hFlip: parentMap['hFlip'] ?? false,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory MilestoneShadowModel.fromJson(
-          String source, Map<String, dynamic> map, int page) =>
-      MilestoneShadowModel.fromMap(json.decode(source), map, page);
-
-  @override
-  String toString() {
-    return 'MilestoneShadowModel(id: $id, asset: $asset, name: $name, dy: $y, animType: $animType, isCompleted: $isCompleted, page: $page, level: $index, vFlip: $vFlip, hFlip: $hFlip)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is MilestoneShadowModel &&
-        other.asset == asset &&
-        other.y == y &&
-        other.animType == animType &&
-        other.isCompleted == isCompleted &&
-        other.page == page &&
-        other.index == index &&
-        other.vFlip == vFlip;
-  }
-
-  @override
-  int get hashCode {
-    return asset.hashCode ^
-        y.hashCode ^
-        animType.hashCode ^
-        isCompleted.hashCode ^
-        page.hashCode ^
-        index.hashCode ^
         vFlip.hashCode;
   }
 }

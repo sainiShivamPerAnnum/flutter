@@ -73,10 +73,9 @@ class OnboardingViewModel extends BaseModel {
   }
 
   registerWalkthroughCompletion(String comingFrom) async {
-    if (_userService.firebaseUser == null) {
-      PreferenceHelper.setBool(
-          PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
-    } else {
+    PreferenceHelper.setBool(
+        PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
+    if (_userService.firebaseUser != null) {
       isWalkthroughRegistrationInProgress = true;
       if (_journeyService.avatarRemoteMlIndex == 1) {
         final ApiResponse<bool> res =

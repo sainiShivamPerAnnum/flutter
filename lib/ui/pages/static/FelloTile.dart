@@ -28,14 +28,14 @@ class FelloTile extends StatelessWidget {
       child: Container(
         height: SizeConfig.screenWidth * 0.25,
         decoration: BoxDecoration(
-          color: Color(0xffF6F9FF),
+          color: Color(0xff464649),
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),
         ),
         padding: EdgeInsets.all(SizeConfig.padding24),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Color(0xffE3F4F7),
+              backgroundColor: Color(0xff464649),
               radius: SizeConfig.screenWidth * 0.067,
               child: leadingIcon != null
                   ? Icon(
@@ -47,7 +47,7 @@ class FelloTile extends StatelessWidget {
                       leadingAsset ?? "assets/vectors/icons/tickets.svg",
                       height: SizeConfig.padding32,
                       width: SizeConfig.padding32,
-                      color: UiConstants.primaryColor,
+                      color: UiConstants.tertiarySolid,
                     ),
             ),
             SizedBox(
@@ -61,26 +61,19 @@ class FelloTile extends StatelessWidget {
                   FittedBox(
                     child: Text(
                       title ?? "title",
-                      style: TextStyles.body1.bold,
+                      style: TextStyles.sourceSansSB.body2,
                     ),
                   ),
                   SizedBox(height: SizeConfig.padding4),
                   FittedBox(
                     child: Text(
                       subtitle ?? "subtitle",
-                      style: TextStyles.body3.colour(Colors.grey),
+                      style: TextStyles.sourceSans.body3.colour(Colors.grey),
                     ),
                   )
                 ],
               ),
             ),
-            SizedBox(width: SizeConfig.padding12),
-            if (showTrailingIcon)
-              Icon(
-                trailingIcon ?? Icons.arrow_right_rounded,
-                size: SizeConfig.padding24,
-                color: UiConstants.primaryColor,
-              )
           ],
         ),
       ),
