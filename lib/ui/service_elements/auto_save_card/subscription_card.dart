@@ -29,6 +29,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
     return BaseView<SubscriptionCardViewModel>(
+        onModelReady: (model) async => await model.init(),
         builder: (context, subscriptionModel, child) =>
             PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
               builder: (context, model, property) => model.autosaveVisible
