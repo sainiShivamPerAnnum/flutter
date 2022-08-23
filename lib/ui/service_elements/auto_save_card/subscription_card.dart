@@ -145,7 +145,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
         builder: (context, model, property) => Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.padding24,
-                  vertical: SizeConfig.padding10),
+                  vertical: SizeConfig.padding20),
               child: Container(
                 height: SizeConfig.screenWidth * 0.34,
                 width: SizeConfig.screenWidth,
