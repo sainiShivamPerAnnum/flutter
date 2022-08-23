@@ -32,7 +32,9 @@ class ViewAllBlogsView extends StatelessWidget {
                 child: Column(
                   children: [
                     model.isLoading
-                        ? BlogsLoadingShimmerWidget()
+                        ? BlogsLoadingShimmerWidget(
+                            model: model,
+                          )
                         : Expanded(
                             child: ListView.builder(
                                 itemCount: model.blogPosts.length,
@@ -52,7 +54,7 @@ class ViewAllBlogsView extends StatelessWidget {
                                                 child: Text(
                                                   '${model.blogPosts[index].acf.categories}',
                                                   style: TextStyles
-                                                      .sourceSansM.body2,
+                                                      .rajdhaniM.body2,
                                                 ),
                                               )
                                             : index ==
@@ -64,7 +66,7 @@ class ViewAllBlogsView extends StatelessWidget {
                                                     child: Text(
                                                       '${model.blogPosts[index].acf.categories}',
                                                       style: TextStyles
-                                                          .sourceSansM.body2,
+                                                          .rajdhaniM.body2,
                                                     ),
                                                   )
                                                 : model.blogPosts[index].acf
@@ -83,8 +85,7 @@ class ViewAllBlogsView extends StatelessWidget {
                                                         child: Text(
                                                           '${model.blogPosts[index].acf.categories}',
                                                           style: TextStyles
-                                                              .sourceSansM
-                                                              .body2,
+                                                              .rajdhaniM.body2,
                                                         ),
                                                       ),
                                         SaveBlogTile(
@@ -115,13 +116,15 @@ class ViewAllBlogsView extends StatelessWidget {
 }
 
 class BlogsLoadingShimmerWidget extends StatelessWidget {
-  const BlogsLoadingShimmerWidget({Key key}) : super(key: key);
+  final SaveViewModel model;
+
+  const BlogsLoadingShimmerWidget({Key key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Padding(
-      padding: EdgeInsets.only(top: SizeConfig.padding20),
+      padding: EdgeInsets.only(top: SizeConfig.padding38),
       child: ListView.builder(
           itemCount: 5,
           itemBuilder: (context, index) {
@@ -143,8 +146,7 @@ class BlogsLoadingShimmerWidget extends StatelessWidget {
                                 bottomRight:
                                     Radius.circular(SizeConfig.roundness12),
                               ),
-                              //TODO make color dynamic
-                              color: Colors.red)),
+                              color: model.getRandomColor())),
                     ),
                     ClipRRect(
                       borderRadius:
@@ -156,10 +158,7 @@ class BlogsLoadingShimmerWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft),
                     ),
                     Positioned(
-                      left: SizeConfig.screenWidth * 0.34,
-                      child: Shimmer.fromColors(
-                        baseColor: UiConstants.kUserRankBackgroundColor,
-                        highlightColor: UiConstants.kBackgroundColor,
+                        left: SizeConfig.screenWidth * 0.34,
                         child: Container(
                           height: SizeConfig.screenWidth * 0.4,
                           width: SizeConfig.screenWidth * 0.525,
@@ -167,19 +166,19 @@ class BlogsLoadingShimmerWidget extends StatelessWidget {
                               borderRadius:
                                   BorderRadius.circular(SizeConfig.roundness12),
                               color: Colors.black),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding10,
-                                horizontal: SizeConfig.padding20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [],
+                          child: Shimmer.fromColors(
+                            baseColor: UiConstants.kUserRankBackgroundColor,
+                            highlightColor: UiConstants.kBackgroundColor,
+                            child: Container(
+                              height: SizeConfig.screenWidth * 0.4,
+                              width: SizeConfig.screenWidth * 0.525,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                  color: Colors.black),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
+                        )),
                   ],
                 ),
               ),

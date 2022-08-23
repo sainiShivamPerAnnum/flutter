@@ -96,18 +96,24 @@ class Save extends StatelessWidget {
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SaveTitleContainer(title: 'Fin-gyan'),
                         Padding(
                           padding: EdgeInsets.only(right: SizeConfig.padding12),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text('View All',
-                                  style: TextStyles.rajdhaniSB.body2),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: SizeConfig.padding2),
+                                child: Text('See All',
+                                    style: TextStyles.rajdhaniSB.body2),
+                              ),
                               SvgPicture.asset(
                                 Assets.chevRonRightArrow,
-                                height: SizeConfig.padding32,
-                                width: SizeConfig.padding32,
+                                height: SizeConfig.padding24,
+                                width: SizeConfig.padding24,
                               )
                             ],
                           ),
@@ -513,7 +519,6 @@ class SaveBlogTile extends StatelessWidget {
                         topRight: Radius.circular(SizeConfig.roundness12),
                         bottomRight: Radius.circular(SizeConfig.roundness12),
                       ),
-                      //TODO make color dynamic
                       color: blogSideFlagColor)),
             ),
             ClipRRect(
@@ -541,7 +546,7 @@ class SaveBlogTile extends StatelessWidget {
                     color: Colors.black),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding10,
+                      vertical: SizeConfig.padding20,
                       horizontal: SizeConfig.padding20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -555,6 +560,7 @@ class SaveBlogTile extends StatelessWidget {
                         ),
                         child: Text(
                           description,
+                          maxLines: 5,
                           style: TextStyles.rajdhaniSB.body2
                               .colour(UiConstants.kTextColor),
                         ),

@@ -113,41 +113,9 @@ class SaveCustomCard extends StatelessWidget {
                                           ),
                                   ],
                                 ),
-                                GestureDetector(
+                                CustomSaveButton(
                                   onTap: onTap,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                            colors: [
-                                              Colors.grey.shade300,
-                                              UiConstants.kBackgroundColor,
-                                              UiConstants.kTextColor2,
-                                            ],
-                                            begin: Alignment(2, -3),
-                                            end: Alignment(-2, 2)),
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness5)),
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.all(SizeConfig.padding2),
-                                      child: Container(
-                                        height: SizeConfig.screenWidth * 0.1,
-                                        width: SizeConfig.screenWidth * 0.2,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness5),
-                                          color: UiConstants
-                                              .kBackgroundDividerColor,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'SAVE',
-                                            style: TextStyles.rajdhaniB.body1,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  title: 'Save',
                                 )
                               ],
                             )
@@ -267,5 +235,45 @@ class CustomSaveCardPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
+  }
+}
+
+class CustomSaveButton extends StatelessWidget {
+  final Function() onTap;
+  final String title;
+
+  const CustomSaveButton({Key key, this.onTap, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Colors.grey.shade300,
+              UiConstants.kBackgroundColor,
+              UiConstants.kTextColor2,
+            ], begin: Alignment(2, -3), end: Alignment(-2, 2)),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding2),
+          child: Container(
+            height: SizeConfig.screenWidth * 0.1,
+            width: SizeConfig.screenWidth * 0.2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+              color: UiConstants.kBackgroundDividerColor,
+            ),
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyles.rajdhaniB.body1,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
