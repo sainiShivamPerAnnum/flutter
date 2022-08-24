@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:app_install_date/utils.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';

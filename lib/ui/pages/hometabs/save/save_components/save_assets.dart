@@ -111,44 +111,39 @@ class SaveAssetView extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   //Complete KYC section
-                  model.isKYCVerified && model.isVPAVerified
-                      ? SizedBox()
-                      : CompleteKYCSection(
-                          isKYCCompleted:
-                              model.userService.isSimpleKycVerified ?? false,
-                          isBankInformationComeplted:
-                              model.isVPAVerified ?? false,
-                        ),
+                  if (!(model.isKYCVerified && model.isVPAVerified))
+                    CompleteKYCSection(
+                      isKYCCompleted:
+                          model.userService.isSimpleKycVerified ?? false,
+                      isBankInformationComeplted: model.isVPAVerified ?? false,
+                    ),
                   //Lock in reached section
-                  model.isLockInReached
-                      ? SellPreventionReasonCard(
-                          iconString: Assets.alertTriangle,
-                          content:
-                              '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
-                        )
-                      : SizedBox(),
-                  model.isGoldSaleActive
-                      ? Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding10),
-                          child: SellPreventionReasonCard(
-                            iconString: Assets.alertTriangle,
-                            content:
-                                'Selling of DIgital Gold is currently on hold. Please try again later.',
-                          ),
-                        )
-                      : SizedBox(),
-                  model.isOngoingTransaction
-                      ? Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding10),
-                          child: SellPreventionReasonCard(
-                            iconString: Assets.loadingSvg,
-                            content:
-                                'Your Digital Gold withdrawal is being processsed',
-                          ),
-                        )
-                      : SizedBox(),
+                  if (model.isLockInReached)
+                    SellPreventionReasonCard(
+                      iconString: Assets.alertTriangle,
+                      content:
+                          '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                    ),
+                  if (model.isGoldSaleActive)
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: SellPreventionReasonCard(
+                        iconString: Assets.alertTriangle,
+                        content:
+                            'Selling of DIgital Gold is currently on hold. Please try again later.',
+                      ),
+                    ),
+                  if (model.isOngoingTransaction)
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: SellPreventionReasonCard(
+                        iconString: Assets.loadingSvg,
+                        content:
+                            'Your Digital Gold withdrawal is being processsed',
+                      ),
+                    ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),

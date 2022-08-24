@@ -255,9 +255,13 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                     fillColor: UiConstants.kFAQDividerColor
                                         .withOpacity(0.5),
                                     filled: true,
-                                    suffix: Text("g",
-                                        style: TextStyles.rajdhaniB.title2
-                                            .colour(UiConstants.kTextColor)),
+                                    suffix: Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig.padding10),
+                                      child: Text("g",
+                                          style: TextStyles.rajdhaniB.title2
+                                              .colour(UiConstants.kTextColor)),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(
