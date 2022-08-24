@@ -165,7 +165,20 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
-            EmailField(model: model),
+            // EmailField(model: model),
+            InkWell(
+              onTap: () => model.verifyEmail(),
+              child: AppTextField(
+                isEnabled: false,
+                textEditingController: model.emailController,
+                validator: (val) {
+                  return null;
+                },
+                suffixIcon: UserEmailVerificationButton(),
+                // suffixText: 'Verified',
+                inputFormatters: [],
+              ),
+            ),
             AppTextFieldLabel(
               locale.obGenderLabel,
             ),
@@ -429,39 +442,25 @@ class UserProfileForm extends StatelessWidget {
   }
 }
 
-class EmailField extends StatelessWidget {
-  const EmailField({
-    Key key,
-    @required this.model,
-  }) : super(key: key);
+// class EmailField extends StatelessWidget {
+//   const EmailField({
+//     Key key,
+//     @required this.model,
+//   }) : super(key: key);
 
-  final UserProfileVM model;
+//   final UserProfileVM model;
 
-  @override
-  Widget build(BuildContext context) {
-    return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myEmail],
-      builder: (context, userService, property) {
-        // model.emailController.text = userService.baseUser.email;
-        return InkWell(
-          onTap: () => model.verifyEmail(),
-          child: AppTextField(
-            isEnabled: false,
-            textEditingController: TextEditingController(
-              text: userService.baseUser.email,
-            ),
-            validator: (val) {
-              return null;
-            },
-            suffixIcon: UserEmailVerificationButton(),
-            // suffixText: 'Verified',
-            inputFormatters: [],
-          ),
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return PropertyChangeConsumer<UserService, UserServiceProperties>(
+//       properties: [UserServiceProperties.myEmail],
+//       builder: (context, userService, property) {
+//         // model.emailController.text = userService.baseUser.email;
+//         return
+//       },
+//     );
+//   }
+// }
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({

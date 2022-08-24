@@ -120,7 +120,7 @@ class UserProfileVM extends BaseModel {
   TextEditingController nameController,
       dobController,
       genderController,
-      // emailController,
+      emailController,
       mobileController,
       dateFieldController,
       monthFieldController,
@@ -132,7 +132,7 @@ class UserProfileVM extends BaseModel {
     genderController = new TextEditingController();
     setDate();
     setGender();
-    // emailController = new TextEditingController(text: myEmail);
+    emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
   }
 

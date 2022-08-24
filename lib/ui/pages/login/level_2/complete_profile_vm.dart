@@ -126,7 +126,7 @@ class CompleteProfileViewModel extends BaseModel {
         'mAvatarId': _userService.baseUser.avatarId,
       },
     );
-    if (updateRes.model) {
+    if (updateRes.code == 200 && updateRes.model) {
       _userService.setMyUserName(_userService.baseUser.name);
       _userService.setDateOfBirth(_userService.baseUser.dob);
       _userService.setEmail(_userService.baseUser.email);
