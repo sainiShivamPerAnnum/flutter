@@ -155,7 +155,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                     height: SizeConfig.iconSize1),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(
-                                  widget.milestone.skipCost['amt'].toString(),
+                                  widget.milestone.skipCost['flc'].toString(),
                                   style: TextStyles.rajdhaniSB.title4
                                       .colour(Colors.white),
                                 ),
