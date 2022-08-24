@@ -89,6 +89,7 @@ class SaveViewModel extends BaseModel {
   }
 
   init() {
+    _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
     getCampaignEvents();
     fetchLockedGoldQnt();
@@ -115,7 +116,6 @@ class SaveViewModel extends BaseModel {
     if (withdrawableQnt < nonWithdrawableQnt) {
       _isLockInReached = true;
     }
-    print(_isLockInReached);
     _isGoldSaleActive = _baseUtil.augmontDetail.isSellLocked;
     _isOngoingTransaction = _sellService.isOngoingTransaction;
     notifyListeners();
