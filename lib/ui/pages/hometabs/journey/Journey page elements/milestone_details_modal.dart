@@ -166,7 +166,8 @@ class _JourneyMilestoneDetailsModalSheetState
                                       Uri.parse(widget.milestone.actionUri));
                                 },
                                 width: SizeConfig.screenWidth),
-                            if (widget.milestone.skipCost != null)
+                            if (widget.milestone.skipCost != null &&
+                                widget.milestone.skipCost.isNotEmpty)
                               Container(
                                 width: SizeConfig.screenWidth,
                                 alignment: Alignment.center,

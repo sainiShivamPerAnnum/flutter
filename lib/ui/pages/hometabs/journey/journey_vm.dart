@@ -204,7 +204,7 @@ class JourneyPageViewModel extends BaseModel {
       enableDrag: false,
       useRootNavigator: true,
       context: context,
-      // isScrollControlled: true,
+      isScrollControlled: true,
       builder: (ctx) {
         return JourneyMilestoneDetailsModalSheet(
           milestone: milestone,

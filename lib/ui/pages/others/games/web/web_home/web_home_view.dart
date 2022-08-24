@@ -579,7 +579,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           backgroundColor: Colors.transparent,
           actions: [
             FelloCoinBar(
-              svgAsset: Assets.aTambolaTicket,
               size: SizeConfig.padding20,
               borderColor: Colors.black,
             ),

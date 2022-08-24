@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/jou
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -22,6 +23,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -176,7 +178,65 @@ class _JourneyViewState extends State<JourneyView>
                       ),
                     ),
                     JourneyAppBar(),
-                    JourneyBannersView(),
+                    // JourneyBannersView(),
+
+                    PropertyChangeConsumer<JourneyService,
+                        JourneyServiceProperties>(
+                      properties: [
+                        JourneyServiceProperties.AvatarRemoteMilestoneIndex
+                      ],
+                      builder: (context, m, properties) {
+                        return m.avatarRemoteMlIndex > 2
+                            ? SizedBox()
+                            : Positioned(
+                                bottom: 0,
+                                child: SafeArea(
+                                  child: Container(
+                                    width: SizeConfig.screenWidth -
+                                        SizeConfig.pageHorizontalMargins * 2,
+                                    margin: EdgeInsets.all(
+                                        SizeConfig.pageHorizontalMargins),
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.gameCardColor,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness24),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding4,
+                                          vertical:
+                                              SizeConfig.pageHorizontalMargins),
+                                      leading: CircleAvatar(
+                                          backgroundColor: Colors.black,
+                                          radius: SizeConfig.avatarRadius * 2,
+                                          child: SvgPicture.asset(
+                                              Assets.aFelloToken,
+                                              height: SizeConfig.padding32)),
+                                      title: Text(
+                                        "Welcome to Fello",
+                                        style: TextStyles.rajdhaniB.title3
+                                            .colour(Colors.white),
+                                      ),
+                                      subtitle: Text(
+                                        "Lets get started with the journey",
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(Colors.white60),
+                                      ),
+                                      trailing: IconButton(
+                                        icon: Icon(Icons.navigate_next_rounded,
+                                            color: Colors.white),
+                                        onPressed: () {
+                                          model.showMilestoneDetailsModalSheet(
+                                              model.currentMilestoneList[1],
+                                              context);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                      },
+                    ),
                     AnimatedPositioned(
                       top: (model.isLoading &&
                               model.pages != null &&
