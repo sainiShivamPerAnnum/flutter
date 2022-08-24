@@ -18,7 +18,10 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -160,7 +163,7 @@ class _JourneyViewState extends State<JourneyView>
                               ActiveMilestoneBaseGlow(),
                               Milestones(model: model),
                               // ActiveMilestoneFrontGlow(),
-                              MilestoneChecks(),
+                              // MilestoneChecks(),
                               Avatar(
                                 model: model,
                               ),
@@ -173,50 +176,49 @@ class _JourneyViewState extends State<JourneyView>
                       ),
                     ),
                     JourneyAppBar(),
-                    JourneyBannersView()
-                    // AnimatedPositioned(
-                    //   top: (model.isLoading &&
-                    //           model.pages != null &&
-                    //           model.pages.length > 0)
-                    //       ? SizeConfig.pageHorizontalMargins
-                    //       : -400,
-                    //   duration: Duration(seconds: 1),
-                    //   curve: Curves.decelerate,
-                    //   left: SizeConfig.pageHorizontalMargins,
-                    //   child: SafeArea(
-                    //     child: Container(
-                    //       width: SizeConfig.screenWidth -
-                    //           SizeConfig.pageHorizontalMargins * 2,
-                    //       height: SizeConfig.padding80,
-                    //       decoration: BoxDecoration(
-                    //         borderRadius:
-                    //             BorderRadius.circular(SizeConfig.roundness16),
-                    //         color: Colors.black54,
-                    //       ),
-                    //       child: ListTile(
-                    //         leading: CircleAvatar(
-                    //           backgroundColor: Colors.black,
-                    //           radius: SizeConfig.avatarRadius * 2,
-                    //           child: SpinKitCircle(
-                    //             color: UiConstants.primaryColor,
-                    //             size: SizeConfig.avatarRadius * 1.5,
-                    //           ),
-                    //         ),
-                    //         title: Text(
-                    //           "Loading",
-                    //           style: GoogleFonts.rajdhani(
-                    //               fontSize: SizeConfig.title3,
-                    //               fontWeight: FontWeight.w800,
-                    //               color: Colors.white),
-                    //         ),
-                    //         subtitle: Text(
-                    //           "Loading more levels for you,please wait",
-                    //           style: TextStyles.body3.colour(Colors.white),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                    JourneyBannersView(),
+                    AnimatedPositioned(
+                      top: (model.isLoading &&
+                              model.pages != null &&
+                              model.pages.length > 0)
+                          ? SizeConfig.pageHorizontalMargins
+                          : -400,
+                      duration: Duration(seconds: 1),
+                      curve: Curves.decelerate,
+                      left: SizeConfig.pageHorizontalMargins,
+                      child: SafeArea(
+                        child: Container(
+                          width: SizeConfig.screenWidth -
+                              SizeConfig.pageHorizontalMargins * 2,
+                          height: SizeConfig.padding80,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                            color: Colors.black54,
+                          ),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.black,
+                              radius: SizeConfig.avatarRadius * 2,
+                              child: SpinKitCircle(
+                                color: UiConstants.primaryColor,
+                                size: SizeConfig.avatarRadius * 1.5,
+                              ),
+                            ),
+                            title: Text(
+                              "Loading",
+                              style: TextStyles.rajdhaniB.title3
+                                  .colour(Colors.white),
+                            ),
+                            subtitle: Text(
+                              "Loading more levels for you,please wait",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
         );
@@ -313,7 +315,11 @@ class MilestoneChecks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.AvatarPosition],
+        properties: [
+          JourneyServiceProperties.AvatarPosition,
+          JourneyServiceProperties.BaseGlow,
+          JourneyServiceProperties.Pages,
+        ],
         builder: (context, model, properties) {
           return SizedBox(
             width: model.pageWidth,
@@ -324,8 +330,8 @@ class MilestoneChecks extends StatelessWidget {
                 //     model.avatarRemoteMlIndex)
                 return Positioned(
                     left: model.pageWidth * model.currentMilestoneList[i].x,
-                    bottom: (model.pageHeight *
-                                (model.currentMilestoneList[i].page - 1) +
+                    bottom: ((model.pageHeight *
+                                (model.currentMilestoneList[i].page - 1)) +
                             model.pageHeight *
                                 model.currentMilestoneList[i].y) -
                         model.pageHeight * 0.02,
@@ -349,7 +355,10 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     print(model.avatarPosition);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.AvatarPosition],
+      properties: [
+        JourneyServiceProperties.AvatarPosition,
+        JourneyServiceProperties.Pages
+      ],
       builder: (context, model, properties) {
         return Positioned(
           key: avatarKey,

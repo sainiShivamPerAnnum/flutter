@@ -4,5 +4,6 @@ enum JourneyServiceProperties {
   AvatarPosition,
   AvatarRemoteMilestoneIndex,
   BaseGlow,
-  Pages
+  Pages,
+  JourneyPath,
 }

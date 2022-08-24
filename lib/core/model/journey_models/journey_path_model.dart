@@ -101,7 +101,7 @@ class JourneyPathModel {
       isBase: map['isBase'] ?? false,
       mlIndex: map['mlIndex']?.toInt() ?? 0,
       hFlip: map['hFlip'] ?? false,
-      id: map['id'],
+      id: map['id'] ?? '',
       asset: JourneyAssetModel.fromMap(map['asset'], page),
       animAsset: map.containsKey('animAsset')
           ? JourneyAssetModel.fromMap(map['animAsset'], page)

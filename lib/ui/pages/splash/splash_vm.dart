@@ -82,9 +82,9 @@ class LauncherViewModel extends BaseModel {
     // final Trace trace = _performance.newTrace('Splash trace start');
     // await trace.start();
     // trace.putAttribute('Spalsh', 'userservice init started');
-    await userService.init();
     // trace.putAttribute('Spalsh', 'userservice init ended');
     try {
+      await userService.init();
       await CacheService.initialize();
       if (userService.isUserOnborded) await _journeyService.init();
       if (userService.isUserOnborded) await _journeyRepo.init();
