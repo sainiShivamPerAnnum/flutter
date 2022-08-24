@@ -115,6 +115,7 @@ class SaveViewModel extends BaseModel {
     if (withdrawableQnt < nonWithdrawableQnt) {
       _isLockInReached = true;
     }
+    print(_isLockInReached);
     _isGoldSaleActive = _baseUtil.augmontDetail.isSellLocked;
     _isOngoingTransaction = _sellService.isOngoingTransaction;
     notifyListeners();
@@ -165,13 +166,13 @@ class SaveViewModel extends BaseModel {
 
   bool getButtonAvailibility() {
     if (_isKYCVerified && _isVPAVerified) {
-      if (_isGoldSaleActive && (_isKYCVerified && _isVPAVerified)) {
+      if (!_isGoldSaleActive && (_isKYCVerified && _isVPAVerified)) {
         return true;
       }
-      if (_isLockInReached && (_isKYCVerified && _isVPAVerified)) {
+      if (!_isLockInReached && (_isKYCVerified && _isVPAVerified)) {
         return true;
       }
-      if (_isOngoingTransaction && (_isKYCVerified && _isVPAVerified)) {
+      if (!_isOngoingTransaction && (_isKYCVerified && _isVPAVerified)) {
         return true;
       }
     }

@@ -121,12 +121,12 @@ class SaveAssetView extends StatelessWidget {
                       ),
                 //Lock in reached section
                 model.isLockInReached
-                    ? SizedBox()
-                    : SellPreventionReasonCard(
+                    ? SellPreventionReasonCard(
                         iconString: Assets.alertTriangle,
                         content:
                             '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
-                      ),
+                      )
+                    : SizedBox(),
                 model.isGoldSaleActive
                     ? Padding(
                         padding: EdgeInsets.symmetric(

@@ -24,6 +24,10 @@ class SubscriptionCardViewModel extends BaseModel {
     notifyListeners();
   }
 
+  init() async {
+    await _paytmService.getActiveSubscriptionDetails();
+  }
+
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
