@@ -44,6 +44,12 @@ class JourneyRepository extends BaseRepo {
     }
   }
 
+  void dump() {
+    if (Directory(_filePathDirectory).existsSync()) {
+      Directory(_filePathDirectory).deleteSync(recursive: true);
+    }
+  }
+
   //Downloads the file and calls the saveFileToLocalDirectory()
   //Assumes that it will always recieve a network url and that too of an image file
   //Regex for network url and asset extension can be added.

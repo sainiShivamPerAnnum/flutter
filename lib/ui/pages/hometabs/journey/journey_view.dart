@@ -223,10 +223,12 @@ class _JourneyViewState extends State<JourneyView>
                                           child: SvgPicture.asset(
                                               Assets.aFelloToken,
                                               height: SizeConfig.padding32)),
-                                      title: Text(
-                                        "Welcome to Fello",
-                                        style: TextStyles.rajdhaniB.title3
-                                            .colour(Colors.white),
+                                      title: FittedBox(
+                                        child: Text(
+                                          "Welcome to Fello",
+                                          style: TextStyles.rajdhaniB.title3
+                                              .colour(Colors.white),
+                                        ),
                                       ),
                                       subtitle: Text(
                                         "Lets get started with the journey",
@@ -238,7 +240,10 @@ class _JourneyViewState extends State<JourneyView>
                                             color: Colors.white),
                                         onPressed: () {
                                           model.showMilestoneDetailsModalSheet(
-                                              model.currentMilestoneList[1],
+                                              model.currentMilestoneList
+                                                  .firstWhere((milestone) =>
+                                                      milestone.index ==
+                                                      m.avatarRemoteMlIndex),
                                               context);
                                         },
                                       ),
