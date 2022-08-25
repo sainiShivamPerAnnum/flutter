@@ -41,7 +41,7 @@ class JourneyPageViewModel extends BaseModel {
   int get pageCount => _journeyService.pageCount;
   int get avatarActiveMilestoneLevel => _journeyService.avatarRemoteMlIndex;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
-  bool _isLoading = false, isEnd = false;
+  bool _isLoading = false, isEnd = false, _isRefreshing = false;
 
   AnimationController get controller => _journeyService.controller;
 
@@ -59,6 +59,13 @@ class JourneyPageViewModel extends BaseModel {
 
   set isLoading(bool value) {
     this._isLoading = value;
+    notifyListeners();
+  }
+
+  bool get isRefreshing => this._isRefreshing;
+
+  set isRefreshing(bool isRefreshing) {
+    this._isRefreshing = isRefreshing;
     notifyListeners();
   }
 
@@ -93,12 +100,22 @@ class JourneyPageViewModel extends BaseModel {
       _journeyService.animateAvatar();
       _journeyService.mainController.addListener(() {
         if (_journeyService.mainController.offset >
-                _journeyService.mainController.position.maxScrollExtent &&
-            !isLoading) {
-          addPageToTop();
+            _journeyService.mainController.position.maxScrollExtent) {
+          if (!canMorePagesBeFetched())
+            return updatingJourneyView();
+          else
+            return addPageToTop();
         }
       });
     });
+  }
+
+  Future<void> updatingJourneyView() async {
+    if (isRefreshing) return;
+    logger.d("Refreshing Journey Stats");
+    isRefreshing = true;
+    await _journeyService.checkForMilestoneLevelChange();
+    isRefreshing = false;
   }
 
   Future<void> checkIfThereIsAMilestoneLevelChange() async =>
@@ -131,6 +148,7 @@ class JourneyPageViewModel extends BaseModel {
   // }
 
   addPageToTop() async {
+    if (isLoading) return;
     logger.d("Adding page to top");
     if (!canMorePagesBeFetched()) return;
     isLoading = true;

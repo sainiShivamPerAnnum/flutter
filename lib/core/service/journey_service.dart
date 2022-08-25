@@ -314,7 +314,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
             userCurrentMilestoneIndex >= level.start &&
             userCurrentMilestoneIndex <= level.end,
         orElse: null);
-    log("Current level data ${currentlevelData.toString()}");
 
     if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
       return currentlevelData;

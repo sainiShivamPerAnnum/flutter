@@ -159,8 +159,10 @@ class _JourneyMilestoneDetailsModalSheetState
                                 btnText: "Let's Go",
                                 onPressed: () {
                                   AppState.backButtonDispatcher.didPopRoute();
-                                  AppState.delegate.parseRoute(
-                                      Uri.parse(widget.milestone.actionUri));
+                                  if (widget.milestone.actionUri != null &&
+                                      widget.milestone.actionUri.isNotEmpty)
+                                    AppState.delegate.parseRoute(
+                                        Uri.parse(widget.milestone.actionUri));
                                 },
                                 width: SizeConfig.screenWidth),
                             if (widget.milestone.skipCost != null &&
