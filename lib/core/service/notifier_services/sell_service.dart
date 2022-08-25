@@ -48,11 +48,14 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   verifyVPAAddress() async {
     ApiResponse response =
         await _saveRepo.verifyVPAAddress(_userService.firebaseUser.uid);
-    if (response.code == 200) {
+    print(response.model);
+    print(response.model['vpa'] != "");
+    if ((response.code == 200) && (response.model['vpa'] != "")) {
       setVPAVerified = true;
       print(_isVPAVerified);
       _logger.d('vpa verified! $isVPAVerified');
     }
+    print(_isVPAVerified);
   }
 
   verifyKYCStatus() {
