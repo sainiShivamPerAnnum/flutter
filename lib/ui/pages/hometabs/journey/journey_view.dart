@@ -300,7 +300,7 @@ class LevelBlurView extends StatelessWidget {
           final JourneyLevel levelData =
               _journeyService.getJourneyLevelBlurData();
           log("Current Level Data ${levelData.toString()}");
-          return levelData != null
+          return levelData != null && model.pages.length >= levelData.pageEnd
               ? Stack(
                   children: [
                     Positioned(

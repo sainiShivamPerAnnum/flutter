@@ -178,7 +178,7 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<FlcModel>> getCoinBalance() async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService?.baseUser?.uid;
       final token = await getBearerToken();
 
       final res = await APIService.instance.getData(
