@@ -9,6 +9,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter and dart imports
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class LauncherView extends StatelessWidget {
@@ -44,10 +45,15 @@ class LauncherView extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        Assets.logoWhite,
-                        width: SizeConfig.screenWidth / 2.5,
-                      ),
+                      model.isFetchingData
+                          ? Lottie.asset(
+                              Assets.felloSplashLoopLogo,
+                              // width: SizeConfig.screenWidth / 2.5,
+                            )
+                          : Lottie.asset(
+                              Assets.felloSplashZoomOutLogo,
+                              // width: SizeConfig.screenWidth / 2.5,
+                            ),
                       // Text(
                       //   locale.splashTagline,
                       //   style: TextStyles.body2,

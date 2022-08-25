@@ -349,13 +349,13 @@ class UserAutosaveDetailsView extends StatelessWidget {
                       height: SizeConfig.padding32,
                     ),
                     Text(
-                      '₹' + model.saveAmount.toString() ?? 0.0,
+                      '₹${m.activeSubscription.autoAmount.toInt()} ${getFreq(m.activeSubscription.autoFrequency)}',
                       style: TextStyles.rajdhaniB.title1,
                     ),
-                    Text(
-                      '₹${m.activeSubscription.autoAmount.toInt()} ${getFreq(m.activeSubscription.autoFrequency)}',
-                      style: TextStyles.sourceSans.body3.setOpecity(0.5),
-                    ),
+                    // Text(
+                    //   '₹${m.activeSubscription.autoAmount.toInt()} ${getFreq(m.activeSubscription.autoFrequency)}',
+                    //   style: TextStyles.sourceSans.body3.setOpecity(0.5),
+                    // ),
                     SizedBox(
                       height: SizeConfig.padding24,
                     ),
