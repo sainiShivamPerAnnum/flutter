@@ -283,7 +283,7 @@ class CampaignView extends StatelessWidget {
                                         height: 10,
                                       ),
                                       Text(
-                                        model.userAmount.toString(),
+                                        '${model.userAmount.toString()} gms',
                                         style: TextStyles.body1.bold
                                             .colour(Colors.white),
                                         maxLines: 1,

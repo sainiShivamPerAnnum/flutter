@@ -37,28 +37,26 @@ class ProfileImageSE extends StatelessWidget {
             properties: [UserServiceProperties.myUserDpUrl],
             builder: (context, model, properties) {
               log("Avatar Id: ${model.baseUser.avatarId}");
-              return journeyModel.avatarRemoteMlIndex > 2
-                  ? CircleAvatar(
-                      radius: radius,
-                      backgroundColor: Colors.transparent,
-                      child: model.baseUser.avatarId != 'CUSTOM' ||
-                              model.myUserDpUrl == null
-                          ? SvgPicture.asset(
-                              "assets/svg/userAvatars/${model?.baseUser?.avatarId ?? 'AV2'}.svg",
-                              height: radius * 2,
-                              width: radius * 2,
-                            )
-                          : SizedBox(),
-                      backgroundImage: model.baseUser.avatarId == 'CUSTOM' ||
-                              model.myUserDpUrl != null
-                          ? CachedNetworkImageProvider(
-                              model.myUserDpUrl,
-                            )
-                          : AssetImage(
-                              Assets.profilePic,
-                            ),
-                    )
-                  : SizedBox();
+              return CircleAvatar(
+                radius: radius,
+                backgroundColor: Colors.transparent,
+                child: model.baseUser.avatarId != 'CUSTOM' ||
+                        model.myUserDpUrl == null
+                    ? SvgPicture.asset(
+                        "assets/svg/userAvatars/${model?.baseUser?.avatarId ?? 'AV2'}.svg",
+                        height: radius * 2,
+                        width: radius * 2,
+                      )
+                    : SizedBox(),
+                backgroundImage: model.baseUser.avatarId == 'CUSTOM' ||
+                        model.myUserDpUrl != null
+                    ? CachedNetworkImageProvider(
+                        model.myUserDpUrl,
+                      )
+                    : AssetImage(
+                        Assets.profilePic,
+                      ),
+              );
             },
           );
         });

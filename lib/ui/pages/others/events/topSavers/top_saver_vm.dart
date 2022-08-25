@@ -311,7 +311,8 @@ class TopSaverViewModel extends BaseModel {
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
-        _userAmount = curentUserStat.score; //TODO
+        _userAmount =
+            BaseUtil.digitPrecision(curentUserStat.score, 4, false); //TODO
       }
 
       fetchHighestSavings();

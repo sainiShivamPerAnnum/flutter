@@ -101,7 +101,8 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                 ),
-                m.txnList != null &&
+                model.state == ViewState.Idle &&
+                        m.txnList != null &&
                         m.txnList.isNotEmpty &&
                         m.txnList.length > 3
                     ? FelloButton(

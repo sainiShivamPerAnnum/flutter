@@ -179,7 +179,18 @@ class _JourneyViewState extends State<JourneyView>
                     ),
                     JourneyAppBar(),
                     // JourneyBannersView(),
-
+                    if (model.isRefreshing)
+                      Positioned(
+                        bottom: SizeConfig.navBarHeight,
+                        child: Container(
+                          width: SizeConfig.screenWidth,
+                          child: LinearProgressIndicator(
+                            minHeight: 4,
+                            backgroundColor: UiConstants.gameCardColor,
+                            color: UiConstants.tertiarySolid,
+                          ),
+                        ),
+                      ),
                     PropertyChangeConsumer<JourneyService,
                         JourneyServiceProperties>(
                       properties: [
@@ -293,58 +304,62 @@ class LevelBlurView extends StatelessWidget {
   LevelBlurView({this.model});
   @override
   Widget build(BuildContext context) {
-    final _journeyService = locator<JourneyService>();
-    return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [UserServiceProperties.myJourneyStats],
-        builder: (context, m, properties) {
-          final JourneyLevel levelData =
-              _journeyService.getJourneyLevelBlurData();
-          log("Current Level Data ${levelData.toString()}");
-          return levelData != null && model.pages.length >= levelData.pageEnd
-              ? Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      child: BlurFilter(
-                        child: Container(
-                          height: model.pageHeight * (1 - levelData.breakpoint),
-                          width: model.pageWidth,
-                          alignment: Alignment.bottomCenter,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: model.pageHeight * (1 - levelData.breakpoint) -
-                          SizeConfig.avatarRadius,
-                      child: Container(
-                        width: model.pageWidth,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: CustomPaint(
-                                painter: DottedLinePainter(),
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.Pages],
+        builder: (context, jModel, properties) {
+          return PropertyChangeConsumer<UserService, UserServiceProperties>(
+              properties: [UserServiceProperties.myJourneyStats],
+              builder: (context, m, properties) {
+                final JourneyLevel levelData = jModel.getJourneyLevelBlurData();
+                log("Current Level Data ${levelData.toString()}");
+                return levelData != null &&
+                        model.pages.length >= levelData.pageEnd
+                    ? Stack(
+                        children: [
+                          Positioned(
+                            left: 0,
+                            top: 0,
+                            child: BlurFilter(
+                              child: Container(
+                                height: model.pageHeight *
+                                    (1 - levelData.breakpoint),
+                                width: model.pageWidth,
+                                alignment: Alignment.bottomCenter,
                               ),
                             ),
-                            CircleAvatar(
-                              radius: SizeConfig.avatarRadius,
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.lock,
-                                  size: SizeConfig.iconSize0,
-                                  color: Colors.black),
-                            ),
-                            Expanded(
-                              child: CustomPaint(
-                                painter: DottedLinePainter(),
+                          ),
+                          Positioned(
+                            top: model.pageHeight * (1 - levelData.breakpoint) -
+                                SizeConfig.avatarRadius,
+                            child: Container(
+                              width: model.pageWidth,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomPaint(
+                                      painter: DottedLinePainter(),
+                                    ),
+                                  ),
+                                  CircleAvatar(
+                                    radius: SizeConfig.avatarRadius,
+                                    backgroundColor: Colors.white,
+                                    child: Icon(Icons.lock,
+                                        size: SizeConfig.iconSize0,
+                                        color: Colors.black),
+                                  ),
+                                  Expanded(
+                                    child: CustomPaint(
+                                      painter: DottedLinePainter(),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              : SizedBox();
+                          )
+                        ],
+                      )
+                    : SizedBox();
+              });
         });
   }
 }
