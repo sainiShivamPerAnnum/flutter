@@ -25,7 +25,7 @@ class AppNegativeDialog extends StatelessWidget {
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: Wrap(children: [dialogContent(context)]),
       insetPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
     );
   }

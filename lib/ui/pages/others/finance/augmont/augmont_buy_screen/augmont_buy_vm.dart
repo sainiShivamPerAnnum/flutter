@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -414,9 +415,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
       return;
     }
     isGoldBuyInProgress = true;
+    // NOTE: We can enable using make model size full screen and put some padding from top.
+
+    // AppState.screenStack.add(ScreenItem.loader);
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
     if (_disabled != null && _disabled) {
       isGoldBuyInProgress = false;
+      // AppState.screenStack.removeLast();
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
         'Gold buying is currently on hold. Please try again after sometime.',
@@ -433,13 +438,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
         : false;
 
     final _status = await _paytmService.initiateTransactions(
-        amount: buyAmount,
-        augmontRates: goldRates,
-        couponCode: appliedCoupon?.code ?? "",
-        skipMl: skipMl,
-        restrictAppInvoke: restrictPaytmAppInvoke);
+      amount: buyAmount,
+      augmontRates: goldRates,
+      couponCode: appliedCoupon?.code ?? "",
+      skipMl: skipMl,
+      restrictAppInvoke: restrictPaytmAppInvoke,
+    );
 
     isGoldBuyInProgress = false;
+    // AppState.screenStack.removeLast();
     resetBuyOptions();
 
     if (_status) {

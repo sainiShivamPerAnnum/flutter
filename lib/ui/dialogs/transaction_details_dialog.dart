@@ -12,22 +12,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class TransactionDetailsBottomSheet extends StatelessWidget {
+class TransactionDetailsBottomSheet extends StatefulWidget {
   final UserTransaction transaction;
   TransactionDetailsBottomSheet({Key key, this.transaction}) : super(key: key);
 
   static AugmontModel augmontProvider;
   static BaseUtil baseProvider;
+
+  @override
+  State<TransactionDetailsBottomSheet> createState() =>
+      _TransactionDetailsBottomSheetState();
+}
+
+class _TransactionDetailsBottomSheetState
+    extends State<TransactionDetailsBottomSheet> {
   final bool _showInvoiceButton = false;
+
   bool _isInvoiceLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return dialogContent(context);
   }
 
@@ -35,15 +41,17 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
       (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 
   Color getFlagColor() {
-    if (transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
+    if (widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
       return UiConstants.primaryColor;
-    if (transaction.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED ||
-        transaction.tranStatus == UserTransaction.TRAN_STATUS_FAILED)
+    if (widget.transaction.tranStatus ==
+            UserTransaction.TRAN_STATUS_CANCELLED ||
+        widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_FAILED)
       return Colors.red;
-    if (transaction.tranStatus == UserTransaction.TRAN_STATUS_PENDING ||
-        transaction.tranStatus == UserTransaction.TRAN_STATUS_PROCESSING)
+    if (widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_PENDING ||
+        widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_PROCESSING)
       return UiConstants.tertiarySolid;
-    if (transaction.type == UserTransaction.TRAN_TYPE_PRIZE) return Colors.blue;
+    if (widget.transaction.type == UserTransaction.TRAN_TYPE_PRIZE)
+      return Colors.blue;
     return UiConstants.primaryColor;
   }
 
@@ -111,7 +119,7 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
               height: SizeConfig.padding24,
             ),
             Text(
-              '\u20b9 ${transaction.amount}',
+              '\u20b9 ${widget.transaction.amount}',
               style: TextStyles.rajdhaniB.title0.colour(UiConstants.kTextColor),
             ),
             Text("Transaction Amount",
@@ -131,43 +139,44 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
                     width: SizeConfig.padding2,
                   ),
                   Text(
-                    transaction.tranStatus,
+                    widget.transaction.tranStatus,
                     style: TextStyles.sourceSans.body3.colour(getFlagColor()),
                   ),
                 ],
               ),
             ),
-            if (transaction.subType ==
+            if (widget.transaction.subType ==
                     UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT)
+                widget.transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT)
               Row(
                 children: [
                   referralTile(
                       'Purchase Rate:',
-                      transaction.augmnt[UserTransaction.subFldAugLockPrice] !=
+                      widget.transaction
+                                  .augmnt[UserTransaction.subFldAugLockPrice] !=
                               null
-                          ? '₹ ${transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm'
+                          ? '₹ ${widget.transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm'
                           : "Unavailable",
                       UiConstants.primaryColor),
                   referralTile(
                       'Gold Purchased:',
-                      '${_getAugmontGoldGrams(BaseUtil.toDouble(transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                      '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
                       UiConstants.primaryColor)
                 ],
               ),
-            if (transaction.subType ==
+            if (widget.transaction.subType ==
                     UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                transaction.type == UserTransaction.TRAN_TYPE_WITHDRAW)
+                widget.transaction.type == UserTransaction.TRAN_TYPE_WITHDRAW)
               Row(
                 children: [
                   referralTile(
                     'Sell Rate:',
-                    '₹ ${transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                    '₹ ${widget.transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                     Colors.redAccent.withOpacity(0.6),
                   ),
                   referralTile(
                     'Gold Sold:',
-                    '${_getAugmontGoldGrams(BaseUtil.toDouble(transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                    '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
                     Colors.redAccent.withOpacity(0.6),
                   )
                 ],
@@ -176,11 +185,11 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
               children: [
                 referralTile(
                     "Date",
-                    "${_getFormattedDate(transaction.timestamp)}",
+                    "${_getFormattedDate(widget.transaction.timestamp)}",
                     Colors.black),
                 referralTile(
                     "Time",
-                    "${_getFormattedTime(transaction.timestamp)}",
+                    "${_getFormattedTime(widget.transaction.timestamp)}",
                     Colors.black),
               ],
             ),
@@ -192,31 +201,39 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
                 children: [
                   AppPositiveCustomChildBtn(
                     child: _isInvoiceLoading
-                        ? SpinKitChasingDots(
-                            color: UiConstants.felloBlue,
-                            duration: Duration(milliseconds: 200),
+                        ? SpinKitThreeBounce(
+                            size: SizeConfig.padding20,
+                            color: Colors.white,
+                            duration: Duration(milliseconds: 500),
                           )
                         : Text('Download Invoice'.toUpperCase(),
                             style: TextStyles.rajdhaniSB.body1),
                     onPressed: () async {
-                      if (transaction.augmnt[UserTransaction.subFldAugTranId] !=
+                      if (widget.transaction
+                              .augmnt[UserTransaction.subFldAugTranId] !=
                           null) {
-                        _isInvoiceLoading = true;
-                        String trnId =
-                            transaction.augmnt[UserTransaction.subFldAugTranId];
-                        augmontProvider
+                        setState(() {
+                          _isInvoiceLoading = true;
+                        });
+                        String trnId = widget.transaction
+                            .augmnt[UserTransaction.subFldAugTranId];
+                        TransactionDetailsBottomSheet.augmontProvider
                             .generatePurchaseInvoicePdf(trnId)
                             .then((generatedPdfFilePath) {
                           _isInvoiceLoading = false;
+                          setState(() {});
                           if (generatedPdfFilePath != null) {
+                            setState(() {});
                             OpenFile.open(generatedPdfFilePath);
                           } else {
+                            setState(() {});
                             BaseUtil.showNegativeAlert(
                                 'Invoice could not be loaded',
                                 'Please try again in some time');
                           }
                         });
                       } else {
+                        setState(() {});
                         BaseUtil.showNegativeAlert(
                             'Invoice could not be loaded',
                             'Please try again in some time');
@@ -263,7 +280,7 @@ class TransactionDetailsBottomSheet extends StatelessWidget {
   Duration getOfferDuration(int totalMins) {
     Duration difference;
     DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
-            transaction.timestamp.millisecondsSinceEpoch)
+            widget.transaction.timestamp.millisecondsSinceEpoch)
         .add(Duration(minutes: totalMins));
     difference = tTime.difference(DateTime.now());
     return difference;

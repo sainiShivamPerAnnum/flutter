@@ -218,7 +218,7 @@ class TopPlayer extends StatelessWidget {
             ),
           ),
           Text(
-            '${model.scoreboard[countedIndex].score} points',
+            '${(model.scoreboard[countedIndex].score).toInt()} points',
             style: TextStyles.rajdhaniM.body3,
           ),
         ],

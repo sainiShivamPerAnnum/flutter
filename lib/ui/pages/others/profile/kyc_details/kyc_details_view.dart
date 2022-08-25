@@ -10,9 +10,11 @@ import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -99,7 +101,7 @@ class KYCDetailsView extends StatelessWidget {
                               },
                             ),
                             SizedBox(
-                              height: SizeConfig.screenHeight * 0.46,
+                              height: SizeConfig.screenHeight * 0.5,
                             ),
                             if (model.inEditMode)
                               Container(
@@ -111,16 +113,27 @@ class KYCDetailsView extends StatelessWidget {
                                           .myConfirmDialogViewStatus
                                     ],
                                     builder: (context, m, property) =>
-                                        AppPositiveBtn(
+                                        AppPositiveCustomChildBtn(
                                           onPressed: () {
                                             model.panFocusNode.unfocus();
                                             model.onSubmit(context);
                                           },
-                                          btnText: locale.btnSumbit,
+                                          child: model.isUpadtingKycDetails
+                                              ? SpinKitThreeBounce(
+                                                  color: Colors.white,
+                                                  duration:
+                                                      Duration(seconds: 1),
+                                                  size: SizeConfig.padding20,
+                                                )
+                                              : Text(
+                                                  locale.btnSumbit,
+                                                  style: TextStyles
+                                                      .rajdhaniB.title5,
+                                                ),
                                           width: SizeConfig.screenWidth,
                                         )),
                               ),
-                            SizedBox(height: SizeConfig.padding24),
+                            SizedBox(height: SizeConfig.padding10),
                           ],
                         ),
                 ),

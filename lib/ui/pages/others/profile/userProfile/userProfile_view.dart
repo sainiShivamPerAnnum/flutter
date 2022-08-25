@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -19,6 +20,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserProfileDetails extends StatelessWidget {
   const UserProfileDetails({Key key}) : super(key: key);
@@ -160,9 +162,13 @@ class UserProfileForm extends StatelessWidget {
                 }
               },
             ),
+            SizedBox(
+              height: SizeConfig.padding10,
+            ),
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
+            // EmailField(model: model),
             InkWell(
               onTap: () => model.verifyEmail(),
               child: AppTextField(
@@ -175,6 +181,9 @@ class UserProfileForm extends StatelessWidget {
                 // suffixText: 'Verified',
                 inputFormatters: [],
               ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding10,
             ),
             AppTextFieldLabel(
               locale.obGenderLabel,
@@ -210,6 +219,9 @@ class UserProfileForm extends StatelessWidget {
                       ),
                     ]
                   : [],
+            ),
+            SizedBox(
+              height: SizeConfig.padding10,
             ),
             AppTextFieldLabel(
               locale.obDobLabel,
@@ -326,7 +338,7 @@ class UserProfileForm extends StatelessWidget {
                           },
                         ),
                         SizedBox(
-                          width: 16,
+                          height: SizeConfig.padding10,
                         ),
                         IconButton(
                           onPressed: model.showAndroidDatePicker,
@@ -364,7 +376,9 @@ class UserProfileForm extends StatelessWidget {
                   ),
                 ],
               ),
-
+            SizedBox(
+              height: SizeConfig.padding10,
+            ),
             AppTextFieldLabel(
               locale.obMobileLabel,
             ),
@@ -438,6 +452,26 @@ class UserProfileForm extends StatelessWidget {
     );
   }
 }
+
+// class EmailField extends StatelessWidget {
+//   const EmailField({
+//     Key key,
+//     @required this.model,
+//   }) : super(key: key);
+
+//   final UserProfileVM model;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return PropertyChangeConsumer<UserService, UserServiceProperties>(
+//       properties: [UserServiceProperties.myEmail],
+//       builder: (context, userService, property) {
+//         // model.emailController.text = userService.baseUser.email;
+//         return
+//       },
+//     );
+//   }
+// }
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({

@@ -73,7 +73,13 @@ class NotificationButton extends StatelessWidget {
                 // AppState.delegate.appState.currentAction = PageAction(
                 //     state: PageState.addPage, page: NotificationsConfig);
                 AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.addPage, page: CompleteProfileViewPageConfig);
+                  state: PageState.addPage,
+                  page: NotificationsConfig,
+                );
+                // AppState.delegate.appState.currentAction = PageAction(
+                //   state: PageState.addPage,
+                //   page: Level2ViewPageConfig,
+                // );
               },
               child: Stack(
                 children: [

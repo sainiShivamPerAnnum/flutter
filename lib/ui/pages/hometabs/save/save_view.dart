@@ -59,12 +59,9 @@ class Save extends StatelessWidget {
               actions: [
                 FelloCoinBar(svgAsset: Assets.aFelloToken),
                 SizedBox(width: SizeConfig.padding10),
-                InkWell(
+                GestureDetector(
                   onTap: () {
-                    AppState.delegate.appState.currentAction = PageAction(
-                      state: PageState.addPage,
-                      page: UserProfileDetailsConfig,
-                    );
+                    model.openProfile();
                   },
                   child: ProfileImageSE(radius: SizeConfig.avatarRadius),
                 ),
@@ -185,7 +182,7 @@ class SaveNetWorthSection extends StatelessWidget {
                         addToScreenStack: true,
                         enableDrag: false,
                         hapticVibrate: true,
-                        isBarrierDismissable: true,
+                        isBarrierDismissable: false,
                         backgroundColor: Colors.transparent,
                         isScrollControlled: true,
                         content: RechargeModalSheet(),
@@ -202,7 +199,7 @@ class SaveNetWorthSection extends StatelessWidget {
                         addToScreenStack: true,
                         enableDrag: false,
                         hapticVibrate: true,
-                        isBarrierDismissable: true,
+                        isBarrierDismissable: false,
                         backgroundColor: Colors.transparent,
                         isScrollControlled: true,
                         content: RechargeModalSheet(),

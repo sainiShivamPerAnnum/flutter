@@ -19,6 +19,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -119,7 +120,9 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                   horizontal: SizeConfig.padding24,
                   vertical: SizeConfig.padding20),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness32),
+                    topRight: Radius.circular(SizeConfig.roundness32)),
                 color: UiConstants.kModalSheetBackgroundColor,
               ),
               child: Padding(
@@ -215,7 +218,7 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              height: SizeConfig.screenWidth * 0.22,
+                              height: SizeConfig.screenWidth * 0.5,
                               width: SizeConfig.screenWidth * 0.42,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.only(
@@ -230,26 +233,35 @@ class AugmontGoldSellViewState extends State<AugmontGoldSellView>
                                   enabled: !model.isGoldSellInProgress,
                                   controller: model.goldAmountController,
                                   enableInteractiveSelection: false,
+                                  textAlign: TextAlign.center,
                                   cursorHeight: SizeConfig.padding46,
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true, signed: true),
-                                  style: TextStyles.rajdhaniSB.body0,
+                                  style: TextStyles.rajdhaniB.title2,
                                   onChanged: (val) {
                                     model.goldSellGrams = double.tryParse(val);
                                     model.updateGoldAmount();
                                   },
+                                  autofocus: true,
                                   showCursor: false,
                                   textInputAction: TextInputAction.done,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(6),
+                                  ],
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding32,
-                                        horizontal: SizeConfig.padding10),
+                                        vertical: SizeConfig.padding24,
+                                        horizontal: SizeConfig.padding28),
                                     fillColor: UiConstants.kFAQDividerColor
                                         .withOpacity(0.5),
                                     filled: true,
-                                    suffix: Text("gms  ",
-                                        style: TextStyles.rajdhaniSB.body1
-                                            .colour(UiConstants.kTextColor)),
+                                    suffix: Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig.padding10),
+                                      child: Text("g",
+                                          style: TextStyles.rajdhaniB.title2
+                                              .colour(UiConstants.kTextColor)),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(

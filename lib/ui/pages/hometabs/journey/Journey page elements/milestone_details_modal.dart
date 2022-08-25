@@ -1,19 +1,15 @@
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/skip_milestone_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -45,9 +41,10 @@ class _JourneyMilestoneDetailsModalSheetState
   get isLoading => this._isLoading;
 
   set isLoading(value) {
-    setState(() {
-      this._isLoading = value;
-    });
+    if (mounted)
+      setState(() {
+        this._isLoading = value;
+      });
   }
 
   Future<void> fetchMilestoneRewards() async {
@@ -162,11 +159,14 @@ class _JourneyMilestoneDetailsModalSheetState
                                 btnText: "Let's Go",
                                 onPressed: () {
                                   AppState.backButtonDispatcher.didPopRoute();
-                                  AppState.delegate.parseRoute(
-                                      Uri.parse(widget.milestone.actionUri));
+                                  if (widget.milestone.actionUri != null &&
+                                      widget.milestone.actionUri.isNotEmpty)
+                                    AppState.delegate.parseRoute(
+                                        Uri.parse(widget.milestone.actionUri));
                                 },
                                 width: SizeConfig.screenWidth),
-                            if (widget.milestone.skipCost != null)
+                            if (widget.milestone.skipCost != null &&
+                                widget.milestone.skipCost.isNotEmpty)
                               Container(
                                 width: SizeConfig.screenWidth,
                                 alignment: Alignment.center,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,6 +28,8 @@ class WebHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    StreamController controller = StreamController.broadcast();
+
     return BaseView<WebHomeViewModel>(
       onModelReady: (model) {
         model.init(game);
@@ -137,69 +140,8 @@ class WebHomeView extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    StreamBuilder(
-                                      stream:
-                                          model.getRealTimePlayingStream(game),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return GameInfoBlock(
-                                            coin: "-",
-                                            coinText: 'Playing',
-                                            assetHeight: SizeConfig.padding16,
-                                            isDot: true,
-                                            assetUrl: Assets.circleGameAsset,
-                                          );
-                                        }
-
-                                        if ((snapshot.data as DatabaseEvent)
-                                                .snapshot
-                                                .value !=
-                                            null) {
-                                          Map<Object, Object> fetchedData =
-                                              Map<dynamic, dynamic>.from(
-                                                  (snapshot.data
-                                                              as DatabaseEvent)
-                                                          .snapshot
-                                                          .value
-                                                      as Map<dynamic, dynamic>);
-                                          String fieldToFetch =
-                                              fetchedData['field'] as String;
-
-                                          Map<Object, Object> requiredTimeData =
-                                              fetchedData[fieldToFetch];
-
-                                          return AnimatedSwitcher(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            transitionBuilder: (Widget child,
-                                                Animation<double> animation) {
-                                              return ScaleTransition(
-                                                  scale: animation,
-                                                  child: child);
-                                            },
-                                            child: GameInfoBlock(
-                                              coin:
-                                                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-                                              coinText: 'Playing',
-                                              assetHeight: SizeConfig.padding16,
-                                              isDot: true,
-                                              assetUrl: Assets.circleGameAsset,
-                                              key: ValueKey<String>(
-                                                  requiredTimeData['value']
-                                                      .toString()),
-                                            ),
-                                          );
-                                        } else {
-                                          return GameInfoBlock(
-                                            coin: "50+",
-                                            coinText: 'Playing',
-                                            assetHeight: SizeConfig.padding16,
-                                            isDot: true,
-                                            assetUrl: Assets.circleGameAsset,
-                                          );
-                                        }
-                                      },
-                                    ),
+                                    //StreamBuilder
+                                    StreamView(model: model, game: game),
                                     GameInfoBlock(
                                       coin:
                                           '${NumberFormat.compact().format(model.currentGameModel.prizeAmount)}',
@@ -332,6 +274,66 @@ class WebHomeView extends StatelessWidget {
             ),
           ),
         );
+      },
+    );
+  }
+}
+
+class StreamView extends StatelessWidget {
+  StreamView({Key key, @required this.model, @required this.game})
+      : super(key: key);
+
+  final WebHomeViewModel model;
+  String game;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      initialData: null,
+      stream: model.getRealTimePlayingStream(game),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return GameInfoBlock(
+            coin: "-",
+            coinText: 'Playing',
+            assetHeight: SizeConfig.padding16,
+            isDot: true,
+            assetUrl: Assets.circleGameAsset,
+          );
+        }
+
+        if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
+          Map<Object, Object> fetchedData = Map<dynamic, dynamic>.from(
+              (snapshot.data as DatabaseEvent).snapshot.value
+                  as Map<dynamic, dynamic>);
+          String fieldToFetch = fetchedData['field'] as String;
+
+          Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch];
+
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+            child: GameInfoBlock(
+              coin:
+                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+              coinText: 'Playing',
+              assetHeight: SizeConfig.padding16,
+              isDot: true,
+              assetUrl: Assets.circleGameAsset,
+              key: ValueKey<String>(requiredTimeData['value'].toString()),
+            ),
+          );
+        } else {
+          return GameInfoBlock(
+            coin: "50+",
+            coinText: 'Playing',
+            assetHeight: SizeConfig.padding16,
+            isDot: true,
+            assetUrl: Assets.circleGameAsset,
+          );
+        }
       },
     );
   }
@@ -579,7 +581,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           backgroundColor: Colors.transparent,
           actions: [
             FelloCoinBar(
-              svgAsset: Assets.aTambolaTicket,
               size: SizeConfig.padding20,
               borderColor: Colors.black,
             ),
