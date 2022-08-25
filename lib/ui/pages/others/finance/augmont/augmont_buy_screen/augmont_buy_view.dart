@@ -293,7 +293,21 @@ class AugmontBuyCard extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.all(SizeConfig.padding20),
                           child: Column(
-                            children: [],
+                            children: [
+                              Text(
+                                'Choose a payment method',
+                                style: TextStyles.title5,
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                    itemCount: 2,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [],
+                                      );
+                                    }),
+                              )
+                            ],
                           ),
                         ),
                       ));

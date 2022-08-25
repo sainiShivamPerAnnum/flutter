@@ -44,6 +44,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:upi_pay/upi_pay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AugmontGoldBuyViewModel extends BaseModel {
@@ -64,6 +65,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
   final _userCoinService = locator<UserCoinService>();
+  List<ApplicationMeta> appMetaList = [];
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -181,6 +183,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
+    await getUPIApps();
     buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
     goldAmountController =
@@ -215,6 +218,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
       buyNotice = _baseUtil.augmontDetail.depNotice;
 
     setState(ViewState.Idle);
+  }
+
+  getUPIApps() async {
+    appMetaList = await UpiPay.getInstalledUpiApplications();
   }
 
   delayedAugmontCall() async {

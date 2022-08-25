@@ -76,6 +76,7 @@ dependencies:
   external_app_launcher: ^2.0.2
   isar: ^2.4.0
   isar_flutter_libs: 2.4.0
+  upi_pay: ^1.0.1
 
 dev_dependencies:
   flutter_test:
