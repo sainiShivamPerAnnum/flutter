@@ -36,11 +36,7 @@ class FAQCardView extends StatelessWidget {
                   (catTitle != null && catTitle == true)
                       ? category.replaceAll("_", " ").toUpperCase()
                       : "FAQs",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: SizeConfig.largeTextSize,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyles.title3.semiBold.colour(Colors.white),
                 ),
                 SizedBox(height: 10),
                 model.state == ViewState.Busy
@@ -77,20 +73,13 @@ class FAQCardView extends StatelessWidget {
 
   _buildItems(FAQCardViewModel model, BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+      // borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       child: Container(
         width: SizeConfig.screenWidth,
         child: Column(
           children: [
             Theme(
-              data: Theme.of(context).copyWith(
-                unselectedWidgetColor: Colors.white, // here for close state
-                colorScheme: ColorScheme.light(
-                  primary: Colors.white,
-                ), // here for open state in replacement of deprecated accentColor
-                dividerColor:
-                    Colors.transparent, // if you want to remove the border
-              ),
+              data: ThemeData(brightness: Brightness.dark),
               child: ExpansionPanelList(
                 animationDuration: Duration(milliseconds: 600),
                 expandedHeaderPadding: EdgeInsets.all(0),
@@ -108,7 +97,7 @@ class FAQCardView extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(model.faqResponses[index],
                           textAlign: TextAlign.start,
-                          style: TextStyles.body2
+                          style: TextStyles.body3
                               .colour(UiConstants.kFAQsAnswerColor)),
                     ),
                   ),
