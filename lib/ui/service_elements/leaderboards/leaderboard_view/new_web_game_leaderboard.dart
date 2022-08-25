@@ -154,6 +154,7 @@ class RemainingRank extends StatelessWidget {
           : model.scoreboard.length <= 6
               ? model.scoreboard.length - 3
               : 3,
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -181,12 +182,14 @@ class RemainingRank extends StatelessWidget {
                             getDefaultProfilePicture(countedIndex),
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
+                            fit: BoxFit.fill,
                           )
                         : ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: userProfilePicUrl[countedIndex],
                               width: SizeConfig.iconSize5,
                               height: SizeConfig.iconSize5,
+                              fit: BoxFit.fill,
                             ),
                           ),
                     SizedBox(

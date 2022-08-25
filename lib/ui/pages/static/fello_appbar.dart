@@ -70,8 +70,10 @@ class NotificationButton extends StatelessWidget {
                 Haptic.vibrate();
                 _analytics.track(eventName: AnalyticsEvents.notifications);
                 model.hasNewNotifications = false;
+                // AppState.delegate.appState.currentAction = PageAction(
+                //     state: PageState.addPage, page: NotificationsConfig);
                 AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.addPage, page: NotificationsConfig);
+                    state: PageState.addPage, page: CompleteProfileViewPageConfig);
               },
               child: Stack(
                 children: [
