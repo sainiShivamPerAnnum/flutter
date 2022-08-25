@@ -36,11 +36,7 @@ class FAQCardView extends StatelessWidget {
                   (catTitle != null && catTitle == true)
                       ? category.replaceAll("_", " ").toUpperCase()
                       : "FAQs",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: SizeConfig.largeTextSize,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyles.title3.semiBold.colour(Colors.white),
                 ),
                 SizedBox(height: 10),
                 model.state == ViewState.Busy
@@ -77,7 +73,7 @@ class FAQCardView extends StatelessWidget {
 
   _buildItems(FAQCardViewModel model, BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+      // borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       child: Container(
         width: SizeConfig.screenWidth,
         child: Column(
@@ -91,31 +87,32 @@ class FAQCardView extends StatelessWidget {
                 dividerColor:
                     Colors.transparent, // if you want to remove the border
               ),
-              child: ExpansionPanelList(
-                animationDuration: Duration(milliseconds: 600),
-                expandedHeaderPadding: EdgeInsets.all(0),
-                dividerColor: UiConstants.kDividerColor,
-                elevation: 0,
+              child: Column(
+                //   animationDuration: Duration(milliseconds: 600),
+                //   expandedHeaderPadding: EdgeInsets.all(0),
+                //   dividerColor: UiConstants.kDividerColor,
+
+                //   elevation: 0,
                 children: List.generate(
                   model.faqHeaders.length,
-                  (index) => ExpansionPanel(
-                    backgroundColor: bgColor ?? UiConstants.kBackgroundColor,
-                    canTapOnHeader: true,
-                    headerBuilder: (ctx, isOpen) =>
-                        _prizeFAQHeader(model.faqHeaders[index]),
-                    isExpanded: model.detStatus[index],
-                    body: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(model.faqResponses[index],
-                          textAlign: TextAlign.start,
-                          style: TextStyles.body2
-                              .colour(UiConstants.kFAQsAnswerColor)),
-                    ),
+                  (index) => ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    childrenPadding: EdgeInsets.zero,
+                    title: _prizeFAQHeader(model.faqHeaders[index]),
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(model.faqResponses[index],
+                            textAlign: TextAlign.start,
+                            style: TextStyles.body3
+                                .colour(UiConstants.kFAQsAnswerColor)),
+                      ),
+                    ],
                   ),
                 ),
-                expansionCallback: (i, isOpen) {
-                  model.updateDetStatus(i, !isOpen);
-                },
+                // expansionCallback: (i, isOpen) {
+                //   model.updateDetStatus(i, !isOpen);
+                // },
               ),
             ),
           ],
