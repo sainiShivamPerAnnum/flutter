@@ -79,40 +79,32 @@ class FAQCardView extends StatelessWidget {
         child: Column(
           children: [
             Theme(
-              data: Theme.of(context).copyWith(
-                unselectedWidgetColor: Colors.white, // here for close state
-                colorScheme: ColorScheme.light(
-                  primary: Colors.white,
-                ), // here for open state in replacement of deprecated accentColor
-                dividerColor:
-                    Colors.transparent, // if you want to remove the border
-              ),
-              child: Column(
-                //   animationDuration: Duration(milliseconds: 600),
-                //   expandedHeaderPadding: EdgeInsets.all(0),
-                //   dividerColor: UiConstants.kDividerColor,
-
-                //   elevation: 0,
+              data: ThemeData(brightness: Brightness.dark),
+              child: ExpansionPanelList(
+                animationDuration: Duration(milliseconds: 600),
+                expandedHeaderPadding: EdgeInsets.all(0),
+                dividerColor: UiConstants.kDividerColor,
+                elevation: 0,
                 children: List.generate(
                   model.faqHeaders.length,
-                  (index) => ExpansionTile(
-                    tilePadding: EdgeInsets.zero,
-                    childrenPadding: EdgeInsets.zero,
-                    title: _prizeFAQHeader(model.faqHeaders[index]),
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(model.faqResponses[index],
-                            textAlign: TextAlign.start,
-                            style: TextStyles.body3
-                                .colour(UiConstants.kFAQsAnswerColor)),
-                      ),
-                    ],
+                  (index) => ExpansionPanel(
+                    backgroundColor: bgColor ?? UiConstants.kBackgroundColor,
+                    canTapOnHeader: true,
+                    headerBuilder: (ctx, isOpen) =>
+                        _prizeFAQHeader(model.faqHeaders[index]),
+                    isExpanded: model.detStatus[index],
+                    body: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(model.faqResponses[index],
+                          textAlign: TextAlign.start,
+                          style: TextStyles.body3
+                              .colour(UiConstants.kFAQsAnswerColor)),
+                    ),
                   ),
                 ),
-                // expansionCallback: (i, isOpen) {
-                //   model.updateDetStatus(i, !isOpen);
-                // },
+                expansionCallback: (i, isOpen) {
+                  model.updateDetStatus(i, !isOpen);
+                },
               ),
             ),
           ],
