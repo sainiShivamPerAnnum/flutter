@@ -56,6 +56,14 @@
 				<string>com.googleusercontent.apps.76548371644-bqosqtn2g7dgk4h880ujt243g7nk7mbd</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>paytmqpHRfp13374268724583</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>119</string>
@@ -69,10 +77,15 @@
 	</array>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms-beta</string>
 		<string>itms</string>
+		<string>phonepe</string>
+		<string>tez</string>
+		<string>paytm</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
