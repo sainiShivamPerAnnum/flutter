@@ -116,6 +116,7 @@ class SaveCustomCard extends StatelessWidget {
                                 CustomSaveButton(
                                   onTap: onTap,
                                   title: 'Save',
+                                  isFullScreen: false,
                                 )
                               ],
                             )
@@ -241,8 +242,12 @@ class CustomSaveCardPainter extends CustomPainter {
 class CustomSaveButton extends StatelessWidget {
   final Function() onTap;
   final String title;
+  final bool isFullScreen;
+  final double width;
 
-  const CustomSaveButton({Key key, this.onTap, this.title}) : super(key: key);
+  const CustomSaveButton(
+      {Key key, this.onTap, this.title, this.isFullScreen = false, this.width})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +265,7 @@ class CustomSaveButton extends StatelessWidget {
           padding: EdgeInsets.all(SizeConfig.padding2),
           child: Container(
             height: SizeConfig.screenWidth * 0.1,
-            width: SizeConfig.screenWidth * 0.2,
+            width: isFullScreen ? width : SizeConfig.screenWidth * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness5),
               color: UiConstants.kBackgroundDividerColor,

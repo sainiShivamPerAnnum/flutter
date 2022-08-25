@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmo
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -20,7 +21,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -36,135 +36,132 @@ class SaveAssetView extends StatelessWidget {
         elevation: 0,
         leading: FelloAppBarBackButton(),
       ),
-      body: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: BaseView<SaveViewModel>(
-            onModelReady: (model) => model.init(),
-            builder: (context, model, child) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: SizeConfig.screenWidth * 2.4,
-                  decoration: BoxDecoration(
-                      color: UiConstants.kBackgroundColor,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GoldAssetCard(),
-                      SizedBox(
-                        height: SizeConfig.padding24,
-                      ),
-                      // -- Break --
-                      SaveTitleContainer(title: 'Auto SIP'),
-                      SizedBox(
-                        height: SizeConfig.padding10,
-                      ),
-                      AutosaveCard(),
-                      SizedBox(
-                        height: SizeConfig.padding24,
-                      ),
-                      SaveTitleContainer(title: 'Transactions'),
-                      MiniTransactionCard(),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+        child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: BaseView<SaveViewModel>(
+              onModelReady: (model) => model.init(),
+              builder: (context, model, child) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: SizeConfig.screenWidth * 2.4,
+                    decoration: BoxDecoration(
+                        color: UiConstants.kBackgroundColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SellGoldText(),
-                        _sellButton(
-                            onTap: () {
-                              BaseUtil.openModalBottomSheet(
-                                  backgroundColor: Colors.transparent,
-                                  isBarrierDismissable: true,
-                                  addToScreenStack: true,
-                                  content: SellingReasonBottomSheet(
-                                    saveViewModel: model,
-                                  ));
-                            },
-                            isActive: model.getButtonAvailibility()),
-                      ]),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: SizeConfig.padding24),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: model.isKYCVerified && model.isVPAVerified
-                        ? SizedBox()
-                        : Text(
-                            'To enable selling gold,\ncomplete the following:',
-                            style: TextStyles.sourceSans.body4
-                                .colour(Colors.grey.withOpacity(0.7)),
-                            textAlign: TextAlign.end,
-                          ),
+                        GoldAssetCard(),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        // -- Break --
+                        SaveTitleContainer(title: 'Auto SIP'),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        AutosaveCard(),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        SaveTitleContainer(title: 'Transactions'),
+                        Expanded(child: MiniTransactionCard()),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                //Complete KYC section
-                model.isKYCVerified && model.isVPAVerified
-                    ? SizedBox()
-                    : CompleteKYCSection(
-                        isKYCCompleted:
-                            model.userService.isSimpleKycVerified ?? false,
-                        isBankInformationComeplted:
-                            model.isVPAVerified ?? false,
-                      ),
-                //Lock in reached section
-                model.isLockInReached
-                    ? SellPreventionReasonCard(
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SellGoldText(),
+                          _sellButton(
+                              onTap: () {
+                                BaseUtil.openModalBottomSheet(
+                                    backgroundColor: Colors.transparent,
+                                    isBarrierDismissable: true,
+                                    addToScreenStack: true,
+                                    content: SellingReasonBottomSheet(
+                                      saveViewModel: model,
+                                    ));
+                              },
+                              isActive: model.getButtonAvailibility()),
+                        ]),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.padding24),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: model.isKYCVerified && model.isVPAVerified
+                          ? SizedBox()
+                          : Text(
+                              'To enable selling gold,\ncomplete the following:',
+                              style: TextStyles.sourceSans.body4
+                                  .colour(Colors.grey.withOpacity(0.7)),
+                              textAlign: TextAlign.end,
+                            ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  //Complete KYC section
+                  if (!(model.isKYCVerified && model.isVPAVerified))
+                    CompleteKYCSection(
+                      isKYCCompleted:
+                          model.userService.isSimpleKycVerified ?? false,
+                      isBankInformationComeplted: model.isVPAVerified ?? false,
+                    ),
+                  //Lock in reached section
+                  if (model.isLockInReached)
+                    SellPreventionReasonCard(
+                      iconString: Assets.alertTriangle,
+                      content:
+                          '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                    ),
+                  if (model.isGoldSaleActive)
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: SellPreventionReasonCard(
                         iconString: Assets.alertTriangle,
                         content:
-                            '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
-                      )
-                    : SizedBox(),
-                model.isGoldSaleActive
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding10),
-                        child: SellPreventionReasonCard(
-                          iconString: Assets.alertTriangle,
-                          content:
-                              'Selling of DIgital Gold is currently on hold. Please try again later.',
-                        ),
-                      )
-                    : SizedBox(),
-                model.isOngoingTransaction
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding10),
-                        child: SellPreventionReasonCard(
-                          iconString: Assets.loadingSvg,
-                          content:
-                              'Your Digital Gold withdrawal is being processsed',
-                        ),
-                      )
-                    : SizedBox(),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-                  child: FAQCardView(
-                      category: 'digital_gold',
-                      bgColor: UiConstants.kDarkBackgroundColor),
-                ),
-                SizedBox(
-                  height: SizeConfig.screenWidth * 0.2,
-                )
-              ],
-            ),
-          )),
+                            'Selling of DIgital Gold is currently on hold. Please try again later.',
+                      ),
+                    ),
+                  if (model.isOngoingTransaction)
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: SellPreventionReasonCard(
+                        iconString: Assets.loadingSvg,
+                        content:
+                            'Your Digital Gold withdrawal is being processsed',
+                      ),
+                    ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                    child: FAQCardView(
+                        category: 'digital_gold',
+                        bgColor: UiConstants.kDarkBackgroundColor),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 0.2,
+                  )
+                ],
+              ),
+            )),
+      ),
     );
   }
 
@@ -323,7 +320,7 @@ class GoldAssetCard extends StatelessWidget {
                             SizedBox(
                               height: SizeConfig.padding26,
                             ),
-                            InkWell(
+                            CustomSaveButton(
                               onTap: () {
                                 return BaseUtil.openModalBottomSheet(
                                   addToScreenStack: true,
@@ -335,22 +332,9 @@ class GoldAssetCard extends StatelessWidget {
                                   content: RechargeModalSheet(),
                                 );
                               },
-                              child: Center(
-                                child: Container(
-                                  height: SizeConfig.screenWidth * 0.10,
-                                  width: SizeConfig.screenWidth * 0.4,
-                                  decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.8),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5)),
-                                  child: Center(
-                                    child: Text(
-                                      'SAVE',
-                                      style: TextStyles.rajdhaniSB.body1,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              title: 'Save',
+                              isFullScreen: true,
+                              width: SizeConfig.screenWidth * 0.10,
                             ),
                           ],
                         ),

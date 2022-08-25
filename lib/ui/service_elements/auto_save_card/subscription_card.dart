@@ -150,7 +150,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                   horizontal: SizeConfig.padding24,
                   vertical: SizeConfig.padding20),
               child: Container(
-                height: SizeConfig.screenWidth * 0.34,
+                height: SizeConfig.screenWidth * 0.38,
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
@@ -333,33 +333,6 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                       //               ],
                       //             ),
                       // ),
-                      model.activeSubscription != null &&
-                              model.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_ACTIVE
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Invested',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                        "₹${model.activeSubscription.autoAmount.toInt() ?? 0.0}",
-                                        style: TextStyles.sourceSans.body1),
-                                    Text(
-                                      subscriptionModel.getFreq(model
-                                          .activeSubscription.autoFrequency),
-                                      style: TextStyles.sourceSans.body1,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            )
-                          : SizedBox(),
                     ]),
               ),
             ));
