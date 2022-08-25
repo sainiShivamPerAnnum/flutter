@@ -127,13 +127,14 @@ class KYCDetailsViewModel extends BaseModel {
   }
 
   void onSubmit(context) async {
+    isUpadtingKycDetails = true;
     if (!_preVerifyInputs()) {
+      isUpadtingKycDetails = false;
       return;
     }
 
     FocusScope.of(context).unfocus();
 
-    isKycInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
@@ -146,6 +147,7 @@ class KYCDetailsViewModel extends BaseModel {
       if (_baseUtil.userRegdPan == null ||
           _baseUtil.userRegdPan.isEmpty ||
           _baseUtil.userRegdPan != panController.text) {
+        isUpadtingKycDetails = false;
         _baseUtil.userRegdPan = panController.text;
       }
 
@@ -159,6 +161,7 @@ class KYCDetailsViewModel extends BaseModel {
         }
         _baseUtil.setKycVerified(true);
         _userService.isSimpleKycVerified = true;
+        isUpadtingKycDetails = false;
       }
 
       _analyticsService.track(
@@ -168,6 +171,7 @@ class KYCDetailsViewModel extends BaseModel {
 
       _userService.isSimpleKycVerified = true;
       _userService.setMyUserName(_userService.baseUser.name);
+      isUpadtingKycDetails = false;
 
       BaseUtil.showPositiveAlert(
           'Verification Successful', 'You are successfully verified!');
@@ -181,6 +185,7 @@ class KYCDetailsViewModel extends BaseModel {
 
       AppState.backButtonDispatcher.didPopRoute();
     } else {
+      isUpadtingKycDetails = false;
       if (veriDetails['fail_code'] == 0) {
         BaseUtil.openDialog(
           addToScreenStack: true,

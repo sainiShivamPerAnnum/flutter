@@ -35,7 +35,7 @@ class MiniTransactionCard extends StatelessWidget {
                           margin: EdgeInsets.only(
                             bottom: SizeConfig.padding24,
                           ),
-                          child: CircularProgressIndicator(),
+                          child: Center(child: CircularProgressIndicator()),
                         )
                       : (m.txnList.length == 0
                           ? Container(
@@ -55,8 +55,6 @@ class MiniTransactionCard extends StatelessWidget {
                                     return ListTile(
                                       onTap: () {
                                         Haptic.vibrate();
-                                        // bool freeBeerStatus = model.txnService
-                                        //     .getBeerTicketStatus(m.txnList[i]);
                                         BaseUtil.openModalBottomSheet(
                                             addToScreenStack: true,
                                             isBarrierDismissable: true,
