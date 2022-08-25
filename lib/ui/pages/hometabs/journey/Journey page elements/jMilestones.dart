@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -40,11 +41,15 @@ class Milestones extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.AvatarPosition],
+        properties: [
+          JourneyServiceProperties.AvatarPosition,
+          JourneyServiceProperties.BaseGlow,
+          JourneyServiceProperties.Pages,
+        ],
         builder: (context, serviceModel, properties) {
           return SizedBox(
             width: model.pageWidth,
-            height: model.pageHeight * 2,
+            height: model.currentFullViewHeight,
             child: Stack(
               children: List.generate(model.currentMilestoneList.length, (i) {
                 log("Milestone: ${model.currentMilestoneList[i].actionUri} || current level: ${model.avatarActiveMilestoneLevel}");
@@ -345,6 +350,13 @@ class StaticMilestone extends StatelessWidget {
             ),
           ),
         ),
+        if (milestone.index < model.avatarActiveMilestoneLevel)
+          Positioned(
+              left: model.pageWidth * milestone.x,
+              bottom: ((model.pageHeight * (milestone.page - 1)) +
+                      model.pageHeight * milestone.y) -
+                  model.pageHeight * 0.02,
+              child: MileStoneCheck())
       ],
     );
   }

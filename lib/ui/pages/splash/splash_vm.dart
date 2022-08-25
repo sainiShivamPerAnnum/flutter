@@ -34,8 +34,9 @@ import '../../../core/repository/user_repo.dart';
 class LauncherViewModel extends BaseModel {
   bool _isSlowConnection = false;
   Timer _timer3;
+  Stopwatch _logoWatch;
   DeviceUnlock deviceUnlock;
-  bool _isPerformanceCollectionEnabled = false;
+  bool _isPerformanceCollectionEnabled = false, _isFetchingData = false;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
   final navigator = AppState.delegate.appState;
@@ -65,7 +66,16 @@ class LauncherViewModel extends BaseModel {
     notifyListeners();
   }
 
+  bool get isFetchingData => _isFetchingData;
+
+  set isFetchingData(bool val) {
+    _isFetchingData = val;
+    notifyListeners();
+  }
+
   init() {
+    isFetchingData = true;
+    _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
     initLogic();
     _timer3 = new Timer(const Duration(seconds: 6), () {
@@ -76,15 +86,16 @@ class LauncherViewModel extends BaseModel {
 
   exit() {
     _timer3.cancel();
+    _logoWatch.stop();
   }
 
   initLogic() async {
     // final Trace trace = _performance.newTrace('Splash trace start');
     // await trace.start();
     // trace.putAttribute('Spalsh', 'userservice init started');
-    await userService.init();
     // trace.putAttribute('Spalsh', 'userservice init ended');
     try {
+      await userService.init();
       await CacheService.initialize();
       if (userService.isUserOnborded) await _journeyService.init();
       if (userService.isUserOnborded) await _journeyRepo.init();
@@ -124,7 +135,27 @@ class LauncherViewModel extends BaseModel {
     _httpModel.init();
     _tambolaService.init();
     _timer3.cancel();
+
     // await trace.stop();
+
+    // log(_logoWatch.elapsed.inMilliseconds.toString());
+
+    int delayedSecond = _logoWatch.elapsed.inMilliseconds % 2500;
+
+    delayedSecond = 2500 - delayedSecond;
+
+    await Future.delayed(
+      new Duration(milliseconds: delayedSecond),
+    );
+    isFetchingData = false;
+
+    // 21 FPS = 350 millisecods : Cal
+    // = 1000 / 60 = 16.66
+    // = 16.66 * 21 = 350
+
+    await Future.delayed(
+      new Duration(milliseconds: 500),
+    );
 
     try {
       deviceUnlock = DeviceUnlock();
@@ -140,8 +171,10 @@ class LauncherViewModel extends BaseModel {
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser.isBlocked) {
       AppState.isUpdateScreen = true;
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      navigator.currentAction = PageAction(
+        state: PageState.replaceAll,
+        page: BlockedUserPageConfig,
+      );
       return;
     }
 

@@ -23,6 +23,7 @@ class SourceAdaptiveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (asset.name == "b1") log("Asset details: ${asset.toString()}");
     return BaseView<SourceAdaptiveAssetViewModel>(onModelReady: (model) {
       model.init(asset.uri);
     }, onModelDispose: (model) {

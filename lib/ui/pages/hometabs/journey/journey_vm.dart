@@ -73,21 +73,10 @@ class JourneyPageViewModel extends BaseModel {
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
     isLoading = true;
-    print("Journey Ticker: ${ticker.toString()}");
     _journeyService.vsync = ticker;
-    // Map<String, dynamic> res =
-    //     await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
-    // pages = res["pages"];
-    // await _journeyService.fetchNetworkPages();
     logger.d("Pages length: ${_journeyService.pages.length}");
-    // lastDoc = res["lastDoc"];
-    // log("${lastDoc.id}");
-    _journeyService.setCurrentMilestones();
-    _journeyService.setCustomPathItems();
-    _journeyService.setJourneyPathItems();
     _journeyService.getAvatarCachedMilestoneIndex();
     await _journeyService.updateUserJourneyStats();
-
     if (_journeyService.isThereAnyMilestoneLevelChange()) {
       _journeyService.createPathForAvatarAnimation(
           _journeyService.avatarCachedMlIndex,
@@ -102,6 +91,13 @@ class JourneyPageViewModel extends BaseModel {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       await _journeyService.scrollPageToAvatarPosition();
       _journeyService.animateAvatar();
+      _journeyService.mainController.addListener(() {
+        if (_journeyService.mainController.offset >
+                _journeyService.mainController.position.maxScrollExtent &&
+            !isLoading) {
+          addPageToTop();
+        }
+      });
     });
   }
 
@@ -134,40 +130,26 @@ class JourneyPageViewModel extends BaseModel {
   //   isLoading = false;
   // }
 
-  // addPageToTop(double currentOffset) async {
-  //   print("Adding page to top");
-  //   if (isEnd) return;
-  //   isLoading = true;
-  //   final res = await _dbModel.fetchJourneyPage(lastDoc: lastDoc);
-  //   pages.addAll(res["pages"]);
-  //   logger.d("TotalPages length: ${pages.length}");
-  //   // isEnd = pages.length >= 4;
-  //   if (res['pages'].isEmpty)
-  //     isEnd = true;
-  //   else
-  //     lastDoc = res['lastDoc'];
+  addPageToTop() async {
+    logger.d("Adding page to top");
+    if (!canMorePagesBeFetched()) return;
+    isLoading = true;
+    final prevPageslength = pages.length;
+    await _journeyService.fetchNetworkPages();
+    logger.d("Total Pages length: ${pages.length}");
+    if (prevPageslength < pages.length)
+      await mainController.animateTo(
+        mainController.offset + 100,
+        curve: Curves.easeOutCubic,
+        duration: Duration(seconds: 1),
+      );
+    _journeyService.placeAvatarAtTheCurrentMileStone();
+    // _journeyService.refreshJourneyPath();
+    isLoading = false;
+  }
 
-  //   await Future.delayed(Duration(seconds: 2));
-  //   pageCount = pages.length;
-  //   currentFullViewHeight = pageHeight * pageCount;
-  //   // addMilestones(res['pages']);
-  //   // addCustomPathItems(res['pages']);
-  //   // addJourneyPathItems(res['pages']);
-  //   _journeyService.setCurrentMilestones();
-  //   _journeyService.setCustomPathItems();
-  //   _journeyService.setJourneyPathItems();
-  //   startPage = pages[0].page;
-  //   lastPage = pages[pages.length - 1].page;
-  //   // avatarPath = drawPath();
-  //   // setAvatarPostion();
-
-  //   mainController.animateTo(
-  //     mainController.offset + 100,
-  //     curve: Curves.easeOutCubic,
-  //     duration: Duration(seconds: 1),
-  //   );
-  //   isLoading = false;
-  // }
+  canMorePagesBeFetched() =>
+      _journeyService.getJourneyLevelBlurData() == null ? true : false;
 
   animateAvatar() {
     _journeyService.animateAvatar();
@@ -222,7 +204,7 @@ class JourneyPageViewModel extends BaseModel {
       enableDrag: false,
       useRootNavigator: true,
       context: context,
-      // isScrollControlled: true,
+      isScrollControlled: true,
       builder: (ctx) {
         return JourneyMilestoneDetailsModalSheet(
           milestone: milestone,

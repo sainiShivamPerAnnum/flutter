@@ -145,7 +145,7 @@ class WinnerWidgets extends StatelessWidget {
                 style: TextStyles.rajdhaniM.body4,
               ),
               Text(
-                '(${scoreboard[rank].score})',
+                '(${(scoreboard[rank].score).toInt()})',
                 style: TextStyles.rajdhani.body4.setOpecity(0.6),
               ),
             ],

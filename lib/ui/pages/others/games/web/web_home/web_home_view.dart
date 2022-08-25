@@ -137,69 +137,69 @@ class WebHomeView extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    StreamBuilder(
-                                      stream:
-                                          model.getRealTimePlayingStream(game),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return GameInfoBlock(
-                                            coin: "-",
-                                            coinText: 'Playing',
-                                            assetHeight: SizeConfig.padding16,
-                                            isDot: true,
-                                            assetUrl: Assets.circleGameAsset,
-                                          );
-                                        }
+                                    // StreamBuilder(
+                                    //   stream:
+                                    //       model.getRealTimePlayingStream(game),
+                                    //   builder: (context, snapshot) {
+                                    //     if (!snapshot.hasData) {
+                                    //       return GameInfoBlock(
+                                    //         coin: "-",
+                                    //         coinText: 'Playing',
+                                    //         assetHeight: SizeConfig.padding16,
+                                    //         isDot: true,
+                                    //         assetUrl: Assets.circleGameAsset,
+                                    //       );
+                                    //     }
 
-                                        if ((snapshot.data as DatabaseEvent)
-                                                .snapshot
-                                                .value !=
-                                            null) {
-                                          Map<Object, Object> fetchedData =
-                                              Map<dynamic, dynamic>.from(
-                                                  (snapshot.data
-                                                              as DatabaseEvent)
-                                                          .snapshot
-                                                          .value
-                                                      as Map<dynamic, dynamic>);
-                                          String fieldToFetch =
-                                              fetchedData['field'] as String;
+                                    //     if ((snapshot.data as DatabaseEvent)
+                                    //             .snapshot
+                                    //             .value !=
+                                    //         null) {
+                                    //       Map<Object, Object> fetchedData =
+                                    //           Map<dynamic, dynamic>.from(
+                                    //               (snapshot.data
+                                    //                           as DatabaseEvent)
+                                    //                       .snapshot
+                                    //                       .value
+                                    //                   as Map<dynamic, dynamic>);
+                                    //       String fieldToFetch =
+                                    //           fetchedData['field'] as String;
 
-                                          Map<Object, Object> requiredTimeData =
-                                              fetchedData[fieldToFetch];
+                                    //       Map<Object, Object> requiredTimeData =
+                                    //           fetchedData[fieldToFetch];
 
-                                          return AnimatedSwitcher(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            transitionBuilder: (Widget child,
-                                                Animation<double> animation) {
-                                              return ScaleTransition(
-                                                  scale: animation,
-                                                  child: child);
-                                            },
-                                            child: GameInfoBlock(
-                                              coin:
-                                                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-                                              coinText: 'Playing',
-                                              assetHeight: SizeConfig.padding16,
-                                              isDot: true,
-                                              assetUrl: Assets.circleGameAsset,
-                                              key: ValueKey<String>(
-                                                  requiredTimeData['value']
-                                                      .toString()),
-                                            ),
-                                          );
-                                        } else {
-                                          return GameInfoBlock(
-                                            coin: "50+",
-                                            coinText: 'Playing',
-                                            assetHeight: SizeConfig.padding16,
-                                            isDot: true,
-                                            assetUrl: Assets.circleGameAsset,
-                                          );
-                                        }
-                                      },
-                                    ),
+                                    //       return AnimatedSwitcher(
+                                    //         duration: const Duration(
+                                    //             milliseconds: 500),
+                                    //         transitionBuilder: (Widget child,
+                                    //             Animation<double> animation) {
+                                    //           return ScaleTransition(
+                                    //               scale: animation,
+                                    //               child: child);
+                                    //         },
+                                    //         child: GameInfoBlock(
+                                    //           coin:
+                                    //               "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+                                    //           coinText: 'Playing',
+                                    //           assetHeight: SizeConfig.padding16,
+                                    //           isDot: true,
+                                    //           assetUrl: Assets.circleGameAsset,
+                                    //           key: ValueKey<String>(
+                                    //               requiredTimeData['value']
+                                    //                   .toString()),
+                                    //         ),
+                                    //       );
+                                    //     } else {
+                                    //       return GameInfoBlock(
+                                    //         coin: "50+",
+                                    //         coinText: 'Playing',
+                                    //         assetHeight: SizeConfig.padding16,
+                                    //         isDot: true,
+                                    //         assetUrl: Assets.circleGameAsset,
+                                    //       );
+                                    //     }
+                                    //   },
+                                    // ),
                                     GameInfoBlock(
                                       coin:
                                           '${NumberFormat.compact().format(model.currentGameModel.prizeAmount)}',
@@ -579,7 +579,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           backgroundColor: Colors.transparent,
           actions: [
             FelloCoinBar(
-              svgAsset: Assets.aTambolaTicket,
               size: SizeConfig.padding20,
               borderColor: Colors.black,
             ),

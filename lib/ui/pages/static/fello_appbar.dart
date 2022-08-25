@@ -71,7 +71,13 @@ class NotificationButton extends StatelessWidget {
                 _analytics.track(eventName: AnalyticsEvents.notifications);
                 model.hasNewNotifications = false;
                 AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.addPage, page: NotificationsConfig);
+                  state: PageState.addPage,
+                  page: NotificationsConfig,
+                );
+                // AppState.delegate.appState.currentAction = PageAction(
+                //   state: PageState.addPage,
+                //   page: Level2ViewPageConfig,
+                // );
               },
               child: Stack(
                 children: [

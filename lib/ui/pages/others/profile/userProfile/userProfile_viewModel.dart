@@ -19,6 +19,8 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/date_helper.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -188,7 +190,7 @@ class UserProfileVM extends BaseModel {
   updateDetails() async {
     if (formKey.currentState.validate() && isValidDate()) {
       if (_checkForChanges()) {
-        if (_isAdult(selectedDate)) {
+        if (DateHelper.isAdult(selectedDate)) {
           isUpdaingUserDetails = true;
           notifyListeners();
           _userService.baseUser.name = nameController.text.trim();
@@ -271,19 +273,6 @@ class UserProfileVM extends BaseModel {
     else if (gen == 0)
       return "F";
     else if (gen == -1) return "O";
-  }
-
-  bool _isAdult(DateTime dt) {
-    // Current time - at this moment
-    DateTime today = DateTime.now();
-    // Date to check but moved 18 years ahead
-    DateTime adultDate = DateTime(
-      dt.year + 18,
-      dt.month,
-      dt.day,
-    );
-
-    return adultDate.isBefore(today);
   }
 
   signout() async {

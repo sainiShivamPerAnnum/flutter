@@ -29,8 +29,11 @@ class UserEmailVerificationButton extends StatelessWidget {
               ),
               onTap: () {
                 AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.addPage, page: VerifyEmailPageConfig);
-              }),
+                  state: PageState.addPage,
+                  page: VerifyEmailPageConfig,
+                );
+              },
+            ),
     );
   }
 }

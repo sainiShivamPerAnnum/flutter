@@ -48,4 +48,17 @@ class DateHelper {
 
     return weekEnd.difference(now).inMinutes;
   }
+
+  static bool isAdult(DateTime dt) {
+    // Current time - at this moment
+    DateTime today = DateTime.now();
+    // Date to check but moved 18 years ahead
+    DateTime adultDate = DateTime(
+      dt.year + 18,
+      dt.month,
+      dt.day,
+    );
+
+    return adultDate.isBefore(today);
+  }
 }
