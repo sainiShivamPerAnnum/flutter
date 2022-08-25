@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -38,55 +39,66 @@ class FelloCoinBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("FLC build called");
-    return PropertyChangeConsumer<UserCoinService, UserCoinServiceProperties>(
-        properties: [UserCoinServiceProperties.coinBalance],
-        builder: (context, model, properties) {
-          return model.flcBalance == null
-              ? CircularProgressIndicator()
-              : GestureDetector(
-                  onTap: () {
-                    if (JourneyService.isAvatarAnimationInProgress) return;
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+      builder: (context, journeyModel, properties) {
+        return PropertyChangeConsumer<UserCoinService,
+            UserCoinServiceProperties>(
+          properties: [UserCoinServiceProperties.coinBalance],
+          builder: (context, model, properties) {
+            return journeyModel.avatarRemoteMlIndex > 2
+                ? (model.flcBalance == null
+                    ? CircularProgressIndicator()
+                    : GestureDetector(
+                        onTap: () {
+                          if (JourneyService.isAvatarAnimationInProgress)
+                            return;
 
-                    _analytics.track(
-                        eventName: AnalyticsEvents.addFLCTokensTopRight);
-                    BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      backgroundColor: UiConstants.gameCardColor,
-                      content: WantMoreTicketsModalSheet(),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.roundness24),
-                        topRight: Radius.circular(SizeConfig.roundness24),
-                      ),
-                      hapticVibrate: true,
-                      isScrollControlled: true,
-                      isBarrierDismissable: true,
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(SizeConfig.padding8),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding12,
-                        vertical: SizeConfig.padding10),
-                    decoration: BoxDecoration(
-                      color: UiConstants.kTextFieldColor.withOpacity(0.4),
-                      border: Border.all(color: borderColor ?? Colors.white10),
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SvgPicture.asset(
-                          svgAsset ?? Assets.aFelloToken,
-                          height: size ?? SizeConfig.padding20,
-                          width: size ?? SizeConfig.padding20,
+                          _analytics.track(
+                              eventName: AnalyticsEvents.addFLCTokensTopRight);
+                          BaseUtil.openModalBottomSheet(
+                            addToScreenStack: true,
+                            backgroundColor: UiConstants.gameCardColor,
+                            content: WantMoreTicketsModalSheet(),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness24),
+                              topRight: Radius.circular(SizeConfig.roundness24),
+                            ),
+                            hapticVibrate: true,
+                            isScrollControlled: true,
+                            isBarrierDismissable: true,
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(SizeConfig.padding8),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding12,
+                              vertical: SizeConfig.padding10),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kTextFieldColor.withOpacity(0.4),
+                            border: Border.all(
+                                color: borderColor ?? Colors.white10),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SvgPicture.asset(
+                                svgAsset ?? Assets.aFelloToken,
+                                height: size ?? SizeConfig.padding20,
+                                width: size ?? SizeConfig.padding20,
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              CoinBalanceTextSE(),
+                            ],
+                          ),
                         ),
-                        SizedBox(width: SizeConfig.padding4),
-                        CoinBalanceTextSE(),
-                      ],
-                    ),
-                  ),
-                );
-        });
+                      ))
+                : SizedBox();
+          },
+        );
+      },
+    );
   }
 }

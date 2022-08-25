@@ -13,72 +13,80 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class JourneyAssetPath extends StatelessWidget {
+class JourneyAssetPath extends StatefulWidget {
   final JourneyPageViewModel model;
   const JourneyAssetPath({Key key, this.model}) : super(key: key);
+  @override
+  State<JourneyAssetPath> createState() => _JourneyAssetPathState();
+}
 
-  // getChild(JourneyPathModel item) {
-  //   switch (item.asset.assetType) {
-  //     case "svg":
-  //       print("network asset used for asset ${item.asset.name}");
-  //       return SvgPicture.network(
-  //         item.asset.uri,
-  //         width: model.pageWidth * item.asset.width,
-  //         height: model.pageHeight * item.asset.height,
-  //       );
-  //     case "PNG":
-  //       return Image.asset(
-  //         item.asset.uri,
-  //         width: model.pageWidth * item.asset.width,
-  //         height: model.pageHeight * item.asset.height,
-  //       );
-  //     case "":
-  //       return SvgPicture.network(
-  //         item.asset.uri,
-  //         width: model.pageWidth * item.asset.width,
-  //         height: model.pageHeight * item.asset.height,
-  //       );
-  //   }
-  // }
-
+class _JourneyAssetPathState extends State<JourneyAssetPath> {
   @override
   Widget build(BuildContext context) {
-    model.journeyPathItemsList.sort((a, b) => a.z.compareTo(b.z));
-    log("Journey path item list length ${model.journeyPathItemsList.length}");
-    log(model.journeyPathItemsList
-        .firstWhere((element) => element.asset.name == "b7" && element.isBase)
-        .toString());
     return SizedBox(
-      height: model.pageHeight * 2,
-      width: model.pageWidth,
+      height: widget.model.currentFullViewHeight,
+      width: widget.model.pageWidth,
       child: Stack(
-        children: List.generate(
-          model.journeyPathItemsList.length,
-          (i) => Positioned(
-            left: model.pageWidth * model.journeyPathItemsList[i].x,
-            bottom:
-                model.pageHeight * (model.journeyPathItemsList[i].page - 1) +
-                    model.pageHeight * model.journeyPathItemsList[i].y,
-            // child: Transform(
-            //   alignment: Alignment.center,
-            //   transform: Matrix4.rotationY(
-            //       model.journeyPathItemsList[i].hFlip ? math.pi : 0),
-            child: Container(
-              height:
-                  model.pageHeight * model.journeyPathItemsList[i].asset.height,
-              width:
-                  model.pageWidth * model.journeyPathItemsList[i].asset.width,
-              child: SourceAdaptiveAssetView(
-                asset: model.journeyPathItemsList[i].asset,
-                //),
-              ),
+        children: List.generate(widget.model.journeyPathItemsList.length, (i) {
+          log("Path Assets ${widget.model.journeyPathItemsList[i].asset.name} : page: ${widget.model.journeyPathItemsList[i].page}  z: ${widget.model.journeyPathItemsList[i].z} x: ${widget.model.journeyPathItemsList[i].x} x: ${widget.model.journeyPathItemsList[i].y} ");
+          return Positioned(
+            left:
+                widget.model.pageWidth * widget.model.journeyPathItemsList[i].x,
+            bottom: widget.model.pageHeight *
+                    (widget.model.journeyPathItemsList[i].page - 1) +
+                widget.model.pageHeight *
+                    widget.model.journeyPathItemsList[i].y,
+            child: SourceAdaptiveAssetView(
+              asset: widget.model.journeyPathItemsList[i].asset,
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
 }
+
+// class JourneyAssetPath extends StatelessWidget {
+//   final JourneyPageViewModel model;
+//   const JourneyAssetPath({Key key, this.model}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // log("Journey path item list length ${model.journeyPathItemsList.length}");
+//     // model.journeyPathItemsList.sort((a, b) => a.z.compareTo(b.z));
+//     // log("Full Screen height of Journey View ${model.currentFullViewHeight}");
+//     // final bg1 = model.journeyPathItemsList
+//     //     .firstWhere((item) => item.asset.name == "b1");
+//     // if (bg1 != null) {
+//     //   print("Bg1 dx: ${model.pageWidth * bg1.x}");
+//     //   print(
+//     //       "Bg1 dy: ${model.pageHeight * (bg1.page - 1) + model.pageHeight * bg1.y}");
+//     //   print("Bg1 width: ${model.pageWidth * bg1.asset.width}");
+//     //   print("Bg1 height: ${model.pageHeight * bg1.asset.height}");
+//     // }
+//     return Container(
+//       color: Colors.black,
+//       height: model.currentFullViewHeight,
+//       width: model.pageWidth,
+//       child: Stack(
+//         children: List.generate(model.journeyPathItemsList.length, (i) {
+//           log("Path Assets ${model.journeyPathItemsList[i].asset.name} : page: ${model.journeyPathItemsList[i].page}  z: ${model.journeyPathItemsList[i].z} x: ${model.journeyPathItemsList[i].x} x: ${model.journeyPathItemsList[i].y} ");
+//           return Positioned(
+//             left: model.pageWidth * model.journeyPathItemsList[i].x,
+//             bottom:
+//                 model.pageHeight * (model.journeyPathItemsList[i].page - 1) +
+//                     model.pageHeight * model.journeyPathItemsList[i].y,
+
+//             child: SourceAdaptiveAssetView(
+//               asset: model.journeyPathItemsList[i].asset,
+
+//             ),
+//           );
+//         }),
+//       ),
+//     );
+//   }
+// }
 
 class ActiveMilestoneBackgroundGlow extends StatelessWidget {
   @override
@@ -123,6 +131,7 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
         properties: [
           JourneyServiceProperties.BaseGlow,
+          JourneyServiceProperties.Pages,
         ],
         builder: (context, model, properties) {
           final JourneyPathModel base = model.journeyPathItemsList.firstWhere(
@@ -134,8 +143,8 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
           return base != null
               ? Positioned(
                   left: model.pageWidth * base.x,
-                  bottom: (model.pageHeight * (base.page - 1) +
-                      model.pageHeight * base.y),
+                  bottom: model.pageHeight * (base.page - 1) +
+                      model.pageHeight * base.y,
                   child: AnimatedOpacity(
                     opacity: model.baseGlow,
                     curve: Curves.easeInCubic,
@@ -196,7 +205,8 @@ class ActiveMilestoneFrontGlow extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
         properties: [
           JourneyServiceProperties.BaseGlow,
-          JourneyServiceProperties.AvatarPosition
+          JourneyServiceProperties.AvatarPosition,
+          JourneyServiceProperties.Pages,
         ],
         builder: (context, model, properties) {
           final MilestoneModel milestone = model.currentMilestoneList

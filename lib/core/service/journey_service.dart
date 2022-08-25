@@ -40,11 +40,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   double pageWidth;
   double pageHeight;
   double currentFullViewHeight;
-  int _avatarCachedMlIndex;
-  int _avatarRemoteMlIndex;
-  int lastPage;
-  int startPage;
-  int pageCount;
+  int _avatarCachedMlIndex = 1;
+  int _avatarRemoteMlIndex = 1;
+  int lastPage = 0;
+  int startPage = 0;
+  int pageCount = 0;
   double _baseGlow = 0;
   TickerProvider _vsync;
   ScrollController _mainController;
@@ -84,6 +84,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set pages(List<JourneyPage> value) {
     this._pages = value;
+    setPageItemsAndProperties();
+    notifyListeners(JourneyServiceProperties.Pages);
+  }
+
+  addMorePages(List<JourneyPage> newPages) {
+    newPages.forEach((page) {
+      this._pages.add(page);
+    });
     setPageItemsAndProperties();
     notifyListeners(JourneyServiceProperties.Pages);
   }
@@ -169,13 +177,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   //Fetching journeypages from Journey Repository
-  fetchNetworkPages() async {
-    if (pages == null || pages.isEmpty) {
-      ApiResponse<List<JourneyPage>> response = await _journeyRepo
-          .fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+  Future<void> fetchNetworkPages() async {
+    ApiResponse<List<JourneyPage>> response = await _journeyRepo
+        .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
+    if (!response.isSuccess())
+      return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
+          "Please try again in some time");
+    if (pages == null || pages.isEmpty)
       pages = response.isSuccess() ? response.model : [];
-      if (!response.isSuccess()) journeyBuildFailure = true;
-    }
+    else
+      addMorePages(response.model);
   }
 
   //Get User journey stats from userservice
@@ -349,6 +360,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     setCurrentMilestones();
     setCustomPathItems();
     setJourneyPathItems();
+    notifyListeners(JourneyServiceProperties.JourneyAssets);
   }
 
   setPageProperties() {

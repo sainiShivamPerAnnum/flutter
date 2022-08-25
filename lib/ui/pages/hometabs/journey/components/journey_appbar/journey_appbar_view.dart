@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -26,114 +27,124 @@ class JourneyAppBar extends StatelessWidget {
   final _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: SizeConfig.padding6,
-      left: SizeConfig.padding10,
-      child: SafeArea(
-          child: Container(
-        width: SizeConfig.screenWidth - SizeConfig.padding20,
-        height: SizeConfig.screenWidth * 0.32,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              child: BlurFilter(
-                  sigmaX: 6,
-                  sigmaY: 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.24),
-                    ),
-                  )),
-            ),
-            Container(
-              child: Column(children: [
-                Expanded(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => _baseUtil.openProfileDetailsScreen(),
-                          child:
-                              ProfileImageSE(radius: SizeConfig.avatarRadius),
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+      builder: (context, m, properties) {
+        return Positioned(
+          top: m.avatarRemoteMlIndex > 2
+              ? SizeConfig.padding6
+              : -SizeConfig.screenHeight / 2,
+          left: SizeConfig.padding10,
+          child: SafeArea(
+              child: Container(
+            width: SizeConfig.screenWidth - SizeConfig.padding20,
+            height: SizeConfig.screenWidth * 0.32,
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  child: BlurFilter(
+                      sigmaX: 6,
+                      sigmaY: 8,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.24),
                         ),
-                        SizedBox(width: SizeConfig.padding12),
-                        Expanded(
-                          child: PropertyChangeConsumer<UserService,
-                              UserServiceProperties>(
-                            properties: [
-                              UserServiceProperties.myUserName,
-                              UserServiceProperties.myJourneyStats
-                            ],
-                            builder: (context, model, properties) {
-                              return GestureDetector(
-                                onTap: () =>
-                                    _baseUtil.openProfileDetailsScreen(),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FittedBox(
-                                      child: Text(
-                                        "Hi ${model?.myUserName?.split(" ")?.first ?? ''}",
-                                        style: TextStyles.rajdhaniSB.title5
-                                            .colour(Colors.white),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Level ${model.userJourneyStats?.level}",
-                                      style: TextStyles.sourceSansM.body3
-                                          .colour(Colors.white.withOpacity(0.8))
-                                          .setHeight(0.8),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        FelloCoinBar(),
-                        NotificationButton()
-                      ],
-                    ),
-                  ),
+                      )),
                 ),
-                Divider(
-                    color: Colors.white.withOpacity(0.5),
-                    thickness: 0.5,
-                    height: 0.5),
-                Expanded(
-                  child: Row(
-                    children: [
-                      JourneyAppBarAssetDetailsTile(
-                        asset: Assets.digitalGoldBar,
-                        value: UserGoldQuantitySE(
-                          style: TextStyles.sourceSansSB.body1
-                              .colour(Colors.white),
+                Container(
+                  child: Column(children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding16),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => _baseUtil.openProfileDetailsScreen(),
+                              child: ProfileImageSE(
+                                  radius: SizeConfig.avatarRadius),
+                            ),
+                            SizedBox(width: SizeConfig.padding12),
+                            Expanded(
+                              child: PropertyChangeConsumer<UserService,
+                                  UserServiceProperties>(
+                                properties: [
+                                  UserServiceProperties.myUserName,
+                                  UserServiceProperties.myJourneyStats
+                                ],
+                                builder: (context, model, properties) {
+                                  return GestureDetector(
+                                    onTap: () =>
+                                        _baseUtil.openProfileDetailsScreen(),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        FittedBox(
+                                          child: Text(
+                                            "Hi ${model?.myUserName?.split(" ")?.first ?? ''}",
+                                            style: TextStyles.rajdhaniSB.title5
+                                                .colour(Colors.white),
+                                          ),
+                                        ),
+                                        Text(
+                                          "Level ${model.userJourneyStats?.level}",
+                                          style: TextStyles.sourceSansM.body3
+                                              .colour(
+                                                  Colors.white.withOpacity(0.8))
+                                              .setHeight(0.8),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            FelloCoinBar(),
+                            NotificationButton()
+                          ],
                         ),
                       ),
-                      VerticalDivider(
+                    ),
+                    Divider(
                         color: Colors.white.withOpacity(0.5),
                         thickness: 0.5,
+                        height: 0.5),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          JourneyAppBarAssetDetailsTile(
+                            asset: Assets.digitalGoldBar,
+                            value: UserGoldQuantitySE(
+                              style: TextStyles.sourceSansSB.body1
+                                  .colour(Colors.white),
+                            ),
+                          ),
+                          VerticalDivider(
+                            color: Colors.white.withOpacity(0.5),
+                            thickness: 0.5,
+                          ),
+                          JourneyAppBarAssetDetailsTile(
+                            asset: Assets.stableFello,
+                            value: Text(
+                              "₹ 3000",
+                              style: TextStyles.sourceSansSB.body1
+                                  .colour(Colors.white),
+                            ),
+                          )
+                        ],
                       ),
-                      JourneyAppBarAssetDetailsTile(
-                        asset: Assets.stableFello,
-                        value: Text(
-                          "₹ 3000",
-                          style: TextStyles.sourceSansSB.body1
-                              .colour(Colors.white),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ]),
+                    )
+                  ]),
+                ),
+              ],
             ),
-          ],
-        ),
-      )),
+          )),
+        );
+      },
     );
   }
 }
