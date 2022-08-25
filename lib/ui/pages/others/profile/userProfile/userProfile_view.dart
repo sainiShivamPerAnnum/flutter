@@ -160,6 +160,9 @@ class UserProfileForm extends StatelessWidget {
                 }
               },
             ),
+            SizedBox(
+              height: SizeConfig.padding10,
+            ),
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
@@ -175,6 +178,9 @@ class UserProfileForm extends StatelessWidget {
                 // suffixText: 'Verified',
                 inputFormatters: [],
               ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding10,
             ),
             AppTextFieldLabel(
               locale.obGenderLabel,
@@ -210,6 +216,9 @@ class UserProfileForm extends StatelessWidget {
                       ),
                     ]
                   : [],
+            ),
+            SizedBox(
+              height: SizeConfig.padding10,
             ),
             AppTextFieldLabel(
               locale.obDobLabel,
@@ -326,7 +335,7 @@ class UserProfileForm extends StatelessWidget {
                           },
                         ),
                         SizedBox(
-                          width: 16,
+                          height: SizeConfig.padding10,
                         ),
                         IconButton(
                           onPressed: model.showAndroidDatePicker,
@@ -364,7 +373,9 @@ class UserProfileForm extends StatelessWidget {
                   ),
                 ],
               ),
-
+            SizedBox(
+              height: SizeConfig.padding10,
+            ),
             AppTextFieldLabel(
               locale.obMobileLabel,
             ),

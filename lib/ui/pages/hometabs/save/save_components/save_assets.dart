@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmo
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -65,7 +66,7 @@ class SaveAssetView extends StatelessWidget {
                           height: SizeConfig.padding24,
                         ),
                         SaveTitleContainer(title: 'Transactions'),
-                        MiniTransactionCard(),
+                        Expanded(child: MiniTransactionCard()),
                       ],
                     ),
                   ),
@@ -319,7 +320,7 @@ class GoldAssetCard extends StatelessWidget {
                             SizedBox(
                               height: SizeConfig.padding26,
                             ),
-                            InkWell(
+                            CustomSaveButton(
                               onTap: () {
                                 return BaseUtil.openModalBottomSheet(
                                   addToScreenStack: true,
@@ -331,22 +332,9 @@ class GoldAssetCard extends StatelessWidget {
                                   content: RechargeModalSheet(),
                                 );
                               },
-                              child: Center(
-                                child: Container(
-                                  height: SizeConfig.screenWidth * 0.10,
-                                  width: SizeConfig.screenWidth * 0.4,
-                                  decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.8),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5)),
-                                  child: Center(
-                                    child: Text(
-                                      'SAVE',
-                                      style: TextStyles.rajdhaniSB.body1,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              title: 'Save',
+                              isFullScreen: true,
+                              width: SizeConfig.screenWidth * 0.10,
                             ),
                           ],
                         ),
