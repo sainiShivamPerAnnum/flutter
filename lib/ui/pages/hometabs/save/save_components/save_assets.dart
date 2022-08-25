@@ -334,7 +334,7 @@ class GoldAssetCard extends StatelessWidget {
                               },
                               title: 'Save',
                               isFullScreen: true,
-                              width: SizeConfig.screenWidth * 0.10,
+                              width: SizeConfig.screenWidth * 0.2,
                             ),
                           ],
                         ),
