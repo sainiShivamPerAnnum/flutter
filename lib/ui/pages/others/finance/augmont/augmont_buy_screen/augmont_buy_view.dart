@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -271,7 +272,31 @@ class AugmontBuyCard extends StatelessWidget {
               onPressed: () async {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
-                  model.initiateBuy();
+                  // model.initiateBuy();
+                  BaseUtil.openModalBottomSheet(
+                      addToScreenStack: true,
+                      backgroundColor: Colors.transparent,
+                      isBarrierDismissable: true,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.roundness12),
+                          topRight: Radius.circular(SizeConfig.roundness12)),
+                      content: Container(
+                        height: SizeConfig.screenWidth * 0.8,
+                        width: SizeConfig.screenWidth,
+                        decoration: BoxDecoration(
+                          color: UiConstants.backgroundColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness12),
+                              topRight:
+                                  Radius.circular(SizeConfig.roundness12)),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(SizeConfig.padding20),
+                          child: Column(
+                            children: [],
+                          ),
+                        ),
+                      ));
                 }
               },
             ),
