@@ -123,7 +123,11 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       ),
                     ),
                     AnimatedContainer(
-                      height: keyboardIsOpen ? SizeConfig.padding54 : 0,
+                      height: keyboardIsOpen &&
+                              (SizeConfig.viewInsets.bottom >
+                                  SizeConfig.screenHeight / 2)
+                          ? SizeConfig.padding54
+                          : 0,
                       duration: Duration(
                         milliseconds: 200,
                       ),

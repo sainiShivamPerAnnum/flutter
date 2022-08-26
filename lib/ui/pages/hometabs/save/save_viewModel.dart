@@ -231,9 +231,9 @@ class SaveViewModel extends BaseModel {
 
   navigateToVerifyVPA() {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: BankDetailsPageConfig,
-        widget: BankDetailsView());
+      state: PageState.addPage,
+      page: EditAugBankDetailsPageConfig,
+    );
   }
 
   navigateToViewAllBlogs() {

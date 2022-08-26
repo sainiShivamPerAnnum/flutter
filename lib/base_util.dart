@@ -309,18 +309,24 @@ class BaseUtil extends ChangeNotifier {
         icon: Icon(
           Icons.flag,
           size: 28.0,
-          color: Colors.white,
+          color: UiConstants.primaryColor,
         ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
+        margin: EdgeInsets.only(
+            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
+                ? SizeConfig.navBarHeight + SizeConfig.pageHorizontalMargins
+                : SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
         title: title,
         message: message,
         duration: Duration(seconds: seconds),
-        backgroundGradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
-        ),
+        // backgroundGradient: LinearGradient(
+        //   begin: Alignment.topRight,
+        //   end: Alignment.bottomLeft,
+        //   colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+        // ),
+        backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -341,14 +347,19 @@ class BaseUtil extends ChangeNotifier {
         icon: Icon(
           Icons.assignment_late,
           size: 28.0,
-          color: Colors.white,
+          color: UiConstants.tertiarySolid,
         ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
+        margin: EdgeInsets.only(
+            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
+                ? SizeConfig.navBarHeight + SizeConfig.pageHorizontalMargins
+                : SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
         title: title,
         message: message,
         duration: Duration(seconds: seconds ?? 3),
-        backgroundColor: UiConstants.negativeAlertColor,
+        backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
             color: UiConstants.negativeAlertColor,
@@ -374,8 +385,8 @@ class BaseUtil extends ChangeNotifier {
           size: 28.0,
           color: Colors.white,
         ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
         title: "No Internet",
         message: "Please check your network connection and try again",
         duration: Duration(seconds: 2),

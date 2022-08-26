@@ -45,7 +45,7 @@ class AppState extends ChangeNotifier {
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
   static bool isDrawerOpened = false;
-
+  static bool isUserSignedIn = false;
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
 

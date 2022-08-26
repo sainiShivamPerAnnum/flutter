@@ -111,6 +111,7 @@ class RootViewModel extends BaseModel {
   onInit() {
     // pages = <Widget>[Save(), Play(), Win()];
     // AppState.delegate.appState.setCurrentTabIndex = 1;
+    AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
@@ -119,6 +120,7 @@ class RootViewModel extends BaseModel {
 
   onDispose() {
     // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
+    AppState.isUserSignedIn = false;
     _fcmListener.addIncomingMessageListener(null);
   }
 

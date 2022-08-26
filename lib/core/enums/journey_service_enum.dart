@@ -6,4 +6,5 @@ enum JourneyServiceProperties {
   BaseGlow,
   Pages,
   JourneyPath,
+  JourneyBuildFailure
 }

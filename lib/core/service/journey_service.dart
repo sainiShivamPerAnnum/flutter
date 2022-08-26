@@ -19,12 +19,14 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 
 const String AVATAR_CURRENT_LEVEL = "avatarcurrentLevel";
 
@@ -34,6 +36,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final CustomLogger _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
+  final _internalOpsService = locator<InternalOpsService>();
+
   //Local Variables
   List<JourneyLevel> _levels = [];
   static bool isAvatarAnimationInProgress = false;
@@ -138,7 +142,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set journeyBuildFailure(value) {
     this._journeyBuildFailure = value;
-    notifyListeners();
+    notifyListeners(JourneyServiceProperties.JourneyBuildFailure);
   }
 
   get levels => this._levels;
@@ -158,8 +162,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     pageHeight = pageWidth * 2.165;
     await getJourneyLevels();
     await updateUserJourneyStats();
-    final res = await _journeyRepo.getJourneyLevels();
-    if (res.isSuccess()) levels = res.model;
     await fetchNetworkPages();
   }
 
@@ -180,13 +182,20 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> fetchNetworkPages() async {
     ApiResponse<List<JourneyPage>> response = await _journeyRepo
         .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
-    if (!response.isSuccess())
+    if (!response.isSuccess()) {
+      _internalOpsService.logFailure(
+        _userService.baseUser?.uid ?? '',
+        FailType.Journey,
+        {'error': "failed to fetch journey pages"},
+      );
       return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
           "Please try again in some time");
-    if (pages == null || pages.isEmpty)
-      pages = response.isSuccess() ? response.model : [];
-    else
-      addMorePages(response.model);
+    } else {
+      if (pages == null || pages.isEmpty)
+        pages = response.isSuccess() ? response.model : [];
+      else
+        addMorePages(response.model);
+    }
   }
 
   //Get User journey stats from userservice
@@ -197,15 +206,33 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Update the user Journey status
   updateUserJourneyStats() async {
-    await _userService.getUserJourneyStats();
-    _userService.userJourneyStats = _userService.userJourneyStats;
-    avatarRemoteMlIndex = _userService.userJourneyStats.mlIndex;
+    bool res = await _userService.getUserJourneyStats();
+    if (res) {
+      _userService.userJourneyStats = _userService.userJourneyStats;
+      avatarRemoteMlIndex = _userService.userJourneyStats.mlIndex;
+    } else {
+      journeyBuildFailure = true;
+      _internalOpsService.logFailure(
+        _userService.baseUser?.uid ?? '',
+        FailType.Journey,
+        {'error': "failed to fetch journey stats"},
+      );
+    }
   }
 
   //Fetch Levels of Journey
   getJourneyLevels() async {
     final res = await _journeyRepo.getJourneyLevels();
-    if (res.isSuccess()) levels = res.model;
+    if (res.isSuccess())
+      levels = res.model;
+    else {
+      journeyBuildFailure = true;
+      _internalOpsService.logFailure(
+        _userService.baseUser?.uid ?? '',
+        FailType.Journey,
+        {'error': "failed to fetch journey levels"},
+      );
+    }
   }
 
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
@@ -509,20 +536,21 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     await scrollPageToAvatarPosition();
     controller.forward().whenComplete(() {
       log("Animation Complete");
-      int gameLevelChangeResult = checkForGameLevelChange();
-      if (gameLevelChangeResult != 0)
-        BaseUtil.showPositiveAlert("Level $gameLevelChangeResult unlocked!!",
-            "New Milestones on your way!");
+      // int gameLevelChangeResult = checkForGameLevelChange();
+      // if (gameLevelChangeResult != 0)
+      BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
+          "New Milestones on your way!");
       updateAvatarLocalLevel();
       baseGlow = 1;
       Future.delayed(
           Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
 
-      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-        if (res)
-          _gtService.showInstantGoldenTicketView(
-              title: 'Congratulations!', source: GTSOURCE.newuser);
-      });
+      if (avatarRemoteMlIndex > 2)
+        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+          if (res)
+            _gtService.showInstantGoldenTicketView(
+                title: 'Congratulations!', source: GTSOURCE.newuser);
+        });
     });
   }
 }

@@ -160,7 +160,7 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 750),
+      new Duration(milliseconds: 600),
     );
 
     try {
@@ -209,8 +209,6 @@ class LauncherViewModel extends BaseModel {
       if (showOnboarding == null || showOnboarding == false //&& value
           ) {
         //show tutorial
-        PreferenceHelper.setBool(
-            PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
         return navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: OnBoardingViewPageConfig,
