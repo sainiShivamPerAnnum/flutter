@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -30,6 +31,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties>(
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
+        log("BUILD");
         return m.WebGameLeaderBoard == null || m.userProfilePicUrl.isEmpty
             ? Container(
                 margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
@@ -46,7 +48,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                 ),
               )
             : NewLeaderBoardView(
-                model: m.WebGameLeaderBoard,
+                scoreBoard: m.WebGameLeaderBoard.scoreboard,
                 userProfilePicUrl: m.userProfilePicUrl,
                 currentUserRank: m.currentUserRank,
                 isUserInTopThree: m.isUserInTopThree,
@@ -58,18 +60,19 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 
 class NewLeaderBoardView extends StatelessWidget {
   NewLeaderBoardView({
-    @required this.model,
+    @required this.scoreBoard,
     @required this.userProfilePicUrl,
     @required this.isUserInTopThree,
     @required this.currentUserRank,
   });
 
-  final LeaderboardModel model;
+  final List<ScoreBoard> scoreBoard;
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {
+    // final localScoreBoard = model.scoreboard
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,
@@ -87,24 +90,27 @@ class NewLeaderBoardView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (model.scoreboard.length >= 3)
+          if (scoreBoard.length >= 3)
             WinnerWidgets(
-              scoreboard: model.scoreboard,
+              scoreboard: scoreBoard,
               userProfilePicUrl: userProfilePicUrl,
             ),
-          if (model.scoreboard.length >= 7 &&
+          if (scoreBoard.length >= 7 &&
               !isUserInTopThree &&
               currentUserRank != 0)
             UserRank(
-              currentUserScore: model.scoreboard[currentUserRank - 1],
+              currentUserScore: scoreBoard[currentUserRank - 1],
               currentUserRank: currentUserRank,
             ),
-          RemainingRank(model: model, userProfilePicUrl: userProfilePicUrl),
-          if (model.scoreboard.length >= 7)
+          RemainingRank(
+            userProfilePicUrl: userProfilePicUrl,
+            scoreboard: scoreBoard,
+          ),
+          if (scoreBoard.length >= 7)
             SizedBox(
               height: SizeConfig.padding12,
             ),
-          if (model.scoreboard.length >= 7)
+          if (scoreBoard.length >= 7)
             TextButton(
               onPressed: () {
                 AppState.delegate.appState.currentAction = PageAction(
@@ -140,25 +146,25 @@ class NewLeaderBoardView extends StatelessWidget {
 class RemainingRank extends StatelessWidget {
   RemainingRank({
     Key key,
-    @required this.model,
     @required this.userProfilePicUrl,
+    @required this.scoreboard,
   }) : super(key: key);
-  final LeaderboardModel model;
   final List<String> userProfilePicUrl;
   final _userService = locator<UserService>();
+  final List<ScoreBoard> scoreboard;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: model.scoreboard.length <= 2
-          ? model.scoreboard.length
-          : model.scoreboard.length <= 6
-              ? model.scoreboard.length - 3
+      itemCount: scoreboard.length <= 2
+          ? scoreboard.length
+          : scoreboard.length <= 6
+              ? scoreboard.length - 3
               : 3,
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        int countedIndex = model.scoreboard.length <= 2 ? index : index + 3;
+        int countedIndex = scoreboard.length <= 2 ? index : index + 3;
         return Padding(
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.padding20,
@@ -197,7 +203,7 @@ class RemainingRank extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        '${_userService.diplayUsername(model.scoreboard[countedIndex].username)}',
+                        '${_userService.diplayUsername(scoreboard[countedIndex].username)}',
                         style: TextStyles.sourceSans.body3.setOpecity(0.8),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -207,7 +213,7 @@ class RemainingRank extends StatelessWidget {
                 ),
               ),
               Text(
-                '${(model.scoreboard[countedIndex].score).toInt()} points',
+                '${(scoreboard[countedIndex].score).toInt()} points',
                 style: TextStyles.rajdhaniM.body3,
               ),
             ],
