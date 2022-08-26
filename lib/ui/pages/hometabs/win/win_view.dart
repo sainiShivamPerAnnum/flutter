@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
@@ -48,9 +49,20 @@ class Win extends StatelessWidget {
                     model.showOldView = false;
                   });
                 },
-                child: Text(
-                  "Win View in Construction",
-                  style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Win View in Construction",
+                      style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+                    ),
+                    TextButton(
+                      child: Text("Clear Journey Local Assets Files"),
+                      onPressed: () {
+                        model.cleanJourneyAssetsFiles();
+                      },
+                    )
+                  ],
                 ),
               ),
             )
