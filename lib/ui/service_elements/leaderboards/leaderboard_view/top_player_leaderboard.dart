@@ -117,9 +117,7 @@ class TopPlayer extends StatelessWidget {
               defaultPanelState: PanelState.CLOSED,
               isDraggable: false,
               color: Colors.transparent,
-              minHeight: SizeConfig.screenHeight >= 800
-                  ? SizeConfig.screenHeight * 0.6
-                  : SizeConfig.screenHeight * 0.55,
+              minHeight: SizeConfig.screenHeight * 0.6,
               maxHeight: SizeConfig.screenHeight * 0.9,
             ),
           ),
@@ -156,6 +154,7 @@ class TopPlayer extends StatelessWidget {
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification value) {
+                log(value.metrics.pixels.toString());
                 if (value.metrics.pixels >= 60 &&
                     panelController.isPanelClosed) {
                   panelController.open();

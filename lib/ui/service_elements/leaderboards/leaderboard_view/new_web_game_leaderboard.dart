@@ -31,6 +31,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties>(
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
+        log("BUILD");
         return m.WebGameLeaderBoard == null || m.userProfilePicUrl.isEmpty
             ? Container(
                 margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
@@ -47,7 +48,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                 ),
               )
             : NewLeaderBoardView(
-                model: m.WebGameLeaderBoard,
+                scoreBoard: m.WebGameLeaderBoard.scoreboard,
                 userProfilePicUrl: m.userProfilePicUrl,
                 currentUserRank: m.currentUserRank,
                 isUserInTopThree: m.isUserInTopThree,
@@ -59,19 +60,19 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 
 class NewLeaderBoardView extends StatelessWidget {
   NewLeaderBoardView({
-    @required this.model,
+    @required this.scoreBoard,
     @required this.userProfilePicUrl,
     @required this.isUserInTopThree,
     @required this.currentUserRank,
   });
 
-  final LeaderboardModel model;
+  final List<ScoreBoard> scoreBoard;
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {
-    // final localScoreBoard = model.scoreboard.sublist(0, 4);
+    // final localScoreBoard = model.scoreboard
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,
@@ -89,27 +90,27 @@ class NewLeaderBoardView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (model.scoreboard.length >= 3)
+          if (scoreBoard.length >= 3)
             WinnerWidgets(
-              scoreboard: model.scoreboard,
+              scoreboard: scoreBoard,
               userProfilePicUrl: userProfilePicUrl,
             ),
-          if (model.scoreboard.length >= 7 &&
+          if (scoreBoard.length >= 7 &&
               !isUserInTopThree &&
               currentUserRank != 0)
             UserRank(
-              currentUserScore: model.scoreboard[currentUserRank - 1],
+              currentUserScore: scoreBoard[currentUserRank - 1],
               currentUserRank: currentUserRank,
             ),
           RemainingRank(
             userProfilePicUrl: userProfilePicUrl,
-            scoreboard: model.scoreboard,
+            scoreboard: scoreBoard,
           ),
-          if (model.scoreboard.length >= 7)
+          if (scoreBoard.length >= 7)
             SizedBox(
               height: SizeConfig.padding12,
             ),
-          if (model.scoreboard.length >= 7)
+          if (scoreBoard.length >= 7)
             TextButton(
               onPressed: () {
                 AppState.delegate.appState.currentAction = PageAction(
