@@ -111,6 +111,7 @@ class MiniTransactionCard extends StatelessWidget {
                             .colour(UiConstants.primaryColor),
                       )
                     : SizedBox(),
+                SizedBox(height: SizeConfig.padding12),
               ],
             );
           },
