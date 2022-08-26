@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cashfree_pg/cashfree_pg.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
+import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
@@ -65,7 +67,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
   final _userCoinService = locator<UserCoinService>();
-  List<ApplicationMeta> appMetaList = [];
+  List appMetaList = [];
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -221,7 +223,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   getUPIApps() async {
-    appMetaList = await UpiPay.getInstalledUpiApplications();
+    CashfreePGSDK.getUPIApps().then((value) => {appMetaList.add(value)});
+    print(appMetaList.length);
+    print(appMetaList);
   }
 
   delayedAugmontCall() async {
@@ -404,19 +408,13 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
   }
 
-  initiateBuy() async {
-    //Check if user is registered on augmont
+  processTransaction() async {
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
       _onboardUserManually();
       return;
     }
-    // if (_status == 1) {
-    //   bool res = await _onboardUser();
-    //   if (!res) await _checkRegistrationStatus();
-    //   status = checkAugmontStatus();
-    //   return;
-    // }
+
     if (couponApplyInProgress) return;
     double buyAmount = double.tryParse(goldAmountController.text);
     // checkIfCouponIsStillApplicable();
@@ -440,6 +438,69 @@ class AugmontGoldBuyViewModel extends BaseModel {
       //   'Minimum amount should be ₹ 10',
       //   'Please enter a minimum purchase amount of ₹ 10',
       // );
+      return;
+    }
+
+    if (_baseUtil.augmontDetail == null) {
+      BaseUtil.showNegativeAlert(
+        'Deposit Failed',
+        'Please try again in sometime or contact us',
+      );
+      return;
+    }
+
+    if (_baseUtil.augmontDetail.isDepLocked) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
+      );
+      return;
+    }
+    isGoldBuyInProgress = true;
+
+    bool _disabled = await _dbModel.isAugmontBuyDisabled();
+    if (_disabled != null && _disabled) {
+      isGoldBuyInProgress = false;
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        'Gold buying is currently on hold. Please try again after sometime.',
+      );
+      return;
+    }
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
+
+    try {
+      _paytmService.processTransaction(buyAmount, 'ios', 'PhonePe',
+          'UPI_INTENT', goldRates, appliedCoupon?.code ?? "");
+    } catch (e) {}
+  }
+
+  initiateBuy() async {
+    //Check if user is registered on augmont
+    if (status == STATUS_UNAVAILABLE) return;
+    if (status == STATUS_REGISTER) {
+      _onboardUserManually();
+      return;
+    }
+    if (couponApplyInProgress) return;
+    double buyAmount = double.tryParse(goldAmountController.text);
+    // checkIfCouponIsStillApplicable();
+    if (goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Gold Rates Unavailable',
+        'Please try again in sometime',
+      );
+      return;
+    }
+    if (buyAmount == null) {
+      BaseUtil.showNegativeAlert(
+        'No amount entered',
+        'Please enter an amount',
+      );
+      return;
+    }
+    if (buyAmount < 10) {
+      showMinCapText = true;
       return;
     }
 

@@ -52,6 +52,7 @@ class ApiPath {
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
   static const kCreatePaytmTransaction = "/transaction";
+  static const kProcessPaytmTransaction = "/process";
   get kCreateSubscription => "/subscription";
   get kPauseSubscription => "/subscription/pause";
   get kResumeSubscription => "/subscription/resume";

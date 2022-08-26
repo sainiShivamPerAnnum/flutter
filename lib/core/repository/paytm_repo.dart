@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -46,6 +47,40 @@ class PaytmRepository {
           CreatePaytmTransactionModel.fromMap(response);
 
       return ApiResponse<CreatePaytmTransactionModel>(
+          model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable create transaction", 400);
+    }
+  }
+
+  Future<ApiResponse<ProcessTransactionModel>> processPaytmTransaction(
+      String tempToken,
+      String osType,
+      String pspApp,
+      String orderId,
+      String paymentMode) async {
+    try {
+      final Map<String, dynamic> _body = {
+        "tempToken": tempToken,
+        "paymentMode": "UPI_INTENT",
+        "osType": osType,
+        "pspApp": pspApp,
+        "orderId": orderId
+      };
+      final _token = await _getBearerToken();
+      _logger.d("This is body: $_body");
+      final response = await APIService.instance.postData(
+          ApiPath.kProcessPaytmTransaction,
+          body: _body,
+          token: _token,
+          isAwsTxnUrl: true);
+
+      ProcessTransactionModel _responseModel =
+          ProcessTransactionModel.fromJson(response);
+
+      print(_responseModel.data.body.deepLinkInfo);
+      return ApiResponse<ProcessTransactionModel>(
           model: _responseModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());

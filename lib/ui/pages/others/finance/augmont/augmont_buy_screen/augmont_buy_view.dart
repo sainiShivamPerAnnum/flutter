@@ -298,6 +298,23 @@ class AugmontBuyCard extends StatelessWidget {
                                 'Choose a payment method',
                                 style: TextStyles.title5,
                               ),
+                              GestureDetector(
+                                onTap: () {
+                                  model.processTransaction();
+                                },
+                                child: Text(
+                                  'Paytm',
+                                  style: TextStyles.title5,
+                                ),
+                              ),
+                              Text(
+                                'PhonePe',
+                                style: TextStyles.title5,
+                              ),
+                              Text(
+                                'Google Pay',
+                                style: TextStyles.title5,
+                              ),
                               Expanded(
                                 child: ListView.builder(
                                     itemCount: 2,
