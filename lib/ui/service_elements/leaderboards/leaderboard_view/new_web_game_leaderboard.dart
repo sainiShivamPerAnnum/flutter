@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -70,6 +71,7 @@ class NewLeaderBoardView extends StatelessWidget {
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {
+    // final localScoreBoard = model.scoreboard.sublist(0, 4);
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,
@@ -99,7 +101,10 @@ class NewLeaderBoardView extends StatelessWidget {
               currentUserScore: model.scoreboard[currentUserRank - 1],
               currentUserRank: currentUserRank,
             ),
-          RemainingRank(model: model, userProfilePicUrl: userProfilePicUrl),
+          RemainingRank(
+            userProfilePicUrl: userProfilePicUrl,
+            scoreboard: model.scoreboard,
+          ),
           if (model.scoreboard.length >= 7)
             SizedBox(
               height: SizeConfig.padding12,
@@ -140,25 +145,25 @@ class NewLeaderBoardView extends StatelessWidget {
 class RemainingRank extends StatelessWidget {
   RemainingRank({
     Key key,
-    @required this.model,
     @required this.userProfilePicUrl,
+    @required this.scoreboard,
   }) : super(key: key);
-  final LeaderboardModel model;
   final List<String> userProfilePicUrl;
   final _userService = locator<UserService>();
+  final List<ScoreBoard> scoreboard;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: model.scoreboard.length <= 2
-          ? model.scoreboard.length
-          : model.scoreboard.length <= 6
-              ? model.scoreboard.length - 3
+      itemCount: scoreboard.length <= 2
+          ? scoreboard.length
+          : scoreboard.length <= 6
+              ? scoreboard.length - 3
               : 3,
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        int countedIndex = model.scoreboard.length <= 2 ? index : index + 3;
+        int countedIndex = scoreboard.length <= 2 ? index : index + 3;
         return Padding(
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.padding20,
@@ -197,7 +202,7 @@ class RemainingRank extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        '${_userService.diplayUsername(model.scoreboard[countedIndex].username)}',
+                        '${_userService.diplayUsername(scoreboard[countedIndex].username)}',
                         style: TextStyles.sourceSans.body3.setOpecity(0.8),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -207,7 +212,7 @@ class RemainingRank extends StatelessWidget {
                 ),
               ),
               Text(
-                '${(model.scoreboard[countedIndex].score).toInt()} points',
+                '${(scoreboard[countedIndex].score).toInt()} points',
                 style: TextStyles.rajdhaniM.body3,
               ),
             ],

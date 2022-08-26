@@ -160,7 +160,7 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 750),
+      new Duration(milliseconds: 600),
     );
 
     try {
