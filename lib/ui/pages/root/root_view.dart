@@ -120,52 +120,52 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S();
-    return
-        // Consumer<AppState>(
-        //   builder: (ctx, m, child) =>
-        PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
-      builder: (context, m, properties) {
-        return Positioned(
-          bottom: m.avatarRemoteMlIndex > 2
-              ? 0
-              : -SizeConfig
-                  .navBarHeight, //SizeConfig.pageHorizontalMargins / 2,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.navBarHeight,
-            decoration: BoxDecoration(
-              color: Colors.black,
-            ),
-            child: NavBar(
-              itemTapped: (int index) => model.onItemTapped(index),
-              currentIndex: AppState.delegate.appState.getCurrentTabIndex,
-              items: [
-                NavBarItemData(
-                  locale.navBarJourney,
-                  Assets.navJourneyActive,
-                  Assets.navJourneyInactive,
-                ),
-                NavBarItemData(
-                  locale.navBarPlay,
-                  Assets.navPlayActive,
-                  Assets.navPlayInactive,
-                ),
-                NavBarItemData(
-                  locale.navBarSave,
-                  Assets.navSaveActive,
-                  Assets.navSaveInactive,
-                ),
-                NavBarItemData(
-                  locale.navBarWin,
-                  Assets.navWinActive,
-                  Assets.navWinInactive,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    return Consumer<AppState>(
+        builder: (ctx, m, child) =>
+            PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+              properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+              builder: (context, m, properties) {
+                return Positioned(
+                  bottom: m.avatarRemoteMlIndex > 2
+                      ? 0
+                      : -SizeConfig
+                          .navBarHeight, //SizeConfig.pageHorizontalMargins / 2,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.navBarHeight,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: NavBar(
+                      itemTapped: (int index) => model.onItemTapped(index),
+                      currentIndex:
+                          AppState.delegate.appState.getCurrentTabIndex,
+                      items: [
+                        NavBarItemData(
+                          locale.navBarJourney,
+                          Assets.navJourneyActive,
+                          Assets.navJourneyInactive,
+                        ),
+                        NavBarItemData(
+                          locale.navBarPlay,
+                          Assets.navPlayActive,
+                          Assets.navPlayInactive,
+                        ),
+                        NavBarItemData(
+                          locale.navBarSave,
+                          Assets.navSaveActive,
+                          Assets.navSaveInactive,
+                        ),
+                        NavBarItemData(
+                          locale.navBarWin,
+                          Assets.navWinActive,
+                          Assets.navWinInactive,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ));
   }
 }

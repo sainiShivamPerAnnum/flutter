@@ -54,7 +54,15 @@ class UserProfileVM extends BaseModel {
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
-  bool isUpdaingUserDetails = false;
+  bool _isUpdaingUserDetails = false;
+
+  get isUpdaingUserDetails => this._isUpdaingUserDetails;
+
+  set isUpdaingUserDetails(value) {
+    this._isUpdaingUserDetails = value;
+    notifyListeners();
+  }
+
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
   bool _hasInputError = false;

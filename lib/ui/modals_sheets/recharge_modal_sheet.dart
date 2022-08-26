@@ -15,7 +15,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class RechargeModalSheet extends StatelessWidget {
   final int amount;
   final bool skipMl;
-  const RechargeModalSheet({Key key, this.amount = 0, this.skipMl = false})
+  const RechargeModalSheet({Key key, this.amount = 250, this.skipMl = false})
       : super(key: key);
 
   @override

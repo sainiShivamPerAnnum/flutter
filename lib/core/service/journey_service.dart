@@ -145,7 +145,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     notifyListeners(JourneyServiceProperties.JourneyBuildFailure);
   }
 
-  get levels => this._levels;
+  List<JourneyLevel> get levels => this._levels;
 
   set levels(value) {
     this._levels = value;
@@ -181,6 +181,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Fetching journeypages from Journey Repository
   Future<void> fetchNetworkPages() async {
+    final int fetches = (_userService.userJourneyStats.page / 2).ceil();
+    for (int i = 0; i < fetches; i++) {
+      //fetch all the pages till where user is currently on
+    }
     ApiResponse<List<JourneyPage>> response = await _journeyRepo
         .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
     if (!response.isSuccess()) {
@@ -376,6 +380,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.i(
         "Avatar Remote Index: $avatarRemoteMlIndex && Avatar Cached Ml Index: $avatarCachedMlIndex");
     return avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
+  }
+
+  getMilestoneLevelFromIndex(int index) {
+    levels.forEach((levelData) {
+      if (index >= levelData.start && index <= levelData.end)
+        return levelData.level;
+    });
+    return null;
   }
 
 //---------------------------------|-HELPER METHODS-END-|---------------------------------

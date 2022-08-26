@@ -334,6 +334,7 @@ class LevelBlurView extends StatelessWidget {
                             top: 0,
                             child: BlurFilter(
                               child: Container(
+                                color: Colors.transparent,
                                 height: model.pageHeight *
                                     (1 - levelData.breakpoint),
                                 width: model.pageWidth,

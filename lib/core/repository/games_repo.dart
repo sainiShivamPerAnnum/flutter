@@ -32,6 +32,7 @@ class GameRepo extends BaseRepo {
       return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
       logger.e("Unable to fetch games ${e.toString()}");
+      allgames = [];
       return ApiResponse.withError("Unable to fetch games", 400);
     }
   }
