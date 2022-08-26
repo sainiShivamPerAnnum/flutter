@@ -28,7 +28,6 @@ class _JourneyAssetPathState extends State<JourneyAssetPath> {
       width: widget.model.pageWidth,
       child: Stack(
         children: List.generate(widget.model.journeyPathItemsList.length, (i) {
-          log("Path Assets ${widget.model.journeyPathItemsList[i].asset.name} : page: ${widget.model.journeyPathItemsList[i].page}  z: ${widget.model.journeyPathItemsList[i].z} x: ${widget.model.journeyPathItemsList[i].x} x: ${widget.model.journeyPathItemsList[i].y} ");
           return Positioned(
             left:
                 widget.model.pageWidth * widget.model.journeyPathItemsList[i].x,

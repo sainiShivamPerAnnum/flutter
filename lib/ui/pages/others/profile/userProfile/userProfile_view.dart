@@ -163,7 +163,7 @@ class UserProfileForm extends StatelessWidget {
               },
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obEmailLabel,
@@ -183,7 +183,7 @@ class UserProfileForm extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obGenderLabel,
@@ -221,7 +221,7 @@ class UserProfileForm extends StatelessWidget {
                   : [],
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obDobLabel,
@@ -377,7 +377,7 @@ class UserProfileForm extends StatelessWidget {
                 ],
               ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obMobileLabel,
