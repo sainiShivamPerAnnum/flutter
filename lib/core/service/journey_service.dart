@@ -171,8 +171,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     mainController?.dispose();
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
+    resetJourneyData();
     PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
-    levels = [];
+    levels.clear();
     vsync = null;
     pages.clear();
     log("Journey Service dumped");
@@ -192,7 +193,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           "Please try again in some time");
     } else {
       if (pages == null || pages.isEmpty)
-        pages = response.isSuccess() ? response.model : [];
+        pages = response.model;
       else
         addMorePages(response.model);
     }
@@ -330,16 +331,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Check if there is a need to blur next level milestones
   JourneyLevel getJourneyLevelBlurData() {
     int lastMileStoneIndex = currentMilestoneList.last.index;
-    // int userCurrentLevel = userJourneyStats.level;
-    log("Current Data Lastmilestone ${lastMileStoneIndex}");
+    // // int userCurrentLevel = userJourneyStats.level;
+    // log("Current Data Lastmilestone ${lastMileStoneIndex}");
 
-    int userCurrentMilestoneIndex = _userService.userJourneyStats.mlIndex;
+    // int userCurrentMilestoneIndex = avatarRemoteMlIndex;
     log("levelData ${levels[0].toString()}");
 
     JourneyLevel currentlevelData = levels.firstWhere(
         (level) =>
-            userCurrentMilestoneIndex >= level.start &&
-            userCurrentMilestoneIndex <= level.end,
+            avatarRemoteMlIndex >= level.start &&
+            avatarRemoteMlIndex <= level.end,
         orElse: null);
 
     if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
@@ -394,6 +395,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     currentFullViewHeight = pageHeight * pageCount;
     startPage = pages[0].page;
     lastPage = pages[pages.length - 1].page;
+    log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage");
   }
 
   setCurrentMilestones() {
@@ -415,6 +417,17 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     pages.forEach((page) {
       journeyPathItemsList.addAll(page.paths);
     });
+  }
+
+  resetJourneyData() {
+    pageCount = 0;
+    currentFullViewHeight = pageHeight * pageCount;
+    startPage = 1;
+    lastPage = 2;
+    currentMilestoneList.clear();
+    customPathDataList.clear();
+    journeyPathItemsList.clear();
+    log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage currentMilestoneList length: ${currentMilestoneList.length} customPathDataList length: ${customPathDataList.length} journeyPathItemsList length: ${journeyPathItemsList.length}");
   }
   //-------------------|-PAGE ITEMS AND PROPERTIES SETUP METHODS-END-|--------------------
 

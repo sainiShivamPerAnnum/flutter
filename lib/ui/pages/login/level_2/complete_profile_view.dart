@@ -70,61 +70,62 @@ class _Level2ViewState extends State<CompleteProfileView> {
               ),
             ),
             Positioned(
-              bottom: SizeConfig.pageHorizontalMargins +
-                  MediaQuery.of(context).viewInsets.bottom,
+              bottom: SizeConfig.pageHorizontalMargins,
               // alignment: Alignment.bottomCenter,
-              child: (model.currentPage == 0)
-                  ? Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              model.handleNextButtonTap();
-                            },
-                            child: Center(
-                              child: Container(
-                                width: SizeConfig.screenWidth * 0.136,
-                                height: SizeConfig.screenWidth * 0.136,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xFF01656B),
-                                ),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    'assets/svg/arrow_svg.svg',
-                                    height: SizeConfig.screenWidth * 0.066,
-                                    width: SizeConfig.screenWidth * 0.069,
-                                    fit: BoxFit.cover,
+              child: SafeArea(
+                child: (model.currentPage == 0)
+                    ? Container(
+                        width: SizeConfig.screenWidth,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                model.handleNextButtonTap();
+                              },
+                              child: Center(
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.136,
+                                  height: SizeConfig.screenWidth * 0.136,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFF01656B),
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      'assets/svg/arrow_svg.svg',
+                                      height: SizeConfig.screenWidth * 0.066,
+                                      width: SizeConfig.screenWidth * 0.069,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  : Container(
-                      width: SizeConfig.screenWidth,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: model.isUpdaingUserDetails ||
-                              model.isSigningInWithGoogle
-                          ? SpinKitThreeBounce(
-                              color: Colors.white,
-                              size: SizeConfig.iconSize0,
                             )
-                          : AppPositiveBtn(
-                              btnText:
-                                  model.currentPage == 3 ? 'Finish' : 'Next',
-                              onPressed: () {
-                                model.handleNextButtonTap();
-                              },
-                              width: SizeConfig.screenWidth,
-                            ),
-                    ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        width: SizeConfig.screenWidth,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: model.isUpdaingUserDetails ||
+                                model.isSigningInWithGoogle
+                            ? SpinKitThreeBounce(
+                                color: Colors.white,
+                                size: SizeConfig.iconSize0,
+                              )
+                            : AppPositiveBtn(
+                                btnText:
+                                    model.currentPage == 3 ? 'Finish' : 'Next',
+                                onPressed: () {
+                                  model.handleNextButtonTap();
+                                },
+                                width: SizeConfig.screenWidth,
+                              ),
+                      ),
+              ),
             ),
             Positioned(
               top: SizeConfig.padding32,

@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
@@ -217,12 +218,19 @@ class _JourneyViewState extends State<JourneyView>
                                           horizontal: SizeConfig.padding4,
                                           vertical:
                                               SizeConfig.pageHorizontalMargins),
-                                      leading: CircleAvatar(
+                                      leading: GestureDetector(
+                                        onDoubleTap: () {
+                                          AppState.delegate
+                                              .parseRoute(Uri.parse("profile"));
+                                        },
+                                        child: CircleAvatar(
                                           backgroundColor: Colors.black,
                                           radius: SizeConfig.avatarRadius * 2,
                                           child: SvgPicture.asset(
                                               Assets.aFelloToken,
-                                              height: SizeConfig.padding32)),
+                                              height: SizeConfig.padding32),
+                                        ),
+                                      ),
                                       title: FittedBox(
                                         child: Text(
                                           "Welcome to Fello",

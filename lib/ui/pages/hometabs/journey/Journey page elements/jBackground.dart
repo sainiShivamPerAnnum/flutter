@@ -44,17 +44,17 @@ class _BackgroundState extends State<Background> {
           padding: EdgeInsets.zero,
           itemBuilder: (ctx, i) {
             return Transform.translate(
-              offset: Offset(0, i > 0 ? 0.1 : 0),
+              offset: Offset(0, i > 0 ? 0.1 * i : 0),
               child: Container(
                 width: widget.model.pageWidth,
                 height: widget.model.pageHeight,
                 decoration: BoxDecoration(
                   // backgroundBlendMode: BlendMode.dstATop,
                   color: widget.model.pages[i].bgAsset.colors.last,
-                  // border: Border(
-                  //   top: BorderSide(
-                  //       color: widget.model.pages[i].bgAsset.colors.first),
-                  // ),
+                  border: Border(
+                    top: BorderSide(
+                        color: widget.model.pages[i].bgAsset.colors.first),
+                  ),
                   gradient: LinearGradient(
                       colors: widget.model.pages[i].bgAsset.colors,
                       stops: widget.model.pages[i].bgAsset.stops,
