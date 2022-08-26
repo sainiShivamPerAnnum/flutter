@@ -154,6 +154,7 @@ class RemainingRank extends StatelessWidget {
           : model.scoreboard.length <= 6
               ? model.scoreboard.length - 3
               : 3,
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {

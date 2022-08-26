@@ -104,14 +104,20 @@ class LauncherViewModel extends BaseModel {
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
       _logger.d(
-          'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
+        'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
+      );
       if (now <= BaseRemoteConfig.invalidationBefore) {
         await new CacheService().invalidateAll();
       }
       // test
       // await new CacheService().invalidateAll();
-      await _userCoinService.init();
-      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
+      if (userService.isUserOnborded) await _userCoinService.init();
+      await Future.wait(
+        [
+          _baseUtil.init(),
+          _fcmListener.setupFcm(),
+        ],
+      );
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -133,7 +139,7 @@ class LauncherViewModel extends BaseModel {
       );
     }
     _httpModel.init();
-    _tambolaService.init();
+    if (userService.isUserOnborded) _tambolaService.init();
     _timer3.cancel();
 
     // await trace.stop();
@@ -154,7 +160,7 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 800),
+      new Duration(milliseconds: 750),
     );
 
     try {

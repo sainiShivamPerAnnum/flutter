@@ -84,62 +84,52 @@ class UsernameInputScreenViewModel extends BaseModel {
         ),
       );
     } else if (response == UsernameResponse.EMPTY)
-      return FittedBox(
-        child: Text("username cannot be empty",
-            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
+      return Text(
+        "username cannot be empty",
+        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
       );
     else if (response == UsernameResponse.UNAVAILABLE)
-      return FittedBox(
-        child: Text(
-          "@${usernameController.text.trim()} is not available",
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.w500,
-          ),
+      return Text(
+        "@${usernameController.text.trim()} is not available",
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.w500,
         ),
       );
     else if (response == UsernameResponse.AVAILABLE) {
-      return FittedBox(
-        child: Text(
-          "@${usernameController.text.trim()} is available",
-          style: TextStyle(
-            color: UiConstants.primaryColor,
-            fontWeight: FontWeight.w500,
-          ),
+      return Text(
+        "@${usernameController.text.trim()} is available",
+        style: TextStyle(
+          color: UiConstants.primaryColor,
+          fontWeight: FontWeight.w500,
         ),
       );
     } else if (response == UsernameResponse.INVALID) {
       if (usernameController.text.trim().length < 4)
-        return FittedBox(
-          child: Text(
-            "please enter a username with more than 3 characters.",
-            maxLines: 2,
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.w500,
-            ),
+        return Text(
+          "please enter a username with more than 3 characters.",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
           ),
         );
       else if (usernameController.text.trim().length > 20)
-        return FittedBox(
-          child: Text(
-            "please enter a username with less than 20 characters.",
-            maxLines: 2,
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.w500,
-            ),
+        return Text(
+          "please enter a username with less than 20 characters.",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
           ),
         );
       else
-        return FittedBox(
-          child: Text(
-            "@${usernameController.text.trim()} is invalid",
-            maxLines: 2,
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.w500,
-            ),
+        return Text(
+          "@${usernameController.text.trim()} is invalid",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
           ),
         );
     }

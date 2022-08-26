@@ -97,7 +97,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
                                           child: Image.file(
                                             File(widget.model
                                                 .selectedProfilePicture.path),
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
                                 ),
@@ -109,8 +109,9 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
                                   left: SizeConfig.padding8,
                                 ),
                                 child: SvgPicture.asset(
-                                    'assets/svg/userAvatars/AV$idx.svg',
-                                    fit: BoxFit.cover),
+                                  'assets/svg/userAvatars/AV$idx.svg',
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                       ),
                     ),
