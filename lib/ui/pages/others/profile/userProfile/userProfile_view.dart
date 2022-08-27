@@ -53,10 +53,12 @@ class UserProfileDetails extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: SizeConfig.padding16),
               child: model.isUpdaingUserDetails
-                  ? SpinKitThreeBounce(
-                      color: Colors.white,
-                      size: SizeConfig.padding16,
-                    )
+                  ? Padding(
+                      padding: EdgeInsets.only(right: SizeConfig.padding12),
+                      child: SpinKitThreeBounce(
+                        color: Colors.white,
+                        size: SizeConfig.padding16,
+                      ))
                   : (!model.inEditMode
                       ? TextButton.icon(
                           icon: Icon(Icons.edit_outlined,

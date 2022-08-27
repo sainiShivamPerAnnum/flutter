@@ -181,10 +181,33 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Fetching journeypages from Journey Repository
   Future<void> fetchNetworkPages() async {
-    final int fetches = (_userService.userJourneyStats.page / 2).ceil();
+    JourneyLevel currentLevel = levels.firstWhere(
+        (levelData) => levelData.level == _userService.userJourneyStats.level);
+    final int fetches = (currentLevel.pageEnd / 2).ceil();
     for (int i = 0; i < fetches; i++) {
       //fetch all the pages till where user is currently on
+      ApiResponse<List<JourneyPage>> response =
+          await _journeyRepo.fetchJourneyPages(
+              pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
+      if (!response.isSuccess()) {
+        _internalOpsService.logFailure(
+          _userService.baseUser?.uid ?? '',
+          FailType.Journey,
+          {'error': "failed to fetch journey pages"},
+        );
+        return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
+            "Please try again in some time");
+      } else {
+        if (pages == null || pages.isEmpty)
+          pages = response.model;
+        else
+          addMorePages(response.model);
+      }
     }
+  }
+
+  //Fetching additional journeypages from Journey Repository
+  Future<void> fetchMoreNetworkPages() async {
     ApiResponse<List<JourneyPage>> response = await _journeyRepo
         .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
     if (!response.isSuccess()) {

@@ -155,7 +155,7 @@ class JourneyPageViewModel extends BaseModel {
     if (!canMorePagesBeFetched()) return;
     isLoading = true;
     final prevPageslength = pages.length;
-    await _journeyService.fetchNetworkPages();
+    await _journeyService.fetchMoreNetworkPages();
     logger.d("Total Pages length: ${pages.length}");
     if (prevPageslength < pages.length)
       await mainController.animateTo(

@@ -45,24 +45,25 @@ class GOWCard extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Hero(
-                        tag: model.gow.code,
-                        child: Container(
-                          height: SizeConfig.screenWidth * 0.474,
-                          width: SizeConfig.screenWidth,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                    model.gow.thumbnailUri),
-                                fit: BoxFit.cover),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness12),
-                              topRight: Radius.circular(SizeConfig.roundness12),
-                            ),
+                      // Hero(
+                      //   tag: model.gow.code,
+                      // child:
+                      Container(
+                        height: SizeConfig.screenWidth * 0.474,
+                        width: SizeConfig.screenWidth,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                  model.gow.thumbnailUri),
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness12),
+                            topRight: Radius.circular(SizeConfig.roundness12),
                           ),
                         ),
                       ),
+                      // ),
                       Container(
                         height: SizeConfig.screenWidth * 0.213,
                         width: SizeConfig.screenWidth,
