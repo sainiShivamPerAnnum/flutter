@@ -9,7 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';

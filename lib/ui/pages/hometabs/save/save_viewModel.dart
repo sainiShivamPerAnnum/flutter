@@ -13,7 +13,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
@@ -39,12 +39,13 @@ class SaveViewModel extends BaseModel {
     UiConstants.kBlogCardRandomColor4,
     UiConstants.kBlogCardRandomColor5
   ];
-  double nonWithdrawableQnt = 0.0;
-  double withdrawableQnt = 0.0;
+  double _nonWithdrawableQnt = 0.0;
+  double _withdrawableQnt = 0.0;
 
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
   bool _isLoading = false;
+  bool _isChallenegsLoading = false;
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
   Map<String, dynamic> _filteredList = {};
@@ -61,6 +62,7 @@ class SaveViewModel extends BaseModel {
   List<EventModel> get ongoingEvents => this._ongoingEvents;
   List<BlogPostModel> get blogPosts => this._blogPosts;
   bool get isLoading => _isLoading;
+  bool get isChallengesLoading => _isChallenegsLoading;
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
   Map<String, dynamic> get filteredBlogList => _filteredList;
@@ -72,6 +74,8 @@ class SaveViewModel extends BaseModel {
   bool get isSellButtonVisible => _isSellButtonVisible;
   UserService get userService => _userService;
   UserFundWallet get userFundWallet => _userService.userFundWallet;
+  double get nonWithdrawableQnt => _nonWithdrawableQnt;
+  double get withdrawableQnt => _withdrawableQnt;
 
   set ongoingEvents(List<EventModel> value) {
     this._ongoingEvents = value;
@@ -80,6 +84,16 @@ class SaveViewModel extends BaseModel {
 
   set blogPosts(List<BlogPostModel> value) {
     this._blogPosts = value;
+    notifyListeners();
+  }
+
+  set setWithdrawableQnt(double value) {
+    this._withdrawableQnt = value;
+    notifyListeners();
+  }
+
+  set setNonWithdrawableQnt(double value) {
+    this._nonWithdrawableQnt = value;
     notifyListeners();
   }
 
@@ -92,8 +106,8 @@ class SaveViewModel extends BaseModel {
     _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
     getCampaignEvents();
-    fetchLockedGoldQnt();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      fetchLockedGoldQnt();
       _sellService.init();
       updateSellButtonDetails();
     });
@@ -106,6 +120,11 @@ class SaveViewModel extends BaseModel {
     notifyListeners();
   }
 
+  void updateIsChallengesLoading(bool value) {
+    _isChallenegsLoading = value;
+    notifyListeners();
+  }
+
   openProfile() {
     _baseUtil.openProfileDetailsScreen();
   }
@@ -113,7 +132,7 @@ class SaveViewModel extends BaseModel {
   updateSellButtonDetails() async {
     _isKYCVerified = _sellService.isKYCVerified;
     _isVPAVerified = _sellService.isVPAVerified;
-    if (withdrawableQnt < nonWithdrawableQnt) {
+    if (withdrawableQnt <= nonWithdrawableQnt) {
       _isLockInReached = true;
     }
     _isGoldSaleActive = _baseUtil.augmontDetail.isSellLocked;
@@ -122,7 +141,7 @@ class SaveViewModel extends BaseModel {
   }
 
   getCampaignEvents() async {
-    updateIsLoading(true);
+    updateIsChallengesLoading(true);
     final response = await _campaignRepo.getOngoingEvents();
     if (response.code == 200) {
       ongoingEvents = response.model;
@@ -130,31 +149,34 @@ class SaveViewModel extends BaseModel {
       ongoingEvents.forEach((element) {
         print(element.toString());
       });
-    } else
+    } else {
       ongoingEvents = [];
-    updateIsLoading(false);
+    }
+    updateIsChallengesLoading(false);
   }
 
   fetchLockedGoldQnt() async {
-    refresh();
     await _userService.getUserFundWalletData();
     ApiResponse<double> qunatityApiResponse =
         await _paymentRepo.getWithdrawableAugGoldQuantity();
     if (qunatityApiResponse.code == 200) {
-      withdrawableQnt = qunatityApiResponse.model;
-      if (withdrawableQnt == null || withdrawableQnt < 0) withdrawableQnt = 0.0;
+      setWithdrawableQnt = qunatityApiResponse.model;
+      if (_withdrawableQnt == null || _withdrawableQnt < 0) {
+        setWithdrawableQnt = 0.0;
+      }
       if (userFundWallet == null ||
           userFundWallet.augGoldQuantity == null ||
-          userFundWallet.augGoldQuantity <= 0.0)
-        nonWithdrawableQnt = 0.0;
-      else
-        nonWithdrawableQnt = BaseUtil.digitPrecision(
-            math.max(0.0, userFundWallet.augGoldQuantity - withdrawableQnt),
+          userFundWallet.augGoldQuantity <= 0.0) {
+        setNonWithdrawableQnt = 0.0;
+      } else {
+        setNonWithdrawableQnt = BaseUtil.digitPrecision(
+            math.max(0.0, userFundWallet.augGoldQuantity - _withdrawableQnt),
             4,
             false);
+      }
     } else {
-      nonWithdrawableQnt = 0.0;
-      withdrawableQnt = 0.0;
+      setNonWithdrawableQnt = 0.0;
+      setWithdrawableQnt = 0.0;
     }
     refresh();
   }

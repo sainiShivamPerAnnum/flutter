@@ -226,13 +226,13 @@ class CampaignCardSection extends StatelessWidget {
       child: Container(
           height: SizeConfig.screenWidth * 0.51,
           child: ListView.builder(
-              itemCount: saveViewModel.isLoading
+              itemCount: saveViewModel.isChallengesLoading
                   ? 2
                   : saveViewModel.ongoingEvents.length,
               physics: BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                return saveViewModel.isLoading
+                return saveViewModel.isChallengesLoading
                     ? Shimmer.fromColors(
                         child: Padding(
                           padding: EdgeInsets.only(right: SizeConfig.padding10),

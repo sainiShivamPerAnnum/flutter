@@ -7,6 +7,7 @@ import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -32,6 +33,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _signzyRepository = locator<SignzyRepository>();
   final _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _sellService = locator<SellService>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode panFocusNode = FocusNode();
@@ -161,6 +163,7 @@ class KYCDetailsViewModel extends BaseModel {
         }
         _baseUtil.setKycVerified(true);
         _userService.isSimpleKycVerified = true;
+        _sellService.setKYCVerified = true;
         isUpadtingKycDetails = false;
       }
 

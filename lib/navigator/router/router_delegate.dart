@@ -14,7 +14,7 @@ import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmation_view.dart';
 import 'package:felloapp/ui/pages/login/level_2/complete_profile_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';

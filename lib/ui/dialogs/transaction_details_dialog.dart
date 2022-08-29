@@ -189,6 +189,24 @@ class _TransactionDetailsBottomSheetState
                   )
                 ],
               ),
+            if (widget.transaction.subType ==
+                    UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                widget.transaction.type ==
+                    UserTransaction.TRAN_STATUS_PROCESSING)
+              Row(
+                children: [
+                  referralTile(
+                    'Sell Rate:',
+                    '₹ ${widget.transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                    Colors.redAccent.withOpacity(0.6),
+                  ),
+                  referralTile(
+                    'Gold Sold:',
+                    '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                    Colors.redAccent.withOpacity(0.6),
+                  )
+                ],
+              ),
             Row(
               children: [
                 referralTile(
