@@ -31,10 +31,8 @@ class MiniTransactionCard extends StatelessWidget {
                 Container(
                   child: model.state == ViewState.Busy || m.txnList == null
                       ? Container(
+                          height: SizeConfig.screenWidth * 0.5,
                           alignment: Alignment.center,
-                          margin: EdgeInsets.only(
-                            bottom: SizeConfig.padding24,
-                          ),
                           child: Center(child: CircularProgressIndicator()),
                         )
                       : (m.txnList.length == 0
@@ -113,6 +111,7 @@ class MiniTransactionCard extends StatelessWidget {
                             .colour(UiConstants.primaryColor),
                       )
                     : SizedBox(),
+                SizedBox(height: SizeConfig.padding12),
               ],
             );
           },

@@ -86,20 +86,21 @@ class TopPlayer extends StatelessWidget {
                     child: SvgPicture.asset('assets/temp/chevron_left.svg'),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Leaderboard",
-                      style: TextStyles.rajdhaniSB.title4,
-                    ),
-                    Text(
-                      "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
-                      style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kTextColor2),
-                    ),
-                  ],
-                ),
+                if (model.lastupdated != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Leaderboard",
+                        style: TextStyles.rajdhaniSB.title4,
+                      ),
+                      Text(
+                        "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor2),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -115,10 +116,8 @@ class TopPlayer extends StatelessWidget {
               controller: panelController,
               defaultPanelState: PanelState.CLOSED,
               isDraggable: false,
-              color: UiConstants.kBackgroundColor,
-              minHeight: SizeConfig.screenHeight >= 800
-                  ? SizeConfig.screenHeight * 0.6
-                  : SizeConfig.screenHeight * 0.55,
+              color: Colors.transparent,
+              minHeight: SizeConfig.screenHeight * 0.6,
               maxHeight: SizeConfig.screenHeight * 0.9,
             ),
           ),
@@ -155,6 +154,7 @@ class TopPlayer extends StatelessWidget {
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification value) {
+                log(value.metrics.pixels.toString());
                 if (value.metrics.pixels >= 60 &&
                     panelController.isPanelClosed) {
                   panelController.open();

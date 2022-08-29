@@ -52,7 +52,6 @@ class Milestones extends StatelessWidget {
             height: model.currentFullViewHeight,
             child: Stack(
               children: List.generate(model.currentMilestoneList.length, (i) {
-                log("Milestone: ${model.currentMilestoneList[i].actionUri} || current level: ${model.avatarActiveMilestoneLevel}");
                 if (model.currentMilestoneList[i].index ==
                     model.avatarActiveMilestoneLevel) {
                   switch (model.currentMilestoneList[i].animType) {

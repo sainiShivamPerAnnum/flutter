@@ -28,26 +28,26 @@ class _Level2ViewState extends State<CompleteProfileView> {
       onModelReady: (model) {},
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              NewSquareBackground(),
-              if (model.currentPage != 0)
-                Container(
-                  height: SizeConfig.screenHeight * 0.5,
-                  width: SizeConfig.screenWidth,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff135756),
-                        UiConstants.kBackgroundColor,
-                      ],
-                    ),
+        body: Stack(
+          children: [
+            NewSquareBackground(),
+            if (model.currentPage != 0)
+              Container(
+                height: SizeConfig.screenHeight * 0.5,
+                width: SizeConfig.screenWidth,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xff135756),
+                      UiConstants.kBackgroundColor,
+                    ],
                   ),
                 ),
-              Column(
+              ),
+            SafeArea(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
@@ -68,39 +68,43 @@ class _Level2ViewState extends State<CompleteProfileView> {
                   ),
                 ],
               ),
-              Positioned(
-                bottom: SizeConfig.pageHorizontalMargins,
-                // alignment: Alignment.bottomCenter,
+            ),
+            Positioned(
+              bottom: SizeConfig.pageHorizontalMargins,
+              // alignment: Alignment.bottomCenter,
+              child: SafeArea(
                 child: (model.currentPage == 0)
                     ? Container(
                         width: SizeConfig.screenWidth,
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  model.handleNextButtonTap();
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: SizeConfig.screenWidth * 0.136,
-                                    height: SizeConfig.screenWidth * 0.136,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xFF01656B),
-                                    ),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        'assets/svg/arrow_svg.svg',
-                                        height: SizeConfig.screenWidth * 0.066,
-                                        width: SizeConfig.screenWidth * 0.069,
-                                        fit: BoxFit.cover,
-                                      ),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                model.handleNextButtonTap();
+                              },
+                              child: Center(
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.136,
+                                  height: SizeConfig.screenWidth * 0.136,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFF01656B),
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      'assets/svg/arrow_svg.svg',
+                                      height: SizeConfig.screenWidth * 0.066,
+                                      width: SizeConfig.screenWidth * 0.069,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                              )
-                            ]))
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                     : Container(
                         width: SizeConfig.screenWidth,
                         alignment: Alignment.center,
@@ -122,16 +126,16 @@ class _Level2ViewState extends State<CompleteProfileView> {
                               ),
                       ),
               ),
-              Positioned(
-                top: SizeConfig.padding32,
-                left: SizeConfig.padding24,
-                child: Text(
-                  "${model.currentPage + 1}/4",
-                  style: TextStyles.sourceSans.body3.setOpecity(0.7),
-                ),
+            ),
+            Positioned(
+              top: SizeConfig.padding32,
+              left: SizeConfig.padding24,
+              child: Text(
+                "${model.currentPage + 1}/4",
+                style: TextStyles.sourceSans.body3.setOpecity(0.7),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

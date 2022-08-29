@@ -69,7 +69,9 @@ class WinnerWidgets extends StatelessWidget {
         if (rank == 0)
           CustomPaint(
             painter: WinnerBackGroundPainter(
-                context: context, isSpotLightVisible: isSpotLightVisible),
+              context: context,
+              isSpotLightVisible: isSpotLightVisible,
+            ),
             size: Size(
               SizeConfig.screenWidth * 0.3333, // 120
               SizeConfig.screenWidth * 0.6666, // 240
@@ -112,6 +114,7 @@ class WinnerWidgets extends StatelessWidget {
                         height: rank == 0
                             ? SizeConfig.screenWidth * 0.2344
                             : SizeConfig.screenWidth * 0.2083,
+                        fit: BoxFit.fill,
                       )
                     : ClipOval(
                         child: CachedNetworkImage(
@@ -122,6 +125,7 @@ class WinnerWidgets extends StatelessWidget {
                           height: rank == 0
                               ? SizeConfig.screenWidth * 0.2344
                               : SizeConfig.screenWidth * 0.2083,
+                          fit: BoxFit.fill,
                         ),
                       ),
               ),

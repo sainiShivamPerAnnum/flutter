@@ -54,7 +54,15 @@ class UserProfileVM extends BaseModel {
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
-  bool isUpdaingUserDetails = false;
+  bool _isUpdaingUserDetails = false;
+
+  get isUpdaingUserDetails => this._isUpdaingUserDetails;
+
+  set isUpdaingUserDetails(value) {
+    this._isUpdaingUserDetails = value;
+    notifyListeners();
+  }
+
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
   bool _hasInputError = false;
@@ -205,7 +213,7 @@ class UserProfileVM extends BaseModel {
               'gender': _userService.baseUser.gender,
             },
           ).then((ApiResponse<bool> res) {
-            if (res.model) {
+            if (res.isSuccess()) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);
               _userService.setGender(_userService.baseUser.gender);
@@ -222,7 +230,7 @@ class UserProfileVM extends BaseModel {
               isUpdaingUserDetails = false;
               notifyListeners();
               BaseUtil.showNegativeAlert(
-                "Action failed",
+                "Profile Update failed",
                 "Please try again in some time",
               );
             }
@@ -272,7 +280,10 @@ class UserProfileVM extends BaseModel {
       return "M";
     else if (gen == 0)
       return "F";
-    else if (gen == -1) return "O";
+    else if (gen == -1)
+      return "O";
+    else
+      return "M";
   }
 
   signout() async {

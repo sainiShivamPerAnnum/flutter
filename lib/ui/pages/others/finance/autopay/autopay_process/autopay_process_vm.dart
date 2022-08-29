@@ -214,7 +214,7 @@ class AutosaveProcessViewModel extends BaseModel {
 
   clear() {
     _timer?.cancel();
-    lottieAnimationController.dispose();
+    lottieAnimationController?.dispose();
   }
 
   onAmountValueChanged(String val) {

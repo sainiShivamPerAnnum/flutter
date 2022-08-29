@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
@@ -48,9 +50,56 @@ class Win extends StatelessWidget {
                     model.showOldView = false;
                   });
                 },
-                child: Text(
-                  "Win View in Construction",
-                  style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Win View in Construction",
+                      style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+                    ),
+                    TextButton(
+                      child: Text("Clear Journey Local Assets Files"),
+                      onPressed: () {
+                        model.cleanJourneyAssetsFiles();
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: UiConstants.primaryColor,
+                          child: IconButton(
+                              icon: Icon(Icons.add, color: Colors.white),
+                              onPressed: () {
+                                BaseUtil.showPositiveAlert("Positive SnackBar",
+                                    "This is a positive snackbar");
+                              }),
+                        ),
+                        SizedBox(width: SizeConfig.padding16),
+                        CircleAvatar(
+                          backgroundColor: UiConstants.negativeAlertColor,
+                          child: IconButton(
+                              icon: Icon(Icons.block, color: Colors.white),
+                              onPressed: () {
+                                BaseUtil.showNegativeAlert("Negative SnackBar",
+                                    "This is a negative snackbar");
+                              }),
+                        ),
+                        SizedBox(width: SizeConfig.padding16),
+                        CircleAvatar(
+                          backgroundColor: Colors.red,
+                          child: IconButton(
+                              icon: Icon(
+                                  Icons
+                                      .signal_wifi_statusbar_connected_no_internet_4_rounded,
+                                  color: Colors.white),
+                              onPressed: () {
+                                BaseUtil.showNoInternetAlert();
+                              }),
+                        )
+                      ],
+                    )
+                  ],
                 ),
               ),
             )

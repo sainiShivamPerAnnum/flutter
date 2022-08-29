@@ -43,24 +43,27 @@ class _BackgroundState extends State<Background> {
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemBuilder: (ctx, i) {
-            return Container(
-              width: widget.model.pageWidth,
-              height: widget.model.pageHeight,
-              decoration: BoxDecoration(
-                // backgroundBlendMode: BlendMode.dstATop,
-                color: widget.model.pages[i].bgAsset.colors.last,
-                // border: Border(
-                //   top: BorderSide(
-                //       color: widget.model.pages[i].bgAsset.colors.first),
-                // ),
-                gradient: LinearGradient(
-                    colors: widget.model.pages[i].bgAsset.colors,
-                    stops: widget.model.pages[i].bgAsset.stops,
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter),
-              ),
-              child: SourceAdaptiveAssetView(
-                asset: widget.model.pages[i].bgAsset.asset,
+            return Transform.translate(
+              offset: Offset(0, i > 0 ? 0.1 * i : 0),
+              child: Container(
+                width: widget.model.pageWidth,
+                height: widget.model.pageHeight,
+                decoration: BoxDecoration(
+                  // backgroundBlendMode: BlendMode.dstATop,
+                  color: widget.model.pages[i].bgAsset.colors.last,
+                  border: Border(
+                    top: BorderSide(
+                        color: widget.model.pages[i].bgAsset.colors.first),
+                  ),
+                  gradient: LinearGradient(
+                      colors: widget.model.pages[i].bgAsset.colors,
+                      stops: widget.model.pages[i].bgAsset.stops,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter),
+                ),
+                child: SourceAdaptiveAssetView(
+                  asset: widget.model.pages[i].bgAsset.asset,
+                ),
               ),
             );
           },

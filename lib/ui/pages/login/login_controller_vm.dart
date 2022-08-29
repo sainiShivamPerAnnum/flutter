@@ -420,7 +420,7 @@ class LoginControllerViewModel extends BaseModel {
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
-      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.username}',
+      'Welcome to ${Constants.APP_NAME}, ${userService.diplayUsername(userService.baseUser.username)}',
     );
     //process complete
   }

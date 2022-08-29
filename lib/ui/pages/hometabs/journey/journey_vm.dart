@@ -11,6 +11,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -20,6 +21,7 @@ class JourneyPageViewModel extends BaseModel {
   final logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _journeyService = locator<JourneyService>();
+  final _userService = locator<UserService>();
   DocumentSnapshot lastDoc;
 
   get avatarAnimation => _journeyService.avatarAnimation;
@@ -153,7 +155,7 @@ class JourneyPageViewModel extends BaseModel {
     if (!canMorePagesBeFetched()) return;
     isLoading = true;
     final prevPageslength = pages.length;
-    await _journeyService.fetchNetworkPages();
+    await _journeyService.fetchMoreNetworkPages();
     logger.d("Total Pages length: ${pages.length}");
     if (prevPageslength < pages.length)
       await mainController.animateTo(
@@ -211,6 +213,8 @@ class JourneyPageViewModel extends BaseModel {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
     log("Current Screen Stack: ${AppState.screenStack}");
 
+    // if (_journeyService.getMilestoneLevelFromIndex(milestone.index) >
+    //     _userService.userJourneyStats.level) return;
     if (milestone.index == 1) {
       return AppState.delegate.parseRoute(Uri.parse("AppWalkthrough"));
     }

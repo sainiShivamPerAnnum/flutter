@@ -40,13 +40,23 @@ class KYCDetailsView extends StatelessWidget {
       },
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: UiConstants.kSecondaryBackgroundColor,
+          elevation: 0.0,
+          title: Text(
+            'My Profile',
+            style: TextStyles.rajdhaniSB.title4,
+          ),
+          centerTitle: false,
+        ),
         body: HomeBackground(
           child: Column(
             children: [
-              FelloAppBar(
-                leading: FelloAppBarBackButton(),
-                title: locale.dPanNkyc,
-              ),
+              // FelloAppBar(
+              //   leading: FelloAppBarBackButton(),
+              //   title: locale.dPanNkyc,
+
+              // ),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),

@@ -43,10 +43,12 @@ class FelloAppBar extends StatelessWidget {
           centerTitle: true,
           title: title != null
               ? FittedBox(
-                  child: Text(title,
-                      maxLines: 1,
-                      overflow: TextOverflow.clip,
-                      style: TextStyles.rajdhaniM))
+                  child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: TextStyles.rajdhaniSB.title4,
+                ))
               : Text(''),
           backgroundColor: showAppBar
               ? UiConstants.kSecondaryBackgroundColor
@@ -70,6 +72,8 @@ class NotificationButton extends StatelessWidget {
                 Haptic.vibrate();
                 _analytics.track(eventName: AnalyticsEvents.notifications);
                 model.hasNewNotifications = false;
+                // AppState.delegate.appState.currentAction = PageAction(
+                //     state: PageState.addPage, page: NotificationsConfig);
                 AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.addPage,
                   page: NotificationsConfig,

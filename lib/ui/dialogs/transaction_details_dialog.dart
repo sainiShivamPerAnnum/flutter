@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,9 +19,6 @@ class TransactionDetailsBottomSheet extends StatefulWidget {
   final UserTransaction transaction;
   TransactionDetailsBottomSheet({Key key, this.transaction}) : super(key: key);
 
-  static AugmontModel augmontProvider;
-  static BaseUtil baseProvider;
-
   @override
   State<TransactionDetailsBottomSheet> createState() =>
       _TransactionDetailsBottomSheetState();
@@ -28,9 +26,19 @@ class TransactionDetailsBottomSheet extends StatefulWidget {
 
 class _TransactionDetailsBottomSheetState
     extends State<TransactionDetailsBottomSheet> {
-  final bool _showInvoiceButton = false;
-
+  bool _showInvoiceButton = false;
+  final AugmontModel augmontProvider = locator<AugmontModel>();
+  final BaseUtil baseProvider = locator<BaseUtil>();
   bool _isInvoiceLoading = false;
+
+  @override
+  void initState() {
+    if (widget.transaction.subType ==
+            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+        widget.transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT)
+      _showInvoiceButton = true;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +65,6 @@ class _TransactionDetailsBottomSheetState
 
   Widget dialogContent(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 1.4,
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
           color: UiConstants.kModalSheetBackgroundColor,
@@ -69,6 +76,7 @@ class _TransactionDetailsBottomSheetState
           horizontal: SizeConfig.padding24,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
@@ -193,70 +201,71 @@ class _TransactionDetailsBottomSheetState
                     Colors.black),
               ],
             ),
-            Spacer(),
-            Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding28),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppPositiveCustomChildBtn(
-                    child: _isInvoiceLoading
-                        ? SpinKitThreeBounce(
-                            size: SizeConfig.padding20,
-                            color: Colors.white,
-                            duration: Duration(milliseconds: 500),
-                          )
-                        : Text('Download Invoice'.toUpperCase(),
-                            style: TextStyles.rajdhaniSB.body1),
-                    onPressed: () async {
-                      if (widget.transaction
-                              .augmnt[UserTransaction.subFldAugTranId] !=
-                          null) {
-                        setState(() {
-                          _isInvoiceLoading = true;
-                        });
-                        String trnId = widget.transaction
-                            .augmnt[UserTransaction.subFldAugTranId];
-                        TransactionDetailsBottomSheet.augmontProvider
-                            .generatePurchaseInvoicePdf(trnId)
-                            .then((generatedPdfFilePath) {
-                          _isInvoiceLoading = false;
+            SizedBox(height: SizeConfig.padding24),
+            if (_showInvoiceButton)
+              Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.padding28),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppPositiveCustomChildBtn(
+                      child: _isInvoiceLoading
+                          ? SpinKitThreeBounce(
+                              size: SizeConfig.padding20,
+                              color: Colors.white,
+                              duration: Duration(milliseconds: 500),
+                            )
+                          : Text('Download Invoice'.toUpperCase(),
+                              style: TextStyles.rajdhaniSB.body1),
+                      onPressed: () async {
+                        if (widget.transaction
+                                .augmnt[UserTransaction.subFldAugTranId] !=
+                            null) {
+                          setState(() {
+                            _isInvoiceLoading = true;
+                          });
+                          String trnId = widget.transaction
+                              .augmnt[UserTransaction.subFldAugTranId];
+                          augmontProvider
+                              .generatePurchaseInvoicePdf(trnId)
+                              .then((generatedPdfFilePath) {
+                            _isInvoiceLoading = false;
+                            setState(() {});
+                            if (generatedPdfFilePath != null) {
+                              setState(() {});
+                              OpenFile.open(generatedPdfFilePath);
+                            } else {
+                              setState(() {});
+                              BaseUtil.showNegativeAlert(
+                                  'Invoice could not be loaded',
+                                  'Please try again in some time');
+                            }
+                          });
+                        } else {
                           setState(() {});
-                          if (generatedPdfFilePath != null) {
-                            setState(() {});
-                            OpenFile.open(generatedPdfFilePath);
-                          } else {
-                            setState(() {});
-                            BaseUtil.showNegativeAlert(
-                                'Invoice could not be loaded',
-                                'Please try again in some time');
-                          }
-                        });
-                      } else {
-                        setState(() {});
-                        BaseUtil.showNegativeAlert(
-                            'Invoice could not be loaded',
-                            'Please try again in some time');
-                      }
-                    },
-                    width: SizeConfig.screenWidth / 2,
-                  ),
-                ],
-              ),
-            ),
-            if (_showInvoiceButton && _isInvoiceLoading)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(20),
-                    child: SpinKitThreeBounce(
-                      color: UiConstants.primaryColor,
-                      size: 18.0,
+                          BaseUtil.showNegativeAlert(
+                              'Invoice could not be loaded',
+                              'Please try again in some time');
+                        }
+                      },
+                      width: SizeConfig.screenWidth / 2,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+            // if (_showInvoiceButton && _isInvoiceLoading)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Padding(
+            //         padding: EdgeInsets.all(20),
+            //         child: SpinKitThreeBounce(
+            //           color: UiConstants.primaryColor,
+            //           size: 18.0,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
             SizedBox(height: SizeConfig.padding12)
           ],
         ),

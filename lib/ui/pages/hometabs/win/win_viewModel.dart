@@ -20,12 +20,14 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
   final _campaignRepo = locator<CampaignRepo>();
+  final _jourenyRepo = locator<JourneyRepository>();
 
   Timer _timer;
   bool _showOldView = false;
@@ -81,6 +83,10 @@ class WinViewModel extends BaseModel {
   init() {
     // setupAutoEventScroll();
     // getOngoingEvents();
+  }
+
+  cleanJourneyAssetsFiles() {
+    _jourenyRepo.dump();
   }
 
   setupAutoEventScroll() {

@@ -95,23 +95,30 @@ class LauncherViewModel extends BaseModel {
     // trace.putAttribute('Spalsh', 'userservice init started');
     // trace.putAttribute('Spalsh', 'userservice init ended');
     try {
-      await userService.init();
       await CacheService.initialize();
-      if (userService.isUserOnborded) await _journeyService.init();
+      await userService.init();
       if (userService.isUserOnborded) await _journeyRepo.init();
+      if (userService.isUserOnborded) await _journeyService.init();
+
       await BaseRemoteConfig.init();
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
       _logger.d(
-          'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}');
+        'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
+      );
       if (now <= BaseRemoteConfig.invalidationBefore) {
         await new CacheService().invalidateAll();
       }
       // test
       // await new CacheService().invalidateAll();
-      await _userCoinService.init();
-      await Future.wait([_baseUtil.init(), _fcmListener.setupFcm()]);
+      if (userService.isUserOnborded) await _userCoinService.init();
+      await Future.wait(
+        [
+          _baseUtil.init(),
+          _fcmListener.setupFcm(),
+        ],
+      );
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -133,7 +140,7 @@ class LauncherViewModel extends BaseModel {
       );
     }
     _httpModel.init();
-    _tambolaService.init();
+    if (userService.isUserOnborded) _tambolaService.init();
     _timer3.cancel();
 
     // await trace.stop();
@@ -154,7 +161,7 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 800),
+      new Duration(milliseconds: 600),
     );
 
     try {
@@ -203,8 +210,6 @@ class LauncherViewModel extends BaseModel {
       if (showOnboarding == null || showOnboarding == false //&& value
           ) {
         //show tutorial
-        PreferenceHelper.setBool(
-            PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
         return navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: OnBoardingViewPageConfig,

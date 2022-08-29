@@ -290,15 +290,19 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<void> getUserJourneyStats() async {
+  Future<bool> getUserJourneyStats() async {
     if (baseUser != null) {
       ApiResponse<UserJourneyStatsModel> res =
           await _journeyRepo.getUserJourneyStats();
-      if (res.isSuccess())
+      if (res.isSuccess()) {
         userJourneyStats = res.model;
-      else
+        return true;
+      } else {
         _logger.e("Error fetching User journey stats data");
+        return false;
+      }
     }
+    return false;
   }
 
   _compileUserWallet() {

@@ -19,6 +19,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -51,32 +52,39 @@ class UserProfileDetails extends StatelessWidget {
           actions: [
             Padding(
               padding: EdgeInsets.only(right: SizeConfig.padding16),
-              child: !model.inEditMode
-                  ? TextButton.icon(
-                      icon: Icon(Icons.edit_outlined,
-                          size: SizeConfig.iconSize2,
-                          color: UiConstants.kTextColor),
-                      // SizedBox(width: SizeConfig.padding8),
-                      label: Text(
-                        'EDIT',
-                        style: TextStyles.sourceSansSB.body2,
-                      ),
-                      onPressed: () => model.enableEdit(),
-                    )
-                  : TextButton(
-                      onPressed: () {
-                        if (!model.isUpdaingUserDetails) {
-                          FocusScope.of(context).unfocus();
-                          model.updateDetails();
-                        }
-                      },
-                      child: Text(
-                        'DONE',
-                        style: TextStyles.sourceSansSB.body2.colour(
-                          UiConstants.kTabBorderColor,
-                        ),
-                      ),
-                    ),
+              child: model.isUpdaingUserDetails
+                  ? Padding(
+                      padding: EdgeInsets.only(right: SizeConfig.padding12),
+                      child: SpinKitThreeBounce(
+                        color: Colors.white,
+                        size: SizeConfig.padding16,
+                      ))
+                  : (!model.inEditMode
+                      ? TextButton.icon(
+                          icon: Icon(Icons.edit_outlined,
+                              size: SizeConfig.iconSize2,
+                              color: UiConstants.kTextColor),
+                          // SizedBox(width: SizeConfig.padding8),
+                          label: Text(
+                            'EDIT',
+                            style: TextStyles.sourceSansSB.body2,
+                          ),
+                          onPressed: () => model.enableEdit(),
+                        )
+                      : TextButton(
+                          onPressed: () {
+                            if (!model.isUpdaingUserDetails) {
+                              FocusScope.of(context).unfocus();
+                              model.updateDetails();
+                            }
+                          },
+                          child: Text(
+                            'DONE',
+                            style: TextStyles.sourceSansSB.body2.colour(
+                              UiConstants.kTabBorderColor,
+                            ),
+                          ),
+                        )),
               // ),
             ),
             // IconButton(
@@ -163,7 +171,7 @@ class UserProfileForm extends StatelessWidget {
               },
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obEmailLabel,
@@ -183,7 +191,7 @@ class UserProfileForm extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obGenderLabel,
@@ -221,7 +229,7 @@ class UserProfileForm extends StatelessWidget {
                   : [],
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obDobLabel,
@@ -377,7 +385,7 @@ class UserProfileForm extends StatelessWidget {
                 ],
               ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
               locale.obMobileLabel,
