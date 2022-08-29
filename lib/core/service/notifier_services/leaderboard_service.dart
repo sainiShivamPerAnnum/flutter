@@ -71,8 +71,9 @@ class LeaderboardService
     );
     if (response.code == 200 && response.model.isNotEmpty) {
       _WebGameLeaderBoard = LeaderboardModel.fromMap(response.model);
-      setWebGameLeaderBoard();
       setCurrentPlayerRank();
+      await fetchLeaderBoardProfileImage();
+      setWebGameLeaderBoard();
 
       _logger.d("$game Leaderboard successfully fetched");
     } else {
