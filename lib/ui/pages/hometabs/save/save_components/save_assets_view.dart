@@ -119,10 +119,14 @@ class SaveAssetView extends StatelessWidget {
                     ),
                   //Lock in reached section
                   if (model.isLockInReached)
-                    SellPreventionReasonCard(
-                      iconString: Assets.alertTriangle,
-                      content:
-                          '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: SellPreventionReasonCard(
+                        iconString: Assets.alertTriangle,
+                        content:
+                            '${model.withdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                      ),
                     ),
                   if (model.isGoldSaleActive)
                     Padding(
@@ -131,7 +135,7 @@ class SaveAssetView extends StatelessWidget {
                       child: SellPreventionReasonCard(
                         iconString: Assets.alertTriangle,
                         content:
-                            'Selling of DIgital Gold is currently on hold. Please try again later.',
+                            'Selling of Digital Gold is currently on hold. Please try again later.',
                       ),
                     ),
                   if (model.isOngoingTransaction)
