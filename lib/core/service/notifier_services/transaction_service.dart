@@ -379,7 +379,6 @@ class TransactionService
       if (!depositFcmResponseModel.status) {
         // AppState.delegate.appState.isTxnLoaderInView = false;
         currentTransactionState = TransactionState.idleTrasantion;
-        log("KUNJ: ${AppState.screenStack.last}");
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.remove(AppState.screenStack.last);
         }
@@ -441,11 +440,9 @@ class TransactionService
       //   }
       // }
       if (currentTransactionState == TransactionState.ongoingTransaction) {
-        log("KUNJ: currentTransactionState == TransactionServiceProperties.ongoingTransaction");
         if (depositFcmResponseModel.gtId != null) {
           GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
           if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-            log("KUNJ: _gtService.fetchAndVerifyGoldenTicketByID()");
             Future.delayed(Duration(milliseconds: 220), () {
               currentTransactionState = TransactionState.idleTrasantion;
             });
@@ -459,17 +456,15 @@ class TransactionService
             }
             AppState.backButtonDispatcher.didPopRoute();
           } else {
-            log("KUNJ: else _gtService.fetchAndVerifyGoldenTicketByID()");
             currentTransactionState = TransactionState.successTransaction;
             await Future.delayed(Duration(milliseconds: 5000), () {});
-            log("KUNJ: else _gtService.fetchAndVerifyGoldenTicketByID() ${AppState.screenStack.last}");
+
             if (AppState.screenStack.last == ScreenItem.loader) {
               AppState.screenStack.remove(AppState.screenStack.last);
             }
             AppState.backButtonDispatcher.didPopRoute();
           }
         } else {
-          log("KUNJ: else");
           currentTransactionState = TransactionState.successTransaction;
           await Future.delayed(Duration(milliseconds: 5000), () {});
           currentTransactionState = TransactionState.successCoinTransaction;

@@ -34,7 +34,6 @@ class CongratulatoryCoinView extends StatelessWidget {
               size: SizeConfig.padding24,
             ),
             onPressed: () {
-              log("KUNJ: else ${AppState.screenStack.last}");
               if (AppState.screenStack.last == ScreenItem.loader) {
                 AppState.screenStack.remove(AppState.screenStack.last);
                 AppState.backButtonDispatcher.didPopRoute();

@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/leader_board_modal.dart';
-import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
@@ -31,28 +30,30 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties>(
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
-        log("BUILD");
-        return m.WebGameLeaderBoard == null || m.userProfilePicUrl.isEmpty
-            ? Container(
-                margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                decoration: BoxDecoration(
-                  color: UiConstants.gameCardColor,
-                  borderRadius: BorderRadius.circular(
-                    SizeConfig.roundness8,
-                  ),
-                ),
-                padding: EdgeInsets.only(bottom: SizeConfig.padding40),
-                child: NoRecordDisplayWidget(
-                  asset: "images/leaderboard.png",
-                  text: "Leaderboard will be updated soon",
-                ),
-              )
-            : NewLeaderBoardView(
-                scoreBoard: m.WebGameLeaderBoard.scoreboard,
-                userProfilePicUrl: m.userProfilePicUrl,
-                currentUserRank: m.currentUserRank,
-                isUserInTopThree: m.isUserInTopThree,
-              );
+        return m.isLeaderboardLoading
+            ? LeaderboardShimmer()
+            : m.WebGameLeaderBoard == null || m.userProfilePicUrl.isEmpty
+                ? Container(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                    decoration: BoxDecoration(
+                      color: UiConstants.gameCardColor,
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness8,
+                      ),
+                    ),
+                    padding: EdgeInsets.only(bottom: SizeConfig.padding40),
+                    child: NoRecordDisplayWidget(
+                      asset: "images/leaderboard.png",
+                      text: "Leaderboard will be updated soon",
+                    ),
+                  )
+                : NewLeaderBoardView(
+                    scoreBoard: m.WebGameLeaderBoard.scoreboard,
+                    userProfilePicUrl: m.userProfilePicUrl,
+                    currentUserRank: m.currentUserRank,
+                    isUserInTopThree: m.isUserInTopThree,
+                  );
       },
     );
   }
@@ -72,7 +73,6 @@ class NewLeaderBoardView extends StatelessWidget {
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {
-    // final localScoreBoard = model.scoreboard
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding12,

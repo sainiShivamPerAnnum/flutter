@@ -37,7 +37,6 @@ class RechargeLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () {
-                log('Timer ended', name: 'KUNJ');
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoingTransaction) return;
 

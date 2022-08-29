@@ -21,7 +21,7 @@ class LeaderboardService
   final ScrollController parentController = ScrollController();
   int _referralLBLength = 0;
   List<String> _userProfilePicUrl = [];
-  bool isUserInTopThree = false;
+  bool isUserInTopThree = false, _isLeaderboardLoading = false;
   int currentUserRank = 0;
 
   List<ScoreBoard> _referralLeaderBoard = [];
@@ -34,6 +34,12 @@ class LeaderboardService
   List<String> get userProfilePicUrl => this._userProfilePicUrl;
 
   get referralLBLength => this._referralLBLength;
+
+  bool get isLeaderboardLoading => this._isLeaderboardLoading;
+
+  set isLeaderboardLoading(value) {
+    this._isLeaderboardLoading = value;
+  }
 
   setReferralLeaderBoard() {
     notifyListeners(LeaderBoardServiceProperties.ReferralLeaderboard);
@@ -65,15 +71,18 @@ class LeaderboardService
   }
 
   fetchWebGameLeaderBoard({@required String game}) async {
+    isLeaderboardLoading = true;
     ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
       type: game,
       freq: "weekly",
     );
     if (response.code == 200 && response.model.isNotEmpty) {
       _WebGameLeaderBoard = LeaderboardModel.fromMap(response.model);
-      setWebGameLeaderBoard();
       setCurrentPlayerRank();
 
+      await fetchLeaderBoardProfileImage();
+      isLeaderboardLoading = false;
+      setWebGameLeaderBoard();
       _logger.d("$game Leaderboard successfully fetched");
     } else {
       _WebGameLeaderBoard = null;
