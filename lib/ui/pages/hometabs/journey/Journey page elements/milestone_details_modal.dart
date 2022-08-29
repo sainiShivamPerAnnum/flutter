@@ -139,7 +139,7 @@ class _JourneyMilestoneDetailsModalSheetState
               SizedBox(height: SizeConfig.padding12),
               Text(
                 widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
-                    ? "Wohoo, you completed this widget.milestone"
+                    ? "Wohoo, you completed this milestone"
                     : widget.milestone.steps.first.subtitle,
                 style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
               ),
@@ -149,9 +149,11 @@ class _JourneyMilestoneDetailsModalSheetState
                     ? CircularProgressIndicator(strokeWidth: 1)
                     : ticket == null
                         ? SizedBox()
-                        : (ticket.redeemedTimestamp == null ||
-                                ticket.redeemedTimestamp ==
-                                    TimestampModel(seconds: 0, nanoseconds: 0))
+                        : (ticket.isRewarding &&
+                                (ticket.redeemedTimestamp == null ||
+                                    ticket.redeemedTimestamp ==
+                                        TimestampModel(
+                                            seconds: 0, nanoseconds: 0)))
                             ? goldenTicketWidget()
                             : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
