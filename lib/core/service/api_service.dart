@@ -16,6 +16,7 @@ abstract class API {
 
   Future<dynamic> getData(String url);
   Future<dynamic> postData(String url, {Map<String, dynamic> body});
+  Future<dynamic> postRazorpayData(String url, {Map<String, dynamic> body});
   Future<dynamic> deleteData(String url, {Map<String, dynamic> body});
   Future<dynamic> patchData(String url, {Map<String, dynamic> body});
   Future<dynamic> putData(String url);
@@ -113,6 +114,59 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid,
+      };
+      logger.d(_headers);
+      if (token != null)
+        _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+
+      if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
+
+      String _url = getBaseUrl(
+              isSubUrl: isAwsSubUrl,
+              isTxnUrl: isAwsTxnUrl,
+              isAwsDeviceUrl: isAwsDeviceUrl) +
+          url;
+
+      if (cBaseUrl != null) _url = cBaseUrl + url;
+      logger.d("response from $_url");
+
+      final response = await http.post(
+        Uri.parse(_url),
+        headers: _headers,
+        body: jsonEncode(body ?? {}),
+      );
+      responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(
+        'Error communication with server: Please check your internet connectivity',
+      );
+    } finally {
+      await metric.stop();
+    }
+    return responseJson;
+  }
+
+  @override
+  Future<dynamic> postRazorpayData(String url,
+      {Map<String, dynamic> body,
+      String cBaseUrl,
+      String token,
+      bool isAuthTokenAvailable = true,
+      bool isAwsSubUrl = false,
+      bool isAwsTxnUrl = false,
+      bool isAwsDeviceUrl = false}) async {
+    final HttpMetric metric =
+        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
+    await metric.start();
+    var responseJson;
+    try {
+      Map<String, String> _headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'platform': Platform.isAndroid ? 'android' : 'iOS',
+        'version':
+            _versionString.isEmpty ? await _getAppVersion() : _versionString,
+        'uid': userService?.baseUser?.uid,
+        'x-is-razorpay': 'true'
       };
       logger.d(_headers);
       if (token != null)

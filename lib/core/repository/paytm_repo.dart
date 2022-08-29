@@ -25,7 +25,7 @@ class PaytmRepository {
     return token;
   }
 
-  Future<ApiResponse<CreatePaytmTransactionModel>> createPaytmTransaction(
+  Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(
       double amount, Map<String, dynamic> augMap, String couponCode) async {
     try {
       final String _uid = _userService.baseUser.uid;
@@ -37,7 +37,7 @@ class PaytmRepository {
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
-      final response = await APIService.instance.postData(
+      final response = await APIService.instance.postRazorpayData(
           ApiPath.kCreatePaytmTransaction,
           body: _body,
           token: _token,
@@ -63,6 +63,8 @@ class PaytmRepository {
     try {
       final Map<String, dynamic> _body = {
         "tempToken": tempToken,
+        "uid": _userService.baseUser?.uid,
+        "payerAccount": "85551875858@ybl",
         "paymentMode": "UPI_INTENT",
         "osType": osType,
         "pspApp": pspApp,

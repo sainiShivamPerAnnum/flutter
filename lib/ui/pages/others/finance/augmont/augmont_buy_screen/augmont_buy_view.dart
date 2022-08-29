@@ -11,6 +11,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 class AugmontBuyCard extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
@@ -272,62 +273,63 @@ class AugmontBuyCard extends StatelessWidget {
               onPressed: () async {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
-                  // model.initiateBuy();
-                  BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      backgroundColor: Colors.transparent,
-                      isBarrierDismissable: true,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness12),
-                          topRight: Radius.circular(SizeConfig.roundness12)),
-                      content: Container(
-                        height: SizeConfig.screenWidth * 0.8,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          color: UiConstants.backgroundColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness12),
-                              topRight:
-                                  Radius.circular(SizeConfig.roundness12)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(SizeConfig.padding20),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Choose a payment method',
-                                style: TextStyles.title5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  model.processTransaction();
-                                },
-                                child: Text(
-                                  'Paytm',
-                                  style: TextStyles.title5,
-                                ),
-                              ),
-                              Text(
-                                'PhonePe',
-                                style: TextStyles.title5,
-                              ),
-                              Text(
-                                'Google Pay',
-                                style: TextStyles.title5,
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                    itemCount: 2,
-                                    itemBuilder: (context, index) {
-                                      return Column(
-                                        children: [],
-                                      );
-                                    }),
-                              )
-                            ],
-                          ),
-                        ),
-                      ));
+                  model.initiateRazorpayBuy();
+                  // BaseUtil.openModalBottomSheet(
+                  //     addToScreenStack: true,
+                  //     backgroundColor: Colors.transparent,
+                  //     isBarrierDismissable: true,
+                  //     borderRadius: BorderRadius.only(
+                  //         topLeft: Radius.circular(SizeConfig.roundness12),
+                  //         topRight: Radius.circular(SizeConfig.roundness12)),
+                  //     content: Container(
+                  //       height: SizeConfig.screenWidth * 0.8,
+                  //       width: SizeConfig.screenWidth,
+                  //       decoration: BoxDecoration(
+                  //         color: UiConstants.backgroundColor,
+                  //         borderRadius: BorderRadius.only(
+                  //             topLeft: Radius.circular(SizeConfig.roundness12),
+                  //             topRight:
+                  //                 Radius.circular(SizeConfig.roundness12)),
+                  //       ),
+                  //       child: Padding(
+                  //         padding: EdgeInsets.all(SizeConfig.padding20),
+                  //         child: Column(
+                  //           children: [
+                  //             Text(
+                  //               'Choose a payment method',
+                  //               style: TextStyles.title5,
+                  //             ),
+                  //             GestureDetector(
+                  //               onTap: () {
+                  //                 model.upiApplication = model.appMetaList[5];
+                  //                 model.processTransaction();
+                  //               },
+                  //               child: Text(
+                  //                 'Paytm',
+                  //                 style: TextStyles.title5,
+                  //               ),
+                  //             ),
+                  //             Text(
+                  //               'PhonePe',
+                  //               style: TextStyles.title5,
+                  //             ),
+                  //             Text(
+                  //               'Google Pay',
+                  //               style: TextStyles.title5,
+                  //             ),
+                  //             Expanded(
+                  //               child: ListView.builder(
+                  //                   itemCount: 2,
+                  //                   itemBuilder: (context, index) {
+                  //                     return Column(
+                  //                       children: [],
+                  //                     );
+                  //                   }),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ));
                 }
               },
             ),

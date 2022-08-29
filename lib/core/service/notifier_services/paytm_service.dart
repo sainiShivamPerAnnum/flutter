@@ -11,6 +11,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -27,7 +28,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 //ERROR CODE
 const int ERR_CREATE_SUBSCRIPTION_FAILED = 0;
@@ -41,6 +42,7 @@ const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _paytmRepo = locator<PaytmRepository>();
+  final _rzpModel = locator<RazorpayModel>();
   final _userService = locator<UserService>();
   final _api = locator<Api>();
   final _getterRepo = locator<GetterRepository>();
@@ -178,7 +180,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       {double amount,
       AugmontRates augmontRates,
       String couponCode,
-      bool restrictAppInvoke = false}) async {
+      bool restrictAppInvoke = false,
+      bool isRzpTxn = true}) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -186,7 +189,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,
-      "aPaymode": "PYTM",
+      "aPaymode": isRzpTxn ? 'RZP' : 'PYTM',
       "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
           augmontRates.goldBuyPrice),
@@ -196,7 +199,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse =
-        await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
+        await _paytmRepo.createTransaction(amount, augMap, couponCode);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -204,23 +207,36 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+    print(paytmSubscriptionModel.data.orderId);
+    print(amount);
 
     try {
-      _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
-      _logger.d("Paytm app invoke: $restrictAppInvoke");
-      final response = await AllInOneSdk.startTransaction(
-          mid,
-          paytmSubscriptionModel.data.orderId,
-          amount.toString(),
-          paytmSubscriptionModel.data.temptoken,
-          paytmSubscriptionModel.data.callbackUrl,
-          isStaging,
-          restrictAppInvoke);
-      _logger.d("Paytm Response:${response.toString()}");
+      _logger.d("Transaction order id: ${paytmSubscriptionModel.data.orderId}");
+      _logger.d("Transaction app invoke: $restrictAppInvoke");
+      var response;
+      if (isRzpTxn) {
+        response = await _rzpModel.submitAugmontTransaction(
+            _userService.firebaseUser.phoneNumber,
+            _userService.firebaseUser.email,
+            paytmSubscriptionModel.data.orderId,
+            amount);
+      } else {
+        response = await AllInOneSdk.startTransaction(
+            mid,
+            paytmSubscriptionModel.data.orderId,
+            amount.toString(),
+            paytmSubscriptionModel.data.temptoken,
+            paytmSubscriptionModel.data.callbackUrl,
+            isStaging,
+            restrictAppInvoke);
+        _logger.d("Transaction Response:${response.toString()}");
+      }
 
       //For debug mode to check transaction status from paytm.
       // validateTransaction(paytmTransactionModel.data.orderId);
-      validateTransaction(paytmSubscriptionModel.data.orderId);
+      if (!isRzpTxn) {
+        validateTransaction(paytmSubscriptionModel.data.orderId);
+      }
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
@@ -386,8 +402,14 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
-  Future processTransaction(double amount, String osType, String pspApp,
-      String paymentMode, AugmontRates augmontRates, String couponCode) async {
+  Future processTransaction(
+      double amount,
+      String osType,
+      String pspApp,
+      String paymentMode,
+      AugmontRates augmontRates,
+      String couponCode,
+      ApplicationMeta appMeta) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -405,7 +427,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse =
-        await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
+        await _paytmRepo.createTransaction(amount, augMap, couponCode);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -426,10 +448,36 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.e(processTransactionApiResponse.errorMessage);
       return;
     } else {
-      var response = await launchUrl(Uri.parse(
-          processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink));
-      print(response);
+      await doUpiTransation(
+          amount: amount.toString(),
+          appMeta: appMeta,
+          receiverName: 'Mayukh',
+          receiverUpiAddress: '8551875858@ybl',
+          transactionNote: 'UPITXREF0001',
+          transactionRef: 'A UPI Transaction',
+          url: processTransactionApiResponse
+              .model.data.body.deepLinkInfo.deepLink);
     }
+  }
+
+  Future doUpiTransation(
+      {ApplicationMeta appMeta,
+      String amount,
+      String receiverName,
+      String receiverUpiAddress,
+      String transactionRef,
+      String transactionNote,
+      String url}) async {
+    final UpiTransactionResponse response = await UpiPay.initiateTransaction(
+      amount: amount,
+      app: appMeta.upiApplication,
+      receiverName: receiverName,
+      receiverUpiAddress: receiverUpiAddress,
+      transactionRef: transactionRef,
+      transactionNote: transactionNote,
+      // url: url
+    );
+    print(response.status);
   }
 
   Future<bool> updateDailySubscriptionAmount(

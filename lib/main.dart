@@ -11,6 +11,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
@@ -111,6 +112,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
           ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
+          ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
           StreamProvider<ConnectivityStatus>(
             create: (_) {
               ConnectivityService connectivityService =

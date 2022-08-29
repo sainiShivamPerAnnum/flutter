@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cashfree_pg/cashfree_pg.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -12,9 +11,9 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
-import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -62,12 +61,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final TransactionService _txnService = locator<TransactionService>();
   final GoldenTicketService _gtService = GoldenTicketService();
   final _internalOpsService = locator<InternalOpsService>();
+  final _razorpayOpsModel = locator<RazorpayModel>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
   final _userCoinService = locator<UserCoinService>();
-  List appMetaList = [];
+  List<ApplicationMeta> appMetaList = [];
+  ApplicationMeta _upiApplication;
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -138,6 +139,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   set status(value) {
     this._status = value;
+    notifyListeners();
+  }
+
+  set upiApplication(ApplicationMeta value) {
+    this._upiApplication = value;
     notifyListeners();
   }
 
@@ -223,8 +229,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   getUPIApps() async {
-    CashfreePGSDK.getUPIApps().then((value) => {appMetaList.add(value)});
-    print(appMetaList.length);
+    appMetaList = await UpiPay.getInstalledUpiApplications(
+        statusType: UpiApplicationDiscoveryAppStatusType.all);
     print(appMetaList);
   }
 
@@ -409,6 +415,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   processTransaction() async {
+    setState(ViewState.Idle);
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
       _onboardUserManually();
@@ -470,9 +477,115 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
     try {
-      _paytmService.processTransaction(buyAmount, 'ios', 'PhonePe',
-          'UPI_INTENT', goldRates, appliedCoupon?.code ?? "");
+      isGoldBuyInProgress = false;
+      resetBuyOptions();
+      await _paytmService.processTransaction(buyAmount, 'ios', 'Paytm',
+          'UPI_INTENT', goldRates, appliedCoupon?.code ?? "", _upiApplication);
+      setState(ViewState.Idle);
     } catch (e) {}
+  }
+
+  initiateRazorpayBuy() async {
+    //Check if user is registered on augmont
+    if (status == STATUS_UNAVAILABLE) return;
+    if (status == STATUS_REGISTER) {
+      _onboardUserManually();
+      return;
+    }
+    if (couponApplyInProgress) return;
+    double buyAmount = double.tryParse(goldAmountController.text);
+    // checkIfCouponIsStillApplicable();
+    if (goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Gold Rates Unavailable',
+        'Please try again in sometime',
+      );
+      return;
+    }
+    if (buyAmount == null) {
+      BaseUtil.showNegativeAlert(
+        'No amount entered',
+        'Please enter an amount',
+      );
+      return;
+    }
+    if (buyAmount < 10) {
+      showMinCapText = true;
+      return;
+    }
+
+    if (_baseUtil.augmontDetail == null) {
+      BaseUtil.showNegativeAlert(
+        'Deposit Failed',
+        'Please try again in sometime or contact us',
+      );
+      return;
+    }
+
+    if (_baseUtil.augmontDetail.isDepLocked) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
+      );
+      return;
+    }
+    isGoldBuyInProgress = true;
+
+    bool _disabled = await _dbModel.isAugmontBuyDisabled();
+    if (_disabled != null && _disabled) {
+      isGoldBuyInProgress = false;
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        'Gold buying is currently on hold. Please try again after sometime.',
+      );
+      return;
+    }
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
+
+    final bool restrictPaytmAppInvoke = (FlavorConfig.isDevelopment() ||
+            BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.RESTRICT_PAYTM_APP_INVOKE) ==
+                "true")
+        ? true
+        : false;
+
+    final _status = await _paytmService.initiateTransactions(
+        amount: buyAmount,
+        augmontRates: goldRates,
+        couponCode: appliedCoupon?.code ?? "",
+        restrictAppInvoke: restrictPaytmAppInvoke);
+
+    isGoldBuyInProgress = false;
+    resetBuyOptions();
+
+    if (_status) {
+      AppState.delegate.appState.isTxnLoaderInView = true;
+      _logger.d("Txn Timer Function reinitialised and set with 30 secs delay");
+      // AppState.delegate.appState.txnFunction = null;
+      AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        showTransactionPendingDialog();
+        AppState.delegate.appState.txnTimer.cancel();
+        _logger.d("timer cancelled");
+      });
+      // AppState.delegate.appState.txnFunction =
+      //     Future.delayed(Duration(seconds: 30), () async {
+      //   if (AppState.delegate.appState.isTxnLoaderInView == true) {
+      //     AppState.delegate.appState.isTxnLoaderInView = false;
+      //     AppState.delegate.appState.txnFunction = null;
+      //     showTransactionPendingDialog();
+      //   }
+      // });
+      //  AppState.delegate.appState.txnFunction()
+    } else {
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+      }
+      BaseUtil.showNegativeAlert(
+        'Transaction failed',
+        'Your transaction was unsuccessful. Please try again',
+      );
+    }
   }
 
   initiateBuy() async {
