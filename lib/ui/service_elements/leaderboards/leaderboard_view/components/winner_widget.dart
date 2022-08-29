@@ -114,19 +114,18 @@ class WinnerWidgets extends StatelessWidget {
                         height: rank == 0
                             ? SizeConfig.screenWidth * 0.2344
                             : SizeConfig.screenWidth * 0.2083,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       )
                     : ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: userProfilePicUrl[rank],
-                          width: rank == 0
-                              ? SizeConfig.screenWidth * 0.2344
-                              : SizeConfig.screenWidth * 0.2083,
-                          height: rank == 0
-                              ? SizeConfig.screenWidth * 0.2344
-                              : SizeConfig.screenWidth * 0.2083,
-                          fit: BoxFit.fill,
-                        ),
+                            imageUrl: userProfilePicUrl[rank],
+                            width: rank == 0
+                                ? SizeConfig.screenWidth * 0.2344
+                                : SizeConfig.screenWidth * 0.2083,
+                            height: rank == 0
+                                ? SizeConfig.screenWidth * 0.2344
+                                : SizeConfig.screenWidth * 0.2083,
+                            fit: BoxFit.cover),
                       ),
               ),
               SizedBox(
