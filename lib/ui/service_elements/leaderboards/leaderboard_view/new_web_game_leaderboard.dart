@@ -30,30 +30,30 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties>(
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
-        return m.isLeaderboardLoading
-            ? LeaderboardShimmer()
-            : m.WebGameLeaderBoard == null || m.userProfilePicUrl.isEmpty
-                ? Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                    decoration: BoxDecoration(
-                      color: UiConstants.gameCardColor,
-                      borderRadius: BorderRadius.circular(
-                        SizeConfig.roundness8,
-                      ),
-                    ),
-                    padding: EdgeInsets.only(bottom: SizeConfig.padding40),
-                    child: NoRecordDisplayWidget(
-                      asset: "images/leaderboard.png",
-                      text: "Leaderboard will be updated soon",
-                    ),
-                  )
-                : NewLeaderBoardView(
-                    scoreBoard: m.WebGameLeaderBoard.scoreboard,
-                    userProfilePicUrl: m.userProfilePicUrl,
-                    currentUserRank: m.currentUserRank,
-                    isUserInTopThree: m.isUserInTopThree,
-                  );
+        return m.WebGameLeaderBoard != null &&
+                m.WebGameLeaderBoard.scoreboard != null &&
+                (m.userProfilePicUrl.length >=
+                    m.WebGameLeaderBoard.scoreboard.length)
+            ? NewLeaderBoardView(
+                scoreBoard: m.WebGameLeaderBoard.scoreboard,
+                userProfilePicUrl: m.userProfilePicUrl,
+                currentUserRank: m.currentUserRank,
+                isUserInTopThree: m.isUserInTopThree,
+              )
+            : Container(
+                margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                decoration: BoxDecoration(
+                  color: UiConstants.gameCardColor,
+                  borderRadius: BorderRadius.circular(
+                    SizeConfig.roundness8,
+                  ),
+                ),
+                padding: EdgeInsets.only(bottom: SizeConfig.padding40),
+                child: NoRecordDisplayWidget(
+                  asset: "images/leaderboard.png",
+                  text: "Leaderboard will be updated soon",
+                ),
+              );
       },
     );
   }
