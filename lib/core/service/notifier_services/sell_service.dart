@@ -59,7 +59,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   }
 
   verifyKYCStatus() {
-    setKYCVerified = _userService.isSimpleKycVerified;
+    setKYCVerified = _userService.baseUser.isSimpleKycVerified;
     print(_isKYCVerified);
     _logger.d('kyc verified! $isKYCVerified');
   }

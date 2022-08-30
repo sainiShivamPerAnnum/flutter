@@ -125,7 +125,7 @@ class SaveAssetView extends StatelessWidget {
                       child: SellPreventionReasonCard(
                         iconString: Assets.alertTriangle,
                         content:
-                            '${model.withdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                            '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
                       ),
                     ),
                   if (model.isGoldSaleActive)
