@@ -553,7 +553,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: restrictPaytmAppInvoke);
+        restrictAppInvoke: restrictPaytmAppInvoke,
+        isRzpTxn: true);
 
     isGoldBuyInProgress = false;
     resetBuyOptions();

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -199,7 +200,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse =
-        await _paytmRepo.createTransaction(amount, augMap, couponCode);
+        await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -427,7 +428,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse =
-        await _paytmRepo.createTransaction(amount, augMap, couponCode);
+        await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -449,35 +450,21 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return;
     } else {
       await doUpiTransation(
-          amount: amount.toString(),
-          appMeta: appMeta,
-          receiverName: 'Mayukh',
-          receiverUpiAddress: '8551875858@ybl',
-          transactionNote: 'UPITXREF0001',
-          transactionRef: 'A UPI Transaction',
           url: processTransactionApiResponse
               .model.data.body.deepLinkInfo.deepLink);
     }
   }
 
-  Future doUpiTransation(
-      {ApplicationMeta appMeta,
-      String amount,
-      String receiverName,
-      String receiverUpiAddress,
-      String transactionRef,
-      String transactionNote,
-      String url}) async {
-    final UpiTransactionResponse response = await UpiPay.initiateTransaction(
-      amount: amount,
-      app: appMeta.upiApplication,
-      receiverName: receiverName,
-      receiverUpiAddress: receiverUpiAddress,
-      transactionRef: transactionRef,
-      transactionNote: transactionNote,
-      // url: url
-    );
-    print(response.status);
+  Future doUpiTransation({String url}) async {
+    MethodChannel _platform =
+        MethodChannel("fello.in/dev/payments/paytmService");
+    var response;
+    if (PlatformUtils.isAndroid) {
+      response = await _platform.invokeMethod<String>(
+        'initiatePaytmTransaction',
+      );
+    }
+    print(response);
   }
 
   Future<bool> updateDailySubscriptionAmount(

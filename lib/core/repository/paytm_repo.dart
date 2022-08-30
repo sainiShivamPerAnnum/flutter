@@ -26,7 +26,10 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(
-      double amount, Map<String, dynamic> augMap, String couponCode) async {
+      double amount,
+      Map<String, dynamic> augMap,
+      String couponCode,
+      bool isRzpTxn) async {
     try {
       final String _uid = _userService.baseUser.uid;
       final Map<String, dynamic> _body = {
@@ -39,6 +42,7 @@ class PaytmRepository {
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postRazorpayData(
           ApiPath.kCreatePaytmTransaction,
+          isRzpTxn: false,
           body: _body,
           token: _token,
           isAwsTxnUrl: true);

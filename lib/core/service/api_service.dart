@@ -152,6 +152,7 @@ class APIService implements API {
       String cBaseUrl,
       String token,
       bool isAuthTokenAvailable = true,
+      bool isRzpTxn = false,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
       bool isAwsDeviceUrl = false}) async {
@@ -166,7 +167,7 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid,
-        'x-is-razorpay': 'true'
+        'x-is-razorpay': isRzpTxn.toString()
       };
       logger.d(_headers);
       if (token != null)

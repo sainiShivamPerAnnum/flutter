@@ -3,7 +3,6 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/razorpay_api_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -62,6 +61,7 @@ class RazorpayModel extends ChangeNotifier {
     if (!init()) return null; //initialise razorpay
 
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
+    print(_keyId);
     var options = {
       'key': _keyId,
       'amount': amount.toInt() * 100,

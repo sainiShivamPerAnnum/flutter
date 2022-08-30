@@ -11,6 +11,21 @@ import AppsFlyerLib
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         GeneratedPluginRegistrant.register(with: self)
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        let paymentChannel = FlutterMethodChannel(name: "fello.in/dev/payments/paytmService",
+                                                     binaryMessenger: controller.binaryMessenger)
+        paymentChannel.setMethodCallHandler({
+            [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
+            guard let args = call.arguments as? [String : Any] else {return}
+            let url = args["url"]
+              // This method is invoked on the UI thread.
+              guard call.method == "launchPaytmDeepLink" else {
+                result(FlutterMethodNotImplemented)
+                return
+              }
+              self?.launchUri(uri: url, result: <#T##FlutterResult#>)
+
+        })
         if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
@@ -37,4 +52,23 @@ import AppsFlyerLib
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         AppsFlyerLib.shared().registerUninstall(deviceToken)
     }
+    
+    private func canLaunch(uri: String) -> Bool {
+        let url = URL(string: uri)
+        return UIApplication.shared.canOpenURL(url!)
+      }
+
+      private func launchUri(uri: String, result: @escaping FlutterResult) -> Bool {
+        if(canLaunch(uri: uri)) {
+          let url = URL(string: uri)
+          if #available(iOS 10, *) {
+            UIApplication.shared.open(url!, completionHandler: { (ret) in
+                result(ret)
+            })
+          } else {
+            result(UIApplication.shared.openURL(url!))
+          }
+        }
+        return false
+      }
 }
