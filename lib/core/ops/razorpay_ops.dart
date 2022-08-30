@@ -96,11 +96,13 @@ class RazorpayModel extends ChangeNotifier {
 
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     print(_keyId);
+    bool isDev = FlavorConfig.isDevelopment();
+    print(isDev);
     var options = {
       'key': _keyId,
       'amount': amount.toInt() * 100,
       'name': 'Augmont Gold',
-      'order_id': FlavorConfig.isDevelopment() ? "" : orderId,
+      'order_id': isDev ? "" : orderId,
       'description': 'Digital Gold Purchase',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,

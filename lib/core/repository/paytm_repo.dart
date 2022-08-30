@@ -40,9 +40,9 @@ class PaytmRepository {
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
-      final response = await APIService.instance.postRazorpayData(
+      final response = await APIService.instance.postPaymentData(
           ApiPath.kCreatePaytmTransaction,
-          isRzpTxn: false,
+          isRzpTxn: isRzpTxn,
           body: _body,
           token: _token,
           isAwsTxnUrl: true);

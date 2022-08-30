@@ -191,6 +191,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
 
     bool isRzpTxn = BaseRemoteConfig.ACTIVE_PG == 'rzp';
+    print(isRzpTxn);
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
@@ -204,8 +205,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     };
 
     final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse =
-        await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
+        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
+            amount, augMap, couponCode, isRzpTxn);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);

@@ -16,7 +16,7 @@ abstract class API {
 
   Future<dynamic> getData(String url);
   Future<dynamic> postData(String url, {Map<String, dynamic> body});
-  Future<dynamic> postRazorpayData(String url, {Map<String, dynamic> body});
+  Future<dynamic> postPaymentData(String url, {Map<String, dynamic> body});
   Future<dynamic> deleteData(String url, {Map<String, dynamic> body});
   Future<dynamic> patchData(String url, {Map<String, dynamic> body});
   Future<dynamic> putData(String url);
@@ -147,12 +147,12 @@ class APIService implements API {
   }
 
   @override
-  Future<dynamic> postRazorpayData(String url,
+  Future<dynamic> postPaymentData(String url,
       {Map<String, dynamic> body,
       String cBaseUrl,
       String token,
       bool isAuthTokenAvailable = true,
-      bool isRzpTxn = false,
+      bool isRzpTxn,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
       bool isAwsDeviceUrl = false}) async {
