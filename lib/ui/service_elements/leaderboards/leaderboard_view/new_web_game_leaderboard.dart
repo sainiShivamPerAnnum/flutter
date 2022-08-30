@@ -48,7 +48,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                     SizeConfig.roundness8,
                   ),
                 ),
-                padding: EdgeInsets.only(bottom: SizeConfig.padding40),
+                padding: EdgeInsets.only(bottom: SizeConfig.padding80 * 3),
                 child: NoRecordDisplayWidget(
                   asset: "images/leaderboard.png",
                   text: "Leaderboard will be updated soon",
