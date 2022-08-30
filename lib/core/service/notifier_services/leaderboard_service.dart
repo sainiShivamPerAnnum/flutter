@@ -21,7 +21,7 @@ class LeaderboardService
   final ScrollController parentController = ScrollController();
   int _referralLBLength = 0;
   List<String> _userProfilePicUrl = [];
-  bool isUserInTopThree = false, _isLeaderboardLoading = false;
+  bool isUserInTopThree = false, isLeaderboardLoading = false;
   int currentUserRank = 0;
 
   List<ScoreBoard> _referralLeaderBoard = [];
@@ -34,12 +34,6 @@ class LeaderboardService
   List<String> get userProfilePicUrl => this._userProfilePicUrl;
 
   get referralLBLength => this._referralLBLength;
-
-  bool get isLeaderboardLoading => this._isLeaderboardLoading;
-
-  set isLeaderboardLoading(value) {
-    this._isLeaderboardLoading = value;
-  }
 
   setReferralLeaderBoard() {
     notifyListeners(LeaderBoardServiceProperties.ReferralLeaderboard);
