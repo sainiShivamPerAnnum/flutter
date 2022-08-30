@@ -486,7 +486,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateRazorpayBuy() async {
-    //Check if user is registered on augmont
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
       _onboardUserManually();
@@ -553,39 +552,32 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: restrictPaytmAppInvoke,
-        isRzpTxn: true);
+        restrictAppInvoke: restrictPaytmAppInvoke);
 
     isGoldBuyInProgress = false;
     resetBuyOptions();
 
-    if (_status) {
-      AppState.delegate.appState.isTxnLoaderInView = true;
-      _logger.d("Txn Timer Function reinitialised and set with 30 secs delay");
-      // AppState.delegate.appState.txnFunction = null;
-      AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
-        AppState.delegate.appState.isTxnLoaderInView = false;
-        showTransactionPendingDialog();
-        AppState.delegate.appState.txnTimer.cancel();
-        _logger.d("timer cancelled");
-      });
-      // AppState.delegate.appState.txnFunction =
-      //     Future.delayed(Duration(seconds: 30), () async {
-      //   if (AppState.delegate.appState.isTxnLoaderInView == true) {
-      //     AppState.delegate.appState.isTxnLoaderInView = false;
-      //     AppState.delegate.appState.txnFunction = null;
-      //     showTransactionPendingDialog();
-      //   }
-      // });
-      //  AppState.delegate.appState.txnFunction()
-    } else {
-      if (AppState.delegate.appState.isTxnLoaderInView == true) {
-        AppState.delegate.appState.isTxnLoaderInView = false;
+    if (BaseRemoteConfig.ACTIVE_PG != 'rzp') {
+      if (_status) {
+        AppState.delegate.appState.isTxnLoaderInView = true;
+        _logger
+            .d("Txn Timer Function reinitialised and set with 30 secs delay");
+        // AppState.delegate.appState.txnFunction = null;
+        AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          showTransactionPendingDialog();
+          AppState.delegate.appState.txnTimer.cancel();
+          _logger.d("timer cancelled");
+        });
+      } else {
+        if (AppState.delegate.appState.isTxnLoaderInView == true) {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+        }
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Your transaction was unsuccessful. Please try again',
+        );
       }
-      BaseUtil.showNegativeAlert(
-        'Transaction failed',
-        'Your transaction was unsuccessful. Please try again',
-      );
     }
   }
 

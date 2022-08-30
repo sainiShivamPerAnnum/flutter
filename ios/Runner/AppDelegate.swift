@@ -13,19 +13,19 @@ import AppsFlyerLib
         GeneratedPluginRegistrant.register(with: self)
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let paymentChannel = FlutterMethodChannel(name: "fello.in/dev/payments/paytmService",
-                                                     binaryMessenger: controller.binaryMessenger)
-        paymentChannel.setMethodCallHandler({
-            [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
-            guard let args = call.arguments as? [String : Any] else {return}
-            let url = args["url"]
-              // This method is invoked on the UI thread.
-              guard call.method == "launchPaytmDeepLink" else {
-                result(FlutterMethodNotImplemented)
-                return
-              }
-              self?.launchUri(uri: url, result: <#T##FlutterResult#>)
-
-        })
+        binaryMessenger: controller.binaryMessenger)
+//        paymentChannel.setMethodCallHandler({
+//            [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
+//            guard let args = call.arguments as? [String : Any] else {return}
+//            let url = args["url"]
+//              // This method is invoked on the UI thread.
+//              guard call.method == "launchPaytmDeepLink" else {
+//                result(FlutterMethodNotImplemented)
+//                return
+//              }
+//              self?.launchUri(uri: url, result: <#T##FlutterResult#>)
+//
+//        })
         if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
@@ -58,7 +58,7 @@ import AppsFlyerLib
         return UIApplication.shared.canOpenURL(url!)
       }
 
-      private func launchUri(uri: String, result: @escaping FlutterResult) -> Bool {
+    private func launchUri(uri: String, result: @escaping FlutterResult) -> Bool {
         if(canLaunch(uri: uri)) {
           let url = URL(string: uri)
           if #available(iOS 10, *) {

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -45,7 +47,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _paytmRepo = locator<PaytmRepository>();
   final _rzpModel = locator<RazorpayModel>();
   final _userService = locator<UserService>();
-  final _api = locator<Api>();
   final _getterRepo = locator<GetterRepository>();
 
   bool _isFirstTime = true;
@@ -168,12 +169,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
-  Future<void> validateTransaction(String orderId) async {
+  Future<bool> validateTransaction(String orderId) async {
     final ApiResponse<TransactionResponseModel> transactionResponseModel =
         await _paytmRepo.getTransactionStatus(orderId);
 
     if (transactionResponseModel.code == 200) {
       _logger.d(transactionResponseModel.model.toString());
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -181,11 +185,12 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       {double amount,
       AugmontRates augmontRates,
       String couponCode,
-      bool restrictAppInvoke = false,
-      bool isRzpTxn = true}) async {
+      bool restrictAppInvoke = false}) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+
+    bool isRzpTxn = BaseRemoteConfig.ACTIVE_PG == 'rzp';
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
@@ -208,15 +213,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
-    print(paytmSubscriptionModel.data.orderId);
-    print(amount);
 
     try {
       _logger.d("Transaction order id: ${paytmSubscriptionModel.data.orderId}");
       _logger.d("Transaction app invoke: $restrictAppInvoke");
       var response;
       if (isRzpTxn) {
-        response = await _rzpModel.submitAugmontTransaction(
+        await _rzpModel.submitAugmontTransaction(
             _userService.firebaseUser.phoneNumber,
             _userService.firebaseUser.email,
             paytmSubscriptionModel.data.orderId,
@@ -231,11 +234,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             isStaging,
             restrictAppInvoke);
         _logger.d("Transaction Response:${response.toString()}");
-      }
-
-      //For debug mode to check transaction status from paytm.
-      // validateTransaction(paytmTransactionModel.data.orderId);
-      if (!isRzpTxn) {
         validateTransaction(paytmSubscriptionModel.data.orderId);
       }
       return true;
