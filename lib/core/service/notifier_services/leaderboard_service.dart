@@ -22,6 +22,7 @@ class LeaderboardService
   int _referralLBLength = 0;
   List<String> _userProfilePicUrl = [];
   bool isUserInTopThree = false;
+  // bool isLeaderboardLoading = false;
   int currentUserRank = 0;
 
   List<ScoreBoard> _referralLeaderBoard = [];
@@ -75,6 +76,11 @@ class LeaderboardService
       await fetchLeaderBoardProfileImage();
       setWebGameLeaderBoard();
 
+      _userProfilePicUrl.clear();
+
+      await fetchLeaderBoardProfileImage();
+
+      setWebGameLeaderBoard();
       _logger.d("$game Leaderboard successfully fetched");
     } else {
       _WebGameLeaderBoard = null;

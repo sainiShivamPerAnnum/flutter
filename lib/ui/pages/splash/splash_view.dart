@@ -27,7 +27,7 @@ class LauncherView extends StatelessWidget {
           backgroundColor: Colors.black,
           body: Container(
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight,
+            // height: SizeConfig.screenHeight,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -48,12 +48,10 @@ class LauncherView extends StatelessWidget {
                       model.isFetchingData
                           ? Lottie.asset(
                               Assets.felloSplashLoopLogo,
-                              // width: SizeConfig.screenWidth / 2.5,
                             )
                           : Lottie.asset(
                               Assets.felloSplashZoomOutLogo,
                               repeat: false
-                              // width: SizeConfig.screenWidth / 2.5,
                             ),
                       // Text(
                       //   locale.splashTagline,

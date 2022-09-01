@@ -56,7 +56,6 @@ class FcmHandler extends ChangeNotifier {
 
     // if (data["test_txn"] == "paytm") {
     // _txnService.isOngoingTxn = false;
-    //   log('Success KUNJ');
     //   return true;
     // }
 

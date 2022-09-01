@@ -155,17 +155,20 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       ),
                       alignment: Alignment.centerRight,
                       child: Text(
-                        model.currentPage == LoginUserNameView.index
-                            ? 'finish'
-                            : model.currentPage == LoginOtpView.index
-                                ? 'Done'
-                                : 'next',
-                        style: model.currentPage == LoginOtpView.index ||
-                                model.currentPage == LoginUserNameView.index
-                            ? TextStyles.rajdhaniB.body1
-                                .colour(UiConstants.kPrimaryColor)
-                            : TextStyles.rajdhaniB.body1,
-                      ),
+                          model.currentPage == LoginUserNameView.index
+                              ? 'Finish'
+                              : model.currentPage == LoginOtpView.index
+                                  ? 'Done'
+                                  : 'Next',
+                          style: TextStyles.rajdhaniB.body1
+                              .colour(UiConstants.kPrimaryColor)
+
+                          // style: model.currentPage == LoginOtpView.index ||
+                          //         model.currentPage == LoginUserNameView.index
+                          //     ? TextStyles.rajdhaniB.body1
+                          //         .colour(UiConstants.kPrimaryColor)
+                          //     : TextStyles.rajdhaniB.body1,
+                          ),
                     ),
                   ),
                 ),

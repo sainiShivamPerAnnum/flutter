@@ -58,9 +58,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 controller: model.mobileController,
                 onTap: model.showAvailablePhoneNumbers,
                 validator: (value) => model.validateMobile(),
-                // onChanged: (val) {
-                //   if (val.length == 10) FocusScope.of(context).unfocus();
-                // },
+                onChanged: (val) {
+                  if (val.length == 10) FocusScope.of(context).unfocus();
+                },
                 onFieldSubmitted: (v) {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },

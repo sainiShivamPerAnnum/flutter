@@ -1,5 +1,4 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/components/reward_shimmer.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -95,9 +94,7 @@ class RewardLeaderboardView extends StatelessWidget {
                     text: "Prizes will be updates soon",
                   )
                 : RewardView(model: model.prizes),
-        model.isLeaderboardLoading
-            ? LeaderboardShimmer()
-            : NewWebGameLeaderBoardView(),
+        NewWebGameLeaderBoardView(),
       ],
     );
   }
