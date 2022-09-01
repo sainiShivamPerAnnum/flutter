@@ -36,7 +36,8 @@ class OnBoardingView extends StatelessWidget {
               if (swipeCount >= 40) {
                 if (leftSwipe) {
                   if (model.currentPage == 2) {
-                    model.registerWalkthroughCompletion(comingFrom);
+                    // model.registerWalkthroughCompletion(comingFrom);
+                    return;
                   } else {
                     model.pageController.nextPage(
                       duration: Duration(milliseconds: 500),

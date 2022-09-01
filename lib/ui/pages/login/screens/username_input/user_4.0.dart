@@ -47,7 +47,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
           // mainAxisAlignment: MainAxisAlignment.start,
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding80),
+            SizedBox(height: SizeConfig.padding40),
             Text(
               'What do we call you?',
               style: TextStyles.rajdhaniB.title2,
@@ -66,7 +66,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
               duration: Duration(milliseconds: 200),
               height: isKeyboardOpen
                   ? SizeConfig.screenWidth * 0.03
-                  : SizeConfig.screenWidth * 0.186,
+                  : SizeConfig.screenWidth * 0.08,
             ),
             FelloUserAvatar(),
             AnimatedContainer(
@@ -87,7 +87,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                 enabled: model.enabled,
                 validator: (val) {
                   if (val == null || val.isEmpty)
-                    return "username cannot be empty";
+                    return "Username cannot be empty";
                   return null;
                 },
                 onChanged: (value) {
