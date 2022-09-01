@@ -110,7 +110,6 @@ flutter:
     - assets/temp/
     - assets/svg/
     - assets/svg/BottomNavBarIcons/
-    - assets/journey/
 
   fonts:
     - family: Cucciolo

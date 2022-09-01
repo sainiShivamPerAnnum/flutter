@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -61,6 +62,42 @@ class Win extends StatelessWidget {
                       onPressed: () {
                         model.cleanJourneyAssetsFiles();
                       },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: UiConstants.primaryColor,
+                          child: IconButton(
+                              icon: Icon(Icons.add, color: Colors.white),
+                              onPressed: () {
+                                BaseUtil.showPositiveAlert("Positive SnackBar",
+                                    "This is a positive snackbar");
+                              }),
+                        ),
+                        SizedBox(width: SizeConfig.padding16),
+                        CircleAvatar(
+                          backgroundColor: UiConstants.negativeAlertColor,
+                          child: IconButton(
+                              icon: Icon(Icons.block, color: Colors.white),
+                              onPressed: () {
+                                BaseUtil.showNegativeAlert("Negative SnackBar",
+                                    "This is a negative snackbar");
+                              }),
+                        ),
+                        SizedBox(width: SizeConfig.padding16),
+                        CircleAvatar(
+                          backgroundColor: Colors.red,
+                          child: IconButton(
+                              icon: Icon(
+                                  Icons
+                                      .signal_wifi_statusbar_connected_no_internet_4_rounded,
+                                  color: Colors.white),
+                              onPressed: () {
+                                BaseUtil.showNoInternetAlert();
+                              }),
+                        )
+                      ],
                     )
                   ],
                 ),

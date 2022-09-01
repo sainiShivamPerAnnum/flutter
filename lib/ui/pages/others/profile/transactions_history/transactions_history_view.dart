@@ -202,22 +202,21 @@ class SIPTransactionHistoryView extends StatelessWidget {
         : Column(
             children: [
               Expanded(
-                child: (model.filteredSIPList.length == 0
-                    ? Center(child: NoTransactionsContent())
-                    : ListView(
-                        physics: BouncingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding28),
-                        controller: model.tranListController,
-                        children: List.generate(
-                          model.filteredList.length,
-                          (index) => TransactionSIPTile(
-                            model: model,
-                            txn: model.filteredSIPList[index],
+                  child: (model.filteredSIPList.length == 0)
+                      ? Center(child: NoTransactionsContent())
+                      : ListView(
+                          physics: BouncingScrollPhysics(),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding28),
+                          controller: model.tranListController,
+                          children: List.generate(
+                            model.filteredSIPList.length,
+                            (index) => TransactionSIPTile(
+                              model: model,
+                              txn: model.filteredSIPList[index],
+                            ),
                           ),
-                        ),
-                      )),
-              ),
+                        )),
               if (model.isMoreTxnsBeingFetched)
                 Container(
                   width: SizeConfig.screenWidth,
@@ -329,13 +328,9 @@ class TransactionSIPTile extends StatelessWidget {
         Haptic.vibrate();
       },
       dense: true,
-      title: Text(
-          _txnService.getTileSubtitle(
-            txn.amount.toString(),
-          ),
-          style: TextStyles.sourceSans.body3),
+      title: Text('AUTO SIP', style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        txn.txnDateTime,
+        _txnService.getFormattedSIPDate(DateTime.parse(txn.txnDateTime)),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Text(

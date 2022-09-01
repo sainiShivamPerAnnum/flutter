@@ -85,6 +85,11 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                 textAlign: TextAlign.center,
                 controller: model.usernameController,
                 enabled: model.enabled,
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'[a-z0-9.]'),
+                  )
+                ],
                 validator: (val) {
                   if (val == null || val.isEmpty)
                     return "Username cannot be empty";
@@ -97,11 +102,11 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
             ),
             // SizedBox(height: SizeConfig.padding20),
             Container(
-              // margin: EdgeInsets.only(top: SizeConfig.padding16),
-              padding: EdgeInsets.only(
+              margin: EdgeInsets.only(
+                top: SizeConfig.padding16,
                 bottom: SizeConfig.padding24,
-                left: SizeConfig.padding12,
               ),
+              alignment: Alignment.center,
               child: model.showResult(),
             ),
             SizedBox(height: SizeConfig.padding20),

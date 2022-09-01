@@ -793,58 +793,10 @@ class PendingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppNegativeDialog(
-      btnAction: () {
-        AppState.backButtonDispatcher.didPopRoute();
-      },
+      btnAction: () {},
       btnText: "OK",
       title: "We're still Processing",
       subtitle: subtitle + duration,
-
-      // customContent: Column(
-      //   children: [
-      //     SizedBox(height: SizeConfig.screenHeight * 0.04),
-      //     SvgPicture.asset(
-      //       Assets.processing,
-      //       height: SizeConfig.screenHeight * 0.16,
-      //     ),
-      //     SizedBox(
-      //       height: SizeConfig.screenHeight * 0.04,
-      //     ),
-      //     Text(
-      //       title,
-      //       style: TextStyles.title3.bold,
-      //     ),
-      //     SizedBox(height: SizeConfig.padding16),
-      //     RichText(
-      //       textAlign: TextAlign.center,
-      //       text: TextSpan(
-      //         text: subtitle,
-      //         style: TextStyles.body3.colour(Colors.black54),
-      //         children: [
-      //           TextSpan(
-      //             text: duration,
-      //             style:
-      //                 TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
-      //           )
-      //         ],
-      //       ),
-      //     ),
-      //     SizedBox(height: SizeConfig.screenHeight * 0.02),
-      //     Container(
-      //       width: SizeConfig.screenWidth,
-      //       child: FelloButtonLg(
-      //         child: Text(
-      //           "OK",
-      //           style: TextStyles.body3.colour(Colors.white),
-      //         ),
-      //         color: UiConstants.primaryColor,
-      //         onPressed: () {
-      //           AppState.backButtonDispatcher.didPopRoute();
-      //         },
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

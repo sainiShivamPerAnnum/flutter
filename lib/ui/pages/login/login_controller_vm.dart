@@ -21,9 +21,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_4.0.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -420,7 +420,7 @@ class LoginControllerViewModel extends BaseModel {
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
-      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.username}',
+      'Welcome to ${Constants.APP_NAME}, ${userService.diplayUsername(userService.baseUser.username)}',
     );
     //process complete
   }

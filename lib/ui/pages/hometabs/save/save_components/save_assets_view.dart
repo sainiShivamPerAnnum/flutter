@@ -45,7 +45,6 @@ class SaveAssetView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: SizeConfig.screenWidth * 2.4,
                     decoration: BoxDecoration(
                         color: UiConstants.kBackgroundColor,
                         borderRadius: BorderRadius.circular(5)),
@@ -66,7 +65,7 @@ class SaveAssetView extends StatelessWidget {
                           height: SizeConfig.padding24,
                         ),
                         SaveTitleContainer(title: 'Transactions'),
-                        Expanded(child: MiniTransactionCard()),
+                        MiniTransactionCard(),
                       ],
                     ),
                   ),
@@ -120,10 +119,14 @@ class SaveAssetView extends StatelessWidget {
                     ),
                   //Lock in reached section
                   if (model.isLockInReached)
-                    SellPreventionReasonCard(
-                      iconString: Assets.alertTriangle,
-                      content:
-                          '${model.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: SellPreventionReasonCard(
+                        iconString: Assets.alertTriangle,
+                        content:
+                            '${model.withdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
+                      ),
                     ),
                   if (model.isGoldSaleActive)
                     Padding(
@@ -132,7 +135,7 @@ class SaveAssetView extends StatelessWidget {
                       child: SellPreventionReasonCard(
                         iconString: Assets.alertTriangle,
                         content:
-                            'Selling of DIgital Gold is currently on hold. Please try again later.',
+                            'Selling of Digital Gold is currently on hold. Please try again later.',
                       ),
                     ),
                   if (model.isOngoingTransaction)
@@ -326,7 +329,7 @@ class GoldAssetCard extends StatelessWidget {
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
-                                  isBarrierDismissable: true,
+                                  isBarrierDismissable: false,
                                   backgroundColor: Colors.transparent,
                                   isScrollControlled: true,
                                   content: RechargeModalSheet(),

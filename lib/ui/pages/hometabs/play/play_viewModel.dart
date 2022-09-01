@@ -79,8 +79,10 @@ class PlayViewModel extends BaseModel {
   init() async {
     isGamesListDataLoading = true;
     final response = await gamesRepo.getGames();
-    if (response.isSuccess()) gamesListData = response.model;
-    isGamesListDataLoading = false;
+    if (response.isSuccess()) {
+      gamesListData = response.model;
+      isGamesListDataLoading = false;
+    }
   }
 
   void openGame(GameModel game) {

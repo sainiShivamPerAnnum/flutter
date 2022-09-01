@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
-import 'package:felloapp/core/model/game_model4.0.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';

@@ -56,7 +56,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
                             )
                           : InitAutosaveCard(
                               onTap: () {
-                                subscriptionModel.navigateToAutoSave();
+                                subscriptionModel.getActiveButtonAction();
                               },
                             ))
                   : SizedBox(),

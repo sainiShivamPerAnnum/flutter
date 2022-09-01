@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -97,7 +97,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
                                           child: Image.file(
                                             File(widget.model
                                                 .selectedProfilePicture.path),
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                 ),
@@ -110,7 +110,7 @@ class _ChooseAvatar4State extends State<ChooseAvatar4> {
                                 ),
                                 child: SvgPicture.asset(
                                   'assets/svg/userAvatars/AV$idx.svg',
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                       ),

@@ -4,8 +4,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -123,7 +123,11 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       ),
                     ),
                     AnimatedContainer(
-                      height: keyboardIsOpen ? SizeConfig.padding54 : 0,
+                      height: keyboardIsOpen &&
+                              (SizeConfig.viewInsets.bottom >
+                                  SizeConfig.screenHeight / 2)
+                          ? SizeConfig.padding54
+                          : 0,
                       duration: Duration(
                         milliseconds: 200,
                       ),

@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -32,22 +33,44 @@ class NewAugmontBuyView extends StatelessWidget {
                 height: SizeConfig.padding16,
               ),
               Container(
-                decoration: BoxDecoration(
-                  color: UiConstants.kProfileBorderColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                child: Row(
+                  // crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Recharge',
+                      style: TextStyles.sourceSansSB.title3,
+                    ),
+                    // Spacer(),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     color: UiConstants.kProfileBorderColor,
+                    //     borderRadius:
+                    //         BorderRadius.circular(SizeConfig.roundness12),
+                    //   ),
+                    //   width: SizeConfig.screenWidth * 0.25,
+                    //   height: SizeConfig.padding4,
+                    // ),
+
+                    Expanded(
+                      child: Container(
+                          // margin: EdgeInsets.only(right: SizeConfig.padding16),
+                          alignment: Alignment.centerRight,
+                          child: model.isGoldBuyInProgress
+                              ? SizedBox()
+                              : IconButton(
+                                  icon: Icon(Icons.close, color: Colors.white),
+                                  onPressed: () {
+                                    AppState.backButtonDispatcher.didPopRoute();
+                                  },
+                                )),
+                    )
+                  ],
                 ),
-                width: SizeConfig.screenWidth * 0.25,
-                height: SizeConfig.padding4,
               ),
               SizedBox(
                 height: SizeConfig.padding32,
-              ),
-              Text(
-                'Recharge',
-                style: TextStyles.sourceSansSB.title4,
-              ),
-              SizedBox(
-                height: SizeConfig.padding54,
               ),
               EnterAmountView(model: model),
               Spacer(),

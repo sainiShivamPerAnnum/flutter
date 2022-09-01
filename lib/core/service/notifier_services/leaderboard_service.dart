@@ -72,8 +72,9 @@ class LeaderboardService
     );
     if (response.code == 200 && response.model.isNotEmpty) {
       _WebGameLeaderBoard = LeaderboardModel.fromMap(response.model);
-
       setCurrentPlayerRank();
+      await fetchLeaderBoardProfileImage();
+      setWebGameLeaderBoard();
 
       _userProfilePicUrl.clear();
 

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
@@ -138,7 +139,7 @@ class _JourneyMilestoneDetailsModalSheetState
               SizedBox(height: SizeConfig.padding12),
               Text(
                 widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
-                    ? "Wohoo, you completed this widget.milestone"
+                    ? "Wohoo, you completed this milestone"
                     : widget.milestone.steps.first.subtitle,
                 style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
               ),
@@ -148,7 +149,13 @@ class _JourneyMilestoneDetailsModalSheetState
                     ? CircularProgressIndicator(strokeWidth: 1)
                     : ticket == null
                         ? SizedBox()
-                        : rewardWidget(ticket.rewardArr),
+                        : (ticket.isRewarding &&
+                                (ticket.redeemedTimestamp == null ||
+                                    ticket.redeemedTimestamp ==
+                                        TimestampModel(
+                                            seconds: 0, nanoseconds: 0)))
+                            ? goldenTicketWidget()
+                            : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()
@@ -206,6 +213,27 @@ class _JourneyMilestoneDetailsModalSheetState
     );
   }
 
+  Widget goldenTicketWidget() {
+    return Container(
+      margin: EdgeInsets.only(right: SizeConfig.padding12),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              AppState.backButtonDispatcher.didPopRoute();
+              AppState.delegate.parseRoute(Uri.parse("/myWinnings"));
+            },
+            child: SvgPicture.asset(
+              Assets.unredemmedGoldenTicketBG,
+              height: SizeConfig.padding40,
+              width: SizeConfig.padding40,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget rewardWidget(List<Reward> rewards) {
     return (rewards == null || rewards.isEmpty)
         ? SizedBox()
@@ -255,7 +283,6 @@ class _JourneyMilestoneDetailsModalSheetState
                   ),
                 ),
               ),
-              SizedBox(height: SizeConfig.padding24),
             ],
           );
   }

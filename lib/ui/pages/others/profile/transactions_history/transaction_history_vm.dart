@@ -84,8 +84,8 @@ class TransactionsHistoryViewModel extends BaseModel {
     notifyListeners();
   }
 
-  set filteredSIPList(value) {
-    _filteredList = value;
+  set filteredSIPList(List<AutosaveTransactionModel> value) {
+    _filteredSIPList = value;
     notifyListeners();
   }
 

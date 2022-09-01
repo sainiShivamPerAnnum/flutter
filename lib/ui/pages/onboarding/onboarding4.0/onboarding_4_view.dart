@@ -79,23 +79,12 @@ class OnBoardingView extends StatelessWidget {
                     right: SizeConfig.padding24,
                     child: GestureDetector(
                       onTap: () {
-                        // if (model.currentPage == 2) {
-                        model.registerWalkthroughCompletion(comingFrom);
-                        // } else {
-                        //   model.pageController.animateToPage(
-                        //     2,
-                        //     duration: Duration(milliseconds: 500),
-                        //     curve: Curves.easeIn,
-                        //   );
-                        // }
+                        model.onBoardingCompleted(comingFrom);
                       },
-                      child: model.isWalkthroughRegistrationInProgress
-                          ? SpinKitThreeBounce(
-                              color: Colors.white, size: SizeConfig.padding16)
-                          : Text(
-                              "SKIP",
-                              style: TextStyles.rajdhaniSB.body1,
-                            ),
+                      child: Text(
+                        "SKIP",
+                        style: TextStyles.rajdhaniSB.body1,
+                      ),
                     ),
                   ),
                 ),

@@ -42,11 +42,17 @@ class RechargeLoadingView extends StatelessWidget {
 
                 _txnService.currentTransactionState =
                     TransactionState.idleTrasantion;
+                log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
                   AppState.screenStack.remove(AppState.screenStack.last);
                 }
+                log("Screen Stack:${AppState.screenStack.toString()}");
+
                 AppState.backButtonDispatcher.didPopRoute();
+                log("Screen Stack:${AppState.screenStack.toString()}");
+
                 _txnService.showTransactionPendingDialog();
+                log("Screen Stack:${AppState.screenStack.toString()}");
               },
               builder: (BuildContext context, Duration value, Widget child) {
                 final minutes = value.inMinutes;

@@ -36,11 +36,11 @@ class ProfileImageSE extends StatelessWidget {
           return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserDpUrl],
             builder: (context, model, properties) {
-              log("Avatar Id: ${model.baseUser.avatarId}");
+              log("Avatar Id: ${model?.baseUser?.avatarId}");
               return CircleAvatar(
                 radius: radius,
-                backgroundColor: Colors.transparent,
-                child: model.baseUser.avatarId != 'CUSTOM' ||
+                backgroundColor: Colors.black,
+                child: model?.baseUser?.avatarId != 'CUSTOM' ||
                         model.myUserDpUrl == null
                     ? SvgPicture.asset(
                         "assets/svg/userAvatars/${model?.baseUser?.avatarId ?? 'AV2'}.svg",
@@ -48,7 +48,7 @@ class ProfileImageSE extends StatelessWidget {
                         width: radius * 2,
                       )
                     : SizedBox(),
-                backgroundImage: model.baseUser.avatarId == 'CUSTOM' ||
+                backgroundImage: model?.baseUser?.avatarId == 'CUSTOM' ||
                         model.myUserDpUrl != null
                     ? CachedNetworkImageProvider(
                         model.myUserDpUrl,

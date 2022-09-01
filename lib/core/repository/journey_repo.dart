@@ -159,32 +159,54 @@ class JourneyRepository extends BaseRepo {
 
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
+      final response = await APIService.instance.getData(
+        ApiPath().kJourney,
+        token: token,
+        cBaseUrl: FlavorConfig.isDevelopment()
+            ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
+            : "not yet found",
+        queryParams: queryParams,
+      );
+      final responseData = response["data"];
+      logger.d("Journey Response $responseData");
+      final start = responseData["start"];
+      final end = responseData["end"];
+      List<dynamic> items = responseData["items"];
 
-      return await _cacheService.paginatedCachedApi(
-          CacheKeys.JOURNEY_PAGE,
-          startPage,
-          endPage,
-          TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath().kJourney,
-                token: token,
-                cBaseUrl: FlavorConfig.isDevelopment()
-                    ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
-                    : "not yet found",
-                queryParams: queryParams,
-              ), (dynamic responseData) {
-        // parser
-        final start = responseData["start"];
-        final end = responseData["end"];
-        List<dynamic> items = responseData["items"];
-
-        List<JourneyPage> journeyPages = [];
-        for (int i = start; i <= end; i++) {
-          journeyPages.add(JourneyPage.fromMap(items[i - start], i));
-        }
-
-        return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
+      List<JourneyPage> journeyPages = [];
+      for (int i = start; i <= end; i++) {
+        journeyPages.add(JourneyPage.fromMap(items[i - start], i));
+      }
+      logger.d("Pages fetched: ${journeyPages.length}");
+      journeyPages.forEach((page) {
+        logger.d("Pages: ${page.page}");
       });
+      return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
+      // return await _cacheService.paginatedCachedApi(
+      //     CacheKeys.JOURNEY_PAGE,
+      //     startPage,
+      //     endPage,
+      //     TTL.ONE_DAY,
+      //     () => APIService.instance.getData(
+      //           ApiPath().kJourney,
+      //           token: token,
+      //           cBaseUrl: FlavorConfig.isDevelopment()
+      //               ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
+      //               : "not yet found",
+      //           queryParams: queryParams,
+      //         ), (dynamic responseData) {
+      //   // parser
+      //   final start = responseData["start"];
+      //   final end = responseData["end"];
+      //   List<dynamic> items = responseData["items"];
+
+      //   List<JourneyPage> journeyPages = [];
+      //   for (int i = start; i <= end; i++) {
+      //     journeyPages.add(JourneyPage.fromMap(items[i - start], i));
+      //   }
+
+      //   return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
+      // });
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to journey pages", 400);

@@ -242,6 +242,12 @@ class TransactionService
     return DateFormat('MMMMd').format(now);
   }
 
+  String getFormattedSIPDate(DateTime time) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    return DateFormat('MMMMd').format(now);
+  }
+
   Widget getTileLead(String type) {
     IconData icon;
     Color iconColor;
@@ -289,7 +295,7 @@ class TransactionService
     } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
       return "Withdrawal";
     }
-    return "";
+    return "AUTO SIP";
   }
 
   Color getTransactionTypeColor(String type) {
