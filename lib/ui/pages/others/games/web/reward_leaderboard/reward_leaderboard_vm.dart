@@ -57,8 +57,10 @@ class RewardLeaderboardViewModel extends BaseModel {
     currentGame = game;
     print(currentGame);
     _pageController = PageController(initialPage: 0);
-    refreshPrizes();
-    refreshLeaderboard();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      refreshPrizes();
+      refreshLeaderboard();
+    });
   }
 
   clear() {

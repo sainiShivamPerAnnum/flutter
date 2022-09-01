@@ -28,32 +28,38 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
         LeaderBoardServiceProperties>(
-      properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
+      properties: [
+        LeaderBoardServiceProperties.WebGameLeaderBoard,
+        LeaderBoardServiceProperties.LeaderBoardState
+      ],
       builder: (context, m, properties) {
-        return m.WebGameLeaderBoard != null &&
-                m.WebGameLeaderBoard.scoreboard != null &&
-                (m.userProfilePicUrl.length >=
-                    m.WebGameLeaderBoard.scoreboard.length)
-            ? NewLeaderBoardView(
-                scoreBoard: m.WebGameLeaderBoard.scoreboard,
-                userProfilePicUrl: m.userProfilePicUrl,
-                currentUserRank: m.currentUserRank,
-                isUserInTopThree: m.isUserInTopThree,
-              )
-            : Container(
-                margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                decoration: BoxDecoration(
-                  color: UiConstants.gameCardColor,
-                  borderRadius: BorderRadius.circular(
-                    SizeConfig.roundness8,
-                  ),
-                ),
-                padding: EdgeInsets.only(bottom: SizeConfig.padding80 * 3),
-                child: NoRecordDisplayWidget(
-                  asset: "images/leaderboard.png",
-                  text: "Leaderboard will be updated soon",
-                ),
-              );
+        return m.isLeaderboardLoading
+            ? LeaderboardShimmer()
+            : (m.WebGameLeaderBoard != null &&
+                    m.WebGameLeaderBoard.scoreboard != null &&
+                    (m.userProfilePicUrl.length >=
+                        m.WebGameLeaderBoard.scoreboard.length)
+                ? NewLeaderBoardView(
+                    scoreBoard: m.WebGameLeaderBoard.scoreboard,
+                    userProfilePicUrl: m.userProfilePicUrl,
+                    currentUserRank: m.currentUserRank,
+                    isUserInTopThree: m.isUserInTopThree,
+                  )
+                : Container(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                    decoration: BoxDecoration(
+                      color: UiConstants.gameCardColor,
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness8,
+                      ),
+                    ),
+                    padding: EdgeInsets.only(bottom: SizeConfig.padding80 * 3),
+                    child: NoRecordDisplayWidget(
+                      asset: "images/leaderboard.png",
+                      text: "Leaderboard will be updated soon",
+                    ),
+                  ));
       },
     );
   }

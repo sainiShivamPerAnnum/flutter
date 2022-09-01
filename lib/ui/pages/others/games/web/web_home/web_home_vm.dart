@@ -130,7 +130,7 @@ class WebHomeViewModel extends BaseModel {
     await fetchGame(game);
     // scrollController = _lbService.parentController;
     // pageController = new PageController(initialPage: 0);
-    refreshPrizes();
+    // refreshPrizes();
     isLoading = false;
   }
 
@@ -140,47 +140,47 @@ class WebHomeViewModel extends BaseModel {
 
   clear() {}
 
-  refreshPrizes() async {
-    isPrizesLoading = true;
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        if (_prizeService.poolClubPrizes == null)
-          await _prizeService.fetchPoolClubPrizes();
-        prizes = _prizeService.poolClubPrizes;
-        gameCode = "PO";
+  // refreshPrizes() async {
+  //   isPrizesLoading = true;
+  //   switch (currentGame) {
+  //     case Constants.GAME_TYPE_POOLCLUB:
+  //       if (_prizeService.poolClubPrizes == null)
+  //         await _prizeService.fetchPoolClubPrizes();
+  //       prizes = _prizeService.poolClubPrizes;
+  //       gameCode = "PO";
 
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        if (_prizeService.cricketPrizes == null)
-          await _prizeService.fetchCricketPrizes();
-        prizes = _prizeService.cricketPrizes;
-        gameCode = "CR";
+  //       break;
+  //     case Constants.GAME_TYPE_CRICKET:
+  //       if (_prizeService.cricketPrizes == null)
+  //         await _prizeService.fetchCricketPrizes();
+  //       prizes = _prizeService.cricketPrizes;
+  //       gameCode = "CR";
 
-        break;
-      case Constants.GAME_TYPE_TAMBOLA:
-        if (_prizeService.tambolaPrizes == null)
-          await _prizeService.fetchTambolaPrizes();
-        prizes = _prizeService.tambolaPrizes;
-        gameCode = "TA";
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        if (_prizeService.footballPrizes == null)
-          await _prizeService.fetchFootballPrizes();
-        prizes = _prizeService.footballPrizes;
-        gameCode = "FO";
-        break;
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        if (_prizeService.candyFiestaPrizes == null)
-          await _prizeService.fetchCandyFiestaPrizes();
-        prizes = _prizeService.candyFiestaPrizes;
-        gameCode = "CA";
-        break;
-    }
-    isPrizesLoading = false;
-    if (prizes == null)
-      BaseUtil.showNegativeAlert("Unable to fetch prizes at the moment",
-          "Please try again after sometime");
-  }
+  //       break;
+  //     case Constants.GAME_TYPE_TAMBOLA:
+  //       if (_prizeService.tambolaPrizes == null)
+  //         await _prizeService.fetchTambolaPrizes();
+  //       prizes = _prizeService.tambolaPrizes;
+  //       gameCode = "TA";
+  //       break;
+  //     case Constants.GAME_TYPE_FOOTBALL:
+  //       if (_prizeService.footballPrizes == null)
+  //         await _prizeService.fetchFootballPrizes();
+  //       prizes = _prizeService.footballPrizes;
+  //       gameCode = "FO";
+  //       break;
+  //     case Constants.GAME_TYPE_CANDYFIESTA:
+  //       if (_prizeService.candyFiestaPrizes == null)
+  //         await _prizeService.fetchCandyFiestaPrizes();
+  //       prizes = _prizeService.candyFiestaPrizes;
+  //       gameCode = "CA";
+  //       break;
+  //   }
+  //   isPrizesLoading = false;
+  //   if (prizes == null)
+  //     BaseUtil.showNegativeAlert("Unable to fetch prizes at the moment",
+  //         "Please try again after sometime");
+  // }
 
   Future<bool> setupGame() async {
     await getBearerToken();
