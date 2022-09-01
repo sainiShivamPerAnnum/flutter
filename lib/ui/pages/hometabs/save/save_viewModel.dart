@@ -130,13 +130,13 @@ class SaveViewModel extends BaseModel {
   }
 
   updateSellButtonDetails() async {
-    _isKYCVerified = _sellService.isKYCVerified;
-    _isVPAVerified = _sellService.isVPAVerified;
+    _isKYCVerified = _sellService?.isKYCVerified ?? false;
+    _isVPAVerified = _sellService?.isVPAVerified ?? false;
     if (withdrawableQnt <= nonWithdrawableQnt) {
       _isLockInReached = true;
     }
-    _isGoldSaleActive = _baseUtil.augmontDetail.isSellLocked;
-    _isOngoingTransaction = _sellService.isOngoingTransaction;
+    _isGoldSaleActive = _baseUtil.augmontDetail?.isSellLocked ?? false;
+    _isOngoingTransaction = _sellService?.isOngoingTransaction ?? false;
     notifyListeners();
   }
 

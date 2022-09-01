@@ -66,10 +66,13 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   verifyOngoingTransaction() async {
     await _txnService.updateTransactions();
-    setOngoingTransaction = _txnService.txnList
-            .where((element) => element.subType == 'WITHDRAWL')
-            .first
-            .tranStatus !=
-        "COMPLETE";
+    if (_txnService.txnList.length > 0) {
+      setOngoingTransaction = _txnService.txnList
+                  .where((element) => element.subType == 'WITHDRAWL')
+                  .first
+                  ?.tranStatus !=
+              "COMPLETE" ??
+          false;
+    }
   }
 }
