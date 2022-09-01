@@ -14,17 +14,20 @@ import AppsFlyerLib
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let paymentChannel = FlutterMethodChannel(name: "fello.in/dev/payments/paytmService",
         binaryMessenger: controller.binaryMessenger)
-         paymentChannel.setMethodCallHandler({
-             [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
-             guard let args = call.arguments as String else {return}
-             let url = args["url"]
-               // This method is invoked on the UI thread.
-               guard call.method == "launchPaytmDeepLink" else {
-                 result(FlutterMethodNotImplemented)
-                 return
-               }
-               self?.launchUri(uri: url, result: FlutterResult)
-         })
+//        paymentChannel.setMethodCallHandler({
+//            [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
+//               // This method is invoked on the UI thread.
+//              switch(call.method){
+//                case "launchPaytmDeepLink":
+//                  let args = call.arguments
+//                  let uri = (args!["url"] as? String)!
+//                  self.launchUri(uri: uri, result: result)
+//                  return
+//                default:
+//                  result(FlutterMethodNotImplemented)
+//                  return
+//              }
+//        })
         if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }

@@ -37,12 +37,12 @@ class RazorpayModel extends ChangeNotifier {
     String paySignature = response.signature;
     AppState.delegate.appState.isTxnLoaderInView = true;
     AppState.delegate.appState.txnTimer =
-        Timer(Duration(seconds: 15), () async {
+        Timer(Duration(seconds: 30), () async {
       bool isValidated =
           await _paytmService.validateTransaction(response.orderId);
       AppState.delegate.appState.isTxnLoaderInView = false;
       print(isValidated);
-      if (isValidated) {
+      if (!isValidated) {
         BaseUtil.openDialog(
           addToScreenStack: true,
           hapticVibrate: true,
@@ -102,7 +102,7 @@ class RazorpayModel extends ChangeNotifier {
       'key': _keyId,
       'amount': amount.toInt() * 100,
       'name': 'Augmont Gold',
-      'order_id': isDev ? "" : orderId,
+      'order_id': orderId,
       'description': 'Digital Gold Purchase',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,

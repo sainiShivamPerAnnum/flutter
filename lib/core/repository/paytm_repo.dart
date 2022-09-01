@@ -68,8 +68,6 @@ class PaytmRepository {
       final Map<String, dynamic> _body = {
         "tempToken": tempToken,
         "uid": _userService.baseUser?.uid,
-        "payerAccount": "85551875858@ybl",
-        "paymentMode": "UPI_INTENT",
         "osType": osType,
         "pspApp": pspApp,
         "orderId": orderId
