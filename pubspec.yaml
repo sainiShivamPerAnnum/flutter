@@ -111,17 +111,6 @@ flutter:
     - assets/svg/
     - assets/svg/BottomNavBarIcons/
 
-  fonts:
-    - family: Cucciolo
-      fonts:
-        - asset: fonts/Cucciolo Rough.ttf
-    - family: Arctick
-      fonts:
-        - asset: fonts/arctick/arctik-2.ttf
-        - asset: fonts/arctick/arctik-3.5.ttf
-          weight: 500
-        - asset: fonts/arctick/arctik-5.ttf
-          weight: 700
 
 flutter_intl:
   main_locale: en_US
