@@ -48,7 +48,7 @@ class ProfileImageSE extends StatelessWidget {
                         width: radius * 2,
                       )
                     : SizedBox(),
-                backgroundImage: model.baseUser.avatarId == 'CUSTOM' ||
+                backgroundImage: model?.baseUser?.avatarId == 'CUSTOM' ||
                         model.myUserDpUrl != null
                     ? CachedNetworkImageProvider(
                         model.myUserDpUrl,

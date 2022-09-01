@@ -150,7 +150,7 @@ class LauncherViewModel extends BaseModel {
     int delayedSecond = _logoWatch.elapsed.inMilliseconds % 2500;
 
     delayedSecond = 2500 - delayedSecond;
-
+    log('Delayed seconds: $delayedSecond');
     await Future.delayed(
       new Duration(milliseconds: delayedSecond),
     );
@@ -161,7 +161,7 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 600),
+      new Duration(milliseconds: 700),
     );
 
     try {

@@ -136,43 +136,27 @@ class _JourneyViewState extends State<JourneyView>
                           height: model.currentFullViewHeight,
                           width: SizeConfig.screenWidth,
                           // color: Colors.black,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xffB9D1FE),
-                                Color(0xffD6E0FF),
-                                Color(0xffF1EFFF)
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
+                          // decoration: BoxDecoration(
+                          // gradient: LinearGradient(
+                          //   colors: [
+                          //     Color(0xffB9D1FE),
+                          //     Color(0xffD6E0FF),
+                          //     Color(0xffF1EFFF)
+                          //   ],
+                          //   begin: Alignment.topCenter,
+                          //   end: Alignment.bottomCenter,
+                          // ),
+                          // ),
                           child: Stack(
                             children: [
                               Background(model: model),
                               ActiveMilestoneBackgroundGlow(),
                               JourneyAssetPath(model: model),
                               if (model.avatarPath != null)
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  child: CustomPaint(
-                                    size: Size(
-                                        model.pageWidth, model.pageHeight * 2),
-                                    painter: PathPainter(
-                                        model.avatarPath, Colors.transparent),
-                                  ),
-                                ),
+                                AvatarPathPainter(model: model),
                               ActiveMilestoneBaseGlow(),
                               Milestones(model: model),
-                              // ActiveMilestoneFrontGlow(),
-                              // MilestoneChecks(),
-                              Avatar(
-                                model: model,
-                              ),
-                              LevelBlurView(
-                                model: model,
-                              )
+                              Avatar(model: model),
                             ],
                           ),
                         ),
@@ -180,129 +164,9 @@ class _JourneyViewState extends State<JourneyView>
                     ),
                     JourneyAppBar(),
                     // JourneyBannersView(),
-                    if (model.isRefreshing)
-                      Positioned(
-                        bottom: SizeConfig.navBarHeight,
-                        child: Container(
-                          width: SizeConfig.screenWidth,
-                          child: LinearProgressIndicator(
-                            minHeight: 4,
-                            backgroundColor: UiConstants.gameCardColor,
-                            color: UiConstants.tertiarySolid,
-                          ),
-                        ),
-                      ),
-                    PropertyChangeConsumer<JourneyService,
-                        JourneyServiceProperties>(
-                      properties: [
-                        JourneyServiceProperties.AvatarRemoteMilestoneIndex
-                      ],
-                      builder: (context, m, properties) {
-                        return m.avatarRemoteMlIndex > 2
-                            ? SizedBox()
-                            : Positioned(
-                                bottom: 0,
-                                child: SafeArea(
-                                  child: Container(
-                                    width: SizeConfig.screenWidth -
-                                        SizeConfig.pageHorizontalMargins * 2,
-                                    margin: EdgeInsets.all(
-                                        SizeConfig.pageHorizontalMargins),
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.gameCardColor,
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness24),
-                                    ),
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding4,
-                                          vertical:
-                                              SizeConfig.pageHorizontalMargins),
-                                      leading: GestureDetector(
-                                        onDoubleTap: () {
-                                          AppState.delegate
-                                              .parseRoute(Uri.parse("profile"));
-                                        },
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.black,
-                                          radius: SizeConfig.avatarRadius * 2,
-                                          child: SvgPicture.asset(
-                                              Assets.aFelloToken,
-                                              height: SizeConfig.padding32),
-                                        ),
-                                      ),
-                                      title: FittedBox(
-                                        child: Text(
-                                          "Welcome to Fello",
-                                          style: TextStyles.rajdhaniB.title3
-                                              .colour(Colors.white),
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        "Lets get started with the journey",
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white60),
-                                      ),
-                                      trailing: IconButton(
-                                        icon: Icon(Icons.navigate_next_rounded,
-                                            color: Colors.white),
-                                        onPressed: () {
-                                          model.showMilestoneDetailsModalSheet(
-                                              model.currentMilestoneList
-                                                  .firstWhere((milestone) =>
-                                                      milestone.index ==
-                                                      m.avatarRemoteMlIndex),
-                                              context);
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                      },
-                    ),
-                    AnimatedPositioned(
-                      top: (model.isLoading &&
-                              model.pages != null &&
-                              model.pages.length > 0)
-                          ? SizeConfig.pageHorizontalMargins
-                          : -400,
-                      duration: Duration(seconds: 1),
-                      curve: Curves.decelerate,
-                      left: SizeConfig.pageHorizontalMargins,
-                      child: SafeArea(
-                        child: Container(
-                          width: SizeConfig.screenWidth -
-                              SizeConfig.pageHorizontalMargins * 2,
-                          height: SizeConfig.padding80,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness16),
-                            color: Colors.black54,
-                          ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.black,
-                              radius: SizeConfig.avatarRadius * 2,
-                              child: SpinKitCircle(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.avatarRadius * 1.5,
-                              ),
-                            ),
-                            title: Text(
-                              "Loading",
-                              style: TextStyles.rajdhaniB.title3
-                                  .colour(Colors.white),
-                            ),
-                            subtitle: Text(
-                              "Loading more levels for you,please wait",
-                              style: TextStyles.sourceSans.body3
-                                  .colour(Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    if (model.isRefreshing) JRefreshIndicator(model: model),
+                    NewUserNavBar(model: model),
+                    JPageLoader(model: model)
                   ],
                 ),
         );
@@ -311,70 +175,222 @@ class _JourneyViewState extends State<JourneyView>
   }
 }
 
-class LevelBlurView extends StatelessWidget {
+class AvatarPathPainter extends StatelessWidget {
   final JourneyPageViewModel model;
 
-  LevelBlurView({this.model});
+  const AvatarPathPainter({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      child: CustomPaint(
+        size: Size(model.pageWidth, model.pageHeight * 2),
+        painter: PathPainter(model.avatarPath, Colors.transparent),
+      ),
+    );
+  }
+}
+
+class JRefreshIndicator extends StatelessWidget {
+  final JourneyPageViewModel model;
+  const JRefreshIndicator({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: SizeConfig.navBarHeight,
+      child: Container(
+        width: SizeConfig.screenWidth,
+        child: LinearProgressIndicator(
+          minHeight: 4,
+          backgroundColor: UiConstants.gameCardColor,
+          color: UiConstants.tertiarySolid,
+        ),
+      ),
+    );
+  }
+}
+
+class NewUserNavBar extends StatelessWidget {
+  final JourneyPageViewModel model;
+
+  const NewUserNavBar({Key key, @required this.model}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.Pages],
-        builder: (context, jModel, properties) {
-          return PropertyChangeConsumer<UserService, UserServiceProperties>(
-              properties: [UserServiceProperties.myJourneyStats],
-              builder: (context, m, properties) {
-                final JourneyLevel levelData = jModel.getJourneyLevelBlurData();
-                log("Current Level Data ${levelData.toString()}");
-                return levelData != null &&
-                        model.pages.length >= levelData.pageEnd
-                    ? Stack(
-                        children: [
-                          Positioned(
-                            left: 0,
-                            top: 0,
-                            child: BlurFilter(
-                              child: Container(
-                                color: Colors.transparent,
-                                height: model.pageHeight *
-                                    (1 - levelData.breakpoint),
-                                width: model.pageWidth,
-                                alignment: Alignment.bottomCenter,
-                              ),
-                            ),
+      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+      builder: (context, m, properties) {
+        return m.avatarRemoteMlIndex > 2
+            ? SizedBox()
+            : Positioned(
+                bottom: 0,
+                child: SafeArea(
+                  child: Container(
+                    width: SizeConfig.screenWidth -
+                        SizeConfig.pageHorizontalMargins * 2,
+                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    decoration: BoxDecoration(
+                      color: UiConstants.gameCardColor,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness24),
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding4,
+                          vertical: SizeConfig.pageHorizontalMargins),
+                      leading: GestureDetector(
+                        onDoubleTap: () {
+                          AppState.delegate.parseRoute(Uri.parse("profile"));
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: SizeConfig.avatarRadius * 2,
+                          child: SvgPicture.asset(Assets.aFelloToken,
+                              height: SizeConfig.padding32),
+                        ),
+                      ),
+                      title: FittedBox(
+                        child: Text(
+                          "Welcome to Fello",
+                          style:
+                              TextStyles.rajdhaniB.title3.colour(Colors.white),
+                        ),
+                      ),
+                      subtitle: Text(
+                        "Lets get started with the journey",
+                        style:
+                            TextStyles.sourceSans.body3.colour(Colors.white60),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.navigate_next_rounded,
+                            color: Colors.white),
+                        onPressed: () {
+                          model.showMilestoneDetailsModalSheet(
+                              model.currentMilestoneList.firstWhere(
+                                  (milestone) =>
+                                      milestone.index == m.avatarRemoteMlIndex),
+                              context);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              );
+      },
+    );
+  }
+}
+
+class JPageLoader extends StatelessWidget {
+  final JourneyPageViewModel model;
+  const JPageLoader({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      top: (model.isLoading && model.pages != null && model.pages.length > 0)
+          ? SizeConfig.pageHorizontalMargins
+          : -400,
+      duration: Duration(seconds: 1),
+      curve: Curves.decelerate,
+      left: SizeConfig.pageHorizontalMargins,
+      child: SafeArea(
+        child: Container(
+          width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+          height: SizeConfig.padding80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            color: Colors.black54,
+          ),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.black,
+              radius: SizeConfig.avatarRadius * 2,
+              child: SpinKitCircle(
+                color: UiConstants.primaryColor,
+                size: SizeConfig.avatarRadius * 1.5,
+              ),
+            ),
+            title: Text(
+              "Loading",
+              style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+            ),
+            subtitle: Text(
+              "Loading more levels for you,please wait",
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LevelBlurView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+      properties: [JourneyServiceProperties.Pages],
+      builder: (context, jModel, properties) {
+        return PropertyChangeConsumer<UserService, UserServiceProperties>(
+          properties: [UserServiceProperties.myJourneyStats],
+          builder: (context, m, properties) {
+            final JourneyLevel levelData = jModel.getJourneyLevelBlurData();
+            log("Current Level Data ${levelData.toString()}");
+            return levelData != null && jModel.pages.length >= levelData.pageEnd
+                ? Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        child: BlurFilter(
+                          child: Container(
+                            color: Colors.transparent,
+                            height:
+                                jModel.pageHeight * (1 - levelData.breakpoint),
+                            width: jModel.pageWidth,
+                            alignment: Alignment.bottomCenter,
                           ),
-                          Positioned(
-                            top: model.pageHeight * (1 - levelData.breakpoint) -
-                                SizeConfig.avatarRadius,
-                            child: Container(
-                              width: model.pageWidth,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomPaint(
-                                      painter: DottedLinePainter(),
-                                    ),
-                                  ),
-                                  CircleAvatar(
-                                    radius: SizeConfig.avatarRadius,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(Icons.lock,
-                                        size: SizeConfig.iconSize0,
-                                        color: Colors.black),
-                                  ),
-                                  Expanded(
-                                    child: CustomPaint(
-                                      painter: DottedLinePainter(),
-                                    ),
-                                  ),
-                                ],
+                        ),
+                      ),
+                      Positioned(
+                        top: jModel.pageHeight * (1 - levelData.breakpoint) -
+                            SizeConfig.avatarRadius,
+                        child: Container(
+                          width: jModel.pageWidth,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CustomPaint(
+                                  painter: DottedLinePainter(),
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                              CircleAvatar(
+                                radius: SizeConfig.avatarRadius,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.lock,
+                                    size: SizeConfig.iconSize0,
+                                    color: Colors.black),
+                              ),
+                              Expanded(
+                                child: CustomPaint(
+                                  painter: DottedLinePainter(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       )
-                    : SizedBox();
-              });
-        });
+                    ],
+                  )
+                : SizedBox();
+          },
+        );
+      },
+    );
   }
 }
 
@@ -397,42 +413,6 @@ class DottedLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
-  }
-}
-
-class MilestoneChecks extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
-          JourneyServiceProperties.AvatarPosition,
-          JourneyServiceProperties.BaseGlow,
-          JourneyServiceProperties.Pages,
-        ],
-        builder: (context, model, properties) {
-          return SizedBox(
-            width: model.pageWidth,
-            height: model.pageHeight * 2,
-            child: Stack(
-              children: List.generate(model.avatarRemoteMlIndex - 1, (i) {
-                // if (model.currentMilestoneList.length <
-                //     model.avatarRemoteMlIndex)
-                return Positioned(
-                    left: model.pageWidth * model.currentMilestoneList[i].x,
-                    bottom: ((model.pageHeight *
-                                (model.currentMilestoneList[i].page - 1)) +
-                            model.pageHeight *
-                                model.currentMilestoneList[i].y) -
-                        model.pageHeight * 0.02,
-                    child: MileStoneCheck(
-                        // model: model,
-                        milestone: model.currentMilestoneList[i]));
-                // else
-                //   return SizedBox();
-              }),
-            ),
-          );
-        });
   }
 }
 

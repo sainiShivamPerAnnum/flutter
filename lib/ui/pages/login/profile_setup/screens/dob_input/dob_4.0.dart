@@ -6,7 +6,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_vm.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DOB4 extends StatelessWidget {

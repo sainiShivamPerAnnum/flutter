@@ -52,6 +52,7 @@ class LauncherView extends StatelessWidget {
                             )
                           : Lottie.asset(
                               Assets.felloSplashZoomOutLogo,
+                              repeat: false
                               // width: SizeConfig.screenWidth / 2.5,
                             ),
                       // Text(

@@ -1,14 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -32,9 +31,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../../../core/enums/page_state_enum.dart';
 import '../../../../navigator/app_state.dart';
-import '../../../../navigator/router/ui_pages.dart';
+
+const HtmlEscape htmlEscape = HtmlEscape();
 
 class Save extends StatelessWidget {
   final CustomLogger logger = locator<CustomLogger>();
@@ -452,8 +451,8 @@ class SaveBlogSection extends StatelessWidget {
                                 model.blogPosts[index].slug);
                           },
                           blogSideFlagColor: model.getRandomColor(),
-                          title: model.blogPosts[index].title.rendered,
-                          description: model.blogPosts[index].acf.categories,
+                          title: model.blogPosts[index].acf.categories,
+                          description: model.blogPosts[index].title.rendered,
                           imageUrl: model.blogPosts[index].yoastHeadJson,
                         ),
                       );
@@ -499,6 +498,8 @@ class SaveBlogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final document = parse(description);
+    // final String parsedDesc = parse(document.body.text).documentElement.text;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -556,18 +557,20 @@ class SaveBlogTile extends StatelessWidget {
                               : SizeConfig.screenWidth * 0.34,
                         ),
                         child: Text(
-                          description,
-                          maxLines: 5,
+                          description.replaceAll('&#8211;', '-'),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyles.rajdhaniSB.body2
                               .colour(UiConstants.kTextColor),
                         ),
                       ),
+                      SizedBox(height: SizeConfig.padding12),
                       ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: SizeConfig.screenWidth * 0.34,
                           ),
                           child: Text(
-                            title,
+                            title.replaceAll('&#8211;', '-'),
                             maxLines: 2,
                             overflow: TextOverflow.clip,
                             style: TextStyles.sourceSans.body3

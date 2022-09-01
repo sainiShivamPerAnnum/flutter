@@ -1,9 +1,9 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/level_2/complete_profile_vm.dart';
-import 'package:felloapp/ui/pages/login/level_2/screens/choose_avatar_input/choose_avatar.dart';
-import 'package:felloapp/ui/pages/login/level_2/screens/dob_input/dob_4.0.dart';
-import 'package:felloapp/ui/pages/login/level_2/screens/email_input/email_4.0.dart';
-import 'package:felloapp/ui/pages/login/level_2/screens/name_input/name_4.0.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_vm.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/screens/choose_avatar_input/choose_avatar.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/screens/dob_input/dob_4.0.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/screens/email_input/email_4.0.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/screens/name_input/name_4.0.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/styles/size_config.dart';
