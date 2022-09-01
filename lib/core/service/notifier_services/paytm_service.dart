@@ -191,7 +191,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
 
     bool isRzpTxn = BaseRemoteConfig.ACTIVE_PG == 'rzp';
-    print(isRzpTxn);
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
@@ -219,13 +218,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.d("Transaction order id: ${paytmSubscriptionModel.data.orderId}");
       _logger.d("Transaction app invoke: $restrictAppInvoke");
       var response;
-      if (isRzpTxn) {
-        await _rzpModel.submitAugmontTransaction(
-            _userService.firebaseUser.phoneNumber,
-            _userService.firebaseUser.email,
-            paytmSubscriptionModel.data.orderId,
-            amount);
-      } else {
         response = await AllInOneSdk.startTransaction(
             mid,
             paytmSubscriptionModel.data.orderId,
@@ -236,7 +228,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             restrictAppInvoke);
         _logger.d("Transaction Response:${response.toString()}");
         validateTransaction(paytmSubscriptionModel.data.orderId);
-      }
       return true;
     } catch (onError) {
       if (onError is PlatformException) {

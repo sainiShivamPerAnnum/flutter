@@ -273,7 +273,7 @@ class AugmontBuyCard extends StatelessWidget {
               onPressed: () async {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
-                  model.initiateRazorpayBuy();
+                  model.initiateBuy();
                   // BaseUtil.openModalBottomSheet(
                   //     addToScreenStack: true,
                   //     backgroundColor: Colors.transparent,

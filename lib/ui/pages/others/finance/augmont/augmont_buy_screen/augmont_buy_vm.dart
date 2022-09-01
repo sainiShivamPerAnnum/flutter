@@ -15,6 +15,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -66,6 +67,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
+  final _paytmRepo = locator<PaytmRepository>();
   final _userCoinService = locator<UserCoinService>();
   List<ApplicationMeta> appMetaList = [];
   ApplicationMeta _upiApplication;
@@ -485,7 +487,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     } catch (e) {}
   }
 
-  initiateRazorpayBuy() async {
+  initiateBuy() async {
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
       _onboardUserManually();
@@ -548,16 +550,28 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ? true
         : false;
 
-    final _status = await _paytmService.initiateTransactions(
-        amount: buyAmount,
-        augmontRates: goldRates,
-        couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: restrictPaytmAppInvoke);
+    bool isRzpTxn = BaseRemoteConfig.ACTIVE_PG == 'rzp';
+    var _status;
+
+    if (isRzpTxn) {
+      await _razorpayOpsModel.submitAugmontTransaction(
+          amount: buyAmount,
+          augmontRates: goldRates,
+          couponCode: appliedCoupon?.code ?? "",
+          email: _userService.baseUser.email,
+          mobile: _userService.baseUser.mobile);
+    } else {
+      _status = await _paytmService.initiateTransactions(
+          amount: buyAmount,
+          augmontRates: goldRates,
+          couponCode: appliedCoupon?.code ?? "",
+          restrictAppInvoke: restrictPaytmAppInvoke);
+    }
 
     isGoldBuyInProgress = false;
     resetBuyOptions();
 
-    if (BaseRemoteConfig.ACTIVE_PG != 'rzp') {
+    if (isRzpTxn) {
       if (_status) {
         AppState.delegate.appState.isTxnLoaderInView = true;
         _logger
@@ -578,109 +592,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
           'Your transaction was unsuccessful. Please try again',
         );
       }
-    }
-  }
-
-  initiateBuy() async {
-    //Check if user is registered on augmont
-    if (status == STATUS_UNAVAILABLE) return;
-    if (status == STATUS_REGISTER) {
-      _onboardUserManually();
-      return;
-    }
-    if (couponApplyInProgress) return;
-    double buyAmount = double.tryParse(goldAmountController.text);
-    // checkIfCouponIsStillApplicable();
-    if (goldRates == null) {
-      BaseUtil.showNegativeAlert(
-        'Gold Rates Unavailable',
-        'Please try again in sometime',
-      );
-      return;
-    }
-    if (buyAmount == null) {
-      BaseUtil.showNegativeAlert(
-        'No amount entered',
-        'Please enter an amount',
-      );
-      return;
-    }
-    if (buyAmount < 10) {
-      showMinCapText = true;
-      return;
-    }
-
-    if (_baseUtil.augmontDetail == null) {
-      BaseUtil.showNegativeAlert(
-        'Deposit Failed',
-        'Please try again in sometime or contact us',
-      );
-      return;
-    }
-
-    if (_baseUtil.augmontDetail.isDepLocked) {
-      BaseUtil.showNegativeAlert(
-        'Purchase Failed',
-        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-      );
-      return;
-    }
-    isGoldBuyInProgress = true;
-
-    bool _disabled = await _dbModel.isAugmontBuyDisabled();
-    if (_disabled != null && _disabled) {
-      isGoldBuyInProgress = false;
-      BaseUtil.showNegativeAlert(
-        'Purchase Failed',
-        'Gold buying is currently on hold. Please try again after sometime.',
-      );
-      return;
-    }
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
-
-    final bool restrictPaytmAppInvoke = (FlavorConfig.isDevelopment() ||
-            BaseRemoteConfig.remoteConfig
-                    .getString(BaseRemoteConfig.RESTRICT_PAYTM_APP_INVOKE) ==
-                "true")
-        ? true
-        : false;
-
-    final _status = await _paytmService.initiateTransactions(
-        amount: buyAmount,
-        augmontRates: goldRates,
-        couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: restrictPaytmAppInvoke);
-
-    isGoldBuyInProgress = false;
-    resetBuyOptions();
-
-    if (_status) {
-      AppState.delegate.appState.isTxnLoaderInView = true;
-      _logger.d("Txn Timer Function reinitialised and set with 30 secs delay");
-      // AppState.delegate.appState.txnFunction = null;
-      AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
-        AppState.delegate.appState.isTxnLoaderInView = false;
-        showTransactionPendingDialog();
-        AppState.delegate.appState.txnTimer.cancel();
-        _logger.d("timer cancelled");
-      });
-      // AppState.delegate.appState.txnFunction =
-      //     Future.delayed(Duration(seconds: 30), () async {
-      //   if (AppState.delegate.appState.isTxnLoaderInView == true) {
-      //     AppState.delegate.appState.isTxnLoaderInView = false;
-      //     AppState.delegate.appState.txnFunction = null;
-      //     showTransactionPendingDialog();
-      //   }
-      // });
-      //  AppState.delegate.appState.txnFunction()
-    } else {
-      if (AppState.delegate.appState.isTxnLoaderInView == true) {
-        AppState.delegate.appState.isTxnLoaderInView = false;
-      }
-      BaseUtil.showNegativeAlert(
-        'Transaction failed',
-        'Your transaction was unsuccessful. Please try again',
-      );
     }
   }
 

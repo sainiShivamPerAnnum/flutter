@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -21,10 +24,12 @@ class RazorpayModel extends ChangeNotifier {
   ValueChanged<UserTransaction> _txnUpdateListener;
   Razorpay _razorpay;
   PaytmService _paytmService;
+  PaytmRepository _paytmRepo;
 
   bool init() {
     _razorpay = Razorpay();
     _paytmService = locator<PaytmService>();
+    _paytmRepo = locator<PaytmRepository>();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
@@ -89,20 +94,40 @@ class RazorpayModel extends ChangeNotifier {
     log.debug("EXTERNAL_WALLET: " + response.walletName);
   }
 
-  //generate order id // update transaction //create map //open gateway
-  Future<UserTransaction> submitAugmontTransaction(
-      String mobile, String email, String orderId, double amount) async {
+  //generate order id // update transaction //creatre<UserTransaction> submitAu
+  Future submitAugmontTransaction(
+      {String mobile,
+      String email,
+      double amount,
+      AugmontRates augmontRates,
+      String couponCode}) async {
     if (!init()) return null; //initialise razorpay
 
+    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+
+    final augMap = {
+      "aBlockId": augmontRates.blockId.toString(),
+      "aLockPrice": augmontRates.goldBuyPrice,
+      "aPaymode": 'RZP',
+      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
+          augmontRates.goldBuyPrice),
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+    };
+
+    final ApiResponse<CreatePaytmTransactionModel>
+        paytmSubscriptionApiResponse =
+        await _paytmRepo.createTransaction(amount, augMap, couponCode, true);
+
+    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
-    print(_keyId);
-    bool isDev = FlavorConfig.isDevelopment();
-    print(isDev);
     var options = {
       'key': _keyId,
       'amount': amount.toInt() * 100,
       'name': 'Augmont Gold',
-      'order_id': orderId,
+      'order_id': paytmSubscriptionModel.data.orderId,
       'description': 'Digital Gold Purchase',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,
@@ -118,6 +143,14 @@ class RazorpayModel extends ChangeNotifier {
 
     _razorpay.open(options);
     return _currentTxn;
+  }
+
+  double _getTaxOnAmount(double amount, double taxRate) {
+    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+  }
+
+  double _getGoldQuantityFromTaxedAmount(double amount, double rate) {
+    return BaseUtil.digitPrecision((amount / rate), 4, false);
   }
 
   void cleanListeners() {
