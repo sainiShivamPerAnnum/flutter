@@ -49,10 +49,8 @@ class LauncherView extends StatelessWidget {
                           ? Lottie.asset(
                               Assets.felloSplashLoopLogo,
                             )
-                          : Lottie.asset(
-                              Assets.felloSplashZoomOutLogo,
-                              repeat: false
-                            ),
+                          : Lottie.asset(Assets.felloSplashZoomOutLogo,
+                              repeat: false),
                       // Text(
                       //   locale.splashTagline,
                       //   style: TextStyles.body2,
@@ -91,33 +89,24 @@ class LauncherView extends StatelessWidget {
                 //     ),
                 //   ),
                 // ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 40),
-                          child: Visibility(
-                            maintainSize: true,
-                            maintainAnimation: true,
-                            maintainState: true,
-                            visible: model.isSlowConnection,
-                            child:
-                                connectivityStatus == ConnectivityStatus.Offline
-                                    ? Text(
-                                        locale.splashNoInternet,
-                                        style: TextStyles.body3.bold,
-                                      )
-                                    : BreathingText(
-                                        alertText: locale.splashSlowConnection,
-                                        textStyle: TextStyles.sourceSans.body2,
-                                      ),
-                          ),
-                        ),
-                      ],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 40),
+                    child: Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: model.isSlowConnection,
+                      child: connectivityStatus == ConnectivityStatus.Offline
+                          ? Text(
+                              locale.splashNoInternet,
+                              style: TextStyles.body3.bold,
+                            )
+                          : BreathingText(
+                              alertText: locale.splashSlowConnection,
+                              textStyle: TextStyles.sourceSans.body2,
+                            ),
                     ),
                   ),
                 )
