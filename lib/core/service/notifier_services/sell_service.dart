@@ -59,17 +59,20 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   }
 
   verifyKYCStatus() {
-    setKYCVerified = _userService.isSimpleKycVerified;
+    setKYCVerified = _userService.baseUser.isSimpleKycVerified;
     print(_isKYCVerified);
     _logger.d('kyc verified! $isKYCVerified');
   }
 
   verifyOngoingTransaction() async {
     await _txnService.updateTransactions();
-    setOngoingTransaction = _txnService.txnList
-            .where((element) => element.subType == 'WITHDRAWL')
-            .first
-            .tranStatus !=
-        "COMPLETE";
+    if (_txnService.txnList.length > 0) {
+      setOngoingTransaction = _txnService.txnList
+                  .where((element) => element.subType == 'WITHDRAWL')
+                  .first
+                  ?.tranStatus !=
+              "COMPLETE" ??
+          false;
+    }
   }
 }
