@@ -274,6 +274,7 @@ class AugmontBuyCard extends StatelessWidget {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
                   // model.initiateBuy();
+                  //Bottom sheet
                   BaseUtil.openModalBottomSheet(
                       addToScreenStack: true,
                       backgroundColor: Colors.transparent,
@@ -292,50 +293,68 @@ class AugmontBuyCard extends StatelessWidget {
                                   Radius.circular(SizeConfig.roundness12)),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(SizeConfig.padding20),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Choose a payment method',
-                                style: TextStyles.title5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // model.upiApplication = model.appMetaList[5];
-                                  model.processTransaction('Paytm');
-                                },
-                                child: Text(
-                                  'Paytm',
-                                  style: TextStyles.title5,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  model.processTransaction('PhonePe');
-                                },
-                                child: Text(
-                                  'PhonePe',
-                                  style: TextStyles.title5,
-                                ),
-                              ),
-                              GestureDetector(
-                                child: Text(
-                                  'Google Pay',
-                                  style: TextStyles.title5,
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                    itemCount: 2,
-                                    itemBuilder: (context, index) {
-                                      return Column(
-                                        children: [],
-                                      );
-                                    }),
-                              )
-                            ],
-                          ),
-                        ),
+                            padding: EdgeInsets.all(SizeConfig.padding20),
+                            child: ListView.builder(
+                                itemCount: model.appMetaList.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      model.processTransaction(model
+                                          .appMetaList[index]
+                                          .upiApplication
+                                          .appName);
+                                    },
+                                    child: Text(
+                                      model.appMetaList[index].upiApplication
+                                          .appName,
+                                      style: TextStyles.title5,
+                                    ),
+                                  );
+                                })
+                            // Column(
+                            //   children: [
+                            //     Text(
+                            //       'Choose a payment method',
+                            //       style: TextStyles.title5,
+                            //     ),
+                            //     SizedBox(height: 30),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     // model.upiApplication = model.appMetaList[5];
+                            //     model.processTransaction('Paytm');
+                            //   },
+                            //   child: Text(
+                            //     'Paytm',
+                            //     style: TextStyles.title5,
+                            //   ),
+                            // ),
+                            //     GestureDetector(
+                            //       onTap: () {
+                            //         model.processTransaction('PhonePe');
+                            //       },
+                            //       child: Text(
+                            //         'PhonePe',
+                            //         style: TextStyles.title5,
+                            //       ),
+                            //     ),
+                            //     GestureDetector(
+                            //       child: Text(
+                            //         'Google Pay',
+                            //         style: TextStyles.title5,
+                            //       ),
+                            //     ),
+                            //     Expanded(
+                            //       child: ListView.builder(
+                            //           itemCount: 2,
+                            //           itemBuilder: (context, index) {
+                            //             return Column(
+                            //               children: [],
+                            //             );
+                            //           }),
+                            //     )
+                            //   ],
+                            // ),
+                            ),
                       ));
                 }
               },

@@ -476,7 +476,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           AppState.delegate.appState.isTxnLoaderInView = false;
           if (isValidated) {
             AppState.delegate.appState.txnTimer.cancel();
-            AppState.backButtonDispatcher.didPopRoute();
+
             BaseUtil.openDialog(
               addToScreenStack: true,
               hapticVibrate: true,
@@ -490,7 +490,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             );
           } else {
             AppState.delegate.appState.txnTimer.cancel();
-            AppState.backButtonDispatcher.didPopRoute();
             BaseUtil.showNegativeAlert(
               'Transaction failed',
               'Your transaction was unsuccessful. Please try again',
