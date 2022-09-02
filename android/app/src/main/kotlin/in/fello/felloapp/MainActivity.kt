@@ -93,6 +93,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     private fun initiateTransaction(mapData: HashMap<String,String>) : Boolean{
         val uri = Uri.parse(mapData["url"])
+        // Log.e(uri)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         intent.setPackage(mapData["app"])
         startActivityForResult(intent, 201119)

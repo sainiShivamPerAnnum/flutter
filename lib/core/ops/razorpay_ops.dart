@@ -46,8 +46,7 @@ class RazorpayModel extends ChangeNotifier {
       bool isValidated =
           await _paytmService.validateTransaction(response.orderId);
       AppState.delegate.appState.isTxnLoaderInView = false;
-      print(isValidated);
-      if (!isValidated) {
+      if (isValidated) {
         BaseUtil.openDialog(
           addToScreenStack: true,
           hapticVibrate: true,

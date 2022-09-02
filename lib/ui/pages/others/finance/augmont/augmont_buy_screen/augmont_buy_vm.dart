@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -377,7 +378,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         _userService.augGoldQuantity = newAugQuantity;
       }
       //add this to augmontBuyVM
-      int newFlcBalance = depositFcmResponseModel.flcBalance;
+      int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
       if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
@@ -416,7 +417,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
   }
 
-  processTransaction() async {
+  processTransaction(String pspApp) async {
     setState(ViewState.Idle);
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
@@ -443,10 +444,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     }
     if (buyAmount < 10) {
       showMinCapText = true;
-      // BaseUtil.showNegativeAlert(
-      //   'Minimum amount should be ₹ 10',
-      //   'Please enter a minimum purchase amount of ₹ 10',
-      // );
       return;
     }
 
@@ -479,10 +476,16 @@ class AugmontGoldBuyViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
 
     try {
+      await _paytmService.processTransaction(
+          buyAmount,
+          'ios',
+          pspApp,
+          'UPI_INTENT',
+          goldRates,
+          appliedCoupon?.code ?? "",
+          _upiApplication);
       isGoldBuyInProgress = false;
       resetBuyOptions();
-      await _paytmService.processTransaction(buyAmount, 'ios', 'Paytm',
-          'UPI_INTENT', goldRates, appliedCoupon?.code ?? "", _upiApplication);
       setState(ViewState.Idle);
     } catch (e) {}
   }
@@ -568,10 +571,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
           restrictAppInvoke: restrictPaytmAppInvoke);
     }
 
-    isGoldBuyInProgress = false;
-    resetBuyOptions();
-
     if (isRzpTxn) {
+      isGoldBuyInProgress = false;
+      resetBuyOptions();
       if (_status) {
         AppState.delegate.appState.isTxnLoaderInView = true;
         _logger
@@ -593,6 +595,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
         );
       }
     }
+
+    isGoldBuyInProgress = false;
+    resetBuyOptions();
   }
 
   onBuyValueChanged(String val) {

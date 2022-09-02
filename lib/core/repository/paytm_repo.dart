@@ -59,18 +59,18 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<ProcessTransactionModel>> processPaytmTransaction(
-      String tempToken,
+      {String tempToken,
       String osType,
       String pspApp,
       String orderId,
-      String paymentMode) async {
+      String paymentMode}) async {
     try {
       final Map<String, dynamic> _body = {
         "tempToken": tempToken,
-        "uid": _userService.baseUser?.uid,
         "osType": osType,
         "pspApp": pspApp,
-        "orderId": orderId
+        "orderId": orderId,
+        "paymentMode": paymentMode
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
@@ -93,13 +93,14 @@ class PaytmRepository {
   }
 
   Future<ApiResponse<TransactionResponseModel>> getTransactionStatus(
-      String orderId) async {
+      String orderId, bool isRzpTxn) async {
     try {
       final String _uid = _userService.baseUser.uid;
       final _token = await _getBearerToken();
       final _queryParams = {"orderId": orderId, "uid": _uid};
-      final response = await APIService.instance.getData(
+      final response = await APIService.instance.getPaymentData(
           ApiPath.kCreatePaytmTransaction,
+          isRzpTxn: isRzpTxn,
           token: _token,
           queryParams: _queryParams,
           isAwsTxnUrl: true);

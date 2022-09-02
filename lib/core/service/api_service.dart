@@ -15,6 +15,7 @@ abstract class API {
   dynamic returnResponse(http.Response response);
 
   Future<dynamic> getData(String url);
+  Future<dynamic> getPaymentData(String url);
   Future<dynamic> postData(String url, {Map<String, dynamic> body});
   Future<dynamic> postPaymentData(String url, {Map<String, dynamic> body});
   Future<dynamic> deleteData(String url, {Map<String, dynamic> body});
@@ -77,6 +78,56 @@ class APIService implements API {
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
           'uid': userService?.firebaseUser?.uid,
+        },
+      );
+      logger.d("response from $finalPath");
+      logger.d("Full url: $finalPath");
+      logger.d("Get Response: ${response.statusCode}");
+      logger.d("Get Response: ${response.body}");
+      responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on UnauthorisedException {
+      throw UnauthorisedException("Token Expired, Signout current user");
+    } finally {
+      await metric.stop();
+    }
+    return responseJson;
+  }
+
+  @override
+  Future<dynamic> getPaymentData(String url,
+      {String token,
+      Map<String, dynamic> queryParams,
+      String cBaseUrl,
+      bool isAwsSubUrl = false,
+      bool isAwsTxnUrl = false,
+      bool isRzpTxn}) async {
+    final HttpMetric metric =
+        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
+    await metric.start();
+
+    var responseJson;
+    // token = Preference.getString('token');
+    try {
+      String queryString = '';
+      String finalPath =
+          "${getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl)}$url";
+      if (cBaseUrl != null) finalPath = cBaseUrl + url;
+      if (queryParams != null) {
+        queryString = Uri(queryParameters: queryParams).query;
+        finalPath += '?$queryString';
+      }
+      logger.d("finalPath for get : $finalPath");
+      final response = await http.get(
+        Uri.parse(finalPath),
+        headers: {
+          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
+          'platform': Platform.isAndroid ? 'android' : 'iOS',
+          'version':
+              _versionString.isEmpty ? await _getAppVersion() : _versionString,
+          'uid': userService?.firebaseUser?.uid,
+          'x-is-razorpay': isRzpTxn.toString()
         },
       );
       logger.d("response from $finalPath");

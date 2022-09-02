@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:app_install_date/utils.dart';
@@ -20,6 +21,8 @@ import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -32,6 +35,7 @@ import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:upi_pay/upi_pay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //ERROR CODE
 const int ERR_CREATE_SUBSCRIPTION_FAILED = 0;
@@ -171,13 +175,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future<bool> validateTransaction(String orderId) async {
     final ApiResponse<TransactionResponseModel> transactionResponseModel =
-        await _paytmRepo.getTransactionStatus(orderId);
+        await _paytmRepo.getTransactionStatus(
+            orderId, BaseRemoteConfig.ACTIVE_PG == 'rzp');
+
+    print(transactionResponseModel.code);
 
     if (transactionResponseModel.code == 200) {
       _logger.d(transactionResponseModel.model.toString());
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 
@@ -218,16 +225,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.d("Transaction order id: ${paytmSubscriptionModel.data.orderId}");
       _logger.d("Transaction app invoke: $restrictAppInvoke");
       var response;
-        response = await AllInOneSdk.startTransaction(
-            mid,
-            paytmSubscriptionModel.data.orderId,
-            amount.toString(),
-            paytmSubscriptionModel.data.temptoken,
-            paytmSubscriptionModel.data.callbackUrl,
-            isStaging,
-            restrictAppInvoke);
-        _logger.d("Transaction Response:${response.toString()}");
-        validateTransaction(paytmSubscriptionModel.data.orderId);
+      response = await AllInOneSdk.startTransaction(
+          mid,
+          paytmSubscriptionModel.data.orderId,
+          amount.toString(),
+          paytmSubscriptionModel.data.temptoken,
+          paytmSubscriptionModel.data.callbackUrl,
+          isStaging,
+          restrictAppInvoke);
+      _logger.d("Transaction Response:${response.toString()}");
+      validateTransaction(paytmSubscriptionModel.data.orderId);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
@@ -426,14 +433,17 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+    print(paytmSubscriptionApiResponse.model.data.orderId);
 
     final ApiResponse<ProcessTransactionModel> processTransactionApiResponse =
         await _paytmRepo.processPaytmTransaction(
-            paytmSubscriptionModel.data.temptoken,
-            osType,
-            pspApp,
-            paytmSubscriptionModel.data.orderId,
-            paymentMode);
+            tempToken: paytmSubscriptionModel.data.temptoken,
+            osType: osType,
+            pspApp: pspApp,
+            orderId: paytmSubscriptionModel.data.orderId,
+            paymentMode: paymentMode);
+
+    print(processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink);
 
     if (processTransactionApiResponse.code == 400) {
       _logger.e(processTransactionApiResponse.errorMessage);
@@ -441,20 +451,54 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     } else {
       await doUpiTransation(
           url: processTransactionApiResponse
-              .model.data.body.deepLinkInfo.deepLink);
+              .model.data.body.deepLinkInfo.deepLink,
+          orderId: paytmSubscriptionModel.data.orderId);
     }
   }
 
-  Future doUpiTransation({String url}) async {
+  Future doUpiTransation({String url, String orderId}) async {
     MethodChannel _platform =
         MethodChannel("fello.in/dev/payments/paytmService");
     var response;
     if (PlatformUtils.isAndroid) {
+      // launchUrl(Uri.parse(url));
       response = await _platform.invokeMethod<String>(
-        'initiatePaytmTransaction',
-      );
+          'initiatePaytmTransaction', {"url": url, "app": "net.one97.paytm"});
     }
-    print(response);
+    if (PlatformUtils.isIOS) {
+      launchUrl(Uri.parse(url)).then((value) async {
+        AppState.backButtonDispatcher.didPopRoute();
+        AppState.delegate.appState.isTxnLoaderInView = true;
+        AppState.delegate.appState.txnTimer =
+            Timer(Duration(seconds: 30), () async {
+          bool isValidated = await validateTransaction(orderId);
+          print(isValidated);
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          if (isValidated) {
+            AppState.delegate.appState.txnTimer.cancel();
+            AppState.backButtonDispatcher.didPopRoute();
+            BaseUtil.openDialog(
+              addToScreenStack: true,
+              hapticVibrate: true,
+              isBarrierDismissable: false,
+              content: PendingDialog(
+                title: "We're still processing!",
+                subtitle:
+                    "Your transaction is taking longer than usual. We'll get back to you in ",
+                duration: '15 minutes',
+              ),
+            );
+          } else {
+            AppState.delegate.appState.txnTimer.cancel();
+            AppState.backButtonDispatcher.didPopRoute();
+            BaseUtil.showNegativeAlert(
+              'Transaction failed',
+              'Your transaction was unsuccessful. Please try again',
+            );
+          }
+        });
+      });
+    }
   }
 
   Future<bool> updateDailySubscriptionAmount(

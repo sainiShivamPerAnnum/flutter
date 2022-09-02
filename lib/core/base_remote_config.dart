@@ -182,7 +182,7 @@ class BaseRemoteConfig {
   };
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
-  static const Map<String, String> _ACTIVE_PG = {'active_pg': 'rzp'};
+  static const Map<String, String> _ACTIVE_PG = {'active_pg': 'paytm'};
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,

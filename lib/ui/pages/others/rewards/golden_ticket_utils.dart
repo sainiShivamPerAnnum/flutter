@@ -265,7 +265,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   doubleRewardWidget(
       List<Reward> rewards, TextStyle textStyle, TextStyle titleStyle2) {
     int rupee = rewards
-            .firstWhere((e) => e.type == 'rupee', orElse: () => null)
+            .firstWhere((e) => e.type == 'rupee' || e.type == 'amt',
+                orElse: () => null)
             .value ??
         0;
     int flc =
