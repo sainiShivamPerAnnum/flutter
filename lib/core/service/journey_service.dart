@@ -430,7 +430,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     currentFullViewHeight = pageHeight * pageCount;
     startPage = pages[0].page;
     lastPage = pages[pages.length - 1].page;
-    log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage");
+    log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage, ${_pages.map((e) => e.page)}");
   }
 
   setCurrentMilestones() {
