@@ -241,13 +241,13 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> _body = {
-        "uid": uid,
-        "deviceId": deviceId,
-        "platform": platform,
-        "model": model,
-        "brand": brand,
-        "version": version,
-        "isPhysicalDevice": isPhysicalDevice
+        "uid": uid ?? "",
+        "deviceId": deviceId ?? "",
+        "platform": platform ?? "",
+        "model": model ?? "",
+        "brand": brand ?? "",
+        "version": version ?? "",
+        "isPhysicalDevice": isPhysicalDevice ?? true
       };
 
       await APIService.instance.postData(
