@@ -418,51 +418,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   processTransaction(String pspApp) async {
     setState(ViewState.Idle);
-    if (status == STATUS_UNAVAILABLE) return;
-    if (status == STATUS_REGISTER) {
-      _onboardUserManually();
-      return;
-    }
-
-    if (couponApplyInProgress) return;
-    double buyAmount = double.tryParse(goldAmountController.text);
-    // checkIfCouponIsStillApplicable();
-    if (goldRates == null) {
-      BaseUtil.showNegativeAlert(
-        'Gold Rates Unavailable',
-        'Please try again in sometime',
-      );
-      return;
-    }
-    if (buyAmount == null) {
-      BaseUtil.showNegativeAlert(
-        'No amount entered',
-        'Please enter an amount',
-      );
-      return;
-    }
-    if (buyAmount < 10) {
-      showMinCapText = true;
-      return;
-    }
-
-    if (_baseUtil.augmontDetail == null) {
-      BaseUtil.showNegativeAlert(
-        'Deposit Failed',
-        'Please try again in sometime or contact us',
-      );
-      return;
-    }
-
-    if (_baseUtil.augmontDetail.isDepLocked) {
-      BaseUtil.showNegativeAlert(
-        'Purchase Failed',
-        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-      );
-      return;
-    }
     isGoldBuyInProgress = true;
-
+    double buyAmount = double.tryParse(goldAmountController.text);
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
     if (_disabled != null && _disabled) {
       isGoldBuyInProgress = false;
@@ -489,6 +446,63 @@ class AugmontGoldBuyViewModel extends BaseModel {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<bool> initChecks() async {
+    if (status == STATUS_UNAVAILABLE) return false;
+    if (status == STATUS_REGISTER) {
+      _onboardUserManually();
+      return true;
+    }
+    if (couponApplyInProgress) return false;
+    double buyAmount = double.tryParse(goldAmountController.text);
+    // checkIfCouponIsStillApplicable();
+    if (goldRates == null) {
+      BaseUtil.showNegativeAlert(
+        'Gold Rates Unavailable',
+        'Please try again in sometime',
+      );
+      return false;
+    }
+    if (buyAmount == null) {
+      BaseUtil.showNegativeAlert(
+        'No amount entered',
+        'Please enter an amount',
+      );
+      return false;
+    }
+    if (buyAmount < 10) {
+      showMinCapText = true;
+      return false;
+    }
+
+    if (_baseUtil.augmontDetail == null) {
+      BaseUtil.showNegativeAlert(
+        'Deposit Failed',
+        'Please try again in sometime or contact us',
+      );
+      return false;
+    }
+
+    if (_baseUtil.augmontDetail.isDepLocked) {
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
+      );
+      return false;
+    }
+
+    bool _disabled = await _dbModel.isAugmontBuyDisabled();
+    if (_disabled != null && _disabled) {
+      isGoldBuyInProgress = false;
+      BaseUtil.showNegativeAlert(
+        'Purchase Failed',
+        'Gold buying is currently on hold. Please try again after sometime.',
+      );
+      return false;
+    }
+    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
+    return true;
   }
 
   initiateBuy() async {

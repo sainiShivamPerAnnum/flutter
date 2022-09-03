@@ -282,16 +282,20 @@ class AugmontBuyCard extends StatelessWidget {
                   if (BaseRemoteConfig.remoteConfig
                           .getString(BaseRemoteConfig.ACTIVE_PG) ==
                       'paytm') {
-                    BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        backgroundColor: Colors.transparent,
-                        isBarrierDismissable: true,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness12),
-                            topRight: Radius.circular(SizeConfig.roundness12)),
-                        content: UPIAppsBottomSheet(
-                          model: model,
-                        ));
+                    bool isAllowed = await model.initChecks();
+                    if (isAllowed) {
+                      BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          backgroundColor: Colors.transparent,
+                          isBarrierDismissable: true,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness12),
+                              topRight:
+                                  Radius.circular(SizeConfig.roundness12)),
+                          content: UPIAppsBottomSheet(
+                            model: model,
+                          ));
+                    }
                   }
                 }
               },
@@ -323,39 +327,58 @@ class UPIAppsBottomSheet extends StatelessWidget {
       ),
       child: Padding(
           padding: EdgeInsets.all(SizeConfig.padding20),
-          child: GridView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: model.appMetaList.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  model.upiApplication = model.appMetaList[index];
-                  model.processTransaction(
-                      model.appMetaList[index].upiApplication.appName);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Container(
-                    child: Center(
-                      child: Column(
-                        children: [
-                          model.appMetaList[index].iconImage(40),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            model.appMetaList[index].upiApplication.appName,
-                            style: TextStyles.body4,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  'Please select an UPI App',
+                  style: TextStyles.body1.bold,
                 ),
-              );
-            },
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: model.appMetaList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        model.upiApplication = model.appMetaList[index];
+                        model.processTransaction(
+                            model.appMetaList[index].upiApplication.appName);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Container(
+                          child: Center(
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child:
+                                        model.appMetaList[index].iconImage(40)),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  model.appMetaList[index].upiApplication
+                                      .appName,
+                                  style: TextStyles.body4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                ),
+              ),
+            ],
           )),
     );
   }
