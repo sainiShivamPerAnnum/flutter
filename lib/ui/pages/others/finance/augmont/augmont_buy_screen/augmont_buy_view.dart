@@ -12,7 +12,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:upi_pay/upi_pay.dart';
+// import 'package:upi_pay/upi_pay.dart';
 
 class AugmontBuyCard extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
@@ -332,52 +332,57 @@ class UPIAppsBottomSheet extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'Please select an UPI App',
-                  style: TextStyles.body1.bold,
+                child: GestureDetector(
+                  onTap: () {
+                    model.processTransaction('Paytm');
+                  },
+                  child: Text(
+                    'Please select an UPI App',
+                    style: TextStyles.body1.bold,
+                  ),
                 ),
               ),
               SizedBox(height: 20),
-              Expanded(
-                child: GridView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: model.appMetaList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        model.upiApplication = model.appMetaList[index];
-                        model.processTransaction(
-                            model.appMetaList[index].upiApplication.appName);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          child: Center(
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child:
-                                        model.appMetaList[index].iconImage(40)),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  model.appMetaList[index].upiApplication
-                                      .appName,
-                                  style: TextStyles.body4,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                ),
-              ),
+              // Expanded(
+              //   child: GridView.builder(
+              //     scrollDirection: Axis.vertical,
+              //     itemCount: model.appMetaList.length,
+              //     itemBuilder: (context, index) {
+              //       return GestureDetector(
+              //         onTap: () {
+              // model.upiApplication = model.appMetaList[index];
+              // model.processTransaction(
+              //     model.appMetaList[index].upiApplication.appName);
+              //         },
+              //         child: Padding(
+              //           padding: const EdgeInsets.all(10),
+              //           child: Container(
+              //             child: Center(
+              //               child: Column(
+              //                 children: [
+              //                   ClipRRect(
+              //                       borderRadius: BorderRadius.circular(5),
+              //                       child:
+              //                           model.appMetaList[index].iconImage(40)),
+              //                   SizedBox(
+              //                     height: 10,
+              //                   ),
+              //                   Text(
+              //                     model.appMetaList[index].upiApplication
+              //                         .appName,
+              //                     style: TextStyles.body4,
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //         crossAxisCount: 3),
+              //   ),
+              // ),
             ],
           )),
     );

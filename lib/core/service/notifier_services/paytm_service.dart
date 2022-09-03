@@ -34,7 +34,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:upi_pay/upi_pay.dart';
+// import 'package:upi_pay/upi_pay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //ERROR CODE
@@ -406,13 +406,14 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   }
 
   Future processTransaction(
-      double amount,
-      String osType,
-      String pspApp,
-      String paymentMode,
-      AugmontRates augmontRates,
-      String couponCode,
-      ApplicationMeta appMeta) async {
+    double amount,
+    String osType,
+    String pspApp,
+    String paymentMode,
+    AugmontRates augmontRates,
+    String couponCode,
+    // ApplicationMeta appMeta
+  ) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -458,7 +459,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           url: processTransactionApiResponse
               .model.data.body.deepLinkInfo.deepLink,
           orderId: paytmSubscriptionModel.data.orderId,
-          androidPackageName: appMeta.packageName);
+          androidPackageName: 'net.one97.paytm'
+          // androidPackageName: appMeta.packageName
+          );
     }
   }
 
@@ -471,42 +474,42 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     var response;
     if (PlatformUtils.isAndroid) {
       // launchUrl(Uri.parse(url));
+      AppState.backButtonDispatcher.didPopRoute();
       try {
         response = await _platform.invokeMethod<String>(
             'initiatePaytmTransaction',
             {"url": url, "app": androidPackageName});
         print(response);
-        AppState.backButtonDispatcher.didPopRoute();
-        AppState.delegate.appState.isTxnLoaderInView = true;
-        AppState.delegate.appState.txnTimer =
-            Timer(Duration(seconds: 30), () async {
-          bool isValidated = await validateTransaction(orderId);
-          print(isValidated);
-          AppState.delegate.appState.isTxnLoaderInView = false;
-          if (isValidated) {
-            AppState.delegate.appState.txnTimer.cancel();
-            BaseUtil.openDialog(
-              addToScreenStack: true,
-              hapticVibrate: true,
-              isBarrierDismissable: false,
-              content: PendingDialog(
-                title: "We're still processing!",
-                subtitle:
-                    "Your transaction is taking longer than usual. We'll get back to you in ",
-                duration: '15 minutes',
-              ),
-            );
-          } else {
-            AppState.delegate.appState.txnTimer.cancel();
-            BaseUtil.showNegativeAlert(
-              'Transaction failed',
-              'Your transaction was unsuccessful. Please try again',
-            );
-          }
-        });
       } catch (e) {
         print(e);
       }
+      AppState.delegate.appState.isTxnLoaderInView = true;
+      AppState.delegate.appState.txnTimer =
+          Timer(Duration(seconds: 30), () async {
+        bool isValidated = await validateTransaction(orderId);
+        print(isValidated);
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        if (isValidated) {
+          AppState.delegate.appState.txnTimer.cancel();
+          BaseUtil.openDialog(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            isBarrierDismissable: false,
+            content: PendingDialog(
+              title: "We're still processing!",
+              subtitle:
+                  "Your transaction is taking longer than usual. We'll get back to you in ",
+              duration: '15 minutes',
+            ),
+          );
+        } else {
+          AppState.delegate.appState.txnTimer.cancel();
+          BaseUtil.showNegativeAlert(
+            'Transaction failed',
+            'Your transaction was unsuccessful. Please try again',
+          );
+        }
+      });
     }
     if (PlatformUtils.isIOS) {
       launchUrl(Uri.parse(url)).then((value) async {
