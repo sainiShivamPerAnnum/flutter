@@ -108,37 +108,6 @@ class MilestoneModel {
       if (shadow != null) 'sy': shadow.y,
       'hFlip': hFlip ?? false
     };
-    // animAsset != null
-    //     ? (shadow != null
-    //         ? <String, dynamic>{
-    //             'x': x,
-    //             'y': y,
-    //             'ax': ax,
-    //             'ay': ay,
-    //             'sx': shadow.x,
-    //             'sy': shadow.y,
-    //             'hFlip': hFlip ?? false
-    //           }
-    //         : <String, dynamic>{
-    //             'x': x,
-    //             'y': y,
-    //             'ax': ax,
-    //             'ay': ay,
-    //             'hFlip': hFlip ?? false
-    //           })
-    //     : (shadow != null
-    //         ? <String, dynamic>{
-    //             'x': x,
-    //             'y': y,
-    //             'sx': shadow.x,
-    //             'sy': shadow.y,
-    //             'hFlip': hFlip ?? false,
-    //           }
-    //         : <String, dynamic>{
-    //             'x': x,
-    //             'y': y,
-    //             'hFlip': hFlip ?? false,
-    //           });
   }
 
   Map<String, dynamic> toMap(int page) {
@@ -153,50 +122,6 @@ class MilestoneModel {
       'prizeSubType': prizeSubType ?? '',
       if (shadow != null) 'shadow': {'assetRef': shadow.name},
     };
-
-    // shadow != null
-    //     ? (animAsset != null
-    //         ? <String, dynamic>{
-    //             'assetRef': asset.name,
-    //             'animRef': animAsset.name,
-    //             'animType': animType ?? "none",
-    //             'actionUri': actionUri ?? '',
-    //             'toolTip': tooltip ?? '',
-    //             'page': page,
-    //             'steps': steps.map((x) => x.toMap()).toList(),
-    //             'prizeSubType': prizeSubType ?? '',
-    //             'shadow': {'assetRef': shadow.name},
-    //           }
-    //         : <String, dynamic>{
-    //             'assetRef': asset.name,
-    //             'animType': animType ?? "none",
-    //             'actionUri': actionUri ?? '',
-    //             'toolTip': tooltip ?? '',
-    //             'page': page,
-    //             'steps': steps.map((x) => x.toMap()).toList(),
-    //             'prizeSubType': prizeSubType ?? '',
-    //             'shadow': {'assetRef': shadow.name},
-    //           })
-    //     : (animAsset != null
-    //         ? <String, dynamic>{
-    //             'assetRef': asset.name,
-    //             'animAssetRef': animAsset.name,
-    //             'animType': animType ?? "none",
-    //             'actionUri': actionUri ?? '',
-    //             'toolTip': tooltip ?? '',
-    //             'page': page,
-    //             'steps': steps.map((x) => x.toMap()).toList(),
-    //             'prizeSubType': prizeSubType ?? '',
-    //           }
-    //         : <String, dynamic>{
-    //             'assetRef': asset.name,
-    //             'animType': animType ?? "none",
-    //             'actionUri': actionUri ?? '',
-    //             'toolTip': tooltip ?? '',
-    //             'page': page,
-    //             'steps': steps.map((x) => x.toMap()).toList(),
-    //             'prizeSubType': prizeSubType ?? '',
-    //           });
   }
 
   factory MilestoneModel.fromMap(Map<String, dynamic> map, int page) {

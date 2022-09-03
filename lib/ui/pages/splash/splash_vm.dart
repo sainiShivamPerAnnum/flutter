@@ -97,10 +97,12 @@ class LauncherViewModel extends BaseModel {
     try {
       await CacheService.initialize();
       await userService.init();
-      if (userService.isUserOnborded) await _journeyRepo.init();
-      if (userService.isUserOnborded) await _journeyService.init();
-
       await BaseRemoteConfig.init();
+
+      if (userService.isUserOnborded) {
+        await _journeyRepo.init();
+        await _journeyService.init();
+      }
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -153,7 +155,7 @@ class LauncherViewModel extends BaseModel {
     int delayedSecond = _logoWatch.elapsed.inMilliseconds % 2500;
 
     delayedSecond = 2500 - delayedSecond;
-
+    log('Delayed seconds: $delayedSecond');
     await Future.delayed(
       new Duration(milliseconds: delayedSecond),
     );
@@ -164,7 +166,9 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
+
       new Duration(milliseconds: 820),
+
     );
 
     try {
@@ -211,9 +215,8 @@ class LauncherViewModel extends BaseModel {
       _logger.d("New user. Moving to Onboarding..");
       bool showOnboarding = PreferenceHelper.getBool(
           PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
-      // _localDBModel.showHomeTutorial.then((value) {
-      if (showOnboarding == null || showOnboarding == false //&& value
-          ) {
+
+      if (showOnboarding == null || showOnboarding == false) {
         //show tutorial
         return navigator.currentAction = PageAction(
           state: PageState.replaceAll,

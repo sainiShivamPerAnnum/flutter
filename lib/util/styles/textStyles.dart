@@ -86,7 +86,7 @@ class TextStyles {
         color: UiConstants.kTextColor,
       );
 
-  // 3.0 Code START {Need to retire}
+  // 3.0 Code START {Need to retire after 4.0 release}
 
   static TextStyle get bodyFont =>
       GoogleFonts.sourceSansPro(); //TextStyle(fontFamily: "Arctick");
@@ -112,7 +112,7 @@ class TextStyles {
   static TextStyle get body3 => bodyFont.copyWith(fontSize: SizeConfig.body3);
   static TextStyle get body4 => bodyFont.copyWith(fontSize: SizeConfig.body4);
 
-  // 3.0 Code END {Need to retire}
+  // 3.0 Code END {Need to retire after 4.0 release}
 }
 
 extension TextStyleHelpers on TextStyle {

@@ -4,8 +4,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_4.0.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/user_4.0.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -155,17 +155,20 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       ),
                       alignment: Alignment.centerRight,
                       child: Text(
-                        model.currentPage == LoginUserNameView.index
-                            ? 'finish'
-                            : model.currentPage == LoginOtpView.index
-                                ? 'Done'
-                                : 'next',
-                        style: model.currentPage == LoginOtpView.index ||
-                                model.currentPage == LoginUserNameView.index
-                            ? TextStyles.rajdhaniB.body1
-                                .colour(UiConstants.kPrimaryColor)
-                            : TextStyles.rajdhaniB.body1,
-                      ),
+                          model.currentPage == LoginUserNameView.index
+                              ? 'Finish'
+                              : model.currentPage == LoginOtpView.index
+                                  ? 'Done'
+                                  : 'Next',
+                          style: TextStyles.rajdhaniB.body1
+                              .colour(UiConstants.kPrimaryColor)
+
+                          // style: model.currentPage == LoginOtpView.index ||
+                          //         model.currentPage == LoginUserNameView.index
+                          //     ? TextStyles.rajdhaniB.body1
+                          //         .colour(UiConstants.kPrimaryColor)
+                          //     : TextStyles.rajdhaniB.body1,
+                          ),
                     ),
                   ),
                 ),

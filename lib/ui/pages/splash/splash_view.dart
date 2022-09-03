@@ -27,7 +27,7 @@ class LauncherView extends StatelessWidget {
           backgroundColor: Colors.black,
           body: Container(
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight,
+            // height: SizeConfig.screenHeight,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -48,12 +48,9 @@ class LauncherView extends StatelessWidget {
                       model.isFetchingData
                           ? Lottie.asset(
                               Assets.felloSplashLoopLogo,
-                              // width: SizeConfig.screenWidth / 2.5,
                             )
-                          : Lottie.asset(
-                              Assets.felloSplashZoomOutLogo,
-                              // width: SizeConfig.screenWidth / 2.5,
-                            ),
+                          : Lottie.asset(Assets.felloSplashZoomOutLogo,
+                              repeat: false),
                       // Text(
                       //   locale.splashTagline,
                       //   style: TextStyles.body2,
@@ -92,33 +89,24 @@ class LauncherView extends StatelessWidget {
                 //     ),
                 //   ),
                 // ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 40),
-                          child: Visibility(
-                            maintainSize: true,
-                            maintainAnimation: true,
-                            maintainState: true,
-                            visible: model.isSlowConnection,
-                            child:
-                                connectivityStatus == ConnectivityStatus.Offline
-                                    ? Text(
-                                        locale.splashNoInternet,
-                                        style: TextStyles.body3.bold,
-                                      )
-                                    : BreathingText(
-                                        alertText: locale.splashSlowConnection,
-                                        textStyle: TextStyles.sourceSans.body2,
-                                      ),
-                          ),
-                        ),
-                      ],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 40),
+                    child: Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: model.isSlowConnection,
+                      child: connectivityStatus == ConnectivityStatus.Offline
+                          ? Text(
+                              locale.splashNoInternet,
+                              style: TextStyles.body3.bold,
+                            )
+                          : BreathingText(
+                              alertText: locale.splashSlowConnection,
+                              textStyle: TextStyles.sourceSans.body2,
+                            ),
                     ),
                   ),
                 )

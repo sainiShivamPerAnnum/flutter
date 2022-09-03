@@ -46,7 +46,6 @@ class GoogleSignInService extends ChangeNotifier {
       return userEmail;
     } catch (e) {
       _logger.d(e.toString());
-      log('Kunj: $e');
       BaseUtil.showNegativeAlert(
         "Unable to verify",
         "Please try a different method",

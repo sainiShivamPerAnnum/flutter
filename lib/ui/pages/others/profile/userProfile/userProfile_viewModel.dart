@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -212,7 +213,7 @@ class UserProfileVM extends BaseModel {
               'dob': _userService.baseUser.dob,
               'gender': _userService.baseUser.gender,
             },
-          ).then((ApiResponse<bool> res) {
+          ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
               _userService.setMyUserName(_userService.baseUser.name);
               _userService.setDateOfBirth(_userService.baseUser.dob);

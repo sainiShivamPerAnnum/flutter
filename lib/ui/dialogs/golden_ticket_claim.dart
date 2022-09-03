@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -278,7 +279,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                 child: Container(
                   width: SizeConfig.screenWidth,
                   height: SizeConfig.screenHeight,
-                  child: Lottie.asset("images/lottie/confetti.json",
+                  child: Lottie.asset(Assets.gtConfetti,
                       fit: BoxFit.fitHeight, repeat: true),
                 ),
               ),

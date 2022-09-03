@@ -175,7 +175,7 @@ class CacheService {
 
     if (items.length == end - start + 1) {
       try {
-        _logger.d('cache: data read successfully');
+        _logger.d('cache: paginated data read successfully $items');
         return parseData({"start": start, "end": end, "items": items});
       } catch (e) {
         _logger.e(

@@ -27,7 +27,7 @@ class WinViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
   final _campaignRepo = locator<CampaignRepo>();
-  final _jourenyRepo = locator<JourneyRepository>();
+  final _journeyRepo = locator<JourneyRepository>();
 
   Timer _timer;
   bool _showOldView = false;
@@ -86,7 +86,7 @@ class WinViewModel extends BaseModel {
   }
 
   cleanJourneyAssetsFiles() {
-    _jourenyRepo.dump();
+    _journeyRepo.dump();
   }
 
   setupAutoEventScroll() {

@@ -22,6 +22,16 @@ class LeaderboardService
   int _referralLBLength = 0;
   List<String> _userProfilePicUrl = [];
   bool isUserInTopThree = false;
+  bool _isLeaderboardLoading = false;
+
+  get isLeaderboardLoading => this._isLeaderboardLoading;
+
+  set isLeaderboardLoading(value) {
+    this._isLeaderboardLoading = value;
+    notifyListeners(LeaderBoardServiceProperties.LeaderBoardState);
+    _logger.d("Leaderboard state notifier updated");
+  }
+
   int currentUserRank = 0;
 
   List<ScoreBoard> _referralLeaderBoard = [];
@@ -65,6 +75,7 @@ class LeaderboardService
   }
 
   fetchWebGameLeaderBoard({@required String game}) async {
+    isLeaderboardLoading = true;
     ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
       type: game,
       freq: "weekly",
@@ -72,9 +83,13 @@ class LeaderboardService
     if (response.code == 200 && response.model.isNotEmpty) {
       _WebGameLeaderBoard = LeaderboardModel.fromMap(response.model);
       setCurrentPlayerRank();
-      await fetchLeaderBoardProfileImage();
-      setWebGameLeaderBoard();
 
+      _userProfilePicUrl.clear();
+
+      await fetchLeaderBoardProfileImage();
+
+      setWebGameLeaderBoard();
+      isLeaderboardLoading = false;
       _logger.d("$game Leaderboard successfully fetched");
     } else {
       _WebGameLeaderBoard = null;

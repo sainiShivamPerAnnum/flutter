@@ -198,49 +198,49 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
   }
 }
 
-class ActiveMilestoneFrontGlow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
-          JourneyServiceProperties.BaseGlow,
-          JourneyServiceProperties.AvatarPosition,
-          JourneyServiceProperties.Pages,
-        ],
-        builder: (context, model, properties) {
-          final MilestoneModel milestone = model.currentMilestoneList
-              .firstWhere(
-                  (element) => element.index == model.avatarRemoteMlIndex,
-                  orElse: null);
-          return milestone != null
-              ? Positioned(
-                  left: (model.pageWidth * milestone.x) -
-                      (milestone.asset.width * model.pageWidth) * 0.6,
-                  bottom: model.pageHeight * (milestone.page - 1) +
-                      model.pageHeight * milestone.y,
-                  child: ClipPath(
-                    clipper: const FrontBeamClipper(),
-                    child: Container(
-                      width: model.pageWidth * milestone.asset.width * 2,
-                      height: model.pageWidth * milestone.asset.height,
-                      decoration: BoxDecoration(
-                        // color: Colors.black,
-                        gradient: LinearGradient(
-                            colors: [
-                              UiConstants.primaryColor.withOpacity(0.01),
-                              UiConstants.primaryColor.withOpacity(0.3),
-                              UiConstants.primaryColor.withOpacity(0.1),
-                              UiConstants.primaryColor.withOpacity(0.01)
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter),
-                      ),
-                    ),
-                  ))
-              : SizedBox();
-        });
-  }
-}
+// class ActiveMilestoneFrontGlow extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+//         properties: [
+//           JourneyServiceProperties.BaseGlow,
+//           JourneyServiceProperties.AvatarPosition,
+//           JourneyServiceProperties.Pages,
+//         ],
+//         builder: (context, model, properties) {
+//           final MilestoneModel milestone = model.currentMilestoneList
+//               .firstWhere(
+//                   (element) => element.index == model.avatarRemoteMlIndex,
+//                   orElse: null);
+//           return milestone != null
+//               ? Positioned(
+//                   left: (model.pageWidth * milestone.x) -
+//                       (milestone.asset.width * model.pageWidth) * 0.6,
+//                   bottom: model.pageHeight * (milestone.page - 1) +
+//                       model.pageHeight * milestone.y,
+//                   child: ClipPath(
+//                     clipper: const FrontBeamClipper(),
+//                     child: Container(
+//                       width: model.pageWidth * milestone.asset.width * 2,
+//                       height: model.pageWidth * milestone.asset.height,
+//                       decoration: BoxDecoration(
+//                         // color: Colors.black,
+//                         gradient: LinearGradient(
+//                             colors: [
+//                               UiConstants.primaryColor.withOpacity(0.01),
+//                               UiConstants.primaryColor.withOpacity(0.3),
+//                               UiConstants.primaryColor.withOpacity(0.1),
+//                               UiConstants.primaryColor.withOpacity(0.01)
+//                             ],
+//                             begin: Alignment.bottomCenter,
+//                             end: Alignment.topCenter),
+//                       ),
+//                     ),
+//                   ))
+//               : SizedBox();
+//         });
+//   }
+// }
 
 class BaseRings extends StatelessWidget {
   final double size;
