@@ -113,12 +113,14 @@ class LauncherViewModel extends BaseModel {
       // test
       // await new CacheService().invalidateAll();
       if (userService.isUserOnborded) await _userCoinService.init();
-      await Future.wait(
-        [
-          _baseUtil.init(),
-          _fcmListener.setupFcm(),
-        ],
-      );
+      if (userService.isUserOnborded)
+        await Future.wait(
+          [
+            // Note: BaseUtil Alredy in Sync
+            _baseUtil.init(),
+            _fcmListener.setupFcm(),
+          ],
+        );
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -126,10 +128,11 @@ class LauncherViewModel extends BaseModel {
                   _userRepo.updateUserAppFlyer(userService.baseUser, token),
             );
       if (userService.baseUser != null) {
-        await _analyticsService.login(
-          isOnBoarded: userService?.isUserOnborded,
-          baseUser: userService?.baseUser,
-        );
+        if (userService.isUserOnborded)
+          await _analyticsService.login(
+            isOnBoarded: userService?.isUserOnborded,
+            baseUser: userService?.baseUser,
+          );
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");
@@ -161,7 +164,7 @@ class LauncherViewModel extends BaseModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 600),
+      new Duration(milliseconds: 820),
     );
 
     try {
@@ -188,18 +191,20 @@ class LauncherViewModel extends BaseModel {
     ///check for breaking update
     if (await checkBreakingUpdate()) {
       AppState.isUpdateScreen = true;
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+      navigator.currentAction = PageAction(
+        state: PageState.replaceAll,
+        page: UpdateRequiredConfig,
+      );
       return;
     }
 
     ///check for breaking update (TESTING)
-    if (await checkBreakingUpdateTest()) {
-      AppState.isUpdateScreen = true;
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-      return;
-    }
+    // if (await checkBreakingUpdateTest()) {
+    //   AppState.isUpdateScreen = true;
+    //   navigator.currentAction =
+    //       PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+    //   return;
+    // }
 
     ///check if user is onboarded
     if (!userService.isUserOnborded) {
@@ -239,7 +244,9 @@ class LauncherViewModel extends BaseModel {
           PageAction(state: PageState.replaceAll, page: RootPageConfig);
     } else {
       BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please reopen and try again');
+        'Authentication Failed',
+        'Please reopen and try again',
+      );
     }
   }
 
@@ -283,9 +290,11 @@ class LauncherViewModel extends BaseModel {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String currentBuild = packageInfo.buildNumber;
     _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
-        ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID
-        : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS);
+    String minBuild = BaseRemoteConfig.remoteConfig.getString(
+      Platform.isAndroid
+          ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID
+          : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS,
+    );
     _logger.v('Min Build Required $minBuild');
     //minBuild = "50";
     try {
@@ -299,29 +308,29 @@ class LauncherViewModel extends BaseModel {
     }
   }
 
-  Future<bool> checkBreakingUpdateTest() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String currentBuild = packageInfo.buildNumber;
-    _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
-        ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID_2
-        : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS_2);
-    _logger.v('Min Build Required $minBuild');
-    //minBuild = "50";
-    try {
-      if (int.parse(currentBuild) < int.parse(minBuild)) {
-        if (userService != null && userService.baseUser != null) {
-          _logger.i("User mobile no: ${userService.baseUser.mobile}");
-          if (userService.baseUser.mobile.startsWith('99999000') ||
-              userService.baseUser.mobile.startsWith('88888000')) return true;
-          return false;
-        }
-        return false;
-      }
-      return false;
-    } catch (e) {
-      _logger.e(e.toString());
-      return false;
-    }
-  }
+  // Future<bool> checkBreakingUpdateTest() async {
+  // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  // String currentBuild = packageInfo.buildNumber;
+  // _logger.i('Current Build $currentBuild');
+  // String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
+  //     ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID_2
+  //     : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS_2);
+  // _logger.v('Min Build Required $minBuild');
+  //minBuild = "50";
+  // try {
+  // if (int.parse(currentBuild) < int.parse(minBuild)) {
+  // if (userService != null && userService.baseUser != null) {
+  //   _logger.i("User mobile no: ${userService.baseUser.mobile}");
+  //   if (userService.baseUser.mobile.startsWith('99999000') ||
+  //       userService.baseUser.mobile.startsWith('88888000')) return true;
+  //   return false;
+  // }
+  // return false;
+  // }
+  // return false;
+  // } catch (e) {
+  //   _logger.e(e.toString());
+  //   return false;
+  // }
+  // }
 }

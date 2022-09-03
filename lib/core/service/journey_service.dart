@@ -161,6 +161,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     await getJourneyLevels();
+    // NOTE: REQUIRED METHOD
     await updateUserJourneyStats();
     await fetchNetworkPages();
   }

@@ -123,6 +123,7 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
     try {
+      logger.i("CALLING: updateUserAppFlyer");
       final id = await _appsFlyerService.appFlyerId;
 
       if (user.appFlyerId == id) {
@@ -134,7 +135,7 @@ class UserRepository extends BaseRepo {
         'appFlyerId': id,
       };
 
-      final res = await APIService.instance.putData(
+      await APIService.instance.putData(
         _apiPaths.kUpdateUserAppflyer,
         body: body,
         token: 'Bearer $token',
@@ -257,6 +258,7 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
+      logger.i("CALLING: getUserAugmontDetails");
       final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
