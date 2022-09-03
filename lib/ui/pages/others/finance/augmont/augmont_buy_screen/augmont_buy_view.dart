@@ -294,67 +294,46 @@ class AugmontBuyCard extends StatelessWidget {
                         ),
                         child: Padding(
                             padding: EdgeInsets.all(SizeConfig.padding20),
-                            child: ListView.builder(
-                                itemCount: model.appMetaList.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      model.processTransaction(model
-                                          .appMetaList[index]
-                                          .upiApplication
-                                          .appName);
-                                    },
-                                    child: Text(
-                                      model.appMetaList[index].upiApplication
-                                          .appName,
-                                      style: TextStyles.title5,
+                            child: GridView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: model.appMetaList.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    model.upiApplication =
+                                        model.appMetaList[index];
+                                    model.processTransaction(model
+                                        .appMetaList[index]
+                                        .upiApplication
+                                        .appName);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Container(
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            model.appMetaList[index]
+                                                .iconImage(40),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              model.appMetaList[index]
+                                                  .upiApplication.appName,
+                                              style: TextStyles.body4,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  );
-                                })
-                            // Column(
-                            //   children: [
-                            //     Text(
-                            //       'Choose a payment method',
-                            //       style: TextStyles.title5,
-                            //     ),
-                            //     SizedBox(height: 30),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     // model.upiApplication = model.appMetaList[5];
-                            //     model.processTransaction('Paytm');
-                            //   },
-                            //   child: Text(
-                            //     'Paytm',
-                            //     style: TextStyles.title5,
-                            //   ),
-                            // ),
-                            //     GestureDetector(
-                            //       onTap: () {
-                            //         model.processTransaction('PhonePe');
-                            //       },
-                            //       child: Text(
-                            //         'PhonePe',
-                            //         style: TextStyles.title5,
-                            //       ),
-                            //     ),
-                            //     GestureDetector(
-                            //       child: Text(
-                            //         'Google Pay',
-                            //         style: TextStyles.title5,
-                            //       ),
-                            //     ),
-                            //     Expanded(
-                            //       child: ListView.builder(
-                            //           itemCount: 2,
-                            //           itemBuilder: (context, index) {
-                            //             return Column(
-                            //               children: [],
-                            //             );
-                            //           }),
-                            //     )
-                            //   ],
-                            // ),
-                            ),
+                                  ),
+                                );
+                              },
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3),
+                            )),
                       ));
                 }
               },

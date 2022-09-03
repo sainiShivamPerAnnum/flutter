@@ -442,7 +442,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    if (buyAmount < 10) {
+    if (buyAmount < 1) {
       showMinCapText = true;
       return;
     }
@@ -478,7 +478,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     try {
       await _paytmService.processTransaction(
           buyAmount,
-          'ios',
+          PlatformUtils.isAndroid ? 'android' : 'ios',
           pspApp,
           'UPI_INTENT',
           goldRates,
@@ -487,7 +487,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
       isGoldBuyInProgress = false;
       resetBuyOptions();
       setState(ViewState.Idle);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   initiateBuy() async {

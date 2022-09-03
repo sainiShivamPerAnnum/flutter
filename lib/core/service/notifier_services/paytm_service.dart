@@ -452,18 +452,56 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       await doUpiTransation(
           url: processTransactionApiResponse
               .model.data.body.deepLinkInfo.deepLink,
-          orderId: paytmSubscriptionModel.data.orderId);
+          orderId: paytmSubscriptionModel.data.orderId,
+          androidPackageName: appMeta.packageName);
     }
   }
 
-  Future doUpiTransation({String url, String orderId}) async {
+  Future doUpiTransation(
+      {String url, String orderId, String androidPackageName}) async {
+    //regex check for the uRL in case its buggy
+    //
     MethodChannel _platform =
         MethodChannel("fello.in/dev/payments/paytmService");
     var response;
     if (PlatformUtils.isAndroid) {
       // launchUrl(Uri.parse(url));
-      response = await _platform.invokeMethod<String>(
-          'initiatePaytmTransaction', {"url": url, "app": "net.one97.paytm"});
+      try {
+        response = await _platform.invokeMethod<String>(
+            'initiatePaytmTransaction',
+            {"url": url, "app": androidPackageName});
+        print(response);
+        AppState.backButtonDispatcher.didPopRoute();
+        AppState.delegate.appState.isTxnLoaderInView = true;
+        AppState.delegate.appState.txnTimer =
+            Timer(Duration(seconds: 30), () async {
+          bool isValidated = await validateTransaction(orderId);
+          print(isValidated);
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          if (isValidated) {
+            AppState.delegate.appState.txnTimer.cancel();
+            BaseUtil.openDialog(
+              addToScreenStack: true,
+              hapticVibrate: true,
+              isBarrierDismissable: false,
+              content: PendingDialog(
+                title: "We're still processing!",
+                subtitle:
+                    "Your transaction is taking longer than usual. We'll get back to you in ",
+                duration: '15 minutes',
+              ),
+            );
+          } else {
+            AppState.delegate.appState.txnTimer.cancel();
+            BaseUtil.showNegativeAlert(
+              'Transaction failed',
+              'Your transaction was unsuccessful. Please try again',
+            );
+          }
+        });
+      } catch (e) {
+        print(e);
+      }
     }
     if (PlatformUtils.isIOS) {
       launchUrl(Uri.parse(url)).then((value) async {
@@ -476,7 +514,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           AppState.delegate.appState.isTxnLoaderInView = false;
           if (isValidated) {
             AppState.delegate.appState.txnTimer.cancel();
-
             BaseUtil.openDialog(
               addToScreenStack: true,
               hapticVibrate: true,

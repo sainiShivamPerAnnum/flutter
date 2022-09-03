@@ -22,6 +22,8 @@ class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val PAYMENTCHANNEL = "fello.in/dev/payments/paytmService"
     private var result: Result? = null
+    var hasResponded = false
+    private var requestCodeNumber = 201119
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -32,7 +34,7 @@ class MainActivity : FlutterFragmentActivity() {
             if (call.method == "createNotificationChannel") {
                 val argData = call.arguments as java.util.HashMap<String, String>
                 val completed = createNotificationChannel(argData)
-                if (completed == true) {
+                if (completed != null) {
                     result.success(completed)
                 } else {
                     result.error("Error Code", "Error Message", null)
@@ -48,12 +50,7 @@ class MainActivity : FlutterFragmentActivity() {
             if (call.method == "initiatePaytmTransaction") {
                     val argData = call.arguments as java.util.HashMap<String, String>
                     val completed = initiateTransaction(argData)
-                    if (completed == true){
-                        result.success(completed)
-                    }
-                    else{
-                        result.error("Error Code", "Error Message", null)
-                    }
+                result.success(completed)
             } else {
                 result.notImplemented()
             }
@@ -91,12 +88,43 @@ class MainActivity : FlutterFragmentActivity() {
         return completed
     }
 
-    private fun initiateTransaction(mapData: HashMap<String,String>) : Boolean{
-        val uri = Uri.parse(mapData["url"])
-        // Log.e(uri)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.setPackage(mapData["app"])
-        startActivityForResult(intent, 201119)
-        return true;
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCodeNumber == requestCode && result != null) {
+        if (data != null) {
+            try {
+                val response = data.getStringExtra("response")!!
+                this.success(response)
+            } catch (ex: Exception) {
+                this.success("invalid_response")
+            }
+        } else {
+            this.success("user_cancelled")
+        }
+    }
+  }
+
+  private fun success(o: String) {
+    if (!hasResponded) {
+      hasResponded = true
+      result?.success(o)
+    }
+  }
+
+    private fun initiateTransaction(mapData: HashMap<String,String>) {
+        try{
+            val uri = Uri.parse(mapData["url"])
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            intent.setPackage(mapData["app"])
+            if (intent.resolveActivity(packageManager) == null) {
+                this.success("activity_unavailable")
+                return
+            }
+            startActivityForResult(intent, requestCodeNumber)
+
+        }
+        catch(ex: Exception){
+            this.success("failed_to_open_app")
+        }
         }
     }
