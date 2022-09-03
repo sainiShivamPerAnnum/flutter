@@ -157,11 +157,13 @@ class _JourneyViewState extends State<JourneyView>
                               ActiveMilestoneBaseGlow(),
                               Milestones(model: model),
                               Avatar(model: model),
+                              LevelBlurView()
                             ],
                           ),
                         ),
                       ),
                     ),
+
                     JourneyAppBar(),
                     // JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
@@ -228,55 +230,65 @@ class NewUserNavBar extends StatelessWidget {
             : Positioned(
                 bottom: 0,
                 child: SafeArea(
-                  child: Container(
-                    width: SizeConfig.screenWidth -
-                        SizeConfig.pageHorizontalMargins * 2,
-                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      color: UiConstants.gameCardColor,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness24),
-                    ),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding4,
-                          vertical: SizeConfig.pageHorizontalMargins),
-                      leading: GestureDetector(
-                        onDoubleTap: () {
-                          AppState.delegate.parseRoute(Uri.parse("profile"));
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black,
-                          radius: SizeConfig.avatarRadius * 2,
-                          child: SvgPicture.asset(Assets.aFelloToken,
-                              height: SizeConfig.padding32),
+                  child: GestureDetector(
+                      onTap: () {
+                        model.showMilestoneDetailsModalSheet(
+                            model.currentMilestoneList.firstWhere((milestone) =>
+                                milestone.index == m.avatarRemoteMlIndex),
+                            context);
+                      },
+                      child: Container(
+                        width: SizeConfig.screenWidth -
+                            SizeConfig.pageHorizontalMargins * 2,
+                        margin:
+                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                        decoration: BoxDecoration(
+                          color: UiConstants.gameCardColor,
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness24),
                         ),
-                      ),
-                      title: FittedBox(
-                        child: Text(
-                          "Welcome to Fello",
-                          style:
-                              TextStyles.rajdhaniB.title3.colour(Colors.white),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding4,
+                              vertical: SizeConfig.pageHorizontalMargins),
+                          leading: GestureDetector(
+                            onDoubleTap: () {
+                              AppState.delegate
+                                  .parseRoute(Uri.parse("profile"));
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black,
+                              radius: SizeConfig.avatarRadius * 2,
+                              child: SvgPicture.asset(Assets.aFelloToken,
+                                  height: SizeConfig.padding32),
+                            ),
+                          ),
+                          title: FittedBox(
+                            child: Text(
+                              "Welcome to Fello",
+                              style: TextStyles.rajdhaniB.title3
+                                  .colour(Colors.white),
+                            ),
+                          ),
+                          subtitle: Text(
+                            "Lets get started with the journey",
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white60),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.navigate_next_rounded,
+                                color: Colors.white),
+                            onPressed: () {
+                              model.showMilestoneDetailsModalSheet(
+                                  model.currentMilestoneList.firstWhere(
+                                      (milestone) =>
+                                          milestone.index ==
+                                          m.avatarRemoteMlIndex),
+                                  context);
+                            },
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        "Lets get started with the journey",
-                        style:
-                            TextStyles.sourceSans.body3.colour(Colors.white60),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.navigate_next_rounded,
-                            color: Colors.white),
-                        onPressed: () {
-                          model.showMilestoneDetailsModalSheet(
-                              model.currentMilestoneList.firstWhere(
-                                  (milestone) =>
-                                      milestone.index == m.avatarRemoteMlIndex),
-                              context);
-                        },
-                      ),
-                    ),
-                  ),
+                      )),
                 ),
               );
       },

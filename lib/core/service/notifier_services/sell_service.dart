@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -66,13 +67,14 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   verifyOngoingTransaction() async {
     await _txnService.updateTransactions();
-    if (_txnService.txnList.length > 0) {
-      setOngoingTransaction = _txnService.txnList
-                  .where((element) => element.subType == 'WITHDRAWL')
-                  .first
-                  ?.tranStatus !=
-              "COMPLETE" ??
-          false;
+    if (_txnService.txnList != null && _txnService.txnList.length > 0) {
+      UserTransaction ongoingTxn = _txnService.txnList.firstWhere(
+          (element) =>
+              element.subType == 'WITHDRAWL' &&
+              element.tranStatus != "COMPLETE", orElse: () {
+        return null;
+      });
+      setOngoingTransaction = ongoingTxn != null ? true : false;
     }
   }
 }
