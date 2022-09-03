@@ -397,7 +397,7 @@ class BaseRemoteConfig {
 
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
 
-  static String get ACTIVE_PG => _ACTIVE_PG.values.first;
+  static String get ACTIVE_PG => _ACTIVE_PG.keys.first;
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

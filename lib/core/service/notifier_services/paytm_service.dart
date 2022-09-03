@@ -176,7 +176,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   Future<bool> validateTransaction(String orderId) async {
     final ApiResponse<TransactionResponseModel> transactionResponseModel =
         await _paytmRepo.getTransactionStatus(
-            orderId, BaseRemoteConfig.ACTIVE_PG == 'rzp');
+            orderId,
+            BaseRemoteConfig.remoteConfig
+                    .getString(BaseRemoteConfig.ACTIVE_PG) ==
+                'rzp');
 
     print(transactionResponseModel.code);
 
@@ -197,7 +200,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
 
-    bool isRzpTxn = BaseRemoteConfig.ACTIVE_PG == 'rzp';
+    bool isRzpTxn =
+        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
+            'rzp';
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),

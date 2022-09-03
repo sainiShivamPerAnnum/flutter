@@ -408,7 +408,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
               showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
         }
       }
-
       _txnService.updateTransactions();
     } catch (e) {
       _logger.e(e);
@@ -442,7 +441,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    if (buyAmount < 1) {
+    if (buyAmount < 10) {
       showMinCapText = true;
       return;
     }
@@ -555,7 +554,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
         ? true
         : false;
 
-    bool isRzpTxn = BaseRemoteConfig.ACTIVE_PG == 'rzp';
+    bool isRzpTxn =
+        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
+            'rzp';
+    print(isRzpTxn);
     var _status;
 
     if (isRzpTxn) {
@@ -573,7 +575,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           restrictAppInvoke: restrictPaytmAppInvoke);
     }
 
-    if (isRzpTxn) {
+    if (!isRzpTxn) {
       isGoldBuyInProgress = false;
       resetBuyOptions();
       if (_status) {

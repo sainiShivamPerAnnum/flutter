@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -183,13 +184,13 @@ class AugmontBuyCard extends StatelessWidget {
                           child: InkWell(
                               onTap: () => model.showOfferModal(model),
                               child: RichText(
-                                text: new TextSpan(
+                                text: TextSpan(
                                   children: [
-                                    new TextSpan(
+                                    TextSpan(
                                         text: 'Apply a',
                                         style: TextStyles.body3
                                             .colour(UiConstants.felloBlue)),
-                                    new TextSpan(
+                                    TextSpan(
                                       text: ' Coupon',
                                       style: TextStyles.body3
                                           .colour(UiConstants.felloBlue)
@@ -273,68 +274,25 @@ class AugmontBuyCard extends StatelessWidget {
               onPressed: () async {
                 if (!model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
-                  // model.initiateBuy();
-                  //Bottom sheet
-                  BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      backgroundColor: Colors.transparent,
-                      isBarrierDismissable: true,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness12),
-                          topRight: Radius.circular(SizeConfig.roundness12)),
-                      content: Container(
-                        height: SizeConfig.screenWidth * 0.8,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          color: UiConstants.backgroundColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness12),
-                              topRight:
-                                  Radius.circular(SizeConfig.roundness12)),
-                        ),
-                        child: Padding(
-                            padding: EdgeInsets.all(SizeConfig.padding20),
-                            child: GridView.builder(
-                              scrollDirection: Axis.vertical,
-                              itemCount: model.appMetaList.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    model.upiApplication =
-                                        model.appMetaList[index];
-                                    model.processTransaction(model
-                                        .appMetaList[index]
-                                        .upiApplication
-                                        .appName);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Container(
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            model.appMetaList[index]
-                                                .iconImage(40),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              model.appMetaList[index]
-                                                  .upiApplication.appName,
-                                              style: TextStyles.body4,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3),
-                            )),
-                      ));
+                  if (BaseRemoteConfig.remoteConfig
+                          .getString(BaseRemoteConfig.ACTIVE_PG) ==
+                      'rzp') {
+                    model.initiateBuy();
+                  }
+                  if (BaseRemoteConfig.remoteConfig
+                          .getString(BaseRemoteConfig.ACTIVE_PG) ==
+                      'paytm') {
+                    BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        backgroundColor: Colors.transparent,
+                        isBarrierDismissable: true,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness12),
+                            topRight: Radius.circular(SizeConfig.roundness12)),
+                        content: UPIAppsBottomSheet(
+                          model: model,
+                        ));
+                  }
                 }
               },
             ),
@@ -343,6 +301,62 @@ class AugmontBuyCard extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class UPIAppsBottomSheet extends StatelessWidget {
+  final AugmontGoldBuyViewModel model;
+
+  const UPIAppsBottomSheet({Key key, this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.screenWidth * 0.8,
+      width: SizeConfig.screenWidth,
+      decoration: BoxDecoration(
+        color: UiConstants.backgroundColor,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness12),
+            topRight: Radius.circular(SizeConfig.roundness12)),
+      ),
+      child: Padding(
+          padding: EdgeInsets.all(SizeConfig.padding20),
+          child: GridView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: model.appMetaList.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  model.upiApplication = model.appMetaList[index];
+                  model.processTransaction(
+                      model.appMetaList[index].upiApplication.appName);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          model.appMetaList[index].iconImage(40),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            model.appMetaList[index].upiApplication.appName,
+                            style: TextStyles.body4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          )),
     );
   }
 }
