@@ -100,30 +100,22 @@ class MainActivity : FlutterFragmentActivity() {
                 this.success("activity_unavailable")
                 return
             }
-            startActivityForResult(intent, REQUEST_CODE_HANDLER)
+            // startActivityForResult(intent, REQUEST_CODE_HANDLER)
+            resultLauncher.launch(intent)
         } catch (ex: Exception) {
             this.success("failed_to_open_app")
         }
     }
 
-//    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//        if (result.resultCode == Activity.RESULT_OK) {
-//            // There are no request codes
-//            val data: Intent? = result.data
-//
-//        }
-//    }
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        Log.d("result", "onActivityResult $requestCode $resultCode ${data?.data}")
-//
-//        if (requestCode == REQUEST_CODE_HANDLER) {
-//            // Process based on the data in response.
-//            data?.getStringExtra("Status")?.let { Log.d("result", it) }
-//            data?.getStringExtra("Status")?.let { Toast.makeText(applicationContext, it, Toast.LENGTH_LONG).show() }
-//        }
-//    }
+   var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+       if (result.resultCode == Activity.RESULT_OK) {
+           // There are no request codes
+           val data: Intent? = result.data
+           Log.d("Data:", data.toString())
 
+
+       }
+   }
 
 
     private fun success(o: String) {
