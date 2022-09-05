@@ -34,7 +34,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-// import 'package:upi_pay/upi_pay.dart';
+import 'package:upi_pay/upi_pay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //ERROR CODE
@@ -474,53 +474,47 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future doUpiTransation(
       {String url, String orderId, String androidPackageName}) async {
-    //regex check for the uRL in case its buggy
-    //
-    var response;
     if (PlatformUtils.isAndroid) {
-      // launchUrl(Uri.parse(url));
+      UpiTransactionResponse response;
       AppState.backButtonDispatcher.didPopRoute();
       try {
-        response = await methodChannelCall(url, androidPackageName);
+        response = await UpiPay.initiateTransaction(
+            app: UpiApplication.paytm, deepLinkUrl: url);
         print(response);
       } catch (e) {
         print(e);
       }
-      Timer _paymentStatusTimer =
-          Timer.periodic(Duration(seconds: 5), (timer) async {
-        bool isValidated = await validateTransaction(orderId);
-        print(isValidated);
-        if (isValidated) {
-          timer.cancel();
-        }
-      });
-      AppState.delegate.appState.isTxnLoaderInView = true;
-      AppState.delegate.appState.txnTimer =
-          Timer(Duration(seconds: 30), () async {
-        bool isValidated = await validateTransaction(orderId);
-        print(isValidated);
-        AppState.delegate.appState.isTxnLoaderInView = false;
-        if (isValidated) {
-          AppState.delegate.appState.txnTimer.cancel();
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            hapticVibrate: true,
-            isBarrierDismissable: false,
-            content: PendingDialog(
-              title: "We're still processing!",
-              subtitle:
-                  "Your transaction is taking longer than usual. We'll get back to you in ",
-              duration: '15 minutes',
-            ),
-          );
-        } else {
-          AppState.delegate.appState.txnTimer.cancel();
-          BaseUtil.showNegativeAlert(
-            'Transaction failed',
-            'Your transaction was unsuccessful. Please try again',
-          );
-        }
-      });
+      if (response.status == UpiTransactionStatus.failure) {
+        AppState.delegate.appState.txnTimer.cancel();
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Your transaction was unsuccessful. Please try again',
+        );
+      }
+      if (response.status == UpiTransactionStatus.submitted ||
+          response.status == UpiTransactionStatus.success) {
+        AppState.delegate.appState.isTxnLoaderInView = true;
+        AppState.delegate.appState.txnTimer =
+            Timer(Duration(seconds: 30), () async {
+          bool isValidated = await validateTransaction(orderId);
+          print(isValidated);
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          if (isValidated) {
+            AppState.delegate.appState.txnTimer.cancel();
+            BaseUtil.openDialog(
+              addToScreenStack: true,
+              hapticVibrate: true,
+              isBarrierDismissable: false,
+              content: PendingDialog(
+                title: "We're still processing!",
+                subtitle:
+                    "Your transaction is taking longer than usual. We'll get back to you in ",
+                duration: '15 minutes',
+              ),
+            );
+          }
+        });
+      }
     }
 
     if (PlatformUtils.isIOS) {

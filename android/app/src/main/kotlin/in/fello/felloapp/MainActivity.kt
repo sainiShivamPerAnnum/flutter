@@ -14,6 +14,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks.await
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -46,17 +48,17 @@ class MainActivity : FlutterFragmentActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PAYMENTCHANNEL).setMethodCallHandler {
-                call, result ->
-            if (call.method == "initiatePaytmTransaction") {
-                val argData = call.arguments as java.util.HashMap<String, String>
-                val completed = initiateTransaction(argData)
-                Log.d("completed android:", completed.toString())
-                result.success(completed.toString())
-            } else {
-                result.notImplemented()
-            }
-        }
+        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PAYMENTCHANNEL).setMethodCallHandler {
+        //         call, result ->
+        //     if (call.method == "initiatePaytmTransaction") {
+        //         val argData = call.arguments as java.util.HashMap<String, String>
+        //         val completed = await(initiateTransaction(argData))
+        //         Log.d("completed android:", completed.toString())
+        //         result.success(completed.toString())
+        //     } else {
+        //         result.notImplemented()
+        //     }
+        // }
     }
 
     override fun onStart() {
@@ -97,7 +99,6 @@ class MainActivity : FlutterFragmentActivity() {
             intent.setPackage(mapData["app"])
             if (intent.resolveActivity(packageManager) == null) {
                 this.success("activity_unavailable")
-                return
             }
             resultLauncher.launch(intent)
         } catch (ex: Exception) {
