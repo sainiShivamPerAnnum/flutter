@@ -49,8 +49,9 @@ class LauncherView extends StatelessWidget {
                           ? Lottie.asset(
                               Assets.felloSplashLoopLogo,
                             )
-                          : Lottie.asset(Assets.felloSplashZoomOutLogo,
-                              repeat: false),
+                          : Lottie.asset(
+                              Assets.felloSplashZoomOutLogo,
+                            ),
                       // Text(
                       //   locale.splashTagline,
                       //   style: TextStyles.body2,

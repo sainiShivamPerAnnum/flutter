@@ -237,8 +237,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   updateUserJourneyStats() async {
     bool res = await _userService.getUserJourneyStats();
     if (res) {
-      // NOTE: WHAT IS MEAN OF SAME ASSIGNMENT
-      _userService.userJourneyStats = _userService.userJourneyStats;
       avatarRemoteMlIndex = _userService.userJourneyStats.mlIndex;
     } else {
       journeyBuildFailure = true;
@@ -359,23 +357,28 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Check if there is a need to blur next level milestones
   JourneyLevel getJourneyLevelBlurData() {
-    int lastMileStoneIndex = currentMilestoneList.last.index;
-    // // int userCurrentLevel = userJourneyStats.level;
-    // log("Current Data Lastmilestone ${lastMileStoneIndex}");
+    try {
+      int lastMileStoneIndex = currentMilestoneList.last.index;
+      // // int userCurrentLevel = userJourneyStats.level;
+      // log("Current Data Lastmilestone ${lastMileStoneIndex}");
 
-    // int userCurrentMilestoneIndex = avatarRemoteMlIndex;
-    log("levelData ${levels[0].toString()}");
+      // int userCurrentMilestoneIndex = avatarRemoteMlIndex;
+      log("levelData ${levels[0].toString()}");
 
-    JourneyLevel currentlevelData = levels.firstWhere(
-        (level) =>
-            avatarRemoteMlIndex >= level.start &&
-            avatarRemoteMlIndex <= level.end,
-        orElse: null);
+      JourneyLevel currentlevelData = levels.firstWhere(
+          (level) =>
+              avatarRemoteMlIndex >= level.start &&
+              avatarRemoteMlIndex <= level.end,
+          orElse: null);
 
-    if (currentlevelData != null && lastMileStoneIndex > currentlevelData.end) {
-      return currentlevelData;
-    } else
+      if (currentlevelData != null &&
+          lastMileStoneIndex > currentlevelData.end) {
+        return currentlevelData;
+      } else
+        return null;
+    } catch (e) {
       return null;
+    }
   }
 
   //Scrolls Page to avatar Position
