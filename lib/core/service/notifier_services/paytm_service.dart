@@ -516,19 +516,24 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       launchUrl(Uri.parse(url)).then((value) async {
         AppState.backButtonDispatcher.didPopRoute();
         AppState.delegate.appState.isTxnLoaderInView = true;
-        // Timer.periodic(Duration(seconds: 10), (timer) async {
-        //   await validateTransaction(orderId);
-        // });
+        Timer _paymentStatusTimer =
+            Timer.periodic(Duration(seconds: 5), (timer) async {
+          bool isValidated = await validateTransaction(orderId);
+          print(isValidated);
+          if (isValidated) {
+            timer.cancel();
+          }
+        });
         if (WidgetsBinding.instance.lifecycleState ==
             AppLifecycleState.resumed) {
           AppState.delegate.appState.txnTimer =
               Timer(Duration(seconds: 30), () async {
             bool isValidated = await validateTransaction(orderId);
-
             print(isValidated);
             AppState.delegate.appState.isTxnLoaderInView = false;
             if (isValidated) {
               AppState.delegate.appState.txnTimer.cancel();
+              _paymentStatusTimer.cancel();
               BaseUtil.openDialog(
                 addToScreenStack: true,
                 hapticVibrate: true,
@@ -542,6 +547,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
               );
             } else {
               AppState.delegate.appState.txnTimer.cancel();
+              _paymentStatusTimer.cancel();
               BaseUtil.showNegativeAlert(
                 'Transaction failed',
                 'Your transaction was unsuccessful. Please try again',
