@@ -511,36 +511,44 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         }
       });
     }
+
     if (PlatformUtils.isIOS) {
       launchUrl(Uri.parse(url)).then((value) async {
         AppState.backButtonDispatcher.didPopRoute();
         AppState.delegate.appState.isTxnLoaderInView = true;
-        AppState.delegate.appState.txnTimer =
-            Timer(Duration(seconds: 30), () async {
-          bool isValidated = await validateTransaction(orderId);
-          print(isValidated);
-          AppState.delegate.appState.isTxnLoaderInView = false;
-          if (isValidated) {
-            AppState.delegate.appState.txnTimer.cancel();
-            BaseUtil.openDialog(
-              addToScreenStack: true,
-              hapticVibrate: true,
-              isBarrierDismissable: false,
-              content: PendingDialog(
-                title: "We're still processing!",
-                subtitle:
-                    "Your transaction is taking longer than usual. We'll get back to you in ",
-                duration: '15 minutes',
-              ),
-            );
-          } else {
-            AppState.delegate.appState.txnTimer.cancel();
-            BaseUtil.showNegativeAlert(
-              'Transaction failed',
-              'Your transaction was unsuccessful. Please try again',
-            );
-          }
-        });
+        // Timer.periodic(Duration(seconds: 10), (timer) async {
+        //   await validateTransaction(orderId);
+        // });
+        if (WidgetsBinding.instance.lifecycleState ==
+            AppLifecycleState.resumed) {
+          AppState.delegate.appState.txnTimer =
+              Timer(Duration(seconds: 30), () async {
+            bool isValidated = await validateTransaction(orderId);
+
+            print(isValidated);
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            if (isValidated) {
+              AppState.delegate.appState.txnTimer.cancel();
+              BaseUtil.openDialog(
+                addToScreenStack: true,
+                hapticVibrate: true,
+                isBarrierDismissable: false,
+                content: PendingDialog(
+                  title: "We're still processing!",
+                  subtitle:
+                      "Your transaction is taking longer than usual. We'll get back to you in ",
+                  duration: '15 minutes',
+                ),
+              );
+            } else {
+              AppState.delegate.appState.txnTimer.cancel();
+              BaseUtil.showNegativeAlert(
+                'Transaction failed',
+                'Your transaction was unsuccessful. Please try again',
+              );
+            }
+          });
+        }
       });
     }
   }
