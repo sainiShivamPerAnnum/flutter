@@ -192,12 +192,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         isEmailVerified = baseUser.isEmailVerified ?? false;
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
         await Future.wait([
-          setProfilePicture(),
-          getUserFundWalletData(),
+          // note: Already Setting profile in Root uneccessary Calling
+          // setProfilePicture(),
+          // getUserFundWalletData(),
           getUserJourneyStats()
         ]);
-        checkForNewNotifications();
-        checkForUnscratchedGTStatus();
+        // checkForNewNotifications();
+        // checkForUnscratchedGTStatus();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -260,25 +261,26 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<void> setProfilePicture() async {
-    if (await CacheManager.readCache(key: 'dpUrl') == null) {
-      try {
-        if (_baseUser != null) {
-          setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
-          _logger.d("No cached profile picture found. updated from server");
-        }
-        if (_myUserDpUrl != null) {
-          await CacheManager.writeCache(
-              key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
-          _logger.d("Profile picture fetched from server and cached");
-        }
-      } catch (e) {
-        _logger.e(e.toString());
-      }
-    } else {
-      setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
-    }
-  }
+  // Note: Already Setting in Root uneccessary Calling
+  // Future<void> setProfilePicture() async {
+  //   if (await CacheManager.readCache(key: 'dpUrl') == null) {
+  //     try {
+  //       if (_baseUser != null) {
+  //         setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
+  //         _logger.d("No cached profile picture found. updated from server");
+  //       }
+  //       if (_myUserDpUrl != null) {
+  //         await CacheManager.writeCache(
+  //             key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
+  //         _logger.d("Profile picture fetched from server and cached");
+  //       }
+  //     } catch (e) {
+  //       _logger.e(e.toString());
+  //     }
+  //   } else {
+  //     setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
+  //   }
+  // }
 
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
@@ -291,6 +293,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<bool> getUserJourneyStats() async {
+    // NOTE: CACHE REQUIRED, FOR CALLED FROM JOURUNY SERVICE AGAIN
     if (baseUser != null) {
       ApiResponse<UserJourneyStatsModel> res =
           await _journeyRepo.getUserJourneyStats();

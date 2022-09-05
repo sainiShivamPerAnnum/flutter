@@ -253,9 +253,14 @@ class RootViewModel extends BaseModel {
       //   _userService.showSecurityPrompt = showSecurityPrompt;
       // }
 
+      _userService.getUserFundWalletData();
+      _userService.checkForNewNotifications();
+      _userService.checkForUnscratchedGTStatus();
+      _baseUtil.getProfilePicture();
+      // await _baseUtil.getProfilePicture();
+
       _initAdhocNotifications();
 
-      _baseUtil.getProfilePicture();
       // show security modal
       // if (showSecurityPrompt &&
       //     _userService.baseUser.isAugmontOnboarded &&
