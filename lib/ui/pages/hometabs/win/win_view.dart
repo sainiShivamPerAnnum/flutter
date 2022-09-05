@@ -9,9 +9,11 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -19,6 +21,16 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../core/base_remote_config.dart';
+import '../../../../core/enums/user_service_enum.dart';
+import '../../../../core/service/notifier_services/user_service.dart';
+import '../../../service_elements/user_service/profile_image.dart';
+import '../../../widgets/coin_bar/coin_bar_view.dart';
+import 'customPainters.dart';
 
 class Win extends StatelessWidget {
   @override
@@ -32,183 +44,358 @@ class Win extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
-        return Container(
-            margin: EdgeInsets.only(
-                top: model.showOldView
-                    ? SizeConfig.screenWidth * 0.1 +
-                        SizeConfig.viewInsets.top +
-                        SizeConfig.padding32
-                    : 0),
-            child:
-                // !model.showOldView
-                //     ?
-                Center(
-              child: GestureDetector(
-                onDoubleTap: () {
-                  model.showOldView = true;
-                  Future.delayed(Duration(seconds: 4), () {
-                    model.showOldView = false;
-                  });
-                },
+        double currentWinning = 58.0;
+
+        String minWithdrawPrize = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
+        String refUnlock = BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+        int refUnlockAmt = BaseUtil.toInt(refUnlock);
+        int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
+
+        return PropertyChangeConsumer<UserService, UserServiceProperties>(
+          properties: [UserServiceProperties.myUserFund],
+          builder: (context, m, property) => Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: Text(
+                "Win",
+                style: TextStyles.rajdhaniSB.title1,
+              ),
+              elevation: 0,
+              backgroundColor: UiConstants.kSecondaryBackgroundColor,
+              actions: [
+                FelloCoinBar(svgAsset: Assets.aFelloToken),
+                SizedBox(width: SizeConfig.padding10),
+                GestureDetector(
+                  onTap: () {
+                    model.openProfile();
+                  },
+                  child: ProfileImageSE(radius: SizeConfig.avatarRadius),
+                ),
+                SizedBox(width: SizeConfig.padding20)
+              ],
+            ),
+            body: Container(
+              width: double.infinity,
+
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: ClampingScrollPhysics(),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Win View in Construction",
-                      style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: UiConstants.kSecondaryBackgroundColor),
+                      padding: EdgeInsets.fromLTRB(
+                          SizeConfig.padding24,
+                          SizeConfig.padding44,
+                          SizeConfig.padding24,
+                          SizeConfig.padding32),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Current Winnings',
+                                    style: TextStyles.rajdhaniSB
+                                        .copyWith(fontSize: SizeConfig.body0),
+                                  ),
+                                  Text(
+                                    '₹ ${m.userFundWallet.unclaimedBalance.toString()}',
+                                    style: TextStyles.title1.extraBold
+                                        .colour(Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding40,
+                                  ),
+                                  currentWinning >= model.redeemAmount
+                                      ? AppPositiveBtn(
+                                          btnText: "Redeem",
+                                          onPressed: () {},
+                                          width: SizeConfig.screenWidth * 0.4)
+                                      : Container(
+                                          width: SizeConfig.screenWidth * 0.4,
+                                          child: Text(
+                                            'Rewards can be\nredeemed at Rs 200',
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              Consumer<AppState>(
+                                builder: (ctx, m, child) => WinningsCylinder(
+                                  index: AppState
+                                      .delegate.appState.getCurrentTabIndex,
+                                  currentWinning: currentWinning,
+                                  model: model,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding54,
+                          ),
+                          Divider(
+                            color: Colors.white,
+                            thickness: 0.3,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MyWinningsView(),
+                                  ));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                        Assets.unredemmedGoldenTicketBG,
+                                        height: SizeConfig.padding38),
+                                    SizedBox(
+                                      width: SizeConfig.padding8,
+                                    ),
+                                    Text(
+                                      'Golden Tickets',
+                                      style: TextStyles.sourceSans.body2
+                                          .colour(Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '3 NEW',
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.white),
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding10,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white,
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    TextButton(
-                      child: Text("Clear Journey Local Assets Files"),
-                      onPressed: () {
-                        model.cleanJourneyAssetsFiles();
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: UiConstants.primaryColor,
-                          child: IconButton(
-                              icon: Icon(Icons.add, color: Colors.white),
-                              onPressed: () {
-                                BaseUtil.showPositiveAlert("Positive SnackBar",
-                                    "This is a positive snackbar");
-                              }),
-                        ),
-                        SizedBox(width: SizeConfig.padding16),
-                        CircleAvatar(
-                          backgroundColor: UiConstants.negativeAlertColor,
-                          child: IconButton(
-                              icon: Icon(Icons.block, color: Colors.white),
-                              onPressed: () {
-                                BaseUtil.showNegativeAlert("Negative SnackBar",
-                                    "This is a negative snackbar");
-                              }),
-                        ),
-                        SizedBox(width: SizeConfig.padding16),
-                        CircleAvatar(
-                          backgroundColor: Colors.red,
-                          child: IconButton(
-                              icon: Icon(
-                                  Icons
-                                      .signal_wifi_statusbar_connected_no_internet_4_rounded,
-                                  color: Colors.white),
-                              onPressed: () {
-                                BaseUtil.showNoInternetAlert();
-                              }),
-                        )
-                      ],
-                    )
                   ],
                 ),
               ),
-            )
-            // : Stack(
-            //     children: [
-            //       Container(
-            //         margin: EdgeInsets.only(top: SizeConfig.padding20),
-            //         child: ListView(
-            //           padding:
-            //               EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
-            //           children: [
-            //             Container(
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.center,
-            //                 children: [
-            //                   BigPrizeContainer(
-            //                     bgColor: Color(0xff26A6F4),
-            //                     bigText: locale.winMoneyBigText,
-            //                     smallText: locale.winMoneySmallText,
-            //                     image: Assets.moneyBag,
-            //                     painter: LakhCustomPaint(),
-            //                     onPressed: () => AppState
-            //                         .delegate.appState.setCurrentTabIndex = 1,
-            //                   ),
-            //                   SizedBox(width: SizeConfig.padding16),
-            //                   BigPrizeContainer(
-            //                     bgColor: UiConstants.tertiarySolid,
-            //                     bigText: locale.winIphoneBigText,
-            //                     smallText: locale.winIphoneSmallText,
-            //                     image: Assets.iphone,
-            //                     painter: IphoneCustomPaint(),
-            //                     onPressed: () {
-            //                       // model.panelController.animatePanelToPosition(1);
-            //                       // model.setCurrentPage = 1;
-            //                       AppState.delegate.appState.currentAction =
-            //                           PageAction(
-            //                         page: ReferralDetailsPageConfig,
-            //                         state: PageState.addPage,
-            //                       );
-            //                     },
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //             SizedBox(height: SizeConfig.padding32),
-            //             WinnersMarqueeStrip(),
-            //             SizedBox(height: SizeConfig.padding20),
-            //             if (model.ongoingEvents != null)
-            //               Column(
-            //                 crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   Padding(
-            //                     padding: EdgeInsets.symmetric(
-            //                         horizontal:
-            //                             SizeConfig.pageHorizontalMargins),
-            //                     child: Text(
-            //                       "Ongoing Campaigns",
-            //                       style: TextStyles.title3.bold,
-            //                     ),
-            //                   ),
-            //                   SizedBox(height: SizeConfig.padding16),
-            //                   Container(
-            //                     height: SizeConfig.screenWidth * 0.3,
-            //                     width: SizeConfig.screenWidth,
-            //                     child: ListView(
-            //                       padding: EdgeInsets.zero,
-            //                       scrollDirection: Axis.horizontal,
-            //                       controller: model.eventScrollController,
-            //                       children: List.generate(
-            //                         model.ongoingEvents.length,
-            //                         (i) => Container(
-            //                           margin: EdgeInsets.only(
-            //                               left: i == 0
-            //                                   ? SizeConfig
-            //                                       .pageHorizontalMargins
-            //                                   : 0),
-            //                           child: EventCard(
-            //                             event: model.ongoingEvents[i],
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                   SizedBox(height: SizeConfig.padding24),
-            //                 ],
-            //               ),
-            //             SizedBox(
-            //               height: SizeConfig.screenHeight * 0.24,
-            //             )
-            //           ],
-            //         ),
-            //       ),
-            //       Container(
-            //         //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-            //         child: Hero(
-            //           tag: "myWinnigs",
-            //           child: WinningsContainer(
-            //             shadow: false,
-            //             onTap: () => model.navigateToMyWinnings(),
-            //           ),
-            //         ),
-            //       ),
-            //       WinnersLeaderBoardSE(
-            //         model: model,
-            //       )
-            //     ],
-            //   ),
-            );
+
+              // : Stack(
+              //     children: [
+              //       Container(
+              //         margin: EdgeInsets.only(top: SizeConfig.padding20),
+              //         child: ListView(
+              //           padding:
+              //               EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
+              //           children: [
+              //             Container(
+              //               child: Row(
+              //                 mainAxisAlignment: MainAxisAlignment.center,
+              //                 children: [
+              //                   BigPrizeContainer(
+              //                     bgColor: Color(0xff26A6F4),
+              //                     bigText: locale.winMoneyBigText,
+              //                     smallText: locale.winMoneySmallText,
+              //                     image: Assets.moneyBag,
+              //                     painter: LakhCustomPaint(),
+              //                     onPressed: () => AppState
+              //                         .delegate.appState.setCurrentTabIndex = 1,
+              //                   ),
+              //                   SizedBox(width: SizeConfig.padding16),
+              //                   BigPrizeContainer(
+              //                     bgColor: UiConstants.tertiarySolid,
+              //                     bigText: locale.winIphoneBigText,
+              //                     smallText: locale.winIphoneSmallText,
+              //                     image: Assets.iphone,
+              //                     painter: IphoneCustomPaint(),
+              //                     onPressed: () {
+              //                       // model.panelController.animatePanelToPosition(1);
+              //                       // model.setCurrentPage = 1;
+              //                       AppState.delegate.appState.currentAction =
+              //                           PageAction(
+              //                         page: ReferralDetailsPageConfig,
+              //                         state: PageState.addPage,
+              //                       );
+              //                     },
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //             SizedBox(height: SizeConfig.padding32),
+              //             WinnersMarqueeStrip(),
+              //             SizedBox(height: SizeConfig.padding20),
+              //             if (model.ongoingEvents != null)
+              //               Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Padding(
+              //                     padding: EdgeInsets.symmetric(
+              //                         horizontal:
+              //                             SizeConfig.pageHorizontalMargins),
+              //                     child: Text(
+              //                       "Ongoing Campaigns",
+              //                       style: TextStyles.title3.bold,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: SizeConfig.padding16),
+              //                   Container(
+              //                     height: SizeConfig.screenWidth * 0.3,
+              //                     width: SizeConfig.screenWidth,
+              //                     child: ListView(
+              //                       padding: EdgeInsets.zero,
+              //                       scrollDirection: Axis.horizontal,
+              //                       controller: model.eventScrollController,
+              //                       children: List.generate(
+              //                         model.ongoingEvents.length,
+              //                         (i) => Container(
+              //                           margin: EdgeInsets.only(
+              //                               left: i == 0
+              //                                   ? SizeConfig
+              //                                       .pageHorizontalMargins
+              //                                   : 0),
+              //                           child: EventCard(
+              //                             event: model.ongoingEvents[i],
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: SizeConfig.padding24),
+              //                 ],
+              //               ),
+              //             SizedBox(
+              //               height: SizeConfig.screenHeight * 0.24,
+              //             )
+              //           ],
+              //         ),
+              //       ),
+              //       Container(
+              //         //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+              //         child: Hero(
+              //           tag: "myWinnigs",
+              //           child: WinningsContainer(
+              //             shadow: false,
+              //             onTap: () => model.navigateToMyWinnings(),
+              //           ),
+              //         ),
+              //       ),
+              //       WinnersLeaderBoardSE(
+              //         model: model,
+              //       )
+              //     ],
+              //   ),
+            ),
+          ),
+        );
       },
+    );
+  }
+}
+
+class WinningsCylinder extends StatefulWidget {
+  const WinningsCylinder({
+    Key key,
+    @required this.index,
+    @required this.currentWinning,
+    @required this.model,
+  }) : super(key: key);
+
+  final int index;
+  final double currentWinning;
+  final WinViewModel model;
+
+  @override
+  State<WinningsCylinder> createState() => _WinningsCylinder();
+}
+
+double containerHeight = SizeConfig.screenWidth * 0.4;
+double containerWidth = SizeConfig.screenWidth * 0.3;
+
+double containerFilledHeight = 0;
+
+class _WinningsCylinder extends State<WinningsCylinder> {
+  @override
+  void initState() {
+    containerFilledHeight = 0;
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    containerFilledHeight = 0;
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.index == 3) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (containerFilledHeight == 0) {
+          setState(() {
+            if (widget.currentWinning >= widget.model.redeemAmount) {
+              containerFilledHeight = containerHeight;
+            } else {
+              containerFilledHeight = widget.model
+                  .calculateFillHeight(widget.currentWinning, containerHeight);
+            }
+          });
+        }
+      });
+    }
+    return Center(
+      child: Container(
+        width: containerWidth,
+        height: containerHeight,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            Container(
+                child: CustomPaint(
+              size: Size(SizeConfig.screenWidth * 0.15,
+                  (SizeConfig.screenWidth * 0.4)),
+              painter: CustomCylinderOuter(),
+            )),
+            AnimatedContainer(
+                height: containerFilledHeight,
+                duration: Duration(seconds: 1),
+                curve: Curves.easeInCirc,
+                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                child: CustomPaint(
+                  size: Size((SizeConfig.screenWidth * 0.15) - 8,
+                      containerFilledHeight - 10),
+                  painter: CustomCylinderInner(),
+                )),
+          ],
+        ),
+      ),
     );
   }
 }

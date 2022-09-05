@@ -28,10 +28,13 @@ class WinViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _campaignRepo = locator<CampaignRepo>();
   final _journeyRepo = locator<JourneyRepository>();
+  final _baseUtil = locator<BaseUtil>();
 
   Timer _timer;
   bool _showOldView = false;
   bool get showOldView => this._showOldView;
+
+  double redeemAmount = 200;
 
   set showOldView(bool value) {
     this._showOldView = value;
@@ -83,6 +86,7 @@ class WinViewModel extends BaseModel {
   init() {
     // setupAutoEventScroll();
     // getOngoingEvents();
+    _baseUtil.fetchUserAugmontDetail();
   }
 
   cleanJourneyAssetsFiles() {
@@ -147,6 +151,10 @@ class WinViewModel extends BaseModel {
     );
   }
 
+  openProfile() {
+    _baseUtil.openProfileDetailsScreen();
+  }
+
   openVoucherModal(
     String asset,
     String title,
@@ -175,6 +183,13 @@ class WinViewModel extends BaseModel {
         isBarrierDismissable: false,
         hapticVibrate: true,
       );
+  }
+
+  double calculateFillHeight(double winningAmount, double containerHeight) {
+    double fillPercent = (winningAmount / redeemAmount) * 100;
+    double heightToFill = (fillPercent / 100) * containerHeight;
+
+    return heightToFill;
   }
 
   getOngoingEvents() async {
