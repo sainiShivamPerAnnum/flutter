@@ -334,7 +334,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: GestureDetector(
                   onTap: () {
-                    model.processTransaction('Paytm');
+                    // model.processTransaction('Paytm');
                   },
                   child: Text(
                     'Please select an UPI App',
@@ -343,46 +343,46 @@ class UPIAppsBottomSheet extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              // Expanded(
-              //   child: GridView.builder(
-              //     scrollDirection: Axis.vertical,
-              //     itemCount: model.appMetaList.length,
-              //     itemBuilder: (context, index) {
-              //       return GestureDetector(
-              //         onTap: () {
-              // model.upiApplication = model.appMetaList[index];
-              // model.processTransaction(
-              //     model.appMetaList[index].upiApplication.appName);
-              //         },
-              //         child: Padding(
-              //           padding: const EdgeInsets.all(10),
-              //           child: Container(
-              //             child: Center(
-              //               child: Column(
-              //                 children: [
-              //                   ClipRRect(
-              //                       borderRadius: BorderRadius.circular(5),
-              //                       child:
-              //                           model.appMetaList[index].iconImage(40)),
-              //                   SizedBox(
-              //                     height: 10,
-              //                   ),
-              //                   Text(
-              //                     model.appMetaList[index].upiApplication
-              //                         .appName,
-              //                     style: TextStyles.body4,
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //         crossAxisCount: 3),
-              //   ),
-              // ),
+              Expanded(
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: model.appMetaList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        model.upiApplication = model.appMetaList[index];
+                        model.processTransaction(
+                            model.appMetaList[index].upiApplication.appName);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Container(
+                          child: Center(
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child:
+                                        model.appMetaList[index].iconImage(40)),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  model.appMetaList[index].upiApplication
+                                      .appName,
+                                  style: TextStyles.body4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                ),
+              ),
             ],
           )),
     );

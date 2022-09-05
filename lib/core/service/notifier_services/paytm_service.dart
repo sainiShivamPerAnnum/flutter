@@ -406,14 +406,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   }
 
   Future processTransaction(
-    double amount,
-    String osType,
-    String pspApp,
-    String paymentMode,
-    AugmontRates augmontRates,
-    String couponCode,
-    // ApplicationMeta appMeta
-  ) async {
+      double amount,
+      String osType,
+      String pspApp,
+      String paymentMode,
+      AugmontRates augmontRates,
+      String couponCode,
+      ApplicationMeta appMeta) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -459,9 +458,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           url: processTransactionApiResponse
               .model.data.body.deepLinkInfo.deepLink,
           orderId: paytmSubscriptionModel.data.orderId,
-          androidPackageName: 'net.one97.paytm'
-          // androidPackageName: appMeta.packageName
-          );
+          // androidPackageName: 'net.one97.paytm'
+          androidPackageName: appMeta.packageName);
     }
   }
 
@@ -483,9 +481,12 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         print(response);
       } catch (e) {
         print(e);
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Your transaction was unsuccessful. Please try again',
+        );
       }
       if (response.status == UpiTransactionStatus.failure) {
-        AppState.delegate.appState.txnTimer.cancel();
         BaseUtil.showNegativeAlert(
           'Transaction failed',
           'Your transaction was unsuccessful. Please try again',
@@ -497,7 +498,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         AppState.delegate.appState.txnTimer =
             Timer(Duration(seconds: 30), () async {
           bool isValidated = await validateTransaction(orderId);
-          print(isValidated);
           AppState.delegate.appState.isTxnLoaderInView = false;
           if (isValidated) {
             AppState.delegate.appState.txnTimer.cancel();

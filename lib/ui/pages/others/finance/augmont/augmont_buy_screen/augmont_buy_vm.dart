@@ -47,7 +47,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:upi_pay/upi_pay.dart';
+import 'package:upi_pay/upi_pay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AugmontGoldBuyViewModel extends BaseModel {
@@ -70,8 +70,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
   final _paytmRepo = locator<PaytmRepository>();
   final _userCoinService = locator<UserCoinService>();
-  // List<ApplicationMeta> appMetaList = [];
-  // ApplicationMeta _upiApplication;
+  List<ApplicationMeta> appMetaList = [];
+  ApplicationMeta _upiApplication;
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -145,10 +145,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  // set upiApplication(ApplicationMeta value) {
-  //   this._upiApplication = value;
-  //   notifyListeners();
-  // }
+  set upiApplication(ApplicationMeta value) {
+    this._upiApplication = value;
+    notifyListeners();
+  }
 
   get showMaxCapText => this._showMaxCapText;
 
@@ -194,7 +194,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
   init() async {
     setState(ViewState.Busy);
-    // await getUPIApps();
+    await getUPIApps();
     buyFieldNode = _userService.buyFieldFocusNode;
     goldBuyAmount = chipAmountList[1];
     goldAmountController =
@@ -231,11 +231,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
-  // getUPIApps() async {
-  //   appMetaList = await UpiPay.getInstalledUpiApplications(
-  //       statusType: UpiApplicationDiscoveryAppStatusType.all);
-  //   print(appMetaList);
-  // }
+  getUPIApps() async {
+    appMetaList = await UpiPay.getInstalledUpiApplications(
+        statusType: UpiApplicationDiscoveryAppStatusType.all);
+    print(appMetaList);
+  }
 
   delayedAugmontCall() async {
     await Future.delayed(Duration(seconds: 2));
@@ -433,20 +433,20 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     try {
       await _paytmService.processTransaction(
-        buyAmount,
-        PlatformUtils.isAndroid ? 'android' : 'ios',
-        pspApp,
-        'UPI_INTENT',
-        goldRates,
-        appliedCoupon?.code ?? "",
-        // _upiApplication
-      );
-      isGoldBuyInProgress = false;
+          buyAmount,
+          PlatformUtils.isAndroid ? 'android' : 'ios',
+          pspApp,
+          'UPI_INTENT',
+          goldRates,
+          appliedCoupon?.code ?? "",
+          _upiApplication);
+
       resetBuyOptions();
       setState(ViewState.Idle);
     } catch (e) {
       print(e);
     }
+    isGoldBuyInProgress = false;
   }
 
   Future<bool> initChecks() async {
