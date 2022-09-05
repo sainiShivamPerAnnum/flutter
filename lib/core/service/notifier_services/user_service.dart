@@ -293,6 +293,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<bool> getUserJourneyStats() async {
+    // NOTE: CACHE REQUIRED, FOR CALLED FROM JOURUNY SERVICE AGAIN
     if (baseUser != null) {
       ApiResponse<UserJourneyStatsModel> res =
           await _journeyRepo.getUserJourneyStats();

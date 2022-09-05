@@ -237,6 +237,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   updateUserJourneyStats() async {
     bool res = await _userService.getUserJourneyStats();
     if (res) {
+      // NOTE: WHAT IS MEAN OF SAME ASSIGNMENT
       _userService.userJourneyStats = _userService.userJourneyStats;
       avatarRemoteMlIndex = _userService.userJourneyStats.mlIndex;
     } else {
