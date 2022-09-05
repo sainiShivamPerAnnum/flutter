@@ -47,7 +47,6 @@ class MainActivity : FlutterFragmentActivity() {
         }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PAYMENTCHANNEL).setMethodCallHandler {
-                // Note: th is method is invoked on the main thread.
                 call, result ->
             if (call.method == "initiatePaytmTransaction") {
                 val argData = call.arguments as java.util.HashMap<String, String>
@@ -100,22 +99,23 @@ class MainActivity : FlutterFragmentActivity() {
                 this.success("activity_unavailable")
                 return
             }
-            // startActivityForResult(intent, REQUEST_CODE_HANDLER)
             resultLauncher.launch(intent)
         } catch (ex: Exception) {
             this.success("failed_to_open_app")
         }
     }
 
-   var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-       if (result.resultCode == Activity.RESULT_OK) {
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
            // There are no request codes
-           val data: Intent? = result.data
-           Log.d("Data:", data.toString())
-
-
-       }
-   }
+            val data: Intent? = result.data
+            Log.d("Data:", data.toString())
+            this.success("transaction completed");
+        }
+        if(result.resultCode != Activity.RESULT_OK){
+            this.success("transaction failed");
+        }
+    }
 
 
     private fun success(o: String) {

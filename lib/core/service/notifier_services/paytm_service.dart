@@ -465,24 +465,35 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
+  methodChannelCall(String url, String androidPackageName) async {
+    MethodChannel _platform =
+        MethodChannel("fello.in/dev/payments/paytmService");
+    return await _platform.invokeMethod<String>(
+        'initiatePaytmTransaction', {"url": url, "app": androidPackageName});
+  }
+
   Future doUpiTransation(
       {String url, String orderId, String androidPackageName}) async {
     //regex check for the uRL in case its buggy
     //
-    MethodChannel _platform =
-        MethodChannel("fello.in/dev/payments/paytmService");
     var response;
     if (PlatformUtils.isAndroid) {
       // launchUrl(Uri.parse(url));
       AppState.backButtonDispatcher.didPopRoute();
       try {
-        response = await _platform.invokeMethod<String>(
-            'initiatePaytmTransaction',
-            {"url": url, "app": androidPackageName});
+        response = await methodChannelCall(url, androidPackageName);
         print(response);
       } catch (e) {
         print(e);
       }
+      Timer _paymentStatusTimer =
+          Timer.periodic(Duration(seconds: 5), (timer) async {
+        bool isValidated = await validateTransaction(orderId);
+        print(isValidated);
+        if (isValidated) {
+          timer.cancel();
+        }
+      });
       AppState.delegate.appState.isTxnLoaderInView = true;
       AppState.delegate.appState.txnTimer =
           Timer(Duration(seconds: 30), () async {
