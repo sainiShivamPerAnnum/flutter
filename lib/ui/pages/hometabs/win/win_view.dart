@@ -4,12 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
@@ -44,8 +46,6 @@ class Win extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
-        double currentWinning = 58.0;
-
         String minWithdrawPrize = BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
         String refUnlock = BaseRemoteConfig.remoteConfig
@@ -54,261 +54,421 @@ class Win extends StatelessWidget {
         int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
 
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
-          properties: [UserServiceProperties.myUserFund],
-          builder: (context, m, property) => Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: Text(
-                "Win",
-                style: TextStyles.rajdhaniSB.title1,
-              ),
-              elevation: 0,
-              backgroundColor: UiConstants.kSecondaryBackgroundColor,
-              actions: [
-                FelloCoinBar(svgAsset: Assets.aFelloToken),
-                SizedBox(width: SizeConfig.padding10),
-                GestureDetector(
-                  onTap: () {
-                    model.openProfile();
-                  },
-                  child: ProfileImageSE(radius: SizeConfig.avatarRadius),
+            properties: [UserServiceProperties.myUserFund],
+            builder: (context, m, property) {
+              double currentWinning = m.userFundWallet.unclaimedBalance;
+              return Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: AppBar(
+                  title: Text(
+                    "Win",
+                    style: TextStyles.rajdhaniSB.title1,
+                  ),
+                  elevation: 0,
+                  backgroundColor: UiConstants.kSecondaryBackgroundColor,
+                  actions: [
+                    FelloCoinBar(svgAsset: Assets.aFelloToken),
+                    SizedBox(width: SizeConfig.padding10),
+                    GestureDetector(
+                      onTap: () {
+                        model.openProfile();
+                      },
+                      child: ProfileImageSE(radius: SizeConfig.avatarRadius),
+                    ),
+                    SizedBox(width: SizeConfig.padding20)
+                  ],
                 ),
-                SizedBox(width: SizeConfig.padding20)
-              ],
-            ),
-            body: Container(
-              width: double.infinity,
+                body: Container(
+                  width: double.infinity,
 
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: ClampingScrollPhysics(),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: UiConstants.kSecondaryBackgroundColor),
-                      padding: EdgeInsets.fromLTRB(
-                          SizeConfig.padding24,
-                          SizeConfig.padding44,
-                          SizeConfig.padding24,
-                          SizeConfig.padding32),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    physics: ClampingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        //Current Winnings section
+                        Container(
+                          decoration: BoxDecoration(
+                            color: UiConstants.kSecondaryBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(SizeConfig.roundness12),
+                              bottomRight:
+                                  Radius.circular(SizeConfig.roundness12),
+                            ),
+                          ),
+                          padding: EdgeInsets.fromLTRB(
+                              SizeConfig.padding24,
+                              SizeConfig.padding44,
+                              SizeConfig.padding24,
+                              SizeConfig.padding32),
+                          child: Column(
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'Current Winnings',
-                                    style: TextStyles.rajdhaniSB
-                                        .copyWith(fontSize: SizeConfig.body0),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Current Winnings',
+                                        style: TextStyles.rajdhaniSB.copyWith(
+                                            fontSize: SizeConfig.body0),
+                                      ),
+                                      Text(
+                                        '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+                                        style: TextStyles.title1.extraBold
+                                            .colour(Colors.white),
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig.padding40,
+                                      ),
+                                      m.userFundWallet.unclaimedBalance >=
+                                              minWithdrawPrizeAmt
+                                          ? AppPositiveBtn(
+                                              btnText: "Redeem",
+                                              onPressed: () {},
+                                              width:
+                                                  SizeConfig.screenWidth * 0.4)
+                                          : Text(
+                                              'Rewards can be\nredeemed at Rs. $minWithdrawPrizeAmt',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor2),
+                                            ),
+                                    ],
                                   ),
-                                  Text(
-                                    '₹ ${m.userFundWallet.unclaimedBalance.toString()}',
-                                    style: TextStyles.title1.extraBold
-                                        .colour(Colors.white),
+                                  Consumer<AppState>(
+                                    builder: (ctx, m, child) =>
+                                        WinningsCylinder(
+                                      index: AppState
+                                          .delegate.appState.getCurrentTabIndex,
+                                      currentWinning: currentWinning,
+                                      model: model,
+                                      redeemAmount: minWithdrawPrizeAmt,
+                                    ),
                                   ),
-                                  SizedBox(
-                                    height: SizeConfig.padding40,
-                                  ),
-                                  currentWinning >= model.redeemAmount
-                                      ? AppPositiveBtn(
-                                          btnText: "Redeem",
-                                          onPressed: () {},
-                                          width: SizeConfig.screenWidth * 0.4)
-                                      : Container(
-                                          width: SizeConfig.screenWidth * 0.4,
-                                          child: Text(
-                                            'Rewards can be\nredeemed at Rs 200',
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(
-                                                    UiConstants.kTextColor2),
-                                          ),
-                                        ),
                                 ],
                               ),
-                              Consumer<AppState>(
-                                builder: (ctx, m, child) => WinningsCylinder(
-                                  index: AppState
-                                      .delegate.appState.getCurrentTabIndex,
-                                  currentWinning: currentWinning,
-                                  model: model,
+                              SizedBox(
+                                height: SizeConfig.padding54,
+                              ),
+                              Divider(
+                                color: Colors.white,
+                                thickness: 0.3,
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding16,
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  AppState.delegate.appState.currentAction =
+                                      PageAction(
+                                    page: CampaignViewPageConfig,
+                                    state: PageState.addWidget,
+                                    widget: MyWinningsView(),
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            Assets.unredemmedGoldenTicketBG,
+                                            height: SizeConfig.padding38),
+                                        SizedBox(
+                                          width: SizeConfig.padding8,
+                                        ),
+                                        Text(
+                                          'Golden Tickets',
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '3 NEW',
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding10,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding54,
+                        ),
+                        //Refer and Earn
+                        Container(
+                          child: Stack(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(
+                                  SizeConfig.padding24,
+                                ),
+                                margin: EdgeInsets.fromLTRB(
+                                    SizeConfig.padding24,
+                                    SizeConfig.padding44,
+                                    SizeConfig.padding24,
+                                    0),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xff1A1A1A),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            SizeConfig.roundness12))),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            AppState.delegate.appState
+                                                .currentAction = PageAction(
+                                              page: CampaignViewPageConfig,
+                                              state: PageState.addWidget,
+                                              widget: ReferralDetailsView(),
+                                            );
+                                          },
+                                          child: Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.white,
+                                            size: SizeConfig.padding20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding28,
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: 'Earn upto Rs.50 and',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor3)),
+                                          WidgetSpan(
+                                              child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    SizeConfig.padding4),
+                                            height: 17,
+                                            width: 17,
+                                            child: SvgPicture.asset(
+                                              Assets.aFelloToken,
+                                            ),
+                                          )),
+                                          TextSpan(
+                                              text:
+                                                  '200 from every Golden Ticket. Win an iPad every month.',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor3)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding28,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.padding32,
+                                              vertical: SizeConfig.padding6),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.2),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    SizeConfig.roundness8),
+                                              ),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 0.6)),
+                                          child: Text(
+                                            model.loadingRefCode
+                                                ? '-'
+                                                : model.refCode,
+                                            style: TextStyles.title2.extraBold
+                                                .colour(Colors.white),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  model.copyReferCode();
+                                                },
+                                                icon: Icon(
+                                                  Icons.copy,
+                                                  color: UiConstants
+                                                      .kTabBorderColor,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  model.shareWhatsApp();
+                                                },
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: UiConstants
+                                                      .kTabBorderColor,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                    EdgeInsets.only(left: SizeConfig.padding44),
+                                child: SvgPicture.asset(Assets.referAndEarn,
+                                    height: SizeConfig.padding90),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: SizeConfig.padding54,
-                          ),
-                          Divider(
-                            color: Colors.white,
-                            thickness: 0.3,
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MyWinningsView(),
-                                  ));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                        Assets.unredemmedGoldenTicketBG,
-                                        height: SizeConfig.padding38),
-                                    SizedBox(
-                                      width: SizeConfig.padding8,
-                                    ),
-                                    Text(
-                                      'Golden Tickets',
-                                      style: TextStyles.sourceSans.body2
-                                          .colour(Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '3 NEW',
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(Colors.white),
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding10,
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
 
-              // : Stack(
-              //     children: [
-              //       Container(
-              //         margin: EdgeInsets.only(top: SizeConfig.padding20),
-              //         child: ListView(
-              //           padding:
-              //               EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
-              //           children: [
-              //             Container(
-              //               child: Row(
-              //                 mainAxisAlignment: MainAxisAlignment.center,
-              //                 children: [
-              //                   BigPrizeContainer(
-              //                     bgColor: Color(0xff26A6F4),
-              //                     bigText: locale.winMoneyBigText,
-              //                     smallText: locale.winMoneySmallText,
-              //                     image: Assets.moneyBag,
-              //                     painter: LakhCustomPaint(),
-              //                     onPressed: () => AppState
-              //                         .delegate.appState.setCurrentTabIndex = 1,
-              //                   ),
-              //                   SizedBox(width: SizeConfig.padding16),
-              //                   BigPrizeContainer(
-              //                     bgColor: UiConstants.tertiarySolid,
-              //                     bigText: locale.winIphoneBigText,
-              //                     smallText: locale.winIphoneSmallText,
-              //                     image: Assets.iphone,
-              //                     painter: IphoneCustomPaint(),
-              //                     onPressed: () {
-              //                       // model.panelController.animatePanelToPosition(1);
-              //                       // model.setCurrentPage = 1;
-              //                       AppState.delegate.appState.currentAction =
-              //                           PageAction(
-              //                         page: ReferralDetailsPageConfig,
-              //                         state: PageState.addPage,
-              //                       );
-              //                     },
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //             SizedBox(height: SizeConfig.padding32),
-              //             WinnersMarqueeStrip(),
-              //             SizedBox(height: SizeConfig.padding20),
-              //             if (model.ongoingEvents != null)
-              //               Column(
-              //                 crossAxisAlignment: CrossAxisAlignment.start,
-              //                 children: [
-              //                   Padding(
-              //                     padding: EdgeInsets.symmetric(
-              //                         horizontal:
-              //                             SizeConfig.pageHorizontalMargins),
-              //                     child: Text(
-              //                       "Ongoing Campaigns",
-              //                       style: TextStyles.title3.bold,
-              //                     ),
-              //                   ),
-              //                   SizedBox(height: SizeConfig.padding16),
-              //                   Container(
-              //                     height: SizeConfig.screenWidth * 0.3,
-              //                     width: SizeConfig.screenWidth,
-              //                     child: ListView(
-              //                       padding: EdgeInsets.zero,
-              //                       scrollDirection: Axis.horizontal,
-              //                       controller: model.eventScrollController,
-              //                       children: List.generate(
-              //                         model.ongoingEvents.length,
-              //                         (i) => Container(
-              //                           margin: EdgeInsets.only(
-              //                               left: i == 0
-              //                                   ? SizeConfig
-              //                                       .pageHorizontalMargins
-              //                                   : 0),
-              //                           child: EventCard(
-              //                             event: model.ongoingEvents[i],
-              //                           ),
-              //                         ),
-              //                       ),
-              //                     ),
-              //                   ),
-              //                   SizedBox(height: SizeConfig.padding24),
-              //                 ],
-              //               ),
-              //             SizedBox(
-              //               height: SizeConfig.screenHeight * 0.24,
-              //             )
-              //           ],
-              //         ),
-              //       ),
-              //       Container(
-              //         //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-              //         child: Hero(
-              //           tag: "myWinnigs",
-              //           child: WinningsContainer(
-              //             shadow: false,
-              //             onTap: () => model.navigateToMyWinnings(),
-              //           ),
-              //         ),
-              //       ),
-              //       WinnersLeaderBoardSE(
-              //         model: model,
-              //       )
-              //     ],
-              //   ),
-            ),
-          ),
-        );
+                  // : Stack(
+                  //     children: [
+                  //       Container(
+                  //         margin: EdgeInsets.only(top: SizeConfig.padding20),
+                  //         child: ListView(
+                  //           padding:
+                  //               EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
+                  //           children: [
+                  //             Container(
+                  //               child: Row(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   BigPrizeContainer(
+                  //                     bgColor: Color(0xff26A6F4),
+                  //                     bigText: locale.winMoneyBigText,
+                  //                     smallText: locale.winMoneySmallText,
+                  //                     image: Assets.moneyBag,
+                  //                     painter: LakhCustomPaint(),
+                  //                     onPressed: () => AppState
+                  //                         .delegate.appState.setCurrentTabIndex = 1,
+                  //                   ),
+                  //                   SizedBox(width: SizeConfig.padding16),
+                  //                   BigPrizeContainer(
+                  //                     bgColor: UiConstants.tertiarySolid,
+                  //                     bigText: locale.winIphoneBigText,
+                  //                     smallText: locale.winIphoneSmallText,
+                  //                     image: Assets.iphone,
+                  //                     painter: IphoneCustomPaint(),
+                  //                     onPressed: () {
+                  //                       // model.panelController.animatePanelToPosition(1);
+                  //                       // model.setCurrentPage = 1;
+                  //                       AppState.delegate.appState.currentAction =
+                  //                           PageAction(
+                  //                         page: ReferralDetailsPageConfig,
+                  //                         state: PageState.addPage,
+                  //                       );
+                  //                     },
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //             SizedBox(height: SizeConfig.padding32),
+                  //             WinnersMarqueeStrip(),
+                  //             SizedBox(height: SizeConfig.padding20),
+                  //             if (model.ongoingEvents != null)
+                  //               Column(
+                  //                 crossAxisAlignment: CrossAxisAlignment.start,
+                  //                 children: [
+                  //                   Padding(
+                  //                     padding: EdgeInsets.symmetric(
+                  //                         horizontal:
+                  //                             SizeConfig.pageHorizontalMargins),
+                  //                     child: Text(
+                  //                       "Ongoing Campaigns",
+                  //                       style: TextStyles.title3.bold,
+                  //                     ),
+                  //                   ),
+                  //                   SizedBox(height: SizeConfig.padding16),
+                  //                   Container(
+                  //                     height: SizeConfig.screenWidth * 0.3,
+                  //                     width: SizeConfig.screenWidth,
+                  //                     child: ListView(
+                  //                       padding: EdgeInsets.zero,
+                  //                       scrollDirection: Axis.horizontal,
+                  //                       controller: model.eventScrollController,
+                  //                       children: List.generate(
+                  //                         model.ongoingEvents.length,
+                  //                         (i) => Container(
+                  //                           margin: EdgeInsets.only(
+                  //                               left: i == 0
+                  //                                   ? SizeConfig
+                  //                                       .pageHorizontalMargins
+                  //                                   : 0),
+                  //                           child: EventCard(
+                  //                             event: model.ongoingEvents[i],
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                   SizedBox(height: SizeConfig.padding24),
+                  //                 ],
+                  //               ),
+                  //             SizedBox(
+                  //               height: SizeConfig.screenHeight * 0.24,
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Container(
+                  //         //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
+                  //         child: Hero(
+                  //           tag: "myWinnigs",
+                  //           child: WinningsContainer(
+                  //             shadow: false,
+                  //             onTap: () => model.navigateToMyWinnings(),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       WinnersLeaderBoardSE(
+                  //         model: model,
+                  //       )
+                  //     ],
+                  //   ),
+                ),
+              );
+            });
       },
     );
   }
@@ -320,11 +480,13 @@ class WinningsCylinder extends StatefulWidget {
     @required this.index,
     @required this.currentWinning,
     @required this.model,
+    @required this.redeemAmount,
   }) : super(key: key);
 
   final int index;
   final double currentWinning;
   final WinViewModel model;
+  final int redeemAmount;
 
   @override
   State<WinningsCylinder> createState() => _WinningsCylinder();
@@ -360,11 +522,11 @@ class _WinningsCylinder extends State<WinningsCylinder> {
       Future.delayed(const Duration(milliseconds: 500), () {
         if (containerFilledHeight == 0) {
           setState(() {
-            if (widget.currentWinning >= widget.model.redeemAmount) {
+            if (widget.currentWinning >= widget.redeemAmount) {
               containerFilledHeight = containerHeight;
             } else {
-              containerFilledHeight = widget.model
-                  .calculateFillHeight(widget.currentWinning, containerHeight);
+              containerFilledHeight = widget.model.calculateFillHeight(
+                  widget.currentWinning, containerHeight, widget.redeemAmount);
             }
           });
         }

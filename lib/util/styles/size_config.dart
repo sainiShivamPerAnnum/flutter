@@ -97,6 +97,7 @@ class SizeConfig {
   static double get padding64 => screenWidth * 0.154; //56
   static double get padding70 => screenWidth * 0.186; //70
   static double get padding80 => screenWidth * 0.193; //56
+  static double get padding90 => screenWidth * 0.245;
 
   // MARGINS
   static double get pageHorizontalMargins => screenWidth * 0.0579; //

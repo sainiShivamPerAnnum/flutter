@@ -242,6 +242,9 @@ class Assets {
   static final String singleTmbolaTicket =
       "assets/svg/tambola_ticket_single.svg";
 
+  //WIN SCREEN
+  static final String referAndEarn = "assets/svg/refer_earn.svg";
+
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
 

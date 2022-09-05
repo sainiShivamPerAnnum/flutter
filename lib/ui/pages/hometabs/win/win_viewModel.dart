@@ -10,17 +10,28 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+
+import '../../../../core/base_remote_config.dart';
+import '../../../../core/repository/referral_repo.dart';
+import '../../../../core/service/analytics/appflyer_analytics.dart';
+import '../../../../core/service/fcm/fcm_listener_service.dart';
+import '../../../../util/api_response.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
@@ -29,17 +40,30 @@ class WinViewModel extends BaseModel {
   final _campaignRepo = locator<CampaignRepo>();
   final _journeyRepo = locator<JourneyRepository>();
   final _baseUtil = locator<BaseUtil>();
+  final _refRepo = locator<ReferralRepo>();
+  final _appFlyer = locator<AppFlyerAnalytics>();
 
   Timer _timer;
   bool _showOldView = false;
   bool get showOldView => this._showOldView;
+  String _refCode = "";
+  String _shareMsg;
+  bool shareWhatsappInProgress = false;
+  bool shareLinkInProgress = false;
+  bool loadingRefCode = true;
+  String appShareMessage =
+      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
+  final _fcmListener = locator<FcmListener>();
 
-  double redeemAmount = 200;
+  String _refUrl = "";
 
   set showOldView(bool value) {
     this._showOldView = value;
     notifyListeners();
   }
+
+  get refCode => _refCode;
+  get refUrl => _refUrl;
 
   LocalDBModel _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
@@ -87,10 +111,92 @@ class WinViewModel extends BaseModel {
     // setupAutoEventScroll();
     // getOngoingEvents();
     _baseUtil.fetchUserAugmontDetail();
+    fetchReferralCode();
   }
 
   cleanJourneyAssetsFiles() {
     _journeyRepo.dump();
+  }
+
+  void copyReferCode() {
+    Haptic.vibrate();
+    _analyticsService.track(eventName: AnalyticsEvents.referCodeCopied);
+    Clipboard.setData(ClipboardData(text: _refCode)).then((_) {
+      BaseUtil.showPositiveAlert("Code: $_refCode", "Copied to Clipboard");
+    });
+  }
+
+  Future<void> shareWhatsApp() async {
+    if (await BaseUtil.showNoInternetAlert()) return;
+    _fcmListener.addSubscription(FcmTopic.REFERRER);
+    BaseAnalytics.analytics.logShare(
+      contentType: 'referral',
+      itemId: _userService.baseUser.uid,
+      method: 'whatsapp',
+    );
+    shareWhatsappInProgress = true;
+    refresh();
+
+    String url = await this.generateLink();
+    shareWhatsappInProgress = false;
+    refresh();
+
+    if (url == null) {
+      BaseUtil.showNegativeAlert(
+        'Generating link failed',
+        'Please try again in some time',
+      );
+      return;
+    } else
+      _logger.d(url);
+    try {
+      _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
+      FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+        if (flag == "false") {
+          FlutterShareMe()
+              .shareToWhatsApp4Biz(msg: _shareMsg + url)
+              .then((flag) {
+            _logger.d(flag);
+            if (flag == "false") {
+              BaseUtil.showNegativeAlert(
+                  "Whatsapp not detected", "Please use other option to share.");
+            }
+          });
+        }
+      });
+    } catch (e) {
+      _logger.d(e.toString());
+    }
+  }
+
+  Future<String> generateLink() async {
+    if (_refUrl != "") return _refUrl;
+
+    String url;
+    try {
+      final link = await _appFlyer.inviteLink();
+      if (link['status'] == 'success') {
+        url = link['payload']['userInviteUrl'];
+        if (url == null) url = link['payload']['userInviteURL'];
+      }
+      _logger.d('appflyer invite link as $url');
+    } catch (e) {
+      _logger.e(e);
+    }
+    return url;
+  }
+
+  Future<void> fetchReferralCode() async {
+    final ApiResponse res = await _refRepo.getReferralCode();
+    if (res.code == 200) {
+      _refCode = res.model;
+    }
+    _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
+        ? appShareMessage
+        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+
+    loadingRefCode = false;
+    refresh();
   }
 
   setupAutoEventScroll() {
@@ -185,7 +291,8 @@ class WinViewModel extends BaseModel {
       );
   }
 
-  double calculateFillHeight(double winningAmount, double containerHeight) {
+  double calculateFillHeight(
+      double winningAmount, double containerHeight, int redeemAmount) {
     double fillPercent = (winningAmount / redeemAmount) * 100;
     double heightToFill = (fillPercent / 100) * containerHeight;
 
