@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/refe
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/util/assets.dart';
@@ -30,11 +32,41 @@ import 'package:provider/provider.dart';
 import '../../../../core/base_remote_config.dart';
 import '../../../../core/enums/user_service_enum.dart';
 import '../../../../core/service/notifier_services/user_service.dart';
+import '../../../service_elements/leaderboards/referral_leaderboard.dart';
 import '../../../service_elements/user_service/profile_image.dart';
 import '../../../widgets/coin_bar/coin_bar_view.dart';
+import '../../../widgets/helpers/height_adaptive_pageview.dart';
 import 'customPainters.dart';
 
+//Following is a dummy list to populate the Fello News section for now
+List<Map<String, dynamic>> dummyFelloNews = [
+  {
+    'title': 'Amit won an IPad!',
+    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'color': 0xffF79780,
+    'asset': Assets.winScreenWinnerAsset,
+  },
+  {
+    'title': 'Ankita played all 10 games!',
+    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'color': 0xffEFAF4E,
+    'asset': Assets.winScreenAllGamesAsset,
+  },
+  {
+    'title': 'Sarayu referred fello to 5 friends!',
+    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'color': 0xff93B5FE,
+    'asset': Assets.winScreenReferalAsset,
+  },
+];
+
 class Win extends StatelessWidget {
+  final TextStyle selectedTextStyle =
+      TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
+
+  final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
+      .colour(UiConstants.titleTextColor.withOpacity(0.6));
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -78,398 +110,450 @@ class Win extends StatelessWidget {
                     SizedBox(width: SizeConfig.padding20)
                   ],
                 ),
-                body: Container(
-                  width: double.infinity,
-
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    physics: ClampingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        //Current Winnings section
-                        Container(
-                          decoration: BoxDecoration(
-                            color: UiConstants.kSecondaryBackgroundColor,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft:
-                                  Radius.circular(SizeConfig.roundness12),
-                              bottomRight:
-                                  Radius.circular(SizeConfig.roundness12),
-                            ),
+                body: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      //Current Winnings section
+                      Container(
+                        decoration: BoxDecoration(
+                          color: UiConstants.kSecondaryBackgroundColor,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(SizeConfig.roundness12),
+                            bottomRight:
+                                Radius.circular(SizeConfig.roundness12),
                           ),
-                          padding: EdgeInsets.fromLTRB(
-                              SizeConfig.padding24,
-                              SizeConfig.padding44,
-                              SizeConfig.padding24,
-                              SizeConfig.padding32),
-                          child: Column(
-                            children: [
-                              Row(
+                        ),
+                        padding: EdgeInsets.fromLTRB(
+                            SizeConfig.padding24,
+                            SizeConfig.padding44,
+                            SizeConfig.padding24,
+                            SizeConfig.padding32),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Current Winnings',
+                                      style: TextStyles.rajdhaniSB
+                                          .copyWith(fontSize: SizeConfig.body0),
+                                    ),
+                                    Text(
+                                      '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+                                      style: TextStyles.title1.extraBold
+                                          .colour(Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding40,
+                                    ),
+                                    m.userFundWallet.unclaimedBalance >=
+                                            minWithdrawPrizeAmt
+                                        ? AppPositiveBtn(
+                                            btnText: "Redeem",
+                                            onPressed: () {},
+                                            width: SizeConfig.screenWidth * 0.4)
+                                        : Text(
+                                            'Rewards can be\nredeemed at Rs. $minWithdrawPrizeAmt',
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                  ],
+                                ),
+                                Consumer<AppState>(
+                                  builder: (ctx, m, child) => WinningsCylinder(
+                                    index: AppState
+                                        .delegate.appState.getCurrentTabIndex,
+                                    currentWinning: currentWinning,
+                                    model: model,
+                                    redeemAmount: minWithdrawPrizeAmt,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding54,
+                            ),
+                            Divider(
+                              color: Colors.white,
+                              thickness: 0.3,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                  page: CampaignViewPageConfig,
+                                  state: PageState.addWidget,
+                                  widget: MyWinningsView(),
+                                );
+                              },
+                              child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Text(
-                                        'Current Winnings',
-                                        style: TextStyles.rajdhaniSB.copyWith(
-                                            fontSize: SizeConfig.body0),
+                                      SvgPicture.asset(
+                                          Assets.unredemmedGoldenTicketBG,
+                                          height: SizeConfig.padding38),
+                                      SizedBox(
+                                        width: SizeConfig.padding8,
                                       ),
                                       Text(
-                                        '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
-                                        style: TextStyles.title1.extraBold
+                                        'Golden Tickets',
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '3 NEW',
+                                        style: TextStyles.sourceSans.body3
                                             .colour(Colors.white),
                                       ),
                                       SizedBox(
-                                        height: SizeConfig.padding40,
+                                        width: SizeConfig.padding10,
                                       ),
-                                      m.userFundWallet.unclaimedBalance >=
-                                              minWithdrawPrizeAmt
-                                          ? AppPositiveBtn(
-                                              btnText: "Redeem",
-                                              onPressed: () {},
-                                              width:
-                                                  SizeConfig.screenWidth * 0.4)
-                                          : Text(
-                                              'Rewards can be\nredeemed at Rs. $minWithdrawPrizeAmt',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      UiConstants.kTextColor2),
-                                            ),
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                      )
                                     ],
-                                  ),
-                                  Consumer<AppState>(
-                                    builder: (ctx, m, child) =>
-                                        WinningsCylinder(
-                                      index: AppState
-                                          .delegate.appState.getCurrentTabIndex,
-                                      currentWinning: currentWinning,
-                                      model: model,
-                                      redeemAmount: minWithdrawPrizeAmt,
-                                    ),
-                                  ),
+                                  )
                                 ],
                               ),
-                              SizedBox(
-                                height: SizeConfig.padding54,
-                              ),
-                              Divider(
-                                color: Colors.white,
-                                thickness: 0.3,
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                    page: CampaignViewPageConfig,
-                                    state: PageState.addWidget,
-                                    widget: MyWinningsView(),
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            Assets.unredemmedGoldenTicketBG,
-                                            height: SizeConfig.padding38),
-                                        SizedBox(
-                                          width: SizeConfig.padding8,
-                                        ),
-                                        Text(
-                                          'Golden Tickets',
-                                          style: TextStyles.sourceSans.body2
-                                              .colour(Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '3 NEW',
-                                          style: TextStyles.sourceSans.body3
-                                              .colour(Colors.white),
-                                        ),
-                                        SizedBox(
-                                          width: SizeConfig.padding10,
-                                        ),
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          height: SizeConfig.padding54,
-                        ),
-                        //Refer and Earn
-                        Container(
-                          child: Stack(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(
-                                  SizeConfig.padding24,
-                                ),
-                                margin: EdgeInsets.fromLTRB(
-                                    SizeConfig.padding24,
-                                    SizeConfig.padding44,
-                                    SizeConfig.padding24,
-                                    0),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xff1A1A1A),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            SizeConfig.roundness12))),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            AppState.delegate.appState
-                                                .currentAction = PageAction(
-                                              page: CampaignViewPageConfig,
-                                              state: PageState.addWidget,
-                                              widget: ReferralDetailsView(),
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.arrow_forward_ios,
-                                            color: Colors.white,
-                                            size: SizeConfig.padding20,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding28,
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                              text: 'Earn upto Rs.50 and',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      UiConstants.kTextColor3)),
-                                          WidgetSpan(
-                                              child: Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    SizeConfig.padding4),
-                                            height: 17,
-                                            width: 17,
-                                            child: SvgPicture.asset(
-                                              Assets.aFelloToken,
-                                            ),
-                                          )),
-                                          TextSpan(
-                                              text:
-                                                  '200 from every Golden Ticket. Win an iPad every month.',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      UiConstants.kTextColor3)),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding28,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding32,
-                                              vertical: SizeConfig.padding6),
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Colors.white.withOpacity(0.2),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    SizeConfig.roundness8),
-                                              ),
-                                              border: Border.all(
-                                                  color: Colors.white,
-                                                  width: 0.6)),
-                                          child: Text(
-                                            model.loadingRefCode
-                                                ? '-'
-                                                : model.refCode,
-                                            style: TextStyles.title2.extraBold
-                                                .colour(Colors.white),
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  model.copyReferCode();
-                                                },
-                                                icon: Icon(
-                                                  Icons.copy,
-                                                  color: UiConstants
-                                                      .kTabBorderColor,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  model.shareWhatsApp();
-                                                },
-                                                icon: Icon(
-                                                  Icons.share,
-                                                  color: UiConstants
-                                                      .kTabBorderColor,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin:
-                                    EdgeInsets.only(left: SizeConfig.padding44),
-                                child: SvgPicture.asset(Assets.referAndEarn,
-                                    height: SizeConfig.padding90),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding54,
+                      ),
+                      //Refer and Earn
+                      ReferAndEarnComponent(
+                        model: model,
+                      ),
 
-                  // : Stack(
-                  //     children: [
-                  //       Container(
-                  //         margin: EdgeInsets.only(top: SizeConfig.padding20),
-                  //         child: ListView(
-                  //           padding:
-                  //               EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
-                  //           children: [
-                  //             Container(
-                  //               child: Row(
-                  //                 mainAxisAlignment: MainAxisAlignment.center,
-                  //                 children: [
-                  //                   BigPrizeContainer(
-                  //                     bgColor: Color(0xff26A6F4),
-                  //                     bigText: locale.winMoneyBigText,
-                  //                     smallText: locale.winMoneySmallText,
-                  //                     image: Assets.moneyBag,
-                  //                     painter: LakhCustomPaint(),
-                  //                     onPressed: () => AppState
-                  //                         .delegate.appState.setCurrentTabIndex = 1,
-                  //                   ),
-                  //                   SizedBox(width: SizeConfig.padding16),
-                  //                   BigPrizeContainer(
-                  //                     bgColor: UiConstants.tertiarySolid,
-                  //                     bigText: locale.winIphoneBigText,
-                  //                     smallText: locale.winIphoneSmallText,
-                  //                     image: Assets.iphone,
-                  //                     painter: IphoneCustomPaint(),
-                  //                     onPressed: () {
-                  //                       // model.panelController.animatePanelToPosition(1);
-                  //                       // model.setCurrentPage = 1;
-                  //                       AppState.delegate.appState.currentAction =
-                  //                           PageAction(
-                  //                         page: ReferralDetailsPageConfig,
-                  //                         state: PageState.addPage,
-                  //                       );
-                  //                     },
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //             ),
-                  //             SizedBox(height: SizeConfig.padding32),
-                  //             WinnersMarqueeStrip(),
-                  //             SizedBox(height: SizeConfig.padding20),
-                  //             if (model.ongoingEvents != null)
-                  //               Column(
-                  //                 crossAxisAlignment: CrossAxisAlignment.start,
-                  //                 children: [
-                  //                   Padding(
-                  //                     padding: EdgeInsets.symmetric(
-                  //                         horizontal:
-                  //                             SizeConfig.pageHorizontalMargins),
-                  //                     child: Text(
-                  //                       "Ongoing Campaigns",
-                  //                       style: TextStyles.title3.bold,
-                  //                     ),
-                  //                   ),
-                  //                   SizedBox(height: SizeConfig.padding16),
-                  //                   Container(
-                  //                     height: SizeConfig.screenWidth * 0.3,
-                  //                     width: SizeConfig.screenWidth,
-                  //                     child: ListView(
-                  //                       padding: EdgeInsets.zero,
-                  //                       scrollDirection: Axis.horizontal,
-                  //                       controller: model.eventScrollController,
-                  //                       children: List.generate(
-                  //                         model.ongoingEvents.length,
-                  //                         (i) => Container(
-                  //                           margin: EdgeInsets.only(
-                  //                               left: i == 0
-                  //                                   ? SizeConfig
-                  //                                       .pageHorizontalMargins
-                  //                                   : 0),
-                  //                           child: EventCard(
-                  //                             event: model.ongoingEvents[i],
-                  //                           ),
-                  //                         ),
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   SizedBox(height: SizeConfig.padding24),
-                  //                 ],
-                  //               ),
-                  //             SizedBox(
-                  //               height: SizeConfig.screenHeight * 0.24,
-                  //             )
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-                  //         child: Hero(
-                  //           tag: "myWinnigs",
-                  //           child: WinningsContainer(
-                  //             shadow: false,
-                  //             onTap: () => model.navigateToMyWinnings(),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       WinnersLeaderBoardSE(
-                  //         model: model,
-                  //       )
-                  //     ],
-                  //   ),
+                      SizedBox(
+                        height: SizeConfig.padding54,
+                      ),
+                      //Fello News
+                      FelloNewsComponent(),
+                      SizedBox(
+                        height: SizeConfig.padding54,
+                      ),
+
+                      //Leader Board , Top Referers
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding34),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () => model.switchTab(0),
+                                    child: Text(
+                                      'LeaderBoard',
+                                      style: model.tabNo == 0
+                                          ? selectedTextStyle
+                                          : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () => model.switchTab(1),
+                                    child: Text(
+                                      'Top Referers',
+                                      style: model.tabNo == 1
+                                          ? selectedTextStyle
+                                          : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                AnimatedContainer(
+                                  duration: Duration(milliseconds: 500),
+                                  height: 5,
+                                  width: model.tabPosWidthFactor,
+                                ),
+                                Container(
+                                  color: UiConstants.kTabBorderColor,
+                                  height: 5,
+                                  width: SizeConfig.screenWidth * 0.38,
+                                )
+                              ],
+                            ),
+                            HeightAdaptivePageView(
+                              controller: model.pageController,
+                              onPageChanged: (int page) {
+                                model.switchTab(page);
+                              },
+                              children: [
+                                Text("Highest Savers"),
+                                Text("Top Referers"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: SizeConfig.padding80 +
+                            SizeConfig.padding80 +
+                            SizeConfig.padding80,
+                      ),
+                    ],
+                  ),
                 ),
               );
             });
       },
+    );
+  }
+}
+
+class FelloNewsComponent extends StatelessWidget {
+  const FelloNewsComponent({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: SizeConfig.padding24,
+            ),
+            child: Text(
+              "Fello News",
+              style: TextStyles.sourceSans.semiBold.colour(Colors.white).title3,
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding24),
+          Container(
+            width: double.infinity,
+            height: SizeConfig.screenWidth * 0.4026,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: dummyFelloNews.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: EdgeInsets.only(
+                      left: index == 0 ? 0.0 : SizeConfig.padding20,
+                      right: SizeConfig.padding20),
+                  height: double.maxFinite,
+                  width: SizeConfig.screenWidth * 0.8,
+                  margin: EdgeInsets.only(
+                      left: SizeConfig.padding24,
+                      right: index == dummyFelloNews.length - 1
+                          ? SizeConfig.padding24
+                          : 0.0),
+                  decoration: BoxDecoration(
+                    color: Color(dummyFelloNews[index]['color']),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness12)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: index == 0
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        dummyFelloNews[index]['asset'],
+                        width: index == 0
+                            ? SizeConfig.screenWidth * 0.25
+                            : SizeConfig.screenWidth * 0.2,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding16,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                dummyFelloNews[index]['title'],
+                                style: TextStyles.rajdhaniSB.body1
+                                    .colour(UiConstants.kBackgroundColor),
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            Flexible(
+                              child: Text(
+                                dummyFelloNews[index]['subTitle'],
+                                style: TextStyles.sourceSans.body4
+                                    .colour(UiConstants.kBackgroundColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ReferAndEarnComponent extends StatelessWidget {
+  const ReferAndEarnComponent({
+    Key key,
+    @required this.model,
+  }) : super(key: key);
+
+  final WinViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.all(
+              SizeConfig.padding24,
+            ),
+            margin: EdgeInsets.fromLTRB(SizeConfig.padding24,
+                SizeConfig.padding44, SizeConfig.padding24, 0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Color(0xff1A1A1A),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.roundness12))),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: SizeConfig.padding20,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding28,
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                          text: 'Earn upto Rs.50 and',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor3)),
+                      WidgetSpan(
+                          child: Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding4),
+                        height: 17,
+                        width: 17,
+                        child: SvgPicture.asset(
+                          Assets.aFelloToken,
+                        ),
+                      )),
+                      TextSpan(
+                          text:
+                              '200 from every Golden Ticket. Win an iPad every month.',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor3)),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding28,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding32,
+                          vertical: SizeConfig.padding6),
+                      decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness8),
+                          ),
+                          border: Border.all(color: Colors.white, width: 0.6)),
+                      child: Text(
+                        model.loadingRefCode ? '-' : model.refCode,
+                        style: TextStyles.title2.extraBold.colour(Colors.white),
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              model.copyReferCode();
+                            },
+                            icon: Icon(
+                              Icons.copy,
+                              color: UiConstants.kTabBorderColor,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              model.shareWhatsApp();
+                            },
+                            icon: Icon(
+                              Icons.share,
+                              color: UiConstants.kTabBorderColor,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: SizeConfig.padding44),
+            child: SvgPicture.asset(Assets.referAndEarn,
+                height: SizeConfig.padding90),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -245,6 +245,18 @@ class Assets {
   //WIN SCREEN
   static final String referAndEarn = "assets/svg/refer_earn.svg";
 
+  static final String winScreenReferalAsset =
+      "assets/svg/winScreen-referalAsset.svg";
+
+  static final String winScreenWinnerAsset =
+      "assets/svg/winScreen_winnerAsset_.svg";
+
+  static final String winScreenAllGamesAsset =
+      "assets/svg/winScreen_allGamesAsset.svg";
+
+  static final String winScreenHighestScorers =
+      "assets/svg/highest_scorers.svg";
+
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
 

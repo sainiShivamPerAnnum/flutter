@@ -54,8 +54,27 @@ class WinViewModel extends BaseModel {
   String appShareMessage =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
   final _fcmListener = locator<FcmListener>();
+  PageController _pageController;
+
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
+
+  int _tabNo = 0;
+
+  double get tabPosWidthFactor => _tabPosWidthFactor;
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
+
+  PageController get pageController => _pageController;
 
   String _refUrl = "";
+
+  int get tabNo => _tabNo;
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
 
   set showOldView(bool value) {
     this._showOldView = value;
@@ -112,6 +131,7 @@ class WinViewModel extends BaseModel {
     // getOngoingEvents();
     _baseUtil.fetchUserAugmontDetail();
     fetchReferralCode();
+    _pageController = PageController(initialPage: 0);
   }
 
   cleanJourneyAssetsFiles() {
@@ -197,6 +217,21 @@ class WinViewModel extends BaseModel {
 
     loadingRefCode = false;
     refresh();
+  }
+
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
   }
 
   setupAutoEventScroll() {
