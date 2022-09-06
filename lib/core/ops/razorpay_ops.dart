@@ -94,7 +94,7 @@ class RazorpayModel extends ChangeNotifier {
   }
 
   //generate order id // update transaction //creatre<UserTransaction> submitAu
-  Future submitAugmontTransaction(
+  Future initiateRazorpayTxn(
       {String mobile,
       String email,
       double amount,

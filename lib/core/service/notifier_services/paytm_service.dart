@@ -412,7 +412,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       String paymentMode,
       AugmontRates augmontRates,
       String couponCode,
-      ApplicationMeta appMeta) async {
+      UpiApplication upiApplication) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -457,27 +457,19 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       await doUpiTransation(
           url: processTransactionApiResponse
               .model.data.body.deepLinkInfo.deepLink,
-          orderId: paytmSubscriptionModel.data.orderId,
-          // androidPackageName: 'net.one97.paytm'
-          androidPackageName: appMeta.packageName);
+          upiApplication: upiApplication,
+          orderId: paytmSubscriptionModel.data.orderId);
     }
   }
 
-  methodChannelCall(String url, String androidPackageName) async {
-    MethodChannel _platform =
-        MethodChannel("fello.in/dev/payments/paytmService");
-    return await _platform.invokeMethod<String>(
-        'initiatePaytmTransaction', {"url": url, "app": androidPackageName});
-  }
-
   Future doUpiTransation(
-      {String url, String orderId, String androidPackageName}) async {
+      {String url, String orderId, UpiApplication upiApplication}) async {
     if (PlatformUtils.isAndroid) {
       UpiTransactionResponse response;
       AppState.backButtonDispatcher.didPopRoute();
       try {
         response = await UpiPay.initiateTransaction(
-            app: UpiApplication.paytm, deepLinkUrl: url);
+            app: upiApplication, deepLinkUrl: url);
         print(response);
       } catch (e) {
         print(e);

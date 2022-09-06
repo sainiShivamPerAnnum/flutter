@@ -24,10 +24,6 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
-    private val PAYMENTCHANNEL = "fello.in/dev/payments/paytmService"
-    private var result: Result? = null
-    var hasResponded = false
-    private val REQUEST_CODE_HANDLER = 201119
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -47,18 +43,6 @@ class MainActivity : FlutterFragmentActivity() {
                 result.notImplemented()
             }
         }
-
-        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PAYMENTCHANNEL).setMethodCallHandler {
-        //         call, result ->
-        //     if (call.method == "initiatePaytmTransaction") {
-        //         val argData = call.arguments as java.util.HashMap<String, String>
-        //         val completed = await(initiateTransaction(argData))
-        //         Log.d("completed android:", completed.toString())
-        //         result.success(completed.toString())
-        //     } else {
-        //         result.notImplemented()
-        //     }
-        // }
     }
 
     override fun onStart() {
@@ -90,39 +74,5 @@ class MainActivity : FlutterFragmentActivity() {
             completed = false
         }
         return completed
-    }
-
-    private fun initiateTransaction(mapData: HashMap<String, String>) {
-        try {
-            val uri = Uri.parse(mapData["url"])
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            intent.setPackage(mapData["app"])
-            if (intent.resolveActivity(packageManager) == null) {
-                this.success("activity_unavailable")
-            }
-            resultLauncher.launch(intent)
-        } catch (ex: Exception) {
-            this.success("failed_to_open_app")
-        }
-    }
-
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-           // There are no request codes
-            val data: Intent? = result.data
-            Log.d("Data:", data.toString())
-            this.success("transaction completed");
-        }
-        if(result.resultCode != Activity.RESULT_OK){
-            this.success("transaction failed");
-        }
-    }
-
-
-    private fun success(o: String) {
-        if (!hasResponded) {
-            hasResponded = true
-            result?.success(o)
-        }
     }
 }

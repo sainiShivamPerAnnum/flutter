@@ -124,12 +124,6 @@ class PaytmRepository {
         "maxAmount": 5000,
         "amount": 0
       };
-      //  final Map<String, dynamic> _body = {
-      //   "uid": _uid,
-      //   "maxAmount": 3000,
-      //   "expiryDate": "2030-03-10",
-      //   "amount": 1
-      // };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
@@ -217,10 +211,6 @@ class PaytmRepository {
         'resume': resumeDate,
       };
       _logger.d(_body);
-      //  final _body = {
-      //   'uid': _userService.baseUser.uid,
-      //   'subId': subId,
-      // };
       final response = await APIService.instance.postData(
         ApiPath().kPauseSubscription,
         body: _body,
@@ -246,10 +236,6 @@ class PaytmRepository {
       final _body = {
         'uid': _userService.baseUser.uid,
       };
-      //  final _body = {
-      //   'uid': _userService.baseUser.uid,
-      //   'subId': subId,
-      // };
       final response = await APIService.instance.postData(
         ApiPath().kResumeSubscription,
         body: _body,

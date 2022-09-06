@@ -350,7 +350,9 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        model.upiApplication = model.appMetaList[index];
+                        CircularProgressIndicator();
+                        model.upiApplication =
+                            model.appMetaList[index].upiApplication;
                         model.processTransaction(
                             model.appMetaList[index].upiApplication.appName);
                       },

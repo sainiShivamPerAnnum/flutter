@@ -16,7 +16,6 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
-import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -68,10 +67,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
-  final _paytmRepo = locator<PaytmRepository>();
   final _userCoinService = locator<UserCoinService>();
   List<ApplicationMeta> appMetaList = [];
-  ApplicationMeta _upiApplication;
+  UpiApplication _upiApplication;
 
   int _status = 0;
   int lastTappedChipIndex = 1;
@@ -145,7 +143,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     notifyListeners();
   }
 
-  set upiApplication(ApplicationMeta value) {
+  set upiApplication(UpiApplication value) {
     this._upiApplication = value;
     notifyListeners();
   }
@@ -232,9 +230,15 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   getUPIApps() async {
-    appMetaList = await UpiPay.getInstalledUpiApplications(
+    List<ApplicationMeta> allUpiApps = await UpiPay.getInstalledUpiApplications(
         statusType: UpiApplicationDiscoveryAppStatusType.all);
-    print(appMetaList);
+    allUpiApps.forEach((element) {
+      if (element.upiApplication.appName == "Paytm" ||
+          element.upiApplication.appName == "Google Pay" ||
+          element.upiApplication.appName == "PhonePe") {
+        appMetaList.add(element);
+      }
+    });
   }
 
   delayedAugmontCall() async {
@@ -577,7 +581,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     var _status;
 
     if (isRzpTxn) {
-      await _razorpayOpsModel.submitAugmontTransaction(
+      await _razorpayOpsModel.initiateRazorpayTxn(
           amount: buyAmount,
           augmontRates: goldRates,
           couponCode: appliedCoupon?.code ?? "",
