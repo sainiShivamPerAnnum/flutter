@@ -74,10 +74,8 @@ class _BottomNavBarState extends State<BottomNavBar>
         element.controller.reset();
       });
       widget.parentModel.onItemTapped(index);
-      navbarItems[index].controller.forward(from: 0.0);
-    } else {
-      navbarItems[index].controller.forward(from: 0.0);
     }
+    navbarItems[index].controller.forward(from: 0.0);
   }
 
   @override

@@ -13,7 +13,7 @@ class UiConstants {
   static final Color gameCardColor = const Color(0xff39393C);
 
   static final Color accentColor = const Color(0xff333333);
-  static final Color darkPrimaryColor = const Color.fromARGB(255, 58, 120, 255);
+  static final Color darkPrimaryColor = const Color(0XFF02484D);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color chipColor = Colors.grey[200];
@@ -98,7 +98,7 @@ class UiConstants {
   static const Color kDarkBoxColor = const Color(0xFF3B3B3B);
   // Recharge Modal Sheet
   static const Color kRechargeModalSheetAmountSectionBackgroundColor =
-      const Color(0xFF49494C);
+      const Color(0xFF1B262C);
 
   static const Color kpurpleTicketColor = const Color(0xFFCEC5FF);
 

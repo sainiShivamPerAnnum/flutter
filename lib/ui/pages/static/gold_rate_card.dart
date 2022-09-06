@@ -203,14 +203,10 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   @override
   Widget build(BuildContext context) {
     return widget.mini
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                "Current rate (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
-                style: TextStyles.sourceSans.body4
-                    .colour(UiConstants.kTextFieldTextColor),
-              ),
               widget.isFetching
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
@@ -221,6 +217,11 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kPrimaryColor),
                     ),
+              Text(
+                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+                style: TextStyles.sourceSans.body4
+                    .colour(UiConstants.kTextFieldTextColor),
+              ),
             ],
           )
         : Container();

@@ -74,6 +74,14 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
   bool _skipMl = false;
+  double _fieldWidth = 0.0;
+
+  get fieldWidth => this._fieldWidth;
+
+  set fieldWidth(value) {
+    this._fieldWidth = value;
+    notifyListeners();
+  }
 
   // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
@@ -87,8 +95,22 @@ class AugmontGoldBuyViewModel extends BaseModel {
   bool _augRegFailed = false;
   String buyNotice;
 
-  double goldBuyAmount = 0;
-  double goldAmountInGrams = 0.0;
+  double _goldBuyAmount = 0;
+  double _goldAmountInGrams = 0.0;
+  get goldBuyAmount => this._goldBuyAmount;
+
+  set goldBuyAmount(value) {
+    this._goldBuyAmount = value;
+    notifyListeners();
+  }
+
+  get goldAmountInGrams => this._goldAmountInGrams;
+
+  set goldAmountInGrams(value) {
+    this._goldAmountInGrams = value;
+    notifyListeners();
+  }
+
   TextEditingController goldAmountController;
   TextEditingController vpaController;
   List<double> chipAmountList = [101, 201, 501, 1001];
@@ -195,6 +217,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     goldBuyAmount = amount.toDouble() ?? chipAmountList[1];
     goldAmountController = TextEditingController(
         text: amount.toString() ?? chipAmountList[1].toInt().toString());
+    fieldWidth =
+        (SizeConfig.padding40 * goldAmountController.text.length.toDouble());
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
@@ -269,6 +293,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       child: Container(
         padding: EdgeInsets.symmetric(
             vertical: SizeConfig.padding8, horizontal: SizeConfig.padding12),
+        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           border: Border.all(
@@ -311,6 +336,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
       else
         goldAmountInGrams = 0.0;
     }
+    fieldWidth =
+        (SizeConfig.padding40 * goldAmountController.text.length.toDouble());
     refresh();
   }
 
@@ -447,7 +474,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     isGoldBuyInProgress = false;
     // AppState.screenStack.removeLast();
-    resetBuyOptions();
+    // resetBuyOptions();
 
     if (_status) {
       // AppState.delegate.appState.isTxnLoaderInView = true;
@@ -502,6 +529,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
+      if (val.length > 2 && val[0] == '0' && val[1] != '.')
+        val = val.substring(1);
       if (double.tryParse(val.trim()) != null &&
           double.tryParse(val.trim()) > 50000) {
         goldBuyAmount = 50000;
@@ -522,8 +551,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
       }
     } else {
       goldBuyAmount = 0;
+      goldAmountController.text = '0';
+      buyFieldNode.unfocus();
       updateGoldAmount();
     }
+
     // checkIfCouponIsStillApplicable();
     appliedCoupon = null;
   }

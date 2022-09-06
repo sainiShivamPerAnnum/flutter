@@ -673,6 +673,13 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
+  static getIntOrDouble(double x) {
+    if (x - x.round() != 0)
+      return x;
+    else
+      return x.toInt();
+  }
+
   static double digitPrecision(double x, [int offset = 2, bool round = true]) {
     double y = x * pow(10, offset);
     int z = (round) ? y.round() : y.truncate();

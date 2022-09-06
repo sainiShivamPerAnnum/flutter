@@ -2,6 +2,8 @@ import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/new_augmont_buy_view.dart';
 import 'package:felloapp/ui/pages/static/congratulatory_coin_view.dart';
 import 'package:felloapp/ui/pages/static/congratulatory_view.dart';
@@ -41,21 +43,24 @@ class RechargeModalSheet extends StatelessWidget {
             children: [
               _getBackground(txnService),
               PageTransitionSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (
-                  Widget child,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                ) {
-                  return FadeThroughTransition(
-                    fillColor: Colors.transparent,
-                    child: child,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                  );
-                },
-                child: _getView(txnService),
-              ),
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (
+                    Widget child,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                  ) {
+                    return FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      child: child,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                    );
+                  },
+                  child: BaseView<AugmontGoldBuyViewModel>(
+                      onModelReady: (model) => model.init(amount, skipMl),
+                      builder: (ctx, model, child) {
+                        return _getView(txnService, model);
+                      })),
             ],
           ),
         );
@@ -63,12 +68,13 @@ class RechargeModalSheet extends StatelessWidget {
     );
   }
 
-  Widget _getView(TransactionService txnService) {
+  Widget _getView(
+      TransactionService txnService, AugmontGoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return NewAugmontBuyView(amount: amount, skipMl: skipMl);
+      return NewAugmontBuyView(amount: amount, skipMl: skipMl, model: model);
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
-      return RechargeLoadingView();
+      return RechargeLoadingView(model: model);
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
       return CongratulatoryView();
@@ -76,15 +82,15 @@ class RechargeModalSheet extends StatelessWidget {
         TransactionState.successCoinTransaction) {
       return CongratulatoryCoinView();
     }
-    return Container();
+    return RechargeLoadingView(model: model);
   }
 
   double _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return SizeConfig.screenHeight * 0.8;
+      return SizeConfig.screenHeight * 0.9;
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
-      return SizeConfig.screenHeight * 0.8;
+      return SizeConfig.screenHeight * 0.9;
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
       return SizeConfig.screenHeight;
@@ -99,7 +105,7 @@ class RechargeModalSheet extends StatelessWidget {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
       return Container(
         decoration: BoxDecoration(
-          color: UiConstants.kSecondaryBackgroundColor,
+          color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.padding16),
             topRight: Radius.circular(SizeConfig.padding16),
@@ -112,7 +118,7 @@ class RechargeModalSheet extends StatelessWidget {
         TransactionState.ongoingTransaction) {
       return Container(
         decoration: BoxDecoration(
-          color: UiConstants.kSecondaryBackgroundColor,
+          color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.padding16),
             topRight: Radius.circular(SizeConfig.padding16),
