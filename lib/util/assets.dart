@@ -77,6 +77,10 @@ class Assets {
       "assets/svg/BottomNavBarIcons/nav_win_active.svg";
   static final String navWinInactive =
       "assets/svg/BottomNavBarIcons/nav_win_inactive.svg";
+  static final String navJourneyLottie = "assets/lotties/nav/journey.json";
+  static final String navPlayLottie = "assets/lotties/nav/play.json";
+  static final String navSaveLottie = "assets/lotties/nav/save.json";
+  static final String navWinLottie = "assets/lotties/nav/win.json";
 
 // ONBOARDING
   static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";

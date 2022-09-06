@@ -110,6 +110,7 @@ flutter:
     - assets/temp/
     - assets/svg/
     - assets/svg/BottomNavBarIcons/
+    - assets/lotties/nav/
 
 
 flutter_intl:
