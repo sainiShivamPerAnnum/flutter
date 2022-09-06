@@ -524,7 +524,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         Timer _paymentStatusTimer =
             Timer.periodic(Duration(seconds: 5), (timer) async {
           bool isValidated = await validateTransaction(orderId);
-          print(isValidated);
           if (isValidated) {
             timer.cancel();
           }
