@@ -13,11 +13,14 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
+import '../../ops/db_ops.dart';
+
 class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _winnersRepo = locator<WinnersRepository>();
   final _apiCacheManager = locator<ApiCacheManager>();
   final _getterRepo = locator<GetterRepository>();
+  final _dbModel = locator<DBModel>();
 
   int _cricketWinnersLength = 0;
   int _tambolaWinnersLength = 0;
@@ -77,6 +80,40 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       setTopWinners();
       _logger.d("Top winners successfully fetched");
     }
+  }
+
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
+  }
+
+  String getDateRange() {
+    List<String> months = [
+      'Jan',
+      'Feb',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+
+    var today = DateTime.now();
+    var beforeSevenDays = today.subtract(Duration(days: 7));
+
+    int dayToday = today.day;
+    int monthToday = today.month;
+    String todayDateToShow = "$dayToday ${months[monthToday - 1]}";
+
+    int dayOld = beforeSevenDays.day;
+    int monthOld = beforeSevenDays.month;
+    String oldDateToShow = "$dayOld ${months[monthOld - 1]}";
+
+    return "$oldDateToShow - $todayDateToShow";
   }
 
   fetchBugBountyWinners() async {

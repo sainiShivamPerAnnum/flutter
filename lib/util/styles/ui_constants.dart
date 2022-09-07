@@ -105,6 +105,8 @@ class UiConstants {
   // Autosave
   static const Color kAutosaveBalanceColor = const Color(0xFFEFECD1);
 
+  static const Color kSecondaryLeaderBoardTextColor = const Color(0xffF4F1EC);
+
   static LinearGradient kTextFieldGradient1 = LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],
     begin: Alignment.topCenter,

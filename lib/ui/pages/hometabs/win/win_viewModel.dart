@@ -11,7 +11,9 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -42,6 +44,8 @@ class WinViewModel extends BaseModel {
   final _baseUtil = locator<BaseUtil>();
   final _refRepo = locator<ReferralRepo>();
   final _appFlyer = locator<AppFlyerAnalytics>();
+  final _winnerService = locator<WinnerService>();
+  final _lbService = locator<LeaderboardService>();
 
   Timer _timer;
   bool _showOldView = false;
@@ -132,6 +136,7 @@ class WinViewModel extends BaseModel {
     _baseUtil.fetchUserAugmontDetail();
     fetchReferralCode();
     _pageController = PageController(initialPage: 0);
+    _winnerService.fetchWinners();
   }
 
   cleanJourneyAssetsFiles() {

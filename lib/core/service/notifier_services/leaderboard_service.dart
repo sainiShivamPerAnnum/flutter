@@ -96,6 +96,36 @@ class LeaderboardService
     }
   }
 
+  String getDateRange() {
+    List<String> months = [
+      'Jan',
+      'Feb',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+
+    var today = DateTime.now();
+    var beforeSevenDays = today.subtract(Duration(days: 7));
+
+    int dayToday = today.day;
+    int monthToday = today.month;
+    String todayDateToShow = "$dayToday ${months[monthToday - 1]}";
+
+    int dayOld = beforeSevenDays.day;
+    int monthOld = beforeSevenDays.month;
+    String oldDateToShow = "$dayOld ${months[monthOld - 1]}";
+
+    return "$oldDateToShow - $todayDateToShow";
+  }
+
   fetchLeaderBoardProfileImage() async {
     if (_WebGameLeaderBoard != null) {
       int length = _WebGameLeaderBoard.scoreboard.length <= 6

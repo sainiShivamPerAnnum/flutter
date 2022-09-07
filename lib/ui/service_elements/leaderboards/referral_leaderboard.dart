@@ -8,7 +8,173 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+
+// class ReferralLeaderboard extends StatelessWidget {
+//   final int count;
+//   ReferralLeaderboard({this.count});
+//   getLength(int listLength) {
+//     if (count != null) {
+//       if (listLength < count)
+//         return listLength;
+//       else
+//         return count;
+//     } else
+//       return listLength;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return PropertyChangeConsumer<LeaderboardService,
+//             LeaderBoardServiceProperties>(
+//         properties: [LeaderBoardServiceProperties.ReferralLeaderboard],
+//         builder: (context, model, properties) {
+//           return Container(
+//             color: Colors.white,
+//             child: Column(
+//               children: [
+//                 Container(
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                   ),
+//                   padding: EdgeInsets.only(top: SizeConfig.padding8),
+//                   child: model.referralLeaderBoard == null
+//                       ? Container(
+//                           width: SizeConfig.screenWidth,
+//                           color: Colors.white,
+//                           alignment: Alignment.center,
+//                           child: ListLoader())
+//                       : (model.referralLeaderBoard.isEmpty
+//                           ? Container(
+//                               width: SizeConfig.screenWidth,
+//                               height: SizeConfig.safeScreenHeight * 0.7,
+//                               color: Colors.white,
+//                               child: NoRecordDisplayWidget(
+//                                 asset: "images/leaderboard.png",
+//                                 text:
+//                                     "Referral Leaderboard will be updated soon",
+//                               ),
+//                             )
+//                           : Column(
+//                               children: [
+//                                 // Container(
+//                                 //   margin: EdgeInsets.only(
+//                                 //       bottom: SizeConfig.padding20),
+//                                 //   width: SizeConfig.screenWidth,
+//                                 //   padding: EdgeInsets.symmetric(
+//                                 //       vertical: SizeConfig.padding4,
+//                                 //       horizontal:
+//                                 //           SizeConfig.pageHorizontalMargins),
+//                                 //   color:
+//                                 //       UiConstants.primaryLight.withOpacity(0.5),
+//                                 //   child: FittedBox(
+//                                 //     fit: BoxFit.scaleDown,
+//                                 //     child: Text(
+//                                 //       "You've to make atleast 100 referrals to win an iphone 13",
+//                                 //       maxLines: 1,
+//                                 //       style: TextStyles.body3
+//                                 //           .colour(UiConstants.primaryColor),
+//                                 //     ),
+//                                 //   ),
+//                                 // ),
+//                                 Padding(
+//                                   padding: EdgeInsets.symmetric(
+//                                     horizontal:
+//                                         SizeConfig.pageHorizontalMargins,
+//                                   ),
+//                                   child: Row(
+//                                     mainAxisAlignment:
+//                                         MainAxisAlignment.spaceBetween,
+//                                     children: [
+//                                       Text(
+//                                         'This months\'s top referrers:',
+//                                         style: TextStyles.body4
+//                                             .colour(Colors.grey),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                                 Column(
+//                                   children: List.generate(
+//                                     getLength(model.referralLeaderBoard.length),
+//                                     (i) {
+//                                       return Container(
+//                                         width: SizeConfig.screenWidth,
+//                                         padding: EdgeInsets.all(
+//                                             SizeConfig.padding12),
+//                                         margin: EdgeInsets.symmetric(
+//                                             vertical: SizeConfig.padding8,
+//                                             horizontal: SizeConfig
+//                                                 .pageHorizontalMargins),
+//                                         decoration: BoxDecoration(
+//                                           color: Color(0xfff6f6f6),
+//                                           borderRadius: BorderRadius.circular(
+//                                               SizeConfig.roundness16),
+//                                         ),
+//                                         child: Row(
+//                                           children: [
+//                                             CircleAvatar(
+//                                               backgroundColor:
+//                                                   UiConstants.primaryColor,
+//                                               radius: SizeConfig.padding16,
+//                                               child: Text(
+//                                                 "${i + 1}",
+//                                                 style: TextStyles.body4
+//                                                     .colour(Colors.white),
+//                                               ),
+//                                             ),
+//                                             SizedBox(
+//                                                 width: SizeConfig.padding12),
+//                                             Expanded(
+//                                               child: Column(
+//                                                 crossAxisAlignment:
+//                                                     CrossAxisAlignment.start,
+//                                                 mainAxisAlignment:
+//                                                     MainAxisAlignment.center,
+//                                                 children: [
+//                                                   Text(
+//                                                       model
+//                                                               .referralLeaderBoard[
+//                                                                   i]
+//                                                               .username
+//                                                               .replaceAll(
+//                                                                   '@', '.') ??
+//                                                           "username",
+//                                                       style: TextStyles.body3),
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                             PrizeChip(
+//                                               color: UiConstants.primaryColor,
+//                                               svg: Assets.plane,
+//                                               text: model.referralLeaderBoard[i]
+//                                                       .refCount
+//                                                       .toString() ??
+//                                                   "00",
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       );
+//                                     },
+//                                   ),
+//                                 ),
+//                               ],
+//                             )),
+//                 ),
+//                 SizedBox(
+//                   height: model.referralLeaderBoard.length < 10
+//                       ? (10 - model.referralLeaderBoard.length) *
+//                           SizeConfig.padding54
+//                       : SizeConfig.navBarHeight * 1.5,
+//                 )
+//               ],
+//             ),
+//           );
+//         });
+//   }
+// }
 
 class ReferralLeaderboard extends StatelessWidget {
   final int count;
@@ -30,143 +196,298 @@ class ReferralLeaderboard extends StatelessWidget {
         properties: [LeaderBoardServiceProperties.ReferralLeaderboard],
         builder: (context, model, properties) {
           return Container(
-            color: Colors.white,
-            child: Column(
+            child: Stack(
+              alignment: Alignment.topCenter,
               children: [
+                //1
                 Container(
+                  margin: EdgeInsets.only(top: SizeConfig.padding32),
+                  width: SizeConfig.screenWidth * 0.5,
+                  height: SizeConfig.screenWidth * 0.5,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: UiConstants.kSecondaryBackgroundColor,
+                    shape: BoxShape.circle,
                   ),
-                  padding: EdgeInsets.only(top: SizeConfig.padding8),
-                  child: model.referralLeaderBoard == null
-                      ? Container(
-                          width: SizeConfig.screenWidth,
-                          color: Colors.white,
-                          alignment: Alignment.center,
-                          child: ListLoader())
-                      : (model.referralLeaderBoard.isEmpty
-                          ? Container(
-                              width: SizeConfig.screenWidth,
-                              height: SizeConfig.safeScreenHeight * 0.7,
-                              color: Colors.white,
-                              child: NoRecordDisplayWidget(
-                                asset: "images/leaderboard.png",
-                                text:
-                                    "Referral Leaderboard will be updated soon",
+                ),
+                //2
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                  margin: EdgeInsets.fromLTRB(
+                      SizeConfig.padding24,
+                      SizeConfig.screenWidth * 0.15 + SizeConfig.padding32,
+                      SizeConfig.padding24,
+                      0.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: UiConstants.kSecondaryBackgroundColor,
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness12)),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.padding64,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Top Referers",
+                                style: TextStyles.rajdhaniSB.body0.colour(
+                                    UiConstants.kSecondaryLeaderBoardTextColor),
                               ),
-                            )
-                          : Column(
-                              children: [
-                                // Container(
-                                //   margin: EdgeInsets.only(
-                                //       bottom: SizeConfig.padding20),
-                                //   width: SizeConfig.screenWidth,
-                                //   padding: EdgeInsets.symmetric(
-                                //       vertical: SizeConfig.padding4,
-                                //       horizontal:
-                                //           SizeConfig.pageHorizontalMargins),
-                                //   color:
-                                //       UiConstants.primaryLight.withOpacity(0.5),
-                                //   child: FittedBox(
-                                //     fit: BoxFit.scaleDown,
-                                //     child: Text(
-                                //       "You've to make atleast 100 referrals to win an iphone 13",
-                                //       maxLines: 1,
-                                //       style: TextStyles.body3
-                                //           .colour(UiConstants.primaryColor),
-                                //     ),
-                                //   ),
-                                // ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'This months\'s top referrers:',
-                                        style: TextStyles.body4
-                                            .colour(Colors.grey),
+                              Text(
+                                model.getDateRange(),
+                                style: TextStyles.sourceSans.body4
+                                    .colour(UiConstants.kTextFieldTextColor),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "1K Referals\nweekly",
+                            style: TextStyles.sourceSans.body4
+                                .colour(UiConstants.kTextFieldTextColor),
+                            textAlign: TextAlign.end,
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                      //Old code to refactor starts here
+                      Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                              ),
+                              padding:
+                                  EdgeInsets.only(top: SizeConfig.padding8),
+                              child: model.referralLeaderBoard == null
+                                  ? Container(
+                                      width: SizeConfig.screenWidth,
+                                      color: Colors.transparent,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: SizeConfig.padding24),
+                                      alignment: Alignment.center,
+                                      child: SpinKitWave(
+                                        color: UiConstants.primaryColor,
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  children: List.generate(
-                                    getLength(model.referralLeaderBoard.length),
-                                    (i) {
-                                      return Container(
-                                        width: SizeConfig.screenWidth,
-                                        padding: EdgeInsets.all(
-                                            SizeConfig.padding12),
-                                        margin: EdgeInsets.symmetric(
-                                            vertical: SizeConfig.padding8,
-                                            horizontal: SizeConfig
-                                                .pageHorizontalMargins),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xfff6f6f6),
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness16),
-                                        ),
-                                        child: Row(
+                                    )
+                                  : (model.referralLeaderBoard.isEmpty
+                                      ? Container(
+                                          width: SizeConfig.screenWidth,
+                                          color: Colors.transparent,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding24),
+                                          child: NoRecordDisplayWidget(
+                                            topPadding: false,
+                                            asset: "images/leaderboard.png",
+                                            text:
+                                                "Referral Leaderboard will be updated soon",
+                                          ),
+                                        )
+                                      : Column(
                                           children: [
-                                            CircleAvatar(
-                                              backgroundColor:
-                                                  UiConstants.primaryColor,
-                                              radius: SizeConfig.padding16,
-                                              child: Text(
-                                                "${i + 1}",
-                                                style: TextStyles.body4
-                                                    .colour(Colors.white),
+                                            // Container(
+                                            //   margin: EdgeInsets.only(
+                                            //       bottom: SizeConfig.padding20),
+                                            //   width: SizeConfig.screenWidth,
+                                            //   padding: EdgeInsets.symmetric(
+                                            //       vertical: SizeConfig.padding4,
+                                            //       horizontal:
+                                            //           SizeConfig.pageHorizontalMargins),
+                                            //   color:
+                                            //       UiConstants.primaryLight.withOpacity(0.5),
+                                            //   child: FittedBox(
+                                            //     fit: BoxFit.scaleDown,
+                                            //     child: Text(
+                                            //       "You've to make atleast 100 referrals to win an iphone 13",
+                                            //       maxLines: 1,
+                                            //       style: TextStyles.body3
+                                            //           .colour(UiConstants.primaryColor),
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: SizeConfig
+                                                    .pageHorizontalMargins,
                                               ),
-                                            ),
-                                            SizedBox(
-                                                width: SizeConfig.padding12),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Text(
-                                                      model
-                                                              .referralLeaderBoard[
-                                                                  i]
-                                                              .username
-                                                              .replaceAll(
-                                                                  '@', '.') ??
-                                                          "username",
-                                                      style: TextStyles.body3),
+                                                    'This months\'s top referrers:',
+                                                    style: TextStyles.body4
+                                                        .colour(Colors.grey),
+                                                  ),
                                                 ],
                                               ),
                                             ),
-                                            PrizeChip(
-                                              color: UiConstants.primaryColor,
-                                              svg: Assets.plane,
-                                              text: model.referralLeaderBoard[i]
-                                                      .refCount
-                                                      .toString() ??
-                                                  "00",
+                                            Column(
+                                              children: List.generate(
+                                                getLength(model
+                                                    .referralLeaderBoard
+                                                    .length),
+                                                (i) {
+                                                  return Container(
+                                                    width:
+                                                        SizeConfig.screenWidth,
+                                                    padding: EdgeInsets.all(
+                                                        SizeConfig.padding12),
+                                                    margin: EdgeInsets.symmetric(
+                                                        vertical:
+                                                            SizeConfig.padding8,
+                                                        horizontal: SizeConfig
+                                                            .pageHorizontalMargins),
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xfff6f6f6),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              SizeConfig
+                                                                  .roundness16),
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        CircleAvatar(
+                                                          backgroundColor:
+                                                              UiConstants
+                                                                  .primaryColor,
+                                                          radius: SizeConfig
+                                                              .padding16,
+                                                          child: Text(
+                                                            "${i + 1}",
+                                                            style: TextStyles
+                                                                .body4
+                                                                .colour(Colors
+                                                                    .white),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            width: SizeConfig
+                                                                .padding12),
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                  model
+                                                                          .referralLeaderBoard[
+                                                                              i]
+                                                                          .username
+                                                                          .replaceAll(
+                                                                              '@',
+                                                                              '.') ??
+                                                                      "username",
+                                                                  style:
+                                                                      TextStyles
+                                                                          .body3),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        PrizeChip(
+                                                          color: UiConstants
+                                                              .primaryColor,
+                                                          svg: Assets.plane,
+                                                          text: model
+                                                                  .referralLeaderBoard[
+                                                                      i]
+                                                                  .refCount
+                                                                  .toString() ??
+                                                              "00",
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                             ),
+                                            SizedBox(
+                                              height: SizeConfig.padding16,
+                                            ),
+                                            if (model.referralLeaderBoard
+                                                    .length >
+                                                getLength(model
+                                                    .referralLeaderBoard
+                                                    .length))
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: SizeConfig
+                                                              .padding12),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                              top: SizeConfig
+                                                                  .padding2,
+                                                              right: SizeConfig
+                                                                  .padding10,
+                                                            ),
+                                                            child: Text(
+                                                                'See All',
+                                                                style: TextStyles
+                                                                    .rajdhaniSB
+                                                                    .body2),
+                                                          ),
+                                                          SvgPicture.asset(
+                                                            Assets
+                                                                .chevRonRightArrow,
+                                                            height: SizeConfig
+                                                                .padding24,
+                                                            width: SizeConfig
+                                                                .padding24,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
                                           ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            )),
+                                        )),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: model.referralLeaderBoard.length < 10
-                      ? (10 - model.referralLeaderBoard.length) *
-                          SizeConfig.padding54
-                      : SizeConfig.navBarHeight * 1.5,
-                )
+                //3
+                Container(
+                  margin: EdgeInsets.only(right: SizeConfig.padding14),
+                  child: SvgPicture.asset(
+                    Assets.winScreenTopReferer,
+                    width: SizeConfig.screenWidth * 0.3,
+                  ),
+                ),
               ],
             ),
           );

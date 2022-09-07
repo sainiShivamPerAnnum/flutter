@@ -257,6 +257,9 @@ class Assets {
   static final String winScreenHighestScorers =
       "assets/svg/highest_scorers.svg";
 
+  static final String winScreenTopReferer =
+      "assets/svg/winnerScreen_topRefrer.svg";
+
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
 

@@ -300,14 +300,21 @@ class Win extends StatelessWidget {
                                 )
                               ],
                             ),
+                            SizedBox(
+                              height: SizeConfig.padding70,
+                            ),
                             HeightAdaptivePageView(
                               controller: model.pageController,
                               onPageChanged: (int page) {
                                 model.switchTab(page);
                               },
                               children: [
-                                Text("Highest Savers"),
-                                Text("Top Referers"),
+                                WinnerboardView(
+                                  count: 4,
+                                ),
+                                ReferralLeaderboard(
+                                  count: 4,
+                                ),
                               ],
                             ),
                           ],
