@@ -182,13 +182,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
-  Future<bool> validateTransaction(String orderId) async {
+  Future<bool> validateTransaction(String orderId, bool isRzp) async {
     final ApiResponse<TransactionResponseModel> transactionResponseModel =
-        await _paytmRepo.getTransactionStatus(
-            orderId,
-            BaseRemoteConfig.remoteConfig
-                    .getString(BaseRemoteConfig.ACTIVE_PG) ==
-                'rzp');
+        await _paytmRepo.getTransactionStatus(orderId, isRzp);
 
     print(transactionResponseModel.code);
 
@@ -209,10 +205,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
 
-    bool isRzpTxn =
-        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
-            'RZP-PG';
-
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,
@@ -225,8 +217,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     };
 
     final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
-            amount, augMap, couponCode, isRzpTxn);
+        paytmSubscriptionApiResponse =
+        await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
 
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -248,7 +240,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           isStaging,
           restrictAppInvoke);
       _logger.d("Transaction Response:${response.toString()}");
-      validateTransaction(paytmSubscriptionModel.data.orderId);
+      validateTransaction(paytmSubscriptionModel.data.orderId, false);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
@@ -512,7 +504,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         AppState.delegate.appState.isTxnLoaderInView = true;
         AppState.delegate.appState.txnTimer =
             Timer(Duration(seconds: 30), () async {
-          bool isValidated = await validateTransaction(orderId);
+          bool isValidated = await validateTransaction(orderId, false);
           ApiResponse<TxnResultModel> _txnResult =
               await validateTxnResult(orderId);
           AppState.delegate.appState.isTxnLoaderInView = false;
@@ -560,7 +552,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         AppState.delegate.appState.isTxnLoaderInView = true;
         Timer _paymentStatusTimer =
             Timer.periodic(Duration(seconds: 5), (timer) async {
-          bool isValidated = await validateTransaction(orderId);
+          bool isValidated = await validateTransaction(orderId, false);
           if (isValidated) {
             _txnResult = await validateTxnResult(orderId);
             if (!_txnResult.model.data.isUpdating) {
@@ -574,7 +566,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         if (isResumed) {
           AppState.delegate.appState.txnTimer =
               Timer(Duration(seconds: 30), () async {
-            bool isValidated = await validateTransaction(orderId);
+            bool isValidated = await validateTransaction(orderId, false);
             if (isValidated) {
               _txnResult = await validateTxnResult(orderId);
               if (_txnResult.model.data.isUpdating) {

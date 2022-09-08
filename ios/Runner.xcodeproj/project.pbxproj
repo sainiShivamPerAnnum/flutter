@@ -1788,9 +1788,9 @@
 				CURRENT_PROJECT_VERSION = 119;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
+				FLUTTER_APPLICATION_PATH = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp;
+				FLUTTER_ROOT = /Users/mayukhsil/Developer/flutter;
+				FLUTTER_TARGET = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1807,7 +1807,7 @@
 				);
 				MARKETING_VERSION = 3.3.2;
 				ONLY_ACTIVE_ARCH = YES;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
+				PACKAGE_CONFIG = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1888,7 +1888,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
+				FLUTTER_TARGET = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1982,7 +1982,7 @@
 				CURRENT_PROJECT_VERSION = 119;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
+				FLUTTER_TARGET = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2074,9 +2074,9 @@
 				CURRENT_PROJECT_VERSION = 119;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
+				FLUTTER_APPLICATION_PATH = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp;
+				FLUTTER_ROOT = /Users/mayukhsil/Developer/flutter;
+				FLUTTER_TARGET = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2093,7 +2093,7 @@
 				);
 				MARKETING_VERSION = 3.3.2;
 				ONLY_ACTIVE_ARCH = YES;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
+				PACKAGE_CONFIG = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2358,9 +2358,9 @@
 				CURRENT_PROJECT_VERSION = 119;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_dev.dart;
+				FLUTTER_APPLICATION_PATH = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp;
+				FLUTTER_ROOT = /Users/mayukhsil/Developer/flutter;
+				FLUTTER_TARGET = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2377,7 +2377,7 @@
 				);
 				MARKETING_VERSION = 3.3.2;
 				ONLY_ACTIVE_ARCH = YES;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
+				PACKAGE_CONFIG = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2551,7 +2551,7 @@
 				CURRENT_PROJECT_VERSION = 119;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
+				FLUTTER_TARGET = /Users/mayukhsil/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",

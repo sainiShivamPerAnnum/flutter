@@ -182,8 +182,6 @@ class BaseRemoteConfig {
   };
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
-  static const Map<String, String> _ACTIVE_PG = {'active_pg': 'paytm'};
-
   static const Map<String, String> _ACTIVE_PG_ANDROID = {
     'active_pg_android': 'PAYTM'
   };
@@ -248,7 +246,6 @@ class BaseRemoteConfig {
     ..._RESTRICT_PAYTM_APP_INVOKE,
     ..._NEW_USER_GAMES_ORDER,
     ..._CACHE_INVALIDATION,
-    ..._ACTIVE_PG,
     ..._ENABLED_PSP_APPS,
     ..._ACTIVE_PG_ANDROID,
     ..._ACTIVE_PG_IOS
@@ -409,8 +406,6 @@ class BaseRemoteConfig {
       _RESTRICT_PAYTM_APP_INVOKE.keys.first;
 
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
-
-  static String get ACTIVE_PG => _ACTIVE_PG.keys.first;
 
   static String get ACTIVE_PG_ANDROID => _ACTIVE_PG_ANDROID.keys.first;
 

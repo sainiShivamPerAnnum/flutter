@@ -300,13 +300,52 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
               onPressed: () async {
                 if (!widget.model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
+                  //Android - RazorpayPG
                   if (BaseRemoteConfig.remoteConfig
-                          .getString(BaseRemoteConfig.ACTIVE_PG) ==
+                          .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID) ==
                       'RZP-PG') {
-                    widget.model.initiateGatewayTxn();
+                    widget.model.initiateRzpGatewayTxn();
                   }
+                  //iOS - RazorpayPG
                   if (BaseRemoteConfig.remoteConfig
-                          .getString(BaseRemoteConfig.ACTIVE_PG) ==
+                          .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
+                      'RZP-PG') {
+                    widget.model.initiateRzpGatewayTxn();
+                  }
+                  //Android - PaytmPG
+                  if (BaseRemoteConfig.remoteConfig
+                          .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID) ==
+                      'PAYTM-PG') {
+                    widget.model.initiatePaytmPgTxn();
+                  }
+                  //iOS - PaytmPG
+                  if (BaseRemoteConfig.remoteConfig
+                          .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
+                      'PAYTM-PG') {
+                    widget.model.initiatePaytmPgTxn();
+                  }
+                  //Android - Paytm(UPI Intent)
+                  if (BaseRemoteConfig.remoteConfig
+                          .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID) ==
+                      'PAYTM') {
+                    bool isAllowed = await widget.model.initChecks();
+                    if (isAllowed) {
+                      BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          backgroundColor: Colors.transparent,
+                          isBarrierDismissable: true,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness12),
+                              topRight:
+                                  Radius.circular(SizeConfig.roundness12)),
+                          content: UPIAppsBottomSheet(
+                            model: widget.model,
+                          ));
+                    }
+                  }
+                  //iOS - Paytm(UPI Intent)
+                  if (BaseRemoteConfig.remoteConfig
+                          .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
                       'PAYTM') {
                     bool isAllowed = await widget.model.initChecks();
                     if (isAllowed) {

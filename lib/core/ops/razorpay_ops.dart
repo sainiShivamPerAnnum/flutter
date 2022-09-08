@@ -44,7 +44,7 @@ class RazorpayModel extends ChangeNotifier {
     AppState.delegate.appState.txnTimer =
         Timer(Duration(seconds: 30), () async {
       bool isValidated =
-          await _paytmService.validateTransaction(response.orderId);
+          await _paytmService.validateTransaction(response.orderId, true);
       AppState.delegate.appState.isTxnLoaderInView = false;
       if (isValidated) {
         BaseUtil.openDialog(
