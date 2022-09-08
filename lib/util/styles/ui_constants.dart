@@ -73,6 +73,7 @@ class UiConstants {
   static const Color kOtherPlayerPrimaryColor = const Color(0xFFFFFFFF);
   static const Color kLastUpdatedTextColor = const Color(0xFF919193);
   static const Color kTextFieldTextColor = const Color(0xFFBDBDBE);
+  static const Color kArowButtonBackgroundColor = const Color(0xFF1A1A1A);
   static const Color kProfileBorderOutterColor = const Color(0xFF737373);
   static const Color kProfileBorderColor = const Color(0xFFD9D9D9);
   static const Color kTextFieldColor = const Color(0xFF161617);

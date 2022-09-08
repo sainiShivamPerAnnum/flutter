@@ -96,6 +96,10 @@ class LeaderboardService
     }
   }
 
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
+  }
+
   String getDateRange() {
     List<String> months = [
       'Jan',
