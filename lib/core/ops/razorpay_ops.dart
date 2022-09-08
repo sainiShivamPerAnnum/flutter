@@ -120,6 +120,7 @@ class RazorpayModel extends ChangeNotifier {
         await _paytmRepo.createTransaction(amount, augMap, couponCode, true);
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+    print(paytmSubscriptionApiResponse.model.data.orderId);
 
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     var options = {
