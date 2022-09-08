@@ -2,24 +2,22 @@ import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
-import 'package:felloapp/ui/pages/static/winnings_container.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/web_game_leaderboard.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
-import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
-import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -30,13 +28,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/base_remote_config.dart';
-import '../../../../core/enums/user_service_enum.dart';
-import '../../../../core/service/notifier_services/user_service.dart';
-import '../../../service_elements/leaderboards/referral_leaderboard.dart';
-import '../../../service_elements/user_service/profile_image.dart';
-import '../../../widgets/coin_bar/coin_bar_view.dart';
-import '../../../widgets/helpers/height_adaptive_pageview.dart';
 import 'customPainters.dart';
 
 //Following is a dummy list to populate the Fello News section for now
@@ -62,12 +53,6 @@ List<Map<String, dynamic>> dummyFelloNews = [
 ];
 
 class Win extends StatelessWidget {
-  final TextStyle selectedTextStyle =
-      TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
-
-  final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
-      .colour(UiConstants.titleTextColor.withOpacity(0.6));
-
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -79,13 +64,6 @@ class Win extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
-        String minWithdrawPrize = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
-        String refUnlock = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
-        int refUnlockAmt = BaseUtil.toInt(refUnlock);
-        int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
-
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
@@ -152,13 +130,13 @@ class Win extends StatelessWidget {
                                       height: SizeConfig.padding40,
                                     ),
                                     m.userFundWallet.unclaimedBalance >=
-                                            minWithdrawPrizeAmt
+                                            model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
                                             onPressed: () {},
                                             width: SizeConfig.screenWidth * 0.4)
                                         : Text(
-                                            'Rewards can be\nredeemed at Rs. $minWithdrawPrizeAmt',
+                                            'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
                                             style: TextStyles.sourceSans.body3
                                                 .colour(
                                                     UiConstants.kTextColor2),
@@ -171,7 +149,7 @@ class Win extends StatelessWidget {
                                         .delegate.appState.getCurrentTabIndex,
                                     currentWinning: currentWinning,
                                     model: model,
-                                    redeemAmount: minWithdrawPrizeAmt,
+                                    redeemAmount: model.minWithdrawPrizeAmt,
                                   ),
                                 ),
                               ],
@@ -275,9 +253,7 @@ class Win extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        height: SizeConfig.padding80 +
-                            SizeConfig.padding80 +
-                            SizeConfig.padding80,
+                        height: SizeConfig.padding80,
                       ),
                     ],
                   ),

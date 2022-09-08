@@ -2,17 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 // class WinnerboardView extends StatelessWidget {
@@ -223,17 +220,15 @@ class WinnerboardView extends StatelessWidget {
                 //2
                 Container(
                   padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
                   margin: EdgeInsets.fromLTRB(
-                      SizeConfig.padding24,
+                      0.0,
                       SizeConfig.screenWidth * 0.15 + SizeConfig.padding32,
-                      SizeConfig.padding24,
+                      0.0,
                       0.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.roundness12)),
                   ),
                   child: Column(
                     children: [
@@ -481,8 +476,6 @@ class WinnerboardView extends StatelessWidget {
                                                       padding: EdgeInsets.only(
                                                         top:
                                                             SizeConfig.padding2,
-                                                        right: SizeConfig
-                                                            .padding10,
                                                       ),
                                                       child: Text('See All',
                                                           style: TextStyles
@@ -490,12 +483,13 @@ class WinnerboardView extends StatelessWidget {
                                                               .body2),
                                                     ),
                                                     SvgPicture.asset(
-                                                      Assets.chevRonRightArrow,
-                                                      height:
-                                                          SizeConfig.padding24,
-                                                      width:
-                                                          SizeConfig.padding24,
-                                                    )
+                                                        Assets
+                                                            .chevRonRightArrow,
+                                                        height: SizeConfig
+                                                            .padding24,
+                                                        width: SizeConfig
+                                                            .padding24,
+                                                        color: Colors.white)
                                                   ],
                                                 ),
                                               )

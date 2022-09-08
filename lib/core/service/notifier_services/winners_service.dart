@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';

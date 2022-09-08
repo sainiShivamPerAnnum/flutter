@@ -310,8 +310,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                 vertical: SizeConfig.padding8,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: UiConstants
-                                                    .kSecondaryBackgroundColor,
+                                                color: Colors.transparent,
                                               ),
                                               child: Column(
                                                 children: [

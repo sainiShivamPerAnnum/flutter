@@ -64,6 +64,17 @@ class WinViewModel extends BaseModel {
 
   int _tabNo = 0;
 
+  String _minWithdrawPrize;
+  String _refUnlock;
+  int _refUnlockAmt;
+  int _minWithdrawPrizeAmt;
+
+  String get minWithdrawPrize => _minWithdrawPrize;
+  String get refUnlock => _refUnlock;
+  int get refUnlockAmt => _refUnlockAmt;
+
+  int get minWithdrawPrizeAmt => _minWithdrawPrizeAmt;
+
   double get tabPosWidthFactor => _tabPosWidthFactor;
   set tabPosWidthFactor(value) {
     this._tabPosWidthFactor = value;
@@ -136,7 +147,18 @@ class WinViewModel extends BaseModel {
     _baseUtil.fetchUserAugmontDetail();
     fetchReferralCode();
     _pageController = PageController(initialPage: 0);
+    fectchBasicConstantValues();
+
     _winnerService.fetchWinners();
+  }
+
+  fectchBasicConstantValues() {
+    _minWithdrawPrize = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
+    _refUnlock = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    _refUnlockAmt = BaseUtil.toInt(_refUnlock);
+    _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
   }
 
   cleanJourneyAssetsFiles() {
