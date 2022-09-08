@@ -5,8 +5,11 @@ class NavBarItemModel {
   final String activeIconImage;
   final String inactiveIconImage;
   final String lottie;
-  final AnimationController controller;
 
-  NavBarItemModel(this.title, this.activeIconImage, this.inactiveIconImage,
-      this.lottie, this.controller);
+  NavBarItemModel(
+    this.title,
+    this.activeIconImage,
+    this.inactiveIconImage,
+    this.lottie,
+  );
 }

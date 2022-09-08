@@ -12,6 +12,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -71,7 +72,8 @@ Future mainInit() async {
   } catch (e) {
     print('Firebase initialisation error: $e');
   }
-  FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
+  FirebaseMessaging.onBackgroundMessage(
+      BackgroundFcmHandler.myBackgroundMessageHandler);
 }
 
 class MyApp extends StatefulWidget {

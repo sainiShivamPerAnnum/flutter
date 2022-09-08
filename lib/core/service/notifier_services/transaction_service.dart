@@ -417,11 +417,8 @@ class TransactionService
       if (newAugQuantity != null && newAugQuantity > 0) {
         _userService.augGoldQuantity = newAugQuantity;
       }
-      //add this to augmontBuyVM
-      int newFlcBalance = depositFcmResponseModel.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
+      _userCoinService.getUserCoinBalance();
+
       // if (AppState.delegate.appState.isTxnLoaderInView == true) {
       //   if (depositFcmResponseModel.gtId != null) {
       //     GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;

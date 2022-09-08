@@ -13,70 +13,20 @@ import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
-class BottomNavBar extends StatefulWidget {
+class BottomNavBar extends StatelessWidget {
   final RootViewModel parentModel;
   BottomNavBar({@required this.parentModel});
 
-  @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
-}
-
-class _BottomNavBarState extends State<BottomNavBar>
-    with TickerProviderStateMixin {
-  AnimationController journeyLottieController,
-      playLottieController,
-      saveLottieController,
-      winLottieController;
-  List<NavBarItemModel> navbarItems;
-  @override
-  void initState() {
-    log("BottomNavbar init called");
-    journeyLottieController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-    playLottieController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-    saveLottieController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-    winLottieController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-    navbarItems = [
-      NavBarItemModel(
-          'Journey',
-          Assets.navJourneyActive,
-          Assets.navJourneyInactive,
-          Assets.navJourneyLottie,
-          journeyLottieController),
-      NavBarItemModel('Play', Assets.navPlayActive, Assets.navPlayInactive,
-          Assets.navPlayLottie, playLottieController),
-      NavBarItemModel('Save', Assets.navSaveActive, Assets.navSaveInactive,
-          Assets.navSaveLottie, saveLottieController),
-      NavBarItemModel('Win', Assets.navWinActive, Assets.navWinInactive,
-          Assets.navWinLottie, winLottieController)
-    ];
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      navbarItems[0].controller.forward();
-    });
-  }
-
-  onNavItemTap(int index, AppState appStateInstance) {
-    if (appStateInstance.getCurrentTabIndex != index) {
-      navbarItems.forEach((element) {
-        element.controller.reset();
-      });
-      widget.parentModel.onItemTapped(index);
-    }
-    navbarItems[index].controller.forward(from: 0.0);
-  }
+  final List<NavBarItemModel> navbarItems = [
+    NavBarItemModel('Journey', Assets.navJourneyActive,
+        Assets.navJourneyInactive, Assets.navJourneyLottie),
+    NavBarItemModel('Play', Assets.navPlayActive, Assets.navPlayInactive,
+        Assets.navPlayLottie),
+    NavBarItemModel('Save', Assets.navSaveActive, Assets.navSaveInactive,
+        Assets.navSaveLottie),
+    NavBarItemModel(
+        'Win', Assets.navWinActive, Assets.navWinInactive, Assets.navWinLottie)
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +36,8 @@ class _BottomNavBarState extends State<BottomNavBar>
         properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
         builder: (context, model, properties) {
           return Positioned(
-            bottom: model.avatarRemoteMlIndex > 2
-                ? 0
-                : -SizeConfig
-                    .navBarHeight, //SizeConfig.pageHorizontalMargins / 2,
+            bottom:
+                model.avatarRemoteMlIndex > 2 ? 0 : -SizeConfig.navBarHeight,
             child: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.navBarHeight,
@@ -103,36 +51,24 @@ class _BottomNavBarState extends State<BottomNavBar>
                   children: List.generate(
                     4,
                     (index) => Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          onNavItemTap(index, superModel);
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.black,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: SizeConfig.navBarHeight * 0.6,
-                                // color: Colors.green,
-                                width: SizeConfig.navBarHeight * 0.6,
-                                child: Lottie.asset(navbarItems[index].lottie,
-                                    fit: BoxFit.contain,
-                                    controller: navbarItems[index].controller,
-                                    repeat: false),
+                      child: superModel.getCurrentTabIndex == index
+                          ? NavBarIcon(
+                              animate: true,
+                              item: navbarItems[index],
+                              style: TextStyles.rajdhaniSB
+                                  .colour(UiConstants.kTextColor),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                parentModel.onItemTapped(index);
+                              },
+                              child: NavBarIcon(
+                                animate: false,
+                                item: navbarItems[index],
+                                style: TextStyles.rajdhaniSB
+                                    .colour(UiConstants.kTextColor2),
                               ),
-                              Text(navbarItems[index].title,
-                                  style: superModel.getCurrentTabIndex == index
-                                      ? TextStyles.rajdhaniSB
-                                          .colour(UiConstants.kTextColor)
-                                      : TextStyles.rajdhaniSB
-                                          .colour(UiConstants.kTextColor2))
-                            ],
-                          ),
-                        ),
-                      ),
+                            ),
                     ),
                   ),
                 ),
@@ -140,6 +76,37 @@ class _BottomNavBarState extends State<BottomNavBar>
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class NavBarIcon extends StatelessWidget {
+  final bool animate;
+  final NavBarItemModel item;
+  final TextStyle style;
+  NavBarIcon(
+      {@required this.animate, @required this.item, @required this.style});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: SizeConfig.navBarHeight * 0.6,
+            width: SizeConfig.navBarHeight * 0.6,
+            child: Lottie.asset(item.lottie,
+                fit: BoxFit.contain, animate: animate, repeat: false),
+          ),
+          Text(
+            item.title,
+            style: style,
+          )
+        ],
       ),
     );
   }

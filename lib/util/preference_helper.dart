@@ -81,4 +81,8 @@ class PreferenceHelper {
   static void clear() {
     _prefs.clear();
   }
+
+  static void reload() {
+    _prefs.reload();
+  }
 }

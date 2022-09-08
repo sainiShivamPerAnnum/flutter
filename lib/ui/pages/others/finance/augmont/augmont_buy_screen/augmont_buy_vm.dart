@@ -517,6 +517,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
           TransactionState.ongoingTransaction) {
         _txnService.currentTransactionState = TransactionState.idleTrasantion;
       }
+      AppState.unblockNavigation();
       BaseUtil.showNegativeAlert(
         'Transaction failed',
         'Your transaction was unsuccessful. Please try again',
