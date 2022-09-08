@@ -402,82 +402,89 @@ class UPIAppsBottomSheet extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'Please select an UPI App',
-                  style: TextStyles.body1.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: GridView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: model.appMetaList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        BaseUtil.openDialog(
-                            addToScreenStack: true,
-                            isBarrierDismissable: true,
-                            content: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Dialog(
-                                child: Container(
-                                    height: SizeConfig.screenWidth * 0.2,
-                                    width: SizeConfig.screenWidth,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 20),
-                                      child: Row(children: [
-                                        Text(
-                                          'Processing',
-                                          style: TextStyles.title5.bold,
-                                        ),
-                                        Spacer(),
-                                        CircularProgressIndicator()
-                                      ]),
-                                    )),
-                              ),
-                            ));
-                        model.upiApplication =
-                            model.appMetaList[index].upiApplication;
-                        model.processTransaction(
-                            model.appMetaList[index].upiApplication.appName);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          child: Center(
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child:
-                                        model.appMetaList[index].iconImage(40)),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  model.appMetaList[index].upiApplication
-                                      .appName,
-                                  style: TextStyles.body4,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+              model.appMetaList.length > 0
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        'Please select an UPI App',
+                        style: TextStyles.body1.bold,
                       ),
-                    );
-                  },
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                ),
-              ),
+                    )
+                  : SizedBox(),
+              SizedBox(height: 20),
+              model.appMetaList.length <= 0
+                  ? Center(
+                      child: Text('Please Install UPI applications to proceed',
+                          style: TextStyles.body1))
+                  : Expanded(
+                      child: GridView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: model.appMetaList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              BaseUtil.openDialog(
+                                  addToScreenStack: true,
+                                  isBarrierDismissable: true,
+                                  content: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Dialog(
+                                      child: Container(
+                                          height: SizeConfig.screenWidth * 0.2,
+                                          width: SizeConfig.screenWidth,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20),
+                                            child: Row(children: [
+                                              Text(
+                                                'Processing',
+                                                style: TextStyles.title5.bold,
+                                              ),
+                                              Spacer(),
+                                              CircularProgressIndicator()
+                                            ]),
+                                          )),
+                                    ),
+                                  ));
+                              model.upiApplication =
+                                  model.appMetaList[index].upiApplication;
+                              model.processTransaction(model
+                                  .appMetaList[index].upiApplication.appName);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Container(
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: model.appMetaList[index]
+                                              .iconImage(40)),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        model.appMetaList[index].upiApplication
+                                            .appName,
+                                        style: TextStyles.body4,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                      ),
+                    ),
             ],
           )),
     );
