@@ -410,10 +410,13 @@ class TransactionService
       }
 
       //add this to augmontBuyVM
+      _userCoinService.getUserCoinBalance();
       double newFlcBalance = amount ?? 0;
       if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance.toInt());
+        _userCoinService.setFlcBalance(
+            (_userCoinService.flcBalance + newFlcBalance).toInt());
       }
+      print(gtId);
       if (AppState.delegate.appState.isTxnLoaderInView == true) {
         if (gtId != null) {
           GoldenTicketService.goldenTicketId = gtId;
@@ -425,18 +428,18 @@ class TransactionService
                 amount: amount,
                 title: "You have successfully saved ₹${getAmount(amount)}",
                 source: GTSOURCE.deposit,
-                showAutoSavePrompt: true);
+                showAutoSavePrompt: false);
           } else {
             AppState.delegate.appState.isTxnLoaderInView = false;
             showTxnSuccessScreen(
                 amount, "You have successfully saved ₹${getAmount(amount)}",
-                showAutoSavePrompt: true);
+                showAutoSavePrompt: false);
           }
         } else {
           AppState.delegate.appState.isTxnLoaderInView = false;
           showTxnSuccessScreen(
               amount, "You have successfully saved ₹${getAmount(amount)}",
-              showAutoSavePrompt: true);
+              showAutoSavePrompt: false);
         }
       }
       updateTransactions();

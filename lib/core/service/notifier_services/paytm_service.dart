@@ -518,10 +518,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           AppState.delegate.appState.isTxnLoaderInView = false;
           if (isValidated) {
             AppState.delegate.appState.txnTimer.cancel();
+            _txnResult = await validateTxnResult(orderId);
             if (_txnResult.model.data.isUpdating) {
-              await _txnService.transactionResponseUpdate();
-            }
-            if (_txnResult.code != 200) {
+              AppState.delegate.appState.isTxnLoaderInView = false;
+              AppState.delegate.appState.txnTimer.cancel();
               BaseUtil.openDialog(
                 addToScreenStack: true,
                 hapticVibrate: true,
@@ -534,6 +534,18 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
                 ),
               );
             }
+            if (!_txnResult.model.data.isUpdating) {
+              AppState.delegate.appState.txnTimer.cancel();
+              _txnService.transactionResponseUpdate(
+                  amount: amount, gtId: orderId);
+            }
+          } else {
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            AppState.delegate.appState.txnTimer.cancel();
+            BaseUtil.showNegativeAlert(
+              'Transaction failed',
+              'Your transaction was unsuccessful. Please try again',
+            );
           }
         });
       }
@@ -554,7 +566,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             if (!_txnResult.model.data.isUpdating) {
               timer.cancel();
               AppState.delegate.appState.txnTimer.cancel();
-              AppState.delegate.appState.isTxnLoaderInView = false;
               return _txnService.transactionResponseUpdate(
                   amount: amount, gtId: orderId);
             }
@@ -564,10 +575,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           AppState.delegate.appState.txnTimer =
               Timer(Duration(seconds: 30), () async {
             bool isValidated = await validateTransaction(orderId);
-            AppState.delegate.appState.isTxnLoaderInView = false;
             if (isValidated) {
               _txnResult = await validateTxnResult(orderId);
               if (_txnResult.model.data.isUpdating) {
+                AppState.delegate.appState.isTxnLoaderInView = false;
                 AppState.delegate.appState.txnTimer.cancel();
                 _paymentStatusTimer.cancel();
                 BaseUtil.openDialog(
@@ -589,6 +600,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
                     amount: amount, gtId: orderId);
               }
             } else {
+              AppState.delegate.appState.isTxnLoaderInView = false;
               AppState.delegate.appState.txnTimer.cancel();
               _paymentStatusTimer.cancel();
               BaseUtil.showNegativeAlert(
