@@ -447,7 +447,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     return true;
   }
 
-  initiateBuy() async {
+  initiateGatewayTxn() async {
     if (status == STATUS_UNAVAILABLE) return;
     if (status == STATUS_REGISTER) {
       _onboardUserManually();
@@ -512,19 +512,21 @@ class AugmontGoldBuyViewModel extends BaseModel {
 
     bool isRzpTxn =
         BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
-            'rzp';
-    print(isRzpTxn);
+            'RZP-PG';
     var _status;
 
-    if (isRzpTxn) {
+    if (BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
+        'RZP-PG') {
       await _razorpayOpsModel.initiateRazorpayTxn(
           amount: buyAmount,
           augmontRates: goldRates,
           couponCode: appliedCoupon?.code ?? "",
           email: _userService.baseUser.email,
           mobile: _userService.baseUser.mobile);
-    } else {
-      _status = await _paytmService.initiateTransactions(
+    }
+    if (BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
+        'PAYTM-PG') {
+      _status = await _paytmService.initiatePaytmPGTransaction(
           amount: buyAmount,
           augmontRates: goldRates,
           couponCode: appliedCoupon?.code ?? "",

@@ -184,6 +184,12 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _ACTIVE_PG = {'active_pg': 'paytm'};
 
+  static const Map<String, String> _ACTIVE_PG_ANDROID = {
+    'active_pg_android': 'PAYTM'
+  };
+
+  static const Map<String, String> _ACTIVE_PG_IOS = {'active_pg_ios': 'PAYTM'};
+
   static const Map<String, String> _ENABLED_PSP_APPS = {
     'enabled_psp_apps': 'EGP'
   };
@@ -243,7 +249,9 @@ class BaseRemoteConfig {
     ..._NEW_USER_GAMES_ORDER,
     ..._CACHE_INVALIDATION,
     ..._ACTIVE_PG,
-    ..._ENABLED_PSP_APPS
+    ..._ENABLED_PSP_APPS,
+    ..._ACTIVE_PG_ANDROID,
+    ..._ACTIVE_PG_IOS
   };
 
   static Future<bool> init() async {
@@ -403,6 +411,10 @@ class BaseRemoteConfig {
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
 
   static String get ACTIVE_PG => _ACTIVE_PG.keys.first;
+
+  static String get ACTIVE_PG_ANDROID => _ACTIVE_PG_ANDROID.keys.first;
+
+  static String get ACTIVE_PG_IOS => _ACTIVE_PG_IOS.keys.first;
 
   static String get ENABLED_PSP_APPS => _ENABLED_PSP_APPS.keys.first;
 

@@ -200,7 +200,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
-  Future<bool> initiateTransactions(
+  Future<bool> initiatePaytmPGTransaction(
       {double amount,
       AugmontRates augmontRates,
       String couponCode,
@@ -211,12 +211,12 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     bool isRzpTxn =
         BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ACTIVE_PG) ==
-            'rzp';
+            'RZP-PG';
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,
-      "aPaymode": isRzpTxn ? 'RZP' : 'PYTM',
+      "aPaymode": 'PYTM',
       "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
           augmontRates.goldBuyPrice),

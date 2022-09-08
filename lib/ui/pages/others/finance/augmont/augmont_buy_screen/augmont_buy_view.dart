@@ -302,12 +302,12 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
                   FocusScope.of(context).unfocus();
                   if (BaseRemoteConfig.remoteConfig
                           .getString(BaseRemoteConfig.ACTIVE_PG) ==
-                      'rzp') {
-                    widget.model.initiateBuy();
+                      'RZP-PG') {
+                    widget.model.initiateGatewayTxn();
                   }
                   if (BaseRemoteConfig.remoteConfig
                           .getString(BaseRemoteConfig.ACTIVE_PG) ==
-                      'paytm') {
+                      'PAYTM') {
                     bool isAllowed = await widget.model.initChecks();
                     if (isAllowed) {
                       BaseUtil.openModalBottomSheet(
