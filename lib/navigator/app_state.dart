@@ -107,6 +107,14 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  static blockNavgiation() {
+    screenStack.add(ScreenItem.loader);
+  }
+
+  static unblockNavigation() {
+    if (screenStack.last == ScreenItem.loader) screenStack.removeLast();
+  }
+
 // GETTERS AND SETTERS
 
   int get getCurrentTabIndex => _rootIndex ?? 0;

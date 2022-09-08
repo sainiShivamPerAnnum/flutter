@@ -1,9 +1,7 @@
 import 'dart:developer';
-import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/service/journey_service.dart';
+
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -13,17 +11,13 @@ import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
+import 'package:felloapp/ui/widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
 final pages = [JourneyView(), Play(), Save(), Win()];
@@ -84,7 +78,7 @@ class Root extends StatelessWidget {
                         : SizedBox(),
               ),
               BottomNavBar(
-                model: model,
+                parentModel: model,
               ),
               BaseAnimation(),
               if (FlavorConfig.isDevelopment())
@@ -110,62 +104,5 @@ class Root extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class BottomNavBar extends StatelessWidget {
-  final RootViewModel model;
-  BottomNavBar({@required this.model});
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S();
-    return Consumer<AppState>(
-        builder: (ctx, m, child) =>
-            PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-              properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
-              builder: (context, m, properties) {
-                return Positioned(
-                  bottom: m.avatarRemoteMlIndex > 2
-                      ? 0
-                      : -SizeConfig
-                          .navBarHeight, //SizeConfig.pageHorizontalMargins / 2,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.navBarHeight,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                    ),
-                    child: NavBar(
-                      itemTapped: (int index) => model.onItemTapped(index),
-                      currentIndex:
-                          AppState.delegate.appState.getCurrentTabIndex,
-                      items: [
-                        NavBarItemData(
-                          locale.navBarJourney,
-                          Assets.navJourneyActive,
-                          Assets.navJourneyInactive,
-                        ),
-                        NavBarItemData(
-                          locale.navBarPlay,
-                          Assets.navPlayActive,
-                          Assets.navPlayInactive,
-                        ),
-                        NavBarItemData(
-                          locale.navBarSave,
-                          Assets.navSaveActive,
-                          Assets.navSaveInactive,
-                        ),
-                        NavBarItemData(
-                          locale.navBarWin,
-                          Assets.navWinActive,
-                          Assets.navWinInactive,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ));
   }
 }

@@ -115,14 +115,14 @@ class LauncherViewModel extends BaseModel {
       // test
       // await new CacheService().invalidateAll();
       if (userService.isUserOnborded) await _userCoinService.init();
-      if (userService.isUserOnborded)
-        await Future.wait(
-          [
-            // Note: BaseUtil Alredy in Sync
-            _baseUtil.init(),
-            _fcmListener.setupFcm(),
-          ],
-        );
+      // if (userService.isUserOnborded)
+      await Future.wait(
+        [
+          // Note: BaseUtil Alredy in Sync
+          _baseUtil.init(),
+          _fcmListener.setupFcm(),
+        ],
+      );
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
