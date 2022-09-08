@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:app_install_date/utils.dart';
@@ -6,31 +7,39 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/txn_result_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -49,8 +58,7 @@ const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _paytmRepo = locator<PaytmRepository>();
-  final _rzpModel = locator<RazorpayModel>();
-  final _userService = locator<UserService>();
+  final _txnService = locator<TransactionService>();
   final _getterRepo = locator<GetterRepository>();
 
   bool _isFirstTime = true;
@@ -111,6 +119,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   String postPrefix;
   bool isStaging;
   String callbackUrl;
+  String orderId;
 
   ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
 
@@ -412,7 +421,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       String paymentMode,
       AugmontRates augmontRates,
       String couponCode,
-      UpiApplication upiApplication) async {
+      UpiApplication upiApplication,
+      Function() successMethod) async {
     if (augmontRates == null) return false;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
@@ -440,6 +450,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
     print(paytmSubscriptionApiResponse.model.data.orderId);
 
+    orderId = paytmSubscriptionModel.data.orderId;
+
     final ApiResponse<ProcessTransactionModel> processTransactionApiResponse =
         await _paytmRepo.processPaytmTransaction(
             tempToken: paytmSubscriptionModel.data.temptoken,
@@ -448,7 +460,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             orderId: paytmSubscriptionModel.data.orderId,
             paymentMode: paymentMode);
 
-    print(processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink);
+    String url =
+        processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink +
+            '&tn=FelloGold';
+
+    print(url);
 
     if (processTransactionApiResponse.code == 400) {
       _logger.e(processTransactionApiResponse.errorMessage);
@@ -456,14 +472,21 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     } else {
       await doUpiTransation(
           url: processTransactionApiResponse
-              .model.data.body.deepLinkInfo.deepLink,
+                  .model.data.body.deepLinkInfo.deepLink +
+              "tn=FelloGold",
+          amount: amount,
           upiApplication: upiApplication,
-          orderId: paytmSubscriptionModel.data.orderId);
+          orderId: paytmSubscriptionModel.data.orderId,
+          successMethod: successMethod);
     }
   }
 
   Future doUpiTransation(
-      {String url, String orderId, UpiApplication upiApplication}) async {
+      {String url,
+      double amount,
+      String orderId,
+      UpiApplication upiApplication,
+      Function() successMethod}) async {
     if (PlatformUtils.isAndroid) {
       UpiTransactionResponse response;
       AppState.backButtonDispatcher.didPopRoute();
@@ -490,46 +513,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         AppState.delegate.appState.txnTimer =
             Timer(Duration(seconds: 30), () async {
           bool isValidated = await validateTransaction(orderId);
+          ApiResponse<TxnResultModel> _txnResult =
+              await validateTxnResult(orderId);
           AppState.delegate.appState.isTxnLoaderInView = false;
           if (isValidated) {
             AppState.delegate.appState.txnTimer.cancel();
-            BaseUtil.openDialog(
-              addToScreenStack: true,
-              hapticVibrate: true,
-              isBarrierDismissable: false,
-              content: PendingDialog(
-                title: "We're still processing!",
-                subtitle:
-                    "Your transaction is taking longer than usual. We'll get back to you in ",
-                duration: '15 minutes',
-              ),
-            );
-          }
-        });
-      }
-    }
-
-    if (PlatformUtils.isIOS) {
-      launchUrl(Uri.parse(url)).then((value) async {
-        AppState.backButtonDispatcher.didPopRoute();
-        AppState.delegate.appState.isTxnLoaderInView = true;
-        Timer _paymentStatusTimer =
-            Timer.periodic(Duration(seconds: 5), (timer) async {
-          bool isValidated = await validateTransaction(orderId);
-          if (isValidated) {
-            timer.cancel();
-          }
-        });
-        if (WidgetsBinding.instance.lifecycleState ==
-            AppLifecycleState.resumed) {
-          AppState.delegate.appState.txnTimer =
-              Timer(Duration(seconds: 30), () async {
-            bool isValidated = await validateTransaction(orderId);
-            print(isValidated);
-            AppState.delegate.appState.isTxnLoaderInView = false;
-            if (isValidated) {
-              AppState.delegate.appState.txnTimer.cancel();
-              _paymentStatusTimer.cancel();
+            if (_txnResult.model.data.isUpdating) {
+              await _txnService.transactionResponseUpdate();
+            }
+            if (_txnResult.code != 200) {
               BaseUtil.openDialog(
                 addToScreenStack: true,
                 hapticVibrate: true,
@@ -541,6 +533,61 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
                   duration: '15 minutes',
                 ),
               );
+            }
+          }
+        });
+      }
+    }
+
+    if (PlatformUtils.isIOS) {
+      launchUrl(Uri.parse(url)).then((value) async {
+        ApiResponse<TxnResultModel> _txnResult;
+        AppState.backButtonDispatcher.didPopRoute();
+        bool isResumed =
+            WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+        AppState.delegate.appState.isTxnLoaderInView = true;
+        Timer _paymentStatusTimer =
+            Timer.periodic(Duration(seconds: 5), (timer) async {
+          bool isValidated = await validateTransaction(orderId);
+          if (isValidated) {
+            _txnResult = await validateTxnResult(orderId);
+            if (!_txnResult.model.data.isUpdating) {
+              timer.cancel();
+              AppState.delegate.appState.txnTimer.cancel();
+              AppState.delegate.appState.isTxnLoaderInView = false;
+              return _txnService.transactionResponseUpdate(
+                  amount: amount, gtId: orderId);
+            }
+          }
+        });
+        if (isResumed) {
+          AppState.delegate.appState.txnTimer =
+              Timer(Duration(seconds: 30), () async {
+            bool isValidated = await validateTransaction(orderId);
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            if (isValidated) {
+              _txnResult = await validateTxnResult(orderId);
+              if (_txnResult.model.data.isUpdating) {
+                AppState.delegate.appState.txnTimer.cancel();
+                _paymentStatusTimer.cancel();
+                BaseUtil.openDialog(
+                  addToScreenStack: true,
+                  hapticVibrate: true,
+                  isBarrierDismissable: false,
+                  content: PendingDialog(
+                    title: "We're still processing!",
+                    subtitle:
+                        "Your transaction is taking longer than usual. We'll get back to you in ",
+                    duration: '15 minutes',
+                  ),
+                );
+              }
+              if (!_txnResult.model.data.isUpdating) {
+                AppState.delegate.appState.txnTimer.cancel();
+                _paymentStatusTimer.cancel();
+                _txnService.transactionResponseUpdate(
+                    amount: amount, gtId: orderId);
+              }
             } else {
               AppState.delegate.appState.txnTimer.cancel();
               _paymentStatusTimer.cancel();
@@ -552,6 +599,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           });
         }
       });
+    }
+  }
+
+  Future<ApiResponse> validateTxnResult(String orderId) async {
+    try {
+      ApiResponse<TxnResultModel> txnResultReponse =
+          await _paytmRepo.fetchTxnResultDetails(orderId);
+      return txnResultReponse;
+    } catch (e) {
+      return ApiResponse.withError("Couldn't verify txn details", 400);
     }
   }
 

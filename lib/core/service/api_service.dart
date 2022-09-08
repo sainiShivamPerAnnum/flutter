@@ -102,7 +102,7 @@ class APIService implements API {
       String cBaseUrl,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
-      bool isRzpTxn}) async {
+      String pgGateway}) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     await metric.start();
@@ -127,7 +127,7 @@ class APIService implements API {
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
           'uid': userService?.firebaseUser?.uid,
-          'x-is-razorpay': isRzpTxn.toString()
+          'pg-mode': pgGateway
         },
       );
       logger.d("response from $finalPath");
@@ -203,7 +203,7 @@ class APIService implements API {
       String cBaseUrl,
       String token,
       bool isAuthTokenAvailable = true,
-      bool isRzpTxn,
+      String pgGateway,
       bool isAwsSubUrl = false,
       bool isAwsTxnUrl = false,
       bool isAwsDeviceUrl = false}) async {
@@ -218,7 +218,7 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid,
-        'x-is-razorpay': isRzpTxn.toString()
+        'pg-mode': pgGateway
       };
       logger.d(_headers);
       if (token != null)

@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/txn_result_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -42,7 +43,7 @@ class PaytmRepository {
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postPaymentData(
           ApiPath.kCreatePaytmTransaction,
-          isRzpTxn: isRzpTxn,
+          pgGateway: isRzpTxn ? 'razorpay' : 'paytm',
           body: _body,
           token: _token,
           isAwsTxnUrl: true);
@@ -100,7 +101,7 @@ class PaytmRepository {
       final _queryParams = {"orderId": orderId, "uid": _uid};
       final response = await APIService.instance.getPaymentData(
           ApiPath.kCreatePaytmTransaction,
-          isRzpTxn: isRzpTxn,
+          pgGateway: isRzpTxn ? 'razorpay' : 'paytm',
           token: _token,
           queryParams: _queryParams,
           isAwsTxnUrl: true);
@@ -167,6 +168,28 @@ class PaytmRepository {
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError("Unable to validate VPA", 400);
+    }
+  }
+
+  Future<ApiResponse> fetchTxnResultDetails(String orderId) async {
+    try {
+      final String _uid = _userService.baseUser.uid;
+      final _token = await _getBearerToken();
+      final _queryParams = {
+        "orderId": orderId,
+      };
+      final response = await APIService.instance.getData(
+        ApiPath.fecthLatestTxnDetails(_uid),
+        token: _token,
+        queryParams: _queryParams,
+        isAwsTxnUrl: true,
+      );
+
+      final _responseModel = TxnResultModel.fromJson(response);
+      return ApiResponse<TxnResultModel>(model: _responseModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch txn result", 400);
     }
   }
 

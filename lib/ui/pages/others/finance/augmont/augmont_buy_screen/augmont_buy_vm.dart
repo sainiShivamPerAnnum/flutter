@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
+import 'package:felloapp/core/model/paytm_models/txn_result_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -59,15 +60,11 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final DBModel _dbModel = locator<DBModel>();
   final AugmontModel _augmontModel = locator<AugmontModel>();
   final UserService _userService = locator<UserService>();
-  final TransactionService _txnService = locator<TransactionService>();
-  final GoldenTicketService _gtService = GoldenTicketService();
-  final _internalOpsService = locator<InternalOpsService>();
   final _razorpayOpsModel = locator<RazorpayModel>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
-  final _userCoinService = locator<UserCoinService>();
   List<ApplicationMeta> appMetaList = [];
   UpiApplication _upiApplication;
 
@@ -233,9 +230,22 @@ class AugmontGoldBuyViewModel extends BaseModel {
     List<ApplicationMeta> allUpiApps = await UpiPay.getInstalledUpiApplications(
         statusType: UpiApplicationDiscoveryAppStatusType.all);
     allUpiApps.forEach((element) {
-      if (element.upiApplication.appName == "Paytm" ||
-          element.upiApplication.appName == "Google Pay" ||
-          element.upiApplication.appName == "PhonePe") {
+      if (element.upiApplication.appName == "Paytm" &&
+          BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
+              .contains('P')) {
+        appMetaList.add(element);
+      }
+      if (element.upiApplication.appName == "PhonePe" &&
+          BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
+              .contains('E')) {
+        appMetaList.add(element);
+      }
+      if (element.upiApplication.appName == "Google Pay" &&
+          BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
+              .contains('G')) {
         appMetaList.add(element);
       }
     });
@@ -337,89 +347,6 @@ class AugmontGoldBuyViewModel extends BaseModel {
     isGoldRateFetching = false;
   }
 
-  // BUY LOGIC
-  fcmTransactionResponseUpdate(fcmDataPayload) async {
-    //Stop loader if loading.
-    _logger.i("Updating response value. $fcmDataPayload");
-    // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
-    AppState.delegate.appState.txnTimer.cancel();
-    _logger.d("timer cancelled");
-
-    try {
-      final DepositFcmResponseModel depositFcmResponseModel =
-          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
-
-      //Handle failed condition here.
-      if (!depositFcmResponseModel.status) {
-        AppState.delegate.appState.isTxnLoaderInView = false;
-        BaseUtil.showNegativeAlert("Transaction failed",
-            "Your gold purchase did not complete successfully");
-        return;
-      }
-      //handle multiple fcm command for same transaction
-      if (depositFcmResponseModel.gtId != null) {
-        print(
-            "Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
-        if (GoldenTicketService.lastGoldenTicketId != null) {
-          if (GoldenTicketService.lastGoldenTicketId ==
-              depositFcmResponseModel.gtId) {
-            return;
-          } else {
-            GoldenTicketService.lastGoldenTicketId =
-                depositFcmResponseModel.gtId;
-          }
-        } else {
-          GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
-        }
-      }
-
-      double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
-      }
-      double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity > 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      //add this to augmontBuyVM
-      int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
-      if (AppState.delegate.appState.isTxnLoaderInView == true) {
-        if (depositFcmResponseModel.gtId != null) {
-          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-            Future.delayed(Duration(milliseconds: 220), () {
-              AppState.delegate.appState.isTxnLoaderInView = false;
-            });
-            _gtService.showInstantGoldenTicketView(
-                amount: depositFcmResponseModel.amount,
-                title:
-                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                source: GTSOURCE.deposit,
-                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
-          } else {
-            AppState.delegate.appState.isTxnLoaderInView = false;
-            showTxnSuccessScreen(depositFcmResponseModel.amount,
-                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
-          }
-        } else {
-          AppState.delegate.appState.isTxnLoaderInView = false;
-          showTxnSuccessScreen(depositFcmResponseModel.amount,
-              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-              showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
-        }
-      }
-      _txnService.updateTransactions();
-    } catch (e) {
-      _logger.e(e);
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.DepositPayloadError, e);
-    }
-  }
-
   processTransaction(String pspApp) async {
     setState(ViewState.Idle);
     isGoldBuyInProgress = true;
@@ -443,9 +370,18 @@ class AugmontGoldBuyViewModel extends BaseModel {
           'UPI_INTENT',
           goldRates,
           appliedCoupon?.code ?? "",
-          _upiApplication);
+          _upiApplication, () async {
+        ApiResponse<TxnResultModel> _txnResult =
+            await _paytmService.validateTxnResult(_paytmService.orderId);
+        print(_txnResult.model.data.gt);
+        if (_txnResult.code == 200) {
+          // transactionResponseUpdate(
+          //     amount: buyAmount, gtId: _paytmService.orderId);
+        }
+      });
 
       resetBuyOptions();
+      AppState.backButtonDispatcher.didPopRoute();
       setState(ViewState.Idle);
     } catch (e) {
       print(e);

@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -11,13 +12,34 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 // import 'package:upi_pay/upi_pay.dart';
 
-class AugmontBuyCard extends StatelessWidget {
+class AugmontBuyCard extends StatefulWidget {
   final AugmontGoldBuyViewModel model;
 
   AugmontBuyCard({this.model, Key key}) : super(key: key);
+
+  @override
+  State<AugmontBuyCard> createState() => _AugmontBuyCardState();
+}
+
+class _AugmontBuyCardState extends State<AugmontBuyCard>
+    with WidgetsBindingObserver {
+  List<String> events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    events.add(state.toString());
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -36,7 +58,8 @@ class AugmontBuyCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (model.buyNotice != null && model.buyNotice.isNotEmpty)
+          if (widget.model.buyNotice != null &&
+              widget.model.buyNotice.isNotEmpty)
             Container(
               margin: EdgeInsets.only(bottom: SizeConfig.padding16),
               decoration: BoxDecoration(
@@ -46,7 +69,7 @@ class AugmontBuyCard extends StatelessWidget {
               width: SizeConfig.screenWidth,
               padding: EdgeInsets.all(SizeConfig.padding16),
               child: Text(
-                model.buyNotice,
+                widget.model.buyNotice,
                 textAlign: TextAlign.center,
                 style: TextStyles.body3.light,
               ),
@@ -75,11 +98,11 @@ class AugmontBuyCard extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding24),
                 Expanded(
                   child: TextField(
-                    enabled: !model.isGoldBuyInProgress &&
-                        !model.couponApplyInProgress,
-                    focusNode: model.buyFieldNode,
+                    enabled: !widget.model.isGoldBuyInProgress &&
+                        !widget.model.couponApplyInProgress,
+                    focusNode: widget.model.buyFieldNode,
                     enableInteractiveSelection: false,
-                    controller: model.goldAmountController,
+                    controller: widget.model.goldAmountController,
                     cursorWidth: 1,
                     keyboardType: TextInputType.numberWithOptions(
                         signed: true, decimal: true),
@@ -88,7 +111,7 @@ class AugmontBuyCard extends StatelessWidget {
                       FilteringTextInputFormatter.deny(RegExp(r'^0+(?!$)')),
                     ],
                     onChanged: (val) {
-                      model.onBuyValueChanged(val);
+                      widget.model.onBuyValueChanged(val);
                     },
                     decoration: InputDecoration(
                       prefix: Text("₹ ", style: TextStyles.body2.bold),
@@ -121,7 +144,7 @@ class AugmontBuyCard extends StatelessWidget {
                       SizedBox(height: SizeConfig.padding4 / 2),
                       FittedBox(
                         child: Text(
-                          "${model.goldAmountInGrams.toStringAsFixed(4)} gm",
+                          "${widget.model.goldAmountInGrams.toStringAsFixed(4)} gm",
                           style: TextStyles.body2.bold,
                         ),
                       ),
@@ -131,7 +154,7 @@ class AugmontBuyCard extends StatelessWidget {
               ],
             ),
           ),
-          if (model.showMaxCapText)
+          if (widget.model.showMaxCapText)
             Padding(
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
               child: Text(
@@ -139,7 +162,7 @@ class AugmontBuyCard extends StatelessWidget {
                 style: TextStyles.body4.bold.colour(UiConstants.primaryColor),
               ),
             ),
-          if (model.showMinCapText)
+          if (widget.model.showMinCapText)
             Padding(
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
               child: Text(
@@ -153,36 +176,37 @@ class AugmontBuyCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              model.amoutChip(0),
-              model.amoutChip(1),
-              model.amoutChip(2),
-              model.amoutChip(3),
+              widget.model.amoutChip(0),
+              widget.model.amoutChip(1),
+              widget.model.amoutChip(2),
+              widget.model.amoutChip(3),
             ],
           ),
           SizedBox(height: SizeConfig.padding12),
-          if (model.showCoupons)
+          if (widget.model.showCoupons)
             Container(
               margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-              child: model.couponApplyInProgress
+              child: widget.model.couponApplyInProgress
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.felloBlue,
                     )
-                  : (model.appliedCoupon != null
+                  : (widget.model.appliedCoupon != null
                       ? CouponItem(
-                          model: model,
-                          couponCode: model.appliedCoupon.code,
-                          desc: model.appliedCoupon.desc,
+                          model: widget.model,
+                          couponCode: widget.model.appliedCoupon.code,
+                          desc: widget.model.appliedCoupon.desc,
                           onTap: () {},
                           trailingWidget: InkWell(
-                            onTap: () => model.appliedCoupon = null,
+                            onTap: () => widget.model.appliedCoupon = null,
                             child: Icon(Icons.cancel,
                                 color: Colors.grey, size: SizeConfig.iconSize1),
                           ),
                         )
                       : Container(
                           child: InkWell(
-                              onTap: () => model.showOfferModal(model),
+                              onTap: () =>
+                                  widget.model.showOfferModal(widget.model),
                               child: RichText(
                                 text: TextSpan(
                                   children: [
@@ -202,7 +226,7 @@ class AugmontBuyCard extends StatelessWidget {
                         )),
             ),
           SizedBox(height: SizeConfig.padding12),
-          if (model.augOnbRegInProgress)
+          if (widget.model.augOnbRegInProgress)
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -219,9 +243,9 @@ class AugmontBuyCard extends StatelessWidget {
                 ),
               ),
             ),
-          if (model.augRegFailed &&
-              !model.augOnbRegInProgress &&
-              model.augmontObjectSecondFetchDone)
+          if (widget.model.augRegFailed &&
+              !widget.model.augOnbRegInProgress &&
+              widget.model.augmontObjectSecondFetchDone)
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -244,7 +268,7 @@ class AugmontBuyCard extends StatelessWidget {
                       recognizer: new TapGestureRecognizer()
                         ..onTap = () {
                           Haptic.vibrate();
-                          model.onboardUser();
+                          widget.model.onboardUser();
                         },
                     ),
                   ],
@@ -258,31 +282,33 @@ class AugmontBuyCard extends StatelessWidget {
                   // ),
                   ),
             ),
-          if (!model.augOnbRegInProgress && !model.augRegFailed)
+          if (!widget.model.augOnbRegInProgress && !widget.model.augRegFailed)
             FelloButtonLg(
-              child: model.isGoldBuyInProgress
+              child: widget.model.isGoldBuyInProgress
                   ? SpinKitThreeBounce(
                       color: Colors.white,
                       size: 20,
                     )
                   : Text(
-                      model.status == 2
+                      widget.model.status == 2
                           ? "BUY"
-                          : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
+                          : (widget.model.status == 0
+                              ? "UNAVAILABLE"
+                              : "REGISTER"),
                       style: TextStyles.body2.colour(Colors.white).bold,
                     ),
               onPressed: () async {
-                if (!model.isGoldBuyInProgress) {
+                if (!widget.model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
                   if (BaseRemoteConfig.remoteConfig
                           .getString(BaseRemoteConfig.ACTIVE_PG) ==
                       'rzp') {
-                    model.initiateBuy();
+                    widget.model.initiateBuy();
                   }
                   if (BaseRemoteConfig.remoteConfig
                           .getString(BaseRemoteConfig.ACTIVE_PG) ==
                       'paytm') {
-                    bool isAllowed = await model.initChecks();
+                    bool isAllowed = await widget.model.initChecks();
                     if (isAllowed) {
                       BaseUtil.openModalBottomSheet(
                           addToScreenStack: true,
@@ -293,7 +319,7 @@ class AugmontBuyCard extends StatelessWidget {
                               topRight:
                                   Radius.circular(SizeConfig.roundness12)),
                           content: UPIAppsBottomSheet(
-                            model: model,
+                            model: widget.model,
                           ));
                     }
                   }
@@ -332,14 +358,9 @@ class UPIAppsBottomSheet extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: GestureDetector(
-                  onTap: () {
-                    // model.processTransaction('Paytm');
-                  },
-                  child: Text(
-                    'Please select an UPI App',
-                    style: TextStyles.body1.bold,
-                  ),
+                child: Text(
+                  'Please select an UPI App',
+                  style: TextStyles.body1.bold,
                 ),
               ),
               SizedBox(height: 20),
@@ -350,7 +371,33 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        CircularProgressIndicator();
+                        BaseUtil.openDialog(
+                            addToScreenStack: true,
+                            isBarrierDismissable: true,
+                            content: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Dialog(
+                                child: Container(
+                                    height: SizeConfig.screenWidth * 0.2,
+                                    width: SizeConfig.screenWidth,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Row(children: [
+                                        Text(
+                                          'Processing',
+                                          style: TextStyles.title5.bold,
+                                        ),
+                                        Spacer(),
+                                        CircularProgressIndicator()
+                                      ]),
+                                    )),
+                              ),
+                            ));
                         model.upiApplication =
                             model.appMetaList[index].upiApplication;
                         model.processTransaction(
