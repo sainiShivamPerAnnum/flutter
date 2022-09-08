@@ -90,24 +90,29 @@ class NavBarIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      color: Colors.black,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            height: SizeConfig.navBarHeight * 0.6,
-            width: SizeConfig.navBarHeight * 0.6,
-            child: Lottie.asset(item.lottie,
-                fit: BoxFit.contain, animate: animate, repeat: false),
-          ),
-          Text(
-            item.title,
-            style: style,
-          )
-        ],
-      ),
-    );
+        alignment: Alignment.center,
+        color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Transform.translate(
+              offset: Offset(0, -SizeConfig.navBarHeight * 0.05),
+              child: Column(
+                children: [
+                  Container(
+                      height: SizeConfig.navBarHeight * 0.6,
+                      width: SizeConfig.navBarHeight * 0.6,
+                      child: Lottie.asset(item.lottie,
+                          fit: BoxFit.contain,
+                          animate: animate,
+                          repeat: false)),
+                  Text(item.title, style: style),
+                  SizedBox(height: SizeConfig.navBarHeight * 0.1)
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }
