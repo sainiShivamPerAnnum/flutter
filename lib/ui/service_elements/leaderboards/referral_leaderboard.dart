@@ -295,6 +295,44 @@ class ReferralLeaderboard extends StatelessWidget {
                                       //     ),
                                       //   ),
                                       // ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "#",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                          SizedBox(width: SizeConfig.padding12),
+                                          SizedBox(width: SizeConfig.padding12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Names",
+                                                    style: TextStyles
+                                                        .sourceSans.body3
+                                                        .colour(UiConstants
+                                                            .kTextColor2)),
+                                                SizedBox(
+                                                    height:
+                                                        SizeConfig.padding4),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            "Referals",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          )
+                                        ],
+                                      ),
 
                                       Column(
                                         children: List.generate(
@@ -474,8 +512,6 @@ class ReferralLeaderboard extends StatelessWidget {
                                                       padding: EdgeInsets.only(
                                                         top:
                                                             SizeConfig.padding2,
-                                                        right: SizeConfig
-                                                            .padding10,
                                                       ),
                                                       child: Text('See All',
                                                           style: TextStyles

@@ -296,6 +296,44 @@ class WinnerboardView extends StatelessWidget {
                                   )
                                 : Column(
                                     children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "#",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                          SizedBox(width: SizeConfig.padding12),
+                                          SizedBox(width: SizeConfig.padding12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Names",
+                                                    style: TextStyles
+                                                        .sourceSans.body3
+                                                        .colour(UiConstants
+                                                            .kTextColor2)),
+                                                SizedBox(
+                                                    height:
+                                                        SizeConfig.padding4),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            "Cashprice",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          )
+                                        ],
+                                      ),
                                       Column(
                                         children: List.generate(
                                           getLength(model.winners.length),
@@ -321,7 +359,7 @@ class WinnerboardView extends StatelessWidget {
                                                   child: Row(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
-                                                            .center,
+                                                            .start,
                                                     children: [
                                                       Text(
                                                         "${i + 1}",
@@ -423,6 +461,15 @@ class WinnerboardView extends StatelessWidget {
                                                                     .body2
                                                                     .colour(Colors
                                                                         .white)),
+                                                            Text(
+                                                              getGameName(model
+                                                                  .winners[i]
+                                                                  .gameType),
+                                                              style: TextStyles
+                                                                  .body4
+                                                                  .colour(UiConstants
+                                                                      .kTextColor2),
+                                                            ),
                                                             SizedBox(
                                                                 height: SizeConfig
                                                                     .padding4),
