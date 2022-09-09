@@ -13,6 +13,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
@@ -493,7 +494,14 @@ class ReferAndEarnComponent extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                //TODO
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReferralDetailsView(),
+                    ));
+              },
               child: Container(
                 margin: EdgeInsets.all(SizeConfig.padding6),
                 padding: EdgeInsets.all(SizeConfig.padding8),
