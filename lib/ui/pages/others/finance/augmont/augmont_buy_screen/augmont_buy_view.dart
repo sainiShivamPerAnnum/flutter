@@ -466,7 +466,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                                   model.appMetaList[index].upiApplication;
                               model.processTransaction(model
                                   .appMetaList[index].upiApplication.appName);
-                              AppState.backButtonDispatcher.didPopRoute();
+                              // AppState.backButtonDispatcher.didPopRoute();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(10),
