@@ -385,6 +385,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         AppState.screenStack.removeLast();
       }
       AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       setState(ViewState.Idle);
     } catch (e) {
       print(e);

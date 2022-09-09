@@ -188,7 +188,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     print(transactionResponseModel.code);
 
-    if (transactionResponseModel.code == 200) {
+    if (transactionResponseModel.code == 200 &&
+        transactionResponseModel.errorMessage == null) {
       _logger.d(transactionResponseModel.model.toString());
       return true;
     } else {
@@ -585,6 +586,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           AppState.delegate.appState.txnTimer =
               Timer(Duration(seconds: 30), () async {
             bool isValidated = await validateTransaction(orderId, false);
+            print(isValidated);
             if (isValidated) {
               _txnResult = await validateTxnResult(orderId);
               if (_txnResult.model.data.isUpdating) {
