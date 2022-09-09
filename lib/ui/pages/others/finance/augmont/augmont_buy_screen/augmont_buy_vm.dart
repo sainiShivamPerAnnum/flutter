@@ -381,6 +381,9 @@ class AugmontGoldBuyViewModel extends BaseModel {
       });
 
       resetBuyOptions();
+      if (AppState.screenStack.last == ScreenItem.loader) {
+        AppState.screenStack.removeLast();
+      }
       AppState.backButtonDispatcher.didPopRoute();
       setState(ViewState.Idle);
     } catch (e) {

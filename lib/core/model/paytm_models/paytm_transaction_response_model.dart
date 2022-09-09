@@ -1,165 +1,140 @@
 class TransactionResponseModel {
-  bool success;
+  String message;
   Data data;
 
-  TransactionResponseModel({this.success, this.data});
+  TransactionResponseModel({this.message, this.data});
 
   TransactionResponseModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    message = json['message'];
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
     return data;
   }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'success': success,
-      'data': data.toMap(),
-    };
-  }
-
-  factory TransactionResponseModel.fromMap(Map<String, dynamic> map) {
-    return TransactionResponseModel(
-      success: map['success'] ?? false,
-      data: Data.fromMap(map['data']),
-    );
-  }
-
-  @override
-  String toString() =>
-      'TransactionResponseModel(success: $success, data: $data)';
 }
 
 class Data {
-  PaytmMap paytmMap;
-  double tAmount;
-  String tTranStatus;
-  String tNote;
+  Head head;
+  Body body;
 
-  Data({this.paytmMap, this.tAmount, this.tTranStatus, this.tNote});
+  Data({this.head, this.body});
 
   Data.fromJson(Map<String, dynamic> json) {
-    paytmMap = json['paytmMap'] != null
-        ? new PaytmMap.fromJson(json['paytmMap'])
-        : null;
-    tAmount = json['tAmount'];
-    tTranStatus = json['tTranStatus'];
-    tNote = json['tNote'];
+    head = json['head'] != null ? Head.fromJson(json['head']) : null;
+    body = json['body'] != null ? Body.fromJson(json['body']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.paytmMap != null) {
-      data['paytmMap'] = this.paytmMap.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (this.head != null) {
+      data['head'] = this.head.toJson();
     }
-    data['tAmount'] = this.tAmount;
-    data['tTranStatus'] = this.tTranStatus;
-    data['tNote'] = this.tNote;
+    if (this.body != null) {
+      data['body'] = this.body.toJson();
+    }
     return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'paytmMap': paytmMap.toMap(),
-      'tAmount': tAmount,
-      'tTranStatus': tTranStatus,
-      'tNote': tNote,
-    };
-  }
-
-  factory Data.fromMap(Map<String, dynamic> map) {
-    return Data(
-        paytmMap: PaytmMap.fromMap(map['paytmMap']),
-        tAmount: map['tAmount']?.toDouble() ?? 0.0,
-        tTranStatus: map['tTranStatus'] ?? '',
-        tNote: map['tNote'] ?? '');
-  }
-
-  @override
-  String toString() {
-    return 'Data(paytmMap: $paytmMap, tAmount: $tAmount, tTranStatus: $tTranStatus, tNote: $tNote)';
   }
 }
 
-class PaytmMap {
-  String txnId;
-  String status;
-  String bankTxnId;
-  String txnType;
-  double txnAmount;
-  String gatewayName;
-  String paymentMode;
-  String bankName;
+class Head {
+  String responseTimestamp;
+  String version;
+  String signature;
 
-  PaytmMap(
-      {this.txnId,
-      this.status,
-      this.bankTxnId,
-      this.txnType,
-      this.txnAmount,
-      this.gatewayName,
-      this.paymentMode,
-      this.bankName});
+  Head({this.responseTimestamp, this.version, this.signature});
 
-  PaytmMap.fromJson(Map<String, dynamic> json) {
-    txnId = json['txnId'];
-    status = json['status'];
-    bankTxnId = json['bankTxnId'];
-    txnType = json['txnType'];
-    txnAmount = json['txnAmount'];
-    gatewayName = json['gatewayName'];
-    paymentMode = json['paymentMode'];
-    bankName = json['bankName'];
+  Head.fromJson(Map<String, dynamic> json) {
+    responseTimestamp = json['responseTimestamp'];
+    version = json['version'];
+    signature = json['signature'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['txnId'] = this.txnId;
-    data['status'] = this.status;
-    data['bankTxnId'] = this.bankTxnId;
-    data['txnType'] = this.txnType;
-    data['txnAmount'] = this.txnAmount;
-    data['gatewayName'] = this.gatewayName;
-    data['paymentMode'] = this.paymentMode;
-    data['bankName'] = this.bankName;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['responseTimestamp'] = this.responseTimestamp;
+    data['version'] = this.version;
+    data['signature'] = this.signature;
     return data;
   }
+}
 
-  Map<String, dynamic> toMap() {
-    return {
-      'txnId': txnId,
-      'status': status,
-      'bankTxnId': bankTxnId,
-      'txnType': txnType,
-      'txnAmount': txnAmount,
-      'gatewayName': gatewayName,
-      'paymentMode': paymentMode,
-      'bankName': bankName
-    };
+class Body {
+  ResultInfo resultInfo;
+  String txnId;
+  String orderId;
+  String txnAmount;
+  String txnType;
+  String mid;
+  String refundAmt;
+  String txnDate;
+  String splitSettlementInfo;
+
+  Body(
+      {this.resultInfo,
+      this.txnId,
+      this.orderId,
+      this.txnAmount,
+      this.txnType,
+      this.mid,
+      this.refundAmt,
+      this.txnDate,
+      this.splitSettlementInfo});
+
+  Body.fromJson(Map<String, dynamic> json) {
+    resultInfo = json['resultInfo'] != null
+        ? new ResultInfo.fromJson(json['resultInfo'])
+        : null;
+    txnId = json['txnId'];
+    orderId = json['orderId'];
+    txnAmount = json['txnAmount'];
+    txnType = json['txnType'];
+    mid = json['mid'];
+    refundAmt = json['refundAmt'];
+    txnDate = json['txnDate'];
+    splitSettlementInfo = json['splitSettlementInfo'];
   }
 
-  factory PaytmMap.fromMap(Map<String, dynamic> map) {
-    return PaytmMap(
-      txnId: map['txnId'] ?? '',
-      status: map['status'] ?? '',
-      bankTxnId: map['bankTxnId'] ?? '',
-      txnType: map['txnType'] ?? '',
-      txnAmount: map['txnAmount']?.toDouble() ?? 0.0,
-      gatewayName: map['gatewayName'] ?? '',
-      paymentMode: map['paymentMode'] ?? '',
-      bankName: map['bankName'] ?? '',
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (this.resultInfo != null) {
+      data['resultInfo'] = this.resultInfo.toJson();
+    }
+    data['txnId'] = this.txnId;
+    data['orderId'] = this.orderId;
+    data['txnAmount'] = this.txnAmount;
+    data['txnType'] = this.txnType;
+    data['mid'] = this.mid;
+    data['refundAmt'] = this.refundAmt;
+    data['txnDate'] = this.txnDate;
+    data['splitSettlementInfo'] = this.splitSettlementInfo;
+    return data;
+  }
+}
+
+class ResultInfo {
+  String resultStatus;
+  String resultCode;
+  String resultMsg;
+
+  ResultInfo({this.resultStatus, this.resultCode, this.resultMsg});
+
+  ResultInfo.fromJson(Map<String, dynamic> json) {
+    resultStatus = json['resultStatus'];
+    resultCode = json['resultCode'];
+    resultMsg = json['resultMsg'];
   }
 
-  @override
-  String toString() {
-    return 'PaytmMap(txnId: $txnId, status: $status, bankTxnId: $bankTxnId, txnType: $txnType, txnAmount: $txnAmount, gatewayName: $gatewayName, paymentMode: $paymentMode, bankName: $bankName)';
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['resultStatus'] = this.resultStatus;
+    data['resultCode'] = this.resultCode;
+    data['resultMsg'] = this.resultMsg;
+    return data;
   }
 }

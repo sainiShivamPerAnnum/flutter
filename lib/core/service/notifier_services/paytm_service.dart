@@ -479,6 +479,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       String orderId,
       UpiApplication upiApplication,
       Function() successMethod}) async {
+    //ANDROID Handling
     if (PlatformUtils.isAndroid) {
       UpiTransactionResponse response;
       AppState.backButtonDispatcher.didPopRoute();
@@ -502,6 +503,20 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       if (response.status == UpiTransactionStatus.submitted ||
           response.status == UpiTransactionStatus.success) {
         AppState.delegate.appState.isTxnLoaderInView = true;
+        var _txnResult;
+        Timer _paymentStatusTimer =
+            Timer.periodic(Duration(seconds: 5), (timer) async {
+          bool isValidated = await validateTransaction(orderId, false);
+          if (isValidated) {
+            _txnResult = await validateTxnResult(orderId);
+            if (!_txnResult.model.data.isUpdating) {
+              timer.cancel();
+              AppState.delegate.appState.txnTimer.cancel();
+              return _txnService.transactionResponseUpdate(
+                  amount: amount, gtId: orderId);
+            }
+          }
+        });
         AppState.delegate.appState.txnTimer =
             Timer(Duration(seconds: 30), () async {
           bool isValidated = await validateTransaction(orderId, false);
@@ -510,8 +525,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           AppState.delegate.appState.isTxnLoaderInView = false;
           if (isValidated) {
             AppState.delegate.appState.txnTimer.cancel();
-            _txnResult = await validateTxnResult(orderId);
             if (_txnResult.model.data.isUpdating) {
+              _paymentStatusTimer.cancel();
               AppState.delegate.appState.isTxnLoaderInView = false;
               AppState.delegate.appState.txnTimer.cancel();
               BaseUtil.openDialog(
@@ -527,11 +542,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
               );
             }
             if (!_txnResult.model.data.isUpdating) {
+              _paymentStatusTimer.cancel();
               AppState.delegate.appState.txnTimer.cancel();
               _txnService.transactionResponseUpdate(
                   amount: amount, gtId: orderId);
             }
           } else {
+            _paymentStatusTimer.cancel();
             AppState.delegate.appState.isTxnLoaderInView = false;
             AppState.delegate.appState.txnTimer.cancel();
             BaseUtil.showNegativeAlert(
@@ -539,10 +556,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
               'Your transaction was unsuccessful. Please try again',
             );
           }
+          _paymentStatusTimer.cancel();
         });
       }
     }
-
+    //iOS Handling
     if (PlatformUtils.isIOS) {
       launchUrl(Uri.parse(url)).then((value) async {
         ApiResponse<TxnResultModel> _txnResult;

@@ -23,7 +23,7 @@ class Data {
   bool isUpdating;
   Gt gt;
 
-  Data({this.isUpdating, this.gt});
+  Data({this.isUpdating = true, this.gt});
 
   Data.fromJson(Map<String, dynamic> json) {
     isUpdating = json['isUpdating'];

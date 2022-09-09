@@ -1,6 +1,7 @@
 import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -106,7 +107,7 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
                     controller: widget.model.goldAmountController,
                     cursorWidth: 1,
                     keyboardType: TextInputType.numberWithOptions(
-                        signed: true, decimal: true),
+                        decimal: false, signed: false),
                     style: TextStyles.body2.bold,
                     inputFormatters: [
                       FilteringTextInputFormatter.deny(RegExp(r'^0+(?!$)')),
@@ -323,7 +324,7 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
                         BaseUtil.openModalBottomSheet(
                             addToScreenStack: true,
                             backgroundColor: Colors.transparent,
-                            isBarrierDismissable: true,
+                            isBarrierDismissable: false,
                             borderRadius: BorderRadius.only(
                                 topLeft:
                                     Radius.circular(SizeConfig.roundness12),
@@ -357,7 +358,7 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
                         BaseUtil.openModalBottomSheet(
                             addToScreenStack: true,
                             backgroundColor: Colors.transparent,
-                            isBarrierDismissable: true,
+                            isBarrierDismissable: false,
                             borderRadius: BorderRadius.only(
                                 topLeft:
                                     Radius.circular(SizeConfig.roundness12),
@@ -389,10 +390,10 @@ class UPIAppsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 0.8,
+      height: SizeConfig.screenWidth * 0.5,
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        color: UiConstants.backgroundColor,
+        color: Colors.white,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness12),
             topRight: Radius.circular(SizeConfig.roundness12)),
@@ -405,9 +406,19 @@ class UPIAppsBottomSheet extends StatelessWidget {
               model.appMetaList.length > 0
                   ? Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        'Please select an UPI App',
-                        style: TextStyles.body1.bold,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Please select an UPI App',
+                            style: TextStyles.body1.bold,
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                AppState.backButtonDispatcher.didPopRoute();
+                              },
+                              child: Icon(Icons.close))
+                        ],
                       ),
                     )
                   : SizedBox(),
@@ -425,7 +436,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                             onTap: () {
                               BaseUtil.openDialog(
                                   addToScreenStack: true,
-                                  isBarrierDismissable: true,
+                                  isBarrierDismissable: false,
                                   content: Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Dialog(
@@ -442,7 +453,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                                             child: Row(children: [
                                               Text(
                                                 'Processing',
-                                                style: TextStyles.title5.bold,
+                                                style: TextStyles.title5,
                                               ),
                                               Spacer(),
                                               CircularProgressIndicator()
@@ -450,6 +461,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                                           )),
                                     ),
                                   ));
+                              AppState.screenStack.add(ScreenItem.loader);
                               model.upiApplication =
                                   model.appMetaList[index].upiApplication;
                               model.processTransaction(model

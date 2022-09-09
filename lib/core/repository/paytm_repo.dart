@@ -105,13 +105,15 @@ class PaytmRepository {
           token: _token,
           queryParams: _queryParams,
           isAwsTxnUrl: true);
+      print(response);
 
-      final _responseModel = TransactionResponseModel.fromMap(response);
+      final _responseModel = TransactionResponseModel.fromJson(response);
+      print(_responseModel);
       return ApiResponse<TransactionResponseModel>(
           model: _responseModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());
-      return ApiResponse.withError("Unable create transaction", 400);
+      return ApiResponse.withError("Unable to validate transaction", 400);
     }
   }
 
