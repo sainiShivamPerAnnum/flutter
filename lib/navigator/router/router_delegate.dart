@@ -55,6 +55,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_v
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
@@ -306,6 +307,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.GoldBalanceDetailsView:
           _addPageData(
               GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
+          break;
+        case Pages.AllParticipantsWinnersTopReferersView:
+          _addPageData(AllParticipantsWinnersTopReferers(),
+              AllParticipantsWinnersTopReferersConfig);
           break;
         // case Pages.WebHomeView:
         //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
@@ -607,6 +612,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.ViewAllBlogsView:
         ViewAllBlogsViewConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsWinnersTopReferersView:
+        AllParticipantsWinnersTopReferersConfig.currentPageAction = action;
         break;
       default:
         break;

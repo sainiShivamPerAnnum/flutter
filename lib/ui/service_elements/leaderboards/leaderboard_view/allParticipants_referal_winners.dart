@@ -15,9 +15,9 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
       Key key})
       : super(key: key);
 
-  bool isForTopReferers;
-  List<Winners> winners;
-  List<ScoreBoard> referralLeaderBoard;
+  final bool isForTopReferers;
+  final List<Winners> winners;
+  final List<ScoreBoard> referralLeaderBoard;
 
   getGameName(String gamename) {
     switch (gamename) {

@@ -65,6 +65,8 @@ const String CampaignViewPath = '/campaignViewPath';
 const String SaveAssetViewPath = '/saveAssetViewPath';
 const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
+const String AllParticipantsWinnersTopReferersPath =
+    "/allParticipantsWinnersTopReferersPath";
 
 enum Pages {
   Splash,
@@ -130,7 +132,8 @@ enum Pages {
   CampaignView,
   SaveAssetView,
   SellConfirmationView,
-  ViewAllBlogsView
+  ViewAllBlogsView,
+  AllParticipantsWinnersTopReferersView
 }
 
 class PageConfiguration {
@@ -586,4 +589,11 @@ PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
   path: ViewAllBlogsViewPath,
   uiPage: Pages.ViewAllBlogsView,
   name: "View All Blogs View",
+);
+
+PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
+  key: 'AllParticipantsWinnersTopReferersView',
+  path: AllParticipantsWinnersTopReferersPath,
+  uiPage: Pages.AllParticipantsWinnersTopReferersView,
+  name: "View All Participants for Win View",
 );

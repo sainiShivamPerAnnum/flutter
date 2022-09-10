@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
@@ -254,7 +255,7 @@ class Win extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        height: SizeConfig.padding80,
+                        height: SizeConfig.navBarHeight,
                       ),
                     ],
                   ),
@@ -450,7 +451,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                         child: Text(
                           model.loadingRefCode ? '-' : model.refCode,
                           style:
-                              TextStyles.title2.extraBold.colour(Colors.white),
+                              TextStyles.rajdhaniEB.title2.colour(Colors.white),
                         ),
                       ),
                       Container(
@@ -495,12 +496,11 @@ class ReferAndEarnComponent extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                //TODO
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReferralDetailsView(),
-                    ));
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  widget: ReferralDetailsView(),
+                  page: ReferralDetailsPageConfig,
+                );
               },
               child: Container(
                 margin: EdgeInsets.all(SizeConfig.padding6),

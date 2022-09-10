@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/util/assets.dart';
@@ -349,16 +352,17 @@ class WinnerboardView extends StatelessWidget {
                                           getLength(model.winners.length))
                                         TextButton(
                                           onPressed: () {
-                                            //TODO
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AllParticipantsWinnersTopReferers(
-                                                    isForTopReferers: false,
-                                                    winners: model.winners,
-                                                  ),
-                                                ));
+                                            AppState.delegate.appState
+                                                .currentAction = PageAction(
+                                              state: PageState.addWidget,
+                                              widget:
+                                                  AllParticipantsWinnersTopReferers(
+                                                isForTopReferers: false,
+                                                winners: model.winners,
+                                              ),
+                                              page:
+                                                  AllParticipantsWinnersTopReferersConfig,
+                                            );
                                           },
                                           child: Row(
                                             mainAxisAlignment:
