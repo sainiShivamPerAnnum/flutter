@@ -39,7 +39,6 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -564,66 +563,77 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     //iOS Handling
     if (PlatformUtils.isIOS) {
       launchUrl(Uri.parse(url)).then((value) async {
-        ApiResponse<TxnResultModel> _txnResult;
         AppState.backButtonDispatcher.didPopRoute();
-        bool isResumed =
-            WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
-        AppState.delegate.appState.isTxnLoaderInView = true;
-        Timer _paymentStatusTimer =
-            Timer.periodic(Duration(seconds: 5), (timer) async {
-          bool isValidated = await validateTransaction(orderId, false);
-          if (isValidated) {
-            _txnResult = await validateTxnResult(orderId);
-            if (!_txnResult.model.data.isUpdating) {
-              timer.cancel();
-              AppState.delegate.appState.txnTimer.cancel();
-              return _txnService.transactionResponseUpdate(
-                  amount: amount, gtId: orderId);
-            }
-          }
-        });
-        if (isResumed) {
-          AppState.delegate.appState.txnTimer =
-              Timer(Duration(seconds: 30), () async {
-            bool isValidated = await validateTransaction(orderId, false);
-            print(isValidated);
-            if (isValidated) {
-              _txnResult = await validateTxnResult(orderId);
-              if (_txnResult.model.data.isUpdating) {
-                AppState.delegate.appState.isTxnLoaderInView = false;
-                AppState.delegate.appState.txnTimer.cancel();
-                _paymentStatusTimer.cancel();
-                BaseUtil.openDialog(
-                  addToScreenStack: true,
-                  hapticVibrate: true,
-                  isBarrierDismissable: false,
-                  content: PendingDialog(
-                    title: "We're still processing!",
-                    subtitle:
-                        "Your transaction is taking longer than usual. We'll get back to you in ",
-                    duration: '15 minutes',
-                  ),
-                );
-              }
-              if (!_txnResult.model.data.isUpdating) {
-                AppState.delegate.appState.txnTimer.cancel();
-                _paymentStatusTimer.cancel();
-                _txnService.transactionResponseUpdate(
-                    amount: amount, gtId: orderId);
-              }
-            } else {
-              AppState.delegate.appState.isTxnLoaderInView = false;
-              AppState.delegate.appState.txnTimer.cancel();
-              _paymentStatusTimer.cancel();
-              BaseUtil.showNegativeAlert(
-                'Transaction failed',
-                'Your transaction was unsuccessful. Please try again',
-              );
-            }
-          });
-        }
+        AppState.isIOSTxnInProgress = true;
+        AppState.currentTxnAmount = amount;
       });
     }
+  }
+
+  handleIOSUpiTransaction() {
+    if (!AppState.isIOSTxnInProgress) return;
+    AppState.isIOSTxnInProgress = false;
+    ApiResponse<TxnResultModel> _txnResult;
+    AppState.delegate.appState.isTxnLoaderInView = true;
+    // DateTime pollingOverTime = DateTime.now().add(Duration(seconds: 30));
+    Timer _paymentStatusTimer =
+        Timer.periodic(Duration(seconds: 5), (timer) async {
+      // if (DateTime.now().isAfter(pollingOverTime) ||
+      //     DateTime.now().isAtSameMomentAs(pollingOverTime)) {
+      //   timer.cancel();
+      //   return;
+      // }
+      bool isValidated = await validateTransaction(orderId, false);
+      if (isValidated) {
+        _txnResult = await validateTxnResult(orderId);
+        if (_txnResult.model != null &&
+            _txnResult.model.data != null &&
+            _txnResult.model.data.isUpdating != null &&
+            !_txnResult.model.data.isUpdating) {
+          timer.cancel();
+          return _txnService.transactionResponseUpdate(
+              amount: AppState.currentTxnAmount ?? 0.0, gtId: orderId);
+        }
+      }
+    });
+    Future.delayed(Duration(seconds: 30), () async {
+      bool isValidated = await validateTransaction(orderId, false);
+      print(isValidated);
+      if (isValidated) {
+        _txnResult = await validateTxnResult(orderId);
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        if (_txnResult.model.data.isUpdating == null ||
+            _txnResult.model.data.isUpdating) {
+          _paymentStatusTimer.cancel();
+          BaseUtil.openDialog(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            isBarrierDismissable: false,
+            content: PendingDialog(
+              title: "We're still processing!",
+              subtitle:
+                  "Your transaction is taking longer than usual. We'll get back to you in ",
+              duration: '15 minutes',
+            ),
+          );
+        }
+        if (_txnResult.model.data.isUpdating != null &&
+            !_txnResult.model.data.isUpdating) {
+          AppState.delegate.appState.txnTimer.cancel();
+          _paymentStatusTimer.cancel();
+          _txnService.transactionResponseUpdate(
+              amount: AppState.currentTxnAmount ?? 0.0, gtId: orderId);
+        }
+      } else {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        AppState.delegate.appState.txnTimer.cancel();
+        _paymentStatusTimer.cancel();
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Your transaction was unsuccessful. Please try again',
+        );
+      }
+    });
   }
 
   Future<ApiResponse> validateTxnResult(String orderId) async {

@@ -474,7 +474,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    if (buyAmount < 10) {
+    if (buyAmount < 0) {
       showMinCapText = true;
       return;
     }
@@ -541,7 +541,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    if (buyAmount < 10) {
+    if (buyAmount < 0) {
       showMinCapText = true;
       return;
     }
@@ -587,7 +587,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         amount: buyAmount,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
-        restrictAppInvoke: restrictPaytmAppInvoke);
+        restrictAppInvoke: false);
 
     isGoldBuyInProgress = false;
     resetBuyOptions();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -14,7 +16,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 // import 'package:upi_pay/upi_pay.dart';
 
@@ -302,7 +303,7 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
               onPressed: () async {
                 if (!widget.model.isGoldBuyInProgress) {
                   FocusScope.of(context).unfocus();
-                  if (PlatformUtils.isAndroid) {
+                  if (Platform.isAndroid) {
                     //Android - RazorpayPG
                     if (BaseRemoteConfig.remoteConfig
                             .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID) ==
@@ -335,40 +336,39 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
                             ));
                       }
                     }
-                  }
-                  if (PlatformUtils.isIOS) {
+                  } else if (Platform.isIOS) {
                     //iOS - RazorpayPG
-                    if (BaseRemoteConfig.remoteConfig
-                            .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
-                        'RZP-PG') {
-                      widget.model.initiateRzpGatewayTxn();
-                    }
-                    //iOS - PaytmPG
-                    if (BaseRemoteConfig.remoteConfig
-                            .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
-                        'PAYTM-PG') {
-                      widget.model.initiatePaytmPgTxn();
-                    }
-                    //iOS - Paytm(UPI Intent)
-                    if (BaseRemoteConfig.remoteConfig
-                            .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
-                        'PAYTM') {
-                      bool isAllowed = await widget.model.initChecks();
-                      if (isAllowed) {
-                        BaseUtil.openModalBottomSheet(
-                            addToScreenStack: true,
-                            backgroundColor: Colors.transparent,
-                            isBarrierDismissable: false,
-                            borderRadius: BorderRadius.only(
-                                topLeft:
-                                    Radius.circular(SizeConfig.roundness12),
-                                topRight:
-                                    Radius.circular(SizeConfig.roundness12)),
-                            content: UPIAppsBottomSheet(
-                              model: widget.model,
-                            ));
-                      }
-                    }
+                    // if (BaseRemoteConfig.remoteConfig
+                    //         .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
+                    //     'RZP-PG') {
+                    //   widget.model.initiateRzpGatewayTxn();
+                    // }
+                    // //iOS - PaytmPG
+                    // if (BaseRemoteConfig.remoteConfig
+                    //         .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
+                    //     'PAYTM-PG') {
+                    widget.model.initiatePaytmPgTxn();
+                    //   }
+                    //   //iOS - Paytm(UPI Intent)
+                    //   if (BaseRemoteConfig.remoteConfig
+                    //           .getString(BaseRemoteConfig.ACTIVE_PG_IOS) ==
+                    //       'PAYTM') {
+                    //     bool isAllowed = await widget.model.initChecks();
+                    //     if (isAllowed) {
+                    //       BaseUtil.openModalBottomSheet(
+                    //           addToScreenStack: true,
+                    //           backgroundColor: Colors.transparent,
+                    //           isBarrierDismissable: false,
+                    //           borderRadius: BorderRadius.only(
+                    //               topLeft:
+                    //                   Radius.circular(SizeConfig.roundness12),
+                    //               topRight:
+                    //                   Radius.circular(SizeConfig.roundness12)),
+                    //           content: UPIAppsBottomSheet(
+                    //             model: widget.model,
+                    //           ));
+                    //     }
+                    //   }
                   }
                 }
               },

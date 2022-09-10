@@ -33,6 +33,8 @@ class AppState extends ChangeNotifier {
   bool _isTxnLoaderInView = false;
   Future _txnFunction;
   Timer _txnTimer;
+  static bool isIOSTxnInProgress = false;
+  static double currentTxnAmount = 0.0;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -80,6 +82,7 @@ class AppState extends ChangeNotifier {
   // }
 
   set txnTimer(Timer timer) {
+    if (txnTimer != null) this.txnTimer.cancel();
     this._txnTimer = timer;
     notifyListeners();
   }
