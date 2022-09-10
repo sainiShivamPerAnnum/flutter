@@ -46,13 +46,6 @@
 			remoteGlobalIDString = AD7F0457BD0E378D3BD385D58F578732;
 			remoteInfo = upi_pay;
 		};
-		07BA0A2728C9F8CD00A234D3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D28204751A8D7FA469F44E04E5F371F;
-			remoteInfo = flutter_fgbg;
-		};
 		385870BE286B48EE006AA702 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -722,7 +715,6 @@
 				53E99C0E2770AA48000F1EEC /* FirebaseStorage */,
 				38FFBC8B2886085500F22FF5 /* FirebaseStorageInternal */,
 				53E99C102770AA48000F1EEC /* flutter_facebook_sdk */,
-				07BA0A2828C9F8CD00A234D3 /* flutter_fgbg */,
 				53E99C162770AA48000F1EEC /* flutter_share_me */,
 				07AE377328BCC63900FC1168 /* fluttertoast */,
 				53E99C182770AA48000F1EEC /* FMDB */,
@@ -911,14 +903,6 @@
 			name = upi_pay;
 			path = upi_pay.framework;
 			remoteRef = 07AE377828BCC63900FC1168 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		07BA0A2828C9F8CD00A234D3 /* flutter_fgbg */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = flutter_fgbg;
-			path = flutter_fgbg.framework;
-			remoteRef = 07BA0A2728C9F8CD00A234D3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		385870BF286B48EE006AA702 /* device_info_plus */ = {
