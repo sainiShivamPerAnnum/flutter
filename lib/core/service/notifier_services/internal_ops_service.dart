@@ -25,28 +25,44 @@ class InternalOpsService extends ChangeNotifier {
   Future<Map<String, dynamic>> initDeviceInfo() async {
     String _deviceId;
     String _platform;
+    String brand;
+    bool isPhysicalDevice;
+
     if (!isDeviceInfoInitiated) {
       try {
         if (Platform.isIOS) {
           IosDeviceInfo iosDeviceInfo;
           iosDeviceInfo = await deviceInfo.iosInfo;
-          phoneModel = iosDeviceInfo.model;
+          phoneModel = iosDeviceInfo.name;
           softwareVersion = iosDeviceInfo.systemVersion;
           _deviceId = iosDeviceInfo.identifierForVendor;
+          isPhysicalDevice = iosDeviceInfo.isPhysicalDevice;
+          brand = "apple";
+
           _platform = "ios";
           logger.d(
               "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
         } else if (Platform.isAndroid) {
           AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
           phoneModel = androidDeviceInfo.model;
-          softwareVersion = androidDeviceInfo.version.release;
+          softwareVersion = androidDeviceInfo.version.sdkInt.toString();
           _deviceId = androidDeviceInfo.androidId;
+          brand = androidDeviceInfo.brand;
+          isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
+
           _platform = "android";
           logger.d(
               "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
         }
         isDeviceInfoInitiated = true;
-        return {"deviceId": _deviceId, "platform": _platform};
+        return {
+          "deviceId": _deviceId ?? "",
+          "platform": _platform ?? "",
+          "version": softwareVersion ?? 0,
+          "model": phoneModel ?? "",
+          "brand": brand ?? "",
+          "isPhysicalDevice": isPhysicalDevice ?? false
+        };
       } catch (e) {
         log.error('Initiating Device Info failed');
       }

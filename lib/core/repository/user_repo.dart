@@ -224,16 +224,24 @@ class UserRepository extends BaseRepo {
   }
 
   Future<void> setNewDeviceId({
-    String uid,
-    String deviceId,
-    String platform,
+    @required String uid,
+    @required String deviceId,
+    @required String platform,
+    @required String model,
+    @required String brand,
+    @required String version,
+    @required bool isPhysicalDevice,
   }) async {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> _body = {
-        "uid": uid,
-        "deviceId": deviceId,
-        "platform": platform,
+        "uid": uid ?? "",
+        "deviceId": deviceId ?? "",
+        "platform": platform ?? "",
+        "model": model ?? "",
+        "brand": brand ?? "",
+        "version": version ?? "",
+        "isPhysicalDevice": isPhysicalDevice ?? true
       };
 
       await APIService.instance.postData(
