@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
@@ -452,20 +453,32 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             orderId: paytmSubscriptionModel.data.orderId,
             paymentMode: paymentMode);
 
+    DeepLinkInfo deepLinkInfo =
+        processTransactionApiResponse.model.data.body.deepLinkInfo;
+    if (deepLinkInfo == null || deepLinkInfo.deepLink == null)
+      return BaseUtil.showNegativeAlert(
+          "Something went wrong", "Please try again");
+
     String url =
         processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink +
             '&tn=FelloGold';
 
-    print(url);
+    _logger.d("Transaction Url: $url");
 
     if (processTransactionApiResponse.code == 400) {
       _logger.e(processTransactionApiResponse.errorMessage);
       return;
     } else {
+      log(upiApplication.appName);
+      if (Platform.isAndroid && upiApplication.appName == "Google Pay") {
+        url = "tez://upi/" + url.substring(6);
+      }
+      if (Platform.isAndroid && upiApplication.appName == "PhonePe") {
+        url = "phonepe://upi/" + url.substring(6);
+      }
+      log(url);
       await doUpiTransation(
-          url: processTransactionApiResponse
-                  .model.data.body.deepLinkInfo.deepLink +
-              "tn=FelloGold",
+          url: url,
           amount: amount,
           upiApplication: upiApplication,
           orderId: paytmSubscriptionModel.data.orderId,
@@ -479,6 +492,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       String orderId,
       UpiApplication upiApplication,
       Function() successMethod}) async {
+    if (url.isEmpty)
+      return BaseUtil.showNegativeAlert(
+          "Something went wrong", "Please try again");
+
     //ANDROID Handling
     if (PlatformUtils.isAndroid) {
       UpiTransactionResponse response;

@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 // import 'package:upi_pay/upi_pay.dart';
 
 class AugmontBuyCard extends StatefulWidget {
@@ -373,6 +375,58 @@ class _AugmontBuyCardState extends State<AugmontBuyCard>
                 }
               },
             ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FelloButtonLg(
+                      color: Colors.black,
+                      onPressed: () {
+                        widget.model.initiateRzpGatewayTxn();
+                      },
+                      child: Text('Razorpay',
+                          style: TextStyles.body2.bold.colour(Colors.white))),
+                ),
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  child: FelloButtonLg(
+                      color: Colors.blue,
+                      onPressed: () {
+                        widget.model.initiatePaytmPgTxn();
+                      },
+                      child: Text(
+                        'Paytm-PG',
+                        style: TextStyles.body2.bold.colour(Colors.white),
+                      )),
+                ),
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  child: FelloButtonLg(
+                      color: Colors.green,
+                      onPressed: () async {
+                        bool isAllowed = await widget.model.initChecks();
+                        if (isAllowed) {
+                          BaseUtil.openModalBottomSheet(
+                              addToScreenStack: true,
+                              backgroundColor: Colors.transparent,
+                              isBarrierDismissable: false,
+                              borderRadius: BorderRadius.only(
+                                  topLeft:
+                                      Radius.circular(SizeConfig.roundness12),
+                                  topRight:
+                                      Radius.circular(SizeConfig.roundness12)),
+                              content: UPIAppsBottomSheet(
+                                model: widget.model,
+                              ));
+                        }
+                      },
+                      child: Text('UPI',
+                          style: TextStyles.body2.bold.colour(Colors.white))),
+                )
+              ],
+            ),
+          ),
           SizedBox(
             height: SizeConfig.padding16,
           )
@@ -403,30 +457,43 @@ class UPIAppsBottomSheet extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              model.appMetaList.length > 0
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Padding(
+                padding: EdgeInsets.only(
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins / 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      model.appMetaList.length > 0
+                          ? 'Please select an UPI App'
+                          : "No Apps available",
+                      style: TextStyles.title4.bold,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          AppState.backButtonDispatcher.didPopRoute();
+                        },
+                        child: Icon(Icons.close))
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              model.appMetaList.length <= 0
+                  ? Container(
+                      width: SizeConfig.screenWidth,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Please select an UPI App',
-                            style: TextStyles.body1.bold,
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                AppState.backButtonDispatcher.didPopRoute();
-                              },
-                              child: Icon(Icons.close))
+                          SvgPicture.asset(Assets.noTickets,
+                              height: SizeConfig.screenWidth * 0.16),
+                          SizedBox(height: SizeConfig.padding12),
+                          Text('Please install any UPI applications to proceed',
+                              style: TextStyles.body1.colour(Colors.grey)),
                         ],
                       ),
                     )
-                  : SizedBox(),
-              SizedBox(height: 20),
-              model.appMetaList.length <= 0
-                  ? Center(
-                      child: Text('Please Install UPI applications to proceed',
-                          style: TextStyles.body1))
                   : Expanded(
                       child: GridView.builder(
                         scrollDirection: Axis.vertical,

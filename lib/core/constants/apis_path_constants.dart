@@ -104,6 +104,8 @@ class ApiPath {
   // Coupon Apis
   static const String getCoupons = "/coupons";
   static String getGameByCode(String gameCode) => "/game/$gameCode";
+  static String getGameToken(String gameName, String uid) =>
+      "/$gameName/token?uid=$uid";
 
   // referral
   static String getUserIdByRefCode(String code) => "/referral/$code";

@@ -54,6 +54,7 @@ class WebHomeViewModel extends BaseModel {
   String token = "";
   String gameCode;
   GameModel _currentGameModel;
+  String gameToken;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -192,6 +193,9 @@ class WebHomeViewModel extends BaseModel {
     setState(ViewState.Busy);
     int _playCost = currentGameModel.playCost;
     ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
+    final response =
+        await _gameRepo.getGameToken(gameName: currentGameModel.gameCode);
+    if (response.isSuccess()) gameToken = response.model;
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
         _flcResponse.model.flcBalance >= _playCost)
@@ -204,7 +208,7 @@ class WebHomeViewModel extends BaseModel {
   generateGameUrl() {
     String _uri = currentGameModel.gameUri;
     String _loadUri =
-        "$_uri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+        "$_uri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}&token=$gameToken";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
   }

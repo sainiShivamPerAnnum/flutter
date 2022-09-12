@@ -369,6 +369,7 @@ class APIService implements API {
   @override
   dynamic returnResponse(http.Response response) {
     var responseJson = json.decode(response.body);
+    logger.d("$responseJson with code  ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
         return responseJson;
