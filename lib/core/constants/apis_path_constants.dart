@@ -42,6 +42,8 @@ class ApiPath {
   static const kDeviceId = "/device";
   static String getCoinBalance(uid) => "/$uid/wallet/coin";
   static String getFundBalance(uid) => "/$uid/wallet/fund";
+  static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
+  static String logOut(String uid) => "/user/$uid/logout";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
@@ -52,6 +54,7 @@ class ApiPath {
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
   static const kCreatePaytmTransaction = "/transaction";
+  static const kProcessPaytmTransaction = "/process";
   get kCreateSubscription => "/subscription";
   get kPauseSubscription => "/subscription/pause";
   get kResumeSubscription => "/subscription/resume";

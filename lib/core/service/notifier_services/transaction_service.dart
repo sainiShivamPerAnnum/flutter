@@ -1,14 +1,25 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
+import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -22,6 +33,9 @@ class TransactionService
   final _baseUtil = locator<BaseUtil>();
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
+  final _gtService = GoldenTicketService();
+  final _internalOpsService = locator<InternalOpsService>();
+  final _userCoinService = locator<UserCoinService>();
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
@@ -273,6 +287,173 @@ class TransactionService
         transaction.amount >= minBeerDeposit &&
         isOfferStillValid(transaction.timestamp)) return true;
     return false;
+  }
+
+  getAmount(double amount) {
+    if (amount > amount.toInt())
+      return amount;
+    else
+      return amount.toInt();
+  }
+
+  showTxnSuccessScreen(double amount, String title,
+      {bool showAutoSavePrompt = false}) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) =>
+            TxnCompletedConfirmationScreenView(
+          amount: amount ?? 0,
+          title: title ?? "Hurray, we saved ₹NA",
+          showAutoSavePrompt: showAutoSavePrompt,
+        ),
+      ),
+    );
+  }
+
+  fcmTransactionResponseUpdate(fcmDataPayload) async {
+    //Stop loader if loading.
+
+    _logger.i("Updating response value. $fcmDataPayload");
+    // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
+    AppState.delegate.appState.txnTimer?.cancel();
+    AppState.pollingPeriodicTimer?.cancel();
+    _logger.d("timer cancelled");
+
+    try {
+      final DepositFcmResponseModel depositFcmResponseModel =
+          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
+
+      //Handle failed condition here.
+      if (!depositFcmResponseModel.status) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        BaseUtil.showNegativeAlert("Transaction failed",
+            "Your gold purchase did not complete successfully");
+        return;
+      }
+      //handle multiple fcm command for same transaction
+      if (depositFcmResponseModel.gtId != null) {
+        print(
+            "Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
+        if (GoldenTicketService.lastGoldenTicketId != null) {
+          if (GoldenTicketService.lastGoldenTicketId ==
+              depositFcmResponseModel.gtId) {
+            return;
+          } else {
+            GoldenTicketService.lastGoldenTicketId =
+                depositFcmResponseModel.gtId;
+          }
+        } else {
+          GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
+        }
+      }
+
+      double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
+      if (newAugPrinciple != null && newAugPrinciple > 0) {
+        _userService.augGoldPrinciple = newAugPrinciple;
+      }
+      double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
+      if (newAugQuantity != null && newAugQuantity > 0) {
+        _userService.augGoldQuantity = newAugQuantity;
+      }
+      //add this to augmontBuyVM
+      int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        if (depositFcmResponseModel.gtId != null) {
+          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+            Future.delayed(Duration(milliseconds: 220), () {
+              AppState.delegate.appState.isTxnLoaderInView = false;
+            });
+            _gtService.showInstantGoldenTicketView(
+                amount: depositFcmResponseModel.amount,
+                title:
+                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                source: GTSOURCE.deposit,
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
+          } else {
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            showTxnSuccessScreen(depositFcmResponseModel.amount,
+                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
+          }
+        } else {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          showTxnSuccessScreen(depositFcmResponseModel.amount,
+              "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+              showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
+        }
+      }
+      AppState.currentTxnAmount = 0;
+      AppState.currentTxnOrderId = "";
+      updateTransactions();
+    } catch (e) {
+      _logger.e(e);
+      _internalOpsService.logFailure(
+          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+    }
+  }
+
+  transactionResponseUpdate({String gtId, double amount}) async {
+    AppState.currentTxnAmount = 0;
+    AppState.currentTxnOrderId = "";
+    try {
+      if (gtId != null) {
+        print("Hey a new fcm recived with gtId: $gtId");
+        if (GoldenTicketService.lastGoldenTicketId != null) {
+          if (GoldenTicketService.lastGoldenTicketId == gtId) {
+            return;
+          } else {
+            GoldenTicketService.lastGoldenTicketId = gtId;
+          }
+        } else {
+          GoldenTicketService.lastGoldenTicketId = gtId;
+        }
+      }
+
+      //add this to augmontBuyVM
+      _userCoinService.getUserCoinBalance();
+      double newFlcBalance = amount ?? 0;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(
+            (_userCoinService.flcBalance + newFlcBalance).toInt());
+      }
+      print(gtId);
+      if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        if (gtId != null) {
+          GoldenTicketService.goldenTicketId = gtId;
+          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+            Future.delayed(Duration(milliseconds: 220), () {
+              AppState.delegate.appState.isTxnLoaderInView = false;
+            });
+            _gtService.showInstantGoldenTicketView(
+                amount: amount,
+                title: "You have successfully saved ₹${getAmount(amount)}",
+                source: GTSOURCE.deposit,
+                showAutoSavePrompt: false);
+          } else {
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            showTxnSuccessScreen(
+                amount, "You have successfully saved ₹${getAmount(amount)}",
+                showAutoSavePrompt: false);
+          }
+        } else {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          showTxnSuccessScreen(
+              amount, "You have successfully saved ₹${getAmount(amount)}",
+              showAutoSavePrompt: false);
+        }
+      }
+      updateTransactions();
+    } catch (e) {
+      _logger.e(e);
+      _internalOpsService.logFailure(
+          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+    }
   }
 
 // Clear transactions
