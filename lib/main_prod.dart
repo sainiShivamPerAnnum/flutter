@@ -11,18 +11,19 @@ void main() async {
     flavor: Flavor.PROD,
     color: Colors.deepPurpleAccent,
     values: FlavorValues(
-      awsAugmontStage: AWSAugmontStage.PROD,
-      awsIciciStage: AWSIciciStage.PROD,
-      freshchatStage: FreshchatStage.DEV,
-      razorpayStage: RazorpayStage.PROD,
-      signzyStage: SignzyStage.PROD,
-      signzyPanStage: SignzyPanStage.PROD,
-      paytmStage: PaytmStage.PROD,
-      baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
-      baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
-      mixpanelToken: MixpanelAnalytics.PROD_TOKEN,
-      dynamicLinkPrefix: 'https://fello.in',
-    ),
+        awsAugmontStage: AWSAugmontStage.PROD,
+        awsIciciStage: AWSIciciStage.PROD,
+        freshchatStage: FreshchatStage.DEV,
+        razorpayStage: RazorpayStage.PROD,
+        signzyStage: SignzyStage.PROD,
+        signzyPanStage: SignzyPanStage.PROD,
+        paytmStage: PaytmStage.PROD,
+        baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+        baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+        mixpanelToken: MixpanelAnalytics.PROD_TOKEN,
+        dynamicLinkPrefix: 'https://fello.in',
+        gameApiTokenSecret:
+            "bb34f35f0a0f7424fb8a25708b58ec142df5216ff05ffbb186108744cd340c85"),
   );
 
   await mainInit();

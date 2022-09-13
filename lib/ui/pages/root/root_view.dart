@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -25,7 +27,38 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
 
-class Root extends StatelessWidget {
+class Root extends StatefulWidget {
+  const Root({Key key}) : super(key: key);
+
+  @override
+  State<Root> createState() => _RootState();
+}
+
+class _RootState extends State<Root> with WidgetsBindingObserver {
+  final PaytmService _paytmService = locator<PaytmService>();
+  AppLifecycleState appLifecycleState;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    appLifecycleState = state;
+    if (appLifecycleState == AppLifecycleState.resumed) {
+      _paytmService.handleIOSUpiTransaction();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
   final pages = [Save(), Play(), Win()];
 
   @override
@@ -172,7 +205,7 @@ class BottomNavBar extends StatelessWidget {
             currentIndex: AppState.delegate.appState.getCurrentTabIndex,
             items: [
               NavBarItemData(
-                locale.navBarFinance,
+                locale.navBarSave,
                 Assets.navSave,
                 SizeConfig.screenWidth * 0.27,
               ),

@@ -427,7 +427,7 @@ class LoginControllerViewModel extends BaseModel {
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
-      await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
+      await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
       logger.d("User details available: Name: " + user.model.name);
       if (source == LoginSource.TRUECALLER)
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
@@ -476,13 +476,23 @@ class LoginControllerViewModel extends BaseModel {
     }
 
     Map<String, dynamic> response = await _internalOpsService.initDeviceInfo();
+    logger.d("Device Details: $response");
     if (response != null) {
       final String deviceId = response["deviceId"];
       final String platform = response["platform"];
+      final String model = response["model"];
+      final String brand = response["brand"];
+      final bool isPhysicalDevice = response["isPhysicalDevice"];
+      final String version = response["version"];
+
       _userRepo.setNewDeviceId(
         uid: userService.baseUser.uid,
         deviceId: deviceId,
         platform: platform,
+        model: model,
+        brand: brand,
+        version: version,
+        isPhysicalDevice: isPhysicalDevice,
       );
     }
 

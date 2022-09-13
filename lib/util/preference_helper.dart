@@ -8,7 +8,7 @@ class PreferenceHelper {
   static const REFERRAL_CODE = 'referral_code';
   static const REFERRAL_PROCESSED = 'referral_processed';
   static const CACHE_RATING_IS_RATED = "isUserRated";
-  static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
+  // static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
 

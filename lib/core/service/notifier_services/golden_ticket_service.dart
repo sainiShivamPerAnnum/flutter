@@ -37,7 +37,7 @@ class GoldenTicketService extends ChangeNotifier {
   final _logger = locator<CustomLogger>();
   final _gtRepo = locator<GoldenTicketRepository>();
   final _userService = locator<UserService>();
-  final _paytmService = locator<PaytmService>();
+  // final _paytmService = locator<PaytmService>();
   final _internalOpsService = locator<InternalOpsService>();
   // static bool hasGoldenTicket = false;
 
@@ -322,7 +322,7 @@ class GoldenTicketService extends ChangeNotifier {
                     ),
                     onPressed: () {
                       AppState.backButtonDispatcher.didPopRoute();
-                      openAutosave();
+                      // openAutosave();
                     },
                   ),
                 ],
@@ -338,17 +338,17 @@ class GoldenTicketService extends ChangeNotifier {
     );
   }
 
-  openAutosave() {
-    if (_paytmService.activeSubscription != null) {
-      AppState.delegate.appState.currentAction = PageAction(
-          page: AutosaveProcessViewPageConfig,
-          widget: AutosaveProcessView(page: 2),
-          state: PageState.addWidget);
-    } else {
-      AppState.delegate.appState.currentAction = PageAction(
-        page: AutosaveDetailsViewPageConfig,
-        state: PageState.addPage,
-      );
-    }
-  }
+  // openAutosave() {
+  //   if (_paytmService.activeSubscription != null) {
+  //     AppState.delegate.appState.currentAction = PageAction(
+  //         page: AutosaveProcessViewPageConfig,
+  //         widget: AutosaveProcessView(page: 2),
+  //         state: PageState.addWidget);
+  //   } else {
+  //     AppState.delegate.appState.currentAction = PageAction(
+  //       page: AutosaveDetailsViewPageConfig,
+  //       state: PageState.addPage,
+  //     );
+  //   }
+  // }
 }
