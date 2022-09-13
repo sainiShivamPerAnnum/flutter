@@ -417,8 +417,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return false;
     }
-    //TODO revert min to 10
-    if (buyAmount < 1) {
+    if (buyAmount < 10) {
       showMinCapText = true;
       return false;
     }
@@ -475,7 +474,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
       );
       return;
     }
-    if (buyAmount < 1) {
+    if (buyAmount < 10) {
       showMinCapText = true;
       return;
     }

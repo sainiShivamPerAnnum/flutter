@@ -120,18 +120,18 @@ class RazorpayModel extends ChangeNotifier {
     print(paytmSubscriptionApiResponse.model.data.orderId);
     AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
     AppState.currentTxnAmount = amount;
-
+    _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     var options = {
       'key': _keyId,
       'amount': amount.toInt() * 100,
-      'name': 'Augmont Gold',
+      'name': 'Digital Gold Purchase',
       'order_id': paytmSubscriptionModel.data.orderId,
-      'description': '',
+      'description': 'GOLD',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,
-      'remember_customer': true,
-      'readonly': {'contact': true, 'email': false, 'name': false},
+      'remember_customer': false,
+      'readonly': {'contact': true, 'email': true, 'name': true},
       'theme': {
         'hide_topbar': false,
         'color': '#2EB19F',

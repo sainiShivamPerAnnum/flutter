@@ -460,7 +460,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     String url =
         processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink +
-            '&tn=FelloGold';
+            '&tn=FELLOGOLD';
 
     _logger.d("Transaction Url: $url");
 
@@ -569,6 +569,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             break;
           case Constants.TXN_STATUS_RESPONSE_FAILURE:
             AppState.delegate.appState.isTxnLoaderInView = false;
+            timer.cancel();
             AppState.delegate.appState.txnTimer.cancel();
             BaseUtil.showNegativeAlert(
               'Transaction failed',

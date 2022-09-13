@@ -314,8 +314,7 @@ class TransactionService
 
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
-    AppState.currentTxnAmount = 0;
-    AppState.currentTxnOrderId = "";
+
     _logger.i("Updating response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     AppState.delegate.appState.txnTimer?.cancel();
@@ -389,6 +388,8 @@ class TransactionService
               showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
         }
       }
+      AppState.currentTxnAmount = 0;
+      AppState.currentTxnOrderId = "";
       updateTransactions();
     } catch (e) {
       _logger.e(e);

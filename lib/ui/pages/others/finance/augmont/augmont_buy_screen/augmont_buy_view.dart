@@ -452,9 +452,9 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   children: [
                     Text(
                       model.appMetaList.length > 0
-                          ? 'Please select an UPI App'
-                          : "No Apps available",
-                      style: TextStyles.title4.bold,
+                          ? 'Please select a UPI App'
+                          : "No UPI apps available",
+                      style: TextStyles.title5.bold,
                     ),
                     GestureDetector(
                         onTap: () {
@@ -475,7 +475,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                           SvgPicture.asset(Assets.noTickets,
                               height: SizeConfig.screenWidth * 0.16),
                           SizedBox(height: SizeConfig.padding12),
-                          Text('Please install any UPI applications to proceed',
+                          Text('Could not find any installed UPI applications.',
                               style: TextStyles.body1.colour(Colors.grey)),
                         ],
                       ),

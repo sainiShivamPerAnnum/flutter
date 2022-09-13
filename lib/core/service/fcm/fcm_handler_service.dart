@@ -55,7 +55,6 @@ class FcmHandler extends ChangeNotifier {
           if (AppState.delegate.appState.isTxnLoaderInView == false)
             showSnackbar = true;
           _txnService.fcmTransactionResponseUpdate(data['payload']);
-
           break;
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
           _webGameViewModel.handleCricketHeroRoundEnd(
@@ -96,7 +95,7 @@ class FcmHandler extends ChangeNotifier {
     if (source == MsgSource.Foreground && showSnackbar == true) {
       handleNotification(title, body);
     }
-    // _userservice.checkForNewNotifications();
+    _userservice.checkForNewNotifications();
     return true;
   }
 
