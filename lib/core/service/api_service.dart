@@ -218,7 +218,8 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid,
-        'pg-mode': pgGateway
+        'pg-mode': pgGateway,
+        // 'paytm-mode': //intent || pg
       };
       logger.d(_headers);
       if (token != null)
@@ -266,7 +267,6 @@ class APIService implements API {
     var responseJson;
     // token = Preference.getString('token');
     try {
-      logger.d("response from $url");
       String _url = getBaseUrl(
             isSubUrl: isAwsSubUrl,
             isTxnUrl: isAwsTxnUrl,
@@ -275,6 +275,8 @@ class APIService implements API {
           url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
+      logger.d("response from $_url");
+
       final response = await http.put(
         Uri.parse(
           _url,

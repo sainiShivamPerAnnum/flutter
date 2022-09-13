@@ -470,13 +470,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return;
     } else {
       log(upiApplication.appName);
-      if (Platform.isAndroid && upiApplication.appName == "Google Pay") {
-        url = "tez://upi/" + url.substring(6);
-      }
-      if (Platform.isAndroid && upiApplication.appName == "PhonePe") {
-        url = "phonepe://upi/" + url.substring(6);
-      }
-      log(url);
       await doUpiTransation(
           url: url,
           amount: amount,

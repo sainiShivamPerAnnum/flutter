@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
@@ -41,9 +44,14 @@ class PaytmRepository {
       };
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
+      final paymentMode = Platform.isAndroid
+          ? BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID)
+          : BaseRemoteConfig.remoteConfig
+              .getString(BaseRemoteConfig.ACTIVE_PG_IOS);
       final response = await APIService.instance.postPaymentData(
           ApiPath.kCreatePaytmTransaction,
-          pgGateway: isRzpTxn ? 'razorpay' : 'paytm',
+          pgGateway: paymentMode,
           body: _body,
           token: _token,
           isAwsTxnUrl: true);

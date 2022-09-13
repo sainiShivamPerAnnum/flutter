@@ -30,21 +30,7 @@ class AugmontBuyCard extends StatefulWidget {
   State<AugmontBuyCard> createState() => _AugmontBuyCardState();
 }
 
-class _AugmontBuyCardState extends State<AugmontBuyCard>
-    with WidgetsBindingObserver {
-  List<String> events = [];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-  }
-
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    events.add(state.toString());
-    setState(() {});
-  }
-
+class _AugmontBuyCardState extends State<AugmontBuyCard> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

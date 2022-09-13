@@ -93,7 +93,7 @@ class TambolaHomeViewModel extends BaseModel {
 
   void openGame() {
     _analyticsService.track(eventName: AnalyticsEvents.startPlayingTambola);
-    _baseUtil.cacheGameorder('TA');
+    // _baseUtil.cacheGameorder('TA');
     BaseUtil().openTambolaGame();
   }
 }

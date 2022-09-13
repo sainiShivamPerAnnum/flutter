@@ -316,7 +316,7 @@ class TransactionService
     //Stop loader if loading.
     _logger.i("Updating response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
-    AppState.delegate.appState.txnTimer.cancel();
+    AppState.delegate.appState.txnTimer?.cancel();
     _logger.d("timer cancelled");
 
     try {

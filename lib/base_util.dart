@@ -311,56 +311,58 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void arrangeGames() {
-    List<GameModel> tempFocusGameList = [];
-    List<GameModel> tempRestGamesList = [];
-    List<GameModel> tempGameList = [];
-    List<String> gamesOrder = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.GAME_POSITION)
-        .split('-');
-    gamesOrder.forEach(
-      (gameCode) {
-        tempGameList.add(
-          gamesList.firstWhere((game) => game.code == gameCode),
-        );
-      },
-    );
+    // List<GameModel> tempFocusGameList = [];
+    // List<GameModel> tempRestGamesList = [];
+    // List<GameModel> tempGameList = [];
+    // List<String> gamesOrder = BaseRemoteConfig.remoteConfig
+    //     .getString(BaseRemoteConfig.GAME_POSITION)
+    //     .split('-');
+    // gamesOrder.forEach(
+    //   (gameCode) {
+    //     tempGameList.add(
+    //       gamesList.firstWhere((game) => game.code == gameCode),
+    //     );
+    //   },
+    // );
 
-    final String userlastPlayedGames =
-        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
-    if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
-      List<String> lastgamesOrder = userlastPlayedGames.split("-");
-      lastgamesOrder.forEach((code) {
-        tempFocusGameList
-            .add(tempGameList.firstWhere((game) => game.code == code));
-      });
-      if (tempFocusGameList.length < 2) {
-        for (int i = 0; i < tempGameList.length; i++) {
-          if (!tempFocusGameList.contains(tempGameList[i])) {
-            tempFocusGameList.add(tempGameList[i]);
-            if (tempFocusGameList.length >= 2) break;
-          }
-        }
-      } else if (tempFocusGameList.length > 2) {
-        while (tempFocusGameList.length > 2) {
-          tempFocusGameList.removeLast();
-        }
-      }
-    } else {
-      List<String> newUserGamesOrder = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
-          .split('-');
-      newUserGamesOrder.forEach((code) {
-        tempFocusGameList
-            .add(tempGameList.firstWhere((game) => game.code == code));
-      });
-    }
-    tempGameList.forEach((game) {
-      if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
-    });
-    focusGamesList = tempFocusGameList;
-    restGamesList = tempRestGamesList;
-    logger.d(
-        "Focused games list: $focusGamesList \nRest games List: $restGamesList");
+    // final String userlastPlayedGames =
+    //     PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
+    // if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
+    //   List<String> lastgamesOrder = userlastPlayedGames.split("-");
+    //   lastgamesOrder.forEach((code) {
+    //     tempFocusGameList
+    //         .add(tempGameList.firstWhere((game) => game.code == code));
+    //   });
+    //   if (tempFocusGameList.length < 2) {
+    //     for (int i = 0; i < tempGameList.length; i++) {
+    //       if (!tempFocusGameList.contains(tempGameList[i])) {
+    //         tempFocusGameList.add(tempGameList[i]);
+    //         if (tempFocusGameList.length >= 2) break;
+    //       }
+    //     }
+    //   } else if (tempFocusGameList.length > 2) {
+    //     while (tempFocusGameList.length > 2) {
+    //       tempFocusGameList.removeLast();
+    //     }
+    //   }
+    // } else {
+    //   List<String> newUserGamesOrder = BaseRemoteConfig.remoteConfig
+    //       .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
+    //       .split('-');
+    //   newUserGamesOrder.forEach((code) {
+    //     tempFocusGameList
+    //         .add(tempGameList.firstWhere((game) => game.code == code));
+    //   });
+    // }
+    // tempGameList.forEach((game) {
+    //   if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
+    // });
+    focusGamesList = gamesList.sublist(0, 2);
+    restGamesList = gamesList.sublist(2);
+    // tempFocusGameList;
+    // restGamesList = tempRestGamesList;
+    // logger.d(
+    //     "Focused games list: $focusGamesList \nRest games List: $restGamesList");
     // dev.log("Games List: $gamePosition");
     // gamesList = [];
     // gamePosition.forEach((code) {
@@ -833,25 +835,25 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  cacheGameorder(String gameCode) {
-    String gamesOrder =
-        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
+  // cacheGameorder(String gameCode) {
+  //   String gamesOrder =
+  //       PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
 
-    if (gamesOrder != null && gamesOrder.isNotEmpty) {
-      List<String> cachedGamesList = gamesOrder.split('-');
+  //   if (gamesOrder != null && gamesOrder.isNotEmpty) {
+  //     List<String> cachedGamesList = gamesOrder.split('-');
 
-      if (!cachedGamesList.contains(gameCode)) {
-        cachedGamesList.insert(0, gameCode);
-        while (cachedGamesList.length > 2) cachedGamesList.removeLast();
-      }
-      gamesOrder = cachedGamesList.join('-');
-    } else {
-      gamesOrder = gameCode;
-    }
-    PreferenceHelper.setString(
-        PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
-    arrangeGames();
-  }
+  //     if (!cachedGamesList.contains(gameCode)) {
+  //       cachedGamesList.insert(0, gameCode);
+  //       while (cachedGamesList.length > 2) cachedGamesList.removeLast();
+  //     }
+  //     gamesOrder = cachedGamesList.join('-');
+  //   } else {
+  //     gamesOrder = gameCode;
+  //   }
+  //   PreferenceHelper.setString(
+  //       PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
+  // arrangeGames();
+  // }
 
   void refreshAugmontBalance() async {
     _userRepo.getFundBalance().then((aValue) {

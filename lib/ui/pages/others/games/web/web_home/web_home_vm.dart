@@ -149,7 +149,7 @@ class WebHomeViewModel extends BaseModel {
 
   Future<bool> setupGame() async {
     await getBearerToken();
-    _baseUtil.cacheGameorder(gameCode);
+    // _baseUtil.cacheGameorder(gameCode);
     return _setupCurrentGame();
   }
 

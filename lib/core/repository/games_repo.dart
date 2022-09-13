@@ -47,20 +47,8 @@ class GameRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<String>> getGameToken({@required String gameName}) async {
-    try {
-      final token = await getBearerToken();
-      final uid = userService.baseUser.uid;
-      final response = await APIService.instance.getData(
-        ApiPath.getGameToken(gameName, uid),
-        cBaseUrl: _baseUrl,
-        token: token,
-      );
-      final String gameToken = response["data"]["token"];
-      return ApiResponse<String>(model: gameToken, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch game by id", 400);
-    }
+  ApiResponse<String> getGameToken({@required String gameName}) {
+    String res = getGameApiToken(gameName);
+    return ApiResponse(model: res, code: 200);
   }
 }

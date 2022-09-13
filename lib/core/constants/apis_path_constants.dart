@@ -43,6 +43,7 @@ class ApiPath {
   static String getCoinBalance(uid) => "/$uid/wallet/coin";
   static String getFundBalance(uid) => "/$uid/wallet/fund";
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
+  static String logOut(String uid) => "/user/$uid/logout";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
@@ -104,8 +105,6 @@ class ApiPath {
   // Coupon Apis
   static const String getCoupons = "/coupons";
   static String getGameByCode(String gameCode) => "/game/$gameCode";
-  static String getGameToken(String gameName, String uid) =>
-      "/$gameName/token?uid=$uid";
 
   // referral
   static String getUserIdByRefCode(String code) => "/referral/$code";

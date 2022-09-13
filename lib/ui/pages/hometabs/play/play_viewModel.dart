@@ -52,7 +52,7 @@ class PlayViewModel extends BaseModel {
       );
     });
 
-    setGameListTitle();
+    // setGameListTitle();
   }
 
   void clear() {
@@ -81,10 +81,10 @@ class PlayViewModel extends BaseModel {
         PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
-  setGameListTitle() async {
-    if (PreferenceHelper.exist(PreferenceHelper.CACHE_LAST_PLAYED_GAMES)) {
-      gamesListOneTitle = "Recently played";
-      notifyListeners();
-    }
-  }
+  // setGameListTitle() async {
+  //   if (PreferenceHelper.exist(PreferenceHelper.CACHE_LAST_PLAYED_GAMES)) {
+  //     gamesListOneTitle = "Recently played";
+  //     notifyListeners();
+  //   }
+  // }
 }

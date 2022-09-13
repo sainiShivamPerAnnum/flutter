@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -391,6 +393,41 @@ class UserRepository extends BaseRepo {
         "Unable to update fcm",
         400,
       );
+    }
+  }
+
+  Future<bool> logOut() async {
+    try {
+      final token = await getBearerToken();
+      Map<String, dynamic> response =
+          await _internalOpsService.initDeviceInfo();
+      if (response != null) {
+        final String deviceId = response["deviceId"];
+        final String platform = response["platform"];
+        final String model = response["model"];
+        final String brand = response["brand"];
+        final bool isPhysicalDevice = response["isPhysicalDevice"];
+        final String version = response["version"];
+        logger.d("Device Details: $response");
+        final res = await APIService.instance.putData(
+            ApiPath.logOut(userService.baseUser.uid),
+            cBaseUrl: _baseUrl,
+            token: "Bearer $token",
+            body: {
+              "uid": userService.baseUser.uid ?? "",
+              "deviceId": deviceId ?? "",
+              "platform": platform ?? "",
+              "model": model ?? "",
+              "brand": brand ?? "",
+              "version": version ?? "",
+              "isPhysicalDevice": isPhysicalDevice ?? true
+            });
+        logger.d("LogOut response: ${res.toString()}");
+      }
+      return true;
+    } catch (e) {
+      logger.e(e);
+      return false;
     }
   }
 }
