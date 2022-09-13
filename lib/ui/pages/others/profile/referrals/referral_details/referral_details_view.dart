@@ -420,6 +420,49 @@ class BonusLockedReferals extends StatelessWidget {
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
                               child: Row(
                                 children: [
+                                  FutureBuilder(
+                                    future: model.getProfileDpWithUid(
+                                        model.referalList[i].uid),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Image.asset(
+                                          Assets.defaultProfilePlaceholder,
+                                          width: SizeConfig.iconSize5_5,
+                                          height: SizeConfig.iconSize5_5,
+                                        );
+                                      }
+
+                                      String imageUrl = snapshot.data as String;
+
+                                      return ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: imageUrl,
+                                          fit: BoxFit.cover,
+                                          width: SizeConfig.iconSize5_5,
+                                          height: SizeConfig.iconSize5_5,
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            width: SizeConfig.iconSize5_5,
+                                            height: SizeConfig.iconSize5_5,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          errorWidget: (a, b, c) {
+                                            return Image.asset(
+                                              Assets.defaultProfilePlaceholder,
+                                              width: SizeConfig.iconSize5,
+                                              height: SizeConfig.iconSize5,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding10,
+                                  ),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -538,6 +581,49 @@ class BonusUnlockedReferals extends StatelessWidget {
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
                               child: Row(
                                 children: [
+                                  FutureBuilder(
+                                    future: model.getProfileDpWithUid(
+                                        model.referalList[i].uid),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Image.asset(
+                                          Assets.defaultProfilePlaceholder,
+                                          width: SizeConfig.iconSize5_5,
+                                          height: SizeConfig.iconSize5_5,
+                                        );
+                                      }
+
+                                      String imageUrl = snapshot.data as String;
+
+                                      return ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: imageUrl,
+                                          fit: BoxFit.cover,
+                                          width: SizeConfig.iconSize5_5,
+                                          height: SizeConfig.iconSize5_5,
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            width: SizeConfig.iconSize5_5,
+                                            height: SizeConfig.iconSize5_5,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          errorWidget: (a, b, c) {
+                                            return Image.asset(
+                                              Assets.defaultProfilePlaceholder,
+                                              width: SizeConfig.iconSize5,
+                                              height: SizeConfig.iconSize5,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding10,
+                                  ),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

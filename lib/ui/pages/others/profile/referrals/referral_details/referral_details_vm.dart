@@ -129,6 +129,7 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   fetchReferalsList(BuildContext context) {
+    print("Method to fetch");
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     final _referralRepo = locator<ReferralRepo>();
@@ -142,9 +143,7 @@ class ReferralDetailsViewModel extends BaseModel {
         notifyListeners();
       });
     } else {
-      if (_referalList == null) {
-        _referalList = [];
-      }
+      _referalList = baseProvider.userReferralsList;
 
       notifyListeners();
     }

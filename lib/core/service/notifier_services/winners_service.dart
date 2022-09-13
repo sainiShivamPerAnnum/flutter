@@ -10,6 +10,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 import '../../ops/db_ops.dart';
@@ -86,31 +87,17 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   }
 
   String getDateRange() {
-    List<String> months = [
-      'Jan',
-      'Feb',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-
     var today = DateTime.now();
     var beforeSevenDays = today.subtract(Duration(days: 7));
+    DateFormat formatter = DateFormat('MMM');
 
     int dayToday = today.day;
-    int monthToday = today.month;
-    String todayDateToShow = "$dayToday ${months[monthToday - 1]}";
+    String monthToday = formatter.format(today);
+    String todayDateToShow = "$dayToday $monthToday";
 
     int dayOld = beforeSevenDays.day;
-    int monthOld = beforeSevenDays.month;
-    String oldDateToShow = "$dayOld ${months[monthOld - 1]}";
+    String monthOld = formatter.format(beforeSevenDays);
+    String oldDateToShow = "$dayOld $monthOld";
 
     return "$oldDateToShow - $todayDateToShow";
   }
