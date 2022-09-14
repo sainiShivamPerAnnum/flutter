@@ -1,12 +1,11 @@
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
-class LoginOtpViewModel extends BaseModel {
+class LoginOtpViewModel extends BaseModel with CodeAutoFill {
   final pinEditingController = new TextEditingController();
   Log log = new Log("OtpInputScreen");
-  FocusNode _focusNode;
-  String _otp;
   String _loaderMessage = "Enter the received OTP..";
   String mobileNo;
   bool _otpFieldEnabled = true;
@@ -21,28 +20,14 @@ class LoginOtpViewModel extends BaseModel {
   get autoDetectingOtp => _autoDetectingOtp;
   bool get showResendOption => _showResendOption;
   String get otp => pinEditingController.text;
-  // FocusNode get focusNode => _focusNode;
 
   set showResendOption(bool val) {
     _showResendOption = val;
     notifyListeners();
   }
 
-  // set focusNode(FocusNode val) {
-  //   _focusNode = val;
-  //   notifyListeners();
-  // }
-
   init(BuildContext context) {
-    // focusNode = new FocusNode();
-    // focusNode.addListener(
-    //   () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'),
-    // );
-
-    // Future.delayed(Duration(seconds: 2), () {
-    //   FocusScope.of(context).requestFocus(focusNode);
-    // });
-
+    listenForCode();
     Future.delayed(Duration(seconds: 30), () {
       try {
         showResendOption = true;
@@ -51,10 +36,6 @@ class LoginOtpViewModel extends BaseModel {
       }
     });
   }
-
-  // modelDispose() {
-  //   focusNode.dispose();
-  // }
 
   onOtpReceived() {
     _otpFieldEnabled = false;
@@ -85,6 +66,14 @@ class LoginOtpViewModel extends BaseModel {
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;
       _loaderMessage = 'OTP requests exceeded. Please try again after sometime';
+      notifyListeners();
+    }
+  }
+
+  @override
+  void codeUpdated() {
+    if (code != null) {
+      pinEditingController.text = code;
       notifyListeners();
     }
   }

@@ -32,6 +32,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -81,7 +82,6 @@ class LoginControllerViewModel extends BaseModel {
 
   String userMobile;
   String _verificationId;
-  String _augmentedVerificationId;
   String cstate;
   int _currentPage;
   ValueNotifier<double> _pageNotifier;
@@ -154,18 +154,24 @@ class LoginControllerViewModel extends BaseModel {
         }
       case LoginOtpView.index:
         {
-          String otp =
-              _otpScreenKey.currentState.model.otp; //otpInScreen.getOtp();
+          String otp = _otpScreenKey.currentState.model.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             setState(ViewState.Busy);
-            bool flag = await baseProvider.authenticateUser(baseProvider
-                .generateAuthCredential(_augmentedVerificationId, otp));
-            if (flag) {
+            final verifyOtp =
+                await this._userRepo.verifyOtp(this._verificationId, otp);
+            if (verifyOtp.isSuccess()) {
               _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.model.onOtpReceived();
-
-              _onSignInSuccess(LoginSource.FIREBASE);
+              FirebaseAuth.instance
+                  .signInWithCustomToken(verifyOtp.model)
+                  .then((res) {
+                _onSignInSuccess(LoginSource.FIREBASE);
+              }).catchError((e) {
+                logger.e(e);
+                BaseUtil.showNegativeAlert("Authentication failed",
+                    "Please enter your mobile number to authenticate.");
+              });
             } else {
               _otpScreenKey.currentState.model.pinEditingController.text = "";
               BaseUtil.showNegativeAlert(
@@ -435,83 +441,33 @@ class LoginControllerViewModel extends BaseModel {
   }
 
   Future<void> _verifyPhone() async {
-    final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
-      logger.d('::AUTO_RETRIEVE::INVOKED');
-      logger.d("Phone number hasnt been auto verified yet");
-      if (_otpScreenKey.currentState != null)
-        _otpScreenKey.currentState.model.onOtpAutoDetectTimeout();
-    };
+    final hash = await SmsAutoFill().getAppSignature;
+    final res = await this._userRepo.sendOtp(this._verificationId, hash);
 
-    final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
-      logger.d('::SMS_CODE_SENT::INVOKED');
-      this._augmentedVerificationId = verId;
-      logger.d("User mobile number format verified. Sending otp and verifying");
+    if (res.isSuccess()) {
       if (baseProvider.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
 
-        _controller.animateToPage(LoginOtpView.index,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInToLinear);
+        _controller.animateToPage(
+          LoginOtpView.index,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear,
+        );
         setState(ViewState.Idle);
       } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState.model.onOtpResendConfirmed(true);
       }
-    };
-
-    final PhoneVerificationCompleted verifiedSuccess =
-        (AuthCredential user) async {
-      logger.d('::VERIFIED_SUCCESS::INVOKED');
-      logger.d("Verified automagically!");
-      setState(ViewState.Busy);
-      if (_currentPage == LoginOtpView.index) {
-        _otpScreenKey.currentState.model.onOtpReceived();
-      }
-      logger.d("Now verifying user");
-      bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
-      if (flag) {
-        logger.d("User signed in successfully");
-        _onSignInSuccess(LoginSource.FIREBASE);
-      } else {
-        logger.e("User auto sign in didnt work");
-
-        BaseUtil.showNegativeAlert(
-          'Sign In Failed',
-          'Please check your network or number and try again',
-        );
-        setState(ViewState.Idle);
-      }
-    };
-
-    final PhoneVerificationFailed veriFailed =
-        (FirebaseAuthException exception) {
-      logger.d('::VERIFIED_FAILED::INVOKED');
-      logger.e(exception.stackTrace.toString());
+    } else {
       String exceptionMessage =
           'Please check your network or number and try again';
-      //codes: 'quotaExceeded'
-      if (exception.code == 'too-many-requests') {
-        logger.e("Quota for otps exceeded");
-        exceptionMessage =
-            "You have exceeded the number of allowed OTP attempts. Please try again in sometime";
-      }
-      logger.e(exception.code);
-      logger.e("Verification process failed:  ${exception.message}");
+
       BaseUtil.showNegativeAlert(
-        'Sign In Failed',
+        'Sending OTP failed',
         exceptionMessage,
       );
       setState(ViewState.Idle);
-    };
-
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: this._verificationId,
-      codeAutoRetrievalTimeout: autoRetrieve,
-      codeSent: smsCodeSent,
-      timeout: const Duration(seconds: 30),
-      verificationCompleted: verifiedSuccess,
-      verificationFailed: veriFailed,
-    );
+    }
   }
 
   Future<String> _getBearerToken() async {
