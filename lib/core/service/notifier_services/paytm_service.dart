@@ -524,6 +524,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
     //iOS Handling
     if (PlatformUtils.isIOS) {
+      if (upiApplication.appName == "Google Pay") {
+        url = "tez:" + url.split(":").last;
+      } else if (upiApplication.appName == "PhonePe") {
+        url = "phonepe:" + url.split(":").last;
+      }
       launchUrl(Uri.parse(url)).then((value) async {
         AppState.backButtonDispatcher.didPopRoute();
         AppState.isIOSTxnInProgress = true;
