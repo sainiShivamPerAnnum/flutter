@@ -434,6 +434,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
     AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
     AppState.currentTxnAmount = amount;
+    _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
       return false;

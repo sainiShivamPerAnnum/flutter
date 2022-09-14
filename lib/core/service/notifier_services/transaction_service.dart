@@ -315,7 +315,7 @@ class TransactionService
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
 
-    _logger.i("Updating response value. $fcmDataPayload");
+    _logger.i("Updating fcm response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     AppState.delegate.appState.txnTimer?.cancel();
     AppState.pollingPeriodicTimer?.cancel();
@@ -388,8 +388,7 @@ class TransactionService
               showAutoSavePrompt: depositFcmResponseModel.autosavePrompt);
         }
       }
-      AppState.currentTxnAmount = 0;
-      AppState.currentTxnOrderId = "";
+
       updateTransactions();
     } catch (e) {
       _logger.e(e);
@@ -401,6 +400,7 @@ class TransactionService
   transactionResponseUpdate({String gtId, double amount}) async {
     AppState.currentTxnAmount = 0;
     AppState.currentTxnOrderId = "";
+    _logger.d("Polling response processing");
     try {
       if (gtId != null) {
         print("Hey a new fcm recived with gtId: $gtId");
