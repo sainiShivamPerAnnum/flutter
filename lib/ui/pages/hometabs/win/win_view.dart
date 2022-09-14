@@ -4,12 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -135,7 +137,10 @@ class Win extends StatelessWidget {
                                             model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              model.showConfirmDialog(
+                                                  PrizeClaimChoice.GOLD_CREDIT);
+                                            },
                                             width: SizeConfig.screenWidth * 0.4)
                                         : Text(
                                             'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
@@ -168,12 +173,7 @@ class Win extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                AppState.delegate.appState.currentAction =
-                                    PageAction(
-                                  page: CampaignViewPageConfig,
-                                  state: PageState.addWidget,
-                                  widget: MyWinningsView(),
-                                );
+                                model.navigateToMyWinnings();
                               },
                               child: Row(
                                 mainAxisAlignment:
@@ -496,11 +496,7 @@ class ReferAndEarnComponent extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                AppState.delegate.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  widget: ReferralDetailsView(),
-                  page: ReferralDetailsPageConfig,
-                );
+                model.navigateToRefer();
               },
               child: Container(
                 margin: EdgeInsets.all(SizeConfig.padding6),
@@ -569,16 +565,14 @@ class _WinningsCylinder extends State<WinningsCylinder> {
   Widget build(BuildContext context) {
     if (widget.index == 3) {
       Future.delayed(const Duration(milliseconds: 500), () {
-        if (containerFilledHeight == 0) {
-          setState(() {
-            if (widget.currentWinning >= widget.redeemAmount) {
-              containerFilledHeight = containerHeight;
-            } else {
-              containerFilledHeight = widget.model.calculateFillHeight(
-                  widget.currentWinning, containerHeight, widget.redeemAmount);
-            }
-          });
-        }
+        setState(() {
+          if (widget.currentWinning >= widget.redeemAmount) {
+            containerFilledHeight = containerHeight;
+          } else {
+            containerFilledHeight = widget.model.calculateFillHeight(
+                widget.currentWinning, containerHeight, widget.redeemAmount);
+          }
+        });
       });
     }
     return Center(

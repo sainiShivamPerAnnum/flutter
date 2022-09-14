@@ -12,14 +12,16 @@ class AppDefaultDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
   final Widget asset;
+  final ValueChanged result;
 
   AppDefaultDialog({
     @required this.title,
     this.description = '',
     @required this.buttonText,
-    @required this.confirmAction,
+    this.confirmAction,
     @required this.cancelAction,
     this.asset,
+    this.result,
     this.cancelBtnText = 'Cancel',
   });
 
@@ -142,7 +144,9 @@ class _FormDialogState extends State<AppDefaultDialog> {
                           setState(() {
                             isLoading = true;
                           });
-                          return widget.confirmAction();
+                          if (widget.result != null) return widget.result(true);
+                          if (widget.confirmAction != null)
+                            return widget.confirmAction();
                         },
                       ),
                     ],

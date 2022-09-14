@@ -1,39 +1,59 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 
-import '../../../../core/base_remote_config.dart';
-import '../../../../core/repository/referral_repo.dart';
-import '../../../../core/service/analytics/appflyer_analytics.dart';
-import '../../../../core/service/fcm/fcm_listener_service.dart';
-import '../../../../util/api_response.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/util/api_response.dart';
 
 class WinViewModel extends BaseModel {
   final _userService = locator<UserService>();
@@ -46,15 +66,39 @@ class WinViewModel extends BaseModel {
   final _appFlyer = locator<AppFlyerAnalytics>();
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
+  final userRepo = locator<UserRepository>();
+  final _httpModel = locator<HttpModel>();
+  final _transactionService = locator<TransactionService>();
+  final _internalOpsService = locator<InternalOpsService>();
 
   Timer _timer;
   bool _showOldView = false;
   bool get showOldView => this._showOldView;
   String _refCode = "";
+  final GlobalKey imageKey = GlobalKey();
+
+  PrizeClaimChoice _choice;
+  get choice => this._choice;
+
+  set choice(value) {
+    this._choice = value;
+    notifyListeners();
+  }
+
   String _shareMsg;
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
+  bool _isWinningHistoryLoading = false;
+
+  List<UserTransaction> _winningHistory;
+
+  List<UserTransaction> get winningHistory => this._winningHistory;
+  set winningHistory(List<UserTransaction> value) {
+    this._winningHistory = value;
+    notifyListeners();
+  }
+
   String appShareMessage =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
   final _fcmListener = locator<FcmListener>();
@@ -68,6 +112,13 @@ class WinViewModel extends BaseModel {
   String _refUnlock;
   int _refUnlockAmt;
   int _minWithdrawPrizeAmt;
+
+  //GETTERS SETTERS
+  get isWinningHistoryLoading => this._isWinningHistoryLoading;
+  set isWinningHistoryLoading(value) {
+    this._isWinningHistoryLoading = value;
+    notifyListeners();
+  }
 
   String get minWithdrawPrize => _minWithdrawPrize;
   String get refUnlock => _refUnlock;
@@ -309,6 +360,266 @@ class WinViewModel extends BaseModel {
       state: PageState.addPage,
       page: ReferralDetailsPageConfig,
     );
+  }
+
+  showConfirmDialog(PrizeClaimChoice choice) {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      hapticVibrate: true,
+      content: AppDefaultDialog(
+        result: (res) async {
+          if (res)
+            await claim(choice, _userService.userFundWallet.unclaimedBalance);
+        },
+        title: "Confirmation",
+        description: choice == PrizeClaimChoice.AMZ_VOUCHER
+            ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as Digital Gold?",
+        buttonText: "Yes",
+        cancelBtnText: "No",
+        cancelAction: AppState.backButtonDispatcher.didPopRoute,
+      ),
+    );
+  }
+
+  getWinningHistory() async {
+    isWinningHistoryLoading = true;
+    ApiResponse<List<UserTransaction>> temp =
+        await userRepo.getWinningHistory(_userService.baseUser.uid);
+    temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    isWinningHistoryLoading = false;
+    if (temp != null)
+      winningHistory = temp.model;
+    else
+      BaseUtil.showNegativeAlert(
+          "Winning History fetch failed", "Please try again after sometime");
+  }
+
+  showSuccessPrizeWithdrawalDialog(
+      PrizeClaimChoice choice, String subtitle, double claimPrize) async {
+    //Starting the redemption sucessfull screen
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      widget: RedeemSucessfulScreen(
+        subTitleWidget: getSubtitleWidget(subtitle),
+        claimPrize: claimPrize,
+        onSharePressed: () {
+          //Starting the sharing screen
+          AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            widget: SharePriceScreen(
+              imageKey: imageKey,
+              dpUrl: _userService.myUserDpUrl,
+              choice: choice,
+              prizeAmount: claimPrize,
+              onShareButtonPressed: (res) async {
+                if (res) {
+                  try {
+                    String url =
+                        await _userService.createDynamicLink(true, 'Other');
+                    caputure(
+                        'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                  } catch (e) {
+                    _logger.e(e.toString());
+                    BaseUtil.showNegativeAlert(
+                        "An error occured!", "Please try again");
+                  }
+                }
+              },
+            ),
+            page: SharePriceScreenPageConfig,
+          );
+        },
+      ),
+      page: RedeemSucessfulScreenPageConfig,
+    );
+  }
+
+  claim(PrizeClaimChoice choice, double claimPrize) {
+    double _claimAmt = claimPrize;
+    _registerClaimChoice(choice).then((flag) {
+      AppState.backButtonDispatcher.didPopRoute();
+      if (flag) {
+        getWinningHistory();
+        showSuccessPrizeWithdrawalDialog(
+            choice,
+            choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
+            claimPrize);
+      }
+    });
+
+    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
+  }
+
+// SET AND GET CLAIM CHOICE
+  Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
+    if (choice == PrizeClaimChoice.NA) return false;
+    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
+        _userService.baseUser.uid,
+        _userService.baseUser.username,
+        _userService.userFundWallet.unclaimedBalance,
+        choice);
+    if (response['status'] != null && response['status']) {
+      _userService.getUserFundWalletData();
+      _transactionService.updateTransactions();
+      notifyListeners();
+      await _localDBModel.savePrizeClaimChoice(choice);
+
+      return true;
+    } else {
+      BaseUtil.showNegativeAlert('Withdrawal Failed',
+          response['message'] ?? "Please try again after sometime");
+      return false;
+    }
+  }
+
+  Widget getSubtitleWidget(String subtitle) {
+    if (subtitle == "gold" || subtitle == "amazon")
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: subtitle == "gold"
+              ? "The gold in grams shall be credited to your wallet in the next "
+              : "You will receive the gift card on your registered email and mobile in the next ",
+          style: TextStyles.body3.colour(Colors.white),
+          children: [
+            TextSpan(
+              text: "1-2 business working days",
+              style: TextStyles.body3.colour(Colors.white),
+            )
+          ],
+        ),
+      );
+    return Text(
+      subtitle,
+      textAlign: TextAlign.center,
+      style: TextStyles.body2.colour(Colors.white),
+    );
+  }
+
+// Capture Share card Logic
+  caputure(String shareMessage) {
+    Future.delayed(Duration(seconds: 1), () {
+      captureCard().then((image) {
+        AppState.backButtonDispatcher.didPopRoute();
+        if (image != null)
+          shareCard(image, shareMessage);
+        else {
+          try {
+            if (Platform.isIOS) {
+              Share.share(shareMessage).catchError((onError) {
+                if (_userService.baseUser.uid != null) {
+                  Map<String, dynamic> errorDetails = {
+                    'error_msg': 'Share reward text in My winnings failed'
+                  };
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                      FailType.FelloRewardTextShareFailed, errorDetails);
+                }
+                _logger.e(onError);
+              });
+            } else {
+              FlutterShareMe()
+                  .shareToSystem(msg: shareMessage)
+                  .catchError((onError) {
+                if (_userService.baseUser.uid != null) {
+                  Map<String, dynamic> errorDetails = {
+                    'error_msg': 'Share reward text in My winnings failed'
+                  };
+                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                      FailType.FelloRewardTextShareFailed, errorDetails);
+                }
+                _logger.e(onError);
+              });
+            }
+          } catch (e) {
+            _logger.e(e.toString());
+          }
+        }
+      });
+    });
+  }
+
+  Future<Uint8List> captureCard() async {
+    try {
+      RenderRepaintBoundary imageObject =
+          imageKey.currentContext.findRenderObject();
+      final image = await imageObject.toImage(pixelRatio: 2);
+      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData.buffer.asUint8List();
+
+      return pngBytes;
+    } catch (e) {
+      if (_userService.baseUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'error_msg': 'Share reward card creation failed'
+        };
+        _internalOpsService.logFailure(_userService.baseUser.uid,
+            FailType.FelloRewardCardShareFailed, errorDetails);
+      }
+
+      AppState.backButtonDispatcher.didPopRoute();
+      print(e.toString());
+      BaseUtil.showNegativeAlert(
+          "Task Failed", "Unable to capture the card at the moment");
+    }
+    return null;
+  }
+
+  shareCard(Uint8List image, String shareMessage) async {
+    try {
+      if (Platform.isAndroid) {
+        final directory = (await getExternalStorageDirectory()).path;
+        String dt = DateTime.now().toString();
+        File imgg = new File('$directory/fello-reward-$dt.png');
+        imgg.writeAsBytesSync(image);
+        Share.shareFiles(
+          [imgg.path],
+          subject: 'Fello Rewards',
+          text: shareMessage ?? "",
+        ).catchError((onError) {
+          if (_userService.baseUser.uid != null) {
+            Map<String, dynamic> errorDetails = {
+              'error_msg': 'Share reward card in card.dart failed'
+            };
+            _internalOpsService.logFailure(_userService.baseUser.uid,
+                FailType.FelloRewardCardShareFailed, errorDetails);
+          }
+          print(onError);
+        });
+      } else if (Platform.isIOS) {
+        String dt = DateTime.now().toString();
+
+        final directory = await getTemporaryDirectory();
+        if (!await directory.exists()) await directory.create(recursive: true);
+
+        final File imgg =
+            await new File('${directory.path}/fello-reward-$dt.jpg').create();
+        imgg.writeAsBytesSync(image);
+
+        _logger.d("Image file created and sharing, ${imgg.path}");
+
+        Share.shareFiles(
+          [imgg.path],
+          subject: 'Fello Rewards',
+          text: shareMessage ?? "",
+        ).catchError((onError) {
+          if (_userService.baseUser.uid != null) {
+            Map<String, dynamic> errorDetails = {
+              'error_msg': 'Share reward card in card.dart failed'
+            };
+            _internalOpsService.logFailure(_userService.baseUser.uid,
+                FailType.FelloRewardCardShareFailed, errorDetails);
+          }
+          print(onError);
+        });
+      }
+    } catch (e) {
+      // backButtonDispatcher.didPopRoute();
+      print(e.toString());
+      BaseUtil.showNegativeAlert(
+          "Task Failed", "Unable to share the picture at the moment");
+    }
   }
 
   void navigateToWinnings() {

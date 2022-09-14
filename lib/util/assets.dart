@@ -264,6 +264,9 @@ class Assets {
   static final String winScreenTopReferer =
       "assets/svg/winnerScreen_topRefrer.svg";
 
+  static final String redeemSucessfullAssetPNG =
+      "images/redeemSucessfull_png.png";
+
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
 
