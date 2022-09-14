@@ -70,6 +70,7 @@ class SizeConfig {
   static double get iconSize3 => screenWidth * 0.028; //12
   static double get iconSize4 => screenWidth * 0.019; //8
   static double get iconSize5 => screenWidth * 0.077; //32
+  static double get iconSize5_5 => screenWidth * 0.120; //50
   static double get iconSize6 => screenWidth * 0.139; //50
   static double get iconSize7 => screenWidth * 0.194; //70
 
@@ -98,6 +99,7 @@ class SizeConfig {
   static double get padding64 => screenWidth * 0.154; //56
   static double get padding70 => screenWidth * 0.186; //70
   static double get padding80 => screenWidth * 0.193; //56
+  static double get padding90 => screenWidth * 0.245;
 
   // MARGINS
   static double get pageHorizontalMargins => screenWidth * 0.0579; //

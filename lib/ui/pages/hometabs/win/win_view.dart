@@ -2,23 +2,57 @@ import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/leaderboard_sheet.dart';
-import 'package:felloapp/ui/pages/static/winnings_container.dart';
-import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
+
+import 'customPainters.dart';
+
+//Following is a dummy list to populate the Fello News section for now
+List<Map<String, dynamic>> dummyFelloNews = [
+  {
+    'title': 'Amit won an IPad!',
+    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'color': 0xffF79780,
+    'asset': Assets.winScreenWinnerAsset,
+  },
+  {
+    'title': 'Ankita played all 10 games!',
+    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'color': 0xffEFAF4E,
+    'asset': Assets.winScreenAllGamesAsset,
+  },
+  {
+    'title': 'Sarayu referred fello to 5 friends!',
+    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'color': 0xff93B5FE,
+    'asset': Assets.winScreenReferalAsset,
+  },
+];
 
 class Win extends StatelessWidget {
   @override
@@ -32,183 +66,547 @@ class Win extends StatelessWidget {
         model.clear();
       },
       builder: (ctx, model, child) {
-        return Container(
-            margin: EdgeInsets.only(
-                top: model.showOldView
-                    ? SizeConfig.screenWidth * 0.1 +
-                        SizeConfig.viewInsets.top +
-                        SizeConfig.padding32
-                    : 0),
-            child:
-                // !model.showOldView
-                //     ?
-                Center(
-              child: GestureDetector(
-                onDoubleTap: () {
-                  model.showOldView = true;
-                  Future.delayed(Duration(seconds: 4), () {
-                    model.showOldView = false;
-                  });
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Win View in Construction",
-                      style: TextStyles.rajdhaniB.title3.colour(Colors.white),
-                    ),
-                    TextButton(
-                      child: Text("Clear Journey Local Assets Files"),
-                      onPressed: () {
-                        model.cleanJourneyAssetsFiles();
+        return PropertyChangeConsumer<UserService, UserServiceProperties>(
+            properties: [UserServiceProperties.myUserFund],
+            builder: (context, m, property) {
+              double currentWinning = m.userFundWallet.unclaimedBalance;
+              return Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: AppBar(
+                  title: Text(
+                    "Win",
+                    style: TextStyles.rajdhaniSB.title1,
+                  ),
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  actions: [
+                    FelloCoinBar(svgAsset: Assets.aFelloToken),
+                    SizedBox(width: SizeConfig.padding10),
+                    GestureDetector(
+                      onTap: () {
+                        model.openProfile();
                       },
+                      child: ProfileImageSE(radius: SizeConfig.avatarRadius),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: UiConstants.primaryColor,
-                          child: IconButton(
-                              icon: Icon(Icons.add, color: Colors.white),
-                              onPressed: () {
-                                BaseUtil.showPositiveAlert("Positive SnackBar",
-                                    "This is a positive snackbar");
-                              }),
-                        ),
-                        SizedBox(width: SizeConfig.padding16),
-                        CircleAvatar(
-                          backgroundColor: UiConstants.negativeAlertColor,
-                          child: IconButton(
-                              icon: Icon(Icons.block, color: Colors.white),
-                              onPressed: () {
-                                BaseUtil.showNegativeAlert("Negative SnackBar",
-                                    "This is a negative snackbar");
-                              }),
-                        ),
-                        SizedBox(width: SizeConfig.padding16),
-                        CircleAvatar(
-                          backgroundColor: Colors.red,
-                          child: IconButton(
-                              icon: Icon(
-                                  Icons
-                                      .signal_wifi_statusbar_connected_no_internet_4_rounded,
-                                  color: Colors.white),
-                              onPressed: () {
-                                BaseUtil.showNoInternetAlert();
-                              }),
-                        )
-                      ],
-                    )
+                    SizedBox(width: SizeConfig.padding20)
                   ],
                 ),
-              ),
-            )
-            // : Stack(
-            //     children: [
-            //       Container(
-            //         margin: EdgeInsets.only(top: SizeConfig.padding20),
-            //         child: ListView(
-            //           padding:
-            //               EdgeInsets.only(top: SizeConfig.screenWidth * 0.24),
-            //           children: [
-            //             Container(
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.center,
-            //                 children: [
-            //                   BigPrizeContainer(
-            //                     bgColor: Color(0xff26A6F4),
-            //                     bigText: locale.winMoneyBigText,
-            //                     smallText: locale.winMoneySmallText,
-            //                     image: Assets.moneyBag,
-            //                     painter: LakhCustomPaint(),
-            //                     onPressed: () => AppState
-            //                         .delegate.appState.setCurrentTabIndex = 1,
-            //                   ),
-            //                   SizedBox(width: SizeConfig.padding16),
-            //                   BigPrizeContainer(
-            //                     bgColor: UiConstants.tertiarySolid,
-            //                     bigText: locale.winIphoneBigText,
-            //                     smallText: locale.winIphoneSmallText,
-            //                     image: Assets.iphone,
-            //                     painter: IphoneCustomPaint(),
-            //                     onPressed: () {
-            //                       // model.panelController.animatePanelToPosition(1);
-            //                       // model.setCurrentPage = 1;
-            //                       AppState.delegate.appState.currentAction =
-            //                           PageAction(
-            //                         page: ReferralDetailsPageConfig,
-            //                         state: PageState.addPage,
-            //                       );
-            //                     },
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //             SizedBox(height: SizeConfig.padding32),
-            //             WinnersMarqueeStrip(),
-            //             SizedBox(height: SizeConfig.padding20),
-            //             if (model.ongoingEvents != null)
-            //               Column(
-            //                 crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   Padding(
-            //                     padding: EdgeInsets.symmetric(
-            //                         horizontal:
-            //                             SizeConfig.pageHorizontalMargins),
-            //                     child: Text(
-            //                       "Ongoing Campaigns",
-            //                       style: TextStyles.title3.bold,
-            //                     ),
-            //                   ),
-            //                   SizedBox(height: SizeConfig.padding16),
-            //                   Container(
-            //                     height: SizeConfig.screenWidth * 0.3,
-            //                     width: SizeConfig.screenWidth,
-            //                     child: ListView(
-            //                       padding: EdgeInsets.zero,
-            //                       scrollDirection: Axis.horizontal,
-            //                       controller: model.eventScrollController,
-            //                       children: List.generate(
-            //                         model.ongoingEvents.length,
-            //                         (i) => Container(
-            //                           margin: EdgeInsets.only(
-            //                               left: i == 0
-            //                                   ? SizeConfig
-            //                                       .pageHorizontalMargins
-            //                                   : 0),
-            //                           child: EventCard(
-            //                             event: model.ongoingEvents[i],
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                   SizedBox(height: SizeConfig.padding24),
-            //                 ],
-            //               ),
-            //             SizedBox(
-            //               height: SizeConfig.screenHeight * 0.24,
-            //             )
-            //           ],
-            //         ),
-            //       ),
-            //       Container(
-            //         //margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.09),
-            //         child: Hero(
-            //           tag: "myWinnigs",
-            //           child: WinningsContainer(
-            //             shadow: false,
-            //             onTap: () => model.navigateToMyWinnings(),
-            //           ),
-            //         ),
-            //       ),
-            //       WinnersLeaderBoardSE(
-            //         model: model,
-            //       )
-            //     ],
-            //   ),
-            );
+                body: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Current Winnings section
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(SizeConfig.roundness12),
+                            bottomRight:
+                                Radius.circular(SizeConfig.roundness12),
+                          ),
+                        ),
+                        padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
+                            SizeConfig.padding44, SizeConfig.padding24, 0.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Current Winnings',
+                                      style: TextStyles.rajdhaniSB
+                                          .copyWith(fontSize: SizeConfig.body0),
+                                    ),
+                                    Text(
+                                      '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+                                      style: TextStyles.title1.extraBold
+                                          .colour(Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding40,
+                                    ),
+                                    m.userFundWallet.unclaimedBalance >=
+                                            model.minWithdrawPrizeAmt
+                                        ? AppPositiveBtn(
+                                            btnText: "Redeem",
+                                            onPressed: () {},
+                                            width: SizeConfig.screenWidth * 0.4)
+                                        : Text(
+                                            'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                  ],
+                                ),
+                                Consumer<AppState>(
+                                  builder: (ctx, m, child) => WinningsCylinder(
+                                    index: AppState
+                                        .delegate.appState.getCurrentTabIndex,
+                                    currentWinning: currentWinning,
+                                    model: model,
+                                    redeemAmount: model.minWithdrawPrizeAmt,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding54,
+                            ),
+                            Divider(
+                              color: Colors.white,
+                              thickness: 0.3,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                  page: CampaignViewPageConfig,
+                                  state: PageState.addWidget,
+                                  widget: MyWinningsView(),
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                          Assets.unredemmedGoldenTicketBG,
+                                          height: SizeConfig.padding38),
+                                      SizedBox(
+                                        width: SizeConfig.padding8,
+                                      ),
+                                      Text(
+                                        'Golden Tickets',
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '3 NEW',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(Colors.white),
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding10,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      //Refer and Earn
+                      ReferAndEarnComponent(
+                        model: model,
+                      ),
+
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                      ReferralLeaderboard(
+                        count: 4,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding44,
+                      ),
+                      //Fello News
+                      FelloNewsComponent(),
+
+                      SizedBox(
+                        height: SizeConfig.padding44,
+                      ),
+
+                      //Leader Board
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.padding24,
+                        ),
+                        child: Text(
+                          "LeaderBoard",
+                          style: TextStyles.sourceSans.semiBold
+                              .colour(Colors.white)
+                              .title3,
+                        ),
+                      ),
+                      WinnerboardView(
+                        count: 4,
+                      ),
+
+                      SizedBox(
+                        height: SizeConfig.navBarHeight,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            });
       },
+    );
+  }
+}
+
+class FelloNewsComponent extends StatelessWidget {
+  const FelloNewsComponent({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: SizeConfig.padding24,
+            ),
+            child: Text(
+              "Fello News",
+              style: TextStyles.sourceSans.semiBold.colour(Colors.white).title3,
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding24),
+          Container(
+            width: double.infinity,
+            height: SizeConfig.screenWidth * 0.4026,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: dummyFelloNews.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: EdgeInsets.only(
+                      left: index == 0 ? 0.0 : SizeConfig.padding20,
+                      right: SizeConfig.padding20),
+                  height: double.maxFinite,
+                  width: SizeConfig.screenWidth * 0.8,
+                  margin: EdgeInsets.only(
+                      left: SizeConfig.padding24,
+                      right: index == dummyFelloNews.length - 1
+                          ? SizeConfig.padding24
+                          : 0.0),
+                  decoration: BoxDecoration(
+                    color: Color(dummyFelloNews[index]['color']),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness12)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: index == 0
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        dummyFelloNews[index]['asset'],
+                        width: index == 0
+                            ? SizeConfig.screenWidth * 0.25
+                            : SizeConfig.screenWidth * 0.2,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding16,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                dummyFelloNews[index]['title'],
+                                style: TextStyles.rajdhaniSB.body1
+                                    .colour(UiConstants.kBackgroundColor),
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            Flexible(
+                              child: Text(
+                                dummyFelloNews[index]['subTitle'],
+                                style: TextStyles.sourceSans.body4
+                                    .colour(UiConstants.kBackgroundColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ReferAndEarnComponent extends StatelessWidget {
+  const ReferAndEarnComponent({
+    Key key,
+    @required this.model,
+  }) : super(key: key);
+
+  final WinViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            margin: EdgeInsets.fromLTRB(
+                SizeConfig.padding24,
+                SizeConfig.padding44,
+                SizeConfig.padding24,
+                (SizeConfig.screenWidth * 0.15) / 2),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: UiConstants.kSecondaryBackgroundColor,
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.roundness12))),
+            child: Container(
+              padding: EdgeInsets.all(
+                SizeConfig.padding24,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    child: SvgPicture.asset(Assets.referAndEarn,
+                        height: SizeConfig.padding90 + SizeConfig.padding10),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding28,
+                  ),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                            text: 'Earn upto Rs.50 and',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor3)),
+                        WidgetSpan(
+                            child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding4),
+                          height: 17,
+                          width: 17,
+                          child: SvgPicture.asset(
+                            Assets.aFelloToken,
+                          ),
+                        )),
+                        TextSpan(
+                            text:
+                                '200 from every Golden Ticket. Win an iPad every month.',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor3)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding28,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding32,
+                            vertical: SizeConfig.padding6),
+                        decoration: BoxDecoration(
+                            color: UiConstants.kArowButtonBackgroundColor,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness8),
+                            ),
+                            border:
+                                Border.all(color: Colors.white, width: 0.6)),
+                        child: Text(
+                          model.loadingRefCode ? '-' : model.refCode,
+                          style:
+                              TextStyles.rajdhaniEB.title2.colour(Colors.white),
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                model.copyReferCode();
+                              },
+                              icon: Icon(
+                                Icons.copy,
+                                color: UiConstants.kTabBorderColor,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                model.shareWhatsApp();
+                              },
+                              icon: Icon(
+                                Icons.share,
+                                color: UiConstants.kTabBorderColor,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding32,
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: SizeConfig.screenWidth * 0.17,
+            height: SizeConfig.screenWidth * 0.17,
+            decoration: BoxDecoration(
+              color: UiConstants.kSecondaryBackgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  widget: ReferralDetailsView(),
+                  page: ReferralDetailsPageConfig,
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.all(SizeConfig.padding6),
+                padding: EdgeInsets.all(SizeConfig.padding8),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  color: UiConstants.kArowButtonBackgroundColor,
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  Assets.chevRonRightArrow,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WinningsCylinder extends StatefulWidget {
+  const WinningsCylinder({
+    Key key,
+    @required this.index,
+    @required this.currentWinning,
+    @required this.model,
+    @required this.redeemAmount,
+  }) : super(key: key);
+
+  final int index;
+  final double currentWinning;
+  final WinViewModel model;
+  final int redeemAmount;
+
+  @override
+  State<WinningsCylinder> createState() => _WinningsCylinder();
+}
+
+double containerHeight = SizeConfig.screenWidth * 0.4;
+double containerWidth = SizeConfig.screenWidth * 0.3;
+
+double containerFilledHeight = 0;
+
+class _WinningsCylinder extends State<WinningsCylinder> {
+  @override
+  void initState() {
+    containerFilledHeight = 0;
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    containerFilledHeight = 0;
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.index == 3) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (containerFilledHeight == 0) {
+          setState(() {
+            if (widget.currentWinning >= widget.redeemAmount) {
+              containerFilledHeight = containerHeight;
+            } else {
+              containerFilledHeight = widget.model.calculateFillHeight(
+                  widget.currentWinning, containerHeight, widget.redeemAmount);
+            }
+          });
+        }
+      });
+    }
+    return Center(
+      child: Container(
+        width: containerWidth,
+        height: containerHeight,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            Container(
+                child: CustomPaint(
+              size: Size(SizeConfig.screenWidth * 0.15,
+                  (SizeConfig.screenWidth * 0.4)),
+              painter: CustomCylinderOuter(),
+            )),
+            AnimatedContainer(
+                height: containerFilledHeight,
+                duration: Duration(seconds: 1),
+                curve: Curves.easeInCirc,
+                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                child: CustomPaint(
+                  size: Size((SizeConfig.screenWidth * 0.15) - 8,
+                      containerFilledHeight - 10),
+                  painter: CustomCylinderInner(),
+                )),
+          ],
+        ),
+      ),
     );
   }
 }
