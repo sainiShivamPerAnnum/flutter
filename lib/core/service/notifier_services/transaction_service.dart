@@ -363,6 +363,7 @@ class TransactionService
         _userCoinService.setFlcBalance(newFlcBalance);
       }
       if (AppState.delegate.appState.isTxnLoaderInView == true) {
+        if (AppState.isIOSTxnInProgress) AppState.isIOSTxnInProgress = false;
         if (depositFcmResponseModel.gtId != null) {
           GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
           if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
