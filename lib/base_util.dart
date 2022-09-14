@@ -483,14 +483,6 @@ class BaseUtil extends ChangeNotifier {
         builder: (ctx) => content);
   }
 
-  AuthCredential generateAuthCredential(String verificationId, String smsCode) {
-    final AuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: smsCode,
-    );
-    return credential;
-  }
-
   Future<bool> authenticateUser(AuthCredential credential) {
     logger.d("Verification credetials: " + credential.toString());
     // FirebaseAuth.instance.signInWithCustomToken(token)

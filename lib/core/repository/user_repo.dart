@@ -151,6 +151,40 @@ class UserRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse> sendOtp(String mobile, String hash) async {
+    try {
+      final body = {
+        'mobile': mobile,
+        'hash': hash,
+      };
+
+      await APIService.instance
+          .postData(ApiPath.sendOtp, body: body, cBaseUrl: _baseUrl);
+
+      return ApiResponse(code: 200);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError("send OTP failed", 400);
+    }
+  }
+
+  Future<ApiResponse<String>> verifyOtp(String mobile, String otp) async {
+    try {
+      final query = {
+        'mobile': mobile,
+        'otp': otp,
+      };
+
+      final res = await APIService.instance
+          .getData(ApiPath.verifyOtp, queryParams: query, cBaseUrl: _baseUrl);
+
+      return ApiResponse(code: 200, model: res['data']['token']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError("send OTP failed", 400);
+    }
+  }
+
   Future<ApiResponse<UserFundWallet>> getFundBalance() async {
     try {
       final uid = userService.baseUser.uid;
