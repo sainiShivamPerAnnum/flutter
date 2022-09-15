@@ -189,8 +189,8 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _cricketWinners?.winners?.length == 0 &&
         _poolClubWinners?.winners?.length == 0 &&
         _footBallWinners?.winners?.length == 0) {
-      BaseUtil.showNegativeAlert(
-          "Unable to fetch winners", "try again in sometime");
+      // BaseUtil.showNegativeAlert(
+      //     "Unable to fetch winners", "try again in sometime");
     }
 
     if (_winners != null)

@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_milestone_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -64,7 +65,10 @@ class GoldenMilestonesViewModel extends BaseModel {
             null) {
           GoldenTicket gt = _gtService.activeGoldenTickets
               .firstWhere((gt) => gt.prizeSubtype == m.prizeSubtype);
-          if (gt.redeemedTimestamp == null) m.isCompleted = false;
+          if (gt.redeemedTimestamp == null ||
+              gt.redeemedTimestamp ==
+                  TimestampModel(seconds: 0, nanoseconds: 0))
+            m.isCompleted = false;
         }
       }
     });

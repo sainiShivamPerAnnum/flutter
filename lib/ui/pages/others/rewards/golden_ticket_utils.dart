@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/util/assets.dart';
@@ -43,7 +45,9 @@ class GoldenTicketGridItemCard extends StatelessWidget {
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin, end: end);
       },
-      child: ticket.redeemedTimestamp == null
+      child: ticket.redeemedTimestamp == null ||
+              ticket.redeemedTimestamp ==
+                  TimestampModel(seconds: 0, nanoseconds: 0)
           ? UnRedeemedGoldenScratchCard(
               ticket: ticket,
             )
@@ -265,7 +269,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   doubleRewardWidget(
       List<Reward> rewards, TextStyle textStyle, TextStyle titleStyle2) {
     int rupee = rewards
-            .firstWhere((e) => e.type == 'rupee', orElse: () => null)
+            .firstWhere((e) => e.type == 'rupee' || e.type == 'amt',
+                orElse: () => null)
             .value ??
         0;
     int flc =

@@ -8,7 +8,7 @@ import 'base_repo.dart';
 
 class InternalOpsRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
+      ? 'https://zul9m5q4t9.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://4ch7btxcuj.execute-api.ap-south-1.amazonaws.com/prod';
 
   final Log log = new Log("DBModel");
@@ -18,7 +18,6 @@ class InternalOpsRepository extends BaseRepo {
     String type,
     Map<String, dynamic> dMap,
   ) async {
-    final token = await getBearerToken();
     try {
       await APIService.instance.postData(
         ApiPath.failureReport,
@@ -27,7 +26,8 @@ class InternalOpsRepository extends BaseRepo {
           'report': dMap,
         },
         cBaseUrl: _baseUrl,
-        token: token,
+        authKey:
+            '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
       );
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {

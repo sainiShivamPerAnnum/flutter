@@ -21,11 +21,17 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
     'tambola_daily_pick_count': '3'
   };
-  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
-    'force_min_build_number': '0'
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_IOS = {
+    'force_min_build_number_ios': '0'
   };
-  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_2 = {
-    'force_min_build_number_2': '0'
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_ANDROID = {
+    'force_min_build_number_android': '0'
+  };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_IOS_2 = {
+    'force_min_build_number_ios_2': '0'
+  };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_ANDROID_2 = {
+    'force_min_build_number_android_2': '0'
   };
   static const Map<String, String> _AMZ_VOUCHER_REDEMPTION = {
     'amz_voucher_redemption': '0'
@@ -182,13 +188,25 @@ class BaseRemoteConfig {
   };
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
 
+  static const Map<String, String> _ACTIVE_PG_ANDROID = {
+    'active_pg_android': 'PAYTM'
+  };
+
+  static const Map<String, String> _ACTIVE_PG_IOS = {'active_pg_ios': 'PAYTM'};
+
+  static const Map<String, String> _ENABLED_PSP_APPS = {
+    'enabled_psp_apps': 'EGP'
+  };
+
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
     ..._TAMBOLA_DAILY_PICK_COUNT,
-    ..._FORCE_MIN_BUILD_NUMBER,
-    ..._FORCE_MIN_BUILD_NUMBER_2,
+    ..._FORCE_MIN_BUILD_NUMBER_IOS,
+    ..._FORCE_MIN_BUILD_NUMBER_ANDROID,
+    ..._FORCE_MIN_BUILD_NUMBER_IOS_2,
+    ..._FORCE_MIN_BUILD_NUMBER_ANDROID_2,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -235,7 +253,10 @@ class BaseRemoteConfig {
     ..._GAME_POSITION,
     ..._RESTRICT_PAYTM_APP_INVOKE,
     ..._NEW_USER_GAMES_ORDER,
-    ..._CACHE_INVALIDATION
+    ..._CACHE_INVALIDATION,
+    ..._ENABLED_PSP_APPS,
+    ..._ACTIVE_PG_ANDROID,
+    ..._ACTIVE_PG_IOS
   };
 
   static Future<bool> init() async {
@@ -272,11 +293,16 @@ class BaseRemoteConfig {
     }
   }
 
-  static String get FORCE_MIN_BUILD_NUMBER =>
-      _FORCE_MIN_BUILD_NUMBER.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_IOS =>
+      _FORCE_MIN_BUILD_NUMBER_IOS.keys.first;
 
-  static String get FORCE_MIN_BUILD_NUMBER_2 =>
-      _FORCE_MIN_BUILD_NUMBER_2.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_ANDROID =>
+      _FORCE_MIN_BUILD_NUMBER_ANDROID.keys.first;
+
+  static String get FORCE_MIN_BUILD_NUMBER_IOS_2 =>
+      _FORCE_MIN_BUILD_NUMBER_IOS_2.keys.first;
+  static String get FORCE_MIN_BUILD_NUMBER_ANDROID_2 =>
+      _FORCE_MIN_BUILD_NUMBER_ANDROID_2.keys.first;
 
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
 
@@ -393,6 +419,12 @@ class BaseRemoteConfig {
       _RESTRICT_PAYTM_APP_INVOKE.keys.first;
 
   static String get NEW_USER_GAMES_ORDER => _NEW_USER_GAMES_ORDER.keys.first;
+
+  static String get ACTIVE_PG_ANDROID => _ACTIVE_PG_ANDROID.keys.first;
+
+  static String get ACTIVE_PG_IOS => _ACTIVE_PG_IOS.keys.first;
+
+  static String get ENABLED_PSP_APPS => _ENABLED_PSP_APPS.keys.first;
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

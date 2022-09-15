@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -166,12 +167,16 @@ class GoldenTicketsViewModel extends BaseModel {
     goldenTicketList
         .sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
     goldenTicketList.forEach((e) {
-      if (e.redeemedTimestamp == null) {
+      if (e.redeemedTimestamp == null ||
+          e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
         arrangedGoldenTicketList.add(e);
       }
     });
     goldenTicketList.forEach((e) {
-      if (e.redeemedTimestamp != null && e.isRewarding) {
+      if ((e.redeemedTimestamp != null &&
+              e.redeemedTimestamp !=
+                  TimestampModel(nanoseconds: 0, seconds: 0)) &&
+          e.isRewarding) {
         arrangedGoldenTicketList.add(e);
       }
     });

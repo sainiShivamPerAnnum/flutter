@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetailsDialog extends StatefulWidget {
@@ -302,7 +302,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             _isInvoiceLoading = false;
                             setState(() {});
                             if (generatedPdfFilePath != null) {
-                              OpenFile.open(generatedPdfFilePath);
+                              OpenFilex.open(generatedPdfFilePath);
                             } else {
                               BaseUtil.showNegativeAlert(
                                   'Invoice could not be loaded',

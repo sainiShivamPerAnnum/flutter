@@ -1,3 +1,5 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../util/custom_logger.dart';
@@ -14,6 +16,16 @@ abstract class BaseRepo {
   Future<String> getBearerToken() async {
     String token = await userService.firebaseUser.getIdToken();
     logger.d(token);
+    return token;
+  }
+
+  @protected
+  String getGameApiToken(String gameName) {
+    final jwt = JWT(
+      {'uid': userService.baseUser.uid, 'gameTitle': gameName},
+    );
+    String token =
+        jwt.sign(SecretKey(FlavorConfig.instance.values.gameApiTokenSecret));
     return token;
   }
 }

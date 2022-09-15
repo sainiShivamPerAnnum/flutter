@@ -14,10 +14,45 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		E629D5C73E0EE97692E0AFDE /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47B924AB65DD0512828858AB /* Pods_Runner.framework */; };
+		EC35AFAAE7914FD1880769A5 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A072389B9E9D22489AC8BD /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		07AE377228BCC63900FC1168 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0C5A85ABEF5ED03A54A449B87B69225;
+			remoteInfo = fluttertoast;
+		};
+		07AE377428BCC63900FC1168 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4D68842CB2772778EFB677388B48AC94;
+			remoteInfo = razorpay_flutter;
+		};
+		07AE377628BCC63900FC1168 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55E0AFD333353D71ACC2207149E879D6;
+			remoteInfo = Toast;
+		};
+		07AE377828BCC63900FC1168 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AD7F0457BD0E378D3BD385D58F578732;
+			remoteInfo = upi_pay;
+		};
+		3819519328D0FDD8006AC089 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1054C982E06652E88574B37F69D4B914;
+			remoteInfo = open_filex;
+		};
 		385870BE286B48EE006AA702 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -522,13 +557,6 @@
 			remoteGlobalIDString = 06FC5C9CF96D60C50FCD47D339C91951;
 			remoteInfo = nanopb;
 		};
-		53E99C372770AA48000F1EEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 04317B68497AC08F78B32A98E7307F9D;
-			remoteInfo = open_file;
-		};
 		53E99C392770AA48000F1EEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -574,20 +602,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00BD566264E0597EC8AF38FC /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
-		0FD11D05197D68232F6CD3B7 /* Pods-Runner.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-prod.xcconfig"; sourceTree = "<group>"; };
+		0E7DF93812B107F2EF2E55CE /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
+		13F013B9C73B6D9F498AF665 /* Pods-Runner.profile-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-qa.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		1E6871F4C97F28CFC41C1DDE /* Pods-Runner.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"; sourceTree = "<group>"; };
-		32C62F323903B3EC95145F7E /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
+		1662EAD16A280AA0F1612E1C /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		47B924AB65DD0512828858AB /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		46ADC04BE256522252AC3482 /* Pods-Runner.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-prod.xcconfig"; sourceTree = "<group>"; };
+		496A023F8097C976DFA248A7 /* Pods-Runner.release-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-qa.xcconfig"; sourceTree = "<group>"; };
 		531F28C0274B7636002E8A52 /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
 		538D381927C61E1B00A4CC68 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Pods.xcodeproj; sourceTree = "<group>"; };
+		5999B411B715C6CD5631007D /* Pods-Runner.debug-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-qa.xcconfig"; sourceTree = "<group>"; };
+		5D220A7BC57D338508F78211 /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		83AE03843A3EC9C1E3FC885E /* Pods-Runner.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"; sourceTree = "<group>"; };
+		88A072389B9E9D22489AC8BD /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -596,8 +628,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A5EA8A6F25F8DEC100C7D14B /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		C3D97DC1F907A529F7D03605 /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
-		DEC87443A399491B5F630570 /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
+		F4D14259493743DFE80BA6FE /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -605,7 +636,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E629D5C73E0EE97692E0AFDE /* Pods_Runner.framework in Frameworks */,
+				EC35AFAAE7914FD1880769A5 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,7 +647,7 @@
 			isa = PBXGroup;
 			children = (
 				538D381927C61E1B00A4CC68 /* SwiftUI.framework */,
-				47B924AB65DD0512828858AB /* Pods_Runner.framework */,
+				88A072389B9E9D22489AC8BD /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -625,12 +656,15 @@
 			isa = PBXGroup;
 			children = (
 				53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */,
-				0FD11D05197D68232F6CD3B7 /* Pods-Runner.debug-prod.xcconfig */,
-				1E6871F4C97F28CFC41C1DDE /* Pods-Runner.debug-dev.xcconfig */,
-				DEC87443A399491B5F630570 /* Pods-Runner.release-prod.xcconfig */,
-				32C62F323903B3EC95145F7E /* Pods-Runner.release-dev.xcconfig */,
-				00BD566264E0597EC8AF38FC /* Pods-Runner.profile-prod.xcconfig */,
-				C3D97DC1F907A529F7D03605 /* Pods-Runner.profile-dev.xcconfig */,
+				46ADC04BE256522252AC3482 /* Pods-Runner.debug-prod.xcconfig */,
+				5999B411B715C6CD5631007D /* Pods-Runner.debug-qa.xcconfig */,
+				83AE03843A3EC9C1E3FC885E /* Pods-Runner.debug-dev.xcconfig */,
+				1662EAD16A280AA0F1612E1C /* Pods-Runner.release-prod.xcconfig */,
+				496A023F8097C976DFA248A7 /* Pods-Runner.release-qa.xcconfig */,
+				5D220A7BC57D338508F78211 /* Pods-Runner.release-dev.xcconfig */,
+				F4D14259493743DFE80BA6FE /* Pods-Runner.profile-prod.xcconfig */,
+				13F013B9C73B6D9F498AF665 /* Pods-Runner.profile-qa.xcconfig */,
+				0E7DF93812B107F2EF2E55CE /* Pods-Runner.profile-dev.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -682,6 +716,7 @@
 				38FFBC8B2886085500F22FF5 /* FirebaseStorageInternal */,
 				53E99C102770AA48000F1EEC /* flutter_facebook_sdk */,
 				53E99C162770AA48000F1EEC /* flutter_share_me */,
+				07AE377328BCC63900FC1168 /* fluttertoast */,
 				53E99C182770AA48000F1EEC /* FMDB */,
 				385870C1286B48EE006AA702 /* google_sign_in_ios */,
 				53E99C1E2770AA48000F1EEC /* GoogleDataTransport */,
@@ -701,18 +736,21 @@
 				53E99C322770AA48000F1EEC /* Mixpanel-swift */,
 				53E99C342770AA48000F1EEC /* mixpanel_flutter */,
 				53E99C362770AA48000F1EEC /* nanopb */,
-				53E99C382770AA48000F1EEC /* open_file */,
+				3819519428D0FDD8006AC089 /* open_filex */,
 				53E99C3A2770AA48000F1EEC /* package_info */,
 				53C8033827A85D5C00190100 /* path_provider_ios */,
 				53E99C4C2770AA48000F1EEC /* paytm_allinonesdk */,
 				53E99C3E2770AA48000F1EEC /* permission_handler */,
 				53E99C402770AA48000F1EEC /* Pods-Runner */,
 				53E99C422770AA48000F1EEC /* PromisesObjC */,
+				07AE377528BCC63900FC1168 /* razorpay_flutter */,
 				53C8033A27A85D5C00190100 /* ReachabilitySwift */,
 				3869290D2886DEF600813FBA /* share_plus */,
 				53C8033C27A85D5C00190100 /* shared_preferences_ios */,
 				3869290F2886DEF600813FBA /* sms_autofill */,
 				386929112886DEF600813FBA /* sqflite */,
+				07AE377728BCC63900FC1168 /* Toast */,
+				07AE377928BCC63900FC1168 /* upi_pay */,
 				53C8034027A85D5C00190100 /* url_launcher_ios */,
 				53F2CF1E2811A7EA0048D017 /* video_player_avfoundation */,
 				53A33C5527994C080046F585 /* webengage_flutter */,
@@ -775,7 +813,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-				A1B7EA3913067F1C64CBF3C2 /* [CP] Check Pods Manifest.lock */,
+				C6D5A3D43200A702D9A81011 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
@@ -784,7 +822,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				31B4847726C28B3700B34495 /* ShellScript */,
 				88BB1BC242170CA70F1570AC /* Run Script */,
-				C9421DAB215EA4248174298D /* [CP] Embed Pods Frameworks */,
+				51AFA2F0A2E5EA4E6B2BECE9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -835,6 +873,46 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		07AE377328BCC63900FC1168 /* fluttertoast */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = fluttertoast;
+			path = fluttertoast.framework;
+			remoteRef = 07AE377228BCC63900FC1168 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		07AE377528BCC63900FC1168 /* razorpay_flutter */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = razorpay_flutter;
+			path = razorpay_flutter.framework;
+			remoteRef = 07AE377428BCC63900FC1168 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		07AE377728BCC63900FC1168 /* Toast */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = Toast;
+			path = Toast.framework;
+			remoteRef = 07AE377628BCC63900FC1168 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		07AE377928BCC63900FC1168 /* upi_pay */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = upi_pay;
+			path = upi_pay.framework;
+			remoteRef = 07AE377828BCC63900FC1168 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3819519428D0FDD8006AC089 /* open_filex */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = open_filex;
+			path = open_filex.framework;
+			remoteRef = 3819519328D0FDD8006AC089 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		385870BF286B48EE006AA702 /* device_info_plus */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1411,14 +1489,6 @@
 			remoteRef = 53E99C352770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C382770AA48000F1EEC /* open_file */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = open_file;
-			path = open_file.framework;
-			remoteRef = 53E99C372770AA48000F1EEC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		53E99C3A2770AA48000F1EEC /* package_info */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1518,6 +1588,23 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
 		};
+		51AFA2F0A2E5EA4E6B2BECE9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		531F28C2274B7694002E8A52 /* Copy GoogleService-Info to the correct place */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1564,7 +1651,7 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
-		A1B7EA3913067F1C64CBF3C2 /* [CP] Check Pods Manifest.lock */ = {
+		C6D5A3D43200A702D9A81011 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1584,23 +1671,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C9421DAB215EA4248174298D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1660,6 +1730,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1690,15 +1761,15 @@
 		};
 		249021D4217E4FDB00AE95B9 /* Profile-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 00BD566264E0597EC8AF38FC /* Pods-Runner.profile-prod.xcconfig */;
+			baseConfigurationReference = F4D14259493743DFE80BA6FE /* Pods-Runner.profile-prod.xcconfig */;
 			buildSettings = {
 				APP_BUILD_NAME = Fello;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -1718,12 +1789,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1754,6 +1825,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1794,9 +1866,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -1815,10 +1887,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
+				MARKETING_VERSION = 3.3.3;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1850,6 +1922,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1888,9 +1961,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
@@ -1908,11 +1981,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
+				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1943,6 +2016,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1973,15 +2047,15 @@
 		};
 		38A0128F2889419A002D717A /* Profile-qa */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 00BD566264E0597EC8AF38FC /* Pods-Runner.profile-prod.xcconfig */;
+			baseConfigurationReference = 13F013B9C73B6D9F498AF665 /* Pods-Runner.profile-qa.xcconfig */;
 			buildSettings = {
 				APP_BUILD_NAME = Fello;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -2001,12 +2075,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2037,6 +2111,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2077,9 +2152,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2097,10 +2172,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS dev ios_app_store 1638942627";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2132,6 +2207,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2170,9 +2246,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2189,11 +2265,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS dev ios_app_store 1638942627";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2224,6 +2300,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2254,15 +2331,15 @@
 		};
 		531F28BB274B6D71002E8A52 /* Profile-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C3D97DC1F907A529F7D03605 /* Pods-Runner.profile-dev.xcconfig */;
+			baseConfigurationReference = 0E7DF93812B107F2EF2E55CE /* Pods-Runner.profile-dev.xcconfig */;
 			buildSettings = {
 				APP_BUILD_NAME = "Fello-Dev";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -2282,12 +2359,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS dev ios_app_store 1638942627";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2318,6 +2395,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2373,6 +2451,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2411,9 +2490,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2431,10 +2510,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2451,9 +2530,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 119;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
@@ -2471,11 +2550,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 3.3.2;
+				MARKETING_VERSION = 3.3.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "XC in fello felloappiOS ios_app_store 1639378441";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

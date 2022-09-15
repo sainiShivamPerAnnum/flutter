@@ -50,13 +50,15 @@ class Data {
   String temptoken;
   String orderId;
   String callbackUrl;
+  String txnId;
 
-  Data({this.temptoken, this.orderId, this.callbackUrl});
+  Data({this.temptoken, this.orderId, this.callbackUrl, this.txnId});
 
   Data.fromJson(Map<String, dynamic> json) {
     temptoken = json['temptoken'];
     orderId = json['orderId'];
     callbackUrl = json['callbackUrl'];
+    txnId = json['txnId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +66,7 @@ class Data {
     data['temptoken'] = this.temptoken;
     data['orderId'] = this.orderId;
     data['callbackUrl'] = this.callbackUrl;
+    data['txnId'] = this.txnId;
     return data;
   }
 
@@ -72,6 +75,7 @@ class Data {
       'temptoken': temptoken,
       'orderId': orderId,
       'callbackUrl': callbackUrl,
+      'txnId': txnId,
     };
   }
 
@@ -80,6 +84,7 @@ class Data {
       temptoken: map['temptoken'] ?? '',
       orderId: map['orderId'] ?? '',
       callbackUrl: map['callbackUrl'] ?? '',
+      txnId: map['txnId'] ?? '',
     );
   }
 
@@ -91,11 +96,13 @@ class Data {
     String temptoken,
     String orderId,
     String callbackUrl,
+    String txnId,
   }) {
     return Data(
       temptoken: temptoken ?? this.temptoken,
       orderId: orderId ?? this.orderId,
       callbackUrl: callbackUrl ?? this.callbackUrl,
+      txnId: txnId ?? this.txnId,
     );
   }
 }

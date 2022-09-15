@@ -173,23 +173,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       _logger.e(e.toString());
-      if (baseUser != null)
-        _internalOpsService
-            .logFailure(baseUser.uid, FailType.UserServiceInitFailed, {
-          "title": "UserService initialization Failed",
-          "error": e.toString(),
-        });
+      _internalOpsService
+          .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
+        "title": "UserService initialization Failed",
+        "error": e.toString(),
+      });
     }
   }
 
   Future<bool> signOut(Function signOut) async {
     try {
+      await _userRepo.logOut();
       await signOut();
       new CacheService().invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
       await _apiCacheManager.clearCacheMemory();
-
       _logger.d("UserService signout called");
       _userFundWallet = null;
       _firebaseUser = null;

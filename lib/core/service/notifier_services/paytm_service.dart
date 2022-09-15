@@ -1,25 +1,41 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
+import 'package:felloapp/core/model/paytm_models/txn_result_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +43,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:upi_pay/upi_pay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //ERROR CODE
 const int ERR_CREATE_SUBSCRIPTION_FAILED = 0;
@@ -40,8 +58,7 @@ const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _paytmRepo = locator<PaytmRepository>();
-  final _userService = locator<UserService>();
-  final _api = locator<Api>();
+  final _txnService = locator<TransactionService>();
   final _getterRepo = locator<GetterRepository>();
 
   bool _isFirstTime = true;
@@ -69,26 +86,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     AmountChipsModel(order: 0, value: 750, best: false),
     AmountChipsModel(order: 0, value: 1000, best: false),
   ];
-
-  // bool _isPausing = false;
-  // bool _isResuming = false;
-  // get isPausing => this._isPausing;
-
-  // set isPausing(isPausing) {
-  //   this._isPausing = isPausing;
-  //   notifyListeners(PaytmServiceProperties.IsPausing);
-  //   _logger.d("Paytm Service:Pausing Subscription Properties notified");
-  //   if (isPausing) refreshAutosaveDetails();
-  // }
-
-  // get isResuming => this._isResuming;
-
-  // set isResuming(isResuming) {
-  //   this._isResuming = isResuming;
-  //   notifyListeners(PaytmServiceProperties.IsResuming);
-  //   _logger.d("Paytm Service:Resuming Subscription Properties notified");
-  //   if (isResuming) refreshAutosaveDetails();
-  // }
 
   bool isOnSubscriptionFlow = false;
 
@@ -122,6 +119,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   String postPrefix;
   bool isStaging;
   String callbackUrl;
+  String orderId;
 
   ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
 
@@ -184,25 +182,19 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
-  Future<void> validateTransaction(String orderId) async {
-    final ApiResponse<TransactionResponseModel> transactionResponseModel =
-        await _paytmRepo.getTransactionStatus(orderId);
-
-    if (transactionResponseModel.code == 200) {
-      _logger.d(transactionResponseModel.model.toString());
-    }
-  }
-
-  // Future<void> validateSubscription(String subId) async {
-  //   final ApiResponse<SubscriptionResponseModel> subscriptionResponseModel =
-  //       await _paytmRepo.getSubscriptionStatus(subId);
-  //   if (subscriptionResponseModel.code == 200) {
-  //     _logger.d(subscriptionResponseModel.model.toString());
+  // Future<Map<String,bool>> getTransactionStatus(String orderId, bool isRzp) async {
+  //   final ApiResponse<TransactionResponseModel> transactionResponseModel =
+  //       await _paytmRepo.getTransactionStatus(orderId, isRzp);
+  //   if (transactionResponseModel.code == 200 &&
+  //       transactionResponseModel.errorMessage == null) {
+  //     _logger.d(transactionResponseModel.model.toString());
+  //     return true;
+  //   } else {
+  //     return false;
   //   }
-  //   return subscriptionResponseModel;
   // }
 
-  Future<bool> initiateTransactions(
+  Future<bool> initiatePaytmPGTransaction(
       {double amount,
       AugmontRates augmontRates,
       String couponCode,
@@ -214,7 +206,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,
-      "aPaymode": "PYTM",
+      "aPaymode": 'PYTM',
       "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
           augmontRates.goldBuyPrice),
@@ -224,8 +216,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse =
-        await _paytmRepo.createPaytmTransaction(amount, augMap, couponCode);
-
+        await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
+    AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
+    AppState.currentTxnAmount = amount;
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
       return false;
@@ -234,9 +227,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
 
     try {
-      _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
-      _logger.d("Paytm app invoke: $restrictAppInvoke");
-      final response = await AllInOneSdk.startTransaction(
+      _logger.d("Transaction order id: ${paytmSubscriptionModel.data.txnId}");
+      _logger.d("Transaction app invoke: $restrictAppInvoke");
+      var response;
+      response = await AllInOneSdk.startTransaction(
           mid,
           paytmSubscriptionModel.data.orderId,
           amount.toString(),
@@ -244,11 +238,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           paytmSubscriptionModel.data.callbackUrl,
           isStaging,
           restrictAppInvoke);
-      _logger.d("Paytm Response:${response.toString()}");
-
-      //For debug mode to check transaction status from paytm.
-      // validateTransaction(paytmTransactionModel.data.orderId);
-      validateTransaction(paytmSubscriptionModel.data.orderId);
+      _logger.d("Transaction Response:${response.toString()}");
+      // validateTransaction(paytmSubscriptionModel.data.orderId, false);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
@@ -271,21 +262,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
-    // final sresponse = {
-    //   "success": true,
-    //   "data": {
-    //     "temptoken": "9c66abe52da541c383e8177b4024c8201646477278128",
-    //     "subscriptionId": "100433743164",
-    //     "orderId": "7oSXBAfmKF4psLMaP0PM",
-    //     "callbackUrl":
-    //         "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=7oSXBAfmKF4psLMaP0PM",
-    //     "authenticateUrl":
-    //         "https://securegw.paytm.in/order/pay?mid=CMTNKX90967647249644&orderId=7oSXBAfmKF4psLMaP0PM"
-    //   }
-    // };
-
-    // final paytmSubscriptionModel =
-    //     CreateSubscriptionResponseModel.fromMap(sresponse);
 
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
@@ -297,17 +273,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           paytmSubscriptionModel.data.callbackUrl,
           isStaging,
           true);
-      // final response = await AllInOneSdk.startTransaction(
-      //     prodMid,
-      //     paytmSubscriptionModel.data.orderId,
-      //     "0",
-      //     paytmSubscriptionModel.data.temptoken,
-      //     paytmSubscriptionModel.data.callbackUrl,
-      //     false,
-      //     true);
       _logger.d("Paytm Response:${response.toString()}");
 
-      // validateSubscription(paytmSubscriptionModel.data.subscriptionId);
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
@@ -335,11 +302,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       else
         nextDebitString = "";
     }
-
-    // else {
-    //   BaseUtil.showNegativeAlert(
-    //       "Unable to fetch Your Autosave details", "Please try after sometime");
-    // }
   }
 
   Future<List<AmountChipsModel>> getAmountChips({@required String freq}) async {
@@ -369,21 +331,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
 
-    // final response = {
-    //   "success": true,
-    //   "data": {
-    //     "temptoken": "e1e7b951539b4ae48d72953bbc749c841648805868020",
-    //     "subscriptionId": "100456947236",
-    //     "orderId": "IoGzmreSnQRAxOzwSE7L",
-    //     "callbackUrl":
-    //         "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=IoGzmreSnQRAxOzwSE7L",
-    //     "authenticateUrl":
-    //         "https://securegw.paytm.in/order/pay?mid=CMTNKX90967647249644&orderId=IoGzmreSnQRAxOzwSE7L"
-    //   }
-    // };
-
-    // final paytmSubscriptionModel =
-    //     CreateSubscriptionResponseModel.fromMap(response);
     processText = "Verifying your UPI address";
     final ApiResponse<ValidateVpaResponseModel> isVpaValidResponse =
         await _paytmRepo.validateVPA(paytmSubscriptionModel, vpa);
@@ -418,18 +365,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
-      // AppState.backButtonDispatcher.didPopRoute();
-      // AppState.screenStack.add(ScreenItem.dialog);
-      // Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
-      //   PageRouteBuilder(
-      //     opaque: false,
-      //     pageBuilder: (BuildContext context, _, __) => PaytmLoader(
-      //       mid: mid,
-      //       paytmSubscriptionModel: paytmSubscriptionModel,
-      //       vpa: vpa,
-      //     ),
-      //   ),
-      // );
       processText = "Connecting to your bank";
       ApiResponse<bool> postResponse = await makePostRequest(
           paytmSubscriptionModel.data.orderId,
@@ -467,6 +402,213 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           subtitle: "Please try again after sometime",
           errorCode: ERR_CREATE_SUBSCRIPTION_FAILED,
           status: false);
+    }
+  }
+
+  Future processTransaction(
+      double amount,
+      String osType,
+      String pspApp,
+      String paymentMode,
+      AugmontRates augmontRates,
+      String couponCode,
+      UpiApplication upiApplication,
+      Function() successMethod) async {
+    if (augmontRates == null) return false;
+
+    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+
+    final augMap = {
+      "aBlockId": augmontRates.blockId.toString(),
+      "aLockPrice": augmontRates.goldBuyPrice,
+      "aPaymode": "PYTM",
+      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
+          augmontRates.goldBuyPrice),
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+    };
+
+    final ApiResponse<CreatePaytmTransactionModel>
+        paytmSubscriptionApiResponse =
+        await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
+    AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
+    AppState.currentTxnAmount = amount;
+    _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
+    if (paytmSubscriptionApiResponse.code == 400) {
+      _logger.e(paytmSubscriptionApiResponse.errorMessage);
+      return false;
+    }
+
+    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+    print(paytmSubscriptionApiResponse.model.data.orderId);
+
+    orderId = paytmSubscriptionModel.data.orderId;
+
+    final ApiResponse<ProcessTransactionModel> processTransactionApiResponse =
+        await _paytmRepo.processPaytmTransaction(
+            tempToken: paytmSubscriptionModel.data.temptoken,
+            osType: osType,
+            pspApp: pspApp,
+            orderId: paytmSubscriptionModel.data.orderId,
+            paymentMode: paymentMode);
+
+    DeepLinkInfo deepLinkInfo =
+        processTransactionApiResponse.model.data.body.deepLinkInfo;
+    if (deepLinkInfo == null || deepLinkInfo.deepLink == null)
+      return BaseUtil.showNegativeAlert(
+          "Something went wrong", "Please try again");
+
+    String url =
+        processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink +
+            '&tn=FELLOGOLD';
+
+    _logger.d("Transaction Url: $url");
+
+    if (processTransactionApiResponse.code == 400) {
+      _logger.e(processTransactionApiResponse.errorMessage);
+      return;
+    } else {
+      log(upiApplication.appName);
+      await doUpiTransation(
+          url: url,
+          amount: amount,
+          upiApplication: upiApplication,
+          orderId: paytmSubscriptionModel.data.orderId,
+          successMethod: successMethod);
+    }
+  }
+
+  Future doUpiTransation(
+      {String url,
+      double amount,
+      String orderId,
+      UpiApplication upiApplication,
+      Function() successMethod}) async {
+    if (url.isEmpty)
+      return BaseUtil.showNegativeAlert(
+          "Something went wrong", "Please try again");
+
+    //ANDROID Handling
+    if (PlatformUtils.isAndroid) {
+      UpiTransactionResponse response;
+      AppState.backButtonDispatcher.didPopRoute();
+      try {
+        response = await UpiPay.initiateTransaction(
+            app: upiApplication, deepLinkUrl: url);
+        print(response);
+      } catch (e) {
+        print(e);
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Your transaction was unsuccessful. Please try again',
+        );
+      }
+      if (response.status == UpiTransactionStatus.failure) {
+        BaseUtil.showNegativeAlert(
+          'Transaction failed',
+          'Your transaction was unsuccessful. Please try again',
+        );
+      } else if (response.status == UpiTransactionStatus.submitted ||
+          response.status == UpiTransactionStatus.success) {
+        AppState.delegate.appState.isTxnLoaderInView = true;
+        handleTransactionPolling();
+        AppState.delegate.appState.txnTimer =
+            Timer(Duration(seconds: 30), () async {
+          AppState.pollingPeriodicTimer?.cancel();
+          if (AppState.delegate.appState.isTxnLoaderInView) {
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            showTransactionPendingDialog();
+          }
+        });
+      }
+    }
+    //iOS Handling
+    if (PlatformUtils.isIOS) {
+      if (upiApplication.appName == "Google Pay") {
+        url = "tez:" + url.split(":").last;
+      } else if (upiApplication.appName == "PhonePe") {
+        url = "phonepe:" + url.split(":").last;
+      }
+      launchUrl(Uri.parse(url)).then((value) async {
+        AppState.backButtonDispatcher.didPopRoute();
+        AppState.isIOSTxnInProgress = true;
+        AppState.currentTxnAmount = amount;
+      });
+    }
+  }
+
+  handleIOSUpiTransaction() {
+    if (!AppState.isIOSTxnInProgress) return;
+    AppState.isIOSTxnInProgress = false;
+    AppState.delegate.appState.isTxnLoaderInView = true;
+    handleTransactionPolling();
+    AppState.delegate.appState.txnTimer =
+        Timer(Duration(seconds: 30), () async {
+      AppState.pollingPeriodicTimer?.cancel();
+      if (AppState.delegate.appState.isTxnLoaderInView) {
+        AppState.delegate.appState.isTxnLoaderInView = false;
+        showTransactionPendingDialog();
+      }
+    });
+  }
+
+  void handleTransactionPolling() async {
+    AppState.pollingPeriodicTimer =
+        Timer.periodic(Duration(seconds: 5), (timer) async {
+      final res =
+          await _paytmRepo.getTransactionStatus(AppState.currentTxnOrderId);
+      if (res.isSuccess()) {
+        TransactionResponseModel txnStatus = res.model;
+        switch (txnStatus.data.status) {
+          case Constants.TXN_STATUS_RESPONSE_SUCCESS:
+            if (!txnStatus.data.isUpdating) {
+              timer.cancel();
+              AppState.delegate.appState.txnTimer.cancel();
+              return _txnService.transactionResponseUpdate(
+                amount: AppState.currentTxnAmount,
+                gtId: AppState.currentTxnOrderId,
+              );
+            }
+            break;
+          case Constants.TXN_STATUS_RESPONSE_PENDING:
+            break;
+          case Constants.TXN_STATUS_RESPONSE_FAILURE:
+            AppState.delegate.appState.isTxnLoaderInView = false;
+            timer.cancel();
+            AppState.delegate.appState.txnTimer.cancel();
+            BaseUtil.showNegativeAlert(
+              'Transaction failed',
+              'Your transaction was unsuccessful. Please try again',
+            );
+            break;
+        }
+      }
+    });
+  }
+
+  void showTransactionPendingDialog(
+      {String title, String subtitle, String duration}) {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: PendingDialog(
+        title: title ?? "We're still processing!",
+        subtitle: subtitle ??
+            "Your transaction is taking longer than usual. We'll get back to you in ",
+        duration: duration ?? '15 minutes',
+      ),
+    );
+  }
+
+  Future<ApiResponse> validateTxnResult(String orderId) async {
+    try {
+      ApiResponse<TxnResultModel> txnResultReponse =
+          await _paytmRepo.fetchTxnResultDetails(orderId);
+      return txnResultReponse;
+    } catch (e) {
+      return ApiResponse.withError("Couldn't verify txn details", 400);
     }
   }
 
