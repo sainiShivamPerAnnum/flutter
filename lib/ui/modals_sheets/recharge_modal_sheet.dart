@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -9,16 +10,47 @@ import 'package:felloapp/ui/pages/static/congratulatory_coin_view.dart';
 import 'package:felloapp/ui/pages/static/congratulatory_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/recharge_loading_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class RechargeModalSheet extends StatelessWidget {
+class RechargeModalSheet extends StatefulWidget {
   final int amount;
   final bool skipMl;
   const RechargeModalSheet({Key key, this.amount = 250, this.skipMl = false})
       : super(key: key);
+
+  @override
+  State<RechargeModalSheet> createState() => _RechargeModalSheetState();
+}
+
+class _RechargeModalSheetState extends State<RechargeModalSheet>
+    with WidgetsBindingObserver {
+  final PaytmService _paytmService = locator<PaytmService>();
+  AppLifecycleState appLifecycleState;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    appLifecycleState = state;
+    if (appLifecycleState == AppLifecycleState.resumed) {
+      _paytmService.handleIOSUpiTransaction();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +89,8 @@ class RechargeModalSheet extends StatelessWidget {
                     );
                   },
                   child: BaseView<AugmontGoldBuyViewModel>(
-                      onModelReady: (model) => model.init(amount, skipMl),
+                      onModelReady: (model) =>
+                          model.init(widget.amount, widget.skipMl),
                       builder: (ctx, model, child) {
                         return _getView(txnService, model);
                       })),
@@ -71,7 +104,8 @@ class RechargeModalSheet extends StatelessWidget {
   Widget _getView(
       TransactionService txnService, AugmontGoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return NewAugmontBuyView(amount: amount, skipMl: skipMl, model: model);
+      return NewAugmontBuyView(
+          amount: widget.amount, skipMl: widget.skipMl, model: model);
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
       return RechargeLoadingView(model: model);

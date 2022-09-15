@@ -53,4 +53,9 @@ class GameRepo extends BaseRepo {
       return ApiResponse.withError("Unable to fetch game by id", 400);
     }
   }
+
+  ApiResponse<String> getGameToken({@required String gameName}) {
+    String res = getGameApiToken(gameName);
+    return ApiResponse(model: res, code: 200);
+  }
 }

@@ -181,6 +181,7 @@ class RechargeLoadingView extends StatelessWidget {
               onEnd: () {
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoingTransaction) return;
+                AppState.pollingPeriodicTimer?.cancel();
 
                 _txnService.currentTransactionState =
                     TransactionState.idleTrasantion;

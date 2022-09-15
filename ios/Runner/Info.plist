@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -56,6 +60,22 @@
 				<string>com.googleusercontent.apps.76548371644-bqosqtn2g7dgk4h880ujt243g7nk7mbd</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>paytmqpHRfp13374268724583</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>paytmCMTNKX90967647249644</string>
+			</array>
+		</dict>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
@@ -64,7 +84,7 @@
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>CFBundleVersion</key>
-	<string>122</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<string>0</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
@@ -75,10 +95,16 @@
 	</array>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms-beta</string>
 		<string>itms</string>
+		<string>phonepe</string>
+		<string>tez</string>
+		<string>paytm</string>
+		<string>gpay</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -97,6 +123,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

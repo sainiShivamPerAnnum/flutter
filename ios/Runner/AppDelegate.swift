@@ -11,6 +11,9 @@ import AppsFlyerLib
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         GeneratedPluginRegistrant.register(with: self)
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        let paymentChannel = FlutterMethodChannel(name: "fello.in/dev/payments/paytmService",
+        binaryMessenger: controller.binaryMessenger)
         if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
