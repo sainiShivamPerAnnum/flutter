@@ -468,7 +468,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                model.shareWhatsApp();
+                                model.shareLink();
                               },
                               icon: Icon(
                                 Icons.share,
@@ -967,113 +967,5 @@ class VoucherModal extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-//Copy this CustomPainter code to the Bottom of the File
-class LakhCustomPaint extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * 1.184615, size.height * 0.2691261);
-    path_0.cubicTo(
-        size.width * 1.184615,
-        size.height * 0.7285773,
-        size.width * 1.156438,
-        size.height * 1.052747,
-        size.width * 0.6349246,
-        size.height * 0.9553091);
-    path_0.cubicTo(
-        size.width * 0.5865785,
-        size.height * 0.9462761,
-        size.width * 0.5367577,
-        size.height * 0.9483352,
-        size.width * 0.4888669,
-        size.height * 0.9616466);
-    path_0.cubicTo(
-        size.width * -0.07392585,
-        size.height * 1.118072,
-        size.width * 0.007692154,
-        size.height * 0.7302920,
-        size.width * 0.007692154,
-        size.height * 0.2691261);
-    path_0.cubicTo(
-        size.width * 0.007692154,
-        size.height * -0.2109852,
-        size.width * 0.2711554,
-        size.height * -0.6001920,
-        size.width * 0.5961538,
-        size.height * -0.6001920);
-    path_0.cubicTo(
-        size.width * 0.9211538,
-        size.height * -0.6001920,
-        size.width * 1.184615,
-        size.height * -0.2109852,
-        size.width * 1.184615,
-        size.height * 0.2691261);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-//Copy this CustomPainter code to the Bottom of the File
-class IphoneCustomPaint extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * 1.179104, size.height * 0.1723363);
-    path_0.cubicTo(
-        size.width * 1.179104,
-        size.height * 0.5976011,
-        size.width * 1.288672,
-        size.height * 1.119681,
-        size.width * 0.7680075,
-        size.height * 0.9679692);
-    path_0.cubicTo(
-        size.width * 0.6618127,
-        size.height * 0.9370264,
-        size.width * 0.5524649,
-        size.height * 0.9220132,
-        size.width * 0.4449075,
-        size.height * 0.9400901);
-    path_0.cubicTo(
-        size.width * -0.3325672,
-        size.height * 1.070758,
-        size.width * 0.1492530,
-        size.height * 0.6584198,
-        size.width * 0.1492530,
-        size.height * 0.2217868);
-    path_0.cubicTo(
-        size.width * 0.1492530,
-        size.height * -0.2424967,
-        size.width * 0.2929104,
-        size.height * -0.6683231,
-        size.width * 0.6082075,
-        size.height * -0.6683231);
-    path_0.cubicTo(
-        size.width * 0.9235075,
-        size.height * -0.6683231,
-        size.width * 1.179104,
-        size.height * -0.2919473,
-        size.width * 1.179104,
-        size.height * 0.1723363);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }

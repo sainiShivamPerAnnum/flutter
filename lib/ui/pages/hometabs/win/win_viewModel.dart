@@ -203,6 +203,42 @@ class WinViewModel extends BaseModel {
     _winnerService.fetchWinners();
   }
 
+  Future<void> shareLink() async {
+    if (shareLinkInProgress) return;
+    if (await BaseUtil.showNoInternetAlert()) return;
+
+    _fcmListener.addSubscription(FcmTopic.REFERRER);
+    BaseAnalytics.analytics.logShare(
+      contentType: 'referral',
+      itemId: _userService.baseUser.uid,
+      method: 'message',
+    );
+
+    _analyticsService.track(eventName: AnalyticsEvents.shareReferralLink);
+    shareLinkInProgress = true;
+    refresh();
+
+    String url = await this.generateLink();
+
+    shareLinkInProgress = false;
+    refresh();
+
+    if (url == null) {
+      BaseUtil.showNegativeAlert(
+        'Generating link failed',
+        'Please try again in some time',
+      );
+    } else {
+      if (Platform.isIOS) {
+        Share.share(_shareMsg + url);
+      } else {
+        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
+          _logger.d(flag);
+        });
+      }
+    }
+  }
+
   fectchBasicConstantValues() {
     _minWithdrawPrize = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
