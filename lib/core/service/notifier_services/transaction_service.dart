@@ -438,36 +438,54 @@ class TransactionService
       if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
-      if (currentTransactionState == TransactionState.ongoingTransaction) {
-        if (depositFcmResponseModel.gtId != null) {
-          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-            Future.delayed(Duration(milliseconds: 220), () {
-              currentTransactionState = TransactionState.idleTrasantion;
-            });
-            _gtService.showInstantGoldenTicketView(
-                amount: depositFcmResponseModel.amount,
-                title:
-                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                source: GTSOURCE.deposit);
-            if (AppState.screenStack.last == ScreenItem.loader) {
-              AppState.screenStack.remove(AppState.screenStack.last);
-            }
-            AppState.backButtonDispatcher.didPopRoute();
-          } else {
-            currentTransactionState = TransactionState.successTransaction;
-            await Future.delayed(Duration(milliseconds: 5000), () {});
+      // if (currentTransactionState == TransactionState.ongoingTransaction) {
+      //   if (depositFcmResponseModel.gtId != null) {
+      //     GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+      //     if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+      //       Future.delayed(Duration(milliseconds: 220), () {
+      //         currentTransactionState = TransactionState.idleTrasantion;
+      //       });
+      //       _gtService.showInstantGoldenTicketView(
+      //           amount: depositFcmResponseModel.amount,
+      //           title:
+      //               "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+      //           source: GTSOURCE.deposit);
+      //       if (AppState.screenStack.last == ScreenItem.loader) {
+      //         AppState.screenStack.remove(AppState.screenStack.last);
+      //       }
+      //       AppState.backButtonDispatcher.didPopRoute();
+      //     } else {
+      //       currentTransactionState = TransactionState.successTransaction;
+      //       await Future.delayed(Duration(milliseconds: 5000), () {});
 
-            if (AppState.screenStack.last == ScreenItem.loader) {
-              AppState.screenStack.remove(AppState.screenStack.last);
-            }
-            AppState.backButtonDispatcher.didPopRoute();
-          }
-        } else {
-          currentTransactionState = TransactionState.successTransaction;
-          await Future.delayed(Duration(milliseconds: 5000), () {});
-          currentTransactionState = TransactionState.successCoinTransaction;
-          // AppState.backButtonDispatcher.didPopRoute();
+      //       if (AppState.screenStack.last == ScreenItem.loader) {
+      //         AppState.screenStack.remove(AppState.screenStack.last);
+      //       }
+      //       AppState.backButtonDispatcher.didPopRoute();
+      //     }
+      //   } else {
+      //     currentTransactionState = TransactionState.successTransaction;
+      //     await Future.delayed(Duration(milliseconds: 5000), () {});
+      //     currentTransactionState = TransactionState.successCoinTransaction;
+      //     // AppState.backButtonDispatcher.didPopRoute();
+      //   }
+      // }
+      if (currentTransactionState == TransactionState.ongoingTransaction) {
+        if (AppState.screenStack.last == ScreenItem.loader) {
+          AppState.screenStack.remove(AppState.screenStack.last);
+        }
+        currentTransactionState = TransactionState.successTransaction;
+        await Future.delayed(Duration(milliseconds: 5000), () {});
+        currentTransactionState = TransactionState.successCoinTransaction;
+        await Future.delayed(Duration(milliseconds: 3000), () {});
+        currentTransactionState = TransactionState.idleTrasantion;
+        GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+          _gtService.showInstantGoldenTicketView(
+              amount: depositFcmResponseModel.amount,
+              title:
+                  "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+              source: GTSOURCE.prize);
         }
       }
 
@@ -506,35 +524,20 @@ class TransactionService
       }
       print(gtId);
       if (currentTransactionState == TransactionState.ongoingTransaction) {
-        if (depositFcmResponseModel.gtId != null) {
-          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-            Future.delayed(Duration(milliseconds: 220), () {
-              currentTransactionState = TransactionState.idleTrasantion;
-            });
-            _gtService.showInstantGoldenTicketView(
-                amount: depositFcmResponseModel.amount,
-                title:
-                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-                source: GTSOURCE.deposit);
-            if (AppState.screenStack.last == ScreenItem.loader) {
-              AppState.screenStack.remove(AppState.screenStack.last);
-            }
-            AppState.backButtonDispatcher.didPopRoute();
-          } else {
-            currentTransactionState = TransactionState.successTransaction;
-            await Future.delayed(Duration(milliseconds: 5000), () {});
-
-            if (AppState.screenStack.last == ScreenItem.loader) {
-              AppState.screenStack.remove(AppState.screenStack.last);
-            }
-            AppState.backButtonDispatcher.didPopRoute();
-          }
-        } else {
-          currentTransactionState = TransactionState.successTransaction;
-          await Future.delayed(Duration(milliseconds: 5000), () {});
-          currentTransactionState = TransactionState.successCoinTransaction;
-          // AppState.backButtonDispatcher.didPopRoute();
+        if (AppState.screenStack.last == ScreenItem.loader) {
+          AppState.screenStack.remove(AppState.screenStack.last);
+        }
+        currentTransactionState = TransactionState.successTransaction;
+        await Future.delayed(Duration(milliseconds: 5000), () {});
+        currentTransactionState = TransactionState.successCoinTransaction;
+        await Future.delayed(Duration(milliseconds: 3000), () {});
+        currentTransactionState = TransactionState.idleTrasantion;
+        GoldenTicketService.goldenTicketId = gtId;
+        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+          _gtService.showInstantGoldenTicketView(
+              amount: amount,
+              title: "You have successfully saved ₹${getAmount(amount)}",
+              source: GTSOURCE.prize);
         }
       }
 

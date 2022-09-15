@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/seprator.dart';
 import 'package:felloapp/util/locator.dart';
@@ -60,7 +61,7 @@ class CongratulatoryView extends StatelessWidget {
                       ),
                       Spacer(),
                       Text(
-                        "₹${_txnService.depositFcmResponseModel.amount}",
+                        "₹${AppState.currentTxnAmount}",
                         style: TextStyles.sourceSansSB.body2,
                       ),
                     ],
@@ -89,7 +90,8 @@ class CongratulatoryView extends StatelessWidget {
                         width: SizeConfig.screenWidth * 0.12,
                       ),
                       Text(
-                        "${_txnService.depositFcmResponseModel.augmontGoldQty}g",
+                        // "${_txnService.depositFcmResponseModel.augmontGoldQty}g",
+                        "0.0g",
                         style: TextStyles.sourceSansSB.body2,
                       ),
                     ],

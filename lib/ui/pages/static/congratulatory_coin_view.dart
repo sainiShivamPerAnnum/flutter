@@ -56,7 +56,7 @@ class CongratulatoryCoinView extends StatelessWidget {
         ),
         SizedBox(height: SizeConfig.padding12),
         Text(
-          "${(_txnService.depositFcmResponseModel.amount).toInt()} Fello tokens won!",
+          "${(AppState.currentTxnAmount).toInt()} Fello tokens won!",
           style: TextStyles.sourceSans.body2,
         ),
         Spacer(),
@@ -84,8 +84,7 @@ class CongratulatoryCoinView extends StatelessWidget {
                     height: SizeConfig.iconSize5,
                   ),
                   SizedBox(width: SizeConfig.padding2),
-                  Text(
-                      "${(_txnService.depositFcmResponseModel.amount).toInt()}",
+                  Text("${(AppState.currentTxnAmount).toInt()}",
                       style: TextStyles.sourceSansSB.body2),
                 ],
               ),
@@ -117,7 +116,7 @@ class CongratulatoryCoinView extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      "₹${_txnService.depositFcmResponseModel.amount}",
+                      "₹${AppState.currentTxnAmount}",
                       style: TextStyles.sourceSansSB.body2,
                     ),
                   ],
@@ -146,7 +145,7 @@ class CongratulatoryCoinView extends StatelessWidget {
                       width: SizeConfig.screenWidth * 0.12,
                     ),
                     Text(
-                      "${_txnService.depositFcmResponseModel.augmontGoldQty}g",
+                      "${AppState.currentTxnAmount}g",
                       style: TextStyles.sourceSansSB.body2,
                     ),
                   ],
