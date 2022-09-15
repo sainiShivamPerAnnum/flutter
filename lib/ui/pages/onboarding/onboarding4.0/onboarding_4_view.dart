@@ -3,20 +3,38 @@ import 'dart:developer';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 const String COMING_FROM_SPLASH = "fromSplash";
 const String COMING_FROM_HOME = "fromHome";
 
-class OnBoardingView extends StatelessWidget {
+class OnBoardingView extends StatefulWidget {
   final String comingFrom;
+
   const OnBoardingView({Key key, this.comingFrom = COMING_FROM_SPLASH})
       : super(key: key);
+
+  @override
+  State<OnBoardingView> createState() => _OnBoardingViewState();
+}
+
+class _OnBoardingViewState extends State<OnBoardingView>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,37 +45,65 @@ class OnBoardingView extends StatelessWidget {
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: Color(0xFF0D4748),
-          body: GestureDetector(
-            onHorizontalDragEnd: (details) {
-              bool leftSwipe =
-                  model.dragStartPosition > model.dragUpdatePosition;
-              double swipeCount =
-                  (model.dragStartPosition - model.dragUpdatePosition).abs();
-              if (swipeCount >= 40) {
-                if (leftSwipe) {
-                  if (model.currentPage == 2) {
-                    // model.registerWalkthroughCompletion(comingFrom);
-                    return;
-                  } else {
-                    model.pageController.nextPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                    );
-                  }
-                } else {
-                  model.pageController.previousPage(
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Color(0xFF0D4748),
+            onPressed: () {
+              if (model.currentPage == 2)
+                model.registerWalkthroughCompletion(widget.comingFrom);
+              else
+                model.pageController.animateToPage(model.currentPage + 1,
                     duration: Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                  );
-                }
-              }
+                    curve: Curves.easeIn);
             },
-            onHorizontalDragStart: (details) {
-              model.dragStartPosition = details.globalPosition.dx;
-            },
-            onHorizontalDragUpdate: (details) {
-              model.dragUpdatePosition = details.globalPosition.dx;
-            },
+            child: Container(
+              width: SizeConfig.padding64,
+              height: SizeConfig.padding64,
+              // decoration: BoxDecoration(
+              //   color: Colors.transparent,
+              //   border: Border.all(
+              //     color: Color(0xFF009D91),
+              //     width: 2,
+              //   ),
+              //   shape: BoxShape.circle,
+              // ),
+              child: model.isWalkthroughRegistrationInProgress
+                  ? SpinKitThreeBounce(
+                      color: Colors.white, size: SizeConfig.padding16)
+                  : Icon(Icons.arrow_forward_ios_sharp,
+                      size: SizeConfig.padding20, color: Colors.white),
+            ),
+          ),
+          body: GestureDetector(
+            // onHorizontalDragEnd: (details) {
+            //   bool leftSwipe =
+            //       model.dragStartPosition > model.dragUpdatePosition;
+            //   double swipeCount =
+            //       (model.dragStartPosition - model.dragUpdatePosition).abs();
+            //   if (swipeCount >= 40) {
+            //     if (leftSwipe) {
+            //       if (model.currentPage == 2) {
+            //         // model.registerWalkthroughCompletion(comingFrom);
+            //         return;
+            //       } else {
+            //         model.pageController.nextPage(
+            //           duration: Duration(milliseconds: 500),
+            //           curve: Curves.easeIn,
+            //         );
+            //       }
+            //     } else {
+            //       model.pageController.previousPage(
+            //         duration: Duration(milliseconds: 500),
+            //         curve: Curves.easeIn,
+            //       );
+            //     }
+            //   }
+            // },
+            // onHorizontalDragStart: (details) {
+            //   model.dragStartPosition = details.globalPosition.dx;
+            // },
+            // onHorizontalDragUpdate: (details) {
+            //   model.dragUpdatePosition = details.globalPosition.dx;
+            // },
             child: Stack(
               children: [
                 Container(
@@ -72,27 +118,13 @@ class OnBoardingView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Visibility(
-                  visible: model.currentPage != 2,
-                  child: Positioned(
-                    top: SizeConfig.padding46,
-                    right: SizeConfig.padding24,
-                    child: GestureDetector(
-                      onTap: () {
-                        model.onBoardingCompleted(comingFrom);
-                      },
-                      child: Text(
-                        "SKIP",
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: SvgPicture.asset(
-                    "assets/temp/onboarding-tm.svg",
-                    width: 300,
-                    height: 400,
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SafeArea(
+                    child: Lottie.asset("assets/lotties/coin-stack.json",
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.screenWidth,
+                        controller: controller),
                   ),
                 ),
                 Positioned(
@@ -115,91 +147,71 @@ class OnBoardingView extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 100),
-                    height: 90,
-                    width: 300,
-                    child: PageView.builder(
-                      controller: model.pageController,
-                      physics: NeverScrollableScrollPhysics(),
-                      onPageChanged: (val) {
-                        model.currentPage = val;
-                      },
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Text(
-                              model.onboardingData[index][0],
-                              style: TextStyles.rajdhaniB.title2,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding16,
-                            ),
-                            Text(
-                              model.onboardingData[index][1],
-                              textAlign: TextAlign.center,
-                              style: TextStyles.sourceSans.body2,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 30,
-                    margin: EdgeInsets.only(bottom: 40),
-                    child: ListView.builder(
-                      itemCount: 3,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: SizeConfig.padding8,
-                          height: SizeConfig.padding8,
-                          margin: EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: model.currentPage == index
-                                ? Colors.white
-                                : Colors.transparent,
-                            border: Border.all(color: Colors.white),
-                            shape: BoxShape.circle,
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: SizeConfig.padding32),
+                          height: SizeConfig.screenWidth * 0.25,
+                          width: 300,
+                          child: PageView.builder(
+                            controller: model.pageController,
+                            // physics: NeverScrollableScrollPhysics(),
+                            onPageChanged: (val) {
+                              if (val > model.currentPage) {
+                                controller.animateTo(0.3 * (val));
+                              } else {
+                                controller.animateBack(0.3 * (val));
+                              }
+                              model.currentPage = val;
+                            },
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Text(
+                                    model.onboardingData[index][0],
+                                    style: TextStyles.rajdhaniB.title2,
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding16,
+                                  ),
+                                  Text(
+                                    model.onboardingData[index][1],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyles.sourceSans.body2,
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            3,
+                            (index) {
+                              return Container(
+                                width: SizeConfig.padding8,
+                                height: SizeConfig.padding8,
+                                margin: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: model.currentPage == index
+                                      ? Colors.white
+                                      : Colors.transparent,
+                                  border: Border.all(color: Colors.white),
+                                  shape: BoxShape.circle,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding40)
+                      ],
                     ),
                   ),
                 ),
-                if (model.currentPage == 2)
-                  Positioned(
-                    bottom: SizeConfig.padding32,
-                    right: SizeConfig.padding32,
-                    child: Container(
-                      width: SizeConfig.padding64,
-                      height: SizeConfig.padding64,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(
-                          color: Color(0xFF009D91),
-                          width: 2,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                          icon: model.isWalkthroughRegistrationInProgress
-                              ? SpinKitThreeBounce(
-                                  color: Colors.white,
-                                  size: SizeConfig.padding16)
-                              : Icon(Icons.forward),
-                          onPressed: () {
-                            model.registerWalkthroughCompletion(comingFrom);
-                          },
-                          color: Colors.white),
-                    ),
-                  ),
                 BaseAnimation(),
               ],
             ),

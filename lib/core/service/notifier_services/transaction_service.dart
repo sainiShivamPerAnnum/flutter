@@ -438,38 +438,6 @@ class TransactionService
       if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
-      // if (currentTransactionState == TransactionState.ongoingTransaction) {
-      //   if (depositFcmResponseModel.gtId != null) {
-      //     GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-      //     if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-      //       Future.delayed(Duration(milliseconds: 220), () {
-      //         currentTransactionState = TransactionState.idleTrasantion;
-      //       });
-      //       _gtService.showInstantGoldenTicketView(
-      //           amount: depositFcmResponseModel.amount,
-      //           title:
-      //               "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-      //           source: GTSOURCE.deposit);
-      //       if (AppState.screenStack.last == ScreenItem.loader) {
-      //         AppState.screenStack.remove(AppState.screenStack.last);
-      //       }
-      //       AppState.backButtonDispatcher.didPopRoute();
-      //     } else {
-      //       currentTransactionState = TransactionState.successTransaction;
-      //       await Future.delayed(Duration(milliseconds: 5000), () {});
-
-      //       if (AppState.screenStack.last == ScreenItem.loader) {
-      //         AppState.screenStack.remove(AppState.screenStack.last);
-      //       }
-      //       AppState.backButtonDispatcher.didPopRoute();
-      //     }
-      //   } else {
-      //     currentTransactionState = TransactionState.successTransaction;
-      //     await Future.delayed(Duration(milliseconds: 5000), () {});
-      //     currentTransactionState = TransactionState.successCoinTransaction;
-      //     // AppState.backButtonDispatcher.didPopRoute();
-      //   }
-      // }
       if (currentTransactionState == TransactionState.ongoingTransaction) {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.remove(AppState.screenStack.last);
