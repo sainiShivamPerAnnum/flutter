@@ -12,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/win/winPrizeAssets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -31,8 +32,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-
-import 'customPainters.dart';
 
 //Following is a dummy list to populate the Fello News section for now
 List<Map<String, dynamic>> dummyFelloNews = [
@@ -71,7 +70,7 @@ class Win extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
-              double currentWinning = m.userFundWallet.unclaimedBalance;
+              double currentWinning = m.userFundWallet.unclaimedBalance ?? 0;
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
@@ -150,15 +149,14 @@ class Win extends StatelessWidget {
                                           ),
                                   ],
                                 ),
-                                Consumer<AppState>(
-                                  builder: (ctx, m, child) => WinningsCylinder(
-                                    index: AppState
-                                        .delegate.appState.getCurrentTabIndex,
-                                    currentWinning: currentWinning,
-                                    model: model,
-                                    redeemAmount: model.minWithdrawPrizeAmt,
-                                  ),
-                                ),
+                                CustomPaint(
+                                  size: Size(
+                                      SizeConfig.screenWidth * 0.4,
+                                      (SizeConfig.screenWidth * 0.4)
+                                          .toDouble()),
+                                  painter: model.getRedeemAssetWidget(
+                                      m.userFundWallet.unclaimedBalance),
+                                )
                               ],
                             ),
                             SizedBox(
@@ -514,92 +512,6 @@ class ReferAndEarnComponent extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class WinningsCylinder extends StatefulWidget {
-  const WinningsCylinder({
-    Key key,
-    @required this.index,
-    @required this.currentWinning,
-    @required this.model,
-    @required this.redeemAmount,
-  }) : super(key: key);
-
-  final int index;
-  final double currentWinning;
-  final WinViewModel model;
-  final int redeemAmount;
-
-  @override
-  State<WinningsCylinder> createState() => _WinningsCylinder();
-}
-
-double containerHeight = SizeConfig.screenWidth * 0.4;
-double containerWidth = SizeConfig.screenWidth * 0.3;
-
-double containerFilledHeight = 0;
-
-class _WinningsCylinder extends State<WinningsCylinder> {
-  @override
-  void initState() {
-    containerFilledHeight = 0;
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    containerFilledHeight = 0;
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.index == 3) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        setState(() {
-          if (widget.currentWinning >= widget.redeemAmount) {
-            containerFilledHeight = containerHeight;
-          } else {
-            containerFilledHeight = widget.model.calculateFillHeight(
-                widget.currentWinning, containerHeight, widget.redeemAmount);
-          }
-        });
-      });
-    }
-    return Center(
-      child: Container(
-        width: containerWidth,
-        height: containerHeight,
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            Container(
-                child: CustomPaint(
-              size: Size(SizeConfig.screenWidth * 0.15,
-                  (SizeConfig.screenWidth * 0.4)),
-              painter: CustomCylinderOuter(),
-            )),
-            AnimatedContainer(
-                height: containerFilledHeight,
-                duration: Duration(seconds: 1),
-                curve: Curves.easeInCirc,
-                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-                child: CustomPaint(
-                  size: Size((SizeConfig.screenWidth * 0.15) - 8,
-                      containerFilledHeight - 10),
-                  painter: CustomCylinderInner(),
-                )),
-          ],
-        ),
       ),
     );
   }

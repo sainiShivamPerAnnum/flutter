@@ -1,5 +1,8 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -9,16 +12,20 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class RedeemSucessfulScreen extends StatelessWidget {
   RedeemSucessfulScreen(
-      {this.subTitleWidget, this.claimPrize, this.onSharePressed, Key key})
+      {@required this.subTitleWidget,
+      @required this.claimPrize,
+      @required this.choice,
+      @required this.dpUrl,
+      Key key})
       : super(key: key);
 
   final Widget subTitleWidget;
   final double claimPrize;
-  final Function onSharePressed;
+  final PrizeClaimChoice choice;
+  final String dpUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +186,15 @@ class RedeemSucessfulScreen extends StatelessWidget {
                   width: double.infinity,
                   child: TextButton(
                       onPressed: () {
-                        onSharePressed();
+                        AppState.delegate.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          widget: SharePriceScreen(
+                            dpUrl: dpUrl,
+                            choice: choice,
+                            prizeAmount: claimPrize,
+                          ),
+                          page: SharePriceScreenPageConfig,
+                        );
                       },
                       child: Text(
                         "SHARE",

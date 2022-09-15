@@ -29,6 +29,7 @@ import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/win/winPrizeAssets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
@@ -90,6 +91,7 @@ class WinViewModel extends BaseModel {
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
   bool _isWinningHistoryLoading = false;
+  bool _isShareLoading = false;
 
   List<UserTransaction> _winningHistory;
 
@@ -114,6 +116,8 @@ class WinViewModel extends BaseModel {
   int _minWithdrawPrizeAmt;
 
   //GETTERS SETTERS
+  bool get isShareLoading => _isShareLoading;
+
   get isWinningHistoryLoading => this._isWinningHistoryLoading;
   set isWinningHistoryLoading(value) {
     this._isWinningHistoryLoading = value;
@@ -237,6 +241,16 @@ class WinViewModel extends BaseModel {
         });
       }
     }
+  }
+
+  startShareLoading() {
+    _isShareLoading = true;
+    notifyListeners();
+  }
+
+  stopShareLoading() {
+    _isShareLoading = false;
+    notifyListeners();
   }
 
   fectchBasicConstantValues() {
@@ -440,36 +454,24 @@ class WinViewModel extends BaseModel {
       widget: RedeemSucessfulScreen(
         subTitleWidget: getSubtitleWidget(subtitle),
         claimPrize: claimPrize,
-        onSharePressed: () {
-          //Starting the sharing screen
-          AppState.delegate.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            widget: SharePriceScreen(
-              imageKey: imageKey,
-              dpUrl: _userService.myUserDpUrl,
-              choice: choice,
-              prizeAmount: claimPrize,
-              onShareButtonPressed: (res) async {
-                if (res) {
-                  try {
-                    String url =
-                        await _userService.createDynamicLink(true, 'Other');
-                    caputure(
-                        'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
-                  } catch (e) {
-                    _logger.e(e.toString());
-                    BaseUtil.showNegativeAlert(
-                        "An error occured!", "Please try again");
-                  }
-                }
-              },
-            ),
-            page: SharePriceScreenPageConfig,
-          );
-        },
+        dpUrl: _userService.myUserDpUrl,
+        choice: choice,
       ),
       page: RedeemSucessfulScreenPageConfig,
     );
+  }
+
+  sharePrizeDetails() async {
+    startShareLoading();
+    try {
+      String url = await _userService.createDynamicLink(true, 'Other');
+      caputure(
+          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+    } catch (e) {
+      _logger.e(e.toString());
+      BaseUtil.showNegativeAlert("An error occured!", "Please try again");
+    }
+    stopShareLoading();
   }
 
   claim(PrizeClaimChoice choice, double claimPrize) {
@@ -706,6 +708,30 @@ class WinViewModel extends BaseModel {
     double heightToFill = (fillPercent / 100) * containerHeight;
 
     return heightToFill;
+  }
+
+  getRedeemAssetWidget(double walletBalnce) {
+    if (walletBalnce <= 0) {
+      return WinPrizeClaimAsset0();
+    } else if (walletBalnce > 0 && walletBalnce <= 10) {
+      return WinPrizeClaimAsset1();
+    } else if (walletBalnce > 10 && walletBalnce <= 20) {
+      return WinPrizeClaimAsset2();
+    } else if (walletBalnce > 20 && walletBalnce <= 30) {
+      return WinPrizeClaimAsset3();
+    } else if (walletBalnce > 30 && walletBalnce <= 40) {
+      return WinPrizeClaimAsset4();
+    } else if (walletBalnce > 40 && walletBalnce <= 50) {
+      return WinPrizeClaimAsset5();
+    } else if (walletBalnce > 50 && walletBalnce <= 100) {
+      return WinPrizeClaimAsset6();
+    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt - 1) {
+      return WinPrizeClaimAsset7();
+    } else if (walletBalnce >= minWithdrawPrizeAmt) {
+      return WinPrizeClaimAsset8();
+    } else {
+      return WinPrizeClaimAsset0();
+    }
   }
 
   getOngoingEvents() async {
