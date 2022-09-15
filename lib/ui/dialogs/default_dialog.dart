@@ -7,6 +7,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AppDefaultDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
@@ -121,7 +122,10 @@ class _FormDialogState extends State<AppDefaultDialog> {
             ),
             isLoading
                 ? Center(
-                    child: CircularProgressIndicator(),
+                    child: SpinKitThreeBounce(
+                      size: SizeConfig.padding16,
+                      color: UiConstants.kTabBorderColor,
+                    ),
                   )
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
