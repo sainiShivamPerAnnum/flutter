@@ -12,28 +12,31 @@ void main() async {
     flavor: Flavor.DEV,
     color: Colors.green,
     values: FlavorValues(
-      awsAugmontStage: AWSAugmontStage.DEV,
-      awsIciciStage: AWSIciciStage.PROD,
-      freshchatStage: FreshchatStage.DEV,
-      razorpayStage: RazorpayStage.DEV,
-      signzyStage: SignzyStage.PROD,
-      signzyPanStage: SignzyPanStage.DEV,
-      paytmStage: PaytmStage.DEV,
-      baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
-      baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
-      mixpanelToken: MixpanelAnalytics.DEV_TOKEN,
-      dynamicLinkPrefix: 'https://dev.fello.in/test',
-    ),
+        awsAugmontStage: AWSAugmontStage.DEV,
+        awsIciciStage: AWSIciciStage.PROD,
+        freshchatStage: FreshchatStage.DEV,
+        razorpayStage: RazorpayStage.DEV,
+        signzyStage: SignzyStage.PROD,
+        signzyPanStage: SignzyPanStage.DEV,
+        paytmStage: PaytmStage.DEV,
+        baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
+        baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
+        mixpanelToken: MixpanelAnalytics.DEV_TOKEN,
+        dynamicLinkPrefix: 'https://dev.fello.in/test',
+        gameApiTokenSecret:
+            "3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f"),
   );
 
   await mainInit();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
       runApp(
-        DevicePreview(
-          enabled: !kReleaseMode,
-          builder: (context) => MyApp(), // Wrap your app
-        ),
+        // DevicePreview(
+        //   enabled: !kReleaseMode,
+        // builder:
+        // (context) =>
+        MyApp(), // Wrap your app
+        // ),
       );
     },
   );

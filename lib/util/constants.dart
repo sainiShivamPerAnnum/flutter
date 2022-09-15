@@ -127,4 +127,7 @@ class Constants {
   static const COUPONS_APPLIED_NOTIFICATION = "Coupon Applied";
 
   static const DEPOSIT_COMPLETE_NOTIFICATION = "Deposit Complete";
+  static const TXN_STATUS_RESPONSE_SUCCESS = "SUCCESS";
+  static const TXN_STATUS_RESPONSE_FAILURE = "FAIL";
+  static const TXN_STATUS_RESPONSE_PENDING = "PENDING";
 }

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
@@ -23,8 +25,16 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_view.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -355,39 +365,45 @@ class TransactionService
     return false;
   }
 
-// Clear transactions
-  signOut() {
-    lastTxnDocId = null;
-    hasMoreTxns = true;
-    hasMorePrizeTxns = true;
-    hasMoreDepositTxns = true;
-    hasMoreWithdrawalTxns = true;
-    hasMoreRefundedTxns = true;
-    if (txnList != null) txnList.clear();
+  getAmount(double amount) {
+    if (amount > amount.toInt())
+      return amount;
+    else
+      return amount.toInt();
   }
 
-  // BUY LOGIC
+  showTxnSuccessScreen(double amount, String title,
+      {bool showAutoSavePrompt = false}) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) =>
+            TxnCompletedConfirmationScreenView(
+          amount: amount ?? 0,
+          title: title ?? "Hurray, we saved ₹NA",
+          showAutoSavePrompt: showAutoSavePrompt,
+        ),
+      ),
+    );
+  }
+
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
 
-    _logger.i("Updating response value.");
+    _logger.i("Updating fcm response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
-    // AppState.delegate.appState.txnTimer.cancel();
-    // txnTimer.cancel();
+    // AppState.delegate.appState.txnTimer?.cancel();
+    AppState.pollingPeriodicTimer?.cancel();
     _logger.d("timer cancelled");
 
     try {
-      _journeyService.checkForMilestoneLevelChange();
-      depositFcmResponseModel =
+      final DepositFcmResponseModel depositFcmResponseModel =
           DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
-        // AppState.delegate.appState.isTxnLoaderInView = false;
-        currentTransactionState = TransactionState.idleTrasantion;
-        if (AppState.screenStack.last == ScreenItem.loader) {
-          AppState.screenStack.remove(AppState.screenStack.last);
-        }
+        AppState.delegate.appState.isTxnLoaderInView = false;
         BaseUtil.showNegativeAlert("Transaction failed",
             "Your gold purchase did not complete successfully");
         return;
@@ -417,31 +433,11 @@ class TransactionService
       if (newAugQuantity != null && newAugQuantity > 0) {
         _userService.augGoldQuantity = newAugQuantity;
       }
-      _userCoinService.getUserCoinBalance();
-
-      // if (AppState.delegate.appState.isTxnLoaderInView == true) {
-      //   if (depositFcmResponseModel.gtId != null) {
-      //     GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-      //     if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-      //       Future.delayed(Duration(milliseconds: 220), () {
-      //         AppState.delegate.appState.isTxnLoaderInView = false;
-      //       });
-      //       _gtService.showInstantGoldenTicketView(
-      //           amount: depositFcmResponseModel.amount,
-      //           title:
-      //               "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-      //           source: GTSOURCE.deposit);
-      //     } else {
-      //       AppState.delegate.appState.isTxnLoaderInView = false;
-      //       showTxnSuccessScreen(depositFcmResponseModel.amount,
-      //           "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
-      //     }
-      //   } else {
-      //     AppState.delegate.appState.isTxnLoaderInView = false;
-      //     showTxnSuccessScreen(depositFcmResponseModel.amount,
-      //         "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
-      //   }
-      // }
+      //add this to augmontBuyVM
+      int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(newFlcBalance);
+      }
       if (currentTransactionState == TransactionState.ongoingTransaction) {
         if (depositFcmResponseModel.gtId != null) {
           GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
@@ -479,19 +475,207 @@ class TransactionService
     } catch (e) {
       _logger.e(e);
       _internalOpsService.logFailure(
-        _userService.baseUser.uid,
-        FailType.DepositPayloadError,
-        e,
-      );
+          _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
   }
 
-  getAmount(double amount) {
-    if (amount > amount.toInt())
-      return amount;
-    else
-      return amount.toInt();
+  transactionResponseUpdate({String gtId, double amount}) async {
+    AppState.currentTxnAmount = 0;
+    AppState.currentTxnOrderId = "";
+    _logger.d("Polling response processing");
+    try {
+      if (gtId != null) {
+        print("Hey a new fcm recived with gtId: $gtId");
+        if (GoldenTicketService.lastGoldenTicketId != null) {
+          if (GoldenTicketService.lastGoldenTicketId == gtId) {
+            return;
+          } else {
+            GoldenTicketService.lastGoldenTicketId = gtId;
+          }
+        } else {
+          GoldenTicketService.lastGoldenTicketId = gtId;
+        }
+      }
+
+      //add this to augmontBuyVM
+      _userCoinService.getUserCoinBalance();
+      double newFlcBalance = amount ?? 0;
+      if (newFlcBalance > 0) {
+        _userCoinService.setFlcBalance(
+            (_userCoinService.flcBalance + newFlcBalance).toInt());
+      }
+      print(gtId);
+      if (currentTransactionState == TransactionState.ongoingTransaction) {
+        if (depositFcmResponseModel.gtId != null) {
+          GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+          if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+            Future.delayed(Duration(milliseconds: 220), () {
+              currentTransactionState = TransactionState.idleTrasantion;
+            });
+            _gtService.showInstantGoldenTicketView(
+                amount: depositFcmResponseModel.amount,
+                title:
+                    "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+                source: GTSOURCE.deposit);
+            if (AppState.screenStack.last == ScreenItem.loader) {
+              AppState.screenStack.remove(AppState.screenStack.last);
+            }
+            AppState.backButtonDispatcher.didPopRoute();
+          } else {
+            currentTransactionState = TransactionState.successTransaction;
+            await Future.delayed(Duration(milliseconds: 5000), () {});
+
+            if (AppState.screenStack.last == ScreenItem.loader) {
+              AppState.screenStack.remove(AppState.screenStack.last);
+            }
+            AppState.backButtonDispatcher.didPopRoute();
+          }
+        } else {
+          currentTransactionState = TransactionState.successTransaction;
+          await Future.delayed(Duration(milliseconds: 5000), () {});
+          currentTransactionState = TransactionState.successCoinTransaction;
+          // AppState.backButtonDispatcher.didPopRoute();
+        }
+      }
+
+      updateTransactions();
+    } catch (e) {
+      _logger.e(e);
+      _internalOpsService.logFailure(
+          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+    }
   }
+
+// Clear transactions
+  signOut() {
+    lastTxnDocId = null;
+    hasMoreTxns = true;
+    hasMorePrizeTxns = true;
+    hasMoreDepositTxns = true;
+    hasMoreWithdrawalTxns = true;
+    hasMoreRefundedTxns = true;
+    if (txnList != null) txnList.clear();
+  }
+
+  // BUY LOGIC
+  // fcmTransactionResponseUpdate(fcmDataPayload) async {
+  //   //Stop loader if loading.
+
+  //   _logger.i("Updating response value.");
+  //   // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
+  //   // AppState.delegate.appState.txnTimer.cancel();
+  //   // txnTimer.cancel();
+  //   _logger.d("timer cancelled");
+
+  //   try {
+  //     _journeyService.checkForMilestoneLevelChange();
+  //     depositFcmResponseModel =
+  //         DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
+
+  //     //Handle failed condition here.
+  //     if (!depositFcmResponseModel.status) {
+  //       // AppState.delegate.appState.isTxnLoaderInView = false;
+  //       currentTransactionState = TransactionState.idleTrasantion;
+  //       if (AppState.screenStack.last == ScreenItem.loader) {
+  //         AppState.screenStack.remove(AppState.screenStack.last);
+  //       }
+  //       BaseUtil.showNegativeAlert("Transaction failed",
+  //           "Your gold purchase did not complete successfully");
+  //       return;
+  //     }
+  //     //handle multiple fcm command for same transaction
+  //     if (depositFcmResponseModel.gtId != null) {
+  //       print(
+  //           "Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
+  //       if (GoldenTicketService.lastGoldenTicketId != null) {
+  //         if (GoldenTicketService.lastGoldenTicketId ==
+  //             depositFcmResponseModel.gtId) {
+  //           return;
+  //         } else {
+  //           GoldenTicketService.lastGoldenTicketId =
+  //               depositFcmResponseModel.gtId;
+  //         }
+  //       } else {
+  //         GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
+  //       }
+  //     }
+
+  //     double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
+  //     if (newAugPrinciple != null && newAugPrinciple > 0) {
+  //       _userService.augGoldPrinciple = newAugPrinciple;
+  //     }
+  //     double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
+  //     if (newAugQuantity != null && newAugQuantity > 0) {
+  //       _userService.augGoldQuantity = newAugQuantity;
+  //     }
+  //     _userCoinService.getUserCoinBalance();
+
+  //     // if (AppState.delegate.appState.isTxnLoaderInView == true) {
+  //     //   if (depositFcmResponseModel.gtId != null) {
+  //     //     GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+  //     //     if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+  //     //       Future.delayed(Duration(milliseconds: 220), () {
+  //     //         AppState.delegate.appState.isTxnLoaderInView = false;
+  //     //       });
+  //     //       _gtService.showInstantGoldenTicketView(
+  //     //           amount: depositFcmResponseModel.amount,
+  //     //           title:
+  //     //               "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+  //     //           source: GTSOURCE.deposit);
+  //     //     } else {
+  //     //       AppState.delegate.appState.isTxnLoaderInView = false;
+  //     //       showTxnSuccessScreen(depositFcmResponseModel.amount,
+  //     //           "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+  //     //     }
+  //     //   } else {
+  //     //     AppState.delegate.appState.isTxnLoaderInView = false;
+  //     //     showTxnSuccessScreen(depositFcmResponseModel.amount,
+  //     //         "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}");
+  //     //   }
+  //     // }
+  //     if (currentTransactionState == TransactionState.ongoingTransaction) {
+  //       if (depositFcmResponseModel.gtId != null) {
+  //         GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+  //         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+  //           Future.delayed(Duration(milliseconds: 220), () {
+  //             currentTransactionState = TransactionState.idleTrasantion;
+  //           });
+  //           _gtService.showInstantGoldenTicketView(
+  //               amount: depositFcmResponseModel.amount,
+  //               title:
+  //                   "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+  //               source: GTSOURCE.deposit);
+  //           if (AppState.screenStack.last == ScreenItem.loader) {
+  //             AppState.screenStack.remove(AppState.screenStack.last);
+  //           }
+  //           AppState.backButtonDispatcher.didPopRoute();
+  //         } else {
+  //           currentTransactionState = TransactionState.successTransaction;
+  //           await Future.delayed(Duration(milliseconds: 5000), () {});
+
+  //           if (AppState.screenStack.last == ScreenItem.loader) {
+  //             AppState.screenStack.remove(AppState.screenStack.last);
+  //           }
+  //           AppState.backButtonDispatcher.didPopRoute();
+  //         }
+  //       } else {
+  //         currentTransactionState = TransactionState.successTransaction;
+  //         await Future.delayed(Duration(milliseconds: 5000), () {});
+  //         currentTransactionState = TransactionState.successCoinTransaction;
+  //         // AppState.backButtonDispatcher.didPopRoute();
+  //       }
+  //     }
+
+  //     updateTransactions();
+  //   } catch (e) {
+  //     _logger.e(e);
+  //     _internalOpsService.logFailure(
+  //       _userService.baseUser.uid,
+  //       FailType.DepositPayloadError,
+  //       e,
+  //     );
+  //   }
+  // }
 
   showTransactionPendingDialog() {
     BaseUtil.openDialog(

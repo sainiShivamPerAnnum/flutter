@@ -27,6 +27,7 @@ class InternalOpsService extends ChangeNotifier {
     String _platform;
     String brand;
     bool isPhysicalDevice;
+
     if (!isDeviceInfoInitiated) {
       try {
         if (Platform.isIOS) {
@@ -53,12 +54,12 @@ class InternalOpsService extends ChangeNotifier {
         }
         isDeviceInfoInitiated = true;
         return {
-          "deviceId": _deviceId,
-          "platform": _platform,
-          "version": softwareVersion,
-          "model": phoneModel,
-          "brand": brand,
-          "isPhysicalDevice": isPhysicalDevice
+          "deviceId": _deviceId ?? "",
+          "platform": _platform ?? "",
+          "version": softwareVersion ?? 0,
+          "model": phoneModel ?? "",
+          "brand": brand ?? "",
+          "isPhysicalDevice": isPhysicalDevice ?? false
         };
       } catch (e) {
         log.error('Initiating Device Info failed');
