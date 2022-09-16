@@ -47,6 +47,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset.vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
@@ -210,6 +211,7 @@ void setupLocator() {
   locator.registerFactory(() => CampaignRepo());
   locator.registerFactory(() => OnboardingViewModel());
   locator.registerFactory(() => JourneyBannersViewModel());
+  locator.registerFactory(() => FaqPageViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

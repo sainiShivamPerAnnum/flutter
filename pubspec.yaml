@@ -80,7 +80,7 @@ dependencies:
   space_fixer: ^0.1.1
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
-
+  flutter_html: ^3.0.0-alpha.5
 
   isar: ^2.4.0
   isar_flutter_libs: 2.4.0

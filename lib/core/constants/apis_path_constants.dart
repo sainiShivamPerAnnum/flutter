@@ -99,6 +99,7 @@ class ApiPath {
       "/leaderboard/past/type/$type/freq/$freq";
 
   static const String amountChips = "/amount/chips/";
+  static const String faqs = "/faqs";
 
   // Internal Ops
   static const String failureReport = '/fail/report';

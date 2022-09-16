@@ -1,15 +1,21 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:flutter/cupertino.dart';
 
 class GetterRepository extends BaseRepo {
+  final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
@@ -128,6 +134,32 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch promos", 400);
+    }
+  }
+
+  Future<ApiResponse<List<FAQDataModel>>> getFaqs({
+    FaqsType type,
+  }) async {
+    try {
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+        '${CacheKeys.FAQS}/${type.name}',
+        TTL.TWO_HOURS,
+        () => APIService.instance.getData(
+          ApiPath.faqs,
+          token: token,
+          cBaseUrl: _baseUrl,
+          queryParams: {"type": type.name},
+        ),
+        (response) {
+          final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
+          return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
+        },
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
 }
