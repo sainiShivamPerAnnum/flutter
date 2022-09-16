@@ -14,6 +14,7 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -56,7 +57,7 @@ class SaveAssetView extends StatelessWidget {
                           height: SizeConfig.padding24,
                         ),
                         // -- Break --
-                        SaveTitleContainer(title: 'Auto SIP'),
+                        TitleSubtitleContainer(title: 'Auto SIP'),
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),
@@ -64,7 +65,7 @@ class SaveAssetView extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding24,
                         ),
-                        SaveTitleContainer(title: 'Transactions'),
+                        TitleSubtitleContainer(title: 'Transactions'),
                         MiniTransactionCard(),
                       ],
                     ),
