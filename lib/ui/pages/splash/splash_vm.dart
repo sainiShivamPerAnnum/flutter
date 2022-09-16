@@ -4,12 +4,16 @@ import 'dart:io';
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -21,13 +25,23 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../core/repository/user_repo.dart';
 
@@ -40,6 +54,8 @@ class LauncherViewModel extends BaseModel {
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
   final navigator = AppState.delegate.appState;
+
+  UserBootUp _userBootUp;
 
   // LOCATORS
   final _baseUtil = locator<BaseUtil>();
@@ -56,6 +72,7 @@ class LauncherViewModel extends BaseModel {
   final _userCoinService = locator<UserCoinService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _localDBModel = locator<LocalDBModel>();
+  final _userService = locator<UserService>();
 
   FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
@@ -77,11 +94,90 @@ class LauncherViewModel extends BaseModel {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
+    userBootUpEE();
     initLogic();
+
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
       isSlowConnection = true;
     });
+  }
+
+  void userBootUpEE() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      setLastOpened();
+      dayOPenCount();
+
+      String userId, deviceId, platform, appVersion, lastOpened;
+      int dayOpenCount;
+
+      userId = FirebaseAuth.instance.currentUser.uid;
+
+      Map<String, dynamic> response =
+          await _internalOpsService.initDeviceInfo();
+      if (response != null) {
+        deviceId = response["deviceId"];
+        platform = response["platform"];
+      }
+
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      appVersion = packageInfo.buildNumber;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      lastOpened = prefs.getString(Constants.LAST_OPENED) ?? "";
+      dayOpenCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+
+      _userBootUp = await Api().fetchUserBootUpRssponse(
+          userId: userId,
+          deviceId: deviceId,
+          platform: platform,
+          appVersion: appVersion,
+          lastOpened: lastOpened,
+          dayOpenCount: dayOpenCount);
+    } else {
+      //No user logged in
+    }
+  }
+
+  void dayOPenCount() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      var now = new DateTime.now();
+      var formatter = new DateFormat('dd-MM-yyyy');
+      String today = formatter.format(now);
+
+      String savedDate = prefs.getString(Constants.DATE_TODAY) ?? "";
+
+      if (savedDate == today) {
+        //The count is for today
+        //Increase the count
+        int current_count = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+        current_count = current_count + 1;
+        prefs.setInt(Constants.DAY_OPENED_COUNT, current_count);
+      } else {
+        //Date has changed
+        prefs.setString(Constants.DATE_TODAY, today);
+        prefs.setInt(Constants.DAY_OPENED_COUNT, 0);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void setLastOpened() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var now = new DateTime.now();
+      var formatter = new DateFormat('dd-MM-yyyy');
+      String formattedTime = DateFormat('kk:mm:ss:a').format(now);
+      String formattedDate = formatter.format(now);
+
+      prefs.setString(
+          Constants.LAST_OPENED, formattedDate + " " + formattedTime);
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   exit() {
@@ -180,24 +276,105 @@ class LauncherViewModel extends BaseModel {
       );
     }
 
-    ///check if the account is blocked
-    if (userService.baseUser != null && userService.baseUser.isBlocked) {
-      AppState.isUpdateScreen = true;
-      navigator.currentAction = PageAction(
-        state: PageState.replaceAll,
-        page: BlockedUserPageConfig,
-      );
-      return;
-    }
+    if (FirebaseAuth.instance.currentUser != null && _userBootUp != null) {
+      //1.check if the account is blocked
+      if (_userBootUp.data != null &&
+          _userBootUp.data.isBlocked != null &&
+          _userBootUp.data.isBlocked == true) {
+        AppState.isUpdateScreen = true;
+        navigator.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: BlockedUserPageConfig,
+        );
+        return;
+      }
+      // //2.Checking for forced App Update
+      if (_userBootUp.data.isAppForcedUpdateRequired != null &&
+          _userBootUp.data.isAppForcedUpdateRequired == true) {
+        AppState.isUpdateScreen = true;
+        navigator.currentAction =
+            PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+        return;
+      }
 
-    ///check for breaking update
-    if (await checkBreakingUpdate()) {
-      AppState.isUpdateScreen = true;
-      navigator.currentAction = PageAction(
-        state: PageState.replaceAll,
-        page: UpdateRequiredConfig,
-      );
-      return;
+      //3. Sign out the user automatically
+      if (_userBootUp.data.signOutUser != null &&
+          _userBootUp.data.signOutUser == true) {
+        Haptic.vibrate();
+
+        _userService.signOut(() async {
+          _analyticsService.track(eventName: AnalyticsEvents.signOut);
+          _analyticsService.signOut();
+          await _userRepo.removeUserFCM(_userService.baseUser.uid);
+        }).then((flag) async {
+          if (flag) {
+            //log.debug('Sign out process complete');
+            await _baseUtil.signOut();
+            _journeyService.dump();
+            _tambolaService.signOut();
+            _analyticsService.signOut();
+            _paytmService.signout();
+            AppState.backButtonDispatcher.didPopRoute();
+            AppState.delegate.appState.currentAction =
+                PageAction(state: PageState.replaceAll, page: SplashPageConfig);
+            BaseUtil.showPositiveAlert(
+              'Signed out automatically.',
+              'Seems like some internal issues. Please sign in again.',
+            );
+          } else {
+            BaseUtil.showNegativeAlert(
+              'Sign out failed',
+              'Couldn\'t signout. Please try again',
+            );
+            //log.error('Sign out process failed');
+          }
+        });
+      }
+
+      //4. App update present (Not forced)
+      if (_userBootUp.data.isAppUpdateRequired != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool(Constants.IS_APP_UPDATE_AVILABLE,
+            _userBootUp.data.isAppUpdateRequired);
+      } else {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
+      }
+
+      //5. Clear all the caches
+      if (_userBootUp.data.cache.keys != null) {
+        for (String id in _userBootUp.data.cache.keys) {
+          CacheService().invalidateByKey(id);
+        }
+      }
+
+      //6. Notice
+      if (_userBootUp.data.notice != null) {
+        if (_userBootUp.data.notice.message != null &&
+            _userBootUp.data.notice.message != "") {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
+          prefs.setString(
+              Constants.MSG_NOTICE, _userBootUp.data.notice.message);
+        } else {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
+        }
+
+        if (_userBootUp.data.notice.url != null &&
+            _userBootUp.data.notice.url != "") {
+          try {
+            if (Platform.isIOS)
+              BaseUtil.launchUrl(_userBootUp.data.notice.url);
+            else if (Platform.isAndroid)
+              BaseUtil.launchUrl(_userBootUp.data.notice.url);
+          } catch (e) {
+            Log(e.toString());
+            BaseUtil.showNegativeAlert(
+                "Something went wrong", "Please try again");
+          }
+        } else {}
+      }
     }
 
     ///check for breaking update (TESTING)

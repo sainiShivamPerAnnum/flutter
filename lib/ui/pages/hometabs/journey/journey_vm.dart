@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
@@ -12,10 +14,14 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JourneyPageViewModel extends BaseModel {
   final logger = locator<CustomLogger>();
@@ -110,6 +116,71 @@ class JourneyPageViewModel extends BaseModel {
         }
       });
     });
+
+    checkForBootUpAlerts();
+  }
+
+  checkForBootUpAlerts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool updateAvilable =
+        prefs.getBool(Constants.IS_APP_UPDATE_AVILABLE) ?? false;
+    bool isMsgNoticeAvilable =
+        prefs.getBool(Constants.IS_MSG_NOTICE_AVILABLE) ?? false;
+
+    if (updateAvilable) {
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "App Update Avilable",
+          description:
+              "A new version of the app is avilable. Update now to enjoy the hastle free experience.",
+          buttonText: "Update Now",
+          cancelBtnText: "Not now",
+          confirmAction: () {
+            try {
+              if (Platform.isIOS)
+                BaseUtil.launchUrl(
+                    'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+              else if (Platform.isAndroid)
+                BaseUtil.launchUrl(
+                    'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+            } catch (e) {
+              Log(e.toString());
+              BaseUtil.showNegativeAlert(
+                  "Something went wrong", "Please try again");
+            }
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    } else if (isMsgNoticeAvilable) {
+      String msg = prefs.getString(Constants.MSG_NOTICE) ?? " ";
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "Notice",
+          description: msg,
+          buttonText: "Ok",
+          cancelBtnText: "Cancel",
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return true;
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    }
   }
 
   Future<void> updatingJourneyView() async {

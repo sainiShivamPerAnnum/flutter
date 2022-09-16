@@ -130,4 +130,14 @@ class Constants {
   static const TXN_STATUS_RESPONSE_SUCCESS = "SUCCESS";
   static const TXN_STATUS_RESPONSE_FAILURE = "FAIL";
   static const TXN_STATUS_RESPONSE_PENDING = "PENDING";
+
+  //User Bootup EE Constnats
+  static const LAST_OPENED = "last_opened";
+  static const DATE_TODAY = "date_today";
+  static const DAY_OPENED_COUNT = "day_open_count";
+  //Notices
+  static const IS_MSG_NOTICE_AVILABLE = "isNoticeMessageAvilable";
+  static const MSG_NOTICE = "url_message";
+  //Normal app update dialog show
+  static const IS_APP_UPDATE_AVILABLE = "isAppUpdateAvilable";
 }

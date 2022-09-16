@@ -1,7 +1,9 @@
 import 'dart:developer' as dev;
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -12,6 +14,7 @@ import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class Api {
   Log log = new Log("Api");
@@ -359,6 +362,39 @@ class Api {
     } catch (e) {
       print("Exception:${e.toString()}");
       return null;
+    }
+  }
+
+//Method to fetch the user-boot-up-ee
+
+  Future<UserBootUp> fetchUserBootUpRssponse(
+      {@required String userId,
+      @required String deviceId,
+      @required String platform,
+      @required String appVersion,
+      @required String lastOpened,
+      @required int dayOpenCount}) async {
+    UserBootUp userBootUp;
+
+    try {
+      String baseUrl = "6w37rw51hj.execute-api.ap-south-1.amazonaws.com";
+      String path = "/dev/user/$userId/bootup/alerts";
+      Map<String, dynamic> queryParameters = {
+        'deviceId': deviceId,
+        'platform': platform,
+        'appVersion': appVersion,
+        'lastOpened': lastOpened,
+        'dayOpenCount': dayOpenCount.toString(),
+      };
+      var uri = Uri.https(baseUrl, path, queryParameters);
+
+      var response = await http.get(uri, headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      });
+      userBootUp = userBootUpFromJson(response.body);
+      return userBootUp;
+    } catch (e) {
+      return userBootUp;
     }
   }
 }
