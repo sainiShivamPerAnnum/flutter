@@ -36,6 +36,7 @@ class LoginMobileViewModel extends BaseModel {
 
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
+      showAvailableMobileNos = false;
       mobileFocusNode.unfocus();
       final SmsAutoFill _autoFill = SmsAutoFill();
       String completePhoneNumber = await _autoFill.hint;
@@ -44,7 +45,6 @@ class LoginMobileViewModel extends BaseModel {
             completePhoneNumber.substring(completePhoneNumber.length - 10);
         // notifyListeners();
       }
-      showAvailableMobileNos = false;
       Future.delayed(Duration(milliseconds: 500), () {
         mobileFocusNode.requestFocus();
       });

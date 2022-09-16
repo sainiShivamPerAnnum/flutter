@@ -118,8 +118,13 @@ class _FormDialogState extends State<AppDefaultDialog> {
               height: SizeConfig.padding32,
             ),
             isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
+                ? Column(
+                    children: [
+                      CircularProgressIndicator(
+                        strokeWidth: 0.5,
+                      ),
+                      SizedBox(height: SizeConfig.padding16)
+                    ],
                   )
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

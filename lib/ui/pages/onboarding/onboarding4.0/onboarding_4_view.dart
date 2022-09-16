@@ -32,7 +32,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
   @override
   void initState() {
     controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 4));
+        AnimationController(vsync: this, duration: Duration(seconds: 6));
     Future.delayed(
       Duration(seconds: 2),
       () {
@@ -56,7 +56,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
         return Scaffold(
           backgroundColor: Color(0xFF032A2E),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Color(0xFF0D4748),
+            backgroundColor: Color(0xff0B867C),
             onPressed: () {
               if (model.currentPage == 2)
                 model.registerWalkthroughCompletion(widget.comingFrom);
@@ -68,18 +68,18 @@ class _OnBoardingViewState extends State<OnBoardingView>
             child: Container(
               width: SizeConfig.padding64,
               height: SizeConfig.padding64,
-              // decoration: BoxDecoration(
-              //   color: Colors.transparent,
-              //   border: Border.all(
-              //     color: Color(0xFF009D91),
-              //     width: 2,
-              //   ),
-              //   shape: BoxShape.circle,
-              // ),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(
+                  color: Color(0xFF009D91),
+                  width: 2,
+                ),
+                shape: BoxShape.circle,
+              ),
               child: model.isWalkthroughRegistrationInProgress
                   ? SpinKitThreeBounce(
                       color: Colors.white, size: SizeConfig.padding16)
-                  : Icon(Icons.arrow_forward_ios_sharp,
+                  : Icon(Icons.arrow_forward_ios_rounded,
                       size: SizeConfig.padding20, color: Colors.white),
             ),
           ),
@@ -136,7 +136,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       offset: Offset(0, -SizeConfig.screenHeight * 0.1),
                       child: Container(
                         // color: Colors.red,
-                        child: Lottie.asset("assets/lotties/feonb2.json",
+                        child: Lottie.asset("assets/lotties/onboarding.json",
                             width: SizeConfig.screenWidth,
                             // height: SizeConfig.screenWidth,
                             controller: controller,

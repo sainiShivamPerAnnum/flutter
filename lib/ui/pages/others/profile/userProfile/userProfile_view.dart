@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -23,18 +25,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserProfileDetails extends StatelessWidget {
-  const UserProfileDetails({Key key}) : super(key: key);
-
+  const UserProfileDetails({Key key, this.isNewUser = false}) : super(key: key);
+  final bool isNewUser;
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+    log(isNewUser.toString());
     return BaseView<UserProfileVM>(
       onModelReady: (model) {
-        model.init();
+        model.init(isNewUser);
       },
       builder: (ctx, model, child) => Scaffold(
         appBar: AppBar(
-          backgroundColor: UiConstants.kSecondaryBackgroundColor,
+          backgroundColor: isNewUser
+              ? Colors.transparent
+              : UiConstants.kSecondaryBackgroundColor,
           elevation: 0.0,
           title: Text(
             'My Profile',
@@ -43,66 +48,51 @@ class UserProfileDetails extends StatelessWidget {
           centerTitle: false,
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back_ios_rounded,
               color: UiConstants.kTextColor,
             ),
             onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
           ),
           actions: [
-            Padding(
-              padding: EdgeInsets.only(right: SizeConfig.padding16),
-              child: model.isUpdaingUserDetails
-                  ? Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding12),
-                      child: SpinKitThreeBounce(
-                        color: Colors.white,
-                        size: SizeConfig.padding16,
-                      ))
-                  : (!model.inEditMode
-                      ? TextButton.icon(
-                          icon: Icon(Icons.edit_outlined,
-                              size: SizeConfig.iconSize2,
-                              color: UiConstants.kTextColor),
-                          // SizedBox(width: SizeConfig.padding8),
-                          label: Text(
-                            'EDIT',
-                            style: TextStyles.sourceSansSB.body2,
-                          ),
-                          onPressed: () => model.enableEdit(),
-                        )
-                      : TextButton(
-                          onPressed: () {
-                            if (!model.isUpdaingUserDetails) {
-                              FocusScope.of(context).unfocus();
-                              model.updateDetails();
-                            }
-                          },
-                          child: Text(
-                            'DONE',
-                            style: TextStyles.sourceSansSB.body2.colour(
-                              UiConstants.kTabBorderColor,
+            if (!isNewUser)
+              Padding(
+                padding: EdgeInsets.only(right: SizeConfig.padding16),
+                child: model.isUpdaingUserDetails
+                    ? Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding12),
+                        child: SpinKitThreeBounce(
+                          color: Colors.white,
+                          size: SizeConfig.padding16,
+                        ),
+                      )
+                    : (!model.inEditMode
+                        ? TextButton.icon(
+                            icon: Icon(Icons.edit_outlined,
+                                size: SizeConfig.iconSize2,
+                                color: UiConstants.kTextColor),
+                            // SizedBox(width: SizeConfig.padding8),
+                            label: Text(
+                              'EDIT',
+                              style: TextStyles.sourceSansSB.body2,
                             ),
-                          ),
-                        )),
-              // ),
-            ),
-            // IconButton(
-            //   icon: Icon(
-            //     Icons.money,
-            //     color: UiConstants.kTextColor,
-            //   ),
-            //   onPressed: () {
-            //     BaseUtil.openModalBottomSheet(
-            //       addToScreenStack: true,
-            //       enableDrag: false,
-            //       hapticVibrate: true,
-            //       isBarrierDismissable: false,
-            //       backgroundColor: Colors.transparent,
-            //       isScrollControlled: true,
-            //       content: RechargeModalSheet(),
-            //     );
-            //   },
-            // ),
+                            onPressed: () => model.enableEdit(),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              if (!model.isUpdaingUserDetails) {
+                                FocusScope.of(context).unfocus();
+                                model.updateDetails();
+                              }
+                            },
+                            child: Text(
+                              'DONE',
+                              style: TextStyles.sourceSansSB.body2.colour(
+                                UiConstants.kTabBorderColor,
+                              ),
+                            ),
+                          )),
+                // ),
+              ),
           ],
         ),
         backgroundColor: UiConstants.kBackgroundColor,
@@ -153,6 +143,7 @@ class UserProfileForm extends StatelessWidget {
             AppTextField(
               textEditingController: model.nameController,
               isEnabled: model.inEditMode,
+              focusNode: model.nameFocusNode,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegExp(r'[a-zA-Z ]'),
@@ -402,60 +393,66 @@ class UserProfileForm extends StatelessWidget {
               inputFormatters: [],
             ),
             SizedBox(height: SizeConfig.padding40),
-            Container(
-              height: SizeConfig.padding40,
-              child: Row(
+            if (!model.isNewUser)
+              Column(
                 children: [
-                  Text(
-                    "App Lock",
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
+                  Container(
+                    height: SizeConfig.padding40,
+                    child: Row(
+                      children: [
+                        Text(
+                          "App Lock",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        Spacer(),
+                        AppSwitch(
+                          onToggle: (val) =>
+                              model.onAppLockPreferenceChanged(val),
+                          value: model.applock,
+                          isLoading: model.isApplockLoading,
+                          height: SizeConfig.screenWidth * 0.059,
+                          width: SizeConfig.screenWidth * 0.087,
+                          toggleSize: SizeConfig.screenWidth * 0.032,
+                        ),
+                      ],
+                    ),
                   ),
-                  Spacer(),
-                  AppSwitch(
-                    onToggle: (val) => model.onAppLockPreferenceChanged(val),
-                    value: model.applock,
-                    isLoading: model.isApplockLoading,
-                    height: SizeConfig.screenWidth * 0.059,
-                    width: SizeConfig.screenWidth * 0.087,
-                    toggleSize: SizeConfig.screenWidth * 0.032,
+                  SizedBox(height: SizeConfig.padding16),
+                  Container(
+                    height: SizeConfig.padding40,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Tambola Notifications",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        Spacer(),
+                        AppSwitch(
+                          onToggle: (val) =>
+                              model.onTambolaNotificationPreferenceChanged(val),
+                          value: model.tambolaNotification,
+                          isLoading: model.isTambolaNotificationLoading,
+                          height: SizeConfig.screenWidth * 0.059,
+                          width: SizeConfig.screenWidth * 0.087,
+                          toggleSize: SizeConfig.screenWidth * 0.032,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding54),
+                  Center(
+                    child: TextButton(
+                      child: Text(
+                        'SIGN OUT',
+                        style: TextStyles.rajdhaniB.body1,
+                      ),
+                      onPressed: model.signout,
+                    ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: SizeConfig.padding16),
-            Container(
-              height: SizeConfig.padding40,
-              child: Row(
-                children: [
-                  Text(
-                    "Tambola Notifications",
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                  Spacer(),
-                  AppSwitch(
-                    onToggle: (val) =>
-                        model.onTambolaNotificationPreferenceChanged(val),
-                    value: model.tambolaNotification,
-                    isLoading: model.isTambolaNotificationLoading,
-                    height: SizeConfig.screenWidth * 0.059,
-                    width: SizeConfig.screenWidth * 0.087,
-                    toggleSize: SizeConfig.screenWidth * 0.032,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding54),
-            Center(
-              child: TextButton(
-                child: Text(
-                  'SIGN OUT',
-                  style: TextStyles.rajdhaniB.body1,
-                ),
-                onPressed: model.signout,
-              ),
-            ),
             SizedBox(height: SizeConfig.padding64),
           ],
         ),
@@ -495,13 +492,12 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 0.7000,
+      // height: SizeConfig.screenWidth * 0.7000,
       width: SizeConfig.screenWidth,
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
-      ),
       decoration: BoxDecoration(
-        color: UiConstants.kSecondaryBackgroundColor,
+        color: model.isNewUser
+            ? Colors.transparent
+            : UiConstants.kSecondaryBackgroundColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(SizeConfig.roundness24),
           bottomRight: Radius.circular(SizeConfig.roundness24),
@@ -519,8 +515,17 @@ class ProfileHeader extends StatelessWidget {
             onShowImagePicker: model.handleDPOperation,
           ),
           SizedBox(height: SizeConfig.padding6),
-          _buildUserName(),
-          Spacer(),
+          if (!model.isNewUser) _buildUserName(),
+          if (model.isNewUser)
+            Text(
+              "Change your avatar",
+              style:
+                  TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
+            ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          )
+          // Spacer(),
         ],
       ),
     );

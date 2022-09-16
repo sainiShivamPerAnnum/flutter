@@ -110,7 +110,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              // physics: new NeverScrollableScrosllPhysics(),
+                              physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -141,7 +141,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
                     onTap: () {
-                      // FocusManager.instance.primaryFocus.unfocus();
                       if (model.state == ViewState.Idle)
                         model.processScreenInput(
                           model.currentPage,
@@ -158,7 +157,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       child: model.state == ViewState.Busy
                           ? SpinKitThreeBounce(
                               color: Colors.white,
-                              size: SizeConfig.padding24,
+                              size: SizeConfig.padding20,
                             )
                           : Text(
                               model.currentPage == LoginUserNameView.index

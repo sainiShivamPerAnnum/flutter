@@ -62,6 +62,7 @@ class AppTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.suffixIconConstraints,
     this.margin,
+    this.autovalidateMode,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -78,6 +79,8 @@ class AppTextField extends StatelessWidget {
   final TextStyle prefixTextStyle;
   final String suffixText;
   final TextStyle suffixTextStyle;
+  //executes on every change
+  AutovalidateMode autovalidateMode;
   final Function onChanged;
   final Function onTap;
   final TextAlign textAlign;
@@ -129,6 +132,7 @@ class AppTextField extends StatelessWidget {
         keyboardType: keyboardType,
         onChanged: onChanged,
         onTap: onTap ?? () {},
+        autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(
               suffixIcon: Padding(

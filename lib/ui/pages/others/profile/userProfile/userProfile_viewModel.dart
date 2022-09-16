@@ -40,6 +40,8 @@ import '../../../../../core/repository/user_repo.dart';
 class UserProfileVM extends BaseModel {
   Log log = new Log('User Profile');
   bool inEditMode = false;
+  bool _isNewUser = false;
+
   final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -57,13 +59,6 @@ class UserProfileVM extends BaseModel {
   ValueChanged<bool> upload;
   bool _isUpdaingUserDetails = false;
 
-  get isUpdaingUserDetails => this._isUpdaingUserDetails;
-
-  set isUpdaingUserDetails(value) {
-    this._isUpdaingUserDetails = value;
-    notifyListeners();
-  }
-
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
   bool _hasInputError = false;
@@ -74,6 +69,17 @@ class UserProfileVM extends BaseModel {
 
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
+  //controllers
+  TextEditingController nameController,
+      dobController,
+      genderController,
+      emailController,
+      mobileController,
+      dateFieldController,
+      monthFieldController,
+      yearFieldController;
+
+  final nameFocusNode = FocusNode();
   String get myUserDpUrl => _userService.myUserDpUrl;
   String get myname => _userService.baseUser.name ?? "";
   String get myUsername => _userService.baseUser.username ?? "";
@@ -98,6 +104,8 @@ class UserProfileVM extends BaseModel {
   int get gen => _gen;
 
   String get dateInputError => _dateInputError;
+  bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
+  get isNewUser => this._isNewUser;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -125,20 +133,24 @@ class UserProfileVM extends BaseModel {
     notifyListeners();
   }
 
-  //controllers
-  TextEditingController nameController,
-      dobController,
-      genderController,
-      emailController,
-      mobileController,
-      dateFieldController,
-      monthFieldController,
-      yearFieldController;
+  set isUpdaingUserDetails(value) {
+    this._isUpdaingUserDetails = value;
+    notifyListeners();
+  }
 
-  init() {
+  set isNewUser(value) {
+    this._isNewUser = value;
+
+    notifyListeners();
+  }
+
+  init(bool inu) {
+    isNewUser = inu;
+    if (isNewUser) enableEdit();
+
     nameController = new TextEditingController(text: myname);
     dobController = new TextEditingController(text: myDob);
-    genderController = new TextEditingController();
+    genderController = new TextEditingController(text: gender);
     setDate();
     setGender();
     emailController = new TextEditingController(text: myEmail);
@@ -194,6 +206,9 @@ class UserProfileVM extends BaseModel {
   enableEdit() {
     inEditMode = true;
     notifyListeners();
+    Future.delayed(Duration(seconds: 1), () {
+      nameFocusNode.requestFocus();
+    });
   }
 
   updateDetails() async {

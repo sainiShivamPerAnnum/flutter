@@ -43,7 +43,7 @@ class LoginOtpViewModel extends BaseModel with CodeAutoFill {
   onOtpReceived() {
     _otpFieldEnabled = false;
     _loaderMessage = "Signing in..";
-    notifyListeners();
+    // notifyListeners();
   }
 
   onOtpAutoDetectTimeout() {
@@ -56,6 +56,7 @@ class LoginOtpViewModel extends BaseModel with CodeAutoFill {
   onOtpResendConfirmed(bool flag) {
     if (flag) {
       //otp successfully resent
+      listenForCode();
       _isTriesExceeded = false;
       _isResendClicked = false;
       _otpFieldEnabled = true;

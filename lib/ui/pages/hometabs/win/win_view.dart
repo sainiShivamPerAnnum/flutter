@@ -69,7 +69,7 @@ class Win extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
-              double currentWinning = m.userFundWallet.unclaimedBalance;
+              double currentWinning = m.userFundWallet?.unclaimedBalance;
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(

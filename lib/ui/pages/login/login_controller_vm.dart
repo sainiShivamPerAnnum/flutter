@@ -308,6 +308,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
+    _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
 
     ApiResponse<BaseUser> user =
         await _userRepo.getUserById(id: userService.firebaseUser.uid);

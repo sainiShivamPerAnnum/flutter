@@ -14,6 +14,14 @@ class UsernameInputScreenViewModel extends BaseModel {
   final _referralCodeController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   String username = "";
+  double _errorPadding = 0;
+
+  get errorPadding => this._errorPadding;
+
+  set errorPadding(value) {
+    this._errorPadding = value;
+    notifyListeners();
+  }
 
   bool enabled = true;
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
@@ -23,14 +31,13 @@ class UsernameInputScreenViewModel extends BaseModel {
   bool isUpdated = false;
   bool _hasReferralCode = false;
   final _formKey = GlobalKey<FormState>();
-
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode usernameFocusNode = FocusNode();
 
   get referralCodeController => _referralCodeController;
   String getReferralCode() => _referralCodeController.text;
 
   get formKey => _formKey;
-  FocusNode get focusNode => _focusNode;
+  // FocusNode get focusNode => _focusNode;
 
   set hasReferralCode(bool val) {
     _hasReferralCode = val;
@@ -41,31 +48,42 @@ class UsernameInputScreenViewModel extends BaseModel {
 
   UsernameResponse response;
 
+  init() {
+    Future.delayed(Duration(milliseconds: 200), () {
+      usernameFocusNode.requestFocus();
+    });
+  }
+
   disposeModel() {
-    focusNode.dispose();
+    usernameFocusNode.dispose();
   }
 
   Future<bool> validate() async {
-    username = usernameController.text.trim();
-
+    if (isLoading) return false;
     isLoading = true;
     notifyListeners();
-
+    username = usernameController.text.trim();
     if (username == "" || username == null) {
+      errorPadding = SizeConfig.padding4;
+
       isValid = null;
       response = UsernameResponse.EMPTY;
-    } else if (regex.hasMatch(username)) {
-      bool res = await dbProvider
-          .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
-
-      isValid = res;
-      if (res)
-        response = UsernameResponse.AVAILABLE;
-      else
-        response = UsernameResponse.UNAVAILABLE;
     } else {
-      isValid = false;
-      response = UsernameResponse.INVALID;
+      errorPadding = SizeConfig.padding20;
+
+      if (regex.hasMatch(username)) {
+        bool res = await dbProvider
+            .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
+
+        isValid = res;
+        if (res)
+          response = UsernameResponse.AVAILABLE;
+        else
+          response = UsernameResponse.UNAVAILABLE;
+      } else {
+        isValid = false;
+        response = UsernameResponse.INVALID;
+      }
     }
 
     isLoading = false;
@@ -86,7 +104,7 @@ class UsernameInputScreenViewModel extends BaseModel {
     } else if (response == UsernameResponse.EMPTY)
       return Text(
         "username cannot be empty",
-        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
       );
     else if (response == UsernameResponse.UNAVAILABLE)
       return Text(
