@@ -150,4 +150,6 @@ class SizeConfig {
   // Button Border Radius
   static double get buttonBorderRadius => screenWidth * 0.0139; // 5
 
+  //Assets
+  static double get onboardingAssetsDimens => screenWidth * 0.4;
 }

@@ -403,7 +403,7 @@ class TransactionService
 
       //Handle failed condition here.
       if (!depositFcmResponseModel.status) {
-        AppState.delegate.appState.isTxnLoaderInView = false;
+        // AppState.delegate.appState.isTxnLoaderInView = false;
         BaseUtil.showNegativeAlert("Transaction failed",
             "Your gold purchase did not complete successfully");
         return;

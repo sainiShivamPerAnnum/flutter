@@ -33,6 +33,16 @@ class _OnBoardingViewState extends State<OnBoardingView>
   void initState() {
     controller =
         AnimationController(vsync: this, duration: Duration(seconds: 4));
+    Future.delayed(
+      Duration(seconds: 2),
+      () {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (timeStamp) {
+            controller.animateTo(0.25);
+          },
+        );
+      },
+    );
     super.initState();
   }
 
@@ -44,7 +54,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
       },
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: Color(0xFF0D4748),
+          backgroundColor: Color(0xFF032A2E),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Color(0xFF0D4748),
             onPressed: () {
@@ -74,36 +84,36 @@ class _OnBoardingViewState extends State<OnBoardingView>
             ),
           ),
           body: GestureDetector(
-            // onHorizontalDragEnd: (details) {
-            //   bool leftSwipe =
-            //       model.dragStartPosition > model.dragUpdatePosition;
-            //   double swipeCount =
-            //       (model.dragStartPosition - model.dragUpdatePosition).abs();
-            //   if (swipeCount >= 40) {
-            //     if (leftSwipe) {
-            //       if (model.currentPage == 2) {
-            //         // model.registerWalkthroughCompletion(comingFrom);
-            //         return;
-            //       } else {
-            //         model.pageController.nextPage(
-            //           duration: Duration(milliseconds: 500),
-            //           curve: Curves.easeIn,
-            //         );
-            //       }
-            //     } else {
-            //       model.pageController.previousPage(
-            //         duration: Duration(milliseconds: 500),
-            //         curve: Curves.easeIn,
-            //       );
-            //     }
-            //   }
-            // },
-            // onHorizontalDragStart: (details) {
-            //   model.dragStartPosition = details.globalPosition.dx;
-            // },
-            // onHorizontalDragUpdate: (details) {
-            //   model.dragUpdatePosition = details.globalPosition.dx;
-            // },
+            onHorizontalDragEnd: (details) {
+              bool leftSwipe =
+                  model.dragStartPosition > model.dragUpdatePosition;
+              double swipeCount =
+                  (model.dragStartPosition - model.dragUpdatePosition).abs();
+              if (swipeCount >= 40) {
+                if (leftSwipe) {
+                  if (model.currentPage == 2) {
+                    // model.registerWalkthroughCompletion(comingFrom);
+                    return;
+                  } else {
+                    model.pageController.nextPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeIn,
+                    );
+                  }
+                } else {
+                  model.pageController.previousPage(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeIn,
+                  );
+                }
+              }
+            },
+            onHorizontalDragStart: (details) {
+              model.dragStartPosition = details.globalPosition.dx;
+            },
+            onHorizontalDragUpdate: (details) {
+              model.dragUpdatePosition = details.globalPosition.dx;
+            },
             child: Stack(
               children: [
                 Container(
@@ -114,6 +124,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       colors: [
                         Color(0xFF097178).withOpacity(0.2),
                         Color(0xFF0C867C),
+                        Color(0xff0B867C),
                       ],
                     ),
                   ),
@@ -121,27 +132,47 @@ class _OnBoardingViewState extends State<OnBoardingView>
                 Align(
                   alignment: Alignment.topCenter,
                   child: SafeArea(
-                    child: Lottie.asset("assets/lotties/coin-stack.json",
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenWidth,
-                        controller: controller),
+                    child: Transform.translate(
+                      offset: Offset(0, -SizeConfig.screenHeight * 0.1),
+                      child: Container(
+                        // color: Colors.red,
+                        child: Lottie.asset("assets/lotties/feonb2.json",
+                            width: SizeConfig.screenWidth,
+                            // height: SizeConfig.screenWidth,
+                            controller: controller,
+                            fit: BoxFit.fitWidth),
+                      ),
+                    ),
                   ),
                 ),
                 Positioned(
                   bottom: 0,
                   child: Container(
                     width: SizeConfig.screenWidth,
-                    height: 200,
+                    height: SizeConfig.screenHeight * 0.6,
                     decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xFF0B7D75),
-                          blurRadius: 60,
-                          spreadRadius: 30,
-                          offset: Offset(0, -10),
-                        ),
-                      ],
+                      // color: Colors.transparent,
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Color(0xff0B867C),
+                            Color(0xff0B867C),
+                            Color(0xff0B867C),
+                            Color(0xff0B867C),
+                            Color(0xff0B867C).withOpacity(0.95),
+                            Color(0xff0B867C).withOpacity(0.2),
+                            Color(0xff0B867C).withOpacity(0.05),
+                            Colors.transparent
+                          ]),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: Color(0xFF0B7D75),
+                      //     blurRadius: 60,
+                      //     spreadRadius: 30,
+                      //     offset: Offset(0, -10),
+                      //   ),
+                      // ],
                     ),
                   ),
                 ),
@@ -153,16 +184,25 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       children: [
                         Container(
                           margin: EdgeInsets.only(bottom: SizeConfig.padding32),
-                          height: SizeConfig.screenWidth * 0.25,
-                          width: 300,
+                          height: SizeConfig.screenWidth * 0.28,
+                          width: SizeConfig.screenWidth * 0.8,
                           child: PageView.builder(
                             controller: model.pageController,
                             // physics: NeverScrollableScrollPhysics(),
                             onPageChanged: (val) {
                               if (val > model.currentPage) {
-                                controller.animateTo(0.3 * (val));
+                                if (val == 2)
+                                  controller.animateTo(1);
+                                else
+                                  controller.animateTo(0.4 * (val));
                               } else {
-                                controller.animateBack(0.3 * (val));
+                                if (val == 0) {
+                                  controller.reset();
+                                  controller.animateTo(0.24);
+                                } else if (val == 1)
+                                  controller.animateBack(0.4);
+                                else
+                                  controller.animateBack(0);
                               }
                               model.currentPage = val;
                             },

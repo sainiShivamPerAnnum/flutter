@@ -248,7 +248,7 @@ class UserProfileForm extends StatelessWidget {
             model.inEditMode
                 ? Container(
                     width: double.infinity,
-                    height: SizeConfig.screenWidth * 0.1377,
+                    // height: SizeConfig.screenWidth * 0.1377,
                     decoration: BoxDecoration(
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness5),
@@ -358,16 +358,20 @@ class UserProfileForm extends StatelessWidget {
                       ],
                     ),
                   )
-                : AppDatePickerField(
+                : AppTextField(
                     isEnabled: false,
-                    child: Text(
-                      "${model.dobController.text}",
-                      style: TextStyles.body2.colour(
-                        model.inEditMode
-                            ? UiConstants.kTextColor
-                            : UiConstants.kTextFieldTextColor,
-                      ),
-                    ),
+                    textEditingController: model.dobController,
+                    validator: (val) {
+                      return "";
+                    },
+                    // child: Text(
+                    //   "${model.dobController.text}",
+                    //   style: TextStyles.body2.colour(
+                    //     model.inEditMode
+                    //         ? UiConstants.kTextColor
+                    //         : UiConstants.kTextFieldTextColor,
+                    //   ),
+                    // ),
                     onTap: null,
                   ),
             if (model.inEditMode && model.dateInputError != "")

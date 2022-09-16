@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -7,6 +8,8 @@ class LoginOtpViewModel extends BaseModel with CodeAutoFill {
   final pinEditingController = new TextEditingController();
   Log log = new Log("OtpInputScreen");
   String _loaderMessage = "Enter the received OTP..";
+  FocusNode otpFocusNode = FocusNode();
+  LoginControllerViewModel parentModelInstance;
   String mobileNo;
   bool _otpFieldEnabled = true;
   bool _autoDetectingOtp = true;
@@ -74,6 +77,7 @@ class LoginOtpViewModel extends BaseModel with CodeAutoFill {
   void codeUpdated() {
     if (code != null) {
       pinEditingController.text = code;
+      parentModelInstance.processScreenInput(1);
       notifyListeners();
     }
   }
