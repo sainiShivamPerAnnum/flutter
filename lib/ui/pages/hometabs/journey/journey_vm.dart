@@ -116,69 +116,6 @@ class JourneyPageViewModel extends BaseModel {
         }
       });
     });
-
-    checkForBootUpAlerts();
-  }
-
-  checkForBootUpAlerts() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool updateAvilable =
-        prefs.getBool(Constants.IS_APP_UPDATE_AVILABLE) ?? false;
-    bool isMsgNoticeAvilable =
-        prefs.getBool(Constants.IS_MSG_NOTICE_AVILABLE) ?? false;
-
-    if (updateAvilable) {
-      BaseUtil.openDialog(
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-        addToScreenStack: true,
-        content: AppDefaultDialog(
-          title: "App Update Avilable",
-          description:
-              "A new version of the app is avilable. Update now to enjoy the hastle free experience.",
-          buttonText: "Update Now",
-          cancelBtnText: "Not now",
-          confirmAction: () {
-            try {
-              if (Platform.isIOS)
-                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
-              else if (Platform.isAndroid)
-                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
-            } catch (e) {
-              Log(e.toString());
-              BaseUtil.showNegativeAlert(
-                  "Something went wrong", "Please try again");
-            }
-            AppState.backButtonDispatcher.didPopRoute();
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return false;
-          },
-        ),
-      );
-    } else if (isMsgNoticeAvilable) {
-      String msg = prefs.getString(Constants.MSG_NOTICE) ?? " ";
-      BaseUtil.openDialog(
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-        addToScreenStack: true,
-        content: AppDefaultDialog(
-          title: "Notice",
-          description: msg,
-          buttonText: "Ok",
-          cancelBtnText: "Cancel",
-          confirmAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return true;
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return false;
-          },
-        ),
-      );
-    }
   }
 
   Future<void> updatingJourneyView() async {

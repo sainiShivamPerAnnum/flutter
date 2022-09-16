@@ -398,23 +398,6 @@ class APIService implements API {
     }
   }
 
-  Future<UserBootUp> getUerBootUpData(
-      String baseUrl, String path, Map<String, dynamic> queryParameters) async {
-    UserBootUp userBootUp;
-
-    try {
-      var uri = Uri.https(baseUrl, path, queryParameters);
-
-      var response = await http.get(uri, headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      });
-      userBootUp = userBootUpFromJson(response.body);
-    } catch (e) {
-      logger.d(e.toString());
-    }
-    return userBootUp;
-  }
-
   Future<String> _getAppVersion() async {
     try {
       if (_versionString == null || _versionString.isEmpty) {

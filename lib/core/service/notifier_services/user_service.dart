@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -215,18 +216,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       lastOpened = prefs.getString(Constants.LAST_OPENED) ?? "";
       dayOpenCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
 
-      _userBootUp = await _userRepo.fetchUserBootUpRssponse(
+      final response_temp = await _userRepo.fetchUserBootUpRssponse(
           userId: userId,
           deviceId: deviceId,
           platform: platform,
           appVersion: appVersion,
           lastOpened: lastOpened,
           dayOpenCount: dayOpenCount);
+
+      _userBootUp = response_temp;
+      return _userBootUp;
     } else {
       //No user logged in
     }
 
-    return _userBootUp;
+    return null;
   }
 
   void dayOPenCount() async {

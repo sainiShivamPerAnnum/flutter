@@ -51,6 +51,7 @@ class ApiPath {
   static String verifyOtp = '/auth/verify/otp';
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
   static String logOut(String uid) => "/user/$uid/logout";
+  static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";

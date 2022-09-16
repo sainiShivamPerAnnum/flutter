@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-UserBootUp userBootUpFromJson(String str) =>
-    UserBootUp.fromJson(json.decode(str));
+// UserBootUp userBootUpFromJson(String str) =>
+//     UserBootUp.fromJson(json.decode(str));
 
 String userBootUpToJson(UserBootUp data) => json.encode(data.toJson());
 
@@ -14,7 +14,7 @@ class UserBootUp {
   String message;
   Data data;
 
-  factory UserBootUp.fromJson(Map<String, dynamic> json) => UserBootUp(
+  static fromJson(Map<String, dynamic> json) => UserBootUp(
         message: json["message"],
         data: Data.fromJson(json["data"]),
       );

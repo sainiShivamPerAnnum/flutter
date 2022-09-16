@@ -530,8 +530,6 @@ class UserRepository extends BaseRepo {
     UserBootUp userBootUp;
 
     try {
-      String baseUrl = "6w37rw51hj.execute-api.ap-south-1.amazonaws.com";
-      String path = "/dev/user/$userId/bootup/alerts";
       Map<String, dynamic> queryParameters = {
         'deviceId': deviceId,
         'platform': platform,
@@ -539,11 +537,22 @@ class UserRepository extends BaseRepo {
         'lastOpened': lastOpened,
         'dayOpenCount': dayOpenCount.toString(),
       };
-      userBootUp = await APIService.instance
-          .getUerBootUpData(baseUrl, path, queryParameters);
+
+      final token = await getBearerToken();
+
+      final respone = await APIService.instance.getData(
+          ApiPath.userBootUp(
+            userService.baseUser.uid,
+          ),
+          token: token,
+          queryParams: queryParameters,
+          cBaseUrl: _baseUrl);
+
+      userBootUp = UserBootUp.fromJson(respone);
 
       return userBootUp;
     } catch (e) {
+      logger.d("Unable to fetch user boot up ee ${e.toString()}");
       return userBootUp;
     }
   }

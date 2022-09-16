@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -24,6 +25,7 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
@@ -37,6 +39,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -44,6 +47,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -242,6 +246,67 @@ class RootViewModel extends BaseModel {
     );
   }
 
+  checkForBootUpAlerts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool updateAvilable =
+        prefs.getBool(Constants.IS_APP_UPDATE_AVILABLE) ?? false;
+    bool isMsgNoticeAvilable =
+        prefs.getBool(Constants.IS_MSG_NOTICE_AVILABLE) ?? false;
+
+    if (updateAvilable) {
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "App Update Avilable",
+          description:
+              "A new version of the app is avilable. Update now to enjoy the hastle free experience.",
+          buttonText: "Update Now",
+          cancelBtnText: "Not now",
+          confirmAction: () {
+            try {
+              if (Platform.isIOS)
+                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
+              else if (Platform.isAndroid)
+                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+            } catch (e) {
+              Log(e.toString());
+              BaseUtil.showNegativeAlert(
+                  "Something went wrong", "Please try again");
+            }
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    } else if (isMsgNoticeAvilable) {
+      String msg = prefs.getString(Constants.MSG_NOTICE) ?? " ";
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: AppDefaultDialog(
+          title: "Notice",
+          description: msg,
+          buttonText: "Ok",
+          cancelBtnText: "Cancel",
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return true;
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    }
+  }
+
   initialize() async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       bool canExecuteStartupNotification = true;
@@ -285,6 +350,8 @@ class RootViewModel extends BaseModel {
           MsgSource.Terminated,
         );
       }
+
+      checkForBootUpAlerts();
 
       // if (canExecuteStartupNotification &&
       //     _userService.isAnyUnscratchedGTAvailable) {

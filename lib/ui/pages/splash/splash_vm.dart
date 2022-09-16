@@ -94,7 +94,7 @@ class LauncherViewModel extends BaseModel {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
-    fetchUserBootUpDetails();
+
     initLogic();
 
     _timer3 = new Timer(const Duration(seconds: 6), () {
@@ -120,6 +120,8 @@ class LauncherViewModel extends BaseModel {
     try {
       await CacheService.initialize();
       await userService.init();
+      await fetchUserBootUpDetails();
+
       await BaseRemoteConfig.init();
 
       if (userService.isUserOnborded) {
