@@ -92,9 +92,9 @@ class ReferralDetailsView extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                child: SvgPicture.asset(Assets.referAndEarn,
-                                    height: SizeConfig.padding90 +
-                                        SizeConfig.padding20),
+                                child: SvgPicture.asset(
+                                  Assets.referAndEarn2,
+                                ),
                               ),
                               SizedBox(
                                 height: SizeConfig.padding28,

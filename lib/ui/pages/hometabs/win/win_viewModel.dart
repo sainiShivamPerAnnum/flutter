@@ -26,13 +26,8 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
-import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/winPrizeAssets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -710,29 +705,7 @@ class WinViewModel extends BaseModel {
     return heightToFill;
   }
 
-  getRedeemAssetWidget(double walletBalnce) {
-    if (walletBalnce <= 0) {
-      return WinPrizeClaimAsset0();
-    } else if (walletBalnce > 0 && walletBalnce <= 10) {
-      return WinPrizeClaimAsset1();
-    } else if (walletBalnce > 10 && walletBalnce <= 20) {
-      return WinPrizeClaimAsset2();
-    } else if (walletBalnce > 20 && walletBalnce <= 30) {
-      return WinPrizeClaimAsset3();
-    } else if (walletBalnce > 30 && walletBalnce <= 40) {
-      return WinPrizeClaimAsset4();
-    } else if (walletBalnce > 40 && walletBalnce <= 50) {
-      return WinPrizeClaimAsset5();
-    } else if (walletBalnce > 50 && walletBalnce <= 100) {
-      return WinPrizeClaimAsset6();
-    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt - 1) {
-      return WinPrizeClaimAsset7();
-    } else if (walletBalnce >= minWithdrawPrizeAmt) {
-      return WinPrizeClaimAsset8();
-    } else {
-      return WinPrizeClaimAsset0();
-    }
-  }
+  getRedeemAssetWidget(double walletBalnce) {}
 
   getOngoingEvents() async {
     final response = await _campaignRepo.getOngoingEvents();

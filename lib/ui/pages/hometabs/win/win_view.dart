@@ -12,7 +12,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/winPrizeAssets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -70,7 +69,6 @@ class Win extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
-              double currentWinning = m.userFundWallet.unclaimedBalance ?? 0;
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
@@ -125,7 +123,9 @@ class Win extends StatelessWidget {
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
                                     Text(
-                                      '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+                                      m.userFundWallet == null
+                                          ? "-"
+                                          : '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
                                     ),
@@ -149,14 +149,10 @@ class Win extends StatelessWidget {
                                           ),
                                   ],
                                 ),
-                                CustomPaint(
-                                  size: Size(
-                                      SizeConfig.screenWidth * 0.4,
-                                      (SizeConfig.screenWidth * 0.4)
-                                          .toDouble()),
-                                  painter: model.getRedeemAssetWidget(
-                                      m.userFundWallet.unclaimedBalance),
-                                )
+                                Expanded(
+                                  child: SvgPicture.asset(
+                                      Assets.prizeClaimAssets[0]),
+                                ),
                               ],
                             ),
                             SizedBox(
