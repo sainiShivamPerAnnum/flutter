@@ -69,7 +69,7 @@ class Win extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
-              double currentWinning = m.userFundWallet.unclaimedBalance;
+              double currentWinning = m.userFundWallet?.unclaimedBalance ?? 0;
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
@@ -124,15 +124,14 @@ class Win extends StatelessWidget {
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
                                     Text(
-                                      '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+                                      '₹ ${currentWinning.toString() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
                                     ),
                                     SizedBox(
                                       height: SizeConfig.padding40,
                                     ),
-                                    m.userFundWallet.unclaimedBalance >=
-                                            model.minWithdrawPrizeAmt
+                                    currentWinning >= model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
                                             onPressed: () {},

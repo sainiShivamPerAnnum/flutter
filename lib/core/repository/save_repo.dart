@@ -37,7 +37,7 @@ class SaveRepo extends BaseRepo {
       return ApiResponse(code: 200, model: response['data']);
     } catch (e) {
       return ApiResponse(
-          code: 404, errorMessage: 'Couldn\'t verify VPA address');
+          code: 404, errorMessage: 'Couldn\'t verify VPA address', model: {});
     }
   }
 }
