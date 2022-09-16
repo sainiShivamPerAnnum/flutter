@@ -94,7 +94,7 @@ class LauncherViewModel extends BaseModel {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
-    userBootUpEE();
+    fetchUserBootUpDetails();
     initLogic();
 
     _timer3 = new Timer(const Duration(seconds: 6), () {
@@ -103,81 +103,8 @@ class LauncherViewModel extends BaseModel {
     });
   }
 
-  void userBootUpEE() async {
-    if (FirebaseAuth.instance.currentUser != null) {
-      setLastOpened();
-      dayOPenCount();
-
-      String userId, deviceId, platform, appVersion, lastOpened;
-      int dayOpenCount;
-
-      userId = FirebaseAuth.instance.currentUser.uid;
-
-      Map<String, dynamic> response =
-          await _internalOpsService.initDeviceInfo();
-      if (response != null) {
-        deviceId = response["deviceId"];
-        platform = response["platform"];
-      }
-
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appVersion = packageInfo.buildNumber;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      lastOpened = prefs.getString(Constants.LAST_OPENED) ?? "";
-      dayOpenCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
-
-      _userBootUp = await Api().fetchUserBootUpRssponse(
-          userId: userId,
-          deviceId: deviceId,
-          platform: platform,
-          appVersion: appVersion,
-          lastOpened: lastOpened,
-          dayOpenCount: dayOpenCount);
-    } else {
-      //No user logged in
-    }
-  }
-
-  void dayOPenCount() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      var now = new DateTime.now();
-      var formatter = new DateFormat('dd-MM-yyyy');
-      String today = formatter.format(now);
-
-      String savedDate = prefs.getString(Constants.DATE_TODAY) ?? "";
-
-      if (savedDate == today) {
-        //The count is for today
-        //Increase the count
-        int current_count = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
-        current_count = current_count + 1;
-        prefs.setInt(Constants.DAY_OPENED_COUNT, current_count);
-      } else {
-        //Date has changed
-        prefs.setString(Constants.DATE_TODAY, today);
-        prefs.setInt(Constants.DAY_OPENED_COUNT, 0);
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  void setLastOpened() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var now = new DateTime.now();
-      var formatter = new DateFormat('dd-MM-yyyy');
-      String formattedTime = DateFormat('kk:mm:ss:a').format(now);
-      String formattedDate = formatter.format(now);
-
-      prefs.setString(
-          Constants.LAST_OPENED, formattedDate + " " + formattedTime);
-    } catch (e) {
-      log(e.toString());
-    }
+  fetchUserBootUpDetails() async {
+    _userBootUp = await _userService.userBootUpEE();
   }
 
   exit() {

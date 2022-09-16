@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -395,6 +396,23 @@ class APIService implements API {
           'Error occured while Communication with Server with StatusCode : ${response.statusCode}',
         );
     }
+  }
+
+  Future<UserBootUp> getUerBootUpData(
+      String baseUrl, String path, Map<String, dynamic> queryParameters) async {
+    UserBootUp userBootUp;
+
+    try {
+      var uri = Uri.https(baseUrl, path, queryParameters);
+
+      var response = await http.get(uri, headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      });
+      userBootUp = userBootUpFromJson(response.body);
+    } catch (e) {
+      logger.d(e.toString());
+    }
+    return userBootUp;
   }
 
   Future<String> _getAppVersion() async {

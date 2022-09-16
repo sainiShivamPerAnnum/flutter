@@ -141,11 +141,9 @@ class JourneyPageViewModel extends BaseModel {
           confirmAction: () {
             try {
               if (Platform.isIOS)
-                BaseUtil.launchUrl(
-                    'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
               else if (Platform.isAndroid)
-                BaseUtil.launchUrl(
-                    'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
             } catch (e) {
               Log(e.toString());
               BaseUtil.showNegativeAlert(

@@ -140,4 +140,9 @@ class Constants {
   static const MSG_NOTICE = "url_message";
   //Normal app update dialog show
   static const IS_APP_UPDATE_AVILABLE = "isAppUpdateAvilable";
+
+  static const PLAY_STORE_APP_LINK =
+      "https://play.google.com/store/apps/details?id=in.fello.felloapp";
+  static const APPLE_STORE_APP_LINK =
+      "https://apps.apple.com/in/app/fello-save-play-win/id1558445254";
 }
