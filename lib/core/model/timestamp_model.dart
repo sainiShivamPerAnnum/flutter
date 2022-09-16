@@ -8,6 +8,8 @@ class TimestampModel extends Timestamp {
   factory TimestampModel.fromMap(dynamic map) {
     if (map == null) return new TimestampModel(seconds: 0, nanoseconds: 0);
 
+    if (map.runtimeType == String) return TimestampModel.fromIsoString(map);
+
     return map.runtimeType == Timestamp
         ? TimestampModel.fromTimestamp(map as Timestamp)
         : TimestampModel(
@@ -20,6 +22,12 @@ class TimestampModel extends Timestamp {
     return TimestampModel(
       seconds: time.seconds,
       nanoseconds: time.nanoseconds,
+    );
+  }
+
+  factory TimestampModel.fromIsoString(String date) {
+    return TimestampModel.fromTimestamp(
+      Timestamp.fromDate(DateTime.parse(date)),
     );
   }
 
