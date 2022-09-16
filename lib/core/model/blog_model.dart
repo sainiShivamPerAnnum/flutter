@@ -1,8 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 List<BlogPostModel> blogPostModelFromMap(String str) =>
     List<BlogPostModel>.from(
         json.decode(str).map((x) => BlogPostModel.fromMap(x)));
+
+class BlogPostModelByCategory {
+  final String category;
+  final List<BlogPostModel> blogs;
+
+  BlogPostModelByCategory({
+    @required this.category,
+    @required this.blogs,
+  });
+}
 
 class BlogPostModel {
   BlogPostModel({

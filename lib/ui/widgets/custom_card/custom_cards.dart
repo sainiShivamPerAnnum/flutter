@@ -32,9 +32,10 @@ class SaveCustomCard extends StatelessWidget {
     S locale = S();
     return Padding(
       padding: EdgeInsets.only(
-          right: SizeConfig.padding16,
-          top: SizeConfig.padding20,
-          bottom: SizeConfig.padding20),
+        right: SizeConfig.padding16,
+        top: SizeConfig.padding20,
+        bottom: SizeConfig.padding20,
+      ),
       child: GestureDetector(
         onTap: onCardTap,
         child: Container(
@@ -47,7 +48,9 @@ class SaveCustomCard extends StatelessWidget {
                 padding: EdgeInsets.only(left: SizeConfig.padding16),
                 child: CustomPaint(
                   size: Size(
-                      SizeConfig.screenWidth, SizeConfig.screenWidth * 0.351),
+                    SizeConfig.screenWidth,
+                    SizeConfig.screenWidth * 0.351,
+                  ),
                   painter: CustomSaveCardPainter(cardBgColor),
                 ),
               ),
@@ -97,7 +100,7 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      locale.investedText,
+                                      locale.balanceText,
                                       style: TextStyles.sourceSansM.body4,
                                     ),
                                     isGoldAssets
@@ -255,12 +258,8 @@ class CustomSaveButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Colors.grey.shade300,
-              UiConstants.kBackgroundColor,
-              UiConstants.kTextColor2,
-            ], begin: Alignment(2, -3), end: Alignment(-2, 2)),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        ),
         child: Padding(
           padding: EdgeInsets.all(SizeConfig.padding2),
           child: Container(
@@ -268,7 +267,7 @@ class CustomSaveButton extends StatelessWidget {
             width: isFullScreen ? width : SizeConfig.screenWidth * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-              color: UiConstants.kBackgroundDividerColor,
+              color: UiConstants.kBackgroundDividerColor.withAlpha(200),
             ),
             child: Center(
               child: Text(
