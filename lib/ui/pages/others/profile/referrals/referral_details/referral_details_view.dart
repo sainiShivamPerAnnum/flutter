@@ -46,6 +46,25 @@ class ReferralDetailsView extends StatelessWidget {
   var _unselectedTextStyle = TextStyles.sourceSansSB.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
+  List<Shadow> shadowDrawerList = [
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ];
+
+  getHeadingCustomTextStyle(Color color) {
+    return TextStyles.rajdhaniEB.title50
+        .colour(color)
+        .copyWith(shadows: shadowDrawerList);
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -92,12 +111,44 @@ class ReferralDetailsView extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                child: SvgPicture.asset(
-                                  Assets.referAndEarn2,
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          bottom: SizeConfig.padding1),
+                                      child: SvgPicture.asset(
+                                          Assets.refreAndEarnBackgroundAsset,
+                                          width: SizeConfig.screenWidth * 0.5),
+                                    ),
+                                    Image.asset(Assets.iPadPNG,
+                                        fit: BoxFit.cover,
+                                        width: SizeConfig.screenWidth * 0.3)
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                        text: 'REFER ',
+                                        style: getHeadingCustomTextStyle(
+                                            UiConstants.kTabBorderColor)),
+                                    TextSpan(
+                                        text: '& ',
+                                        style: getHeadingCustomTextStyle(
+                                            Colors.white)),
+                                    TextSpan(
+                                        text: 'EARN',
+                                        style: getHeadingCustomTextStyle(
+                                            UiConstants
+                                                .kWinnerPlayerPrimaryColor)),
+                                  ],
                                 ),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding28,
+                                height: SizeConfig.padding16,
                               ),
                               RichText(
                                 textAlign: TextAlign.center,
@@ -162,15 +213,18 @@ class ReferralDetailsView extends StatelessWidget {
                                           icon: Icon(
                                             Icons.copy,
                                             color: UiConstants.kTabBorderColor,
+                                            size: SizeConfig.padding28,
                                           ),
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            model.shareLink();
+                                            if (!model.isShareAlreadyClicked)
+                                              model.shareLink();
                                           },
                                           icon: Icon(
                                             Icons.share,
                                             color: UiConstants.kTabBorderColor,
+                                            size: SizeConfig.padding28,
                                           ),
                                         )
                                       ],
@@ -287,7 +341,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () => model.switchTab(0),
                                           child: Text(
-                                            'Invested',
+                                            'Successful',
                                             style: model.tabNo == 0
                                                 ? _selectedTextStyle
                                                 : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
@@ -301,7 +355,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () => model.switchTab(1),
                                           child: Text(
-                                            'Not Invested',
+                                            'Have not saved',
                                             style: model.tabNo == 1
                                                 ? _selectedTextStyle
                                                 : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
@@ -361,7 +415,7 @@ class ReferralDetailsView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -699,8 +753,8 @@ class HowToEarnComponment extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
-  Function onStateChanged;
-  ReferralDetailsViewModel model;
+  final Function onStateChanged;
+  final ReferralDetailsViewModel model;
   var locale;
 
   @override
@@ -708,7 +762,7 @@ class HowToEarnComponment extends StatefulWidget {
 }
 
 class _InfoComponentState extends State<HowToEarnComponment> {
-  bool isBoxOpen = false;
+  bool isBoxOpen = true;
 
   @override
   Widget build(BuildContext context) {

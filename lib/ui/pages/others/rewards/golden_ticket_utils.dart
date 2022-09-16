@@ -51,6 +51,7 @@ class GoldenTicketGridItemCard extends StatelessWidget {
                   TimestampModel(seconds: 0, nanoseconds: 0)
           ? UnRedeemedGoldenScratchCard(
               ticket: ticket,
+              width: width,
             )
           : RedeemedGoldenScratchCard(
               ticket: ticket,
@@ -62,14 +63,15 @@ class GoldenTicketGridItemCard extends StatelessWidget {
 
 class UnRedeemedGoldenScratchCard extends StatelessWidget {
   final GoldenTicket ticket;
-  UnRedeemedGoldenScratchCard({@required this.ticket});
+  final double width;
+  UnRedeemedGoldenScratchCard({@required this.ticket, @required this.width});
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
-      height: SizeConfig.screenWidth * 0.6,
-      width: SizeConfig.screenWidth * 0.6,
+      height: width,
+      width: width,
       child: SvgPicture.asset(
         Assets.unredemmedGoldenTicketBG,
         width: double.maxFinite,
@@ -97,8 +99,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         print("I rebuilded");
         return Container(
           child: AnimatedContainer(
-            height: SizeConfig.screenWidth * 0.6,
-            width: SizeConfig.screenWidth * 0.6,
+            height: width,
+            width: width,
             duration: Duration(milliseconds: 300),
             curve: Curves.easeIn,
             padding: EdgeInsets.all(width * 0.04),

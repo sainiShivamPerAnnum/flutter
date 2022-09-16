@@ -28,6 +28,8 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -72,6 +74,10 @@ class WinViewModel extends BaseModel {
   bool get showOldView => this._showOldView;
   String _refCode = "";
   final GlobalKey imageKey = GlobalKey();
+
+  bool _isShareAlreadyClicked = false;
+
+  bool get isShareAlreadyClicked => _isShareAlreadyClicked;
 
   PrizeClaimChoice _choice;
   get choice => this._choice;
@@ -203,6 +209,9 @@ class WinViewModel extends BaseModel {
   }
 
   Future<void> shareLink() async {
+    _isShareAlreadyClicked = true;
+    notifyListeners();
+
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
@@ -236,6 +245,11 @@ class WinViewModel extends BaseModel {
         });
       }
     }
+
+    Future.delayed(Duration(seconds: 3), () {
+      _isShareAlreadyClicked = false;
+      notifyListeners();
+    });
   }
 
   startShareLoading() {
@@ -705,7 +719,27 @@ class WinViewModel extends BaseModel {
     return heightToFill;
   }
 
-  getRedeemAssetWidget(double walletBalnce) {}
+  getRedeemAsset(double walletBalnce) {
+    if (walletBalnce == 0) {
+      return Assets.prizeClaimAssets[0];
+    } else if (walletBalnce <= 10) {
+      return Assets.prizeClaimAssets[1];
+    } else if (walletBalnce > 10 && walletBalnce <= 20) {
+      return Assets.prizeClaimAssets[2];
+    } else if (walletBalnce > 20 && walletBalnce <= 30) {
+      return Assets.prizeClaimAssets[3];
+    } else if (walletBalnce > 30 && walletBalnce <= 40) {
+      return Assets.prizeClaimAssets[4];
+    } else if (walletBalnce > 40 && walletBalnce <= 50) {
+      return Assets.prizeClaimAssets[5];
+    } else if (walletBalnce > 50 && walletBalnce <= 100) {
+      return Assets.prizeClaimAssets[6];
+    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt - 1) {
+      return Assets.prizeClaimAssets[7];
+    } else if (walletBalnce >= minWithdrawPrizeAmt) {
+      return Assets.prizeClaimAssets[8];
+    }
+  }
 
   getOngoingEvents() async {
     final response = await _campaignRepo.getOngoingEvents();

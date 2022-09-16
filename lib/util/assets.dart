@@ -248,7 +248,6 @@ class Assets {
 
   //WIN SCREEN
   static final String referAndEarn = "assets/svg/refer_earn.svg";
-  static final String referAndEarn2 = "assets/svg/refer_earn_2.svg";
 
   static final String winScreenReferalAsset =
       "assets/svg/winScreen-referalAsset.svg";
@@ -267,6 +266,11 @@ class Assets {
 
   static final String redeemSucessfullAssetPNG =
       "images/redeemSucessfull_png.png";
+
+  static final String refreAndEarnBackgroundAsset =
+      "assets/svg/refer_earn_background.svg";
+
+  static final String iPadPNG = "images/ipad.png";
 
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
@@ -288,6 +292,7 @@ class Assets {
 
   //Prize claim assets
   static final List<String> prizeClaimAssets = [
+    "assets/svg/prize_asset_0.svg",
     "assets/svg/prize_asset_1.svg",
     "assets/svg/prize_asset_2.svg",
     "assets/svg/prize_asset_3.svg",
