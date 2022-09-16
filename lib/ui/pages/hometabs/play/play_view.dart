@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
@@ -35,55 +36,8 @@ class Play extends StatelessWidget {
         log("ROOT: Play view baseview build called");
         return Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: Text(
-              ' Play',
-              style: TextStyles.rajdhaniSB.title1,
-            ),
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            actions: [
-              FelloCoinBar(svgAsset: Assets.aFelloToken),
-              SizedBox(width: SizeConfig.padding10),
-
-              // SizedBox(
-              //   width: SizeConfig.padding20,
-              // ),
-              // GestureDetector(
-              //   onTap: () {
-              //     final rootvm = locator<RootViewModel>();
-              //     rootvm.showDrawer();
-              //   },
-              //   child: Container(
-              //     width: 30,
-              //     height: 30,
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       shape: BoxShape.circle,
-              //     ),
-              //     child: Icon(Icons.list, color: Colors.black),
-              //   ),
-              // ),
-              // SizedBox(
-              //   width: SizeConfig.padding20,
-              // ),
-              // IconButton(
-              //   icon: Icon(Icons.search),
-              //   onPressed: () {
-              //     AppState.delegate.appState.currentAction = PageAction(
-              //       page: Level2ViewPageConfig,
-              //       state: PageState.addPage,
-              //     );
-              //   },
-              // ),
-              InkWell(
-                onTap: () => model.openProfile(),
-                child: ProfileImageSE(radius: SizeConfig.avatarRadius),
-              ),
-              SizedBox(
-                width: SizeConfig.padding20,
-              )
-            ],
+          appBar: FAppBar(
+            category: 'play',
           ),
           body: SingleChildScrollView(
             controller: _controller,

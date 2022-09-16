@@ -217,7 +217,9 @@ class ReferralDetailsView extends StatelessWidget {
                             horizontal: SizeConfig.padding16),
                         child: Row(
                           children: [
-                            ProfileImageSE(radius: SizeConfig.avatarRadius),
+                            ProfileImageSE(
+                              reactive: false,
+                            ),
                             SizedBox(
                               width: SizeConfig.padding12,
                             ),

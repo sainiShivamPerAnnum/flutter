@@ -511,6 +511,7 @@ class ProfileHeader extends StatelessWidget {
           NewProfileImage(
             image: ProfileImageSE(
               radius: SizeConfig.screenWidth * 0.25,
+              reactive: false,
             ),
             onShowImagePicker: model.handleDPOperation,
           ),

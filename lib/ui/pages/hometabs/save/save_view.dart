@@ -17,6 +17,8 @@ import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
@@ -50,24 +52,8 @@ class Save extends StatelessWidget {
         log("ROOT: Save view baseview build called");
         return Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: Text(
-                'Save',
-                style: TextStyles.rajdhaniSB.title1,
-              ),
-              elevation: 0,
-              backgroundColor: UiConstants.kSecondaryBackgroundColor,
-              actions: [
-                FelloCoinBar(svgAsset: Assets.aFelloToken),
-                SizedBox(width: SizeConfig.padding10),
-                GestureDetector(
-                  onTap: () {
-                    model.openProfile();
-                  },
-                  child: ProfileImageSE(radius: SizeConfig.avatarRadius),
-                ),
-                SizedBox(width: SizeConfig.padding20)
-              ],
+            appBar: FAppBar(
+              category: 'save',
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -145,6 +131,20 @@ class Save extends StatelessWidget {
               ),
             ));
       },
+    );
+  }
+}
+
+class SaveTitleContainer extends StatelessWidget {
+  final String title;
+
+  const SaveTitleContainer({Key key, @required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: SizeConfig.padding24),
+      child: Text(title, style: TextStyles.rajdhaniSB.title3),
     );
   }
 }
