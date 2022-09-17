@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -52,15 +53,10 @@ class Play extends StatelessWidget {
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
-                InfoComponent(
+                InfoComponent2(
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
-                  onStateChanged: () {
-                    _controller.animateTo(_controller.position.maxScrollExtent,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.ease);
-                  },
                 ),
                 SizedBox(
                   height: SizeConfig.padding80,
