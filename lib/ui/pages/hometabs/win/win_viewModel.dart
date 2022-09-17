@@ -14,6 +14,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
@@ -68,6 +69,7 @@ class WinViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _transactionService = locator<TransactionService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _getterrepo = locator<GetterRepository>(); //TR
 
   Timer _timer;
   bool _showOldView = false;
@@ -200,10 +202,13 @@ class WinViewModel extends BaseModel {
   init() {
     // setupAutoEventScroll();
     // getOngoingEvents();
-    _baseUtil.fetchUserAugmontDetail();
-    fetchReferralCode();
     _pageController = PageController(initialPage: 0);
+
+    fetchReferralCode();
     fectchBasicConstantValues();
+    _baseUtil.fetchUserAugmontDetail();
+
+    _lbService.fetchReferralLeaderBoard();
 
     _winnerService.fetchWinners();
   }
@@ -211,6 +216,8 @@ class WinViewModel extends BaseModel {
   Future<void> shareLink() async {
     _isShareAlreadyClicked = true;
     notifyListeners();
+
+    _getterrepo.getGoldenTickets(); //TR
 
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;

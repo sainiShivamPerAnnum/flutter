@@ -50,6 +50,8 @@ class ApiPath {
   static String sendOtp = '/auth/otp';
   static String verifyOtp = '/auth/verify/otp';
 
+  static String goldenTickets(uid) => '/user/$uid/golden_tickets';
+
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 

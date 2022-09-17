@@ -63,11 +63,11 @@ class APIService implements API {
       String finalPath =
           "${getBaseUrl(isSubUrl: isAwsSubUrl, isTxnUrl: isAwsTxnUrl)}$url";
       if (cBaseUrl != null) finalPath = cBaseUrl + url;
-      if (queryParams != null) {
+      if (queryParams != null && queryParams.isNotEmpty) {
         queryString = Uri(queryParameters: queryParams).query;
         finalPath += '?$queryString';
       }
-      logger.d("finalPath for get : $finalPath");
+      logger.d("Test123 finalPath for get : $finalPath");
       final response = await http.get(
         Uri.parse(finalPath),
         headers: {

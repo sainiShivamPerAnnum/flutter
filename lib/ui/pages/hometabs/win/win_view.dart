@@ -132,8 +132,9 @@ class Win extends StatelessWidget {
                                     SizedBox(
                                       height: SizeConfig.padding40,
                                     ),
-                                    m.userFundWallet.unclaimedBalance >=
-                                            model.minWithdrawPrizeAmt
+                                    m.userFundWallet != null &&
+                                            m.userFundWallet.unclaimedBalance >=
+                                                model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
                                             onPressed: () {
@@ -193,7 +194,7 @@ class Win extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '3 NEW',
+                                        'See All',
                                         style: TextStyles.sourceSans.body3
                                             .colour(Colors.white),
                                       ),
