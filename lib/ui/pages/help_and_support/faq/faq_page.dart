@@ -39,6 +39,9 @@ class FAQPage extends StatelessWidget {
                   padding: EdgeInsets.only(top: SizeConfig.padding8),
                   child: ListView.separated(
                     itemCount: model.list.length,
+                    padding: EdgeInsets.only(
+                      bottom: SizeConfig.screenWidth * 0.5,
+                    ),
                     itemBuilder: (context, index) => ListTile(
                       title: Text(
                         model.list[index].title,
@@ -68,7 +71,7 @@ class FAQPage extends StatelessWidget {
     final desc = data.description;
     final style = html.Style(
       color: Colors.white,
-      fontSize: html.FontSize(18),
+      fontSize: html.FontSize(14),
     );
 
     showBottomSheet(
@@ -101,20 +104,26 @@ class FAQPage extends StatelessWidget {
           ListTile(
             title: Text(
               data.title,
-              style: TextStyles.sourceSans.body2,
+              style: TextStyles.sourceSans.body1.semiBold,
             ),
           ),
           Expanded(
             child: ListView(
               children: [
-                html.Html(
-                  style: {
-                    "html": style,
-                    "body": style,
-                    "p": style,
-                    "span": style,
-                  },
-                  data: desc,
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding8,
+                  ),
+                  child: html.Html(
+                    style: {
+                      "html": style,
+                      "body": style,
+                      "p": style,
+                      "span": style,
+                      "ul": style,
+                    },
+                    data: desc,
+                  ),
                 ),
               ],
             ),
