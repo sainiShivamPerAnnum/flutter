@@ -29,7 +29,7 @@ class Play extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.transparent,
           appBar: FAppBar(
-           type: FaqsType.play,
+            type: FaqsType.play,
           ),
           body: SingleChildScrollView(
             controller: _controller,

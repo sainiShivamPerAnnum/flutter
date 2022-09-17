@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
@@ -10,7 +9,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/flutter_html.dart' as html;
 
 class FAQPage extends StatelessWidget {
   final FaqsType type;
@@ -48,59 +47,7 @@ class FAQPage extends StatelessWidget {
                       minVerticalPadding: SizeConfig.padding8,
                       style: ListTileStyle.list,
                       onTap: () {
-                        final desc = model.list[index].description;
-                        // log(desc);
-                        showBottomSheet(
-                          context: context,
-                          backgroundColor: UiConstants.kBackgroundColor,
-                          constraints: BoxConstraints(
-                            maxHeight: SizeConfig.screenHeight * 0.6,
-                          ),
-                          enableDrag: true,
-                          elevation: 2,
-                          builder: (ctx) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: SizeConfig.padding8,
-                                width: SizeConfig.screenWidth * 0.2,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      SizeConfig.roundness16,
-                                    ),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.padding6,
-                                  bottom: SizeConfig.padding8,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                  model.list[index].title,
-                                  style: TextStyles.sourceSans.body2,
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView(
-                                  children: [
-                                    Html(
-                                      style: {
-                                        "html": Style(color: Colors.white),
-                                        "body": Style(color: Colors.white),
-                                        "p": Style(color: Colors.white),
-                                        "span": Style(color: Colors.white),
-                                      },
-                                      data: desc,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+                        showFaqBottomSheet(context, model.list[index]);
                       },
                     ),
                     separatorBuilder: (context, index) => Divider(
@@ -113,6 +60,66 @@ class FAQPage extends StatelessWidget {
                   ),
                 );
         },
+      ),
+    );
+  }
+
+  void showFaqBottomSheet(BuildContext context, FAQDataModel data) {
+    final desc = data.description;
+    final style = html.Style(
+      color: Colors.white,
+      fontSize: html.FontSize(18),
+    );
+
+    showBottomSheet(
+      context: context,
+      backgroundColor: UiConstants.kBackgroundColor,
+      constraints: BoxConstraints(
+        maxHeight: SizeConfig.screenHeight * 0.6,
+      ),
+      enableDrag: true,
+      elevation: 2,
+      builder: (ctx) => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: SizeConfig.padding8,
+            width: SizeConfig.screenWidth * 0.2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  SizeConfig.roundness16,
+                ),
+              ),
+              color: Colors.white,
+            ),
+            margin: EdgeInsets.only(
+              top: SizeConfig.padding6,
+              bottom: SizeConfig.padding8,
+            ),
+          ),
+          ListTile(
+            title: Text(
+              data.title,
+              style: TextStyles.sourceSans.body2,
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                html.Html(
+                  style: {
+                    "html": style,
+                    "body": style,
+                    "p": style,
+                    "span": style,
+                  },
+                  data: desc,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
