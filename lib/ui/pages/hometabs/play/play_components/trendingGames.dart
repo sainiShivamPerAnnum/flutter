@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -25,28 +26,10 @@ class TrendingGamesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: SizeConfig.pageHorizontalMargins,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Your favorites",
-                style: TextStyles.rajdhaniSB.body0,
-              ),
-              SizedBox(
-                height: SizeConfig.padding2,
-              ),
-              Text(
-                "Play using fello tokens. Money from savings will not be deducted",
-                style:
-                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
-              ),
-            ],
-          ),
-        ),
+        GameTitleWithSubTitle(
+            title: "Your favorites",
+            subtitle:
+                "Play using fello tokens. Money from savings will not be deducted"),
         Container(
           height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth,
@@ -82,7 +65,7 @@ class TrendingGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Haptic.vibrate();
         AppState.delegate.parseRoute(

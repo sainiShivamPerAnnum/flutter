@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/titlesGames.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -156,15 +157,7 @@ class InfoComponent2 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: SizeConfig.pageHorizontalMargins,
-              top: SizeConfig.pageHorizontalMargins),
-          child: Text(
-            heading,
-            style: TextStyles.rajdhaniSB.body0,
-          ),
-        ),
+        GameTitleWithSubTitle(title: heading),
         Container(
           height: heightOfObject + SizeConfig.padding80,
           margin:
