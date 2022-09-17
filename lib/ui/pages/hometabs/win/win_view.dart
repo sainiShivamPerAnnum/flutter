@@ -377,7 +377,7 @@ class Win extends StatelessWidget {
                         height: SizeConfig.padding32,
                       ),
                       ReferralLeaderboard(
-                        count: 4,
+                        count: 2,
                       ),
                       SizedBox(
                         height: SizeConfig.padding44,
