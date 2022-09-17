@@ -18,6 +18,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 import 'play_components/more_games_section.dart';
@@ -49,7 +50,6 @@ class Play extends StatelessWidget {
                 GOWCard(
                   model: model,
                 ),
-                GameTitle(title: 'Trending'),
                 TrendingGamesSection(model: model),
                 GameTitle(title: 'Enjoy more Games'),
                 MoreGamesSection(model: model),
