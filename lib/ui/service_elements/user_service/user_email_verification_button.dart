@@ -26,13 +26,14 @@ class UserEmailVerificationButton extends StatelessWidget {
           : model.email == null || model.email.isEmpty
               ? SizedBox()
               : InkWell(
-                  child: FittedBox(
-                    child: Text(
-                      "Verify",
-                      style: TextStyles.body3.bold
-                          .colour(UiConstants.primaryColor),
-                    ),
-                  ),
+                  child: SizedBox(),
+                  // FittedBox(
+                  //   child: Text(
+                  //     "Verify",
+                  //     style: TextStyles.body3.bold
+                  //         .colour(UiConstants.primaryColor),
+                  //   ),
+                  // ),
                   onTap: () {
                     AppState.delegate.appState.currentAction = PageAction(
                       state: PageState.addPage,

@@ -202,6 +202,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         isEmailVerified = baseUser.isEmailVerified ?? false;
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
+        setEmail(baseUser.email);
+        setMyAvatarId(baseUser.avatarId);
+        setMyUserName(baseUser.name);
+        setDateOfBirth(baseUser.dob);
+        setGender(baseUser.gender);
+
         await Future.wait([
           // note: Already Setting profile in Root uneccessary Calling
           // setProfilePicture(),

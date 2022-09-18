@@ -34,36 +34,37 @@ class ProfileImageSE extends StatelessWidget {
     _userService.addListener(_listener, [UserServiceProperties.myUserDpUrl]);
 
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
-        builder: (context, journeyModel, properties) {
-          return PropertyChangeConsumer<UserService, UserServiceProperties>(
-            properties: [
-              UserServiceProperties.myUserDpUrl,
-              UserServiceProperties.myAvatarId
-            ],
-            builder: (context, model, properties) {
-              log("Avatar Id: ${model?.baseUser?.avatarId}");
-              return CircleAvatar(
-                radius: radius ?? SizeConfig.avatarRadius,
-                backgroundColor: Colors.black,
-                child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
-                    ? SvgPicture.asset(
-                        "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
-                        height: radius ?? SizeConfig.avatarRadius * 2,
-                        width: radius ?? SizeConfig.avatarRadius * 2,
-                      )
-                    : SizedBox(),
-                backgroundImage:
-                    model.avatarId == 'CUSTOM' || model.myUserDpUrl != null
-                        ? CachedNetworkImageProvider(
-                            model.myUserDpUrl,
-                          )
-                        : AssetImage(
-                            Assets.profilePic,
-                          ),
-              );
-            },
-          );
-        });
+      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+      builder: (context, journeyModel, properties) {
+        return PropertyChangeConsumer<UserService, UserServiceProperties>(
+          properties: [
+            UserServiceProperties.myUserDpUrl,
+            UserServiceProperties.myAvatarId
+          ],
+          builder: (context, model, properties) {
+            log("Avatar Id: ${model?.baseUser?.avatarId}");
+            return CircleAvatar(
+              radius: radius ?? SizeConfig.avatarRadius,
+              backgroundColor: Colors.black,
+              child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
+                  ? SvgPicture.asset(
+                      "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
+                      height: radius ?? SizeConfig.avatarRadius * 2,
+                      width: radius ?? SizeConfig.avatarRadius * 2,
+                    )
+                  : SizedBox(),
+              backgroundImage:
+                  model.avatarId == 'CUSTOM' || model.myUserDpUrl != null
+                      ? CachedNetworkImageProvider(
+                          model.myUserDpUrl,
+                        )
+                      : AssetImage(
+                          Assets.profilePic,
+                        ),
+            );
+          },
+        );
+      },
+    );
   }
 }

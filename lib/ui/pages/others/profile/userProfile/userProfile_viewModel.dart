@@ -188,7 +188,6 @@ class UserProfileVM extends BaseModel {
   init(bool inu) {
     isNewUser = inu;
     if (isNewUser) enableEdit();
-
     nameController = new TextEditingController(text: myname);
     dobController = new TextEditingController(text: myDob);
     genderController = new TextEditingController(text: gender);
@@ -297,7 +296,7 @@ class UserProfileVM extends BaseModel {
             dMap: {
               'name': _userService.baseUser.name,
               'dob': _userService.baseUser.dob,
-              BaseUser.fldGender: _userService.baseUser.gender,
+              'gender': _userService.baseUser.gender,
               BaseUser.fldIsEmailVerified:
                   _userService.baseUser.isEmailVerified,
               'email': _userService.baseUser.email
