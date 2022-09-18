@@ -107,7 +107,7 @@ class _JourneyViewState extends State<JourneyView>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Lottie.asset("assets/lotties/loader.json",
+                      Lottie.asset(Assets.fullScreenLoaderLottie,
                           height: SizeConfig.screenWidth / 2),
                       SizedBox(height: 20),
                       Text(

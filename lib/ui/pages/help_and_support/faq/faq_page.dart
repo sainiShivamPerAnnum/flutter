@@ -1,8 +1,10 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -33,7 +35,7 @@ class FAQPage extends StatelessWidget {
         builder: (ctx, model, child) {
           return model.state == ViewState.Busy
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: FullScreenLoader(),
                 )
               : Padding(
                   padding: EdgeInsets.only(top: SizeConfig.padding8),
@@ -80,26 +82,39 @@ class FAQPage extends StatelessWidget {
       constraints: BoxConstraints(
         maxHeight: SizeConfig.screenHeight * 0.6,
       ),
-      enableDrag: true,
+      enableDrag: false,
       elevation: 2,
       builder: (ctx) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            height: SizeConfig.padding8,
-            width: SizeConfig.screenWidth * 0.2,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  SizeConfig.roundness16,
-                ),
-              ),
-              color: Colors.white,
-            ),
-            margin: EdgeInsets.only(
-              top: SizeConfig.padding6,
-              bottom: SizeConfig.padding8,
-            ),
+          // Container(
+          //   height: SizeConfig.padding8,
+          //   width: SizeConfig.screenWidth * 0.2,
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.all(
+          //       Radius.circular(
+          //         SizeConfig.roundness16,
+          //       ),
+          //     ),
+          //     color: Colors.white,
+          //   ),
+          //   margin: EdgeInsets.only(
+          //     top: SizeConfig.padding6,
+          //     bottom: SizeConfig.padding8,
+          //   ),
+          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ))
+            ],
           ),
           ListTile(
             title: Text(

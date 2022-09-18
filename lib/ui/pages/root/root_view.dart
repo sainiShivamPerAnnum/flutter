@@ -40,7 +40,7 @@ class Root extends StatelessWidget {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
-          drawer: FDrawer(),
+          // drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
@@ -59,18 +59,18 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              if (AppState.delegate.appState.getCurrentTabIndex == 3)
-                FelloAppBar(
-                  showAppBar: false,
-                  leading: InkWell(
-                    onTap: model.showDrawer,
-                    child: Container(
-                      width: SizeConfig.padding38,
-                      height: SizeConfig.padding38,
-                      // color: Colors.red,
-                    ),
-                  ),
-                ),
+              // if (AppState.delegate.appState.getCurrentTabIndex == 3)
+              //   FelloAppBar(
+              //     showAppBar: false,
+              //     leading: InkWell(
+              //       onTap: model.showDrawer,
+              //       child: Container(
+              //         width: SizeConfig.padding38,
+              //         height: SizeConfig.padding38,
+              //         // color: Colors.red,
+              //       ),
+              //     ),
+              //   ),
               // Consumer<AppState>(
               //   builder: (ctx, m, child) =>
               //       AppState.delegate.appState.isTxnLoaderInView

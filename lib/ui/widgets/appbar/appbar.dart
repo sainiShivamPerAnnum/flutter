@@ -31,19 +31,28 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       title: Row(
         children: [
-          showAvatar ? ProfileImageSE() : SizedBox(),
+          showAvatar
+              ? ProfileImageSE(
+                  radius: SizeConfig.roundedButtonRadius,
+                )
+              : SizedBox(),
           Text(
             '${title ?? ''}',
             style: TextStyles.rajdhaniSB.title1,
           ),
         ],
       ),
+      centerTitle: false,
       elevation: 0,
       backgroundColor: UiConstants.kSecondaryBackgroundColor,
       actions: [
-        if (showCoinBar) FelloCoinBar(svgAsset: Assets.aFelloToken),
-        if (type != null) FaqButtonRounded(type: type),
-        SizedBox(width: SizeConfig.padding20)
+        Row(
+          children: [
+            if (showCoinBar) FelloCoinBar(svgAsset: Assets.aFelloToken),
+            if (type != null) FaqButtonRounded(type: type),
+            SizedBox(width: SizeConfig.padding20)
+          ],
+        )
       ],
     );
   }

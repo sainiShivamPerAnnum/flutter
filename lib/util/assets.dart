@@ -503,4 +503,5 @@ class Assets {
       "assets/lotties/deposit_progress.json";
   static const String goldDepostSuccessLottie =
       "assets/lotties/deposit_complete.json";
+  static const String fullScreenLoaderLottie = "assets/lotties/loader.json";
 }
