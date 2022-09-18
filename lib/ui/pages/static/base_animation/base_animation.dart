@@ -58,7 +58,7 @@ class _BaseAnimationState extends State<BaseAnimation>
   }
 
   void initDelay() async {
-    await Future.delayed(const Duration(milliseconds: 500), () {});
+    await Future.delayed(const Duration(milliseconds: 100), () {});
     _animationController.forward();
   }
 

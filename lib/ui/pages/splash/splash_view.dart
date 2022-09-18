@@ -12,7 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class LauncherView extends StatelessWidget {
+class LauncherView extends StatefulWidget {
+  @override
+  State<LauncherView> createState() => _LauncherViewState();
+}
+
+class _LauncherViewState extends State<LauncherView>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -20,8 +26,15 @@ class LauncherView extends StatelessWidget {
         Provider.of<ConnectivityStatus>(context, listen: true);
     S locale = S.of(context);
     return BaseView<LauncherViewModel>(
-      onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.exit(),
+      onModelReady: (model) {
+        model.loopOutlottieAnimationController =
+            AnimationController(vsync: this);
+        model.init();
+      },
+      onModelDispose: (model) {
+        model.loopOutlottieAnimationController.dispose();
+        model.exit();
+      },
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black,
@@ -42,30 +55,35 @@ class LauncherView extends StatelessWidget {
               children: <Widget>[
                 Align(
                   alignment: Alignment.center,
-                  child: model.isFetchingData
-                      ? Lottie.asset(Assets.felloSplashLoopLogo,
-                          height: SizeConfig.screenHeight,
-                          alignment: Alignment.center,
-                          // width: SizeConfig.screenWidth,
-                          fit: BoxFit.cover)
-                      : Lottie.asset(Assets.felloSplashZoomOutLogo,
-                          repeat: false,
-                          height: SizeConfig.screenHeight,
-                          width: SizeConfig.screenWidth,
-                          alignment: Alignment.center,
-                          fit: BoxFit.cover),
+                  child: AnimatedOpacity(
+                    opacity: model.isFetchingData ? 0 : 1,
+                    duration: Duration(milliseconds: 100),
+                    curve: Curves.linear,
+                    child: Lottie.asset(
+                      Assets.felloSplashZoomOutLogo,
+                      width: SizeConfig.screenWidth,
+                      alignment: Alignment.center,
+                      fit: BoxFit.cover,
+                      controller: model.loopOutlottieAnimationController,
+                      onLoaded: (composition) {
+                        model.loopOutlottieAnimationController
+                          ..duration = composition.duration;
+                      },
+                    ),
+                  ),
                 ),
-                // Align(
-                //   alignment: Alignment.center,
-                //   child: Lottie.asset(
-                //     Assets.felloSplashZoomOutLogo,
-                //     height: SizeConfig.screenHeight,
-                //     width: SizeConfig.screenWidth,
-                //     alignment: Alignment.center,
-                //     fit: BoxFit.cover,
-                //     repeat: false,
-                //   ),
-                // ),
+                if (model.isFetchingData)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Lottie.asset(Assets.felloSplashLoopLogo,
+                        height: SizeConfig.screenHeight,
+                        alignment: Alignment.center,
+                        // width: SizeConfig.screenWidth,
+                        onLoaded: (composition) {
+                      model.loopLottieDuration =
+                          composition.duration.inMilliseconds;
+                    }, fit: BoxFit.cover),
+                  ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(

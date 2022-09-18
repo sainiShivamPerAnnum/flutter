@@ -276,8 +276,8 @@ class BaseUtil extends ChangeNotifier {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: RechargeModalSheet(
-          amount: amt,
-          skipMl: isSkipMl,
+          amount: amt ?? 250,
+          skipMl: isSkipMl ?? false,
         ),
       );
   }

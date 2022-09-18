@@ -135,7 +135,7 @@ class SizeConfig {
       math.max(SizeConfig.viewInsets.bottom / 2, SizeConfig.padding8);
 
   //Avatar
-  static double get avatarRadius => screenWidth * 0.052;
+  static double get avatarRadius => screenWidth * 0.048;
   static double get roundedButtonRadius => screenWidth * 0.048;
   static double get tileAvatarRadius => screenWidth * 0.057;
   static double get notificationAvatarRadius => screenWidth * 0.06;

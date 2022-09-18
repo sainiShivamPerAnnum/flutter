@@ -187,7 +187,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                   ),
                 ],
               ),
-            SizedBox(height: SizeConfig.screenWidth * 0.4),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         );
       },
