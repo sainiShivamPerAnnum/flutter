@@ -209,6 +209,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     AppState.currentTxnOrderId =
         paytmSubscriptionApiResponse.model.data.orderId;
     AppState.currentTxnAmount = amount;
+    AppState.currentTxnGms =
+        BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax));
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
       return false;
@@ -424,6 +426,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
     AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
     AppState.currentTxnAmount = amount;
+    AppState.currentTxnGms =
+        BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax));
     _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);

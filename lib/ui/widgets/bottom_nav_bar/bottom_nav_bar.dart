@@ -37,7 +37,7 @@ class BottomNavBar extends StatelessWidget {
         builder: (context, model, properties) {
           return Positioned(
             bottom:
-                model.avatarRemoteMlIndex > 2 ? 0 : -SizeConfig.navBarHeight,
+                0, // model.avatarRemoteMlIndex > 2 ? 0 : -SizeConfig.navBarHeight,
             child: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.navBarHeight,

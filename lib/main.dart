@@ -156,7 +156,7 @@ class _MyAppState extends State<MyApp> {
                           locale: DevicePreview.locale(context),
                           builder: DevicePreview.appBuilder,
                           title: Constants.APP_NAME,
-                          theme: FelloTheme.lightMode(),
+                          theme: FelloTheme.darkMode(),
                           useInheritedMediaQuery: true,
                           debugShowCheckedModeBanner: false,
                           backButtonDispatcher: backButtonDispatcher,

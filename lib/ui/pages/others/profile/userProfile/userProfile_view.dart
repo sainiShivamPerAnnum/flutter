@@ -1,28 +1,18 @@
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
-
+import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/pages/static/profile_image.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserProfileDetails extends StatelessWidget {
   const UserProfileDetails({Key key, this.isNewUser = false}) : super(key: key);
@@ -36,79 +26,20 @@ class UserProfileDetails extends StatelessWidget {
         model.init(isNewUser);
       },
       builder: (ctx, model, child) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: isNewUser
-              ? Colors.transparent
-              : UiConstants.kSecondaryBackgroundColor,
-          elevation: 0.0,
-          title: Text(
-            'My Profile',
-            style: TextStyles.rajdhaniSB.title4,
-          ),
-          centerTitle: false,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios_rounded,
-              color: UiConstants.kTextColor,
-            ),
-            onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-          ),
-          actions: [
-            if (!isNewUser)
-              Padding(
-                padding: EdgeInsets.only(right: SizeConfig.padding16),
-                child: model.isUpdaingUserDetails
-                    ? Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding12),
-                        child: SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: SizeConfig.padding16,
-                        ),
-                      )
-                    : (!model.inEditMode
-                        ? TextButton.icon(
-                            icon: Icon(Icons.edit_outlined,
-                                size: SizeConfig.iconSize2,
-                                color: UiConstants.kTextColor),
-                            // SizedBox(width: SizeConfig.padding8),
-                            label: Text(
-                              'EDIT',
-                              style: TextStyles.sourceSansSB.body2,
-                            ),
-                            onPressed: () => model.enableEdit(),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              if (!model.isUpdaingUserDetails) {
-                                FocusScope.of(context).unfocus();
-                                model.updateDetails();
-                              }
-                            },
-                            child: Text(
-                              'DONE',
-                              style: TextStyles.sourceSansSB.body2.colour(
-                                UiConstants.kTabBorderColor,
-                              ),
-                            ),
-                          )),
-                // ),
-              ),
-          ],
-        ),
         backgroundColor: UiConstants.kBackgroundColor,
+        appBar: ProfileAppBar(
+          isNewUser: model.isNewUser,
+          model: model,
+        ),
         body: Stack(
           children: [
             NewSquareBackground(),
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ProfileHeader(model: model),
-                  SizedBox(height: SizeConfig.padding12),
-                  UserProfileForm(locale: locale, model: model),
-                ],
-              ),
+            ListView(
+              shrinkWrap: true,
+              children: [
+                ProfileHeader(model: model),
+                UserProfileForm(locale: locale, model: model),
+              ],
             ),
           ],
         ),
@@ -144,6 +75,8 @@ class UserProfileForm extends StatelessWidget {
               textEditingController: model.nameController,
               isEnabled: model.inEditMode,
               focusNode: model.nameFocusNode,
+              textCapitalization: TextCapitalization.words,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegExp(r'[a-zA-Z ]'),
@@ -152,10 +85,10 @@ class UserProfileForm extends StatelessWidget {
               // suffix: SizedBox(),
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
-                  model.hasInputError = false;
+                  // model.hasInputError = false;
                   return null;
                 } else {
-                  model.hasInputError = true;
+                  // model.hasInputError = true;
                   return 'Please enter your name';
                 }
               },
@@ -166,20 +99,50 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
-            // EmailField(model: model),
-            InkWell(
-              onTap: () => model.verifyEmail(),
-              child: AppTextField(
-                isEnabled: false,
-                textEditingController: model.emailController,
-                validator: (val) {
-                  return null;
-                },
-                suffixIcon: UserEmailVerificationButton(),
-                // suffixText: 'Verified',
-                inputFormatters: [],
-              ),
-            ),
+            model.inEditMode && model.isEmailEnabled
+                ? AppTextField(
+                    textEditingController: model.emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    autoFocus: true,
+                    isEnabled: true,
+                    focusNode: model.emailFocusNode,
+                    hintText: locale.obEmailHint,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      return (value != null &&
+                              value.isNotEmpty &&
+                              model.emailRegex.hasMatch(value))
+                          ? null
+                          : 'Please enter a valid email';
+                    },
+                  )
+                : AppTextField(
+                    isEnabled: model.inEditMode && model.isgmailFieldEnabled,
+                    validator: (va) {
+                      return null;
+                    },
+                    focusNode: model.emailOptionsFocusNode,
+                    onTap: model.isContinuedWithGoogle
+                        ? () {}
+                        : model.showEmailOptions,
+                    suffixIcon: UserEmailVerificationButton(),
+                    textEditingController: model.emailController,
+                    hintText: model.inEditMode ? "Enter email" : "",
+                  ),
+
+            // InkWell(
+            //   onTap: () => model.verifyEmail(),
+            //   child: AppTextField(
+            //     isEnabled: false,
+            //     textEditingController: model.emailController,
+            //     validator: (val) {
+            //       return null;
+            //     },
+            //     suffixIcon: UserEmailVerificationButton(),
+            //     // suffixText: 'Verified',
+            //     inputFormatters: [],
+            //   ),
+            // ),
             SizedBox(
               height: SizeConfig.padding16,
             ),
@@ -381,78 +344,89 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            AppTextFieldLabel(
-              locale.obMobileLabel,
-            ),
-            AppTextField(
-              isEnabled: false,
-              textEditingController: model.mobileController,
-              validator: (val) {
-                return null;
-              },
-              inputFormatters: [],
-            ),
-            SizedBox(height: SizeConfig.padding40),
             if (!model.isNewUser)
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    height: SizeConfig.padding40,
-                    child: Row(
-                      children: [
-                        Text(
-                          "App Lock",
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        Spacer(),
-                        AppSwitch(
-                          onToggle: (val) =>
-                              model.onAppLockPreferenceChanged(val),
-                          value: model.applock,
-                          isLoading: model.isApplockLoading,
-                          height: SizeConfig.screenWidth * 0.059,
-                          width: SizeConfig.screenWidth * 0.087,
-                          toggleSize: SizeConfig.screenWidth * 0.032,
-                        ),
-                      ],
-                    ),
+                  AppTextFieldLabel(
+                    locale.obMobileLabel,
                   ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Container(
-                    height: SizeConfig.padding40,
-                    child: Row(
-                      children: [
-                        Text(
-                          "Tambola Notifications",
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        Spacer(),
-                        AppSwitch(
-                          onToggle: (val) =>
-                              model.onTambolaNotificationPreferenceChanged(val),
-                          value: model.tambolaNotification,
-                          isLoading: model.isTambolaNotificationLoading,
-                          height: SizeConfig.screenWidth * 0.059,
-                          width: SizeConfig.screenWidth * 0.087,
-                          toggleSize: SizeConfig.screenWidth * 0.032,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.padding54),
-                  Center(
-                    child: TextButton(
-                      child: Text(
-                        'SIGN OUT',
-                        style: TextStyles.rajdhaniB.body1,
-                      ),
-                      onPressed: model.signout,
-                    ),
+                  AppTextField(
+                    isEnabled: false,
+                    textEditingController: model.mobileController,
+                    validator: (val) {
+                      return null;
+                    },
+                    inputFormatters: [],
                   ),
                 ],
               ),
+            SizedBox(height: SizeConfig.padding40),
+            !model.isNewUser
+                ? Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.padding40,
+                        child: Row(
+                          children: [
+                            Text(
+                              "App Lock",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            Spacer(),
+                            AppSwitch(
+                              onToggle: (val) =>
+                                  model.onAppLockPreferenceChanged(val),
+                              value: model.applock,
+                              isLoading: model.isApplockLoading,
+                              height: SizeConfig.screenWidth * 0.059,
+                              width: SizeConfig.screenWidth * 0.087,
+                              toggleSize: SizeConfig.screenWidth * 0.032,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                      Container(
+                        height: SizeConfig.padding40,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Tambola Notifications",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            Spacer(),
+                            AppSwitch(
+                              onToggle: (val) => model
+                                  .onTambolaNotificationPreferenceChanged(val),
+                              value: model.tambolaNotification,
+                              isLoading: model.isTambolaNotificationLoading,
+                              height: SizeConfig.screenWidth * 0.059,
+                              width: SizeConfig.screenWidth * 0.087,
+                              toggleSize: SizeConfig.screenWidth * 0.032,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.padding54),
+                      Center(
+                        child: TextButton(
+                          child: Text(
+                            'SIGN OUT',
+                            style: TextStyles.rajdhaniB.body1,
+                          ),
+                          onPressed: model.signout,
+                        ),
+                      ),
+                    ],
+                  )
+                : ReactivePositiveAppButton(
+                    width: SizeConfig.screenWidth,
+                    btnText: "Complete",
+                    onPressed: model.updateDetails),
+
             SizedBox(height: SizeConfig.padding64),
           ],
         ),
@@ -480,70 +454,3 @@ class UserProfileForm extends StatelessWidget {
 //     );
 //   }
 // }
-
-class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({
-    Key key,
-    @required this.model,
-  }) : super(key: key);
-
-  final UserProfileVM model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // height: SizeConfig.screenWidth * 0.7000,
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        color: model.isNewUser
-            ? Colors.transparent
-            : UiConstants.kSecondaryBackgroundColor,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(SizeConfig.roundness24),
-          bottomRight: Radius.circular(SizeConfig.roundness24),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // _buildProfileImage(),
-          NewProfileImage(
-            image: ProfileImageSE(
-              radius: SizeConfig.screenWidth * 0.25,
-            ),
-            onShowImagePicker: model.handleDPOperation,
-          ),
-          SizedBox(height: SizeConfig.padding6),
-          if (!model.isNewUser) _buildUserName(),
-          if (model.isNewUser)
-            Text(
-              "Change your avatar",
-              style:
-                  TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
-            ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          )
-          // Spacer(),
-        ],
-      ),
-    );
-  }
-
-  _buildUserName() {
-    UserService userService = locator<UserService>();
-    return Column(
-      children: [
-        Text(
-          model.nameController.text,
-          style: TextStyles.rajdhaniSB.title4,
-        ),
-        Text(
-          '@${userService.diplayUsername(model.myUsername)}',
-          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
-        ),
-      ],
-    );
-  }
-}

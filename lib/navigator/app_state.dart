@@ -38,6 +38,7 @@ class AppState extends ChangeNotifier {
   static Timer pollingPeriodicTimer;
   static bool isIOSTxnInProgress = false;
   static double currentTxnAmount = 0.0;
+  static double currentTxnGms = 0.0;
   static String currentTxnOrderId;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();

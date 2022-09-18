@@ -14,6 +14,7 @@ class UiConstants {
 
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color(0XFF02484D);
+  static final Color darkPrimaryColor2 = const Color(0XFF1B262C);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color chipColor = Colors.grey[200];
@@ -23,7 +24,6 @@ class UiConstants {
   static final Color spinnerColor = Colors.grey[400];
   static final Color spinnerColor2 = Colors.grey[200];
 
-  static final Color backgroundColor = Color(0xfff1f1f1);
   static final Color bottomNavBarColor = Colors.white;
   static final Color titleTextColor = Colors.white;
   static final Color textColor = Colors.black87;
@@ -55,6 +55,8 @@ class UiConstants {
 
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kBackgroundColor2 = const Color(0xFF151D22);
+  static final Color kBackgroundColor3 = Color(0xff131315);
+
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
   static const Color kModalSheetBackgroundColor = const Color(0xFF1B262C);
   static const Color kModalSheetMutedTextBackgroundColor =

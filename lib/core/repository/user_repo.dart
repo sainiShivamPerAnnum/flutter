@@ -392,7 +392,7 @@ class UserRepository extends BaseRepo {
     final token = await getBearerToken();
     try {
       await APIService.instance.putData(
-        ApiPath.kGetUserById(uid),
+        ApiPath.kGetUserById(userService.baseUser.uid),
         body: dMap,
         token: "Bearer $token",
         cBaseUrl: _baseUrl,

@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'dart:io';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -141,6 +142,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
                     onTap: () {
+                      if (BaseUtil.showNoInternetAlert()) ;
                       if (model.state == ViewState.Idle)
                         model.processScreenInput(
                           model.currentPage,
@@ -169,6 +171,15 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     ),
                   ),
                 ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding32),
+                  child: model.state == ViewState.Busy
+                      ? CircularProgressIndicator(strokeWidth: 0.5)
+                      : SizedBox(),
+                ),
+              ),
               // if (!keyboardIsOpen)
               Align(
                 alignment: Alignment.bottomCenter,

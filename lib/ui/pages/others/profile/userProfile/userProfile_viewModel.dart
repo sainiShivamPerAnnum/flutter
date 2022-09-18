@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -17,30 +18,36 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
 //Pub Imports
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:felloapp/core/service/journey_service.dart';
+
 import '../../../../../core/repository/user_repo.dart';
 
 class UserProfileVM extends BaseModel {
+  RegExp emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   Log log = new Log('User Profile');
-  bool inEditMode = false;
+  bool _inEditMode = false;
+  bool _isgmailFieldEnabled = true;
+
   bool _isNewUser = false;
+  bool _isEmailEnabled = false;
+  bool _isContinuedWithGoogle = false;
+  bool _isSigningInWithGoogle = false;
 
   final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
@@ -54,11 +61,12 @@ class UserProfileVM extends BaseModel {
   final BaseUtil baseProvider = locator<BaseUtil>();
   final _internalOpsService = locator<InternalOpsService>();
   final _journeyService = locator<JourneyService>();
+  final _googleSignInService = locator<GoogleSignInService>();
+
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
   bool _isUpdaingUserDetails = false;
-
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
   bool _hasInputError = false;
@@ -79,7 +87,10 @@ class UserProfileVM extends BaseModel {
       monthFieldController,
       yearFieldController;
 
-  final nameFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode emailOptionsFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+
   String get myUserDpUrl => _userService.myUserDpUrl;
   String get myname => _userService.baseUser.name ?? "";
   String get myUsername => _userService.baseUser.username ?? "";
@@ -92,6 +103,10 @@ class UserProfileVM extends BaseModel {
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
   bool get isApplockLoading => _isApplockLoading;
   bool get hasInputError => _hasInputError;
+  get isEmailEnabled => this._isEmailEnabled;
+  get isContinuedWithGoogle => this._isContinuedWithGoogle;
+  bool get isSigningInWithGoogle => _isSigningInWithGoogle;
+  bool get inEditMode => this._inEditMode;
 
   bool get applock =>
       _userService.baseUser.userPreferences
@@ -106,6 +121,7 @@ class UserProfileVM extends BaseModel {
   String get dateInputError => _dateInputError;
   bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
   get isNewUser => this._isNewUser;
+  get isgmailFieldEnabled => this._isgmailFieldEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -141,6 +157,31 @@ class UserProfileVM extends BaseModel {
   set isNewUser(value) {
     this._isNewUser = value;
 
+    notifyListeners();
+  }
+
+  set isEmailEnabled(value) {
+    this._isEmailEnabled = value;
+    notifyListeners();
+  }
+
+  set isContinuedWithGoogle(value) {
+    this._isContinuedWithGoogle = value;
+    notifyListeners();
+  }
+
+  set isSigningInWithGoogle(bool val) {
+    _isSigningInWithGoogle = val;
+    notifyListeners();
+  }
+
+  set inEditMode(value) {
+    this._inEditMode = value;
+    notifyListeners();
+  }
+
+  set isgmailFieldEnabled(value) {
+    this._isgmailFieldEnabled = value;
     notifyListeners();
   }
 
@@ -192,6 +233,34 @@ class UserProfileVM extends BaseModel {
       initialDate: DateTime(2000, 1, 1),
       firstDate: DateTime(1950, 1, 1),
       lastDate: DateTime(2002, 1, 1),
+      builder: (BuildContext context, Widget child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark(
+              onPrimary: Colors.black, // selected text color
+              onSurface: Colors.white70, // default text color
+              primary: UiConstants.primaryColor, // circle color
+            ),
+            primaryColor: UiConstants.primaryColor,
+            dialogBackgroundColor: UiConstants.kBackgroundColor,
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                textStyle: TextStyles.rajdhaniSB.body3,
+                primary: UiConstants.primaryColor, // color of button's letters
+                // backgroundColor: Colors.black54, // Background color
+                // shape: RoundedRectangleBorder(
+                //   side: const BorderSide(
+                //       color: Colors.transparent,
+                //       width: 1,
+                //       style: BorderStyle.solid),
+                //   borderRadius: BorderRadius.circular(50),
+                // ),
+              ),
+            ),
+          ),
+          child: child,
+        );
+      },
     );
     if (res != null) print(res);
     selectedDate = res;
@@ -213,20 +282,25 @@ class UserProfileVM extends BaseModel {
 
   updateDetails() async {
     if (formKey.currentState.validate() && isValidDate()) {
-      if (_checkForChanges()) {
+      if (_checkForChanges() && checkForNullData()) {
         if (DateHelper.isAdult(selectedDate)) {
           isUpdaingUserDetails = true;
-          notifyListeners();
           _userService.baseUser.name = nameController.text.trim();
           _userService.baseUser.dob =
               "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
           _userService.baseUser.gender = getGender();
+          _userService.baseUser.isEmailVerified = _userService.isEmailVerified;
+          _userService.baseUser.email = emailController.text.trim();
+
           await _userRepo.updateUser(
             uid: _userService.baseUser.uid,
             dMap: {
               'name': _userService.baseUser.name,
               'dob': _userService.baseUser.dob,
-              'gender': _userService.baseUser.gender,
+              BaseUser.fldGender: _userService.baseUser.gender,
+              BaseUser.fldIsEmailVerified:
+                  _userService.baseUser.isEmailVerified,
+              'email': _userService.baseUser.email
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
@@ -237,14 +311,15 @@ class UserProfileVM extends BaseModel {
               dobController.text = _userService.baseUser.dob;
               isUpdaingUserDetails = false;
               inEditMode = false;
-              notifyListeners();
+              if (isNewUser) AppState.backButtonDispatcher.didPopRoute();
+              isNewUser = false;
+              isEmailEnabled = false;
               BaseUtil.showPositiveAlert(
                 "Updated Successfully",
                 "Profile updated successfully",
               );
             } else {
               isUpdaingUserDetails = false;
-              notifyListeners();
               BaseUtil.showNegativeAlert(
                 "Profile Update failed",
                 "Please try again in some time",
@@ -257,9 +332,6 @@ class UserProfileVM extends BaseModel {
             'You need to be above 18 to join',
           );
         }
-      } else {
-        inEditMode = false;
-        BaseUtil.showNegativeAlert("No changes", "please make some changes");
       }
     } else
       BaseUtil.showNegativeAlert(
@@ -268,8 +340,20 @@ class UserProfileVM extends BaseModel {
 
   bool _checkForChanges() {
     if (myname != nameController.text.trim() ||
+        myEmail != emailController.text.trim() ||
         isDOBChanged() ||
         isGenderChanged()) return true;
+    if (!isNewUser) inEditMode = false;
+    BaseUtil.showNegativeAlert("No changes", "please make some changes");
+    return false;
+  }
+
+  bool checkForNullData() {
+    if (nameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        genderController.text.isNotEmpty &&
+        dateFieldController.text.isNotEmpty) return true;
+    BaseUtil.showNegativeAlert("Empty fields", "please fill all fields");
     return false;
   }
 
@@ -307,7 +391,7 @@ class UserProfileVM extends BaseModel {
     BaseUtil.openDialog(
       isBarrierDismissable: false,
       addToScreenStack: true,
-      content: AppDefaultDialog(
+      content: ConfirmationDialog(
           title: 'Confirm',
           description: 'Are you sure you want to sign out?',
           buttonText: 'Yes',
@@ -332,6 +416,7 @@ class UserProfileVM extends BaseModel {
                 _tambolaService.signOut();
                 _analyticsService.signOut();
                 _paytmService.signout();
+
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
@@ -356,20 +441,17 @@ class UserProfileVM extends BaseModel {
 
   bool isValidDate() {
     dateInputError = "";
-    notifyListeners();
     String inputDate = yearFieldController.text +
         monthFieldController.text +
         dateFieldController.text;
     print("Input date : " + inputDate);
     if (inputDate == null || inputDate.isEmpty) {
       dateInputError = "Invalid date";
-      notifyListeners();
       return false;
     }
     final date = DateTime.tryParse(inputDate);
     if (date == null) {
       dateInputError = "Invalid date";
-      notifyListeners();
       return false;
     } else {
       final originalFormatString = BaseUtil.toOriginalFormatString(date);
@@ -378,7 +460,6 @@ class UserProfileVM extends BaseModel {
         return true;
       } else {
         dateInputError = "Invalid date";
-        notifyListeners();
         return false;
       }
     }
@@ -386,7 +467,7 @@ class UserProfileVM extends BaseModel {
 
   handleDPOperation() async {
     if (await BaseUtil.showNoInternetAlert()) return;
-
+    AppState.backButtonDispatcher.didPopRoute();
     if (await _userService.checkGalleryPermission()) {
       _chooseprofilePicture();
     }
@@ -396,7 +477,7 @@ class UserProfileVM extends BaseModel {
     //   BaseUtil.openDialog(
     //     isBarrierDismissable: false,
     //     addToScreenStack: true,
-    //     content: AppDefaultDialog(
+    //     content: ConfirmationDialog(
     //       title: "Request Permission",
     //       description:
     //           "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
@@ -428,6 +509,32 @@ class UserProfileVM extends BaseModel {
     // }
   }
 
+  showCustomAvatarsDialog() {
+    return BaseUtil.openDialog(
+      addToScreenStack: true,
+      isBarrierDismissable: false,
+      hapticVibrate: true,
+      content: UserAvatarSelectionDialog(
+        onCustomAvatarSelection: handleDPOperation,
+        onPresetAvatarSelection: updateUserAvatar,
+      ),
+    );
+  }
+
+  updateUserAvatar({String avatarId}) async {
+    final res = await _userRepo.updateUser(
+        dMap: {BaseUser.fldAvatarId: avatarId}, uid: _userService.baseUser.uid);
+    AppState.backButtonDispatcher.didPopRoute();
+    if (res.isSuccess() && res.model) {
+      _userService.setMyAvatarId(avatarId);
+
+      return BaseUtil.showPositiveAlert(
+          "Update Successful", "Profile picture updated successfully");
+    } else
+      BaseUtil.showNegativeAlert(
+          "Something went wrong!", "Please try again in sometime");
+  }
+
   //Model should never user Widgets in it. We should never pass context here...
   _chooseprofilePicture() async {
     selectedProfilePicture = await ImagePicker()
@@ -438,13 +545,13 @@ class UserProfileVM extends BaseModel {
       await BaseUtil.openDialog(
         addToScreenStack: true,
         isBarrierDismissable: false,
-        content: AppDefaultDialog(
+        content: ConfirmationDialog(
           asset: NewProfileImage(
+            showAction: false,
+            isNewUser: isNewUser,
             image: ClipOval(
               child: Image.file(
                 File(selectedProfilePicture.path),
-                height: SizeConfig.screenHeight * 0.2,
-                width: SizeConfig.screenHeight * 0.2,
                 fit: BoxFit.cover,
               ),
             ),
@@ -538,5 +645,40 @@ class UserProfileVM extends BaseModel {
       );
     }
     isTambolaNotificationLoading = false;
+  }
+
+  showEmailOptions() {
+    baseProvider.isGoogleSignInProgress = false;
+    emailOptionsFocusNode.unfocus();
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissable: true,
+        backgroundColor:
+            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+        borderRadius: BorderRadius.circular(15),
+        content: SignInOptions(
+          onEmailSignIn: continueWithEmail,
+          onGoogleSignIn: handleSignInWithGoogle,
+        ),
+        addToScreenStack: true,
+        hapticVibrate: true);
+  }
+
+  continueWithEmail() {
+    isEmailEnabled = true;
+    AppState.backButtonDispatcher.didPopRoute();
+    Future.delayed(Duration(milliseconds: 200), () {
+      emailFocusNode.requestFocus();
+    });
+  }
+
+  void handleSignInWithGoogle() async {
+    isSigningInWithGoogle = true;
+    String email = await _googleSignInService.signInWithGoogle();
+    if (email != null) {
+      isgmailFieldEnabled = false;
+      emailController.text = email;
+      // isGoogleVerified = true;
+    }
+    isSigningInWithGoogle = false;
   }
 }

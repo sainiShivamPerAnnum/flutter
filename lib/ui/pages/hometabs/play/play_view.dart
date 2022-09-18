@@ -43,45 +43,50 @@ class Play extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             actions: [
-              FelloCoinBar(svgAsset: Assets.aFelloToken),
-              SizedBox(width: SizeConfig.padding10),
+              Row(
+                children: [
+                  FelloCoinBar(svgAsset: Assets.aFelloToken),
 
-              // SizedBox(
-              //   width: SizeConfig.padding20,
-              // ),
-              // GestureDetector(
-              //   onTap: () {
-              //     final rootvm = locator<RootViewModel>();
-              //     rootvm.showDrawer();
-              //   },
-              //   child: Container(
-              //     width: 30,
-              //     height: 30,
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       shape: BoxShape.circle,
-              //     ),
-              //     child: Icon(Icons.list, color: Colors.black),
-              //   ),
-              // ),
-              // SizedBox(
-              //   width: SizeConfig.padding20,
-              // ),
-              // IconButton(
-              //   icon: Icon(Icons.search),
-              //   onPressed: () {
-              //     AppState.delegate.appState.currentAction = PageAction(
-              //       page: Level2ViewPageConfig,
-              //       state: PageState.addPage,
-              //     );
-              //   },
-              // ),
-              InkWell(
-                onTap: () => model.openProfile(),
-                child: ProfileImageSE(radius: SizeConfig.avatarRadius),
-              ),
-              SizedBox(
-                width: SizeConfig.padding20,
+                  SizedBox(width: SizeConfig.padding10),
+
+                  // SizedBox(
+                  //   width: SizeConfig.padding20,
+                  // ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     final rootvm = locator<RootViewModel>();
+                  //     rootvm.showDrawer();
+                  //   },
+                  //   child: Container(
+                  //     width: 30,
+                  //     height: 30,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white,
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     child: Icon(Icons.list, color: Colors.black),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   width: SizeConfig.padding20,
+                  // ),
+                  // IconButton(
+                  //   icon: Icon(Icons.search),
+                  //   onPressed: () {
+                  //     AppState.delegate.appState.currentAction = PageAction(
+                  //       page: Level2ViewPageConfig,
+                  //       state: PageState.addPage,
+                  //     );
+                  //   },
+                  // ),
+                  InkWell(
+                    onTap: () => model.openProfile(),
+                    child: ProfileImageSE(radius: SizeConfig.avatarRadius),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  )
+                ],
               )
             ],
           ),

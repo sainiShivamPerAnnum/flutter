@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/focus_ring.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
@@ -40,30 +41,18 @@ class JourneyView extends StatefulWidget {
 }
 
 class _JourneyViewState extends State<JourneyView>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
-  AppLifecycleState _appLifecycleState;
+    with TickerProviderStateMixin {
   JourneyPageViewModel modelInstance;
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _appLifecycleState = state;
-    });
-    modelInstance.checkIfThereIsAMilestoneLevelChange();
-    print(_appLifecycleState);
-    super.didChangeAppLifecycleState(state);
-  }
 
   @override
   Widget build(BuildContext context) {
     log("ROOT: Journey view build called");
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
-        WidgetsBinding.instance?.addObserver(this);
         modelInstance = model;
         await model.init(this);
       },
       onModelDispose: (model) {
-        WidgetsBinding.instance?.removeObserver(this);
         model.dump();
       },
       builder: (ctx, model, child) {
@@ -93,7 +82,10 @@ class _JourneyViewState extends State<JourneyView>
           //       child: Icon(Icons.stop),
           //       onPressed: //model.controller.stop
           //           () {
-          //         print(model.journeyRepo());
+          //         _animationController.reset();
+          //         _animationController.forward().then((value) {
+          //           showButton = true;
+          //         });
           //       }),
           // ),
           body: model.isLoading && model.pages == null
@@ -158,6 +150,7 @@ class _JourneyViewState extends State<JourneyView>
                                 AvatarPathPainter(model: model),
                               ActiveMilestoneBaseGlow(),
                               Milestones(model: model),
+                              FocusRing(),
                               Avatar(model: model),
                               LevelBlurView()
                             ],
@@ -169,7 +162,8 @@ class _JourneyViewState extends State<JourneyView>
                     JourneyAppBar(),
                     // JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
-                    NewUserNavBar(model: model),
+                    // NewUserNavBar(model: model),
+
                     JPageLoader(model: model)
                   ],
                 ),
@@ -448,14 +442,11 @@ class Avatar extends StatelessWidget {
           // curve: Curves.decelerate,
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
-          child: GestureDetector(
-            onTap: () => _baseUtil.openProfileDetailsScreen(),
-            child: Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 3, color: Colors.white)),
-              child: ProfileImageSE(radius: SizeConfig.avatarRadius * 1.2),
-            ),
+          child: Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(width: 3, color: Colors.white)),
+            child: ProfileImageSE(radius: SizeConfig.avatarRadius * 0.8),
           ),
         );
       },

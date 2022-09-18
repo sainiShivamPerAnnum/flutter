@@ -443,10 +443,10 @@ class TransactionService
           AppState.screenStack.remove(AppState.screenStack.last);
         }
         currentTransactionState = TransactionState.successTransaction;
-        await Future.delayed(Duration(milliseconds: 5000), () {});
-        currentTransactionState = TransactionState.successCoinTransaction;
-        await Future.delayed(Duration(milliseconds: 3000), () {});
-        currentTransactionState = TransactionState.idleTrasantion;
+        // await Future.delayed(Duration(milliseconds: 5000), () {});
+        // currentTransactionState = TransactionState.successCoinTransaction;
+        // await Future.delayed(Duration(milliseconds: 3000), () {});
+        // currentTransactionState = TransactionState.idleTrasantion;
         GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
           _gtService.showInstantGoldenTicketView(
@@ -468,6 +468,7 @@ class TransactionService
   transactionResponseUpdate({String gtId, double amount}) async {
     AppState.currentTxnAmount = 0;
     AppState.currentTxnOrderId = "";
+    AppState.currentTxnGms = 0.0;
     _logger.d("Polling response processing");
     try {
       if (gtId != null) {
@@ -496,10 +497,10 @@ class TransactionService
           AppState.screenStack.remove(AppState.screenStack.last);
         }
         currentTransactionState = TransactionState.successTransaction;
-        await Future.delayed(Duration(milliseconds: 5000), () {});
-        currentTransactionState = TransactionState.successCoinTransaction;
-        await Future.delayed(Duration(milliseconds: 3000), () {});
-        currentTransactionState = TransactionState.idleTrasantion;
+        // await Future.delayed(Duration(milliseconds: 5000), () {});
+        // currentTransactionState = TransactionState.successCoinTransaction;
+        // await Future.delayed(Duration(milliseconds: 3000), () {});
+        // currentTransactionState = TransactionState.idleTrasantion;
         GoldenTicketService.goldenTicketId = gtId;
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
           _gtService.showInstantGoldenTicketView(

@@ -177,12 +177,12 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: BaseRings(
-                            size: model.pageWidth * base.asset.width * 0.6,
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.bottomCenter,
+                        //   child: BaseRings(
+                        //     size: model.pageWidth * base.asset.width * 0.6,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

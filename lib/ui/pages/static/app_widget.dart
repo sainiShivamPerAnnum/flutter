@@ -257,7 +257,7 @@ class AppDropDownField extends StatelessWidget {
           value: value,
           disabledHint: Text(
             disabledHintText,
-            style: TextStyles.body2.colour(
+            style: TextStyles.body3.colour(
               UiConstants.kTextFieldTextColor,
             ),
           ),
@@ -267,7 +267,13 @@ class AppDropDownField extends StatelessWidget {
           dropdownColor: isEnabled
               ? UiConstants.kTextFieldColor
               : UiConstants.kTextFieldColor.withOpacity(0.7),
-          hint: Text(hintText),
+          hint: Text(
+            hintText,
+            style: TextStyles.body3.colour(
+              UiConstants.kTextColor2,
+            ),
+          ),
+
           items: items,
         ),
       ),

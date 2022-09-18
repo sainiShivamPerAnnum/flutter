@@ -56,15 +56,19 @@ class Save extends StatelessWidget {
               elevation: 0,
               backgroundColor: UiConstants.kSecondaryBackgroundColor,
               actions: [
-                FelloCoinBar(svgAsset: Assets.aFelloToken),
-                SizedBox(width: SizeConfig.padding10),
-                GestureDetector(
-                  onTap: () {
-                    model.openProfile();
-                  },
-                  child: ProfileImageSE(radius: SizeConfig.avatarRadius),
-                ),
-                SizedBox(width: SizeConfig.padding20)
+                Row(
+                  children: [
+                    FelloCoinBar(svgAsset: Assets.aFelloToken),
+                    SizedBox(width: SizeConfig.padding10),
+                    GestureDetector(
+                      onTap: () {
+                        model.openProfile();
+                      },
+                      child: ProfileImageSE(radius: SizeConfig.avatarRadius),
+                    ),
+                    SizedBox(width: SizeConfig.padding20)
+                  ],
+                )
               ],
             ),
             body: SingleChildScrollView(

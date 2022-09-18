@@ -29,6 +29,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
@@ -685,7 +686,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     if (skipMl && buyAmount < incomingAmount) {
       return BaseUtil.openDialog(
           addToScreenStack: true,
-          content: AppDefaultDialog(
+          content: ConfirmationDialog(
             title: "Alert!",
             description:
                 "Buy amount is less than skip cost. You can still buy gold but milestone won't be skipped",
