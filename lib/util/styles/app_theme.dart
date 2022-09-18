@@ -6,7 +6,7 @@ class FelloTheme {
   Color textColor1 = Colors.black;
   Color textColor2 = Colors.black54;
 
-  static ThemeData lightMode() {
+  static ThemeData darkMode() {
     return ThemeData(
       textSelectionTheme:
           TextSelectionThemeData(cursorColor: UiConstants.primaryColor),

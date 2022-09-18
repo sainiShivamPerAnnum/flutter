@@ -27,8 +27,11 @@ class GameRepo extends BaseRepo {
       );
       logger.d("Games: ${response["data"]}");
 
-      final games = GameModel.helper.fromMapArray(response["data"]["games"]);
+      final List<GameModel> games =
+          GameModel.helper.fromMapArray(response["data"]["games"]);
+      games.removeWhere((game) => game.code == 'TA');
       allgames = games;
+
       return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
       logger.e("Unable to fetch games ${e.toString()}");

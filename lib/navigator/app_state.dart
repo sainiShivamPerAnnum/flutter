@@ -30,7 +30,7 @@ class AppState extends ChangeNotifier {
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
   int _rootIndex = 0;
-  bool _isTxnLoaderInView = false;
+  // bool _isTxnLoaderInView = false;
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
   // Timer _txnTimer;
@@ -38,6 +38,7 @@ class AppState extends ChangeNotifier {
   static Timer pollingPeriodicTimer;
   static bool isIOSTxnInProgress = false;
   static double currentTxnAmount = 0.0;
+  static double currentTxnGms = 0.0;
   static String currentTxnOrderId;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
@@ -63,7 +64,7 @@ class AppState extends ChangeNotifier {
 
   get rootIndex => this._rootIndex;
 
-  get isTxnLoaderInView => this._isTxnLoaderInView;
+  // get isTxnLoaderInView => this._isTxnLoaderInView;
 
   // Timer get txnTimer => this._txnTimer;
 
@@ -72,10 +73,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  set isTxnLoaderInView(bool val) {
-    this._isTxnLoaderInView = val;
-    notifyListeners();
-  }
+  // set isTxnLoaderInView(bool val) {
+  //   this._isTxnLoaderInView = val;
+  //   notifyListeners();
+  // }
 
   // Future get txnFunction => this._txnFunction;
 

@@ -9,6 +9,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
@@ -52,15 +53,15 @@ class GOWCard extends StatelessWidget {
                         height: SizeConfig.screenWidth * 0.474,
                         width: SizeConfig.screenWidth,
                         decoration: BoxDecoration(
-                          color: Colors.black,
-                          image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                  model.gow.thumbnailUri),
-                              fit: BoxFit.cover),
+                          color: UiConstants.gameCardColor,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(SizeConfig.roundness12),
                             topRight: Radius.circular(SizeConfig.roundness12),
                           ),
+                        ),
+                        child: SvgPicture.network(
+                          model.gow.thumbnailUri,
+                          fit: BoxFit.fill,
                         ),
                       ),
                       // ),
@@ -91,10 +92,11 @@ class GOWCard extends StatelessWidget {
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness8),
-                                  image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                          model.gow.thumbnailUri),
-                                      fit: BoxFit.cover),
+                                ),
+                                child: SvgPicture.network(
+                                  model.gow.icon,
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),

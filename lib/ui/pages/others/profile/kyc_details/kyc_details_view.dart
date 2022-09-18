@@ -39,7 +39,6 @@ class KYCDetailsView extends StatelessWidget {
         model.init();
       },
       builder: (ctx, model, child) => Scaffold(
-        backgroundColor: UiConstants.backgroundColor,
         appBar: AppBar(
           backgroundColor: UiConstants.kSecondaryBackgroundColor,
           elevation: 0.0,

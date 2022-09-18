@@ -51,6 +51,7 @@ class LauncherView extends StatelessWidget {
                             )
                           : Lottie.asset(
                               Assets.felloSplashZoomOutLogo,
+                              repeat: false,
                             ),
                       // Text(
                       //   locale.splashTagline,

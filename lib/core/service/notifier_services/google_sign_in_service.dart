@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +15,7 @@ class GoogleSignInService extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn();
   final _httpProvider = locator<HttpModel>();
   final _userService = locator<UserService>();
+  final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
 
   Future<String> signInWithGoogle() async {
@@ -41,9 +45,18 @@ class GoogleSignInService extends ChangeNotifier {
       }
 
       final userEmail = googleUser.email;
-      _userService.baseUser.isEmailVerified = true;
-
-      return userEmail;
+      _userService.setEmail(userEmail);
+      final res = await _userRepo.updateUser(dMap: {
+        BaseUser.fldIsEmailVerified: true,
+        'email': userEmail,
+      });
+      if (res.isSuccess() && res.model) {
+        _userService.isEmailVerified = true;
+        AppState.backButtonDispatcher.didPopRoute();
+        return userEmail;
+      }
+      BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");
+      return null;
     } catch (e) {
       _logger.d(e.toString());
       BaseUtil.showNegativeAlert(

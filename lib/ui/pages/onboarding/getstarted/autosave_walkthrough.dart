@@ -150,7 +150,7 @@ class _AutosaveWalkthroughState extends State<AutosaveWalkthrough> {
                 icon: value == 2.0
                     ? Icon(Icons.check)
                     : Icon(Icons.navigate_next),
-                color: UiConstants.backgroundColor,
+                color: UiConstants.kBackgroundColor,
                 onPressed: () {
                   Haptic.vibrate();
                   value == 2.0

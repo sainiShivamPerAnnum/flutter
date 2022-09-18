@@ -23,7 +23,7 @@ class HttpModel extends ChangeNotifier {
 
   void init() {
     if (_userService == null || _userService.idToken == null) {
-      logger.e("Null received from user service for IdToken");
+      logger.i("Null received from user service for IdToken");
       return;
     }
     logger.d("Https Ops initialized");

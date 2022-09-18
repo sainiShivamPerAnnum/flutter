@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -60,6 +62,7 @@ class _FelloButtonState extends State<FelloButton> {
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
+    final JourneyService _journeyService = locator<JourneyService>();
     if (connectivityStatus == ConnectivityStatus.Offline)
       return widget.offlineButtonUI != null
           ? InkWell(
@@ -105,7 +108,9 @@ class _FelloButtonState extends State<FelloButton> {
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
-
+                  if (_journeyService.avatarRemoteMlIndex < 2)
+                    return BaseUtil.showNegativeAlert(
+                        "Feature Locked", "Please complete level 1 to unlock");
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
                       widget.action(true);

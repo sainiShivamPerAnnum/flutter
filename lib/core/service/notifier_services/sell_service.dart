@@ -50,7 +50,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     ApiResponse response =
         await _saveRepo.verifyVPAAddress(_userService.firebaseUser.uid);
     print(response.model);
-    print(response.model['vpa'] != "");
+    // print(response?.model['vpa'] != "");
     if ((response.code == 200) && (response.model['vpa'] != "")) {
       setVPAVerified = true;
       print(_isVPAVerified);
