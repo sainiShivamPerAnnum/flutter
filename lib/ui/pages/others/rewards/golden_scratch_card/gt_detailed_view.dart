@@ -49,17 +49,19 @@ class GTDetailedView extends StatelessWidget {
               Spacer(),
               (model.viewScratchedCard)
                   ? RepaintBoundary(
+                      //Scratched card
                       key: ticketImageKey,
                       child: GoldenTicketGridItemCard(
                         ticket: ticket,
                         titleStyle: TextStyles.title2,
                         titleStyle2: TextStyles.title4,
                         subtitleStyle: TextStyles.body1,
-                        width: SizeConfig.screenWidth * 0.6,
+                        width: SizeConfig.screenWidth * 0.75,
                       ),
                     )
                   : (model.viewScratcher
                       ? Hero(
+                          //Unscrached card
                           key: Key(ticket.timestamp.toString()),
                           tag: ticket.timestamp.toString(),
                           createRectTween: (begin, end) {
@@ -74,15 +76,13 @@ class GTDetailedView extends StatelessWidget {
                             onThreshold: () => model.redeemCard(ticket),
                             image: Image.asset(
                               Assets.unredemmedGoldenTicketBG_png,
-                              fit: BoxFit.contain,
-                              height: SizeConfig.screenWidth * 0.6,
-                              width: SizeConfig.screenWidth * 0.6,
+                              fit: BoxFit.fitWidth,
                             ),
                             child: RepaintBoundary(
                               key: ticketImageKey,
                               child: RedeemedGoldenScratchCard(
                                 ticket: ticket,
-                                width: SizeConfig.screenWidth * 0.6,
+                                width: SizeConfig.screenWidth * 0.75,
                               ),
                             ),
                           ),
@@ -92,7 +92,7 @@ class GTDetailedView extends StatelessWidget {
                           titleStyle: TextStyles.title2,
                           titleStyle2: TextStyles.title4,
                           subtitleStyle: TextStyles.body1,
-                          width: SizeConfig.screenWidth * 0.6,
+                          width: SizeConfig.screenWidth * 0.75,
                         )),
               AnimatedContainer(
                   decoration: BoxDecoration(),

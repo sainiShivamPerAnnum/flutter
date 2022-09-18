@@ -37,7 +37,7 @@ class ShareCard extends StatelessWidget {
         return "You've won an Amazon Gift Voucher\n worth";
         break;
       case PrizeClaimChoice.GOLD_CREDIT:
-        return "You've won Digital Gold\n worth";
+        return "I've won Rs.$prizeAmount as\nDigital Gold on Fello!";
         break;
       default:
         return "You've won Fello Rewards\n worth";
@@ -46,130 +46,61 @@ class ShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(32),
-      child: Material(
-        child: Container(
-          width: 366,
-          height: 480,
-          decoration: BoxDecoration(
-            color: UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(
+          left: SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.pageHorizontalMargins,
+          top: SizeConfig.padding40,
+          bottom: SizeConfig.padding80),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(SizeConfig.roundness16),
+        ),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(SizeConfig.padding12),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: UiConstants.kBlogCardRandomColor3,
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
+              ),
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
                 child: Image.asset(
-                  Assets.splashBackground,
-                  width: SizeConfig.screenWidth,
-                  fit: BoxFit.fitWidth,
+                  Assets.redeemSucessfullAssetPNG,
+                  height: double.maxFinite,
+                  width: double.maxFinite,
                 ),
               ),
-              Column(
-                children: [
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Spacer(),
-                      Image.asset("images/fello_logo.png", height: 36),
-                      SizedBox(
-                        width: 16,
-                      )
-                    ],
-                  ),
-
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Image.asset(
-                      getImage(),
-                      height: 140,
-                    ),
-                  ),
-                  FittedBox(
-                    child: Text(
-                      getTitle(),
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body1.bold
-                          .colour(Colors.white)
-                          .setHeight(1.6),
-                    ),
-                  ),
-
-                  Container(
-                    child: FittedBox(
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          text: "₹ ",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2, 2),
-                                color:
-                                    UiConstants.tertiarySolid.withOpacity(0.3),
-                              )
-                            ],
-                            fontWeight: FontWeight.w500,
-                            fontSize: 80,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: "${prizeAmount.toInt()}",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2, 2),
-                                    blurRadius: 10,
-                                    color: UiConstants.tertiarySolid
-                                        .withOpacity(0.3),
-                                  )
-                                ],
-                                fontWeight: FontWeight.w600,
-                                fontSize: 80,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Text(
-                  //   "rewarded as",
-                  //   style: GoogleFonts.montserrat(
-                  //     color: Colors.white,
-                  //     fontWeight: FontWeight.w500,
-                  //     fontSize: SizeConfig.largeTextSize,
-                  //   ),
-                  // ),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "images/svgs/web.svg",
-                          height: SizeConfig.mediumTextSize,
-                          width: SizeConfig.mediumTextSize,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "fello.in",
-                          style: TextStyles.body3.colour(Colors.white),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
+            ),
           ),
-        ),
+          SizedBox(
+            height: SizeConfig.padding40,
+          ),
+          Text(
+            getTitle(),
+            style: TextStyles.rajdhaniSB.title3.colour(Colors.black),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Text(
+            'Play fun games and get a chance to\nwin rewards as Digital Gold',
+            style: TextStyles.sourceSans.body3.colour(Colors.black),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: SizeConfig.padding40,
+          ),
+        ],
       ),
     );
   }

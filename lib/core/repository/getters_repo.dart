@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -37,6 +38,8 @@ class GetterRepository extends BaseRepo {
         },
         token: token,
       );
+
+      print("Reaching here: ${statisticsResponse.toString()}");
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
@@ -127,12 +130,15 @@ class GetterRepository extends BaseRepo {
 
       final responseData = response["data"];
 
+      print("Test123 ${response.toString()}");
+
       logger.d(responseData);
       final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
 
       return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
     } catch (e) {
       logger.e(e.toString());
+      print("Test123 ${e.toString()}");
       return ApiResponse.withError("Unable to fetch promos", 400);
     }
   }
@@ -160,6 +166,37 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
+    }
+  }
+
+  //TODO: Not working
+  //Triggered on: Share button click on win view
+  Future<ApiResponse<List<GoldenTicket>>> getGoldenTickets() async {
+    try {
+      // final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.goldenTickets(userService.baseUser.uid),
+        cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
+        queryParams: {},
+      );
+
+      // final response2 = await APIService.instance.getData(
+      //   "/user/ojUP6fumUgOb9wDMB6Jmoy32GOE3/golden_tickets",
+      //   cBaseUrl: _baseUrl,
+      //   queryParams: {},
+      // );
+
+      final responseData = response["data"]["gts"];
+
+      print("Test123 ${response.toString()}");
+      // final goldenTickets = GoldenTicket.fromJson(json, docId);
+
+      // return ApiResponse<List<GoldenTicket>>(model: events, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      print("Test123 ${e.toString()}");
+
+      return ApiResponse.withError("Unable to fetch golden tickets", 400);
     }
   }
 }

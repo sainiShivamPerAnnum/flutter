@@ -10,5 +10,6 @@ enum UserServiceProperties {
   mySimpleKycVerified,
   myNotificationStatus,
   myConfirmDialogViewStatus,
-  myJourneyStats
+  myJourneyStats,
+  myAvatarId,
 }

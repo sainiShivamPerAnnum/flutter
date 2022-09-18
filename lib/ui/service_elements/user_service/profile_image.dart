@@ -37,33 +37,31 @@ class ProfileImageSE extends StatelessWidget {
         properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
         builder: (context, journeyModel, properties) {
           return PropertyChangeConsumer<UserService, UserServiceProperties>(
-            properties: [UserServiceProperties.myUserDpUrl],
+            properties: [
+              UserServiceProperties.myUserDpUrl,
+              UserServiceProperties.myAvatarId
+            ],
             builder: (context, model, properties) {
               log("Avatar Id: ${model?.baseUser?.avatarId}");
-              return GestureDetector(
-                  onTap: reactive
-                      ? () => _baseUtil.openProfileDetailsScreen()
-                      : () {},
-                  child: CircleAvatar(
-                    radius: radius ?? SizeConfig.avatarRadius,
-                    backgroundColor: Colors.black,
-                    child: model?.baseUser?.avatarId != 'CUSTOM' ||
-                            model.myUserDpUrl == null
-                        ? SvgPicture.asset(
-                            "assets/svg/userAvatars/${model?.baseUser?.avatarId ?? 'AV2'}.svg",
-                            height: radius ?? SizeConfig.avatarRadius * 2,
-                            width: radius ?? SizeConfig.avatarRadius * 2,
-                          )
-                        : SizedBox(),
-                    backgroundImage: model?.baseUser?.avatarId == 'CUSTOM' ||
-                            model.myUserDpUrl != null
+              return CircleAvatar(
+                radius: radius,
+                backgroundColor: Colors.black,
+                child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
+                    ? SvgPicture.asset(
+                        "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
+                        height: radius * 2,
+                        width: radius * 2,
+                      )
+                    : SizedBox(),
+                backgroundImage:
+                    model.avatarId == 'CUSTOM' || model.myUserDpUrl != null
                         ? CachedNetworkImageProvider(
                             model.myUserDpUrl,
                           )
                         : AssetImage(
                             Assets.profilePic,
                           ),
-                  ));
+              );
             },
           );
         });

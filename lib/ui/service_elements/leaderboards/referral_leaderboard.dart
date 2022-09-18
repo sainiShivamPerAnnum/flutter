@@ -153,6 +153,9 @@ class ReferralLeaderboard extends StatelessWidget {
                                           )
                                         ],
                                       ),
+                                      SizedBox(
+                                        height: SizeConfig.padding14,
+                                      ),
                                       Column(
                                         children: List.generate(
                                           getLength(
@@ -160,12 +163,6 @@ class ReferralLeaderboard extends StatelessWidget {
                                           (i) {
                                             return Container(
                                               width: SizeConfig.screenWidth,
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical:
-                                                      SizeConfig.padding12),
-                                              margin: EdgeInsets.symmetric(
-                                                vertical: SizeConfig.padding8,
-                                              ),
                                               decoration: BoxDecoration(
                                                 color: Colors.transparent,
                                               ),
@@ -291,6 +288,10 @@ class ReferralLeaderboard extends StatelessWidget {
                                                       )
                                                     ],
                                                   ),
+                                                  SizedBox(
+                                                    height:
+                                                        SizeConfig.padding10,
+                                                  ),
                                                   if (i + 1 <
                                                       getLength(model
                                                           .referralLeaderBoard
@@ -298,7 +299,11 @@ class ReferralLeaderboard extends StatelessWidget {
                                                     Divider(
                                                       color: Colors.white,
                                                       thickness: 0.2,
-                                                    )
+                                                    ),
+                                                  SizedBox(
+                                                    height:
+                                                        SizeConfig.padding10,
+                                                  ),
                                                 ],
                                               ),
                                             );

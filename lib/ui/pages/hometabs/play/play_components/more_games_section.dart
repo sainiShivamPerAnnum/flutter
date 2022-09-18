@@ -10,6 +10,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MoreGamesSection extends StatelessWidget {
@@ -79,10 +80,11 @@ class MoreGames extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(game.thumbnailUri),
-                    fit: BoxFit.cover,
-                  ),
+                ),
+                child: SvgPicture.network(
+                  game.icon,
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,7 +14,7 @@ class LoginMobileViewModel extends BaseModel {
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();
   final logger = locator<CustomLogger>();
-
+  final FocusNode mobileFocusNode = FocusNode();
   bool _validate = true;
   bool showAvailableMobileNos = true;
   Log log = new Log("MobileInputScreen");
@@ -20,7 +22,6 @@ class LoginMobileViewModel extends BaseModel {
       GlobalKey<FormFieldState<String>>();
   String code = "+91";
   // bool hasReferralCode = false;
-
   get formKey => _formKey;
   get validate => _validate;
   get phoneFieldKey => _phoneFieldKey;
@@ -35,14 +36,18 @@ class LoginMobileViewModel extends BaseModel {
 
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
+      showAvailableMobileNos = false;
+      mobileFocusNode.unfocus();
       final SmsAutoFill _autoFill = SmsAutoFill();
       String completePhoneNumber = await _autoFill.hint;
       if (completePhoneNumber != null) {
         _mobileController.text =
             completePhoneNumber.substring(completePhoneNumber.length - 10);
-        notifyListeners();
+        // notifyListeners();
       }
-      showAvailableMobileNos = false;
+      Future.delayed(Duration(milliseconds: 500), () {
+        mobileFocusNode.requestFocus();
+      });
     }
   }
 

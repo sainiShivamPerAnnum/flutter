@@ -1,6 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
+import 'package:felloapp/ui/pages/login/login_controller_view.dart';
+import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -19,6 +22,7 @@ class LoginOtpView extends StatefulWidget {
   final VoidCallback changeNumber;
   static const int index = 1; //pager index
   final String mobileNo;
+  final LoginControllerViewModel loginModel;
 
   LoginOtpView({
     Key key,
@@ -26,6 +30,7 @@ class LoginOtpView extends StatefulWidget {
     this.resendOtp,
     this.changeNumber,
     this.mobileNo,
+    @required this.loginModel,
   }) : super(key: key);
 
   @override
@@ -43,39 +48,37 @@ class LoginOtpViewState extends State<LoginOtpView> {
     return BaseView<LoginOtpViewModel>(
       onModelReady: (model) {
         this.model = model;
+        model.parentModelInstance = widget.loginModel;
         model.init(context);
       },
       builder: (ctx, model, child) {
         return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: SizeConfig.screenWidth * 0.186),
-            SvgPicture.asset('assets/svg/flag_svg.svg'),
-            SizedBox(height: SizeConfig.screenWidth * 0.208),
-            Text('Hey!', style: TextStyles.rajdhaniB.title2),
-            SizedBox(height: SizeConfig.screenWidth * 0.018),
+            SizedBox(height: SizeConfig.padding80),
+            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
             Text(
-              'Kindly enter the OTP shared with you',
-              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+              'Enter OTP',
+              style: TextStyles.rajdhaniB.title2,
             ),
-            SizedBox(height: SizeConfig.screenWidth * 0.098),
+            SizedBox(height: SizeConfig.padding32),
             //input
             Padding(
-              padding: EdgeInsets.only(
-                left: SizeConfig.screenWidth * 0.104,
-                right: SizeConfig.screenWidth * 0.136,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins * 2,
               ),
               child: PinInputTextField(
                 enabled: model.otpFieldEnabled,
                 controller: model.pinEditingController,
                 autoFocus: true,
                 pinLength: 6,
+                focusNode: model.otpFocusNode,
+                keyboardType: TextInputType.number,
                 decoration: BoxLooseDecoration(
-                  solidColor: Color(0xff6E6E7E).withOpacity(0.5),
-                  strokeColor: Color(0xFFFFFFFF).withOpacity(0.5),
-                  strokeWidth: 0,
+                  solidColor: UiConstants.kTextFieldColor,
+                  strokeColor: UiConstants.primaryColor,
+                  strokeWidth: 1,
                   textStyle: TextStyles.sourceSansSB.body1.colour(
-                    Color(0xFFFFFFFF).withOpacity(0.5),
+                    Color(0xFFFFFFFF),
                   ),
                 ),
                 onChanged: (value) {
@@ -92,7 +95,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 },
               ),
             ),
-            SizedBox(height: SizeConfig.screenWidth * 0.050),
+            SizedBox(height: SizeConfig.padding40),
             if ((model.showResendOption && !model.isTriesExceeded))
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +113,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     onTap: () {
                       if (BaseUtil.showNoInternetAlert()) return;
                       model.log.debug("Resend action triggered");
-                      FocusScope.of(context).unfocus();
+                      // FocusScope.of(context).unfocus();
 
                       model.showResendOption = false;
 

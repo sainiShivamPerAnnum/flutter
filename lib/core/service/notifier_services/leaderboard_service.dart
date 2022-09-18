@@ -66,6 +66,7 @@ class LeaderboardService
       type: "REF-ACTIVE",
       freq: "monthly",
     );
+
     if (response.code == 200) {
       _referralLeaderBoard.clear();
       _referralLeaderBoard =

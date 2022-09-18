@@ -30,6 +30,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -99,7 +100,7 @@ class LoginControllerViewModel extends BaseModel {
     notifyListeners();
   }
 
-  init(initPage) {
+  init(initPage, loginModelInstance) {
     _currentPage = (initPage != null) ? initPage : LoginMobileView.index;
     // _formProgress = 0.2 * (_currentPage + 1);
     _controller = new PageController(initialPage: _currentPage);
@@ -115,13 +116,14 @@ class LoginControllerViewModel extends BaseModel {
         resendOtp: _onOtpResendRequested,
         changeNumber: _onChangeNumberRequest,
         mobileNo: this.userMobile,
+        loginModel: loginModelInstance,
       ),
       LoginUserNameView(key: _usernameKey),
     ];
   }
 
   processScreenInput(int currentPage) async {
-    FocusScope.of(AppState.delegate.navigatorKey.currentContext).unfocus();
+    // FocusScope.of(AppState.delegate.navigatorKey.currentContext).unfocus();
     switch (currentPage) {
       case LoginMobileView.index:
         {
@@ -147,7 +149,7 @@ class LoginControllerViewModel extends BaseModel {
             );
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
-            FocusScope.of(_mobileScreenKey.currentContext).unfocus();
+            // FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(ViewState.Busy);
           }
           break;
@@ -177,7 +179,7 @@ class LoginControllerViewModel extends BaseModel {
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
 
-              FocusScope.of(_otpScreenKey.currentContext).unfocus();
+              // FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(ViewState.Idle);
             }
           } else {
@@ -306,6 +308,7 @@ class LoginControllerViewModel extends BaseModel {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
+    _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
 
     ApiResponse<BaseUser> user =
         await _userRepo.getUserById(id: userService.firebaseUser.uid);
@@ -454,6 +457,9 @@ class LoginControllerViewModel extends BaseModel {
           curve: Curves.easeInToLinear,
         );
         setState(ViewState.Idle);
+        Future.delayed(Duration(seconds: 1), () {
+          _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
+        });
       } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState.model.onOtpResendConfirmed(true);
@@ -489,6 +495,17 @@ class LoginControllerViewModel extends BaseModel {
       }
     }
     return null;
+  }
+
+  Color getCTATextColor() {
+    if (currentPage == 0) {
+      if (_mobileScreenKey.currentState.model.mobileController.text.length ==
+          10)
+        return UiConstants.primaryColor;
+      else
+        return UiConstants.gameCardColor;
+    }
+    return UiConstants.gameCardColor;
   }
 
   bool _isAdult(DateTime dt) {

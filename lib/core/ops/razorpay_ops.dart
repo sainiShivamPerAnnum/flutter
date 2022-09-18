@@ -48,7 +48,7 @@ class RazorpayModel extends ChangeNotifier {
     String paymentId = response.paymentId;
     String checkoutOrderId = response.orderId;
     String paySignature = response.signature;
-    AppState.delegate.appState.isTxnLoaderInView = true;
+    // AppState.delegate.appState.isTxnLoaderInView = true;
     _paytmService.handleTransactionPolling();
     // AppState.delegate.appState.txnTimer =
     //     Timer(Duration(seconds: 30), () async {
@@ -71,9 +71,9 @@ class RazorpayModel extends ChangeNotifier {
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    if (AppState.delegate.appState.isTxnLoaderInView == true) {
-      AppState.delegate.appState.isTxnLoaderInView = false;
-    }
+    // if (AppState.delegate.appState.isTxnLoaderInView == true) {
+    //   AppState.delegate.appState.isTxnLoaderInView = false;
+    // }
     BaseUtil.showNegativeAlert(
       'Transaction failed',
       'Your transaction was unsuccessful. Please try again',

@@ -209,6 +209,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     AppState.currentTxnOrderId =
         paytmSubscriptionApiResponse.model.data.orderId;
     AppState.currentTxnAmount = amount;
+    AppState.currentTxnGms =
+        BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax));
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
       return false;
@@ -424,6 +426,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
     AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
     AppState.currentTxnAmount = amount;
+    AppState.currentTxnGms =
+        BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax));
     _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -501,7 +505,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         );
       } else if (response.status == UpiTransactionStatus.submitted ||
           response.status == UpiTransactionStatus.success) {
-        AppState.delegate.appState.isTxnLoaderInView = true;
+        // AppState.delegate.appState.isTxnLoaderInView = true;
         handleTransactionPolling();
         // AppState.delegate.appState.txnTimer =
         //     Timer(Duration(seconds: 30), () async {
@@ -531,7 +535,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   handleIOSUpiTransaction() {
     if (!AppState.isIOSTxnInProgress) return;
     AppState.isIOSTxnInProgress = false;
-    AppState.delegate.appState.isTxnLoaderInView = true;
+    // AppState.delegate.appState.isTxnLoaderInView = true;
     handleTransactionPolling();
     // AppState.delegate.appState.txnTimer =
     //     Timer(Duration(seconds: 30), () async {
@@ -564,7 +568,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           case Constants.TXN_STATUS_RESPONSE_PENDING:
             break;
           case Constants.TXN_STATUS_RESPONSE_FAILURE:
-            AppState.delegate.appState.isTxnLoaderInView = false;
+            // AppState.delegate.appState.isTxnLoaderInView = false;
             timer.cancel();
             // AppState.delegate.appState.txnTimer.cancel();
             BaseUtil.showNegativeAlert(

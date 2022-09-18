@@ -48,17 +48,11 @@ class WebHomeView extends StatelessWidget {
                   physics: BouncingScrollPhysics(),
                   slivers: [
                     SliverPersistentHeader(
-                      delegate: model.isLoading
-                          ? MySliverAppBar(
-                              expandedHeight: SizeConfig.screenHeight * 0.32,
-                              game: model.currentGameModel,
-                              isLoading: true,
-                            )
-                          : MySliverAppBar(
-                              expandedHeight: SizeConfig.screenHeight * 0.32,
-                              game: model.currentGameModel,
-                            ),
-                    ),
+                        delegate: MySliverAppBar(
+                      expandedHeight: SizeConfig.screenWidth * 0.5,
+                      game: model.currentGameModel,
+                      isLoading: model.isLoading,
+                    )),
                     SliverList(
                       delegate: SliverChildListDelegate(
                         [
@@ -539,8 +533,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 )
               : Hero(
                   tag: game.code,
-                  child: CachedNetworkImage(
-                    imageUrl: game.thumbnailUri,
+                  child: SvgPicture.network(
+                    game.thumbnailUri,
                     fit: BoxFit.cover,
                   )),
         ),
@@ -568,10 +562,15 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                       border: Border.all(color: Colors.white, width: 3),
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness16),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(game.thumbnailUri),
-                      ),
+                      // image: DecorationImage(
+                      //   fit: BoxFit.cover,
+                      //   image: NetworkImage(game.thumbnailUri),
+                      // ),
+                    ),
+                    child: SvgPicture.network(
+                      game.icon,
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
                     ),
                   ),
           ),

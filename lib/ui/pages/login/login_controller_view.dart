@@ -1,9 +1,11 @@
 import 'dart:developer' as dev;
 import 'dart:io';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -54,7 +56,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
-        model.init(initPage);
+        model.init(initPage, model);
         if (Platform.isAndroid) {
           model.initTruecaller();
         }
@@ -63,30 +65,30 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       builder: (ctx, model, child) {
         dev.log(model.currentPage.toString());
         return Scaffold(
-          // backgroundColor: UiConstants.primaryColor,
-          // resizeToAvoidBottomInset: false,
-
+          resizeToAvoidBottomInset: false,
           body: Stack(
             children: <Widget>[
-              NewSquareBackground(),
+              NewSquareBackground(
+                  backgroundColor: UiConstants
+                      .kRechargeModalSheetAmountSectionBackgroundColor),
               // if (model.currentPage == 1 || model.currentPage == 0)
-              Positioned(
-                top: 0,
-                child: Container(
-                  height: SizeConfig.screenHeight * 0.5,
-                  width: SizeConfig.screenWidth,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF135756),
-                        UiConstants.kBackgroundColor,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 0,
+              //   child: Container(
+              //     height: SizeConfig.screenHeight * 0.5,
+              //     width: SizeConfig.screenWidth,
+              //     decoration: BoxDecoration(
+              //       gradient: LinearGradient(
+              //         begin: Alignment.topCenter,
+              //         end: Alignment.bottomCenter,
+              //         colors: [
+              //           Color(0xFF135756),
+              //           UiConstants.kBackgroundColor,
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               // if (model.currentPage == 2)
               //   Positioned(
               //     top: 0,
@@ -137,10 +139,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               ),
               if (keyboardIsOpen)
                 Positioned(
-                  bottom: 0,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
                     onTap: () {
-                      FocusManager.instance.primaryFocus.unfocus();
+                      if (BaseUtil.showNoInternetAlert()) ;
                       if (model.state == ViewState.Idle)
                         model.processScreenInput(
                           model.currentPage,
@@ -148,34 +150,40 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     },
                     child: Container(
                       width: SizeConfig.screenWidth,
-                      height: 50,
-                      color: UiConstants.kLeaderBoardBackgroundColor,
+                      height: SizeConfig.padding54,
+                      color: UiConstants.kArowButtonBackgroundColor,
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins,
                       ),
                       alignment: Alignment.centerRight,
-                      child: Text(
-                          model.currentPage == LoginUserNameView.index
-                              ? 'Finish'
-                              : model.currentPage == LoginOtpView.index
-                                  ? 'Done'
-                                  : 'Next',
-                          style: TextStyles.rajdhaniB.body1
-                              .colour(UiConstants.kPrimaryColor)
-
-                          // style: model.currentPage == LoginOtpView.index ||
-                          //         model.currentPage == LoginUserNameView.index
-                          //     ? TextStyles.rajdhaniB.body1
-                          //         .colour(UiConstants.kPrimaryColor)
-                          //     : TextStyles.rajdhaniB.body1,
-                          ),
+                      child: model.state == ViewState.Busy
+                          ? SpinKitThreeBounce(
+                              color: Colors.white,
+                              size: SizeConfig.padding20,
+                            )
+                          : Text(
+                              model.currentPage == LoginUserNameView.index
+                                  ? 'FINISH'
+                                  : 'NEXT',
+                              style: TextStyles.rajdhaniB.body1
+                                  .colour(UiConstants.primaryColor),
+                            ),
                     ),
                   ),
                 ),
-              if (!keyboardIsOpen)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding32),
+                  child: model.state == ViewState.Busy
+                      ? CircularProgressIndicator(strokeWidth: 0.5)
+                      : SizedBox(),
+                ),
+              ),
+              // if (!keyboardIsOpen)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenWidth * 0.2,
                     margin: EdgeInsets.only(
@@ -205,34 +213,35 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               )
                             ],
                           )
-                        : Container(
-                            width: SizeConfig.screenWidth,
-                            alignment: Alignment.center,
-                            child: AppPositiveCustomChildBtn(
-                              child: model.state == ViewState.Idle
-                                  ? Text(
-                                      model.currentPage ==
-                                              LoginUserNameView.index
-                                          ? 'FINISH'
-                                          : 'NEXT',
-                                      style: TextStyles.rajdhaniB.title5,
-                                    )
-                                  : SpinKitThreeBounce(
-                                      color: UiConstants.spinnerColor2,
-                                      size: 18.0,
-                                    ),
-                              width: SizeConfig.screenWidth * 0.78,
-                              onPressed: () {
-                                print("tapped me");
-                                if (model.state == ViewState.Idle)
-                                  model.processScreenInput(
-                                    model.currentPage,
-                                  );
-                              },
-                            ),
-                          ),
-                  ),
-                ),
+                        : SizedBox()
+                    // : Container(
+                    //     width: SizeConfig.screenWidth,
+                    //     alignment: Alignment.center,
+                    //     child: AppPositiveCustomChildBtn(
+                    //       child: model.state == ViewState.Idle
+                    //           ? Text(
+                    //               model.currentPage ==
+                    //                       LoginUserNameView.index
+                    //                   ? 'FINISH'
+                    //                   : 'NEXT',
+                    //               style: TextStyles.rajdhaniB.title5,
+                    //             )
+                    //           : SpinKitThreeBounce(
+                    //               color: UiConstants.spinnerColor2,
+                    //               size: 18.0,
+                    //             ),
+                    //       width: SizeConfig.screenWidth * 0.78,
+                    //       onPressed: () {
+                    //         print("tapped me");
+                    //         if (model.state == ViewState.Idle)
+                    //           model.processScreenInput(
+                    //             model.currentPage,
+                    //           );
+                    //       },
+                    //     ),
+                    //   ),
+                    ),
+              ),
               if (FlavorConfig.isDevelopment())
                 Container(
                   width: SizeConfig.screenWidth,

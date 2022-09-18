@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
@@ -11,6 +10,7 @@ import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
+import '../../../widgets/appbar/appbar.dart';
 import 'play_components/more_games_section.dart';
 
 class Play extends StatelessWidget {
