@@ -79,25 +79,27 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
             children: [
               _getBackground(txnService),
               PageTransitionSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (
-                    Widget child,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                  ) {
-                    return FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      child: child,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                    );
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (
+                  Widget child,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return FadeThroughTransition(
+                    fillColor: Colors.transparent,
+                    child: child,
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                  );
+                },
+                child: BaseView<AugmontGoldBuyViewModel>(
+                  onModelReady: (model) =>
+                      model.init(widget.amount, widget.skipMl),
+                  builder: (ctx, model, child) {
+                    return _getView(txnService, model);
                   },
-                  child: BaseView<AugmontGoldBuyViewModel>(
-                      onModelReady: (model) =>
-                          model.init(widget.amount, widget.skipMl),
-                      builder: (ctx, model, child) {
-                        return _getView(txnService, model);
-                      })),
+                ),
+              ),
             ],
           ),
         );

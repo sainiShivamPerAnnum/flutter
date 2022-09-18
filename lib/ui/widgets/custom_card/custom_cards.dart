@@ -100,7 +100,7 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      locale.balanceText,
+                                      "Balance",
                                       style: TextStyles.sourceSansM.body4,
                                     ),
                                     isGoldAssets
@@ -116,11 +116,15 @@ class SaveCustomCard extends StatelessWidget {
                                           ),
                                   ],
                                 ),
-                                CustomSaveButton(
-                                  onTap: onTap,
-                                  title: 'Save',
-                                  isFullScreen: false,
-                                )
+                                title == "Fello Flo"
+                                    ? Icon(Icons.lock,
+                                        size: SizeConfig.padding34,
+                                        color: Colors.black.withOpacity(0.5))
+                                    : CustomSaveButton(
+                                        onTap: onTap,
+                                        title: 'Save',
+                                        isFullScreen: false,
+                                      )
                               ],
                             )
                           ],

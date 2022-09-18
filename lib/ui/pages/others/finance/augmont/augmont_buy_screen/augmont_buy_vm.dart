@@ -732,7 +732,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         : false;
 
     bool _status;
-
+    AppState.currentTxnGms = goldAmountInGrams;
     _status = await _paytmService.initiatePaytmPGTransaction(
         amount: buyAmount,
         augmontRates: goldRates,

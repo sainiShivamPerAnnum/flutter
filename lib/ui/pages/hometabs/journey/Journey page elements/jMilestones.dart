@@ -192,15 +192,42 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
             ),
           ),
         ),
-        // if (widget.milestone.isCompleted != null &&
-        //     widget.milestone.isCompleted)
-        //   Positioned(
-        //       left: widget.model.pageWidth * widget.milestone.x,
-        //       bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
-        //               widget.model.pageHeight * widget.milestone.y) -
-        //           widget.model.pageHeight * 0.02,
-        //       child: MileStoneCheck(
-        //           model: widget.model, milestone: widget.milestone))
+        if (widget.milestone.index != 1)
+          Positioned(
+            left: widget.model.pageWidth * widget.milestone.x,
+            bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
+                    widget.model.pageHeight * widget.milestone.y) +
+                widget.model.pageHeight * widget.milestone.asset.height * 1.2,
+            child: SafeArea(
+              child: GestureDetector(
+                  onTap: () => widget.model.showMilestoneDetailsModalSheet(
+                      widget.milestone, context),
+                  child: Container(
+                    decoration: ShapeDecoration(
+                      color: Colors.black,
+                      shape: TooltipShapeBorder(arrowArc: 0.5),
+                      shadows: [
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 4.0,
+                            offset: Offset(2, 2))
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("${widget.milestone.tooltip}",
+                              style: TextStyles.sourceSansSB.body2),
+                          Icon(Icons.arrow_forward_ios_rounded,
+                              color: Colors.white, size: SizeConfig.iconSize1),
+                        ],
+                      ),
+                    ),
+                  )),
+            ),
+          )
       ],
     );
   }
@@ -366,7 +393,7 @@ class StaticMilestone extends StatelessWidget {
                                   Icon(Icons.lock_rounded,
                                       color: Colors.white,
                                       size: SizeConfig.iconSize1),
-                                  Text("${milestone.tooltip} Message",
+                                  Text("${milestone.tooltip}",
                                       style: TextStyles.sourceSansSB.body2),
                                 ],
                               ),

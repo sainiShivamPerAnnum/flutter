@@ -111,6 +111,8 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                         horizontal: SizeConfig.pageHorizontalMargins * 2),
                     maxLength: 10,
                     isEnabled: true,
+                    scrollPadding:
+                        EdgeInsets.only(bottom: SizeConfig.padding80),
                     // decoration: InputDecoration(
                     hintText: "Enter your referral code here",
                     textAlign: TextAlign.center,
@@ -121,6 +123,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                         RegExp(r'[a-zA-Z0-9]'),
                       )
                     ],
+
                     validator: (val) {
                       if (val.trim().length == 0 || val == null) return null;
                       if (val.trim().length < 3 || val.trim().length > 10)

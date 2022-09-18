@@ -28,7 +28,10 @@ class RechargeLoadingView extends StatelessWidget {
       children: [
         SizedBox(height: SizeConfig.padding32),
         Text('Digital Gold', style: TextStyles.rajdhaniSB.body2),
-        SizedBox(height: SizeConfig.padding12),
+        SizedBox(
+          height: SizeConfig.padding12,
+          width: SizeConfig.screenWidth,
+        ),
         Text(
           "Safest Digital Investment",
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),

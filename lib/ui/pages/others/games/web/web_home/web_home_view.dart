@@ -579,10 +579,15 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           elevation: 0,
           backgroundColor: Colors.transparent,
           actions: [
-            FelloCoinBar(
-              size: SizeConfig.padding20,
-              borderColor: Colors.black,
-            ),
+            Row(
+              children: [
+                FelloCoinBar(
+                  size: SizeConfig.padding20,
+                  borderColor: Colors.black,
+                ),
+                SizedBox(width: SizeConfig.padding16)
+              ],
+            )
           ],
         ),
       ],

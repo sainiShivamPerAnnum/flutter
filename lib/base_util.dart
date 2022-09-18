@@ -278,9 +278,15 @@ class BaseUtil extends ChangeNotifier {
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
         icon: Icon(
           Icons.flag,
@@ -318,9 +324,15 @@ class BaseUtil extends ChangeNotifier {
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
         icon: Icon(
           Icons.assignment_late,

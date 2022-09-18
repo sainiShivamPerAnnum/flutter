@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
@@ -42,12 +43,12 @@ class FAQPage extends StatelessWidget {
                   child: ListView.separated(
                     itemCount: model.list.length,
                     padding: EdgeInsets.only(
-                      bottom: SizeConfig.screenWidth * 0.5,
+                      bottom: SizeConfig.padding12,
                     ),
                     itemBuilder: (context, index) => ListTile(
                       title: Text(
                         model.list[index].title,
-                        style: TextStyles.sourceSans.body1,
+                        style: TextStyles.sourceSans.body3,
                       ),
                       minVerticalPadding: SizeConfig.padding8,
                       style: ListTileStyle.list,
@@ -76,74 +77,58 @@ class FAQPage extends StatelessWidget {
       fontSize: html.FontSize(14),
     );
 
-    showBottomSheet(
-      context: context,
+    BaseUtil.openModalBottomSheet(
       backgroundColor: UiConstants.kBackgroundColor,
-      constraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight * 0.6,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness16),
+        topRight: Radius.circular(SizeConfig.roundness16),
       ),
-      enableDrag: false,
-      elevation: 2,
-      builder: (ctx) => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Container(
-          //   height: SizeConfig.padding8,
-          //   width: SizeConfig.screenWidth * 0.2,
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.all(
-          //       Radius.circular(
-          //         SizeConfig.roundness16,
-          //       ),
-          //     ),
-          //     color: Colors.white,
-          //   ),
-          //   margin: EdgeInsets.only(
-          //     top: SizeConfig.padding6,
-          //     bottom: SizeConfig.padding8,
-          //   ),
-          // ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: true,
+      content: WillPopScope(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              IconButton(
-                  onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ))
+              ListTile(
+                title: Text(
+                  data.title,
+                  style: TextStyles.sourceSans.body1.semiBold,
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding12,
+                    horizontal: SizeConfig.pageHorizontalMargins),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins / 2,
+                      ),
+                      child: html.Html(
+                        style: {
+                          "html": style,
+                          "body": style,
+                          "p": style,
+                          "span": style,
+                          "ul": style,
+                        },
+                        data: desc,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          ListTile(
-            title: Text(
-              data.title,
-              style: TextStyles.sourceSans.body1.semiBold,
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding8,
-                  ),
-                  child: html.Html(
-                    style: {
-                      "html": style,
-                      "body": style,
-                      "p": style,
-                      "span": style,
-                      "ul": style,
-                    },
-                    data: desc,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
+        onWillPop: () async {
+          AppState.backButtonDispatcher.didPopRoute();
+          return Future.value(true);
+        },
       ),
     );
   }

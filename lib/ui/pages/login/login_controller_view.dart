@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
@@ -112,7 +113,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: new NeverScrollableScrollPhysics(),
+                              // physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -126,10 +127,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       ),
                     ),
                     AnimatedContainer(
-                      height: keyboardIsOpen &&
-                              (SizeConfig.viewInsets.bottom >
-                                  SizeConfig.screenHeight / 2)
-                          ? SizeConfig.padding54
+                      height: keyboardIsOpen && model.currentPage == 2
+                          ? SizeConfig.screenHeight * 0.1
                           : 0,
                       duration: Duration(
                         milliseconds: 200,
@@ -158,10 +157,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       ),
                       alignment: Alignment.centerRight,
                       child: model.state == ViewState.Busy
-                          ? SpinKitThreeBounce(
-                              color: Colors.white,
-                              size: SizeConfig.padding20,
-                            )
+                          ? SizedBox(
+                              width: SizeConfig.padding32,
+                              child: SpinKitThreeBounce(
+                                color: UiConstants.primaryColor,
+                                size: SizeConfig.padding20,
+                              ))
                           : Text(
                               model.currentPage == LoginUserNameView.index
                                   ? 'FINISH'
@@ -178,8 +179,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   padding: EdgeInsets.only(bottom: SizeConfig.padding40),
                   child: model.state == ViewState.Busy
                       ? Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            FullScreenLoader(size: SizeConfig.padding54),
+                            FullScreenLoader(
+                                size: SizeConfig.screenWidth * 0.3),
                             SizedBox(height: SizeConfig.padding12),
                             Text(
                               "Loading",
@@ -272,6 +275,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   ),
                 ),
               BaseAnimation(),
+              // CircularAnim()
             ],
           ),
         );

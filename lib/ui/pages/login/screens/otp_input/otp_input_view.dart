@@ -77,6 +77,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                   solidColor: UiConstants.kTextFieldColor,
                   strokeColor: UiConstants.primaryColor,
                   strokeWidth: 1,
+                  gapSpace: SizeConfig.padding12,
                   textStyle: TextStyles.sourceSansSB.body1.colour(
                     Color(0xFFFFFFFF),
                   ),

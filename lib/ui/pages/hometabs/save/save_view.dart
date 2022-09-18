@@ -26,6 +26,7 @@ import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -55,6 +56,7 @@ class Save extends StatelessWidget {
             backgroundColor: Colors.transparent,
             appBar: FAppBar(
               type: FaqsType.savings,
+              backgroundColor: UiConstants.kSecondaryBackgroundColor,
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -180,6 +182,7 @@ class SaveNetWorthSection extends StatelessWidget {
               isGoldAssets: true,
               onCardTap: () => saveViewModel.navigateToSaveAssetView(),
               onTap: () {
+                Haptic.vibrate();
                 return BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
                   enableDrag: false,
@@ -197,6 +200,7 @@ class SaveNetWorthSection extends StatelessWidget {
               cardAssetName: Assets.stableFello,
               investedAmount: 0.0,
               onTap: () {
+                Haptic.vibrate();
                 return BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
                   enableDrag: false,
@@ -457,7 +461,8 @@ class SaveBlogSection extends StatelessWidget {
                       child: SaveBlogTile(
                         onTap: () {
                           model.navigateToBlogWebView(
-                              model.blogPosts[index].slug);
+                              model.blogPosts[index].slug,
+                              model.blogPosts[index].acf.categories);
                         },
                         blogSideFlagColor: model.getRandomColor(),
                         title: model.blogPosts[index].acf.categories,
@@ -475,17 +480,22 @@ class SaveBlogSection extends StatelessWidget {
 
 class BlogWebView extends StatelessWidget {
   final String initialUrl;
-
-  const BlogWebView({Key key, this.initialUrl}) : super(key: key);
+  final String title;
+  const BlogWebView({Key key, this.initialUrl, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: UiConstants.kBackgroundColor3,
         leading: FelloAppBarBackButton(),
+        centerTitle: true,
+        title: Text(title ?? 'Title', style: TextStyles.rajdhaniSB.title5),
       ),
+      backgroundColor: UiConstants.kBackgroundColor,
       body: WebView(
         initialUrl: initialUrl,
+        backgroundColor: UiConstants.kBackgroundColor,
         javascriptMode: JavascriptMode.unrestricted,
       ),
     );

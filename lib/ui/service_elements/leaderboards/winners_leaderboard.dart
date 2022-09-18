@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'dart:math' as math;
 
 class WinnerboardView extends StatelessWidget {
   final int count;
@@ -174,7 +175,7 @@ class WinnerboardView extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "Cashprice",
+                                            "Cashprize",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(
                                                     UiConstants.kTextColor2),
@@ -227,9 +228,12 @@ class WinnerboardView extends StatelessWidget {
                                                             snapshot) {
                                                           if (!snapshot
                                                               .hasData) {
-                                                            return Image.asset(
-                                                              Assets
-                                                                  .defaultProfilePlaceholder,
+                                                            int rand =
+                                                                math.Random()
+                                                                    .nextInt(5);
+                                                            return SvgPicture
+                                                                .asset(
+                                                              "assets/svg/userAvatars/AV$rand.svg",
                                                               width: SizeConfig
                                                                   .iconSize5,
                                                               height: SizeConfig
@@ -269,10 +273,12 @@ class WinnerboardView extends StatelessWidget {
                                                               ),
                                                               errorWidget:
                                                                   (a, b, c) {
-                                                                return Image
+                                                                int rand = math
+                                                                        .Random()
+                                                                    .nextInt(5);
+                                                                return SvgPicture
                                                                     .asset(
-                                                                  Assets
-                                                                      .defaultProfilePlaceholder,
+                                                                  "assets/svg/userAvatars/AV$rand.svg",
                                                                   width: SizeConfig
                                                                       .iconSize5,
                                                                   height: SizeConfig

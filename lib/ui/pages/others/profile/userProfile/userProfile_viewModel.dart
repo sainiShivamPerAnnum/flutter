@@ -299,7 +299,8 @@ class UserProfileVM extends BaseModel {
               BaseUser.fldGender: _userService.baseUser.gender,
               BaseUser.fldIsEmailVerified:
                   _userService.baseUser.isEmailVerified,
-              BaseUser.fldEmail: _userService.baseUser.email
+              BaseUser.fldEmail: _userService.baseUser.email,
+              BaseUser.fldAvatarId: "AV1",
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
@@ -338,7 +339,7 @@ class UserProfileVM extends BaseModel {
   }
 
   bool _checkForChanges() {
-    if (isNewUser) return false;
+    if (isNewUser) return true;
     if (myname != nameController.text.trim() ||
         myEmail != emailController.text.trim() ||
         isDOBChanged() ||

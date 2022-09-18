@@ -57,15 +57,9 @@ class SaveAssetView extends StatelessWidget {
                           height: SizeConfig.padding24,
                         ),
                         // -- Break --
-                        TitleSubtitleContainer(title: 'Auto SIP'),
-                        SizedBox(
-                          height: SizeConfig.padding10,
-                        ),
+
                         AutosaveCard(),
-                        SizedBox(
-                          height: SizeConfig.padding24,
-                        ),
-                        TitleSubtitleContainer(title: 'Transactions'),
+
                         MiniTransactionCard(),
                       ],
                     ),
