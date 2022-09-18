@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmo
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -245,16 +246,18 @@ class SaveViewModel extends BaseModel {
   }
 
   /// `Navigation`
-  navigateToBlogWebView(String slug) {
+  navigateToBlogWebView(String slug, String title) {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: BlogPostWebViewConfig,
         widget: BlogWebView(
           initialUrl: 'https://fello.in/blogs/$slug?content_only=true',
+          title: title,
         ));
   }
 
   navigateToSaveAssetView() {
+    Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
@@ -262,6 +265,7 @@ class SaveViewModel extends BaseModel {
   }
 
   navigateToSellGoldPage() {
+    Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: AugmontGoldSellPageConfig,
@@ -269,6 +273,7 @@ class SaveViewModel extends BaseModel {
   }
 
   navigateToCompleteKYC() {
+    Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: KycDetailsPageConfig,
@@ -276,6 +281,7 @@ class SaveViewModel extends BaseModel {
   }
 
   navigateToVerifyVPA() {
+    Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: EditAugBankDetailsPageConfig,
@@ -283,6 +289,7 @@ class SaveViewModel extends BaseModel {
   }
 
   navigateToViewAllBlogs() {
+    Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,

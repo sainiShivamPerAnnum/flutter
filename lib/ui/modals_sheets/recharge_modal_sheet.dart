@@ -6,9 +6,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_service.dart
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/new_augmont_buy_view.dart';
-import 'package:felloapp/ui/pages/static/congratulatory_coin_view.dart';
 import 'package:felloapp/ui/pages/static/congratulatory_view.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/recharge_loading_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -79,25 +77,27 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
             children: [
               _getBackground(txnService),
               PageTransitionSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (
-                    Widget child,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                  ) {
-                    return FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      child: child,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                    );
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (
+                  Widget child,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return FadeThroughTransition(
+                    fillColor: Colors.transparent,
+                    child: child,
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                  );
+                },
+                child: BaseView<AugmontGoldBuyViewModel>(
+                  onModelReady: (model) =>
+                      model.init(widget.amount, widget.skipMl),
+                  builder: (ctx, model, child) {
+                    return _getView(txnService, model);
                   },
-                  child: BaseView<AugmontGoldBuyViewModel>(
-                      onModelReady: (model) =>
-                          model.init(widget.amount, widget.skipMl),
-                      builder: (ctx, model, child) {
-                        return _getView(txnService, model);
-                      })),
+                ),
+              ),
             ],
           ),
         );

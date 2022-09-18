@@ -91,6 +91,10 @@ class ViewAllBlogsView extends StatelessWidget {
                                                               index]
                                                           .blogs[j]
                                                           .slug,
+                                                      model
+                                                          .blogPostsByCategory[
+                                                              index]
+                                                          .category,
                                                     );
                                                   },
                                                   title: model

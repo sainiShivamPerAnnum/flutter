@@ -14,6 +14,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showCoinBar;
   final bool showAvatar;
   final bool showHelpButton;
+  final Color backgroundColor;
 
   const FAppBar({
     Key key,
@@ -22,6 +23,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.showCoinBar = true,
     this.showAvatar = true,
     this.showHelpButton = true,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -31,20 +33,16 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       title: Row(
         children: [
-          showAvatar
-              ? ProfileImageSE(
-                  radius: SizeConfig.roundedButtonRadius,
-                )
-              : SizedBox(),
+          showAvatar ? ProfileImageSE() : SizedBox(),
           Text(
             '${title ?? ''}',
-            style: TextStyles.rajdhaniSB.title1,
+            style: TextStyles.rajdhaniSB.title3,
           ),
         ],
       ),
       centerTitle: false,
       elevation: 0,
-      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+      backgroundColor: backgroundColor ?? Colors.transparent,
       actions: [
         Row(
           children: [

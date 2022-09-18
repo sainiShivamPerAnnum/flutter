@@ -450,6 +450,9 @@ class TransactionService
         // currentTransactionState = TransactionState.idleTrasantion;
         GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+          if (AppState.screenStack.length > 1)
+            AppState.backButtonDispatcher.didPopRoute();
+
           _gtService.showInstantGoldenTicketView(
               amount: depositFcmResponseModel.amount,
               title:
@@ -467,9 +470,9 @@ class TransactionService
   }
 
   transactionResponseUpdate({String gtId, double amount}) async {
-    AppState.currentTxnAmount = 0;
-    AppState.currentTxnOrderId = "";
-    AppState.currentTxnGms = 0.0;
+    // AppState.currentTxnAmount = 0;
+    // AppState.currentTxnOrderId = "";
+    // AppState.currentTxnGms = 0.0;
     _logger.d("Polling response processing");
     try {
       if (gtId != null) {
@@ -504,6 +507,8 @@ class TransactionService
         // currentTransactionState = TransactionState.idleTrasantion;
         GoldenTicketService.goldenTicketId = gtId;
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+          if (AppState.screenStack.length > 1)
+            AppState.backButtonDispatcher.didPopRoute();
           _gtService.showInstantGoldenTicketView(
               amount: amount,
               title: "You have successfully saved ₹${getAmount(amount)}",

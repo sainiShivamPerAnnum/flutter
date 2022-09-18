@@ -33,9 +33,10 @@ class LoginUserNameView extends StatefulWidget {
 
 class LoginUserNameViewState extends State<LoginUserNameView> {
   UsernameInputScreenViewModel model;
-
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return BaseView<UsernameInputScreenViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -111,6 +112,8 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                         horizontal: SizeConfig.pageHorizontalMargins * 2),
                     maxLength: 10,
                     isEnabled: true,
+                    scrollPadding:
+                        EdgeInsets.only(bottom: SizeConfig.padding80),
                     // decoration: InputDecoration(
                     hintText: "Enter your referral code here",
                     textAlign: TextAlign.center,
@@ -121,6 +124,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                         RegExp(r'[a-zA-Z0-9]'),
                       )
                     ],
+
                     validator: (val) {
                       if (val.trim().length == 0 || val == null) return null;
                       if (val.trim().length < 3 || val.trim().length > 10)
@@ -150,7 +154,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                   style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
                 ),
               ),
-            SizedBox(height: SizeConfig.padding80 * 1.4),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         );
       },

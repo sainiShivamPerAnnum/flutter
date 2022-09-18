@@ -466,15 +466,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateBuyFromModal() {
-    return BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      enableDrag: false,
-      hapticVibrate: true,
-      isBarrierDismissable: false,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      content: RechargeModalSheet(),
-    );
+    return BaseUtil().openRechargeModalSheet();
   }
 
   processTransaction(String pspApp) async {
@@ -732,7 +724,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         : false;
 
     bool _status;
-
+    AppState.currentTxnGms = goldAmountInGrams;
     _status = await _paytmService.initiatePaytmPGTransaction(
         amount: buyAmount,
         augmontRates: goldRates,

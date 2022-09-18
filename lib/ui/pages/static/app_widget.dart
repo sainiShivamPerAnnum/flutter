@@ -518,7 +518,7 @@ class AppNegativeBtn extends StatelessWidget {
     Key key,
     @required this.btnText,
     @required this.onPressed,
-    @required this.width,
+    this.width,
   }) : super(key: key);
   final String btnText;
   final VoidCallback onPressed;

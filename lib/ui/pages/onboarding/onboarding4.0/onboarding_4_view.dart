@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
@@ -194,13 +195,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                 if (val == 2)
                                   controller.animateTo(1);
                                 else
-                                  controller.animateTo(0.4 * (val));
+                                  controller.animateTo(0.53);
                               } else {
                                 if (val == 0) {
                                   controller.reset();
-                                  controller.animateTo(0.24);
+                                  controller.animateTo(0.28);
                                 } else if (val == 1)
-                                  controller.animateBack(0.4);
+                                  controller.animateBack(0.53);
                                 else
                                   controller.animateBack(0);
                               }
@@ -253,6 +254,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                   ),
                 ),
                 BaseAnimation(),
+                // CircularAnim()
               ],
             ),
           ),

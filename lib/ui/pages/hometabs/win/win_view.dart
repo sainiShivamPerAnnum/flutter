@@ -364,7 +364,7 @@ class Win extends StatelessWidget {
                         count: 2,
                       ),
                       SizedBox(
-                        height: SizeConfig.padding44,
+                        height: SizeConfig.padding24,
                       ),
                       //Fello News
                       FelloNewsComponent(),
