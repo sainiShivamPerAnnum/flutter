@@ -12,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -38,39 +39,14 @@ class FcmListener {
           ? logger.d("Fcm instance created")
           : logger.d("Fcm instance not created");
 
-      //SaveFCM
-      String idToken = await CacheManager.readCache(key: 'token');
-
-      idToken == null
-          ? logger.d("No FCM token in pref")
-          : logger.d("FCM token from pref: $idToken");
-
-      if (idToken == null) {
-        idToken = await _fcm.getToken();
-        await CacheManager.writeCache(
-            key: 'token', value: idToken, type: CacheType.string);
-        logger.d("fcm token added to pref: $idToken");
-      }
-
-      if (_userService.baseUser != null) {
-        if (_userService.baseUser.client_token != idToken) {
-          _saveDeviceToken(idToken);
-          logger.d("User fcm token updated in firestore");
-        } else {
-          logger.d("Current device fcm and firestore fcm is same");
-        }
-      } else {
-        logger.d("BaseUser null in user service.");
-      }
+      String idToken = await _fcm.getToken();
+      _saveDeviceToken(idToken);
 
       ///update fcm user token if required
       Stream<String> fcmStream = _fcm.onTokenRefresh;
       fcmStream.listen((token) async {
         logger.d("OnTokenRefresh called, updated FCM token: $token");
-        await CacheManager.writeCache(
-            key: 'token', value: token, type: CacheType.string);
-        _saveDeviceToken(idToken);
-        logger.d("FCM token added to prefs.");
+        _saveDeviceToken(token);
       });
 
       _fcm.getInitialMessage().then((RemoteMessage message) {
@@ -190,19 +166,21 @@ class FcmListener {
     });
   }
 
-  _saveDeviceToken(String fcmToken) async {
-    bool flag = true;
-    if (fcmToken != null &&
-        _userService.baseUser != null &&
-        _userService.baseUser.mobile != null &&
-        (_userService.baseUser.client_token == null ||
-            (_userService.baseUser.client_token != null &&
-                _userService.baseUser.client_token != fcmToken))) {
-      logger.d("Updating FCM token to local and server db");
-      _userService.baseUser.client_token = fcmToken;
-      flag = await _userService.updateClientToken(fcmToken);
+  Future<void> _saveDeviceToken(String fcmToken) async {
+    String savedToken = PreferenceHelper.getString(PreferenceHelper.FCM_TOKEN);
+
+    if (savedToken == null) logger.d("No FCM token in pref");
+
+    if (savedToken != fcmToken) {
+      logger.d(
+          "FCM changed or app is opened for first time, so updating pref and server token");
+      PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken);
+      await _userService.updateClientToken(fcmToken);
+    } else {
+      logger.d("FCM is already updated");
     }
-    return flag;
+
+    _userService.baseUser.client_token = fcmToken;
   }
 
   // TOGGLE THE SUBSCRIPTION
