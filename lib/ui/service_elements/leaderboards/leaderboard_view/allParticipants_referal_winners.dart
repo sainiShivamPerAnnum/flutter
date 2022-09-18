@@ -62,11 +62,6 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                             (i) {
                               return Container(
                                 width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding12),
-                                margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding8,
-                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.transparent,
                                 ),
@@ -110,11 +105,17 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                         )
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
                                     if (i + 1 < referralLeaderBoard.length)
                                       Divider(
                                         color: Colors.white,
                                         thickness: 0.2,
-                                      )
+                                      ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
                                   ],
                                 ),
                               );

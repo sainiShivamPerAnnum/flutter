@@ -16,6 +16,7 @@ import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 
+
 // ignore: must_be_immutable
 class TransactionDetailsBottomSheet extends StatefulWidget {
   final UserTransaction transaction;

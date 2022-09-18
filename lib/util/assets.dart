@@ -264,6 +264,14 @@ class Assets {
   static final String winScreenTopReferer =
       "assets/svg/winnerScreen_topRefrer.svg";
 
+  static final String redeemSucessfullAssetPNG =
+      "images/redeemSucessfull_png.png";
+
+  static final String refreAndEarnBackgroundAsset =
+      "assets/svg/refer_earn_background.svg";
+
+  static final String iPadPNG = "images/ipad.png";
+
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
 
@@ -281,6 +289,19 @@ class Assets {
   static final String gt_token_cashback = "assets/svg/gt_cashback_token.svg";
   static final String gt_none = "assets/svg/gt_none.svg";
   static final String newTokenAsset = "assets/svg/token_asset_new.svg";
+
+  //Prize claim assets
+  static final List<String> prizeClaimAssets = [
+    "assets/svg/prize_asset_0.svg",
+    "assets/svg/prize_asset_1.svg",
+    "assets/svg/prize_asset_2.svg",
+    "assets/svg/prize_asset_3.svg",
+    "assets/svg/prize_asset_4.svg",
+    "assets/svg/prize_asset_5.svg",
+    "assets/svg/prize_asset_6.svg",
+    "assets/svg/prize_asset_7.svg",
+    "assets/svg/prize_asset_8.svg",
+  ];
 
   static final List<String> onboardingHeader = [
     'Save',

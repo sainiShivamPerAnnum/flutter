@@ -67,6 +67,8 @@ const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
 const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
+const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
+const String SharePriceScreenPath = "/SharePriceScreenPath";
 
 enum Pages {
   Splash,
@@ -133,7 +135,9 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
-  AllParticipantsWinnersTopReferersView
+  AllParticipantsWinnersTopReferersView,
+  RedeemSucessfulScreenView,
+  SharePriceScreenView,
 }
 
 class PageConfiguration {
@@ -596,4 +600,18 @@ PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
   path: AllParticipantsWinnersTopReferersPath,
   uiPage: Pages.AllParticipantsWinnersTopReferersView,
   name: "View All Participants for Win View",
+);
+
+PageConfiguration RedeemSucessfulScreenPageConfig = PageConfiguration(
+  key: 'RedeemSucessfulScreenView',
+  path: RedeemSucessfulScreenPath,
+  uiPage: Pages.RedeemSucessfulScreenView,
+  name: "Redeem Sucessfull View",
+);
+
+PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
+  key: 'SharePriceScreenView',
+  path: SharePriceScreenPath,
+  uiPage: Pages.SharePriceScreenView,
+  name: "Reward sharing screen",
 );

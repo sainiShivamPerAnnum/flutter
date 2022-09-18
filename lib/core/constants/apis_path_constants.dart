@@ -52,6 +52,8 @@ class ApiPath {
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
   static String logOut(String uid) => "/user/$uid/logout";
 
+  static String goldenTickets(uid) => '/user/$uid/golden_tickets';
+
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
 

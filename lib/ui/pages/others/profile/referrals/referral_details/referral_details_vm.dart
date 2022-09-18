@@ -40,6 +40,10 @@ class ReferralDetailsViewModel extends BaseModel {
   PageController _pageController;
   int _tabNo = 0;
 
+  bool _isShareAlreadyClicked = false;
+
+  bool get isShareAlreadyClicked => _isShareAlreadyClicked;
+
   int get tabNo => _tabNo;
   set tabNo(value) {
     this._tabNo = value;
@@ -180,6 +184,9 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   Future<void> shareLink() async {
+    _isShareAlreadyClicked = true;
+    notifyListeners();
+
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
@@ -213,6 +220,11 @@ class ReferralDetailsViewModel extends BaseModel {
         });
       }
     }
+
+    Future.delayed(Duration(seconds: 3), () {
+      _isShareAlreadyClicked = false;
+      notifyListeners();
+    });
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {

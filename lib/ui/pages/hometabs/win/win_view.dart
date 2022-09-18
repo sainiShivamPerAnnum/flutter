@@ -4,12 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
@@ -31,8 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-
-import 'customPainters.dart';
 
 //Following is a dummy list to populate the Fello News section for now
 List<Map<String, dynamic>> dummyFelloNews = [
@@ -110,6 +110,7 @@ class Win extends StatelessWidget {
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
                                     Text(
+
                                       '₹ ${currentWinning.toString() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
@@ -120,7 +121,10 @@ class Win extends StatelessWidget {
                                     currentWinning >= model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              model.showConfirmDialog(
+                                                  PrizeClaimChoice.GOLD_CREDIT);
+                                            },
                                             width: SizeConfig.screenWidth * 0.4)
                                         : Text(
                                             'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
@@ -130,15 +134,12 @@ class Win extends StatelessWidget {
                                           ),
                                   ],
                                 ),
-                                Consumer<AppState>(
-                                  builder: (ctx, m, child) => WinningsCylinder(
-                                    index: AppState
-                                        .delegate.appState.getCurrentTabIndex,
-                                    currentWinning: currentWinning,
-                                    model: model,
-                                    redeemAmount: model.minWithdrawPrizeAmt,
+                                if (m.userFundWallet != null)
+                                  Expanded(
+                                    child: SvgPicture.asset(
+                                        model.getRedeemAsset(
+                                            m.userFundWallet.unclaimedBalance)),
                                   ),
-                                ),
                               ],
                             ),
                             SizedBox(
@@ -153,12 +154,7 @@ class Win extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                AppState.delegate.appState.currentAction =
-                                    PageAction(
-                                  page: CampaignViewPageConfig,
-                                  state: PageState.addWidget,
-                                  widget: MyWinningsView(),
-                                );
+                                model.navigateToMyWinnings();
                               },
                               child: Row(
                                 mainAxisAlignment:
@@ -182,7 +178,7 @@ class Win extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '3 NEW',
+                                        'See All',
                                         style: TextStyles.sourceSans.body3
                                             .colour(Colors.white),
                                       ),
@@ -203,15 +199,169 @@ class Win extends StatelessWidget {
                       ),
 
                       //Refer and Earn
-                      ReferAndEarnComponent(
-                        model: model,
+                      Container(
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(
+                                  SizeConfig.padding24,
+                                  SizeConfig.padding44,
+                                  SizeConfig.padding24,
+                                  (SizeConfig.screenWidth * 0.15) / 2),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: UiConstants.kSecondaryBackgroundColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(SizeConfig.roundness12))),
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                  SizeConfig.padding24,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      child: SvgPicture.asset(
+                                          Assets.referAndEarn,
+                                          height: SizeConfig.padding90 +
+                                              SizeConfig.padding10),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding28,
+                                    ),
+                                    RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: 'Earn upto Rs.50 and',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor3)),
+                                          WidgetSpan(
+                                              child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    SizeConfig.padding4),
+                                            height: 17,
+                                            width: 17,
+                                            child: SvgPicture.asset(
+                                              Assets.aFelloToken,
+                                            ),
+                                          )),
+                                          TextSpan(
+                                              text:
+                                                  '200 from every Golden Ticket. Win an iPad every month.',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor3)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding28,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.padding32,
+                                              vertical: SizeConfig.padding6),
+                                          decoration: BoxDecoration(
+                                              color: UiConstants
+                                                  .kArowButtonBackgroundColor,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    SizeConfig.roundness8),
+                                              ),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 0.6)),
+                                          child: Text(
+                                            model.loadingRefCode
+                                                ? '-'
+                                                : model.refCode,
+                                            style: TextStyles.rajdhaniEB.title2
+                                                .colour(Colors.white),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  model.copyReferCode();
+                                                },
+                                                icon: Icon(
+                                                  Icons.copy,
+                                                  color: UiConstants
+                                                      .kTabBorderColor,
+                                                  size: SizeConfig.padding28,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  if (model
+                                                          .isShareAlreadyClicked ==
+                                                      false) model.shareLink();
+                                                },
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: UiConstants
+                                                      .kTabBorderColor,
+                                                  size: SizeConfig.padding28,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding32,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: SizeConfig.screenWidth * 0.17,
+                              height: SizeConfig.screenWidth * 0.17,
+                              decoration: BoxDecoration(
+                                color: UiConstants.kSecondaryBackgroundColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  model.navigateToRefer();
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(SizeConfig.padding6),
+                                  padding: EdgeInsets.all(SizeConfig.padding8),
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        UiConstants.kArowButtonBackgroundColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    Assets.chevRonRightArrow,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
 
                       SizedBox(
                         height: SizeConfig.padding32,
                       ),
                       ReferralLeaderboard(
-                        count: 4,
+                        count: 2,
                       ),
                       SizedBox(
                         height: SizeConfig.padding44,
@@ -353,12 +503,14 @@ class FelloNewsComponent extends StatelessWidget {
 }
 
 class ReferAndEarnComponent extends StatelessWidget {
-  const ReferAndEarnComponent({
+  ReferAndEarnComponent({
     Key key,
     @required this.model,
   }) : super(key: key);
 
   final WinViewModel model;
+
+  bool isShareButtonEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -453,7 +605,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                model.shareWhatsApp();
+                                model.shareLink();
                               },
                               icon: Icon(
                                 Icons.share,
@@ -481,11 +633,7 @@ class ReferAndEarnComponent extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                AppState.delegate.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  widget: ReferralDetailsView(),
-                  page: ReferralDetailsPageConfig,
-                );
+                model.navigateToRefer();
               },
               child: Container(
                 margin: EdgeInsets.all(SizeConfig.padding6),
@@ -503,94 +651,6 @@ class ReferAndEarnComponent extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class WinningsCylinder extends StatefulWidget {
-  const WinningsCylinder({
-    Key key,
-    @required this.index,
-    @required this.currentWinning,
-    @required this.model,
-    @required this.redeemAmount,
-  }) : super(key: key);
-
-  final int index;
-  final double currentWinning;
-  final WinViewModel model;
-  final int redeemAmount;
-
-  @override
-  State<WinningsCylinder> createState() => _WinningsCylinder();
-}
-
-double containerHeight = SizeConfig.screenWidth * 0.4;
-double containerWidth = SizeConfig.screenWidth * 0.3;
-
-double containerFilledHeight = 0;
-
-class _WinningsCylinder extends State<WinningsCylinder> {
-  @override
-  void initState() {
-    containerFilledHeight = 0;
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    containerFilledHeight = 0;
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.index == 3) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (containerFilledHeight == 0) {
-          setState(() {
-            if (widget.currentWinning >= widget.redeemAmount) {
-              containerFilledHeight = containerHeight;
-            } else {
-              containerFilledHeight = widget.model.calculateFillHeight(
-                  widget.currentWinning, containerHeight, widget.redeemAmount);
-            }
-          });
-        }
-      });
-    }
-    return Center(
-      child: Container(
-        width: containerWidth,
-        height: containerHeight,
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            Container(
-                child: CustomPaint(
-              size: Size(SizeConfig.screenWidth * 0.15,
-                  (SizeConfig.screenWidth * 0.4)),
-              painter: CustomCylinderOuter(),
-            )),
-            AnimatedContainer(
-                height: containerFilledHeight,
-                duration: Duration(seconds: 1),
-                curve: Curves.easeInCirc,
-                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-                child: CustomPaint(
-                  size: Size((SizeConfig.screenWidth * 0.15) - 8,
-                      containerFilledHeight - 10),
-                  painter: CustomCylinderInner(),
-                )),
-          ],
-        ),
       ),
     );
   }
@@ -958,113 +1018,5 @@ class VoucherModal extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-//Copy this CustomPainter code to the Bottom of the File
-class LakhCustomPaint extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * 1.184615, size.height * 0.2691261);
-    path_0.cubicTo(
-        size.width * 1.184615,
-        size.height * 0.7285773,
-        size.width * 1.156438,
-        size.height * 1.052747,
-        size.width * 0.6349246,
-        size.height * 0.9553091);
-    path_0.cubicTo(
-        size.width * 0.5865785,
-        size.height * 0.9462761,
-        size.width * 0.5367577,
-        size.height * 0.9483352,
-        size.width * 0.4888669,
-        size.height * 0.9616466);
-    path_0.cubicTo(
-        size.width * -0.07392585,
-        size.height * 1.118072,
-        size.width * 0.007692154,
-        size.height * 0.7302920,
-        size.width * 0.007692154,
-        size.height * 0.2691261);
-    path_0.cubicTo(
-        size.width * 0.007692154,
-        size.height * -0.2109852,
-        size.width * 0.2711554,
-        size.height * -0.6001920,
-        size.width * 0.5961538,
-        size.height * -0.6001920);
-    path_0.cubicTo(
-        size.width * 0.9211538,
-        size.height * -0.6001920,
-        size.width * 1.184615,
-        size.height * -0.2109852,
-        size.width * 1.184615,
-        size.height * 0.2691261);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-//Copy this CustomPainter code to the Bottom of the File
-class IphoneCustomPaint extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * 1.179104, size.height * 0.1723363);
-    path_0.cubicTo(
-        size.width * 1.179104,
-        size.height * 0.5976011,
-        size.width * 1.288672,
-        size.height * 1.119681,
-        size.width * 0.7680075,
-        size.height * 0.9679692);
-    path_0.cubicTo(
-        size.width * 0.6618127,
-        size.height * 0.9370264,
-        size.width * 0.5524649,
-        size.height * 0.9220132,
-        size.width * 0.4449075,
-        size.height * 0.9400901);
-    path_0.cubicTo(
-        size.width * -0.3325672,
-        size.height * 1.070758,
-        size.width * 0.1492530,
-        size.height * 0.6584198,
-        size.width * 0.1492530,
-        size.height * 0.2217868);
-    path_0.cubicTo(
-        size.width * 0.1492530,
-        size.height * -0.2424967,
-        size.width * 0.2929104,
-        size.height * -0.6683231,
-        size.width * 0.6082075,
-        size.height * -0.6683231);
-    path_0.cubicTo(
-        size.width * 0.9235075,
-        size.height * -0.6683231,
-        size.width * 1.179104,
-        size.height * -0.2919473,
-        size.width * 1.179104,
-        size.height * 0.1723363);
-    path_0.close();
-
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }

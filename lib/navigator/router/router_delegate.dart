@@ -16,6 +16,8 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
@@ -311,6 +313,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AllParticipantsWinnersTopReferersView:
           _addPageData(AllParticipantsWinnersTopReferers(),
               AllParticipantsWinnersTopReferersConfig);
+          break;
+        case Pages.RedeemSucessfulScreenView:
+          _addPageData(
+              RedeemSucessfulScreen(), RedeemSucessfulScreenPageConfig);
+          break;
+        case Pages.SharePriceScreenView:
+          _addPageData(SharePriceScreen(), SharePriceScreenPageConfig);
           break;
         // case Pages.WebHomeView:
         //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
@@ -615,6 +624,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AllParticipantsWinnersTopReferersView:
         AllParticipantsWinnersTopReferersConfig.currentPageAction = action;
+        break;
+      case Pages.RedeemSucessfulScreenView:
+        RedeemSucessfulScreenPageConfig.currentPageAction = action;
+        break;
+      case Pages.SharePriceScreenView:
+        SharePriceScreenPageConfig.currentPageAction = action;
         break;
       default:
         break;
