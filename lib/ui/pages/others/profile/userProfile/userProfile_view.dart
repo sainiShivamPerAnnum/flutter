@@ -152,6 +152,7 @@ class UserProfileForm extends StatelessWidget {
             AppDropDownField(
               onChanged: (value) {
                 model.gen = value;
+                model.genderController.text = model.setGenderField();
               },
               value: model.gen,
               disabledHintText: model.genderController.text,

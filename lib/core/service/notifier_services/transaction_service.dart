@@ -84,6 +84,7 @@ class TransactionService
 
   set currentTransactionState(TransactionState state) {
     _currentTransactionState = state;
+
     notifyListeners(TransactionServiceProperties.transactionStatus);
   }
 

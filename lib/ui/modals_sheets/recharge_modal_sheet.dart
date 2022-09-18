@@ -35,7 +35,9 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
   @override
   void initState() {
     super.initState();
-    _txnService.currentTransactionState = TransactionState.idleTrasantion;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _txnService.currentTransactionState = TransactionState.idleTrasantion;
+    });
     WidgetsBinding.instance.addObserver(this);
   }
 

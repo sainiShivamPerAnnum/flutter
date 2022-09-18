@@ -124,15 +124,17 @@ class Win extends StatelessWidget {
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
                                     Text(
-                                      '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+                                      '₹ ${m?.userFundWallet?.unclaimedBalance.toString() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
                                     ),
                                     SizedBox(
                                       height: SizeConfig.padding40,
                                     ),
-                                    m.userFundWallet.unclaimedBalance >=
-                                            model.minWithdrawPrizeAmt
+                                    m?.userFundWallet?.unclaimedBalance !=
+                                                null &&
+                                            m.userFundWallet.unclaimedBalance >=
+                                                model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
                                             onPressed: () {},

@@ -92,13 +92,13 @@ class UserProfileVM extends BaseModel {
   FocusNode emailFocusNode = FocusNode();
 
   String get myUserDpUrl => _userService.myUserDpUrl;
-  String get myname => _userService.baseUser.name ?? "";
+  String get myname => _userService.myUserName ?? "";
   String get myUsername => _userService.baseUser.username ?? "";
-  String get myDob => _userService.baseUser.dob ?? "";
-  String get myEmail => _userService.baseUser.email ?? "";
-  String get myGender => _userService.baseUser.gender ?? "";
+  String get myDob => _userService.dob ?? "";
+  String get myEmail => _userService.email ?? "";
+  String get myGender => _userService.gender ?? "";
   String get myMobile => _userService.baseUser.mobile ?? "";
-  bool get isEmailVerified => _userService.baseUser.isEmailVerified;
+  bool get isEmailVerified => _userService.isEmailVerified;
   bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
   bool get isApplockLoading => _isApplockLoading;
@@ -339,6 +339,7 @@ class UserProfileVM extends BaseModel {
   }
 
   bool _checkForChanges() {
+    if (isNewUser) return false;
     if (myname != nameController.text.trim() ||
         myEmail != emailController.text.trim() ||
         isDOBChanged() ||
@@ -352,7 +353,9 @@ class UserProfileVM extends BaseModel {
     if (nameController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         genderController.text.isNotEmpty &&
-        dateFieldController.text.isNotEmpty) return true;
+        dateFieldController.text.isNotEmpty &&
+        monthFieldController.text.isNotEmpty &&
+        yearFieldController.text.isNotEmpty) return true;
     BaseUtil.showNegativeAlert("Empty fields", "please fill all fields");
     return false;
   }
@@ -384,6 +387,17 @@ class UserProfileVM extends BaseModel {
       return "O";
     else
       return "M";
+  }
+
+  setGenderField() {
+    if (gen == 1)
+      return "Male";
+    else if (gen == 0)
+      return "Female";
+    else if (gen == -1)
+      return "Others";
+    else
+      return "Male";
   }
 
   signout() async {
