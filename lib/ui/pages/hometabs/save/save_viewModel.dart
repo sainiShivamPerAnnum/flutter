@@ -44,6 +44,7 @@ class SaveViewModel extends BaseModel {
 
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
+  List<BlogPostModelByCategory> _blogPostsByCategory;
   bool _isLoading = false;
   bool _isChallenegsLoading = false;
   List<String> _sellingReasons = [];
@@ -61,6 +62,8 @@ class SaveViewModel extends BaseModel {
 
   List<EventModel> get ongoingEvents => this._ongoingEvents;
   List<BlogPostModel> get blogPosts => this._blogPosts;
+  List<BlogPostModelByCategory> get blogPostsByCategory =>
+      this._blogPostsByCategory;
   bool get isLoading => _isLoading;
   bool get isChallengesLoading => _isChallenegsLoading;
   List<String> get sellingReasons => _sellingReasons;
@@ -215,9 +218,30 @@ class SaveViewModel extends BaseModel {
     final response = await _saveRepo.getBlogs(30);
     blogPosts = response.model;
     blogPosts.sort(((a, b) => a.acf.categories.compareTo(b.acf.categories)));
+    this._blogPostsByCategory = getAllBlogsByCategory();
     print(blogPosts.length);
     updateIsLoading(false);
     notifyListeners();
+  }
+
+  List<BlogPostModelByCategory> getAllBlogsByCategory() {
+    List<BlogPostModelByCategory> result = [];
+
+    String cat = this.blogPosts[0].acf.categories;
+    List<BlogPostModel> blogs = [];
+
+    this.blogPosts.forEach((blog) {
+      if (blog.acf.categories != cat) {
+        result.add(new BlogPostModelByCategory(category: cat, blogs: blogs));
+        cat = blog.acf.categories;
+        blogs = [blog];
+      } else {
+        blogs.add(blog);
+      }
+    });
+
+    result.add(new BlogPostModelByCategory(category: cat, blogs: blogs));
+    return result;
   }
 
   /// `Navigation`
@@ -260,8 +284,9 @@ class SaveViewModel extends BaseModel {
 
   navigateToViewAllBlogs() {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: ViewAllBlogsViewConfig,
-        widget: ViewAllBlogsView());
+      state: PageState.addWidget,
+      page: ViewAllBlogsViewConfig,
+      widget: ViewAllBlogsView(),
+    );
   }
 }

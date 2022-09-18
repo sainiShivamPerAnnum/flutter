@@ -161,7 +161,7 @@ class NewAugmontBuyView extends StatelessWidget {
                   onPressed: () async {
                     if (!model.isGoldBuyInProgress) {
                       FocusScope.of(context).unfocus();
-                      model.initiateBuy();
+                      model.initiateBuy(model);
                     }
                     // model.onGoingTxn();
                     // await Future.delayed(Duration(seconds: 5));

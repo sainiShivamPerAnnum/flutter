@@ -51,6 +51,7 @@ class FDrawer extends StatelessWidget {
                               ),
                               child: ProfileImageSE(
                                 radius: SizeConfig.screenWidth * 0.058,
+                                reactive: false,
                               ),
                             ),
                             SizedBox(

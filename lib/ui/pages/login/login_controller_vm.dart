@@ -348,8 +348,8 @@ class LoginControllerViewModel extends BaseModel {
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
-      await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
-      logger.d("User details available: Name: " + user.model.username);
+      await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
+      logger.d("User details available: Name: " + user.model.name);
       if (source == LoginSource.TRUECALLER)
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;

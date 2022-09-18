@@ -49,6 +49,8 @@ class ApiPath {
   static String kVerifyVPAAddress(uid) => '/vpa?uid=$uid';
   static String sendOtp = '/auth/otp';
   static String verifyOtp = '/auth/verify/otp';
+  static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
+  static String logOut(String uid) => "/user/$uid/logout";
 
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
 
@@ -61,6 +63,7 @@ class ApiPath {
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
   static const kCreatePaytmTransaction = "/transaction";
+  static const kProcessPaytmTransaction = "/process";
   get kCreateSubscription => "/subscription";
   get kPauseSubscription => "/subscription/pause";
   get kResumeSubscription => "/subscription/resume";

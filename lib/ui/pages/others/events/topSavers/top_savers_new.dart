@@ -270,6 +270,7 @@ class CampaignView extends StatelessWidget {
                                     children: [
                                       ProfileImageSE(
                                         radius: SizeConfig.profileDPSize,
+                                        reactive: false,
                                       ),
                                       const SizedBox(
                                         height: 10,

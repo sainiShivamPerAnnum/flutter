@@ -31,7 +31,8 @@ enum GTSOURCE {
   poolClub,
   panVerify,
   autosave,
-  game
+  game,
+  prize,
 }
 
 class GTInstantView extends StatefulWidget {

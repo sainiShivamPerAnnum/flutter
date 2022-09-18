@@ -34,6 +34,11 @@ class AppState extends ChangeNotifier {
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
   // Timer _txnTimer;
+  Future _txnFunction;
+  static Timer pollingPeriodicTimer;
+  static bool isIOSTxnInProgress = false;
+  static double currentTxnAmount = 0.0;
+  static String currentTxnOrderId;
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -76,11 +81,6 @@ class AppState extends ChangeNotifier {
 
   // set txnFunction(Future function) {
   //   this._txnFunction = function;
-  //   notifyListeners();
-  // }
-
-  // set txnTimer(Timer timer) {
-  //   this._txnTimer = timer;
   //   notifyListeners();
   // }
 

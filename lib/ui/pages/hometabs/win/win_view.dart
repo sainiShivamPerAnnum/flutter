@@ -12,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -69,26 +71,11 @@ class Win extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
+              double currentWinning = m.userFundWallet?.unclaimedBalance ?? 0;
               return Scaffold(
                 backgroundColor: Colors.transparent,
-                appBar: AppBar(
-                  title: Text(
-                    "Win",
-                    style: TextStyles.rajdhaniSB.title1,
-                  ),
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  actions: [
-                    FelloCoinBar(svgAsset: Assets.aFelloToken),
-                    SizedBox(width: SizeConfig.padding10),
-                    GestureDetector(
-                      onTap: () {
-                        model.openProfile();
-                      },
-                      child: ProfileImageSE(radius: SizeConfig.avatarRadius),
-                    ),
-                    SizedBox(width: SizeConfig.padding20)
-                  ],
+                appBar: FAppBar(
+                  category: 'win',
                 ),
                 body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -123,18 +110,15 @@ class Win extends StatelessWidget {
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
                                     Text(
-                                      m.userFundWallet == null
-                                          ? "-"
-                                          : '₹ ${m.userFundWallet.unclaimedBalance.toString() ?? '-'}',
+
+                                      '₹ ${currentWinning.toString() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
                                     ),
                                     SizedBox(
                                       height: SizeConfig.padding40,
                                     ),
-                                    m.userFundWallet != null &&
-                                            m.userFundWallet.unclaimedBalance >=
-                                                model.minWithdrawPrizeAmt
+                                    currentWinning >= model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
                                             btnText: "Redeem",
                                             onPressed: () {

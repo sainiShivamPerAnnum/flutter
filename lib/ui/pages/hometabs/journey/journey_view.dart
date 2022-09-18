@@ -447,13 +447,17 @@ class Avatar extends StatelessWidget {
           // curve: Curves.decelerate,
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
-          child: GestureDetector(
-            onTap: () => _baseUtil.openProfileDetailsScreen(),
-            child: Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 3, color: Colors.white)),
-              child: ProfileImageSE(radius: SizeConfig.avatarRadius * 1.2),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                width: 3,
+                color: Colors.white,
+              ),
+            ),
+            child: ProfileImageSE(
+              radius: SizeConfig.avatarRadius * 1.2,
+              reactive: false,
             ),
           ),
         );

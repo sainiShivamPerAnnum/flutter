@@ -4,6 +4,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
@@ -137,6 +138,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => GoldenTicketService());
   locator.registerLazySingleton(() => JourneyService());
   locator.registerLazySingleton(() => GoogleSignInService());
+  locator.registerLazySingleton(() => RazorpayModel());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());

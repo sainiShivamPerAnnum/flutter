@@ -12,7 +12,10 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:provider/provider.dart';
+
 
 // ignore: must_be_immutable
 class TransactionDetailsBottomSheet extends StatefulWidget {
@@ -250,7 +253,6 @@ class _TransactionDetailsBottomSheetState
                             _isInvoiceLoading = false;
                             setState(() {});
                             if (generatedPdfFilePath != null) {
-                              setState(() {});
                               OpenFilex.open(generatedPdfFilePath);
                             } else {
                               setState(() {});
