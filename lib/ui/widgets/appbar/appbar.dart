@@ -33,11 +33,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       title: Row(
         children: [
-          showAvatar
-              ? ProfileImageSE(
-                  // radius: SizeConfig.roundedButtonRadius,
-                  )
-              : SizedBox(),
+          showAvatar ? ProfileImageSE() : SizedBox(),
           Text(
             '${title ?? ''}',
             style: TextStyles.rajdhaniSB.title3,

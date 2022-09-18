@@ -598,12 +598,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       Future.delayed(
           Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
 
-      if (avatarRemoteMlIndex > 2)
-        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-          if (res)
-            _gtService.showInstantGoldenTicketView(
-                title: 'Congratulations!', source: GTSOURCE.newuser);
-        });
+      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+        if (res)
+          _gtService.showInstantGoldenTicketView(
+              title: 'Congratulations!', source: GTSOURCE.newuser);
+      });
     });
   }
 }

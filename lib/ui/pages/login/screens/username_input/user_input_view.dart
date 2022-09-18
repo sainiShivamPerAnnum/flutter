@@ -33,9 +33,10 @@ class LoginUserNameView extends StatefulWidget {
 
 class LoginUserNameViewState extends State<LoginUserNameView> {
   UsernameInputScreenViewModel model;
-
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return BaseView<UsernameInputScreenViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -153,7 +154,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                   style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
                 ),
               ),
-            SizedBox(height: SizeConfig.padding80 * 1.4),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         );
       },

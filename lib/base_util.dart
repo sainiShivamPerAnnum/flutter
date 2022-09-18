@@ -33,6 +33,7 @@ import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/widgets/alert_snackbar/alert_snackbar.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -260,6 +261,25 @@ class BaseUtil extends ChangeNotifier {
       BaseUtil.showNegativeAlert(
           "Proflie locked", "Complete milestone 2 to unlock profile");
     }
+  }
+
+  openRechargeModalSheet({int amt, bool isSkipMl}) {
+    if (_userService.userJourneyStats.mlIndex == 1)
+      return BaseUtil.showNegativeAlert("Complete your profile",
+          "You can make deposits only after completing profile");
+    else
+      return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: RechargeModalSheet(
+          amount: amt,
+          skipMl: isSkipMl,
+        ),
+      );
   }
 
   bool get checkKycMissing {

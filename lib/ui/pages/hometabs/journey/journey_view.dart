@@ -298,7 +298,7 @@ class JPageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-      top: (model.isLoading && model.pages != null && model.pages.length > 0)
+      top: (model.isLoading && model.isLoaderRequired)
           ? SizeConfig.pageHorizontalMargins
           : -400,
       duration: Duration(seconds: 1),

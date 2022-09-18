@@ -320,15 +320,7 @@ class GoldAssetCard extends StatelessWidget {
                             ),
                             CustomSaveButton(
                               onTap: () {
-                                return BaseUtil.openModalBottomSheet(
-                                  addToScreenStack: true,
-                                  enableDrag: false,
-                                  hapticVibrate: true,
-                                  isBarrierDismissable: false,
-                                  backgroundColor: Colors.transparent,
-                                  isScrollControlled: true,
-                                  content: RechargeModalSheet(),
-                                );
+                                return BaseUtil().openRechargeModalSheet();
                               },
                               title: 'Save',
                               isFullScreen: true,

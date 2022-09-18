@@ -285,6 +285,7 @@ class ReferralDetailsView extends StatelessWidget {
                               ],
                               builder: (context, m, properties) {
                                 return FittedBox(
+                                  fit: BoxFit.scaleDown,
                                   child: Text(
                                     "${m?.myUserName?.split(" ")?.first ?? ''}",
                                     style: TextStyles.sourceSans.body1.colour(

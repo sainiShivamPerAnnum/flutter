@@ -60,17 +60,14 @@ class JourneyAppBar extends StatelessWidget {
                             horizontal: SizeConfig.padding16),
                         child: Row(
                           children: [
-                            GestureDetector(
-                              onTap: () => _baseUtil.openProfileDetailsScreen(),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                padding: EdgeInsets.all(SizeConfig.padding2),
-                                child: ProfileImageSE(
-                                    radius: SizeConfig.avatarRadius),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
                               ),
+                              padding: EdgeInsets.all(SizeConfig.padding2),
+                              child: ProfileImageSE(
+                                  radius: SizeConfig.avatarRadius),
                             ),
                             SizedBox(width: SizeConfig.padding12),
                             Expanded(

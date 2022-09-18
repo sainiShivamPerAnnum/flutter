@@ -183,17 +183,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                           .didPopRoute();
                                       AppState.backButtonDispatcher
                                           .didPopRoute();
-                                      return BaseUtil.openModalBottomSheet(
-                                        addToScreenStack: true,
-                                        enableDrag: false,
-                                        hapticVibrate: true,
-                                        isBarrierDismissable: true,
-                                        backgroundColor: Colors.transparent,
-                                        isScrollControlled: true,
-                                        content: RechargeModalSheet(
-                                          amount: 250,
-                                          skipMl: true,
-                                        ),
+                                      return BaseUtil().openRechargeModalSheet(
+                                        amt: 250,
+                                        isSkipMl: true,
                                       );
                                     },
                                     width: SizeConfig.screenWidth),

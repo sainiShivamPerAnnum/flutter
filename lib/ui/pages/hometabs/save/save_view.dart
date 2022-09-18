@@ -183,15 +183,7 @@ class SaveNetWorthSection extends StatelessWidget {
               onCardTap: () => saveViewModel.navigateToSaveAssetView(),
               onTap: () {
                 Haptic.vibrate();
-                return BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissable: false,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: RechargeModalSheet(),
-                );
+                return BaseUtil().openRechargeModalSheet();
               },
             ),
             SaveCustomCard(
@@ -201,15 +193,8 @@ class SaveNetWorthSection extends StatelessWidget {
               investedAmount: 0.0,
               onTap: () {
                 Haptic.vibrate();
-                return BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissable: false,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: RechargeModalSheet(),
-                );
+
+                return BaseUtil().openRechargeModalSheet();
               },
             ),
             SizedBox(

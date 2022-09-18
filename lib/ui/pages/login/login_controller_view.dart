@@ -126,14 +126,14 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         ],
                       ),
                     ),
-                    AnimatedContainer(
-                      height: keyboardIsOpen && model.currentPage == 2
-                          ? SizeConfig.screenHeight * 0.1
-                          : 0,
-                      duration: Duration(
-                        milliseconds: 200,
-                      ),
-                    ),
+                    // AnimatedContainer(
+                    //   height: keyboardIsOpen && model.currentPage == 2
+                    //       ? SizeConfig.screenHeight * 0.1
+                    //       : 0,
+                    //   duration: Duration(
+                    //     milliseconds: 200,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -185,7 +185,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                 size: SizeConfig.screenWidth * 0.3),
                             SizedBox(height: SizeConfig.padding12),
                             Text(
-                              "Loading",
+                              "Loading...",
                               style: TextStyles.rajdhani.body0
                                   .colour(UiConstants.primaryColor),
                             )

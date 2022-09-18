@@ -417,6 +417,9 @@ class WinViewModel extends BaseModel {
   }
 
   void navigateToRefer() {
+    if (_userService.userJourneyStats.mlIndex == 1)
+      return BaseUtil.showNegativeAlert("Complete your profile",
+          "You can check referrals only after completing profile");
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,

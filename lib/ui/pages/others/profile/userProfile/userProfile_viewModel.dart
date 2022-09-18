@@ -304,7 +304,9 @@ class UserProfileVM extends BaseModel {
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
+              await _userRepo.getUserById(id: _userService.baseUser.uid);
               _userService.setMyUserName(_userService.baseUser.name);
+              _userService.setEmail(_userService.baseUser.email);
               _userService.setDateOfBirth(_userService.baseUser.dob);
               _userService.setGender(_userService.baseUser.gender);
               genderController.text = setGender();

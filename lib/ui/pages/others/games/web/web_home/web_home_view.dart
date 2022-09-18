@@ -343,15 +343,7 @@ class RechargeBox extends StatelessWidget {
     return rechargeOption.isCustom
         ? InkWell(
             onTap: () {
-              return BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                enableDrag: false,
-                hapticVibrate: true,
-                isBarrierDismissable: false,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                content: RechargeModalSheet(),
-              );
+              return BaseUtil().openRechargeModalSheet();
             },
             child: Container(
               height: SizeConfig.screenWidth * 0.277,
@@ -378,17 +370,8 @@ class RechargeBox extends StatelessWidget {
           )
         : InkWell(
             onTap: () {
-              return BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                enableDrag: false,
-                hapticVibrate: true,
-                isBarrierDismissable: false,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                content: RechargeModalSheet(
-                  amount: rechargeOption.amount,
-                ),
-              );
+              return BaseUtil()
+                  .openRechargeModalSheet(amt: rechargeOption.amount);
             },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
