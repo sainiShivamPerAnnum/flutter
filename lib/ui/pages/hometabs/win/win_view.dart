@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -75,7 +76,7 @@ class Win extends StatelessWidget {
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: FAppBar(
-                  category: 'win',
+                  type: FaqsType.win,
                 ),
                 body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,

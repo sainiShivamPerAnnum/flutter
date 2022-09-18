@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
@@ -53,7 +54,7 @@ class Save extends StatelessWidget {
         return Scaffold(
             backgroundColor: Colors.transparent,
             appBar: FAppBar(
-              category: 'save',
+              type: FaqsType.savings,
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,

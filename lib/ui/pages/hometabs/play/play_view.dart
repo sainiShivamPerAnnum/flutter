@@ -1,11 +1,12 @@
 import 'dart:developer';
-
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class Play extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.transparent,
           appBar: FAppBar(
-            category: 'play',
+            type: FaqsType.play,
           ),
           body: SingleChildScrollView(
             controller: _controller,
