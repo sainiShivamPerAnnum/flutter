@@ -44,13 +44,13 @@ class ProfileImageSE extends StatelessWidget {
             builder: (context, model, properties) {
               log("Avatar Id: ${model?.baseUser?.avatarId}");
               return CircleAvatar(
-                radius: radius,
+                radius: radius ?? SizeConfig.avatarRadius,
                 backgroundColor: Colors.black,
                 child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
                     ? SvgPicture.asset(
                         "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
-                        height: radius * 2,
-                        width: radius * 2,
+                        height: radius ?? SizeConfig.avatarRadius * 2,
+                        width: radius ?? SizeConfig.avatarRadius * 2,
                       )
                     : SizedBox(),
                 backgroundImage:
