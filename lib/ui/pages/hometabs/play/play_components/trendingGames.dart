@@ -85,6 +85,10 @@ class TrendingGames extends StatelessWidget {
                       image: CachedNetworkImageProvider(game.thumbnailUri),
                       fit: BoxFit.cover),
                 ),
+                child: SvgPicture.network(
+                  game.thumbnailUri,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Row(

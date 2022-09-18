@@ -7,6 +7,9 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAs
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -332,21 +335,60 @@ class StaticMilestone extends StatelessWidget {
           child: Transform(
             alignment: Alignment.center,
             transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
-            child: GestureDetector(
-              onTap: () =>
-                  model.showMilestoneDetailsModalSheet(milestone, context),
-              child: Tooltip(
-                  message: milestone.tooltip ?? "Hello World!!",
-                  triggerMode: TooltipTriggerMode.longPress,
-                  child: SourceAdaptiveAssetView(asset: milestone.asset)
-                  // SvgPicture.network(
-                  //   generateAssetUrl(milestone.asset.name),
-                  //   width: model.pageWidth * milestone.asset.width,
-                  //   height: model.pageHeight * milestone.asset.height,
-                  //   fit: BoxFit.cover,
-                  // ),
+            child: model.isInComplete(milestone.index)
+                ? Tooltip(
+                    // message: "Hello World!!",
+                    triggerMode: TooltipTriggerMode.tap,
+                    showDuration: Duration(seconds: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                    ),
+
+                    richMessage: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Container(
+                            decoration: ShapeDecoration(
+                              color: Colors.black,
+                              shape: TooltipShapeBorder(arrowArc: 0.5),
+                              shadows: [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 4.0,
+                                    offset: Offset(2, 2))
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.lock_rounded,
+                                      color: Colors.white,
+                                      size: SizeConfig.iconSize1),
+                                  Text("${milestone.tooltip} Message",
+                                      style: TextStyles.sourceSansSB.body2),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    enableFeedback: true,
+                    margin: EdgeInsets.only(bottom: milestone.asset.height * 2),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding10,
+                      vertical: SizeConfig.padding12,
+                    ),
+                    preferBelow: false,
+                    child: SourceAdaptiveAssetView(asset: milestone.asset),
+                  )
+                : GestureDetector(
+                    onTap: () => model.showMilestoneDetailsModalSheet(
+                        milestone, context),
+                    child: SourceAdaptiveAssetView(asset: milestone.asset),
                   ),
-            ),
           ),
         ),
         if (milestone.index < model.avatarActiveMilestoneLevel)
@@ -359,4 +401,44 @@ class StaticMilestone extends StatelessWidget {
       ],
     );
   }
+}
+
+class TooltipShapeBorder extends ShapeBorder {
+  final double arrowWidth;
+  final double arrowHeight;
+  final double arrowArc;
+  final double radius;
+
+  TooltipShapeBorder({
+    this.radius = 16.0,
+    this.arrowWidth = 20.0,
+    this.arrowHeight = 10.0,
+    this.arrowArc = 0.0,
+  }) : assert(arrowArc <= 1.0 && arrowArc >= 0.0);
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.only(bottom: arrowHeight);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection textDirection}) => null;
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+    rect = Rect.fromPoints(
+        rect.topLeft, rect.bottomRight - Offset(0, arrowHeight));
+    double x = arrowWidth, y = arrowHeight, r = 1 - arrowArc;
+    return Path()
+      ..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius)))
+      ..moveTo(rect.bottomCenter.dx + x / 2, rect.bottomCenter.dy)
+      ..relativeLineTo(-x / 2 * r, y * r)
+      ..relativeQuadraticBezierTo(
+          -x / 2 * (1 - r), y * (1 - r), -x * (1 - r), 0)
+      ..relativeLineTo(-x / 2 * r, -y * r);
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {}
+
+  @override
+  ShapeBorder scale(double t) => this;
 }

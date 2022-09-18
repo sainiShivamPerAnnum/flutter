@@ -15,6 +15,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 
 class RechargeLoadingView extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
@@ -26,124 +27,16 @@ class RechargeLoadingView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.padding32),
-        Text("Summary", style: TextStyles.sourceSansSB.body1),
-        Spacer(),
-        Container(
-          width: SizeConfig.screenWidth * 0.36,
-          height: SizeConfig.screenWidth * 0.36,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                UiConstants.primaryColor.withOpacity(0.4),
-                UiConstants.primaryColor.withOpacity(0.2),
-                UiConstants.primaryColor.withOpacity(0.04),
-                Colors.transparent,
-              ],
-            ),
-          ),
-          alignment: Alignment.center,
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationY(math.pi),
-            child: Image.asset(
-              Assets.digitalGoldBar,
-              width: SizeConfig.screenWidth * 0.24,
-              height: SizeConfig.screenWidth * 0.24,
-            ),
-          ),
-        ),
         Text('Digital Gold', style: TextStyles.rajdhaniSB.body2),
         SizedBox(height: SizeConfig.padding12),
         Text(
           "Safest Digital Investment",
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
-        Container(
-          width: SizeConfig.padding54,
-          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.padding10),
-            color: UiConstants.kModalSheetSecondaryBackgroundColor,
-          ),
-          height: 2,
+        Expanded(
+          child: Lottie.asset(Assets.goldDepostLoadingLottie,
+              height: SizeConfig.screenHeight * 0.7),
         ),
-        Container(
-          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
-          child: Text(
-            "One time investment",
-            style: TextStyles.sourceSansSB.body2,
-          ),
-        ),
-        Container(
-          margin:
-              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            color: UiConstants.darkPrimaryColor,
-          ),
-          child: IntrinsicHeight(
-              child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                      left: SizeConfig.padding16,
-                      top: SizeConfig.padding16,
-                      bottom: SizeConfig.padding16,
-                      right: SizeConfig.padding8),
-                  child: Column(
-                    children: [
-                      Text("INVEST", style: TextStyles.sourceSans.body2),
-                      SizedBox(height: SizeConfig.padding16),
-                      Text("₹ ${BaseUtil.getIntOrDouble(model.goldBuyAmount)}",
-                          style: TextStyles.rajdhaniB.title3),
-                      SizedBox(height: SizeConfig.padding6),
-                      Text(
-                        "${model.goldAmountInGrams} gm",
-                        style: TextStyles.sourceSans.body2
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                      SizedBox(height: SizeConfig.padding8),
-                    ],
-                  ),
-                ),
-              ),
-              VerticalDivider(width: 3),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                      left: SizeConfig.padding8,
-                      top: SizeConfig.padding16,
-                      bottom: SizeConfig.padding16,
-                      right: SizeConfig.padding16),
-                  child: Column(
-                    children: [
-                      Text("GET", style: TextStyles.sourceSans.body2),
-                      SizedBox(height: SizeConfig.padding16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/temp/Tokens.svg',
-                            width: SizeConfig.padding26,
-                            height: SizeConfig.padding26,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding6,
-                          ),
-                          Text((model.goldBuyAmount.toInt()).toString(),
-                              style: TextStyles.rajdhaniB.title3),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          )),
-        ),
-        Spacer(flex: 2),
         Column(
           children: [
             Text(

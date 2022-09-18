@@ -3,12 +3,12 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class NewSquareBackground extends StatelessWidget {
-  const NewSquareBackground({Key key}) : super(key: key);
-
+  const NewSquareBackground({Key key, this.backgroundColor}) : super(key: key);
+  final Color backgroundColor;
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: UiConstants.kBackgroundColor,
+      color: backgroundColor ?? UiConstants.kBackgroundColor,
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenHeight,
       child: Stack(

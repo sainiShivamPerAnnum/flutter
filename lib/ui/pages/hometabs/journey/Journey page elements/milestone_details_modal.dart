@@ -1,14 +1,17 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/skip_milestone_modal.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -166,6 +169,14 @@ class _JourneyMilestoneDetailsModalSheetState
                                 btnText: "Let's Go",
                                 onPressed: () {
                                   AppState.backButtonDispatcher.didPopRoute();
+                                  if (widget.milestone.index == 1)
+                                    return AppState
+                                            .delegate.appState.currentAction =
+                                        PageAction(
+                                            page: UserProfileDetailsConfig,
+                                            state: PageState.addWidget,
+                                            widget: UserProfileDetails(
+                                                isNewUser: true));
                                   if (widget.milestone.actionUri != null &&
                                       widget.milestone.actionUri.isNotEmpty)
                                     AppState.delegate.parseRoute(

@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -49,6 +50,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String _dob;
   String _gender;
   String _idToken;
+  String _avatarId;
+  String _email;
 
   UserFundWallet _userFundWallet;
   UserJourneyStatsModel _userJourneyStats;
@@ -64,12 +67,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
 
+  String get avatarId => _avatarId;
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
-
+  String get email => _email;
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
@@ -100,6 +104,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         "My user dp url updated in userservice, property listeners notified");
   }
 
+  setMyAvatarId(String avId) {
+    _avatarId = avId;
+    notifyListeners(UserServiceProperties.myAvatarId);
+    _logger.d(
+        "My user avatar Id updated in userservice, property listeners notified");
+  }
+
   setMyUserName(String name) {
     _myUserName = name;
     notifyListeners(UserServiceProperties.myUserName);
@@ -122,7 +133,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setEmail(String email) {
-    _baseUser.email = email;
+    _email = email;
     notifyListeners(UserServiceProperties.myEmail);
     _logger
         .d("My user email updated in userservice, property listeners notified");
@@ -394,7 +405,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       BaseUtil.openDialog(
         isBarrierDismissable: false,
         addToScreenStack: true,
-        content: AppDefaultDialog(
+        content: ConfirmationDialog(
           title: "Request Permission",
           description:
               "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
@@ -459,11 +470,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
-      if (url != null) {
+      final updateUserAvatarResponse = await _userRepo.updateUser(
+          dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser.uid);
+      if (url != null &&
+          updateUserAvatarResponse.isSuccess() &&
+          updateUserAvatarResponse.model) {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
         setMyUserDpUrl(url);
-        baseUser.avatarId = 'CUSTOM';
+        setMyAvatarId('CUSTOM');
         //_baseUtil.setDisplayPictureUrl(url);
         _logger.d('Final DP Uri: $url');
         return true;

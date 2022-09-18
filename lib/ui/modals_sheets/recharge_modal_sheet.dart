@@ -29,11 +29,15 @@ class RechargeModalSheet extends StatefulWidget {
 class _RechargeModalSheetState extends State<RechargeModalSheet>
     with WidgetsBindingObserver {
   final PaytmService _paytmService = locator<PaytmService>();
+  final TransactionService _txnService = locator<TransactionService>();
   AppLifecycleState appLifecycleState;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _txnService.currentTransactionState = TransactionState.idleTrasantion;
+    });
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -112,10 +116,11 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
       return CongratulatoryView();
-    } else if (txnService.currentTransactionState ==
-        TransactionState.successCoinTransaction) {
-      return CongratulatoryCoinView();
     }
+    // else if (txnService.currentTransactionState ==
+    //     TransactionState.successCoinTransaction) {
+    //   return CongratulatoryCoinView();
+    // }
     return RechargeLoadingView(model: model);
   }
 
@@ -124,14 +129,15 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
       return SizeConfig.screenHeight * 0.9;
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
-      return SizeConfig.screenHeight * 0.9;
+      return SizeConfig.screenHeight * 0.95;
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
       return SizeConfig.screenHeight;
-    } else if (txnService.currentTransactionState ==
-        TransactionState.successCoinTransaction) {
-      return SizeConfig.screenHeight;
     }
+    // else if (txnService.currentTransactionState ==
+    //     TransactionState.successCoinTransaction) {
+    //   return SizeConfig.screenHeight;
+    // }
     return 0;
   }
 
@@ -163,11 +169,14 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
       );
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
-      return NewSquareBackground();
-    } else if (txnService.currentTransactionState ==
-        TransactionState.successCoinTransaction) {
-      return NewSquareBackground();
+      return Container(
+        color: UiConstants.kBackgroundColor2,
+      );
     }
+    // else if (txnService.currentTransactionState ==
+    //     TransactionState.successCoinTransaction) {
+    //   return NewSquareBackground();
+    // }
     return Container();
   }
 }

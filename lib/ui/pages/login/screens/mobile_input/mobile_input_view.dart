@@ -1,9 +1,7 @@
-import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
-
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,38 +30,41 @@ class LoginMobileViewState extends State<LoginMobileView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding80),
-            SvgPicture.asset('assets/svg/flag_svg.svg'),
-            SizedBox(height: SizeConfig.padding80),
+            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
             Text(
-              'Hey!',
+              'Get Started!',
               style: TextStyles.rajdhaniB.title2,
             ),
-            SizedBox(height: SizeConfig.padding12),
-            Text(
-              'Enter mobile number to sign up',
-              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-            ),
-            SizedBox(height: SizeConfig.padding40),
+            SizedBox(height: SizeConfig.padding32),
+            // Text(
+            //   'Enter mobile number to sign up',
+            //   style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
+            // ),
+            // SizedBox(height: SizeConfig.padding40),
             //input
             Form(
               key: model.formKey,
-              child: LogInTextField(
-                hintText: '0000000000',
-                textFieldKey: model.phoneFieldKey,
-                textInputType: TextInputType.phone,
-                inputFormatter: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+              child: AppTextField(
+                hintText: ' Enter mobile number',
+                isEnabled: true,
+                focusNode: model.mobileFocusNode,
+                key: model.phoneFieldKey,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
-                controller: model.mobileController,
+                prefixText: "+91 ",
+                prefixTextStyle: TextStyles.sourceSans.body3,
+                scrollPadding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom >
+                            SizeConfig.screenHeight / 3
+                        ? SizeConfig.screenHeight * 0.1
+                        : 0),
+                textStyle: TextStyles.sourceSans.body3,
+                textEditingController: model.mobileController,
                 onTap: model.showAvailablePhoneNumbers,
                 validator: (value) => model.validateMobile(),
-                onChanged: (val) {
-                  if (val.length == 10) FocusScope.of(context).unfocus();
-                },
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins * 2),
               ),
             ),
             Spacer(),
@@ -88,11 +89,44 @@ class LoginMobileViewState extends State<LoginMobileView> {
             ),
             SizedBox(
               height:
-                  SizeConfig.screenWidth * 0.3 + SizeConfig.viewInsets.bottom,
+                  SizeConfig.screenWidth * 0.1 + SizeConfig.viewInsets.bottom,
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class SignupHeroAsset extends StatelessWidget {
+  final String asset;
+  const SignupHeroAsset({Key key, @required this.asset}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth * 0.54,
+      height: SizeConfig.screenWidth * 0.54,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          colors: [
+            UiConstants.tertiarySolid.withOpacity(0.6),
+            UiConstants.primaryColor.withOpacity(0.4),
+            UiConstants.primaryColor.withOpacity(0.2),
+            UiConstants.primaryColor.withOpacity(0.05),
+            Colors.transparent
+          ],
+          center: Alignment.center,
+          tileMode: TileMode.clamp,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        asset,
+        height: SizeConfig.onboardingAssetsDimens,
+        width: SizeConfig.onboardingAssetsDimens,
+      ),
     );
   }
 }

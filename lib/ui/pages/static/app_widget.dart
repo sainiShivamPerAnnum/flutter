@@ -36,6 +36,7 @@ class AppTextField extends StatelessWidget {
     @required this.textEditingController,
     @required this.isEnabled,
     @required this.validator,
+    this.onTap,
     //NOTE: Pass [] If inputformatters are not required
     this.inputFormatters,
     this.hintText = '',
@@ -43,6 +44,7 @@ class AppTextField extends StatelessWidget {
     this.borderRadius,
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
+    this.prefixIcon,
     this.prefixText,
     this.prefixTextStyle,
     this.onChanged,
@@ -50,13 +52,17 @@ class AppTextField extends StatelessWidget {
     this.textStyle,
     this.suffixText,
     this.suffixTextStyle,
+    this.scrollPadding,
     this.suffix,
     this.contentPadding,
     this.inputDecoration,
     this.fillColor,
     this.focusNode,
+    this.maxLength,
     this.textCapitalization = TextCapitalization.none,
     this.suffixIconConstraints,
+    this.margin,
+    this.autovalidateMode,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -68,20 +74,27 @@ class AppTextField extends StatelessWidget {
   final bool autoFocus;
   final BorderRadius borderRadius;
   final Widget suffixIcon;
+  final Widget prefixIcon;
   final String prefixText;
   final TextStyle prefixTextStyle;
   final String suffixText;
   final TextStyle suffixTextStyle;
+  //executes on every change
+  AutovalidateMode autovalidateMode;
   final Function onChanged;
+  final Function onTap;
   final TextAlign textAlign;
   final TextStyle textStyle;
   final Widget suffix;
+  final EdgeInsets scrollPadding;
+  final int maxLength;
   final EdgeInsets contentPadding;
   final InputDecoration inputDecoration;
   final Color fillColor;
   final FocusNode focusNode;
   final TextCapitalization textCapitalization;
   final BoxConstraints suffixIconConstraints;
+  final EdgeInsets margin;
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +108,13 @@ class AppTextField extends StatelessWidget {
               ),
         ),
       ),
+      margin: margin ?? EdgeInsets.zero,
       child: TextFormField(
         validator: validator,
         textCapitalization: textCapitalization,
         focusNode: focusNode,
         enabled: isEnabled,
+        scrollPadding: EdgeInsets.zero,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
         inputFormatters: inputFormatters ?? [],
@@ -112,9 +127,12 @@ class AppTextField extends StatelessWidget {
         textAlign: textAlign,
         maxLines: null,
         minLines: null,
+        maxLength: maxLength,
         autofocus: autoFocus,
         keyboardType: keyboardType,
         onChanged: onChanged,
+        onTap: onTap ?? () {},
+        autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(
               suffixIcon: Padding(
@@ -126,6 +144,7 @@ class AppTextField extends StatelessWidget {
               suffixText: suffixText,
               suffixStyle: suffixTextStyle,
               suffix: suffix,
+              prefixIcon: prefixIcon,
               suffixIconConstraints: suffixIconConstraints ??
                   BoxConstraints(
                     minWidth: 35,
@@ -218,7 +237,7 @@ class AppDropDownField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: SizeConfig.screenWidth * 0.1377,
+      // height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         border: Border.all(
@@ -238,7 +257,7 @@ class AppDropDownField extends StatelessWidget {
           value: value,
           disabledHint: Text(
             disabledHintText,
-            style: TextStyles.body2.colour(
+            style: TextStyles.body3.colour(
               UiConstants.kTextFieldTextColor,
             ),
           ),
@@ -248,7 +267,13 @@ class AppDropDownField extends StatelessWidget {
           dropdownColor: isEnabled
               ? UiConstants.kTextFieldColor
               : UiConstants.kTextFieldColor.withOpacity(0.7),
-          hint: Text(hintText),
+          hint: Text(
+            hintText,
+            style: TextStyles.body3.colour(
+              UiConstants.kTextColor2,
+            ),
+          ),
+
           items: items,
         ),
       ),
