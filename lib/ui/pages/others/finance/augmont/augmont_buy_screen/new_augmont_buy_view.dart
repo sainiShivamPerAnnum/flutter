@@ -51,6 +51,7 @@ class NewAugmontBuyView extends StatelessWidget {
                           height: SizeConfig.iconSize0,
                           color: UiConstants.kpurpleTicketColor,
                         ),
+                        SizedBox(width: SizeConfig.padding10),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: SizeConfig.padding8),
@@ -59,9 +60,10 @@ class NewAugmontBuyView extends StatelessWidget {
                             style: TextStyles.sourceSansSB.body2,
                           ),
                         ),
+                        SizedBox(width: SizeConfig.padding4),
                         Text(
                           "applied",
-                          style: TextStyles.sourceSans.body4.setOpecity(0.6),
+                          style: TextStyles.sourceSans.body3.setOpecity(0.6),
                         ),
                         SizedBox(
                           width: SizeConfig.padding8,
