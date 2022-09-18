@@ -120,9 +120,10 @@ class LauncherViewModel extends BaseModel {
         [
           // Note: BaseUtil Alredy in Sync
           _baseUtil.init(),
-          _fcmListener.setupFcm(),
         ],
       );
+
+      _fcmListener.setupFcm();
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(

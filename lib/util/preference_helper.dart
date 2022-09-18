@@ -12,6 +12,7 @@ class PreferenceHelper {
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
   static const CACHE_ONBOARDING_COMPLETION = "onboardingCompletion";
+  static const FCM_TOKEN = "fcm_token";
 
   static SharedPreferences _prefs;
 

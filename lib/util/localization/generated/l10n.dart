@@ -583,11 +583,11 @@ class S {
     );
   }
 
-  /// `Stable Fello`
-  String get stableFelloText {
+  /// `Fello Flo`
+  String get felloFloText {
     return Intl.message(
-      'Stable Fello',
-      name: 'stableFelloText',
+      'Fello Flo',
+      name: 'felloFloText',
       desc: '',
       args: [],
     );
