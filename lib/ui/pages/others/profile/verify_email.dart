@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -165,8 +166,8 @@ class VerifyEmailState extends State<VerifyEmail> {
       ApiResponse<bool> res = await _userRepo.updateUser(
         uid: _userService.baseUser.uid,
         dMap: {
-          'email': _userService.baseUser.email,
-          'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+          BaseUser.fldEmail: _userService.baseUser.email,
+          BaseUser.fldIsEmailVerified: _userService.baseUser.isEmailVerified,
         },
       );
 
@@ -214,8 +215,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         ApiResponse<bool> res = await _userRepo.updateUser(
           uid: _userService.baseUser.uid,
           dMap: {
-            'email': _userService.baseUser.email,
-            'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+            BaseUser.fldEmail: _userService.baseUser.email,
+            BaseUser.fldIsEmailVerified: _userService.baseUser.isEmailVerified,
           },
         );
         if (res.model) {

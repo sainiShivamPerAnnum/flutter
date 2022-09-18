@@ -93,6 +93,7 @@ class InitAutosaveCard extends StatelessWidget {
                 subTitle:
                     'Invest safely in Gold with our Auto SIP to win tokens',
               ),
+              Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
               SizedBox(
                 height: SizeConfig.padding32,
               ),
@@ -120,10 +121,8 @@ class InitAutosaveCard extends StatelessWidget {
                           constraints: BoxConstraints(
                             maxWidth: SizeConfig.screenWidth * 0.5,
                           ),
-                          child: Text(
-                            'Invest in Fello Autosave today',
-                            style: TextStyles.sourceSans.bold.title5,
-                          ),
+                          child: Text('Invest in Fello Autosave today',
+                              style: TextStyles.sourceSans.bold.body1),
                         ),
                         SizedBox(
                           height: SizeConfig.padding10,
@@ -145,8 +144,9 @@ class InitAutosaveCard extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: SizeConfig.padding20,
+                height: SizeConfig.padding32,
               ),
+              Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
             ],
           ),
         ),

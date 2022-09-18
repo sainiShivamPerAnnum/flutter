@@ -451,7 +451,7 @@ class Avatar extends StatelessWidget {
               ),
             ),
             child: ProfileImageSE(
-              radius: SizeConfig.avatarRadius * 0.8,
+              radius: SizeConfig.avatarRadius * 0.9,
               reactive: false,
             ),
           ),

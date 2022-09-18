@@ -160,7 +160,7 @@ class CongratulatoryView extends StatelessWidget {
             child: Text(
               "START PLAYING",
               style:
-                  TextStyles.rajdhaniSB.title4.colour(UiConstants.primaryColor),
+                  TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),
           )
         ],

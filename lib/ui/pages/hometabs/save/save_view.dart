@@ -71,7 +71,7 @@ class Save extends StatelessWidget {
                   // -- Break --
                   AutosaveCard(),
                   SizedBox(
-                    height: SizeConfig.padding32,
+                    height: SizeConfig.padding10,
                   ),
                   // -- Break --
                   TitleSubtitleContainer(

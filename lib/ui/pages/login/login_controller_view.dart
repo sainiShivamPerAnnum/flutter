@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
@@ -174,9 +175,19 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: SizeConfig.padding32),
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding40),
                   child: model.state == ViewState.Busy
-                      ? CircularProgressIndicator(strokeWidth: 0.5)
+                      ? Column(
+                          children: [
+                            FullScreenLoader(size: SizeConfig.padding54),
+                            SizedBox(height: SizeConfig.padding12),
+                            Text(
+                              "Loading",
+                              style: TextStyles.rajdhani.body0
+                                  .colour(UiConstants.primaryColor),
+                            )
+                          ],
+                        )
                       : SizedBox(),
                 ),
               ),

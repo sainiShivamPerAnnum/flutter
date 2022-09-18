@@ -42,53 +42,28 @@ class LauncherView extends StatelessWidget {
               children: <Widget>[
                 Align(
                   alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      model.isFetchingData
-                          ? Lottie.asset(
-                              Assets.felloSplashLoopLogo,
-                            )
-                          : Lottie.asset(
-                              Assets.felloSplashZoomOutLogo,
-                              repeat: false,
-                            ),
-                      // Text(
-                      //   locale.splashTagline,
-                      //   style: TextStyles.body2,
-                      // )
-                    ],
-                  ),
+                  child: model.isFetchingData
+                      ? Lottie.asset(Assets.felloSplashLoopLogo,
+                          height: SizeConfig.screenHeight,
+                          alignment: Alignment.center,
+                          // width: SizeConfig.screenWidth,
+                          fit: BoxFit.cover)
+                      : Lottie.asset(Assets.felloSplashZoomOutLogo,
+                          repeat: false,
+                          height: SizeConfig.screenHeight,
+                          width: SizeConfig.screenWidth,
+                          alignment: Alignment.center,
+                          fit: BoxFit.cover),
                 ),
-                // Positioned(
-                //   bottom: SizeConfig.navBarHeight,
-                //   child: Container(
+                // Align(
+                //   alignment: Alignment.center,
+                //   child: Lottie.asset(
+                //     Assets.felloSplashZoomOutLogo,
+                //     height: SizeConfig.screenHeight,
                 //     width: SizeConfig.screenWidth,
-                //     padding: EdgeInsets.symmetric(
-                //       horizontal: SizeConfig.screenWidth * 0.1,
-                //     ),
-                //     child: Column(
-                //       children: [
-                //         Text(locale.splashSecureText),
-                //         SizedBox(height: 8),
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             Image.asset(Assets.augmontLogo,
-                //                 color: Colors.grey,
-                //                 width: SizeConfig.screenWidth * 0.2),
-                //             SizedBox(width: 16),
-                //             Image.asset(Assets.sebiGraphic,
-                //                 color: Colors.grey,
-                //                 width: SizeConfig.screenWidth * 0.04),
-                //             SizedBox(width: 16),
-                //             Image.asset(Assets.amfiGraphic,
-                //                 color: Colors.grey,
-                //                 width: SizeConfig.screenWidth * 0.04)
-                //           ],
-                //         )
-                //       ],
-                //     ),
+                //     alignment: Alignment.center,
+                //     fit: BoxFit.cover,
+                //     repeat: false,
                 //   ),
                 // ),
                 Align(

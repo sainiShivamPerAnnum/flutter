@@ -53,7 +53,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:math' as math;
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -262,30 +262,6 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static Widget getAppBar(BuildContext context, String title) {
-    return AppBar(
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_rounded,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          AppState.backButtonDispatcher.didPopRoute();
-        },
-      ),
-      elevation: 1.0,
-      backgroundColor: UiConstants.primaryColor,
-      iconTheme: IconThemeData(
-        color: UiConstants.accentColor, //change your color here
-      ),
-      title: Text(title ?? '${Constants.APP_NAME}',
-          style: GoogleFonts.montserrat(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: SizeConfig.largeTextSize)),
-    );
-  }
-
   bool get checkKycMissing {
     bool skFlag = (myUser.isSimpleKycVerified != null &&
         myUser.isSimpleKycVerified == true);
@@ -313,7 +289,9 @@ class BaseUtil extends ChangeNotifier {
         ),
         margin: EdgeInsets.only(
             bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight + SizeConfig.pageHorizontalMargins
+                ? SizeConfig.navBarHeight +
+                    math.max(SizeConfig.viewInsets.bottom,
+                        SizeConfig.pageHorizontalMargins)
                 : SizeConfig.pageHorizontalMargins,
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.pageHorizontalMargins),

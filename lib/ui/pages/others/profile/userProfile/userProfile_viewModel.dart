@@ -294,12 +294,12 @@ class UserProfileVM extends BaseModel {
           await _userRepo.updateUser(
             uid: _userService.baseUser.uid,
             dMap: {
-              'name': _userService.baseUser.name,
-              'dob': _userService.baseUser.dob,
-              'gender': _userService.baseUser.gender,
+              BaseUser.fldName: _userService.baseUser.name,
+              BaseUser.fldDob: _userService.baseUser.dob,
+              BaseUser.fldGender: _userService.baseUser.gender,
               BaseUser.fldIsEmailVerified:
                   _userService.baseUser.isEmailVerified,
-              'email': _userService.baseUser.email
+              BaseUser.fldEmail: _userService.baseUser.email
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
@@ -620,8 +620,8 @@ class UserProfileVM extends BaseModel {
     await _userRepo.updateUser(
       uid: _userService.baseUser.uid,
       dMap: {
-        'userPrefsAl': val,
-        'userPrefsTn': _userService.baseUser.userPreferences.getPreference(
+        'mUserPrefsAl': val,
+        'mUserPrefsTn': _userService.baseUser.userPreferences.getPreference(
               Preferences.TAMBOLANOTIFICATIONS,
             ) ==
             1,
@@ -642,8 +642,8 @@ class UserProfileVM extends BaseModel {
       await _userRepo.updateUser(
         uid: _userService.baseUser.uid,
         dMap: {
-          'userPrefsTn': val,
-          'userPrefsAl': _userService.baseUser.userPreferences.getPreference(
+          'mUserPrefsTn': val,
+          'mUserPrefsAl': _userService.baseUser.userPreferences.getPreference(
                 Preferences.APPLOCK,
               ) ==
               1,
