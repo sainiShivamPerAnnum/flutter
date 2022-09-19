@@ -208,8 +208,12 @@ class SaveViewModel extends BaseModel {
   getSaveViewBlogs() async {
     updateIsLoading(true);
     final response = await _saveRepo.getBlogs(5);
-    blogPosts = response.model;
-    print(blogPosts.length);
+    if (response.isSuccess()) {
+      blogPosts = response.model;
+      print(blogPosts.length);
+    } else {
+      print(response.errorMessage);
+    }
     updateIsLoading(false);
     notifyListeners();
   }

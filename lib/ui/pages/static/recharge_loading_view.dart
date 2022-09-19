@@ -4,6 +4,7 @@ import "dart:math" as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -20,7 +21,10 @@ import 'package:lottie/lottie.dart';
 class RechargeLoadingView extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   RechargeLoadingView({@required this.model});
-  final TransactionService _txnService = locator<TransactionService>();
+
+  final _txnService = locator<TransactionService>();
+  final _paytmService = locator<PaytmService>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,9 +78,13 @@ class RechargeLoadingView extends StatelessWidget {
                 begin: Duration(seconds: 30),
                 end: Duration.zero,
               ),
-              onEnd: () {
+              onEnd: () async {
+                await _paytmService
+                    .handleTransactionProcessing(AppState.pollingPeriodicTimer);
+
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoingTransaction) return;
+
                 AppState.pollingPeriodicTimer?.cancel();
 
                 _txnService.currentTransactionState =
