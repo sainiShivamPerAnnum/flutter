@@ -13,6 +13,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -46,6 +47,7 @@ class WebHomeViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
+  final _coinService = locator<UserCoinService>();
   final GameRepo _gamesRepo = locator<GameRepo>();
 
   //Local Variables
@@ -82,6 +84,7 @@ class WebHomeViewModel extends BaseModel {
     )
   ];
   String gameToken;
+  int _currentCoinValue;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -92,6 +95,7 @@ class WebHomeViewModel extends BaseModel {
   String get sessionID => _sessionId;
   get isLoading => this._isLoading;
   GameModel get currentGameModel => _currentGameModel;
+  int get currentCoinValue => _currentCoinValue;
 
   set isLoading(value) {
     this._isLoading = value;
@@ -133,6 +137,7 @@ class WebHomeViewModel extends BaseModel {
     // scrollController = _lbService.parentController;
     // pageController = new PageController(initialPage: 0);
     // refreshPrizes();
+    fetchUsersCurrentCoins();
     isLoading = false;
   }
 
@@ -191,6 +196,11 @@ class WebHomeViewModel extends BaseModel {
 
   Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
     return Api().fetchRealTimePlayingStats(game);
+  }
+
+  fetchUsersCurrentCoins() {
+    _currentCoinValue = _coinService.flcBalance;
+    notifyListeners();
   }
 
   launchGame() {

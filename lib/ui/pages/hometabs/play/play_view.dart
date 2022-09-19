@@ -1,9 +1,10 @@
 import 'dart:developer';
 import 'package:felloapp/core/enums/faqTypes.dart';
+
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
@@ -37,23 +38,17 @@ class Play extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TrendingGamesSection(model: model),
                 GOWCard(
                   model: model,
                 ),
-                GameTitle(title: 'Trending'),
-                TrendingGamesSection(model: model),
-                GameTitle(title: 'Enjoy more Games'),
-                MoreGamesSection(model: model),
-                InfoComponent(
+                InfoComponent2(
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
-                  onStateChanged: () {
-                    _controller.animateTo(_controller.position.maxScrollExtent,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.ease);
-                  },
                 ),
+                MoreGamesSection(model: model),
+                SafetyWidget(),
                 SizedBox(
                   height: SizeConfig.padding80,
                 ),

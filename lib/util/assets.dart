@@ -225,9 +225,13 @@ class Assets {
   static final String aFelloToken = 'assets/temp/token.svg';
 
   // Play Info Section Asset
-  static final String ludoGameAsset = 'assets/svg/play_ludo.svg';
-  static final String leaderboardGameAsset = 'assets/svg/play_leaderboard.svg';
+  // static final String ludoGameAsset = 'assets/svg/play_ludo.svg';
+  // static final String leaderboardGameAsset = 'assets/svg/play_leaderboard.svg';
   static final String giftGameAsset = 'assets/svg/play_gift.svg';
+
+  static final String ludoGameAsset = 'assets/svg/dice_asset_new.svg';
+  static final String leaderboardGameAsset = 'assets/svg/star_asset_new.svg';
+  // static final String giftGameAsset = ' assets/svg/gift_asset_new.svg';
 
   // Web Home View (GameInfoBlock Asset)
   static final String rewardGameAsset = 'assets/svg/reward_svg.svg';

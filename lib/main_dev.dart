@@ -31,12 +31,10 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
       runApp(
-        // DevicePreview(
-        //   enabled: !kReleaseMode,
-        // builder:
-        // (context) =>
-        MyApp(), // Wrap your app
-        // ),
+        DevicePreview(
+          enabled: !kReleaseMode,
+          builder: (context) => MyApp(), // Wrap your app
+        ),
       );
     },
   );

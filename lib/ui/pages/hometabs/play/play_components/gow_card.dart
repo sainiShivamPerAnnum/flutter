@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
@@ -21,112 +23,40 @@ class GOWCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return model.isGamesListDataLoading
-        ? GameCardShimmer()
-        : (model.gow == null
-            ? SizedBox
-            : InkWell(
-                onTap: () {
-                  Haptic.vibrate();
-                  AppState.delegate.parseRoute(
-                    Uri.parse(model.gow.route),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: SizeConfig.padding16,
-                    left: SizeConfig.padding24,
-                    right: SizeConfig.padding24,
-                    bottom: SizeConfig.padding35,
-                  ),
-                  height: SizeConfig.screenWidth * 0.688,
-                  width: SizeConfig.screenWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  ),
-                  child: Column(
-                    children: [
-                      // Hero(
-                      //   tag: model.gow.code,
-                      // child:
-                      Container(
-                        height: SizeConfig.screenWidth * 0.474,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          color: UiConstants.gameCardColor,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness12),
-                            topRight: Radius.circular(SizeConfig.roundness12),
-                          ),
-                        ),
-                        child: SvgPicture.network(
-                          model.gow.thumbnailUri,
-                          fit: BoxFit.fill,
-                        ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GameTitleWithSubTitle(
+          title: "Game of the week",
+          subtitle: "Win upto ${model.gow.prizeAmount}",
+        ),
+        model.isGamesListDataLoading
+            ? GameCardShimmer()
+            : (model.gow == null
+                ? SizedBox
+                : GestureDetector(
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.delegate.parseRoute(
+                        Uri.parse(model.gow.route),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                          vertical: SizeConfig.padding16),
+                      width: double.infinity,
+                      height: SizeConfig.screenWidth * 0.456,
+                      child: SvgPicture.network(
+                        model.gow.thumbnailUri,
+                        width: double.maxFinite,
+                        height: double.maxFinite,
+                        fit: BoxFit.cover,
                       ),
-                      // ),
-                      Container(
-                        height: SizeConfig.screenWidth * 0.213,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          color: UiConstants.gameCardColor,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(SizeConfig.roundness8),
-                            bottomRight: Radius.circular(SizeConfig.roundness8),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding16),
-                              child: Container(
-                                height: SizeConfig.screenWidth * 0.117,
-                                width: SizeConfig.screenWidth * 0.117,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness8),
-                                ),
-                                child: SvgPicture.network(
-                                  model.gow.icon,
-                                  alignment: Alignment.center,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  model.gow.gameName, // 'Cricket',
-                                  style: TextStyles.rajdhaniSB.title5,
-                                ),
-                                GameRewards(prizeAmount: model.gow.prizeAmount),
-                              ],
-                            ),
-                            Spacer(),
-                            AppBarButton(
-                              svgAsset: Assets.aFelloToken,
-                              size: SizeConfig.padding28,
-                              coin: model.gow.playCost.toString(),
-                              borderColor: Colors.transparent,
-                              onTap: () {},
-                              style: TextStyles.sourceSansSB.title4,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ));
+                    ),
+                  )),
+      ],
+    );
   }
 }
 
@@ -142,7 +72,7 @@ class GameCardShimmer extends StatelessWidget {
         horizontal: SizeConfig.padding24,
         vertical: SizeConfig.padding12,
       ),
-      height: SizeConfig.screenWidth * 0.688,
+      height: SizeConfig.screenWidth * 0.688, //52
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
         color: UiConstants.gameCardColor,
