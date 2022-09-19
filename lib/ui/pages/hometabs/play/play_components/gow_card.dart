@@ -30,7 +30,7 @@ class GOWCard extends StatelessWidget {
           title: "Game of the week",
           subtitle: "Win upto ${model.gow.prizeAmount}",
         ),
-        model.isGamesListDataLoading
+        (model.isGamesListDataLoading)
             ? GameCardShimmer()
             : (model.gow == null
                 ? SizedBox
@@ -47,11 +47,15 @@ class GOWCard extends StatelessWidget {
                           vertical: SizeConfig.padding16),
                       width: double.infinity,
                       height: SizeConfig.screenWidth * 0.456,
-                      child: SvgPicture.network(
-                        model.gow.thumbnailUri,
-                        width: double.maxFinite,
-                        height: double.maxFinite,
-                        fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness16)),
+                        child: SvgPicture.network(
+                          model.gow.thumbnailUri,
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   )),
@@ -67,45 +71,20 @@ class GameCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding24,
-        vertical: SizeConfig.padding12,
-      ),
-      height: SizeConfig.screenWidth * 0.688, //52
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        color: UiConstants.gameCardColor,
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-        child: Shimmer.fromColors(
-          baseColor: UiConstants.kUserRankBackgroundColor,
-          highlightColor: UiConstants.kBackgroundColor,
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(SizeConfig.padding16),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                ),
-                height: SizeConfig.screenWidth * 0.400,
-                width: SizeConfig.screenWidth,
-              ),
-              //
-              Container(
-                margin: EdgeInsets.all(SizeConfig.padding16),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                ),
-                height: SizeConfig.screenWidth * 0.120,
-                width: SizeConfig.screenWidth,
-              ),
-            ],
-          ),
+    return Shimmer.fromColors(
+      baseColor: UiConstants.kUserRankBackgroundColor,
+      highlightColor: UiConstants.kBackgroundColor,
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding24,
+          vertical: SizeConfig.padding12,
+        ),
+        height: SizeConfig.screenWidth * 0.456,
+        width: SizeConfig.screenWidth,
+        decoration: BoxDecoration(
+          color: UiConstants.gameCardColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(SizeConfig.roundness16)),
         ),
       ),
     );

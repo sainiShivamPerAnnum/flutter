@@ -77,7 +77,7 @@ class MoreGames extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
-                  color: Colors.transparent,
+                  color: game.shadowColor,
                 ),
                 height: SizeConfig.screenWidth * 0.38,
                 width: SizeConfig.screenWidth * 0.291,
@@ -85,7 +85,7 @@ class MoreGames extends StatelessWidget {
                   borderRadius:
                       BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
                   child: SvgPicture.network(
-                    game.thumbnailUri,
+                    game.icon,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -85,7 +85,7 @@ class WebHomeView extends StatelessWidget {
                             ),
                           ),
                         ],
-                        expandedHeight: SizeConfig.sliverAppExpandableSize,
+                        expandedHeight: SizeConfig.screenWidth * 0.456,
                         flexibleSpace: FlexibleSpaceBar(
                             background: model.isLoading
                                 ? Shimmer.fromColors(
