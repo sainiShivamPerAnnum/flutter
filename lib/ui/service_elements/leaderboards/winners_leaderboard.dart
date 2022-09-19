@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'dart:math' as math;
 
 class WinnerboardView extends StatelessWidget {
   final int count;
@@ -91,7 +93,7 @@ class WinnerboardView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                "Highest Scorers",
+                                "Game Winners",
                                 style: TextStyles.rajdhaniSB.body0.colour(
                                     UiConstants.kSecondaryLeaderBoardTextColor),
                               ),
@@ -102,12 +104,38 @@ class WinnerboardView extends StatelessWidget {
                               )
                             ],
                           ),
-                          Text(
-                            "5K Players\nweekly",
-                            style: TextStyles.sourceSans.body4
-                                .colour(UiConstants.kTextFieldTextColor),
-                            textAlign: TextAlign.end,
-                          )
+                          if (model.winners.length >
+                              getLength(model.winners.length))
+                            GestureDetector(
+                              onTap: () {
+                                Haptic.vibrate();
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                  state: PageState.addWidget,
+                                  widget: AllParticipantsWinnersTopReferers(
+                                    isForTopReferers: false,
+                                    winners: model.winners,
+                                  ),
+                                  page: AllParticipantsWinnersTopReferersConfig,
+                                );
+                              },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: SizeConfig.padding2,
+                                    ),
+                                    child: Text('See All',
+                                        style: TextStyles.rajdhaniSB.body2),
+                                  ),
+                                  SvgPicture.asset(Assets.chevRonRightArrow,
+                                      height: SizeConfig.padding24,
+                                      width: SizeConfig.padding24,
+                                      color: UiConstants.primaryColor)
+                                ],
+                              ),
+                            ),
                         ],
                       ),
                       SizedBox(
@@ -174,7 +202,7 @@ class WinnerboardView extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "Cashprice",
+                                            "Cashprize",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(
                                                     UiConstants.kTextColor2),
@@ -227,9 +255,12 @@ class WinnerboardView extends StatelessWidget {
                                                             snapshot) {
                                                           if (!snapshot
                                                               .hasData) {
-                                                            return Image.asset(
-                                                              Assets
-                                                                  .defaultProfilePlaceholder,
+                                                            int rand = 1 +
+                                                                math.Random()
+                                                                    .nextInt(4);
+                                                            return SvgPicture
+                                                                .asset(
+                                                              "assets/svg/userAvatars/AV$rand.svg",
                                                               width: SizeConfig
                                                                   .iconSize5,
                                                               height: SizeConfig
@@ -269,10 +300,13 @@ class WinnerboardView extends StatelessWidget {
                                                               ),
                                                               errorWidget:
                                                                   (a, b, c) {
-                                                                return Image
+                                                                int rand = 1 +
+                                                                    math.Random()
+                                                                        .nextInt(
+                                                                            4);
+                                                                return SvgPicture
                                                                     .asset(
-                                                                  Assets
-                                                                      .defaultProfilePlaceholder,
+                                                                  "assets/svg/userAvatars/AV$rand.svg",
                                                                   width: SizeConfig
                                                                       .iconSize5,
                                                                   height: SizeConfig
@@ -348,60 +382,6 @@ class WinnerboardView extends StatelessWidget {
                                       SizedBox(
                                         height: SizeConfig.padding16,
                                       ),
-                                      if (model.winners.length >
-                                          getLength(model.winners.length))
-                                        TextButton(
-                                          onPressed: () {
-                                            AppState.delegate.appState
-                                                .currentAction = PageAction(
-                                              state: PageState.addWidget,
-                                              widget:
-                                                  AllParticipantsWinnersTopReferers(
-                                                isForTopReferers: false,
-                                                winners: model.winners,
-                                              ),
-                                              page:
-                                                  AllParticipantsWinnersTopReferersConfig,
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    right:
-                                                        SizeConfig.padding12),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                        top:
-                                                            SizeConfig.padding2,
-                                                      ),
-                                                      child: Text('See All',
-                                                          style: TextStyles
-                                                              .rajdhaniSB
-                                                              .body2),
-                                                    ),
-                                                    SvgPicture.asset(
-                                                        Assets
-                                                            .chevRonRightArrow,
-                                                        height: SizeConfig
-                                                            .padding24,
-                                                        width: SizeConfig
-                                                            .padding24,
-                                                        color: Colors.white)
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        )
                                     ],
                                   )),
                       )

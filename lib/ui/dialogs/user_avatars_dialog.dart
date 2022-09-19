@@ -92,16 +92,24 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
                   ),
           ),
           SizedBox(height: SizeConfig.padding24),
-          ReactivePositiveAppButton(
-            btnText: "Update",
-            onPressed: () => widget.onPresetAvatarSelection(
-                avatarId: "AV${currentSelectedAvatar + 1}"),
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          AppNegativeBtn(
-              btnText: "Cancel",
-              onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-              width: SizeConfig.screenWidth)
+          Row(
+            children: [
+              Expanded(
+                child: AppNegativeBtn(
+                  btnText: "Cancel",
+                  onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+                ),
+              ),
+              SizedBox(width: SizeConfig.padding12),
+              Expanded(
+                child: ReactivePositiveAppButton(
+                  btnText: "Update",
+                  onPressed: () => widget.onPresetAvatarSelection(
+                      avatarId: "AV${currentSelectedAvatar + 1}"),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

@@ -417,6 +417,9 @@ class WinViewModel extends BaseModel {
   }
 
   void navigateToRefer() {
+    if (_userService.userJourneyStats.mlIndex == 1)
+      return BaseUtil.showNegativeAlert("Complete your profile",
+          "You can check referrals only after completing profile");
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
@@ -430,9 +433,8 @@ class WinViewModel extends BaseModel {
       isBarrierDismissable: false,
       hapticVibrate: true,
       content: ConfirmationDialog(
-        confirmAction: (res) async {
-          if (res)
-            await claim(choice, _userService.userFundWallet.unclaimedBalance);
+        confirmAction: () async {
+          await claim(choice, _userService.userFundWallet.unclaimedBalance);
         },
         title: "Confirmation",
         description: choice == PrizeClaimChoice.AMZ_VOUCHER

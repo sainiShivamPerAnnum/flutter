@@ -20,6 +20,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
   LoginMobileViewModel model;
   @override
   Widget build(BuildContext context) {
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -73,23 +74,24 @@ class LoginMobileViewState extends State<LoginMobileView> {
               style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
             ),
             SizedBox(height: SizeConfig.padding16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                BankingLogo(
-                  asset: 'assets/images/augmont_logo.png',
-                ),
-                BankingLogo(
-                  asset: 'assets/images/icici_logo.png',
-                ),
-                BankingLogo(
-                  asset: 'assets/images/cbi_logo.png',
-                ),
-              ],
-            ),
+            if (!isKeyboardOpen)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  BankingLogo(
+                    asset: 'assets/images/augmont_logo.png',
+                  ),
+                  BankingLogo(
+                    asset: 'assets/images/icici_logo.png',
+                  ),
+                  BankingLogo(
+                    asset: 'assets/images/cbi_logo.png',
+                  ),
+                ],
+              ),
             SizedBox(
-              height:
-                  SizeConfig.screenWidth * 0.1 + SizeConfig.viewInsets.bottom,
+              height: SizeConfig.screenWidth * 0.1 +
+                  MediaQuery.of(context).viewInsets.bottom,
             ),
           ],
         );

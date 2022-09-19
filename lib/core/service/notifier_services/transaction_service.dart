@@ -36,6 +36,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -439,11 +440,13 @@ class TransactionService
       if (newFlcBalance > 0) {
         _userCoinService.setFlcBalance(newFlcBalance);
       }
+      _userService.getUserFundWalletData();
       if (currentTransactionState == TransactionState.ongoingTransaction) {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.remove(AppState.screenStack.last);
         }
         currentTransactionState = TransactionState.successTransaction;
+        Haptic.vibrate();
         // await Future.delayed(Duration(milliseconds: 5000), () {});
         // currentTransactionState = TransactionState.successCoinTransaction;
         // await Future.delayed(Duration(milliseconds: 3000), () {});
@@ -467,9 +470,9 @@ class TransactionService
   }
 
   transactionResponseUpdate({String gtId, double amount}) async {
-    AppState.currentTxnAmount = 0;
-    AppState.currentTxnOrderId = "";
-    AppState.currentTxnGms = 0.0;
+    // AppState.currentTxnAmount = 0;
+    // AppState.currentTxnOrderId = "";
+    // AppState.currentTxnGms = 0.0;
     _logger.d("Polling response processing");
     try {
       if (gtId != null) {
@@ -492,12 +495,14 @@ class TransactionService
         _userCoinService.setFlcBalance(
             (_userCoinService.flcBalance + newFlcBalance).toInt());
       }
+      _userService.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoingTransaction) {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.remove(AppState.screenStack.last);
         }
         currentTransactionState = TransactionState.successTransaction;
+        Haptic.vibrate();
         // await Future.delayed(Duration(milliseconds: 5000), () {});
         // currentTransactionState = TransactionState.successCoinTransaction;
         // await Future.delayed(Duration(milliseconds: 3000), () {});

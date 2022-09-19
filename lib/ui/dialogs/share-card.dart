@@ -37,7 +37,7 @@ class ShareCard extends StatelessWidget {
         return "You've won an Amazon Gift Voucher\n worth";
         break;
       case PrizeClaimChoice.GOLD_CREDIT:
-        return "I've won Rs.$prizeAmount as\nDigital Gold on Fello!";
+        return "I've won ₹${prizeAmount.toInt()} as\nDigital Gold on Fello!";
         break;
       default:
         return "You've won Fello Rewards\n worth";

@@ -113,17 +113,21 @@ class CouponModalSheet extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               children: List.generate(
                 model.couponList.length,
-                (i) => Container(
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
-                  child: _buildCoupenListTile(
-                    couponCode: model.couponList[i].code,
-                    desc: model.couponList[i].description,
-                    onTap: () {
-                      model.applyCoupon(model.couponList[i].code);
-                      AppState.backButtonDispatcher.didPopRoute();
-                    },
-                  ),
-                ),
+                (i) => model.couponList[i].code == null ||
+                        model.couponList[i].description == null
+                    ? SizedBox()
+                    : Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                        child: _buildCoupenListTile(
+                          couponCode: model.couponList[i].code,
+                          desc: model.couponList[i].description,
+                          onTap: () {
+                            model.applyCoupon(model.couponList[i].code);
+                            AppState.backButtonDispatcher.didPopRoute();
+                          },
+                        ),
+                      ),
               ),
             ),
             // child: ListView.builder(

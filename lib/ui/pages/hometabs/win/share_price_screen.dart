@@ -41,6 +41,7 @@ class SharePriceScreen extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: double.infinity,
+                margin: EdgeInsets.only(top: kToolbarHeight),
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +91,8 @@ class SharePriceScreen extends StatelessWidget {
                             onPressed: () {
                               model.sharePrizeDetails();
                             },
-                            width: SizeConfig.screenWidth * 0.5)
+                            width: SizeConfig.screenWidth * 0.5),
+                    SizedBox(height: SizeConfig.padding24)
                   ],
                 ),
               ),
@@ -99,13 +101,14 @@ class SharePriceScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      )),
+                    onPressed: () {
+                      AppState.backButtonDispatcher.didPopRoute();
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],

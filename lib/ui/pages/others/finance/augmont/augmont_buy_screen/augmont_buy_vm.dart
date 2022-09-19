@@ -433,7 +433,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         double.tryParse(goldAmountController.text) == null) {
       goldAmountInGrams = 0.0;
     } else {
-      double netTax = goldRates?.cgstPercent ?? 0 + goldRates.sgstPercent;
+      double netTax = goldRates?.cgstPercent ?? 0 + goldRates?.sgstPercent ?? 0;
       double enteredAmount = double.tryParse(goldAmountController.text);
       double postTaxAmount = BaseUtil.digitPrecision(
           enteredAmount - getTaxOnAmount(enteredAmount, netTax));
@@ -466,15 +466,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   }
 
   initiateBuyFromModal() {
-    return BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      enableDrag: false,
-      hapticVibrate: true,
-      isBarrierDismissable: false,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      content: RechargeModalSheet(),
-    );
+    return BaseUtil().openRechargeModalSheet();
   }
 
   processTransaction(String pspApp) async {
@@ -732,9 +724,10 @@ class AugmontGoldBuyViewModel extends BaseModel {
         : false;
 
     bool _status;
-
+    AppState.currentTxnGms = goldAmountInGrams;
     _status = await _paytmService.initiatePaytmPGTransaction(
         amount: buyAmount,
+        skipMl: skipMl,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
         restrictAppInvoke: restrictPaytmAppInvoke);

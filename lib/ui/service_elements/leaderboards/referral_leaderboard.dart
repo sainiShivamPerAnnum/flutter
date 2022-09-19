@@ -9,10 +9,12 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -68,12 +70,44 @@ class ReferralLeaderboard extends StatelessWidget {
                         )
                       ],
                     ),
-                    Text(
-                      "1K Referals\nweekly",
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextFieldTextColor),
-                      textAlign: TextAlign.end,
-                    )
+                    // Text(
+                    //   "1K Referals\nweekly",
+                    //   style: TextStyles.sourceSans.body4
+                    //       .colour(UiConstants.kTextFieldTextColor),
+                    //   textAlign: TextAlign.end,
+                    // )
+                    if (model.referralLeaderBoard.length >
+                        getLength(model.referralLeaderBoard.length))
+                      GestureDetector(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addWidget,
+                            widget: AllParticipantsWinnersTopReferers(
+                              isForTopReferers: true,
+                              referralLeaderBoard: model.referralLeaderBoard,
+                            ),
+                            page: AllParticipantsWinnersTopReferersConfig,
+                          );
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: SizeConfig.padding2,
+                              ),
+                              child: Text('See All',
+                                  style: TextStyles.rajdhaniSB.body2),
+                            ),
+                            SvgPicture.asset(
+                              Assets.chevRonRightArrow,
+                              height: SizeConfig.padding24,
+                              width: SizeConfig.padding24,
+                            )
+                          ],
+                        ),
+                      )
                   ],
                 ),
                 SizedBox(
@@ -313,61 +347,6 @@ class ReferralLeaderboard extends StatelessWidget {
                                       SizedBox(
                                         height: SizeConfig.padding16,
                                       ),
-                                      if (model.referralLeaderBoard.length >
-                                          getLength(
-                                              model.referralLeaderBoard.length))
-                                        TextButton(
-                                          onPressed: () {
-                                            AppState.delegate.appState
-                                                .currentAction = PageAction(
-                                              state: PageState.addWidget,
-                                              widget:
-                                                  AllParticipantsWinnersTopReferers(
-                                                isForTopReferers: true,
-                                                referralLeaderBoard:
-                                                    model.referralLeaderBoard,
-                                              ),
-                                              page:
-                                                  AllParticipantsWinnersTopReferersConfig,
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    right:
-                                                        SizeConfig.padding12),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                        top:
-                                                            SizeConfig.padding2,
-                                                      ),
-                                                      child: Text('See All',
-                                                          style: TextStyles
-                                                              .rajdhaniSB
-                                                              .body2),
-                                                    ),
-                                                    SvgPicture.asset(
-                                                      Assets.chevRonRightArrow,
-                                                      height:
-                                                          SizeConfig.padding24,
-                                                      width:
-                                                          SizeConfig.padding24,
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        )
                                     ],
                                   )),
                       ),

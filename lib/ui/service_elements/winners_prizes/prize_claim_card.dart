@@ -185,10 +185,13 @@ class ClaimButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: AppPositiveBtn(
-        onPressed: onTap,
-        btnText: text ?? "Redeem for amazon pay",
-        width: double.maxFinite,
+      child: Container(
+        margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+        child: AppPositiveBtn(
+          onPressed: onTap,
+          btnText: text ?? "Redeem for amazon pay",
+          width: double.maxFinite,
+        ),
       ),
     );
   }

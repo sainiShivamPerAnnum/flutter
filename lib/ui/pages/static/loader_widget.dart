@@ -4,11 +4,15 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
 class FullScreenLoader extends StatelessWidget {
-  const FullScreenLoader({Key key,this.size}) : super(key: key);
-final double size;
+  final double size;
+
+  const FullScreenLoader({Key key, this.size}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset(Assets.fullScreenLoaderLottie,
-        height:size?? SizeConfig.screenWidth / 2);
+    return Lottie.asset(
+      Assets.fullScreenLoaderLottie,
+      height: size ?? SizeConfig.screenWidth / 2,
+    );
   }
 }

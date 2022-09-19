@@ -211,7 +211,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         await Future.wait([
           // note: Already Setting profile in Root uneccessary Calling
           // setProfilePicture(),
-          // getUserFundWalletData(),
           getUserJourneyStats()
         ]);
         // checkForNewNotifications();

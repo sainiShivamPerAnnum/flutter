@@ -30,6 +30,18 @@ class _InfoComponentState extends State<InfoComponent> {
   bool isBoxOpen = false;
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        setState(() {
+          isBoxOpen = true;
+        });
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.screenWidth,

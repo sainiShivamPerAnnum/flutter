@@ -59,11 +59,11 @@ class OnboardingViewModel extends BaseModel {
     onboardingData = [
       [
         'Save and Invest',
-        'Strong, low risk assets with steady growth',
+        'In strong, low risk assets with steady growth',
       ],
       [
         'Play games',
-        'Get Fello tokens and tambola tickets for your savings and play weekly games'
+        'Earn tambola tickets and Fello tokens for your savings and play weekly games'
       ],
       [
         'Win rewards',

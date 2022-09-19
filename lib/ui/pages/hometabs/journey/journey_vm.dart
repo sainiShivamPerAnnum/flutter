@@ -47,7 +47,10 @@ class JourneyPageViewModel extends BaseModel {
   int get pageCount => _journeyService.pageCount;
   int get avatarActiveMilestoneLevel => _journeyService.avatarRemoteMlIndex;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
-  bool _isLoading = false, isEnd = false, _isRefreshing = false;
+  bool _isLoading = false,
+      isEnd = false,
+      _isRefreshing = false,
+      _isLoaderRequired = false;
 
   AnimationController get controller => _journeyService.controller;
 
@@ -62,9 +65,14 @@ class JourneyPageViewModel extends BaseModel {
   // set controller(value) => this._controller = value;
 
   bool get isLoading => this._isLoading;
-
+  bool get isLoaderRequired => this._isLoaderRequired;
   set isLoading(bool value) {
     this._isLoading = value;
+    notifyListeners();
+  }
+
+  set isLoaderRequired(bool value) {
+    this._isLoaderRequired = value;
     notifyListeners();
   }
 
@@ -170,6 +178,7 @@ class JourneyPageViewModel extends BaseModel {
     logger.d("Adding page to top");
     if (!canMorePagesBeFetched()) return;
     isLoading = true;
+    isLoaderRequired = true;
     final prevPageslength = pages.length;
     await _journeyService.fetchMoreNetworkPages();
     logger.d("Total Pages length: ${pages.length}");
@@ -181,6 +190,7 @@ class JourneyPageViewModel extends BaseModel {
       );
     _journeyService.placeAvatarAtTheCurrentMileStone();
     // _journeyService.refreshJourneyPath();
+    isLoaderRequired = false;
     isLoading = false;
   }
 

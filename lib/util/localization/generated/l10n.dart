@@ -14,23 +14,22 @@ import 'intl/messages_all.dart';
 
 class S {
   S();
-
+  
   static S current;
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
+  
+  static const AppLocalizationDelegate delegate =
+    AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       S.current = S();
-
+      
       return S.current;
     });
-  }
+  } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
@@ -555,10 +554,10 @@ class S {
   }
 
   /// `Invested`
-  String get balanceText {
+  String get investedText {
     return Intl.message(
-      'Balance',
-      name: 'balanceText',
+      'Invested',
+      name: 'investedText',
       desc: '',
       args: [],
     );
@@ -584,11 +583,11 @@ class S {
     );
   }
 
-  /// `Stable Fello`
-  String get stableFelloText {
+  /// `Fello Flo`
+  String get felloFloText {
     return Intl.message(
-      'Stable Fello',
-      name: 'stableFelloText',
+      'Fello Flo',
+      name: 'felloFloText',
       desc: '',
       args: [],
     );

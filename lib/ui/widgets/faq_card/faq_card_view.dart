@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -42,12 +43,7 @@ class FAQCardView extends StatelessWidget {
                 model.state == ViewState.Busy
                     ? Container(
                         height: SizeConfig.screenHeight * 0.2,
-                        child: Center(
-                          child: SpinKitWave(
-                            color: UiConstants.primaryColor,
-                            size: 30,
-                          ),
-                        ),
+                        child: Center(child: FullScreenLoader()),
                       )
                     : (model.faqHeaders != null && model.faqHeaders.length > 0
                         ? _buildItems(model, context)
@@ -83,7 +79,7 @@ class FAQCardView extends StatelessWidget {
               child: ExpansionPanelList(
                 animationDuration: Duration(milliseconds: 600),
                 expandedHeaderPadding: EdgeInsets.all(0),
-                dividerColor: UiConstants.kDividerColor,
+                dividerColor: UiConstants.kDividerColor.withOpacity(0.3),
                 elevation: 0,
                 children: List.generate(
                   model.faqHeaders.length,

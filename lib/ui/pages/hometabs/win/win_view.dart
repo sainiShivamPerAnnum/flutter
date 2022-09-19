@@ -23,6 +23,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_winnings.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -38,20 +39,23 @@ import 'package:provider/provider.dart';
 //Following is a dummy list to populate the Fello News section for now
 List<Map<String, dynamic>> dummyFelloNews = [
   {
-    'title': 'Amit won an IPad!',
-    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'title': 'Parul won an iPad',
+    'subTitle':
+        'She referred 112 of his friends to Fello and was the referrer of the month',
     'color': 0xffF79780,
     'asset': Assets.winScreenWinnerAsset,
   },
   {
-    'title': 'Ankita played all 10 games!',
-    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'title': 'Fello Autosave is on fire',
+    'subTitle':
+        'Mre than 40,000 users are now automating their savings using Fello Autosave',
     'color': 0xffEFAF4E,
     'asset': Assets.winScreenAllGamesAsset,
   },
   {
-    'title': 'Sarayu referred fello to 5 friends!',
-    'subTitle': 'Put in a penny everyday and win your dream rewards',
+    'title': 'Aaryan is on a hot streak',
+    'subTitle':
+        'He has been saving daily and consistently for 70 days straight!',
     'color': 0xff93B5FE,
     'asset': Assets.winScreenReferalAsset,
   },
@@ -61,6 +65,7 @@ class Win extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+
     return BaseView<WinViewModel>(
       onModelReady: (model) {
         model.init();
@@ -116,16 +121,30 @@ class Win extends StatelessWidget {
                                           .colour(Colors.white),
                                     ),
                                     SizedBox(
-                                      height: SizeConfig.padding40,
+                                      height: SizeConfig.padding32,
                                     ),
                                     currentWinning >= model.minWithdrawPrizeAmt
                                         ? AppPositiveBtn(
+                                            height:
+                                                SizeConfig.screenWidth * 0.12,
                                             btnText: "Redeem",
                                             onPressed: () {
                                               model.showConfirmDialog(
                                                   PrizeClaimChoice.GOLD_CREDIT);
                                             },
-                                            width: SizeConfig.screenWidth * 0.4)
+                                            width:
+                                                SizeConfig.screenWidth * 0.32)
+
+                                        // : m.userFundWallet
+                                        //             .processingRedemptionBalance >
+                                        //         0
+                                        //     ? Text(
+                                        //         "We're processing your rewards.",
+                                        //         style: TextStyles
+                                        //             .sourceSans.body3
+                                        //             .colour(UiConstants
+                                        //                 .kTextColor2),
+                                        //       )
                                         : Text(
                                             'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
                                             style: TextStyles.sourceSans.body3
@@ -364,7 +383,7 @@ class Win extends StatelessWidget {
                         count: 2,
                       ),
                       SizedBox(
-                        height: SizeConfig.padding44,
+                        height: SizeConfig.padding24,
                       ),
                       //Fello News
                       FelloNewsComponent(),
@@ -420,7 +439,7 @@ class FelloNewsComponent extends StatelessWidget {
               left: SizeConfig.padding24,
             ),
             child: Text(
-              "Fello News",
+              "This Week’s Highlights",
               style: TextStyles.sourceSans.semiBold.colour(Colors.white).title3,
             ),
           ),

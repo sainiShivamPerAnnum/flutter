@@ -17,15 +17,31 @@ import 'package:lottie/lottie.dart';
 class CongratulatoryView extends StatelessWidget {
   CongratulatoryView({Key key}) : super(key: key);
   // final TransactionService _txnService = locator<TransactionService>();
-  final _userservice = locator<UserService>();
+  // final _userservice = locator<UserService>();
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: SizeConfig.padding32),
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: Lottie.asset(
               Assets.goldDepostSuccessLottie,
@@ -37,7 +53,7 @@ class CongratulatoryView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your recharge was successfully processed",
+            "Your investment was successfully processed",
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(
@@ -91,6 +107,7 @@ class CongratulatoryView extends StatelessWidget {
                           bottom: SizeConfig.padding16,
                           right: SizeConfig.padding8),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Invested", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
@@ -111,11 +128,12 @@ class CongratulatoryView extends StatelessWidget {
                           bottom: SizeConfig.padding16,
                           right: SizeConfig.padding16),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Bought", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text("${AppState.currentTxnGms} gms",
-                              style: TextStyles.rajdhaniB.title3),
+                              style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
                       ),
@@ -142,7 +160,7 @@ class CongratulatoryView extends StatelessWidget {
               vertical: SizeConfig.padding12,
             ),
             child: Row(children: [
-              Text("Tokens Won",
+              Text("Gold Balance",
                   style: TextStyles.rajdhani.body3
                       .colour(UiConstants.kBackgroundColor)),
               Spacer(),

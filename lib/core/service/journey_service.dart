@@ -266,10 +266,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
     _logger.d("fcm journey update called: $data");
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
-    if (avatarRemoteMlIndex != 2)
-      GoldenTicketService.goldenTicketId = data["gtId"];
-    else
-      GoldenTicketService.goldenTicketId = null;
+    GoldenTicketService.goldenTicketId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     checkAndAnimateAvatar();
   }
@@ -591,19 +588,18 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();
       // if (gameLevelChangeResult != 0)
-      BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
-          "New Milestones on your way!");
+      // BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
+      //     "New Milestones on your way!");
       updateAvatarLocalLevel();
       baseGlow = 1;
       Future.delayed(
           Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
 
-      if (avatarRemoteMlIndex > 2)
-        _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-          if (res)
-            _gtService.showInstantGoldenTicketView(
-                title: 'Congratulations!', source: GTSOURCE.newuser);
-        });
+      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+        if (res)
+          _gtService.showInstantGoldenTicketView(
+              title: 'Congratulations!', source: GTSOURCE.newuser);
+      });
     });
   }
 }

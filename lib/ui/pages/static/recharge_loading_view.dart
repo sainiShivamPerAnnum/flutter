@@ -4,6 +4,7 @@ import "dart:math" as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -20,7 +21,10 @@ import 'package:lottie/lottie.dart';
 class RechargeLoadingView extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   RechargeLoadingView({@required this.model});
-  final TransactionService _txnService = locator<TransactionService>();
+
+  final _txnService = locator<TransactionService>();
+  final _paytmService = locator<PaytmService>();
+  final int waitTimeInSec = 45;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,7 +32,10 @@ class RechargeLoadingView extends StatelessWidget {
       children: [
         SizedBox(height: SizeConfig.padding32),
         Text('Digital Gold', style: TextStyles.rajdhaniSB.body2),
-        SizedBox(height: SizeConfig.padding12),
+        SizedBox(
+          height: SizeConfig.padding12,
+          width: SizeConfig.screenWidth,
+        ),
         Text(
           "Safest Digital Investment",
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
@@ -46,9 +53,9 @@ class RechargeLoadingView extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding16),
             TweenAnimationBuilder<Duration>(
-              duration: Duration(seconds: 30),
+              duration: Duration(seconds: waitTimeInSec),
               tween: Tween(
-                begin: Duration(seconds: 30),
+                begin: Duration(seconds: waitTimeInSec),
                 end: Duration.zero,
               ),
               onEnd: () {},
@@ -57,7 +64,7 @@ class RechargeLoadingView extends StatelessWidget {
                 return Container(
                   width: SizeConfig.screenWidth * 0.7,
                   child: LinearProgressIndicator(
-                    value: 1 - (seconds / 30),
+                    value: 1 - (seconds / waitTimeInSec),
                     color: UiConstants.primaryColor,
                     backgroundColor: UiConstants.kDarkBackgroundColor,
                   ),
@@ -66,14 +73,18 @@ class RechargeLoadingView extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding16),
             TweenAnimationBuilder<Duration>(
-              duration: Duration(seconds: 30),
+              duration: Duration(seconds: waitTimeInSec),
               tween: Tween(
-                begin: Duration(seconds: 30),
+                begin: Duration(seconds: waitTimeInSec),
                 end: Duration.zero,
               ),
-              onEnd: () {
+              onEnd: () async {
+                await _paytmService
+                    .handleTransactionProcessing(AppState.pollingPeriodicTimer);
+
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoingTransaction) return;
+
                 AppState.pollingPeriodicTimer?.cancel();
 
                 _txnService.currentTransactionState =

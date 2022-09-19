@@ -33,6 +33,7 @@ import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/widgets/alert_snackbar/alert_snackbar.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -262,6 +263,25 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  openRechargeModalSheet({int amt, bool isSkipMl}) {
+    if (_userService.userJourneyStats.mlIndex == 1)
+      return BaseUtil.showNegativeAlert("Complete your profile",
+          "You can make deposits only after completing profile");
+    else
+      return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: RechargeModalSheet(
+          amount: amt ?? 250,
+          skipMl: isSkipMl ?? false,
+        ),
+      );
+  }
+
   bool get checkKycMissing {
     bool skFlag = (myUser.isSimpleKycVerified != null &&
         myUser.isSimpleKycVerified == true);
@@ -278,9 +298,15 @@ class BaseUtil extends ChangeNotifier {
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
         icon: Icon(
           Icons.flag,
@@ -318,9 +344,15 @@ class BaseUtil extends ChangeNotifier {
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
         icon: Icon(
           Icons.assignment_late,

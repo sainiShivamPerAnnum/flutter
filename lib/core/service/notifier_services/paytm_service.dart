@@ -209,8 +209,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     AppState.currentTxnOrderId =
         paytmSubscriptionApiResponse.model.data.orderId;
     AppState.currentTxnAmount = amount;
-    AppState.currentTxnGms =
-        BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax));
+
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
       return false;
@@ -426,8 +425,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         await _paytmRepo.createTransaction(amount, augMap, couponCode, false);
     AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
     AppState.currentTxnAmount = amount;
-    AppState.currentTxnGms =
-        BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax));
+
     _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
     if (paytmSubscriptionApiResponse.code == 400) {
       _logger.e(paytmSubscriptionApiResponse.errorMessage);
@@ -548,37 +546,41 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   }
 
   void handleTransactionPolling() async {
-    AppState.pollingPeriodicTimer =
-        Timer.periodic(Duration(seconds: 5), (timer) async {
-      final res =
-          await _paytmRepo.getTransactionStatus(AppState.currentTxnOrderId);
-      if (res.isSuccess()) {
-        TransactionResponseModel txnStatus = res.model;
-        switch (txnStatus.data.status) {
-          case Constants.TXN_STATUS_RESPONSE_SUCCESS:
-            if (!txnStatus.data.isUpdating) {
-              timer.cancel();
-              // AppState.delegate.appState.txnTimer.cancel();
-              return _txnService.transactionResponseUpdate(
-                amount: AppState.currentTxnAmount,
-                gtId: AppState.currentTxnOrderId,
-              );
-            }
-            break;
-          case Constants.TXN_STATUS_RESPONSE_PENDING:
-            break;
-          case Constants.TXN_STATUS_RESPONSE_FAILURE:
-            // AppState.delegate.appState.isTxnLoaderInView = false;
+    AppState.pollingPeriodicTimer = Timer.periodic(
+      Duration(seconds: 5),
+      this.handleTransactionProcessing,
+    );
+  }
+
+  Future<void> handleTransactionProcessing(Timer timer) async {
+    final res =
+        await _paytmRepo.getTransactionStatus(AppState.currentTxnOrderId);
+    if (res.isSuccess()) {
+      TransactionResponseModel txnStatus = res.model;
+      switch (txnStatus.data.status) {
+        case Constants.TXN_STATUS_RESPONSE_SUCCESS:
+          if (!txnStatus.data.isUpdating) {
             timer.cancel();
             // AppState.delegate.appState.txnTimer.cancel();
-            BaseUtil.showNegativeAlert(
-              'Transaction failed',
-              'Your transaction was unsuccessful. Please try again',
+            return _txnService.transactionResponseUpdate(
+              amount: AppState.currentTxnAmount,
+              gtId: AppState.currentTxnOrderId,
             );
-            break;
-        }
+          }
+          break;
+        case Constants.TXN_STATUS_RESPONSE_PENDING:
+          break;
+        case Constants.TXN_STATUS_RESPONSE_FAILURE:
+          // AppState.delegate.appState.isTxnLoaderInView = false;
+          timer.cancel();
+          // AppState.delegate.appState.txnTimer.cancel();
+          BaseUtil.showNegativeAlert(
+            'Transaction failed',
+            'Your transaction was unsuccessful. Please try again',
+          );
+          break;
       }
-    });
+    }
   }
 
   void showTransactionPendingDialog(

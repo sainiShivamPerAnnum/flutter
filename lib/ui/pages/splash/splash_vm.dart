@@ -27,6 +27,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -40,7 +41,8 @@ class LauncherViewModel extends BaseModel {
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
   final navigator = AppState.delegate.appState;
-
+  AnimationController loopOutlottieAnimationController;
+  int loopLottieDuration = 2500;
   // LOCATORS
   final _baseUtil = locator<BaseUtil>();
   final _fcmListener = locator<FcmListener>();
@@ -120,9 +122,10 @@ class LauncherViewModel extends BaseModel {
         [
           // Note: BaseUtil Alredy in Sync
           _baseUtil.init(),
-          _fcmListener.setupFcm(),
         ],
       );
+
+      _fcmListener.setupFcm();
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -152,21 +155,22 @@ class LauncherViewModel extends BaseModel {
 
     // log(_logoWatch.elapsed.inMilliseconds.toString());
 
-    int delayedSecond = _logoWatch.elapsed.inMilliseconds % 2500;
+    int delayedSecond = _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
 
-    delayedSecond = 2500 - delayedSecond;
+    delayedSecond = loopLottieDuration - delayedSecond;
     log('Delayed seconds: $delayedSecond');
     await Future.delayed(
       new Duration(milliseconds: delayedSecond),
     );
     isFetchingData = false;
+    loopOutlottieAnimationController.forward();
 
     // 21 FPS = 350 millisecods : Cal
     // = 1000 / 60 = 16.66
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 1500),
+      new Duration(milliseconds: 820),
     );
 
     try {

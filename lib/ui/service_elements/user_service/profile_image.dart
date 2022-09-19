@@ -43,24 +43,27 @@ class ProfileImageSE extends StatelessWidget {
           ],
           builder: (context, model, properties) {
             log("Avatar Id: ${model?.baseUser?.avatarId}");
-            return CircleAvatar(
-              radius: radius ?? SizeConfig.avatarRadius,
-              backgroundColor: Colors.black,
-              child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
-                  ? SvgPicture.asset(
-                      "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
-                      height: radius ?? SizeConfig.avatarRadius * 2,
-                      width: radius ?? SizeConfig.avatarRadius * 2,
-                    )
-                  : SizedBox(),
-              backgroundImage:
-                  model.avatarId == 'CUSTOM' || model.myUserDpUrl != null
-                      ? CachedNetworkImageProvider(
-                          model.myUserDpUrl,
-                        )
-                      : AssetImage(
-                          Assets.profilePic,
-                        ),
+            return GestureDetector(
+              onTap:
+                  reactive ? () => _baseUtil.openProfileDetailsScreen() : () {},
+              child: CircleAvatar(
+                radius: radius ?? SizeConfig.avatarRadius,
+                backgroundColor: Colors.black,
+                child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
+                    ? SvgPicture.asset(
+                        "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
+                        fit: BoxFit.cover,
+                      )
+                    : SizedBox(),
+                backgroundImage:
+                    model.avatarId == 'CUSTOM' || model.myUserDpUrl != null
+                        ? CachedNetworkImageProvider(
+                            model.myUserDpUrl,
+                          )
+                        : AssetImage(
+                            Assets.profilePic,
+                          ),
+              ),
             );
           },
         );
