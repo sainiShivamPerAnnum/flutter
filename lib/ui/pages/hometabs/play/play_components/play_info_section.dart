@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/titlesGames.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -145,6 +146,100 @@ class _InfoComponentState extends State<InfoComponent> {
               : SizedBox.shrink(),
         ],
       ),
+    );
+  }
+}
+
+class InfoComponent2 extends StatelessWidget {
+  InfoComponent2({
+    @required this.heading,
+    @required this.assetList,
+    @required this.titleList,
+    Key key,
+  }) : super(key: key);
+
+  String heading;
+  List<String> assetList;
+  List<String> titleList;
+
+  double heightOfObject = SizeConfig.screenWidth * 0.3;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GameTitleWithSubTitle(title: heading),
+        Container(
+          height: heightOfObject + SizeConfig.padding80,
+          margin:
+              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            itemCount: assetList.length,
+            itemBuilder: (context, index) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: index == 0
+                              ? SizeConfig.pageHorizontalMargins
+                              : 0.0,
+                          right: index == assetList.length - 1
+                              ? SizeConfig.pageHorizontalMargins
+                              : 0.0,
+                        ),
+                        height: heightOfObject,
+                        width: heightOfObject,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Colors.white.withOpacity(0.7), width: 0.5),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            assetList[index],
+                            width: heightOfObject / 2.5,
+                          ),
+                        ),
+                      ),
+                      if (index != assetList.length - 1)
+                        Container(
+                          width: SizeConfig.padding44,
+                          height: 0.5,
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.7)),
+                        )
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: SizeConfig.padding14,
+                      left: index == 0 ? SizeConfig.pageHorizontalMargins : 0.0,
+                      right: index == assetList.length - 1
+                          ? SizeConfig.pageHorizontalMargins
+                          : 0.0,
+                    ),
+                    width: heightOfObject,
+                    child: Text(
+                      titleList[index],
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor2),
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
@@ -30,6 +31,8 @@ class WebHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     StreamController controller = StreamController.broadcast();
 
+    ScrollController _controller = ScrollController();
+
     return BaseView<WebHomeViewModel>(
       onModelReady: (model) {
         model.init(game);
@@ -45,47 +48,70 @@ class WebHomeView extends StatelessWidget {
               children: [
                 NewSquareBackground(),
                 CustomScrollView(
+                  controller: _controller,
                   physics: BouncingScrollPhysics(),
                   slivers: [
-                    SliverPersistentHeader(
-                        delegate: MySliverAppBar(
-                      expandedHeight: SizeConfig.screenWidth * 0.5,
-                      game: model.currentGameModel,
-                      isLoading: model.isLoading,
-                    )),
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          SizedBox(
-                            height: SizeConfig.screenWidth * 0.266 / 2 +
-                                SizeConfig.padding20,
+                    SliverLayoutBuilder(builder: (context, constraints) {
+                      final scrolled = constraints.scrollOffset > 0;
+                      return SliverAppBar(
+                        title: scrolled
+                            ? Text(
+                                model.currentGameModel.gameName,
+                                style: TextStyles.rajdhaniB.title5
+                                    .colour(Colors.white),
+                              )
+                            : SizedBox.shrink(),
+                        pinned: true,
+                        centerTitle: false,
+                        backgroundColor:
+                            UiConstants.kSliverAppBarBackgroundColor,
+                        leading: Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  AppState.backButtonDispatcher.didPopRoute();
+                                },
+                                icon: Icon(Icons.arrow_back_ios)),
+                          ],
+                        ),
+                        actions: [
+                          Padding(
+                            padding:
+                                EdgeInsets.only(right: SizeConfig.padding4),
+                            child: Row(
+                              children: [
+                                FelloCoinBar(svgAsset: Assets.aFelloToken),
+                              ],
+                            ),
                           ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: model.isLoading
+                        ],
+                        expandedHeight: SizeConfig.screenWidth * 0.456,
+                        flexibleSpace: FlexibleSpaceBar(
+                            background: model.isLoading
                                 ? Shimmer.fromColors(
                                     baseColor:
                                         UiConstants.kUserRankBackgroundColor,
                                     highlightColor:
                                         UiConstants.kBackgroundColor,
                                     child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade600,
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness5),
-                                      ),
-                                      width: SizeConfig.screenWidth * 0.213,
-                                      height: SizeConfig.screenWidth * 0.053,
+                                      color: Colors.grey,
                                     ),
                                   )
-                                : Text(
-                                    model.currentGameModel.gameName,
-                                    style: TextStyles.rajdhaniB.title2,
-                                  ),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding35,
-                          ),
+                                : Hero(
+                                    tag: model.currentGameModel.code,
+                                    child: SvgPicture.network(
+                                      model.currentGameModel.thumbnailUri,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
+                      );
+                    }),
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          SizedBox(height: SizeConfig.padding40),
+
                           model.isLoading
                               ? Row(
                                   mainAxisAlignment:
@@ -221,12 +247,12 @@ class WebHomeView extends StatelessWidget {
                                 margin: EdgeInsets.only(
                                   top: SizeConfig.padding24,
                                 ),
-                                height: SizeConfig.screenWidth * 0.277,
+                                height: SizeConfig.screenWidth * 0.125,
                                 width: SizeConfig.screenWidth,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   physics: BouncingScrollPhysics(),
-                                  itemCount: 3,
+                                  itemCount: model.rechargeOptions.length,
                                   padding: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding12),
                                   itemBuilder: (ctx, i) {
@@ -237,7 +263,7 @@ class WebHomeView extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding80 * 1.5,
+                                height: SizeConfig.padding80 * 2,
                               ),
                             ],
                           ),
@@ -264,11 +290,68 @@ class WebHomeView extends StatelessWidget {
                     ),
                   ),
                 ),
+                model.currentCoinValue < model.currentGameModel.playCost
+                    ? PlayButtonOverlapper()
+                    : SizedBox.shrink(),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class PlayButtonOverlapper extends StatelessWidget {
+  const PlayButtonOverlapper({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Stack(
+        children: [
+          Container(
+            height: SizeConfig.navBarHeight + SizeConfig.padding64,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: UiConstants.kBackgroundColor.withOpacity(0.5),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness24),
+                    topRight: Radius.circular(SizeConfig.roundness24))),
+          ),
+          Container(
+            padding: EdgeInsets.all(SizeConfig.padding12),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: UiConstants.kBackgroundColor,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness24),
+                    topRight: Radius.circular(SizeConfig.roundness24))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: SizeConfig.padding12),
+                  width: SizeConfig.padding10,
+                  height: SizeConfig.padding10,
+                  decoration: BoxDecoration(
+                    color: UiConstants.kSnackBarNegativeContentColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Text(
+                  "You don’t have enough tokens to play",
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTextColor2),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -346,25 +429,18 @@ class RechargeBox extends StatelessWidget {
               return BaseUtil().openRechargeModalSheet();
             },
             child: Container(
-              height: SizeConfig.screenWidth * 0.277,
-              width: SizeConfig.screenWidth * 0.317,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                  vertical: SizeConfig.padding8),
               decoration: BoxDecoration(
-                color: rechargeOption.color,
+                color: Colors.transparent,
+                border: Border.all(color: Colors.white, width: 0.4),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness8),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Icon(
-                    Icons.add,
-                    size: SizeConfig.screenWidth * 0.1,
-                    color: Colors.grey,
-                  ),
-                  Text(
-                    'Custom',
-                    style: TextStyles.sourceSans.body3,
-                  )
-                ],
+              child: Icon(
+                Icons.add,
+                size: SizeConfig.screenWidth * 0.08,
+                color: Colors.white,
               ),
             ),
           )
@@ -375,62 +451,30 @@ class RechargeBox extends StatelessWidget {
             },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
-              height: SizeConfig.screenWidth * 0.277,
-              width: SizeConfig.screenWidth * 0.317,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                  vertical: SizeConfig.padding8),
               decoration: BoxDecoration(
-                color: rechargeOption.color,
+                color: UiConstants.gameCardColor,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness8),
               ),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Spacer(),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding8,
-                        vertical: SizeConfig.padding8),
-                    width: SizeConfig.screenWidth * 0.148,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness8),
-                    ),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            Assets.aFelloToken,
-                            height: SizeConfig.padding24,
-                          ),
-                          SizedBox(width: SizeConfig.padding4),
-                          Text(
-                            rechargeOption.amount.toString(),
-                            style: TextStyles.sourceSansSB.body1,
-                          ),
-                        ],
-                      ),
-                    ),
+                  Text(
+                    "+  ",
+                    style: TextStyles.sourceSansSB.body1.bold,
                   ),
-                  Spacer(),
-                  Container(
-                    height: SizeConfig.screenWidth * 0.085,
-                    width: SizeConfig.screenWidth * 0.261,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness8)),
-                    child: Center(
-                      child: Text(
-                        '₹${rechargeOption.amount}',
-                        style: TextStyles.rajdhaniB.body3,
-                      ),
-                    ),
+                  SvgPicture.asset(
+                    Assets.aFelloToken,
+                    height: SizeConfig.padding24,
                   ),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  )
+                  SizedBox(width: SizeConfig.padding4),
+                  Text(
+                    rechargeOption.amount.toString(),
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
                 ],
               ),
             ),
@@ -485,104 +529,4 @@ class GameInfoBlock extends StatelessWidget {
       ),
     );
   }
-}
-
-class MySliverAppBar extends SliverPersistentHeaderDelegate {
-  final double expandedHeight;
-  final GameModel game;
-  final bool isLoading;
-  MySliverAppBar({
-    @required this.expandedHeight,
-    @required this.game,
-    this.isLoading = false,
-  });
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Stack(
-      fit: StackFit.expand,
-      clipBehavior: Clip.none,
-      children: [
-        Opacity(
-          opacity: (1 - shrinkOffset / expandedHeight),
-          child: isLoading
-              ? Shimmer.fromColors(
-                  baseColor: UiConstants.kUserRankBackgroundColor,
-                  highlightColor: UiConstants.kBackgroundColor,
-                  child: Container(
-                    color: Colors.grey,
-                  ),
-                )
-              : Hero(
-                  tag: game.code,
-                  child: SvgPicture.network(
-                    game.thumbnailUri,
-                    fit: BoxFit.cover,
-                  )),
-        ),
-        Positioned(
-          top: expandedHeight -
-              SizeConfig.screenWidth * 0.266 / 2 -
-              shrinkOffset,
-          left: SizeConfig.screenWidth / 2 - SizeConfig.screenWidth * 0.266 / 2,
-          child: Opacity(
-            opacity: 1, //(1 - shrinkOffset / expandedHeight),
-            child: isLoading
-                ? Shimmer.fromColors(
-                    baseColor: UiConstants.kUserRankBackgroundColor,
-                    highlightColor: UiConstants.kBackgroundColor,
-                    child: Container(
-                      height: SizeConfig.screenWidth * 0.266,
-                      width: SizeConfig.screenWidth * 0.266,
-                      color: Colors.grey,
-                    ),
-                  )
-                : Container(
-                    height: SizeConfig.screenWidth * 0.266,
-                    width: SizeConfig.screenWidth * 0.266,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 3),
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
-                      // image: DecorationImage(
-                      //   fit: BoxFit.cover,
-                      //   image: NetworkImage(game.thumbnailUri),
-                      // ),
-                    ),
-                    child: SvgPicture.network(
-                      game.icon,
-                      alignment: Alignment.center,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-          ),
-        ),
-        AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          actions: [
-            Row(
-              children: [
-                FelloCoinBar(
-                  size: SizeConfig.padding20,
-                  borderColor: Colors.black,
-                ),
-                SizedBox(width: SizeConfig.padding16)
-              ],
-            )
-          ],
-        ),
-      ],
-    );
-  }
-
-  @override
-  double get maxExtent => expandedHeight;
-
-  @override
-  double get minExtent => kToolbarHeight + SizeConfig.viewInsets.top;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
