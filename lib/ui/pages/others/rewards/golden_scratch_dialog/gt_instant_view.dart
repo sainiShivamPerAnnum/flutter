@@ -90,7 +90,7 @@ class _GTInstantViewState extends State<GTInstantView>
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          backgroundColor: Colors.black.withOpacity(0.85),
+          backgroundColor: Colors.black.withOpacity(0.9),
           body: Container(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,
@@ -182,6 +182,8 @@ class _GTInstantViewState extends State<GTInstantView>
                 Column(
                   children: [
                     SafeArea(
+                        child: Container(
+                      height: kToolbarHeight,
                       child: Row(
                         children: [
                           SizedBox(
@@ -193,7 +195,7 @@ class _GTInstantViewState extends State<GTInstantView>
                           SizedBox(width: SizeConfig.padding20)
                         ],
                       ),
-                    ),
+                    )),
                     //if (model.showMainContent)
                     Expanded(
                       child: AnimatedOpacity(

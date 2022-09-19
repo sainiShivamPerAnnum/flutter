@@ -36,9 +36,10 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         return m.isLeaderboardLoading
             ? LeaderboardShimmer()
             : (m.WebGameLeaderBoard != null &&
-                    m.WebGameLeaderBoard.scoreboard != null &&
-                    (m.userProfilePicUrl.length >=
-                        m.WebGameLeaderBoard.scoreboard.length)
+                    m.WebGameLeaderBoard.scoreboard != null
+                // &&
+                // (m.userProfilePicUrl.length >=
+                //     m.WebGameLeaderBoard.scoreboard.length)
                 ? NewLeaderBoardView(
                     scoreBoard: m.WebGameLeaderBoard.scoreboard,
                     userProfilePicUrl: m.userProfilePicUrl,

@@ -12,6 +12,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class RedeemSucessfulScreen extends StatelessWidget {
   RedeemSucessfulScreen(
@@ -45,9 +46,8 @@ class RedeemSucessfulScreen extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                Image.asset(
-                  Assets.redeemSucessfullAssetPNG,
-                  height: SizeConfig.screenHeight * 0.55,
+                Lottie.asset(
+                  Assets.goldDepostSuccessLottie,
                   width: double.infinity,
                 ),
               ],

@@ -433,9 +433,8 @@ class WinViewModel extends BaseModel {
       isBarrierDismissable: false,
       hapticVibrate: true,
       content: ConfirmationDialog(
-        confirmAction: (res) async {
-          if (res)
-            await claim(choice, _userService.userFundWallet.unclaimedBalance);
+        confirmAction: () async {
+          await claim(choice, _userService.userFundWallet.unclaimedBalance);
         },
         title: "Confirmation",
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
