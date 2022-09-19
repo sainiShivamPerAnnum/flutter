@@ -184,7 +184,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                       AppState.backButtonDispatcher
                                           .didPopRoute();
                                       return BaseUtil().openRechargeModalSheet(
-                                        amt: 250,
+                                        amt: widget.milestone.skipCost['amt'],
                                         isSkipMl: true,
                                       );
                                     },

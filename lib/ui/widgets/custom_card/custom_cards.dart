@@ -109,7 +109,7 @@ class SaveCustomCard extends StatelessWidget {
                                                 TextStyles.sourceSansSB.title4,
                                           )
                                         : Text(
-                                            investedAmount.toString() ??
+                                            "₹" + investedAmount.toString() ??
                                                 0.toString(),
                                             style:
                                                 TextStyles.sourceSansSB.title4,

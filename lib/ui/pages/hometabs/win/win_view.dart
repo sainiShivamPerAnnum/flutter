@@ -115,15 +115,11 @@ class Win extends StatelessWidget {
                                       style: TextStyles.rajdhaniSB
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
-                                    UserWinningsSE(
+                                    Text(
+                                      '₹ ${currentWinning.toString() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
                                     ),
-                                    // Text(
-                                    //   '₹ ${currentWinning.toString() ?? '-'}',
-                                    //   style: TextStyles.title1.extraBold
-                                    //       .colour(Colors.white),
-                                    // ),
                                     SizedBox(
                                       height: SizeConfig.padding32,
                                     ),

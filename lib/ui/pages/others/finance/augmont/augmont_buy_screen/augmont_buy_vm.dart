@@ -727,6 +727,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
     AppState.currentTxnGms = goldAmountInGrams;
     _status = await _paytmService.initiatePaytmPGTransaction(
         amount: buyAmount,
+        skipMl: skipMl,
         augmontRates: goldRates,
         couponCode: appliedCoupon?.code ?? "",
         restrictAppInvoke: restrictPaytmAppInvoke);
