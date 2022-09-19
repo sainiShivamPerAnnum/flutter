@@ -167,20 +167,23 @@ class FcmListener {
   }
 
   Future<void> _saveDeviceToken(String fcmToken) async {
-    String savedToken = PreferenceHelper.getString(PreferenceHelper.FCM_TOKEN);
+    if (_userService.baseUser != null) {
+      String savedToken =
+          PreferenceHelper.getString(PreferenceHelper.FCM_TOKEN);
 
-    if (savedToken == null) logger.d("No FCM token in pref");
+      if (savedToken == null) logger.d("No FCM token in pref");
 
-    if (savedToken != fcmToken) {
-      logger.d(
-          "FCM changed or app is opened for first time, so updating pref and server token");
-      PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken);
-      await _userService.updateClientToken(fcmToken);
-    } else {
-      logger.d("FCM is already updated");
+      if (savedToken != fcmToken) {
+        logger.d(
+            "FCM changed or app is opened for first time, so updating pref and server token");
+        PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken);
+        await _userService.updateClientToken(fcmToken);
+      } else {
+        logger.d("FCM is already updated");
+      }
+
+      _userService.baseUser.client_token = fcmToken;
     }
-
-    _userService.baseUser.client_token = fcmToken;
   }
 
   // TOGGLE THE SUBSCRIPTION
