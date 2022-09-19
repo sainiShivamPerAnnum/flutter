@@ -78,6 +78,10 @@ class WebHomeViewModel extends BaseModel {
       amount: 200,
     ),
     RechargeOption(
+      color: Color(0xff9A3538),
+      amount: 500,
+    ),
+    RechargeOption(
       isCustom: true,
       color: Color(0xff39393C),
       amount: 0,
