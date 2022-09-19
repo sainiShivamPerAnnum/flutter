@@ -266,10 +266,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
     _logger.d("fcm journey update called: $data");
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
-    if (avatarRemoteMlIndex != 2)
-      GoldenTicketService.goldenTicketId = data["gtId"];
-    else
-      GoldenTicketService.goldenTicketId = null;
+    GoldenTicketService.goldenTicketId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     checkAndAnimateAvatar();
   }
