@@ -54,7 +54,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                'Enter OTP',
+                'Enter Username',
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),

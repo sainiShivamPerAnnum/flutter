@@ -21,6 +21,7 @@ class RechargeLoadingView extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   RechargeLoadingView({@required this.model});
   final TransactionService _txnService = locator<TransactionService>();
+  final int waitTimeInSec = 45;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,9 +50,9 @@ class RechargeLoadingView extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding16),
             TweenAnimationBuilder<Duration>(
-              duration: Duration(seconds: 30),
+              duration: Duration(seconds: waitTimeInSec),
               tween: Tween(
-                begin: Duration(seconds: 30),
+                begin: Duration(seconds: waitTimeInSec),
                 end: Duration.zero,
               ),
               onEnd: () {},
@@ -60,7 +61,7 @@ class RechargeLoadingView extends StatelessWidget {
                 return Container(
                   width: SizeConfig.screenWidth * 0.7,
                   child: LinearProgressIndicator(
-                    value: 1 - (seconds / 30),
+                    value: 1 - (seconds / waitTimeInSec),
                     color: UiConstants.primaryColor,
                     backgroundColor: UiConstants.kDarkBackgroundColor,
                   ),
@@ -69,9 +70,9 @@ class RechargeLoadingView extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding16),
             TweenAnimationBuilder<Duration>(
-              duration: Duration(seconds: 30),
+              duration: Duration(seconds: waitTimeInSec),
               tween: Tween(
-                begin: Duration(seconds: 30),
+                begin: Duration(seconds: waitTimeInSec),
                 end: Duration.zero,
               ),
               onEnd: () {

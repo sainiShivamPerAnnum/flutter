@@ -324,16 +324,17 @@ class AppPositiveBtn extends StatelessWidget {
     @required this.btnText,
     @required this.onPressed,
     @required this.width,
+    this.height,
   }) : super(key: key);
   final String btnText;
   final VoidCallback onPressed;
-  final double width;
+  final double width, height;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          height: SizeConfig.screenWidth * 0.1556,
+          height: height ?? SizeConfig.screenWidth * 0.1556,
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(

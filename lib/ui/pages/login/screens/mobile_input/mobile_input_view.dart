@@ -88,8 +88,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
               ],
             ),
             SizedBox(
-              height:
-                  SizeConfig.screenWidth * 0.1 + SizeConfig.viewInsets.bottom,
+              height: SizeConfig.screenWidth * 0.1 +
+                  MediaQuery.of(context).viewInsets.bottom,
             ),
           ],
         );
