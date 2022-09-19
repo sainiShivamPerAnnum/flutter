@@ -71,7 +71,7 @@ class GameCardShimmer extends StatelessWidget {
         horizontal: SizeConfig.padding24,
         vertical: SizeConfig.padding12,
       ),
-      height: SizeConfig.screenWidth * 0.688,
+      height: SizeConfig.screenWidth * 0.688, //52
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
         color: UiConstants.gameCardColor,
