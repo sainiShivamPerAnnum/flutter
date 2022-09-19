@@ -433,7 +433,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
         double.tryParse(goldAmountController.text) == null) {
       goldAmountInGrams = 0.0;
     } else {
-      double netTax = goldRates?.cgstPercent ?? 0 + goldRates.sgstPercent;
+      double netTax = goldRates?.cgstPercent ?? 0 + goldRates?.sgstPercent ?? 0;
       double enteredAmount = double.tryParse(goldAmountController.text);
       double postTaxAmount = BaseUtil.digitPrecision(
           enteredAmount - getTaxOnAmount(enteredAmount, netTax));

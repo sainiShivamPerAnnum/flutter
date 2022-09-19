@@ -1,10 +1,6 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
-import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -154,7 +150,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                   style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
                 ),
               ),
-            SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );
       },
