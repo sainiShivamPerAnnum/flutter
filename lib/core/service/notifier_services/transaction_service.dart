@@ -50,7 +50,6 @@ class TransactionService
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _userCoinService = locator<UserCoinService>();
-  final DBModel _dbModel = locator<DBModel>();
   final GoldenTicketService _gtService = GoldenTicketService();
   final JourneyService _journeyService = locator<JourneyService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
@@ -58,6 +57,7 @@ class TransactionService
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod";
+
   List<UserTransaction> _txnList;
   String lastTxnDocId,
       lastPrizeTxnDocId,

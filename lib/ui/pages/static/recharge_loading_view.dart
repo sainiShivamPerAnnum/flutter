@@ -1,7 +1,5 @@
 import 'dart:developer';
-import "dart:math" as math;
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
@@ -14,8 +12,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 class RechargeLoadingView extends StatelessWidget {
@@ -25,6 +21,7 @@ class RechargeLoadingView extends StatelessWidget {
   final _txnService = locator<TransactionService>();
   final _paytmService = locator<PaytmService>();
   final int waitTimeInSec = 45;
+
   @override
   Widget build(BuildContext context) {
     return Column(
