@@ -138,6 +138,9 @@ class Assets {
   static final String saleSuccessVector =
       'assets/vectors/sale_success_vector.png';
   static final String dropDownVector = 'assets/svg/drop_down_button.svg';
+  static final String dailySaver = 'assets/svg/saver_of_daily_card.svg';
+  static final String weeklySaver = 'assets/svg/saver_of_week_card.svg';
+  static final String monthlySaver = 'assets/svg/saver_of_month_card.svg';
 
   // WIN
 

@@ -21,6 +21,7 @@ import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dar
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/widgets/carousal_widget.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
@@ -218,69 +219,69 @@ class CampaignCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: SizeConfig.padding24, top: SizeConfig.padding16),
+        left: SizeConfig.padding24,
+        top: SizeConfig.padding16,
+        right: SizeConfig.padding16,
+      ),
       child: Container(
-        height: SizeConfig.screenWidth * 0.51,
-        child: ListView.builder(
-          itemCount: saveViewModel.isChallengesLoading
-              ? 2
-              : saveViewModel.ongoingEvents.length,
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return saveViewModel.isChallengesLoading
-                ? Shimmer.fromColors(
+        height: SizeConfig.screenWidth * 0.57,
+        child: saveViewModel.isChallengesLoading
+            ? Shimmer.fromColors(
+                child: Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding16),
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                      color: UiConstants.kBackgroundColor,
+                    ),
                     child: Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding10),
+                      padding: EdgeInsets.all(SizeConfig.padding16),
                       child: Container(
-                        width: SizeConfig.screenWidth * 0.5,
+                        height: SizeConfig.screenWidth * 0.2,
+                        width: SizeConfig.screenWidth,
                         decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                            color: UiConstants.kBackgroundColor),
-                        child: Padding(
-                          padding: EdgeInsets.all(SizeConfig.padding16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(top: SizeConfig.padding28),
-                                child: Center(
-                                  child: Container(
-                                    height: SizeConfig.screenWidth * 0.2,
-                                    width: SizeConfig.screenWidth,
-                                    decoration: BoxDecoration(
-                                        color: UiConstants
-                                            .kSecondaryBackgroundColor),
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                            ],
-                          ),
+                          color: UiConstants.kSecondaryBackgroundColor,
                         ),
                       ),
                     ),
-                    baseColor: UiConstants.kUserRankBackgroundColor,
-                    highlightColor: UiConstants.kBackgroundColor,
-                  )
-                : CampiagnCard(
+                  ),
+                ),
+                baseColor: UiConstants.kUserRankBackgroundColor,
+                highlightColor: UiConstants.kBackgroundColor,
+              )
+            : CarousalWidget(
+                height: SizeConfig.screenWidth * 0.49,
+                width: SizeConfig.screenWidth,
+                widgets: List.generate(
+                  saveViewModel.ongoingEvents.length,
+                  (index) => CampaignCard(
                     event: saveViewModel.ongoingEvents[index],
-                  );
-          },
-        ),
+                  ),
+                ),
+              ),
       ),
     );
   }
 }
 
-class CampiagnCard extends StatelessWidget {
+class CampaignCard extends StatelessWidget {
   final EventModel event;
-  CampiagnCard({this.event});
+
+  const CampaignCard({this.event});
 
   @override
   Widget build(BuildContext context) {
+    final i = event.title.lastIndexOf(' ');
+    final prefix = event.title.substring(0, i);
+    final suffix = event.title.substring(i + 1);
+    final asset = event.type == 'SAVER_MONTHLY'
+        ? Assets.monthlySaver
+        : event.type == 'SAVER_DAILY'
+            ? Assets.dailySaver
+            : Assets.weeklySaver;
+
     return GestureDetector(
       onTap: () {
         AppState.delegate.openTopSaverScreen(event.type);
@@ -288,42 +289,55 @@ class CampiagnCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(right: SizeConfig.padding10),
         child: Container(
-          width: SizeConfig.screenWidth * 0.5,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: event.bgColor.toColor()),
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.padding16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: SizeConfig.padding28),
-                  child: Center(
-                    child: SizedBox(
-                      height: SizeConfig.screenWidth * 0.2,
-                      width: SizeConfig.screenWidth,
-                      child: Image.network(event.image),
-                    ),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            color: UiConstants.kSecondaryBackgroundColor,
+          ),
+          padding: EdgeInsets.only(
+            left: SizeConfig.padding16,
+            right: SizeConfig.padding24,
+            top: SizeConfig.padding16,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    prefix,
+                    style: TextStyles.sourceSans.body1.bold,
                   ),
-                ),
-                Spacer(),
-                Text(
-                  event.title,
-                  style: TextStyles.rajdhaniSB.body0,
-                ),
-                FittedBox(
-                  fit: BoxFit.contain,
-                  child: Container(
-                    width: SizeConfig.screenWidth * 0.5,
-                    child: Text(
-                      event.subtitle,
-                      style: TextStyles.sourceSans.body4,
-                    ),
+                  Text(
+                    suffix.toUpperCase(),
+                    style: TextStyles.sourceSansEB.title50
+                        .letterSpace(0.7)
+                        .colour(
+                          event.color.toColor(),
+                        )
+                        .setHeight(1),
                   ),
-                )
-              ],
-            ),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Container(
+                      width: SizeConfig.screenWidth * 0.4,
+                      padding: EdgeInsets.only(top: SizeConfig.padding8),
+                      child: Text(
+                        event.subtitle,
+                        style: TextStyles.sourceSans.body4,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SvgPicture.asset(
+                asset,
+                height: SizeConfig.screenWidth * 0.3,
+                width: SizeConfig.screenWidth * 0.3,
+              ),
+            ],
           ),
         ),
       ),
