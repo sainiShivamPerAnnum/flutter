@@ -1,5 +1,6 @@
 import "dart:math" as math;
 
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
@@ -19,8 +20,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 class NewAugmontBuyView extends StatelessWidget {
   final int amount;
   final bool skipMl;
+  final TransactionService txnService;
   final AugmontGoldBuyViewModel model;
-  const NewAugmontBuyView({Key key, this.amount, this.skipMl, this.model})
+  const NewAugmontBuyView(
+      {Key key,
+      this.amount,
+      this.skipMl,
+      this.model,
+      @required this.txnService})
       : super(key: key);
 
   @override
@@ -31,9 +38,15 @@ class NewAugmontBuyView extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(height: SizeConfig.padding16),
-        RechargeModalSheetAppBar(model: model),
+        RechargeModalSheetAppBar(
+          model: model,
+          txnService: txnService,
+        ),
         SizedBox(height: SizeConfig.padding32),
-        EnterAmountView(model: model),
+        EnterAmountView(
+          model: model,
+          txnService: txnService,
+        ),
         Spacer(),
         if (model.showCoupons)
           model.couponApplyInProgress
@@ -69,34 +82,39 @@ class NewAugmontBuyView extends StatelessWidget {
                           width: SizeConfig.padding8,
                         ),
                         InkWell(
-                          onTap: () => model.appliedCoupon = null,
+                          onTap: () {
+                            if (txnService.isGoldBuyInProgress) return;
+                            model.appliedCoupon = null;
+                          },
                           child: Icon(Icons.cancel,
                               color: Colors.grey, size: SizeConfig.iconSize1),
                         ),
                       ],
                     )
-                  : GestureDetector(
-                      onTap: () => model.showOfferModal(model),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/temp/ticket.svg',
-                            width: SizeConfig.iconSize0,
-                            height: SizeConfig.iconSize0,
+                  : txnService.isGoldBuyInProgress
+                      ? SizedBox()
+                      : GestureDetector(
+                          onTap: () => model.showOfferModal(model),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/temp/ticket.svg',
+                                width: SizeConfig.iconSize0,
+                                height: SizeConfig.iconSize0,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding8,
+                              ),
+                              Text(
+                                'Apply a coupon code',
+                                style: TextStyles.sourceSans.body2
+                                    .colour(UiConstants.kPrimaryColor),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: SizeConfig.padding8,
-                          ),
-                          Text(
-                            'Apply a coupon code',
-                            style: TextStyles.sourceSans.body2
-                                .colour(UiConstants.kPrimaryColor),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
         SizedBox(
           height: SizeConfig.padding32,
         ),
@@ -151,7 +169,7 @@ class NewAugmontBuyView extends StatelessWidget {
             ),
           ),
         if (!model.augOnbRegInProgress && !model.augRegFailed)
-          model.isGoldBuyInProgress
+          txnService.isGoldBuyInProgress
               ? SpinKitThreeBounce(
                   color: Colors.white,
                   size: 20,
@@ -161,35 +179,10 @@ class NewAugmontBuyView extends StatelessWidget {
                       ? 'Invest'
                       : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
                   onPressed: () async {
-                    if (!model.isGoldBuyInProgress) {
+                    if (!txnService.isGoldBuyInProgress) {
                       FocusScope.of(context).unfocus();
-                      model.initiateBuy(model);
+                      model.initiateBuy();
                     }
-                    // model.onGoingTxn();
-                    // await Future.delayed(Duration(seconds: 5));
-                    // model.successTxn();
-                    // await Future.delayed(Duration(seconds: 5));
-                    // model.enableTxn();
-                    // AppState.backButtonDispatcher.didPopRoute();
-                    // await Future.delayed(Duration(seconds: 5));
-                    // BaseUtil.openModalBottomSheet(
-                    //   addToScreenStack: true,
-                    //   enableDrag: true,
-                    //   boxContraints: BoxConstraints(
-                    //     maxHeight: SizeConfig.screenHeight,
-                    //   ),
-                    //   backgroundColor: UiConstants.kBackgroundColor,
-                    //   borderRadius: BorderRadius.only(
-                    //     topLeft: Radius.circular(SizeConfig.roundness24),
-                    //     topRight: Radius.circular(SizeConfig.roundness24),
-                    //   ),
-                    //   hapticVibrate: true,
-                    //   isBarrierDismissable: true,
-                    //   isScrollControlled: true,
-                    //   content: CongratoryDialog(),
-                    // );
-
-                    // AppState.backButtonDispatcher.didPopRoute();
                   },
                   width: SizeConfig.screenWidth * 0.813,
                 ),
@@ -203,7 +196,8 @@ class NewAugmontBuyView extends StatelessWidget {
 
 class RechargeModalSheetAppBar extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
-  RechargeModalSheetAppBar({@required this.model});
+  final TransactionService txnService;
+  RechargeModalSheetAppBar({@required this.model, @required this.txnService});
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -237,7 +231,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
         "Safest Digital Investment",
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
       ),
-      trailing: model.isGoldBuyInProgress
+      trailing: txnService.isGoldBuyInProgress
           ? SizedBox()
           : IconButton(
               icon: Icon(Icons.close, color: Colors.white),
@@ -250,8 +244,10 @@ class RechargeModalSheetAppBar extends StatelessWidget {
 }
 
 class EnterAmountView extends StatelessWidget {
-  EnterAmountView({Key key, @required this.model}) : super(key: key);
+  EnterAmountView({Key key, @required this.model, @required this.txnService})
+      : super(key: key);
   final AugmontGoldBuyViewModel model;
+  final TransactionService txnService;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -283,7 +279,6 @@ class EnterAmountView extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 if (model.buyNotice != null && model.buyNotice.isNotEmpty)
                   Container(
                     margin: EdgeInsets.only(bottom: SizeConfig.padding16),
@@ -300,7 +295,6 @@ class EnterAmountView extends StatelessWidget {
                       style: TextStyles.body3.light,
                     ),
                   ),
-
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -320,7 +314,7 @@ class EnterAmountView extends StatelessWidget {
                       child: TextFormField(
                         controller: model.goldAmountController,
                         focusNode: model.buyFieldNode,
-                        enabled: !model.isGoldBuyInProgress &&
+                        enabled: !txnService.isGoldBuyInProgress &&
                             !model.couponApplyInProgress,
                         validator: (val) {
                           return null;
@@ -351,7 +345,6 @@ class EnterAmountView extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 if (model.showMaxCapText)
                   Padding(
                     padding:
@@ -372,35 +365,6 @@ class EnterAmountView extends StatelessWidget {
                           .colour(Colors.red[400]),
                     ),
                   ),
-                // SizedBox(
-                //   height: SizeConfig.padding20,
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Text(
-                //       'YOU GET',
-                //       style: TextStyles.sourceSans.body3,
-                //     ),
-                //     SizedBox(
-                //       width: SizeConfig.padding6,
-                //     ),
-                //     SvgPicture.asset(
-                //       'assets/temp/Tokens.svg',
-                //       width: SizeConfig.iconSize0,
-                //       height: SizeConfig.iconSize0,
-                //     ),
-                //     SizedBox(
-                //       width: SizeConfig.padding6,
-                //     ),
-                //     Text(
-                //       model.goldAmountController.text == ''
-                //           ? '0'
-                //           : model.goldAmountController.text,
-                //       style: TextStyles.sourceSans.body3,
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),

@@ -26,7 +26,6 @@ class RechargeModalSheet extends StatefulWidget {
 
 class _RechargeModalSheetState extends State<RechargeModalSheet>
     with WidgetsBindingObserver {
-  final PaytmService _paytmService = locator<PaytmService>();
   final TransactionService _txnService = locator<TransactionService>();
   AppLifecycleState appLifecycleState;
 
@@ -49,7 +48,9 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      _paytmService.handleIOSUpiTransaction();
+      if (!TransactionService.isIOSTxnInProgress) return;
+      TransactionService.isIOSTxnInProgress = false;
+      _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -59,7 +60,8 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
     return PropertyChangeConsumer<TransactionService,
         TransactionServiceProperties>(
       properties: [
-        TransactionServiceProperties.transactionStatus,
+        TransactionServiceProperties.transactionState,
+        TransactionServiceProperties.transactionStatus
       ],
       builder: (transactionContext, txnService, transactionProperty) {
         return AnimatedContainer(
@@ -109,7 +111,11 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
       TransactionService txnService, AugmontGoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
       return NewAugmontBuyView(
-          amount: widget.amount, skipMl: widget.skipMl, model: model);
+        amount: widget.amount,
+        skipMl: widget.skipMl,
+        model: model,
+        txnService: txnService,
+      );
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
       return RechargeLoadingView(model: model);

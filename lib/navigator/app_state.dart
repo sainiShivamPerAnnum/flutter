@@ -36,10 +36,7 @@ class AppState extends ChangeNotifier {
   // Timer _txnTimer;
   Future _txnFunction;
   static Timer pollingPeriodicTimer;
-  static bool isIOSTxnInProgress = false;
-  static double currentTxnAmount = 0.0;
-  static double currentTxnGms = 0.0;
-  static String currentTxnOrderId;
+
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -108,7 +105,7 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  static blockNavgiation() {
+  static blockNavigation() {
     screenStack.add(ScreenItem.loader);
   }
 

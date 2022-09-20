@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -477,7 +478,7 @@ class TransationTile extends StatelessWidget {
   }) : super(key: key);
   final bool isLast;
   final AutosaveTransactionModel txn;
-  final _txnService = locator<TransactionService>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -495,7 +496,7 @@ class TransationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _txnService.getTileTitle(
+                    _txnHistoryService.getTileTitle(
                       UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD,
                     ),
                     style: TextStyles.rajdhaniM.body2,
@@ -504,7 +505,7 @@ class TransationTile extends StatelessWidget {
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    _txnService.getFormattedTime(txn.createdOn),
+                    _txnHistoryService.getFormattedTime(txn.createdOn),
                     style: TextStyles.rajdhaniL.body3,
                   ),
                 ],
@@ -514,7 +515,7 @@ class TransationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _txnService.getFormattedTxnAmount(txn.amount),
+                    _txnHistoryService.getFormattedTxnAmount(txn.amount),
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   SizedBox(
@@ -523,7 +524,7 @@ class TransationTile extends StatelessWidget {
                   Text(
                     txn.status,
                     style: TextStyles.rajdhaniM.body3.colour(
-                      _txnService.getTileColor(txn.status),
+                      _txnHistoryService.getTileColor(txn.status),
                     ),
                   ),
                 ],

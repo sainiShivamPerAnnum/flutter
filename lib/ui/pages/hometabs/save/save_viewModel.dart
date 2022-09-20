@@ -6,7 +6,7 @@ import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/payment_repo.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -31,7 +31,7 @@ class SaveViewModel extends BaseModel {
   final _userService = locator<UserService>();
   BaseUtil baseProvider;
   final SellService _sellService = locator<SellService>();
-  final _paymentRepo = locator<PaymentRepository>();
+  final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
   final _baseUtil = locator<BaseUtil>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
@@ -46,7 +46,7 @@ class SaveViewModel extends BaseModel {
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
   List<BlogPostModelByCategory> _blogPostsByCategory;
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool _isChallenegsLoading = false;
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
@@ -162,7 +162,7 @@ class SaveViewModel extends BaseModel {
   fetchLockedGoldQnt() async {
     await _userService.getUserFundWalletData();
     ApiResponse<double> qunatityApiResponse =
-        await _paymentRepo.getWithdrawableAugGoldQuantity();
+        await _transactionHistoryRepo.getWithdrawableAugGoldQuantity();
     if (qunatityApiResponse.code == 200) {
       setWithdrawableQnt = qunatityApiResponse.model;
       if (_withdrawableQnt == null || _withdrawableQnt < 0) {
@@ -206,7 +206,6 @@ class SaveViewModel extends BaseModel {
   }
 
   getSaveViewBlogs() async {
-    updateIsLoading(true);
     final response = await _saveRepo.getBlogs(5);
     if (response.isSuccess()) {
       blogPosts = response.model;
@@ -215,7 +214,6 @@ class SaveViewModel extends BaseModel {
       print(response.errorMessage);
     }
     updateIsLoading(false);
-    notifyListeners();
   }
 
   getAllBlogs() async {

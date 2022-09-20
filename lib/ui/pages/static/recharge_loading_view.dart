@@ -79,9 +79,7 @@ class RechargeLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _paytmService
-                    .handleTransactionProcessing(AppState.pollingPeriodicTimer);
-
+                await _txnService.processPolling(AppState.pollingPeriodicTimer);
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoingTransaction) return;
 
@@ -98,7 +96,7 @@ class RechargeLoadingView extends StatelessWidget {
                 AppState.backButtonDispatcher.didPopRoute();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                _txnService.showTransactionPendingDialog();
+                showTransactionPendingDialog();
                 log("Screen Stack:${AppState.screenStack.toString()}");
               },
               builder: (BuildContext context, Duration value, Widget child) {
@@ -115,6 +113,20 @@ class RechargeLoadingView extends StatelessWidget {
         ),
         SizedBox(height: SizeConfig.padding24),
       ],
+    );
+  }
+
+  showTransactionPendingDialog() {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: PendingDialog(
+        title: "We're still processing!",
+        subtitle:
+            "Your transaction is taking longer than usual. We'll get back to you in ",
+        duration: '15 minutes',
+      ),
     );
   }
 }

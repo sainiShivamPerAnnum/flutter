@@ -1,1 +1,1 @@
-enum TransactionServiceProperties { transactionList, transactionStatus }
+enum TransactionServiceProperties { transactionState, transactionStatus }

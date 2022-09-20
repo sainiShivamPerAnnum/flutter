@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -23,7 +24,8 @@ class AutosaveTransactionDetailsDialog extends StatefulWidget {
 class AutosaveTransactionDetailsDialogState
     extends State<AutosaveTransactionDetailsDialog> {
   final Log log = new Log('AutosaveAutosaveTransactionDetailsDialog');
-  final txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class AutosaveTransactionDetailsDialogState
               color: Colors.white, borderRadius: BorderRadius.circular(12)),
           child: Center(
             child: Text(
-              txnService
+              _txnHistoryService
                   .getTileTitle(UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD),
               style: TextStyle(
                 color: Colors.black54,
@@ -85,7 +87,7 @@ class AutosaveTransactionDetailsDialogState
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Text(
-                      txnService
+                      _txnHistoryService
                           .getFormattedTxnAmount(widget._transaction.amount),
                       // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
                       style: TextStyle(
@@ -95,7 +97,7 @@ class AutosaveTransactionDetailsDialogState
                     ),
                   ),
                   Divider(
-                    color: txnService
+                    color: _txnHistoryService
                         .getTileColor(widget._transaction.status)
                         .withOpacity(0.7),
                     height: 0,
@@ -106,7 +108,7 @@ class AutosaveTransactionDetailsDialogState
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     margin: EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
-                      color: txnService
+                      color: _txnHistoryService
                           .getTileColor(widget._transaction.status)
                           .withOpacity(0.7),
                       borderRadius: BorderRadius.only(
@@ -151,7 +153,8 @@ class AutosaveTransactionDetailsDialogState
                         ? referralTileWide(
                             'Transaction Status:',
                             widget._transaction.status,
-                            txnService.getTileColor(widget._transaction.status),
+                            _txnHistoryService
+                                .getTileColor(widget._transaction.status),
                           )
                         : referralTileWide('Transaction Status:', "COMPLETED",
                             UiConstants.primaryColor),

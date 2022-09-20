@@ -158,6 +158,7 @@ class LoginControllerViewModel extends BaseModel {
         {
           String otp = _otpScreenKey.currentState.model.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
+            logger.d("OTP is $otp");
             setState(ViewState.Busy);
             final verifyOtp =
                 await this._userRepo.verifyOtp(this._verificationId, otp);

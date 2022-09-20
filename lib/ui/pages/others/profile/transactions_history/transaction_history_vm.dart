@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -21,8 +22,8 @@ class TransactionsHistoryViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
   final _subcriptionRepo = locator<SubscriptionRepo>();
-  //locators
-  final TransactionService _txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
 
   //local variables
   int _filter = 1;
@@ -102,7 +103,8 @@ class TransactionsHistoryViewModel extends BaseModel {
   init() {
     _scrollController = ScrollController();
     _pageController = PageController(initialPage: 0);
-    if (_txnService.txnList == null || _txnService.txnList.length < 5) {
+    if (_txnHistoryService.txnList == null ||
+        _txnHistoryService.txnList.length < 5) {
       getTransactions().then((_) {
         WidgetsBinding.instance?.addPostFrameCallback((_) {
           tranAnimWidth = 0;
@@ -110,8 +112,8 @@ class TransactionsHistoryViewModel extends BaseModel {
         });
       });
     }
-    if (_txnService.txnList != null) {
-      filteredList = _txnService.txnList;
+    if (_txnHistoryService.txnList != null) {
+      filteredList = _txnHistoryService.txnList;
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         tranAnimWidth = 0;
         notifyListeners();
@@ -123,7 +125,7 @@ class TransactionsHistoryViewModel extends BaseModel {
       if (_scrollController.offset >=
               _scrollController.position.maxScrollExtent &&
           !_scrollController.position.outOfRange) {
-        if (_txnService.hasMoreTxns && state == ViewState.Idle) {
+        if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
           getMoreTransactions();
         }
       }
@@ -133,8 +135,8 @@ class TransactionsHistoryViewModel extends BaseModel {
 
   Future getTransactions() async {
     setState(ViewState.Busy);
-    await _txnService.fetchTransactions();
-    _filteredList = _txnService.txnList;
+    await _txnHistoryService.fetchTransactions();
+    _filteredList = _txnHistoryService.txnList;
     setState(ViewState.Idle);
   }
 
@@ -143,32 +145,33 @@ class TransactionsHistoryViewModel extends BaseModel {
     isMoreTxnsBeingFetched = true;
     switch (filter) {
       case 1:
-        if (_txnService.hasMoreTxns) await _txnService.fetchTransactions();
+        if (_txnHistoryService.hasMoreTxns)
+          await _txnHistoryService.fetchTransactions();
         break;
       case 2:
-        if (_txnService.hasMoreDepositTxns)
-          await _txnService.fetchTransactions(
+        if (_txnHistoryService.hasMoreDepositTxns)
+          await _txnHistoryService.fetchTransactions(
               type: UserTransaction.TRAN_TYPE_DEPOSIT);
         break;
       case 3:
-        if (_txnService.hasMoreWithdrawalTxns)
-          await _txnService.fetchTransactions(
+        if (_txnHistoryService.hasMoreWithdrawalTxns)
+          await _txnHistoryService.fetchTransactions(
               type: UserTransaction.TRAN_TYPE_WITHDRAW);
         break;
       case 4:
-        if (_txnService.hasMorePrizeTxns)
-          await _txnService.fetchTransactions(
+        if (_txnHistoryService.hasMorePrizeTxns)
+          await _txnHistoryService.fetchTransactions(
               type: UserTransaction.TRAN_TYPE_PRIZE);
 
         break;
       case 5:
-        if (_txnService.hasMoreRefundedTxns)
-          await _txnService.fetchTransactions(
+        if (_txnHistoryService.hasMoreRefundedTxns)
+          await _txnHistoryService.fetchTransactions(
               status: UserTransaction.TRAN_STATUS_REFUNDED);
         break;
       default:
-        // if (_txnService.hasMoreTxns)
-        //   await _txnService.fetchTransactions(limit: 30);
+        // if (_txnHistoryService.hasMoreTxns)
+        //   await _txnHistoryService.fetchTransactions(limit: 30);
         break;
     }
     filterTransactions(update: false);
@@ -178,34 +181,34 @@ class TransactionsHistoryViewModel extends BaseModel {
   filterTransactions({@required bool update}) {
     switch (filter) {
       case 1:
-        filteredList = _txnService.txnList;
+        filteredList = _txnHistoryService.txnList;
         break;
       case 2:
         filteredList = [
-          ..._txnService.txnList
+          ..._txnHistoryService.txnList
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_DEPOSIT)
         ];
         break;
       case 3:
         filteredList = [
-          ..._txnService.txnList
+          ..._txnHistoryService.txnList
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
         ];
         break;
       case 4:
         filteredList = [
-          ..._txnService.txnList
+          ..._txnHistoryService.txnList
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_PRIZE)
         ];
         break;
       case 5:
         filteredList = [
-          ..._txnService.txnList.where(
+          ..._txnHistoryService.txnList.where(
               (txn) => txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED)
         ];
         break;
       default:
-        filteredList = _txnService.txnList;
+        filteredList = _txnHistoryService.txnList;
         break;
     }
     if (update && filteredList.length < 30) getMoreTransactions();

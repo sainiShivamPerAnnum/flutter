@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/core/service/notifier_services/connectivity_service.dar
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -134,41 +136,45 @@ class _MyAppState extends State<MyApp> {
           child: PropertyChangeProvider<LeaderboardService,
               LeaderBoardServiceProperties>(
             value: locator<LeaderboardService>(),
-            child: PropertyChangeProvider<TransactionService,
-                TransactionServiceProperties>(
-              value: locator<TransactionService>(),
-              child: PropertyChangeProvider<UserCoinService,
-                  UserCoinServiceProperties>(
-                value: locator<UserCoinService>(),
-                child:
-                    PropertyChangeProvider<UserService, UserServiceProperties>(
-                  value: locator<UserService>(),
-                  child: PropertyChangeProvider<WinnerService,
-                      WinnerServiceProperties>(
-                    value: locator<WinnerService>(),
-                    child: PropertyChangeProvider<PaytmService,
-                        PaytmServiceProperties>(
-                      value: locator<PaytmService>(),
-                      child: PropertyChangeProvider<SellService,
-                          SellServiceProperties>(
-                        value: locator<SellService>(),
-                        child: MaterialApp.router(
-                          locale: DevicePreview.locale(context),
-                          builder: DevicePreview.appBuilder,
-                          title: Constants.APP_NAME,
-                          theme: FelloTheme.darkMode(),
-                          useInheritedMediaQuery: true,
-                          debugShowCheckedModeBanner: false,
-                          backButtonDispatcher: backButtonDispatcher,
-                          routerDelegate: delegate,
-                          routeInformationParser: parser,
-                          localizationsDelegates: [
-                            S.delegate,
-                            GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate,
-                          ],
-                          supportedLocales: S.delegate.supportedLocales,
+            child: PropertyChangeProvider<TransactionHistoryService,
+                TransactionHistoryServiceProperties>(
+              value: locator<TransactionHistoryService>(),
+              child: PropertyChangeProvider<TransactionService,
+                  TransactionServiceProperties>(
+                value: locator<TransactionService>(),
+                child: PropertyChangeProvider<UserCoinService,
+                    UserCoinServiceProperties>(
+                  value: locator<UserCoinService>(),
+                  child: PropertyChangeProvider<UserService,
+                      UserServiceProperties>(
+                    value: locator<UserService>(),
+                    child: PropertyChangeProvider<WinnerService,
+                        WinnerServiceProperties>(
+                      value: locator<WinnerService>(),
+                      child: PropertyChangeProvider<PaytmService,
+                          PaytmServiceProperties>(
+                        value: locator<PaytmService>(),
+                        child: PropertyChangeProvider<SellService,
+                            SellServiceProperties>(
+                          value: locator<SellService>(),
+                          child: MaterialApp.router(
+                            locale: DevicePreview.locale(context),
+                            builder: DevicePreview.appBuilder,
+                            title: Constants.APP_NAME,
+                            theme: FelloTheme.darkMode(),
+                            useInheritedMediaQuery: true,
+                            debugShowCheckedModeBanner: false,
+                            backButtonDispatcher: backButtonDispatcher,
+                            routerDelegate: delegate,
+                            routeInformationParser: parser,
+                            localizationsDelegates: [
+                              S.delegate,
+                              GlobalMaterialLocalizations.delegate,
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                            ],
+                            supportedLocales: S.delegate.supportedLocales,
+                          ),
                         ),
                       ),
                     ),

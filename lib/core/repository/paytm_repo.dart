@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +23,9 @@ class PaytmRepository {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   String processText = "processing";
-
+  String _baseUrl = FlavorConfig.isProduction()
+      ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
+      : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
   Future<String> _getBearerToken() async {
     String token = await _userService.firebaseUser.getIdToken();
     _logger.d(token);
@@ -50,12 +53,13 @@ class PaytmRepository {
               .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID)
           : BaseRemoteConfig.remoteConfig
               .getString(BaseRemoteConfig.ACTIVE_PG_IOS);
-      final response = await APIService.instance.postPaymentData(
-          ApiPath.kCreatePaytmTransaction,
-          pgGateway: paymentMode,
-          body: _body,
-          token: _token,
-          isAwsTxnUrl: true);
+      final response = await APIService.instance.postData(
+        ApiPath.kCreatePaytmTransaction,
+        body: _body,
+        token: _token,
+        cBaseUrl: _baseUrl,
+        headers: {'pg-mode': paymentMode},
+      );
 
       CreatePaytmTransactionModel _responseModel =
           CreatePaytmTransactionModel.fromMap(response);
@@ -68,12 +72,13 @@ class PaytmRepository {
     }
   }
 
-  Future<ApiResponse<ProcessTransactionModel>> processPaytmTransaction(
-      {String tempToken,
-      String osType,
-      String pspApp,
-      String orderId,
-      String paymentMode}) async {
+  Future<ApiResponse<ProcessTransactionModel>> processPaytmTransaction({
+    String tempToken,
+    String osType,
+    String pspApp,
+    String orderId,
+    String paymentMode,
+  }) async {
     try {
       final Map<String, dynamic> _body = {
         "tempToken": tempToken,
@@ -85,10 +90,11 @@ class PaytmRepository {
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
-          ApiPath.kProcessPaytmTransaction,
-          body: _body,
-          token: _token,
-          isAwsTxnUrl: true);
+        ApiPath.kProcessPaytmTransaction,
+        body: _body,
+        token: _token,
+        cBaseUrl: _baseUrl,
+      );
 
       ProcessTransactionModel _responseModel =
           ProcessTransactionModel.fromJson(response);
@@ -109,11 +115,12 @@ class PaytmRepository {
       final _token = await _getBearerToken();
       final _queryParams = {"orderId": orderId, "uid": _uid};
 
-      final response = await APIService.instance.getPaymentData(
-          ApiPath.kCreatePaytmTransaction,
-          token: _token,
-          queryParams: _queryParams,
-          isAwsTxnUrl: true);
+      final response = await APIService.instance.getData(
+        ApiPath.kCreatePaytmTransaction,
+        token: _token,
+        queryParams: _queryParams,
+        cBaseUrl: _baseUrl,
+      );
       final _responseModel = TransactionResponseModel.fromMap(response);
       _logger.d(_responseModel);
       return ApiResponse<TransactionResponseModel>(
@@ -137,10 +144,11 @@ class PaytmRepository {
       final _token = await _getBearerToken();
       _logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
-          ApiPath().kCreateSubscription,
-          body: _body,
-          token: _token,
-          isAwsSubUrl: true);
+        ApiPath().kCreateSubscription,
+        body: _body,
+        token: _token,
+        cBaseUrl: _baseUrl,
+      );
 
       CreateSubscriptionResponseModel _responseModel =
           CreateSubscriptionResponseModel.fromMap(response);
@@ -168,7 +176,7 @@ class PaytmRepository {
         ApiPath().kValidateVpa,
         token: _token,
         queryParams: _queryParams,
-        isAwsSubUrl: true,
+        cBaseUrl: _baseUrl,
       );
 
       final _responseModel = ValidateVpaResponseModel.fromJson(response);
@@ -191,7 +199,7 @@ class PaytmRepository {
         ApiPath.fecthLatestTxnDetails(_uid),
         token: _token,
         queryParams: _queryParams,
-        isAwsTxnUrl: true,
+        cBaseUrl: _baseUrl,
       );
 
       final _responseModel = TxnResultModel.fromJson(response);
@@ -215,8 +223,8 @@ class PaytmRepository {
       final response = await APIService.instance.putData(
         ApiPath().kCreateSubscription,
         body: _body,
-        token: "Bearer $_token",
-        isAwsSubUrl: true,
+        token: _token,
+        cBaseUrl: _baseUrl,
       );
       if (response != null) {
         final Map responseData = response["data"];
@@ -247,7 +255,7 @@ class PaytmRepository {
         ApiPath().kPauseSubscription,
         body: _body,
         token: _token,
-        isAwsSubUrl: true,
+        cBaseUrl: _baseUrl,
       );
       final Map responseData = response["data"];
 
@@ -272,7 +280,7 @@ class PaytmRepository {
         ApiPath().kResumeSubscription,
         body: _body,
         token: _token,
-        isAwsSubUrl: true,
+        cBaseUrl: _baseUrl,
       );
 
       final Map responseData = response["data"];
@@ -299,7 +307,7 @@ class PaytmRepository {
         ApiPath().kProcessSubscription,
         body: _body,
         token: _token,
-        isAwsSubUrl: true,
+        cBaseUrl: _baseUrl,
       );
       final Map<String, dynamic> responseData = response['data'];
       if (responseData['status'])
@@ -322,7 +330,7 @@ class PaytmRepository {
         ApiPath().kActiveSubscription,
         token: _token,
         queryParams: _queryParams,
-        isAwsSubUrl: true,
+        cBaseUrl: _baseUrl,
       );
       _logger.d(response);
       final _responseData = response["data"];
@@ -346,7 +354,7 @@ class PaytmRepository {
         ApiPath().kNextDebitDate,
         token: _token,
         queryParams: _queryParams,
-        isAwsSubUrl: true,
+        cBaseUrl: _baseUrl,
       );
 
       final _responseStatus = response["data"];

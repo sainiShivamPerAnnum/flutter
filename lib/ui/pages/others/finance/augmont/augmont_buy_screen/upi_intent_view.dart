@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -10,9 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UPIAppsBottomSheet extends StatelessWidget {
-  final AugmontGoldBuyViewModel model;
+  final TransactionService txnServiceInstance;
 
-  const UPIAppsBottomSheet({Key key, this.model}) : super(key: key);
+  const UPIAppsBottomSheet({Key key, this.txnServiceInstance})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      model.appMetaList.length > 0
+                      txnServiceInstance.appMetaList.length > 0
                           ? 'Please select a UPI App'
                           : "No UPI apps available",
                       style: TextStyles.title5.bold,
@@ -52,7 +55,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              model.appMetaList.length <= 0
+              txnServiceInstance.appMetaList.length <= 0
                   ? Container(
                       width: SizeConfig.screenWidth,
                       child: Column(
@@ -70,43 +73,18 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   : Expanded(
                       child: GridView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: model.appMetaList.length,
+                        itemCount: txnServiceInstance.appMetaList.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              BaseUtil.openDialog(
-                                  addToScreenStack: true,
-                                  isBarrierDismissable: false,
-                                  content: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Dialog(
-                                      child: Container(
-                                          height: SizeConfig.screenWidth * 0.2,
-                                          width: SizeConfig.screenWidth,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20),
-                                            child: Row(children: [
-                                              Text(
-                                                'Processing',
-                                                style: TextStyles.title5,
-                                              ),
-                                              Spacer(),
-                                              CircularProgressIndicator()
-                                            ]),
-                                          )),
-                                    ),
-                                  ));
-                              AppState.screenStack.add(ScreenItem.loader);
-                              model.upiApplication =
-                                  model.appMetaList[index].upiApplication;
-                              model.processTransaction(model
-                                  .appMetaList[index].upiApplication.appName);
-                              // AppState.backButtonDispatcher.didPopRoute();
+                              txnServiceInstance.upiApplication =
+                                  txnServiceInstance
+                                      .appMetaList[index].upiApplication;
+                              txnServiceInstance.selectedUpiApplicationName =
+                                  txnServiceInstance.appMetaList[index]
+                                      .upiApplication.appName;
+                              AppState.backButtonDispatcher.didPopRoute();
+                              txnServiceInstance.processUpiTransaction();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(10),
@@ -117,14 +95,15 @@ class UPIAppsBottomSheet extends StatelessWidget {
                                       ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(5),
-                                          child: model.appMetaList[index]
+                                          child: txnServiceInstance
+                                              .appMetaList[index]
                                               .iconImage(40)),
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Text(
-                                        model.appMetaList[index].upiApplication
-                                            .appName,
+                                        txnServiceInstance.appMetaList[index]
+                                            .upiApplication.appName,
                                         style: TextStyles.body4,
                                       ),
                                     ],

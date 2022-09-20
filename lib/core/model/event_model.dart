@@ -8,7 +8,7 @@ class EventModel {
   String thumbnail;
   String type;
   int position;
-  int color;
+  String color;
   String image;
   List<dynamic> instructions;
   int minVersion;
@@ -39,7 +39,7 @@ class EventModel {
       String thumbnail,
       String type,
       int position,
-      int color,
+      String color,
       int minVersion,
       String image,
       List<dynamic> instructions,
@@ -88,7 +88,7 @@ class EventModel {
         thumbnail: map['thumbnail'] ?? '',
         type: map['type'] ?? '',
         position: map['position'] ?? 1,
-        color: map['color'] ?? 4280492835,
+        color: map['color'] ?? '',
         image: map['image'] ?? '',
         url: map['url'] ?? '',
         formUrl: map['formUrl'] ?? '',

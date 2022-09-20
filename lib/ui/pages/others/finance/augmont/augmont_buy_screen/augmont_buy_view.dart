@@ -72,7 +72,7 @@
 // //                 SizedBox(width: SizeConfig.padding24),
 // //                 Expanded(
 // //                   child: TextField(
-// //                     enabled: !model.isGoldBuyInProgress &&
+// //                     enabled: !txnService.isGoldBuyInProgress &&
 // //                         !model.couponApplyInProgress,
 // //                     focusNode: model.buyFieldNode,
 // //                     enableInteractiveSelection: false,
@@ -258,7 +258,7 @@
 // //             ),
 // //           if (!model.augOnbRegInProgress && !model.augRegFailed)
 // //             FelloButtonLg(
-// //               child: model.isGoldBuyInProgress
+// //               child: txnService.isGoldBuyInProgress
 // //                   ? SpinKitThreeBounce(
 // //                       color: Colors.white,
 // //                       size: 20,
@@ -270,7 +270,7 @@
 // //                       style: TextStyles.body2.colour(Colors.white).bold,
 // //                     ),
 // //               onPressed: () async {
-// //                 if (!model.isGoldBuyInProgress) {
+// //                 if (!txnService.isGoldBuyInProgress) {
 // //                   FocusScope.of(context).unfocus();
 // //                   model.initiateBuy();
 // //                 }
@@ -293,6 +293,7 @@
 // import 'package:felloapp/navigator/app_state.dart';
 // import 'package:felloapp/ui/modals_sheets/augmont_coupons_modal.dart';
 // import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+// import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/upi_intent_view.dart';
 // import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 // import 'package:felloapp/util/assets.dart';
 // import 'package:felloapp/util/haptic.dart';
@@ -375,7 +376,7 @@
 //                 SizedBox(width: SizeConfig.padding24),
 //                 Expanded(
 //                   child: TextField(
-//                     enabled: !widget.model.isGoldBuyInProgress &&
+//                     enabled: !widget.txnService.isGoldBuyInProgress &&
 //                         !widget.model.couponApplyInProgress,
 //                     focusNode: widget.model.buyFieldNode,
 //                     enableInteractiveSelection: false,
@@ -561,7 +562,7 @@
 //             ),
 //           if (!widget.model.augOnbRegInProgress && !widget.model.augRegFailed)
 //             FelloButtonLg(
-//               child: widget.model.isGoldBuyInProgress
+//               child: widget.txnService.isGoldBuyInProgress
 //                   ? SpinKitThreeBounce(
 //                       color: Colors.white,
 //                       size: 20,
@@ -575,7 +576,7 @@
 //                       style: TextStyles.body2.colour(Colors.white).bold,
 //                     ),
 //               onPressed: () async {
-//                 if (!widget.model.isGoldBuyInProgress) {
+//                 if (!widget.txnService.isGoldBuyInProgress) {
 //                   FocusScope.of(context).unfocus();
 //                   if (Platform.isAndroid) {
 //                     //Android - RazorpayPG
@@ -707,5 +708,3 @@
 //     );
 //   }
 // }
-
-

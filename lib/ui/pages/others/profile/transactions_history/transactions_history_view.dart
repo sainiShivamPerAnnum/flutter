@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -274,7 +275,7 @@ class NoTransactionsContent extends StatelessWidget {
 class TransactionTile extends StatelessWidget {
   final TransactionsHistoryViewModel model;
   final UserTransaction txn;
-  final _txnService = locator<TransactionService>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
   TransactionTile({
     @required this.model,
     this.txn,
@@ -284,7 +285,6 @@ class TransactionTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         Haptic.vibrate();
-        bool freeBeerStatus = _txnService.getBeerTicketStatus(txn);
         BaseUtil.openModalBottomSheet(
             isScrollControlled: true,
             enableDrag: true,
@@ -297,16 +297,16 @@ class TransactionTile extends StatelessWidget {
       },
       dense: true,
       title: Text(
-          _txnService.getTileSubtitle(
+          _txnHistoryService.getTileSubtitle(
             txn.type.toString(),
           ),
           style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        _txnService.getFormattedDate(txn.timestamp),
+        _txnHistoryService.getFormattedDate(txn.timestamp),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Text(
-        _txnService.getFormattedTxnAmount(txn.amount),
+        _txnHistoryService.getFormattedTxnAmount(txn.amount),
         style: TextStyles.sourceSansM.body3,
       ),
     );
@@ -316,7 +316,7 @@ class TransactionTile extends StatelessWidget {
 class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel model;
   final AutosaveTransactionModel txn;
-  final _txnService = locator<TransactionService>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
   TransactionSIPTile({
     @required this.model,
     this.txn,
@@ -330,11 +330,11 @@ class TransactionSIPTile extends StatelessWidget {
       dense: true,
       title: Text('AUTO SIP', style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        _txnService.getFormattedSIPDate(DateTime.parse(txn.txnDateTime)),
+        _txnHistoryService.getFormattedSIPDate(DateTime.parse(txn.txnDateTime)),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Text(
-        _txnService.getFormattedTxnAmount(txn.amount),
+        _txnHistoryService.getFormattedTxnAmount(txn.amount),
         style: TextStyles.sourceSansM.body3,
       ),
     );

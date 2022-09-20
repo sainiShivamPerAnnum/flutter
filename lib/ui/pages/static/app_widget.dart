@@ -117,7 +117,12 @@ class AppTextField extends StatelessWidget {
         scrollPadding: EdgeInsets.zero,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
-        inputFormatters: inputFormatters ?? [],
+        inputFormatters: inputFormatters ??
+            [
+              FilteringTextInputFormatter.allow(
+                RegExp(r'[a-zA-Z0-9.@]'),
+              )
+            ],
         style: textStyle ??
             TextStyles.body2.colour(
               isEnabled
