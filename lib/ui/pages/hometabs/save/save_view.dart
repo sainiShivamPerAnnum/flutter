@@ -21,6 +21,7 @@ import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dar
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/widgets/carousal_widget.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
@@ -80,7 +81,7 @@ class Save extends StatelessWidget {
                     title: 'Challenges',
                     subTitle: 'Exciting contests to save more',
                   ),
-                  CampaignCardSection(saveViewModel: model),
+                  CampaignCardSection(saveVm: model),
                   // -- Break --
                   SizedBox(height: SizeConfig.padding54),
                   GestureDetector(
@@ -193,7 +194,6 @@ class SaveNetWorthSection extends StatelessWidget {
               investedAmount: 0.0,
               onTap: () {
                 Haptic.vibrate();
-
                 return BaseUtil().openRechargeModalSheet();
               },
             ),
@@ -209,125 +209,155 @@ class SaveNetWorthSection extends StatelessWidget {
 }
 
 class CampaignCardSection extends StatelessWidget {
-  final SaveViewModel saveViewModel;
+  final SaveViewModel saveVm;
 
-  const CampaignCardSection({Key key, @required this.saveViewModel})
-      : super(key: key);
+  const CampaignCardSection({Key key, @required this.saveVm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: SizeConfig.padding24, top: SizeConfig.padding16),
+        left: SizeConfig.padding24,
+        top: SizeConfig.padding16,
+        right: SizeConfig.padding16,
+      ),
       child: Container(
-        height: SizeConfig.screenWidth * 0.51,
-        child: ListView.builder(
-          itemCount: saveViewModel.isChallengesLoading
-              ? 2
-              : saveViewModel.ongoingEvents.length,
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return saveViewModel.isChallengesLoading
-                ? Shimmer.fromColors(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding10),
+        height: SizeConfig.screenWidth * 0.57,
+        child: CarousalWidget(
+          height: SizeConfig.screenWidth * 0.49,
+          width: SizeConfig.screenWidth,
+          widgets: List.generate(
+            saveVm.isChallengesLoading ? 3 : saveVm.ongoingEvents.length,
+            (index) {
+              final event = saveVm.isChallengesLoading
+                  ? null
+                  : saveVm.ongoingEvents[index];
+
+              return GestureDetector(
+                onTap: () {
+                  AppState.delegate.openTopSaverScreen(event.type);
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding10),
+                  child: CampaignCard(
+                    isLoading: saveVm.isChallengesLoading,
+                    topPadding: SizeConfig.padding16,
+                    leftPadding: SizeConfig.padding24,
+                    event: event,
+                    subText: FittedBox(
+                      fit: BoxFit.contain,
                       child: Container(
-                        width: SizeConfig.screenWidth * 0.5,
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                            color: UiConstants.kBackgroundColor),
-                        child: Padding(
-                          padding: EdgeInsets.all(SizeConfig.padding16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(top: SizeConfig.padding28),
-                                child: Center(
-                                  child: Container(
-                                    height: SizeConfig.screenWidth * 0.2,
-                                    width: SizeConfig.screenWidth,
-                                    decoration: BoxDecoration(
-                                        color: UiConstants
-                                            .kSecondaryBackgroundColor),
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                            ],
-                          ),
+                        width: SizeConfig.screenWidth * 0.4,
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.padding8,
+                        ),
+                        child: Text(
+                          event?.subtitle ?? '',
+                          style: TextStyles.sourceSans.body4,
                         ),
                       ),
                     ),
-                    baseColor: UiConstants.kUserRankBackgroundColor,
-                    highlightColor: UiConstants.kBackgroundColor,
-                  )
-                : CampiagnCard(
-                    event: saveViewModel.ongoingEvents[index],
-                  );
-          },
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
 }
 
-class CampiagnCard extends StatelessWidget {
+class CampaignCard extends StatelessWidget {
   final EventModel event;
-  CampiagnCard({this.event});
+  final Widget subText;
+  final bool isLoading;
+  final double topPadding;
+  final double leftPadding;
+
+  const CampaignCard(
+      {@required this.event,
+      @required this.subText,
+      @required this.isLoading,
+      @required this.topPadding,
+      @required this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        AppState.delegate.openTopSaverScreen(event.type);
-      },
-      child: Padding(
-        padding: EdgeInsets.only(right: SizeConfig.padding10),
-        child: Container(
-          width: SizeConfig.screenWidth * 0.5,
-          decoration: BoxDecoration(
+    final i = isLoading ? 0 : event.title.lastIndexOf(' ');
+    final prefix = isLoading ? '' : event.title.substring(0, i);
+    final suffix = isLoading ? '' : event.title.substring(i + 1);
+    final asset = isLoading
+        ? ''
+        : event.type == 'SAVER_MONTHLY'
+            ? Assets.monthlySaver
+            : event.type == 'SAVER_DAILY'
+                ? Assets.dailySaver
+                : Assets.weeklySaver;
+
+    return this.isLoading
+        ? Shimmer.fromColors(
+            child: Container(
+              width: SizeConfig.screenWidth,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                color: UiConstants.kBackgroundColor,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(SizeConfig.padding16),
+                child: Container(
+                  height: SizeConfig.screenWidth * 0.18,
+                  decoration: BoxDecoration(
+                    color: UiConstants.kSecondaryBackgroundColor,
+                  ),
+                ),
+              ),
+            ),
+            baseColor: UiConstants.kUserRankBackgroundColor,
+            highlightColor: UiConstants.kBackgroundColor,
+          )
+        : Container(
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: event.bgColor.toColor()),
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.padding16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              color: UiConstants.kSecondaryBackgroundColor,
+            ),
+            padding: EdgeInsets.only(
+              left: this.leftPadding,
+              right: SizeConfig.padding24,
+              top: this.topPadding,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: SizeConfig.padding28),
-                  child: Center(
-                    child: SizedBox(
-                      height: SizeConfig.screenWidth * 0.2,
-                      width: SizeConfig.screenWidth,
-                      child: Image.network(event.image),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      prefix,
+                      style: TextStyles.sourceSans.body1.bold,
                     ),
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  event.title,
-                  style: TextStyles.rajdhaniSB.body0,
-                ),
-                FittedBox(
-                  fit: BoxFit.contain,
-                  child: Container(
-                    width: SizeConfig.screenWidth * 0.5,
-                    child: Text(
-                      event.subtitle,
-                      style: TextStyles.sourceSans.body4,
+                    Text(
+                      suffix.toUpperCase(),
+                      style: TextStyles.sourceSansEB.title50
+                          .letterSpace(0.7)
+                          .colour(
+                            event.color.toColor(),
+                          )
+                          .setHeight(1),
                     ),
-                  ),
-                )
+                    this.subText
+                  ],
+                ),
+                SvgPicture.asset(
+                  asset,
+                  height: SizeConfig.screenWidth * 0.3,
+                  width: SizeConfig.screenWidth * 0.3,
+                ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 }
 

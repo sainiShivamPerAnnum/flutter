@@ -16,50 +16,50 @@ class EventModel {
   String formUrl;
   String todayMatch; //Only for FPL
   List<dynamic> winners; //only for bug_Bounty and new_Fello
-  String bgColor;
-  EventModel(
-      {@required this.title,
-      @required this.subtitle,
-      @required this.thumbnail,
-      @required this.type,
-      @required this.position,
-      @required this.color,
-      @required this.image,
-      @required this.minVersion,
-      @required this.url,
-      @required this.formUrl,
-      @required this.instructions,
-      @required this.winners,
-      this.todayMatch,
-      @required this.bgColor});
 
-  EventModel copyWith(
-      {String title,
-      String subtitle,
-      String thumbnail,
-      String type,
-      int position,
-      String color,
-      int minVersion,
-      String image,
-      List<dynamic> instructions,
-      List<dynamic> winners,
-      String bgColor}) {
+  EventModel({
+    @required this.title,
+    @required this.subtitle,
+    @required this.thumbnail,
+    @required this.type,
+    @required this.position,
+    @required this.color,
+    @required this.image,
+    @required this.minVersion,
+    @required this.url,
+    @required this.formUrl,
+    @required this.instructions,
+    @required this.winners,
+    this.todayMatch,
+  });
+
+  EventModel copyWith({
+    String title,
+    String subtitle,
+    String thumbnail,
+    String type,
+    int position,
+    String color,
+    int minVersion,
+    String image,
+    List<dynamic> instructions,
+    List<dynamic> winners,
+  }) {
     return EventModel(
-        title: title ?? this.title,
-        subtitle: subtitle ?? this.subtitle,
-        thumbnail: thumbnail ?? this.thumbnail,
-        type: type ?? this.type,
-        position: position ?? this.position,
-        color: color ?? this.color,
-        image: image ?? this.image,
-        minVersion: minVersion ?? this.minVersion,
-        instructions: instructions ?? this.instructions,
-        formUrl: formUrl ?? this.formUrl,
-        url: url ?? this.url,
-        todayMatch: todayMatch ?? this.todayMatch,
-        winners: winners ?? this.winners,
-        bgColor: bgColor ?? this.bgColor);
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      thumbnail: thumbnail ?? this.thumbnail,
+      type: type ?? this.type,
+      position: position ?? this.position,
+      color: color ?? this.color,
+      image: image ?? this.image,
+      minVersion: minVersion ?? this.minVersion,
+      instructions: instructions ?? this.instructions,
+      formUrl: formUrl ?? this.formUrl,
+      url: url ?? this.url,
+      todayMatch: todayMatch ?? this.todayMatch,
+      winners: winners ?? this.winners,
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -77,26 +77,25 @@ class EventModel {
       'formUrl': formUrl,
       'todayMatch': todayMatch,
       'winners': winners,
-      'bgColor': bgColor
     };
   }
 
   factory EventModel.fromMap(Map<String, dynamic> map) {
     return EventModel(
-        title: map['title'] ?? '',
-        subtitle: map['subtitle'] ?? '',
-        thumbnail: map['thumbnail'] ?? '',
-        type: map['type'] ?? '',
-        position: map['position'] ?? 1,
-        color: map['color'] ?? '',
-        image: map['image'] ?? '',
-        url: map['url'] ?? '',
-        formUrl: map['formUrl'] ?? '',
-        minVersion: map["minVersion"] ?? 0,
-        instructions: map['info'] ?? ["Fello Event Instructions"],
-        todayMatch: map['todayMatch'] ?? "",
-        winners: map['winners'] ?? ["ritika won ₹4000"],
-        bgColor: map['bgColor'] ?? 'FFFFFF');
+      title: map['title'] ?? '',
+      subtitle: map['subtitle'] ?? '',
+      thumbnail: map['thumbnail'] ?? '',
+      type: map['type'] ?? '',
+      position: map['position'] ?? 1,
+      color: map['color'] ?? "#ffffff",
+      image: map['image'] ?? '',
+      url: map['url'] ?? '',
+      formUrl: map['formUrl'] ?? '',
+      minVersion: map["minVersion"] ?? 0,
+      instructions: map['info'] ?? ["Fello Event Instructions"],
+      todayMatch: map['todayMatch'] ?? "",
+      winners: map['winners'] ?? ["ritika won ₹4000"],
+    );
   }
 
   String toJson() => json.encode(toMap());

@@ -143,56 +143,57 @@ class BlogsLoadingShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Padding(
-      padding: EdgeInsets.only(
-        right: SizeConfig.padding24,
-      ),
-      child: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding16),
-              child: Container(
-                width: SizeConfig.screenWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Shimmer.fromColors(
-                      baseColor: UiConstants.kUserRankBackgroundColor,
-                      highlightColor: UiConstants.kBackgroundColor,
-                      child: Container(
-                        color: Colors.black,
-                        height: SizeConfig.padding24,
-                        width: 100,
-                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                      ),
-                    ),
-                    ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                      child: Shimmer.fromColors(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding24,
+        ),
+        child: ListView.builder(
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+                child: Container(
+                  width: SizeConfig.screenWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Shimmer.fromColors(
                         baseColor: UiConstants.kUserRankBackgroundColor,
                         highlightColor: UiConstants.kBackgroundColor,
                         child: Container(
-                          height: SizeConfig.screenWidth * 0.4,
-                          width: SizeConfig.screenWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              SizeConfig.roundness12,
+                          color: Colors.black,
+                          height: SizeConfig.padding24,
+                          width: 100,
+                          margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                        ),
+                      ),
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness12),
+                        child: Shimmer.fromColors(
+                          baseColor: UiConstants.kUserRankBackgroundColor,
+                          highlightColor: UiConstants.kBackgroundColor,
+                          child: Container(
+                            height: SizeConfig.screenWidth * 0.4,
+                            width: SizeConfig.screenWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                SizeConfig.roundness12,
+                              ),
+                              color: Colors.black,
                             ),
-                            color: Colors.black,
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    )
-                  ],
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }),
-    ));
+              );
+            }),
+      ),
+    );
   }
 }

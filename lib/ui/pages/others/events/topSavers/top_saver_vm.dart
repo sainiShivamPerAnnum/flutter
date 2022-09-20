@@ -139,7 +139,7 @@ class TopSaverViewModel extends BaseModel {
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
 
-    event = await getSingleEventDetails(eventType);
+    this.event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
     infoBoxOpen = false;
     getRealTimeFinanceStream();
