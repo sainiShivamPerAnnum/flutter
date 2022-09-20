@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -60,7 +61,8 @@ class RootViewModel extends BaseModel {
   int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
-  final txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
 
@@ -98,9 +100,9 @@ class RootViewModel extends BaseModel {
     if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
-    txnService.signOut();
+    _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await txnService.fetchTransactions();
+    await _txnHistoryService.fetchTransactions();
     await _journeyService.checkForMilestoneLevelChange();
   }
 

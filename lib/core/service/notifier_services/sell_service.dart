@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/sell_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -12,7 +13,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _saveRepo = locator<SaveRepo>();
-  final _txnService = locator<TransactionService>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
 
   bool _isKYCVerified = false;
   bool _isVPAVerified = false;
@@ -66,9 +67,10 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   }
 
   verifyOngoingTransaction() async {
-    await _txnService.updateTransactions();
-    if (_txnService.txnList != null && _txnService.txnList.length > 0) {
-      UserTransaction ongoingTxn = _txnService.txnList.firstWhere(
+    await _txnHistoryService.updateTransactions();
+    if (_txnHistoryService.txnList != null &&
+        _txnHistoryService.txnList.length > 0) {
+      UserTransaction ongoingTxn = _txnHistoryService.txnList.firstWhere(
           (element) =>
               element.subType == 'WITHDRAWL' &&
               element.tranStatus != "COMPLETE", orElse: () {

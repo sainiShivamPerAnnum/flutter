@@ -7,7 +7,6 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -17,6 +16,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/sell_confirmatio
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -34,7 +34,7 @@ class AugmontGoldSellViewModel extends BaseModel {
   AugmontModel _augmontModel = locator<AugmontModel>();
   UserService _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
-  final _paymentRepo = locator<PaymentRepository>();
+  final _transactionsHistoryRepo = locator<TransactionHistoryRepository>();
 
   bool isGoldRateFetching = false;
   bool isQntFetching = false;
@@ -135,7 +135,7 @@ class AugmontGoldSellViewModel extends BaseModel {
     refresh();
     await _userService.getUserFundWalletData();
     ApiResponse<double> qunatityApiResponse =
-        await _paymentRepo.getWithdrawableAugGoldQuantity();
+        await _transactionsHistoryRepo.getWithdrawableAugGoldQuantity();
     if (qunatityApiResponse.code == 200) {
       withdrawableQnt = qunatityApiResponse.model;
       if (withdrawableQnt == null || withdrawableQnt < 0) withdrawableQnt = 0.0;

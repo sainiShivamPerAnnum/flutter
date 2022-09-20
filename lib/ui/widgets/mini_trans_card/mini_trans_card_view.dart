@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
@@ -26,9 +28,11 @@ class MiniTransactionCard extends StatelessWidget {
         model.getMiniTransactions();
       },
       builder: (ctx, model, child) {
-        return PropertyChangeConsumer<TransactionService,
-            TransactionServiceProperties>(
-          properties: [TransactionServiceProperties.transactionList],
+        return PropertyChangeConsumer<TransactionHistoryService,
+            TransactionHistoryServiceProperties>(
+          properties: [
+            TransactionHistoryServiceProperties.TransactionHistoryList
+          ],
           builder: (ctx, m, child) {
             return Column(
               children: [
@@ -81,15 +85,17 @@ class MiniTransactionCard extends StatelessWidget {
                                           },
                                           dense: true,
                                           title: Text(
-                                              model.txnService.getTileSubtitle(
+                                              model.txnHistoryService
+                                                  .getTileSubtitle(
                                                 m.txnList[i].type.toString(),
                                               ),
                                               style: TextStyles.sourceSans.body3
                                                   .colour(
                                                       UiConstants.kTextColor)),
                                           subtitle: Text(
-                                            model.txnService.getFormattedDate(
-                                                m.txnList[i].timestamp),
+                                            model.txnHistoryService
+                                                .getFormattedDate(
+                                                    m.txnList[i].timestamp),
                                             style: TextStyles.sourceSans.body4
                                                 .colour(
                                                     UiConstants.kTextColor2),
@@ -101,12 +107,13 @@ class MiniTransactionCard extends StatelessWidget {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Text(
-                                                  model.txnService
+                                                  model.txnHistoryService
                                                       .getFormattedTxnAmount(
                                                           m.txnList[i].amount),
                                                   style: TextStyles
                                                       .sourceSansSB.body2
-                                                      .colour(model.txnService
+                                                      .colour(model
+                                                          .txnHistoryService
                                                           .getTransactionTypeColor(
                                                               model.txnList[i]
                                                                   .type))),

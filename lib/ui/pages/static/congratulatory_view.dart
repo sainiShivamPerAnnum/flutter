@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -82,7 +83,7 @@ class CongratulatoryView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text((AppState.currentTxnAmount.toInt()).toString(),
+              Text((TransactionService.currentTxnAmount.toInt()).toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
@@ -112,7 +113,7 @@ class CongratulatoryView extends StatelessWidget {
                           Text("Invested", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(AppState.currentTxnAmount)}",
+                              "₹ ${BaseUtil.getIntOrDouble(TransactionService.currentTxnAmount)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -132,7 +133,7 @@ class CongratulatoryView extends StatelessWidget {
                         children: [
                           Text("Bought", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${AppState.currentTxnGms} gms",
+                          Text("${TransactionService.currentTxnGms} gms",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],

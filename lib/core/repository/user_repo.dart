@@ -138,7 +138,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.putData(
         _apiPaths.kUpdateUserAppflyer,
         body: body,
-        token: 'Bearer $token',
+        token: token,
       );
 
       // clear cache
@@ -394,7 +394,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.putData(
         ApiPath.kGetUserById(userService.baseUser.uid),
         body: dMap,
-        token: "Bearer $token",
+        token: token,
         cBaseUrl: _baseUrl,
       );
 
@@ -424,7 +424,7 @@ class UserRepository extends BaseRepo {
           "token": fcmToken,
         },
         cBaseUrl: _baseUrl,
-        token: "Bearer $token",
+        token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -497,7 +497,7 @@ class UserRepository extends BaseRepo {
         final res = await APIService.instance.putData(
             ApiPath.logOut(userService.baseUser.uid),
             cBaseUrl: _baseUrl,
-            token: "Bearer $token",
+            token: token,
             body: {
               "uid": userService.baseUser.uid ?? "",
               "deviceId": deviceId ?? "",

@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -24,9 +26,10 @@ class _FocusRingState extends State<FocusRing>
   AnimationController _animationController;
 
   Animation<double> endingAnimation;
-
+  final _userservice = locator<UserService>();
   @override
   void initState() {
+    if (_userservice.userJourneyStats.mlIndex != 1) return;
     _animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 3));
     endingAnimation = CurvedAnimation(
@@ -49,6 +52,12 @@ class _FocusRingState extends State<FocusRing>
     setState(() {
       this._showButton = value;
     });
+  }
+
+  @override
+  void dispose() {
+    _animationController?.dispose();
+    super.dispose();
   }
 
   @override

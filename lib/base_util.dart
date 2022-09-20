@@ -731,10 +731,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> fetchUserAugmontDetail() async {
-    ApiResponse<UserAugmontDetail> augmontDetailResponse =
-        await _userRepo.getUserAugmontDetails();
-    if (augmontDetailResponse.code == 200) {
-      augmontDetail = augmontDetailResponse.model;
+    if (augmontDetail == null) {
+      ApiResponse<UserAugmontDetail> augmontDetailResponse =
+          await _userRepo.getUserAugmontDetails();
+      if (augmontDetailResponse.code == 200)
+        augmontDetail = augmontDetailResponse.model;
     }
   }
 

@@ -31,7 +31,6 @@ import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
@@ -306,10 +305,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AllParticipantsView:
           _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
           break;
-        case Pages.GoldBalanceDetailsView:
-          _addPageData(
-              GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
-          break;
         case Pages.AllParticipantsWinnersTopReferersView:
           _addPageData(AllParticipantsWinnersTopReferers(),
               AllParticipantsWinnersTopReferersConfig);
@@ -568,9 +563,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AllParticipantsView:
         AllParticipantsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldBalanceDetailsView:
-        GoldBalanceDetailsViewPageConfig.currentPageAction = action;
-        break;
+
       case Pages.PoolView:
         PoolViewPageConfig.currentPageAction = action;
         break;
@@ -835,9 +828,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'milestones':
         pageConfiguration = GoldenMilestonesViewPageConfig;
         break;
-      case 'goldBalanceDetails':
-        pageConfiguration = GoldBalanceDetailsViewPageConfig;
-        break;
+
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
         break;

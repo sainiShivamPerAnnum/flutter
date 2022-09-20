@@ -553,11 +553,11 @@ class S {
     );
   }
 
-  /// `Invested`
-  String get investedText {
+  /// `Balance`
+  String get balanceText {
     return Intl.message(
-      'Invested',
-      name: 'investedText',
+      'Balance',
+      name: 'balanceText',
       desc: '',
       args: [],
     );

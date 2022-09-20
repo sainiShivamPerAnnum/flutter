@@ -24,6 +24,7 @@ import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -63,7 +64,7 @@ class WinViewModel extends BaseModel {
   final _lbService = locator<LeaderboardService>();
   final userRepo = locator<UserRepository>();
   final _httpModel = locator<HttpModel>();
-  final _transactionService = locator<TransactionService>();
+  final _transactionHistoryService = locator<TransactionHistoryService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _getterrepo = locator<GetterRepository>(); //TR
 
@@ -514,7 +515,7 @@ class WinViewModel extends BaseModel {
         choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
-      _transactionService.updateTransactions();
+      _transactionHistoryService.updateTransactions();
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 

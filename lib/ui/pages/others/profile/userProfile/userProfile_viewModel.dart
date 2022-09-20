@@ -13,6 +13,7 @@ import 'package:felloapp/core/service/notifier_services/google_sign_in_service.d
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -53,7 +54,7 @@ class UserProfileVM extends BaseModel {
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final fcmlistener = locator<FcmListener>();
-  final _txnService = locator<TransactionService>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
@@ -428,7 +429,7 @@ class UserProfileVM extends BaseModel {
                 //log.debug('Sign out process complete');
                 await _baseUtil.signOut();
                 _journeyService.dump();
-                _txnService.signOut();
+                _txnHistoryService.signOut();
                 _tambolaService.signOut();
                 _analyticsService.signOut();
                 _paytmService.signout();

@@ -46,7 +46,6 @@ const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
-const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
@@ -117,7 +116,6 @@ enum Pages {
   GoldenMilestonesView,
   TopSaverView,
   AllParticipantsView,
-  GoldBalanceDetailsView,
   PoolView,
   WebHomeView,
   WebGameView,
@@ -480,12 +478,7 @@ PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
   uiPage: Pages.AllParticipantsView,
   name: 'AllParticipantsView screen',
 );
-PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
-  key: 'GoldBalanceDetailsView',
-  path: GoldBalanceDetailsViewPath,
-  uiPage: Pages.GoldBalanceDetailsView,
-  name: 'Gold Balance Details Screen',
-);
+
 PageConfiguration WebHomeViewPageConfig = PageConfiguration(
   key: 'WebHomeView',
   path: WebHomeViewPath,

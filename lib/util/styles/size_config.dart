@@ -116,6 +116,7 @@ class SizeConfig {
   static double get roundness32 => screenWidth * 0.077; //32
   static double get roundness40 => screenWidth * 0.096; //40
   static double get roundness56 => screenWidth * 0.135; //56
+  static double get roundness112 => screenWidth * 0.270; //56
 
   //SLIVER APP BAR (Campaign Screen)
   static double get sliverAppExpandableSize => screenWidth * 0.6;

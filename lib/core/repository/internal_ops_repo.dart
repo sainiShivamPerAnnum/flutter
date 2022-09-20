@@ -26,8 +26,10 @@ class InternalOpsRepository extends BaseRepo {
           'report': dMap,
         },
         cBaseUrl: _baseUrl,
-        authKey:
-            '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
+        headers: {
+          'authKey':
+              '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
+        },
       );
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
