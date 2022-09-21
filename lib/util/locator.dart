@@ -94,6 +94,7 @@ import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
+import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
@@ -220,4 +221,5 @@ void setupLocator() {
   locator.registerFactory(() => FAQCardViewModel());
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
+  locator.registerFactory(() => TambolaCardModel());
 }

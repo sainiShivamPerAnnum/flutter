@@ -29,7 +29,7 @@ class GameRepo extends BaseRepo {
 
       final List<GameModel> games =
           GameModel.helper.fromMapArray(response["data"]["games"]);
-      games.removeWhere((game) => game.code == 'TA');
+      // games.removeWhere((game) => game.code == 'TA');
       allgames = games;
 
       return ApiResponse<List<GameModel>>(model: games, code: 200);

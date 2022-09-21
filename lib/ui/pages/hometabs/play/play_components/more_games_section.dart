@@ -73,23 +73,23 @@ class MoreGames extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
-                  color: game.shadowColor,
-                ),
-                height: SizeConfig.screenWidth * 0.38,
-                width: SizeConfig.screenWidth * 0.291,
-                child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
-                  child: SvgPicture.network(
-                    game.icon,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     borderRadius:
+              //         BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
+              //     color: game.shadowColor,
+              //   ),
+              //   height: SizeConfig.screenWidth * 0.38,
+              //   width: SizeConfig.screenWidth * 0.291,
+              //   child: ClipRRect(
+              //     borderRadius:
+              //         BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
+              //     child: SvgPicture.network(
+              //       game.icon,
+              //       fit: BoxFit.cover,
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 width: SizeConfig.padding16,
               ),

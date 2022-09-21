@@ -154,6 +154,7 @@ class UiConstants {
 
   static Color kAnimationBackGroundColor = Color(0xFF1B262C);
   static Color kAnimationRingColor = Color(0xFF0C5A59);
+  static Color kTambolaMidTextColor = Color(0xff323232);
 
   static Color kBlogCardRandomColor1 = Color(0xFFF79780);
   static Color kBlogCardRandomColor2 = Color(0xFF62E3C4);
