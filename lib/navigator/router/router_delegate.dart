@@ -29,12 +29,13 @@ import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart'
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/upi/upi_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
@@ -270,7 +271,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
         case Pages.AugGoldSell:
-          _addPageData(AugmontGoldSellView(), AugmontGoldSellPageConfig);
+          _addPageData(GoldSellInputView(), AugmontGoldSellPageConfig);
           break;
         case Pages.AugGoldDetails:
           _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
@@ -337,6 +338,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AutosaveTransactionsView:
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
+
+          break;
+        case Pages.UserUpiDetailsView:
+          _addPageData(UserUPIDetailsView(), UserUpiDetailsViewPageConfig);
           break;
         case Pages.TopPlayerLeaderboard:
           _addPageData(
@@ -624,6 +629,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SharePriceScreenView:
         SharePriceScreenPageConfig.currentPageAction = action;
         break;
+      case Pages.UserUpiDetailsView:
+        UserUpiDetailsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -855,6 +863,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'completeProfile':
         pageConfiguration = CompleteProfileViewPageConfig;
+        break;
+      case 'upiDetails':
+        pageConfiguration = UserUpiDetailsViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/sell_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
@@ -14,24 +15,37 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   final _userService = locator<UserService>();
   final _saveRepo = locator<SaveRepo>();
   final _txnHistoryService = locator<TransactionHistoryService>();
+  final _baseUtil = locator<BaseUtil>();
 
   bool _isKYCVerified = false;
-  bool _isVPAVerified = false;
+  bool _isBankDetailsAdded = false;
   bool _isOngoingTransaction = false;
   bool _isSellButtonVisible = false;
+  bool _isLockInReached = false;
+  bool _isSellLocked = false;
+  String _sellNotice;
 
+  double _withdrawableQnt = 0.0;
+  double _nonWithdrawableQnt = 0.0;
+
+  get withdrawableQnt => this._withdrawableQnt;
+  get nonWithdrawableQnt => this._nonWithdrawableQnt;
+  get isLockInReached => this._isLockInReached;
+  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isKYCVerified => _isKYCVerified;
-  bool get isVPAVerified => _isVPAVerified;
+  bool get isBankDetailsAdded => _isBankDetailsAdded;
   bool get isOngoingTransaction => _isOngoingTransaction;
   bool get isSellButtonVisible => _isSellButtonVisible;
+  get sellNotice => this._sellNotice;
+  get isSellLocked => this._isSellLocked;
 
-  set setKYCVerified(bool val) {
+  set isKYCVerified(bool val) {
     _isKYCVerified = val;
     notifyListeners(SellServiceProperties.kycVerified);
   }
 
-  set setVPAVerified(bool val) {
-    _isVPAVerified = val;
+  set isBankDetailsAdded(bool val) {
+    _isBankDetailsAdded = val;
     notifyListeners(SellServiceProperties.bankDetailsVerified);
   }
 
@@ -39,31 +53,65 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     _isOngoingTransaction = val;
     notifyListeners(SellServiceProperties.ongoingTransaction);
   }
-  //Transaction - check last transaction status(TransactionService)
 
-  init() async {
-    verifyVPAAddress();
-    verifyKYCStatus();
-    verifyOngoingTransaction();
+  set sellNotice(value) {
+    this._sellNotice = value;
+    notifyListeners(SellServiceProperties.augmontSellNotice);
   }
 
-  verifyVPAAddress() async {
-    ApiResponse response =
-        await _saveRepo.verifyVPAAddress(_userService.firebaseUser.uid);
-    print(response.model);
-    // print(response?.model['vpa'] != "");
-    if ((response.code == 200) && (response.model['vpa'] != "")) {
-      setVPAVerified = true;
-      print(_isVPAVerified);
-      _logger.d('vpa verified! $isVPAVerified');
+  set isSellLocked(value) {
+    this._isSellLocked = value;
+    notifyListeners(SellServiceProperties.augmontSellDisabled);
+  }
+
+  set isLockInReached(value) {
+    this._isLockInReached = value;
+  }
+
+  set nonWithdrawableQnt(value) {
+    this._nonWithdrawableQnt = value;
+  }
+
+  set withdrawableQnt(val) {
+    this._withdrawableQnt = val;
+  }
+  //Transaction - check last transaction status(AugmontTransactionService)
+
+  init() async {
+    await _userService.fetchUserAugmontDetail();
+    verifyKYCStatus();
+    verifyBankDetails();
+    verifyOngoingTransaction();
+    checkForSellNotice();
+    checkIfSellIsLocked();
+  }
+
+  verifyBankDetails() async {
+    if (_userService.userAugmontDetails != null &&
+        _userService.userAugmontDetails.bankAccNo != null &&
+        _userService.userAugmontDetails.bankAccNo.isNotEmpty) {
+      isBankDetailsAdded = true;
     }
-    print(_isVPAVerified);
   }
 
   verifyKYCStatus() {
-    setKYCVerified = _userService.baseUser.isSimpleKycVerified;
+    isKYCVerified = _userService.baseUser.isSimpleKycVerified;
     print(_isKYCVerified);
     _logger.d('kyc verified! $isKYCVerified');
+  }
+
+  checkForSellNotice() {
+    if (_userService.userAugmontDetails != null &&
+        _userService.userAugmontDetails.sellNotice != null &&
+        _userService.userAugmontDetails.sellNotice.isNotEmpty)
+      sellNotice = _userService.userAugmontDetails.sellNotice;
+  }
+
+  checkIfSellIsLocked() {
+    if (_userService.userAugmontDetails != null &&
+        _userService.userAugmontDetails.sellNotice != null &&
+        _userService.userAugmontDetails.sellNotice.isNotEmpty)
+      sellNotice = _userService.userAugmontDetails.sellNotice;
   }
 
   verifyOngoingTransaction() async {
@@ -79,4 +127,20 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
       setOngoingTransaction = ongoingTxn != null ? true : false;
     }
   }
+
+  bool getButtonAvailibility() {
+    if (isKYCVerified && isBankDetailsAdded && !isSellLocked) return true;
+    return false;
+  }
+
+  // updateSellButtonDetails() async {
+  //   _isKYCVerified = isKYCVerified ?? false;
+  //   _isVPAVerified = isVPAVerified ?? false;
+  //   if (withdrawableQnt <= nonWithdrawableQnt) {
+  //     _isLockInReached = true;
+  //   }
+  //   _isGoldSaleActive = _baseUtil.augmontDetail?.isSellLocked ?? false;
+  //   _isOngoingTransaction = isOngoingTransaction ?? false;
+  //   notifyListeners();
+  // }
 }

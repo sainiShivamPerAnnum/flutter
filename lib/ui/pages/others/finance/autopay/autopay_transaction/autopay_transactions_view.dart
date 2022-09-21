@@ -134,7 +134,7 @@ class SubscriptionTransactionTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         Haptic.vibrate();
-        // bool freeBeerStatus = _txnService.getBeerTicketStatus(txn);
+        // bool freeBeerStatus = _augTxnService.getBeerTicketStatus(txn);
         showDialog(
             context: AppState.delegate.navigatorKey.currentContext,
             builder: (BuildContext context) {
@@ -171,7 +171,7 @@ class SubscriptionTransactionTile extends StatelessWidget {
           Text(
             _txnHistoryService.getFormattedTxnAmount(txn.amount),
             style: TextStyle(
-              // color: _txnService.getTileColor(txn.tranStatus),
+              // color: _augTxnService.getTileColor(txn.tranStatus),
               fontSize: SizeConfig.mediumTextSize,
             ),
           ),
@@ -179,7 +179,7 @@ class SubscriptionTransactionTile extends StatelessWidget {
           Text(
             _txnHistoryService.getFormattedTime(txn.createdOn),
             style: TextStyle(
-                // color: _txnService.getTileColor(txn.tranStatus),
+                // color: _augTxnService.getTileColor(txn.tranStatus),
                 color: Colors.black45,
                 fontSize: SizeConfig.smallTextSize),
           )

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UPIAppsBottomSheet extends StatelessWidget {
-  final TransactionService txnServiceInstance;
+  final AugmontTransactionService txnServiceInstance;
 
   const UPIAppsBottomSheet({Key key, this.txnServiceInstance})
       : super(key: key);

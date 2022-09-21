@@ -757,5 +757,6 @@ class WinViewModel extends BaseModel {
       });
     } else
       ongoingEvents = [];
+    setupAutoEventScroll();
   }
 }

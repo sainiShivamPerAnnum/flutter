@@ -65,7 +65,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   UserService get userService => _userService;
-  // TransactionService get txnService => _transactionService;
+  // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
     this._choice = value;

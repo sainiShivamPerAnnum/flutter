@@ -118,7 +118,8 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
-          ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
+          ChangeNotifierProvider(
+              create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
           StreamProvider<ConnectivityStatus>(
             create: (_) {
@@ -139,9 +140,9 @@ class _MyAppState extends State<MyApp> {
             child: PropertyChangeProvider<TransactionHistoryService,
                 TransactionHistoryServiceProperties>(
               value: locator<TransactionHistoryService>(),
-              child: PropertyChangeProvider<TransactionService,
-                  TransactionServiceProperties>(
-                value: locator<TransactionService>(),
+              child: PropertyChangeProvider<AugmontTransactionService,
+                  GoldTransactionServiceProperties>(
+                value: locator<AugmontTransactionService>(),
                 child: PropertyChangeProvider<UserCoinService,
                     UserCoinServiceProperties>(
                   value: locator<UserCoinService>(),

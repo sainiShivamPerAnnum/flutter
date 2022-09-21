@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/service/notifier_services/sell_service.dart';
@@ -16,7 +17,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -32,6 +33,7 @@ class SaveViewModel extends BaseModel {
   BaseUtil baseProvider;
   final SellService _sellService = locator<SellService>();
   final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
+  final _paymentRepo = locator<PaymentRepository>();
   final _baseUtil = locator<BaseUtil>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
@@ -111,9 +113,9 @@ class SaveViewModel extends BaseModel {
     baseProvider = BaseUtil();
     getCampaignEvents();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      fetchLockedGoldQnt();
+      // fetchLockedGoldQnt();
       _sellService.init();
-      updateSellButtonDetails();
+      // _sellService.updateSellButtonDetails();
     });
     getSaveViewBlogs();
     notifyListeners();
@@ -133,17 +135,6 @@ class SaveViewModel extends BaseModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
-  updateSellButtonDetails() async {
-    _isKYCVerified = _sellService?.isKYCVerified ?? false;
-    _isVPAVerified = _sellService?.isVPAVerified ?? false;
-    if (withdrawableQnt <= nonWithdrawableQnt) {
-      _isLockInReached = true;
-    }
-    _isGoldSaleActive = _baseUtil.augmontDetail?.isSellLocked ?? false;
-    _isOngoingTransaction = _sellService?.isOngoingTransaction ?? false;
-    notifyListeners();
-  }
-
   getCampaignEvents() async {
     updateIsChallengesLoading(true);
     final response = await _campaignRepo.getOngoingEvents();
@@ -159,50 +150,35 @@ class SaveViewModel extends BaseModel {
     updateIsChallengesLoading(false);
   }
 
-  fetchLockedGoldQnt() async {
-    await _userService.getUserFundWalletData();
-    ApiResponse<double> qunatityApiResponse =
-        await _transactionHistoryRepo.getWithdrawableAugGoldQuantity();
-    if (qunatityApiResponse.code == 200) {
-      setWithdrawableQnt = qunatityApiResponse.model;
-      if (_withdrawableQnt == null || _withdrawableQnt < 0) {
-        setWithdrawableQnt = 0.0;
-      }
-      if (userFundWallet == null ||
-          userFundWallet.augGoldQuantity == null ||
-          userFundWallet.augGoldQuantity <= 0.0) {
-        setNonWithdrawableQnt = 0.0;
-      } else {
-        setNonWithdrawableQnt = BaseUtil.digitPrecision(
-            math.max(0.0, userFundWallet.augGoldQuantity - _withdrawableQnt),
-            4,
-            false);
-      }
-    } else {
-      setNonWithdrawableQnt = 0.0;
-      setWithdrawableQnt = 0.0;
-    }
-    refresh();
-  }
+  // fetchLockedGoldQnt() async {
+  //   await _userService.getUserFundWalletData();
+  //   ApiResponse<double> qunatityApiResponse =
+  //       await _paymentRepo.getWithdrawableAugGoldQuantity();
+  //   if (qunatityApiResponse.code == 200) {
+  //     setWithdrawableQnt = qunatityApiResponse.model;
+  //     if (_withdrawableQnt == null || _withdrawableQnt < 0) {
+  //       setWithdrawableQnt = 0.0;
+  //     }
+  //     if (userFundWallet == null ||
+  //         userFundWallet.augGoldQuantity == null ||
+  //         userFundWallet.augGoldQuantity <= 0.0) {
+  //       setNonWithdrawableQnt = 0.0;
+  //     } else {
+  //       setNonWithdrawableQnt = BaseUtil.digitPrecision(
+  //           math.max(0.0, userFundWallet.augGoldQuantity - _withdrawableQnt),
+  //           4,
+  //           false);
+  //     }
+  //   } else {
+  //     setNonWithdrawableQnt = 0.0;
+  //     setWithdrawableQnt = 0.0;
+  //   }
+  //   refresh();
+  // }
 
   Color getRandomColor() {
     math.Random random = math.Random();
     return randomBlogCardCornerColors[random.nextInt(5)];
-  }
-
-  bool getButtonAvailibility() {
-    if (_isKYCVerified && _isVPAVerified) {
-      if (!_isGoldSaleActive && (_isKYCVerified && _isVPAVerified)) {
-        return true;
-      }
-      if (!_isLockInReached && (_isKYCVerified && _isVPAVerified)) {
-        return true;
-      }
-      if (!_isOngoingTransaction && (_isKYCVerified && _isVPAVerified)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   getSaveViewBlogs() async {
@@ -271,7 +247,7 @@ class SaveViewModel extends BaseModel {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: AugmontGoldSellPageConfig,
-        widget: AugmontGoldSellView());
+        widget: GoldSellInputView());
   }
 
   navigateToCompleteKYC() {

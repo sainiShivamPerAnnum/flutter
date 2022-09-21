@@ -1,1 +1,1 @@
-enum TransactionServiceProperties { transactionState, transactionStatus }
+enum GoldTransactionServiceProperties { transactionState, transactionStatus }

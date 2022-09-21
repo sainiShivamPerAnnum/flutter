@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -19,6 +22,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 
 class KYCDetailsViewModel extends BaseModel {
   String stateChosenValue;
@@ -34,8 +38,11 @@ class KYCDetailsViewModel extends BaseModel {
   final _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _sellService = locator<SellService>();
+  final _cacheService = new CacheService();
+  final _userRepo = locator<UserRepository>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
+  FocusNode kycNameFocusNode = FocusNode();
   FocusNode panFocusNode = FocusNode();
   TextInputType panTextInputType = TextInputType.name;
 
@@ -105,8 +112,10 @@ class KYCDetailsViewModel extends BaseModel {
         inEditMode = false;
       }
     }
-
     setState(ViewState.Idle);
+    Future.delayed(Duration(milliseconds: 500), () {
+      if (inEditMode) kycNameFocusNode.requestFocus();
+    });
   }
 
   bool _preVerifyInputs() {
@@ -128,7 +137,7 @@ class KYCDetailsViewModel extends BaseModel {
     return true;
   }
 
-  void onSubmit(context) async {
+  Future<void> onSubmit(context) async {
     isUpadtingKycDetails = true;
     if (!_preVerifyInputs()) {
       isUpadtingKycDetails = false;
@@ -146,25 +155,15 @@ class KYCDetailsViewModel extends BaseModel {
     if (veriDetails != null &&
         veriDetails['flag'] != null &&
         veriDetails['flag']) {
-      if (_baseUtil.userRegdPan == null ||
-          _baseUtil.userRegdPan.isEmpty ||
-          _baseUtil.userRegdPan != panController.text) {
-        isUpadtingKycDetails = false;
-        _baseUtil.userRegdPan = panController.text;
-      }
+      if (veriDetails['upstreamName'] != null &&
+          veriDetails['upstreamName'] != '') {
+        await _userRepo.updateUser(dMap: {
+          BaseUser.fldIsSimpleKycVerified: true,
+          BaseUser.fldName: veriDetails['upstreamName'],
+          BaseUser.fldKycName: veriDetails['upstreamName'],
+        });
 
-      if (_userService.baseUser.isSimpleKycVerified == null ||
-          !_userService.baseUser.isSimpleKycVerified) {
-        _userService.baseUser.isSimpleKycVerified = true;
-        if (veriDetails['upstreamName'] != null &&
-            veriDetails['upstreamName'] != '') {
-          _userService.baseUser.kycName = veriDetails['upstreamName'];
-          _userService.baseUser.name = veriDetails['upstreamName'];
-        }
-        _baseUtil.setKycVerified(true);
-        _userService.isSimpleKycVerified = true;
-        _sellService.setKYCVerified = true;
-        isUpadtingKycDetails = false;
+        await _userService.setBaseUser();
       }
 
       _analyticsService.track(
@@ -172,8 +171,6 @@ class KYCDetailsViewModel extends BaseModel {
         properties: {'userId': _userService.baseUser.uid},
       );
 
-      _userService.isSimpleKycVerified = true;
-      _userService.setMyUserName(_userService.baseUser.name);
       isUpadtingKycDetails = false;
 
       BaseUtil.showPositiveAlert(
@@ -241,6 +238,8 @@ class KYCDetailsViewModel extends BaseModel {
         if (_response.code == 200) {
           if (_response.model.gtId != null && _response.model.gtId.isNotEmpty)
             GoldenTicketService.goldenTicketId = _response.model.gtId;
+          // clear cache
+          await _cacheService.invalidateByKey(CacheKeys.USER);
           _flag = true;
         } else {
           _flag = false;

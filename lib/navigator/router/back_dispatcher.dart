@@ -65,6 +65,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   Future<bool> didPopRoute() {
     log("Back Request called");
     if (JourneyService.isAvatarAnimationInProgress) return null;
+    if (AppState.delegate.appState.isTxnLoaderInView) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
     Future.delayed(Duration(milliseconds: 20), () {

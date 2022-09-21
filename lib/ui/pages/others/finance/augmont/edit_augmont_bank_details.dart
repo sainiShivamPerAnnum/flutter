@@ -466,8 +466,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       }
 
       //Verify Transfer
-      final ApiResponse<VerifyAmountApiResponseModel> res =
-          await _signzyRepository.verifyAmount(
+      final ApiResponse<bool> res = await _signzyRepository.verifyAmount(
         uid: _userService.baseUser.uid,
         signzyId: _transferAmountResponse.signzyReferenceId,
       );

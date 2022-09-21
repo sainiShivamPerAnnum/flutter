@@ -20,7 +20,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class NewAugmontBuyView extends StatelessWidget {
   final int amount;
   final bool skipMl;
-  final TransactionService txnService;
+  final AugmontTransactionService txnService;
   final AugmontGoldBuyViewModel model;
   const NewAugmontBuyView(
       {Key key,
@@ -38,10 +38,7 @@ class NewAugmontBuyView extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(height: SizeConfig.padding16),
-        RechargeModalSheetAppBar(
-          model: model,
-          txnService: txnService,
-        ),
+        RechargeModalSheetAppBar(txnService: txnService),
         SizedBox(height: SizeConfig.padding32),
         EnterAmountView(
           model: model,
@@ -195,9 +192,8 @@ class NewAugmontBuyView extends StatelessWidget {
 }
 
 class RechargeModalSheetAppBar extends StatelessWidget {
-  final AugmontGoldBuyViewModel model;
-  final TransactionService txnService;
-  RechargeModalSheetAppBar({@required this.model, @required this.txnService});
+  final AugmontTransactionService txnService;
+  RechargeModalSheetAppBar({@required this.txnService});
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -247,7 +243,7 @@ class EnterAmountView extends StatelessWidget {
   EnterAmountView({Key key, @required this.model, @required this.txnService})
       : super(key: key);
   final AugmontGoldBuyViewModel model;
-  final TransactionService txnService;
+  final AugmontTransactionService txnService;
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -1,6 +1,9 @@
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class MoreInfoDialog extends StatelessWidget {
@@ -20,58 +23,45 @@ class MoreInfoDialog extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+        BaseDialog(
+          content: Padding(
+            padding: EdgeInsets.zero,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.rajdhaniSB.title4,
+                ),
+                Divider(color: UiConstants.kTextColor2),
+                SizedBox(
+                  height: 5,
+                ),
+                if (imagePath != null && imagePath.isNotEmpty)
+                  Image.asset(
+                    imagePath,
+                    alignment: Alignment.center,
+                    fit: BoxFit.contain,
+                    width: SizeConfig.screenWidth * 0.8,
+                    height: SizeConfig.screenHeight * 0.24,
+                  ),
+                SizedBox(height: SizeConfig.padding12),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body2,
+                ),
+                SizedBox(height: SizeConfig.padding20),
+                AppPositiveBtn(
+                    btnText: "OK",
+                    onPressed: () =>
+                        AppState.backButtonDispatcher.didPopRoute())
+              ],
             ),
-            elevation: 1.0,
-            backgroundColor: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.title4.bold,
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  (imagePath != null && imagePath.isNotEmpty)
-                      ? Image.asset(
-                          imagePath,
-                          alignment: Alignment.center,
-                          fit: BoxFit.contain,
-                          height:
-                              imageSize?.height ?? SizeConfig.screenWidth * 0.8,
-                          width:
-                              imageSize?.width ?? SizeConfig.screenWidth * 0.8,
-                        )
-                      : Container(),
-                  Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.body2,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  )
-                ],
-              ),
-            )),
-        Material(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.white,
-          child: IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
           ),
-        )
+        ),
       ],
     );
   }

@@ -223,6 +223,7 @@ class Assets {
   static final String glitter = "assets/lotties/glitter.json";
   static final String gtBackground = "assets/images/gtdbg.png";
   static final String gtConfetti = "assets/lotties/confetti.json";
+  static final String upiIcon = "assets/vectors/icons/upi.svg";
 
   static final String aTambolaTicket = 'assets/svg/frame_svg.svg';
   static final String aFelloToken = 'assets/temp/token.svg';
@@ -510,5 +511,7 @@ class Assets {
       "assets/lotties/deposit_progress.json";
   static const String goldDepostSuccessLottie =
       "assets/lotties/deposit_complete.json";
+  static const String goldSellCompleteLottie =
+      "assets/lotties/sell_complete.json";
   static const String fullScreenLoaderLottie = "assets/lotties/loader.json";
 }

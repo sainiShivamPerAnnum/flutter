@@ -26,7 +26,8 @@ class RechargeModalSheet extends StatefulWidget {
 
 class _RechargeModalSheetState extends State<RechargeModalSheet>
     with WidgetsBindingObserver {
-  final TransactionService _txnService = locator<TransactionService>();
+  final AugmontTransactionService _txnService =
+      locator<AugmontTransactionService>();
   AppLifecycleState appLifecycleState;
 
   @override
@@ -48,8 +49,8 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!TransactionService.isIOSTxnInProgress) return;
-      TransactionService.isIOSTxnInProgress = false;
+      if (!AugmontTransactionService.isIOSTxnInProgress) return;
+      AugmontTransactionService.isIOSTxnInProgress = false;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
@@ -57,11 +58,11 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<TransactionService,
-        TransactionServiceProperties>(
+    return PropertyChangeConsumer<AugmontTransactionService,
+        GoldTransactionServiceProperties>(
       properties: [
-        TransactionServiceProperties.transactionState,
-        TransactionServiceProperties.transactionStatus
+        GoldTransactionServiceProperties.transactionState,
+        GoldTransactionServiceProperties.transactionStatus
       ],
       builder: (transactionContext, txnService, transactionProperty) {
         return AnimatedContainer(
@@ -108,7 +109,7 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
   }
 
   Widget _getView(
-      TransactionService txnService, AugmontGoldBuyViewModel model) {
+      AugmontTransactionService txnService, AugmontGoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
       return NewAugmontBuyView(
         amount: widget.amount,
@@ -147,7 +148,7 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
     return 0;
   }
 
-  _getBackground(TransactionService txnService) {
+  _getBackground(AugmontTransactionService txnService) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
       return Container(
         decoration: BoxDecoration(

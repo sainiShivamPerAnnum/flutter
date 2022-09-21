@@ -11,24 +11,24 @@ class TransactionHistoryRepository extends BaseRepo {
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
-  Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
-    try {
-      final token = await getBearerToken();
-      final quntityResponse = await APIService.instance.getData(
-        ApiPath.getWithdrawableGoldQuantity(
-          this.userService.baseUser.uid,
-        ),
-        cBaseUrl: _baseUrl,
-        token: token,
-      );
+  // Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
+  //   try {
+  //     final token = await getBearerToken();
+  //     final quntityResponse = await APIService.instance.getData(
+  //       ApiPath.getWithdrawableGoldQuantity(
+  //         this.userService.baseUser.uid,
+  //       ),
+  //       cBaseUrl: _baseUrl,
+  //       token: token,
+  //     );
 
-      final quantity = quntityResponse["data"]["quantity"].toDouble();
-      return ApiResponse(model: quantity, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch QUNTITY", 400);
-    }
-  }
+  //     final quantity = quntityResponse["data"]["quantity"].toDouble();
+  //     return ApiResponse(model: quantity, code: 200);
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     return ApiResponse.withError("Unable to fetch QUNTITY", 400);
+  //   }
+  // }
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
     String start,

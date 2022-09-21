@@ -41,6 +41,7 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.hintText = '',
     this.autoFocus = false,
+    this.obscure = false,
     this.borderRadius,
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
@@ -50,6 +51,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.textAlign = TextAlign.start,
     this.textStyle,
+    this.maxLines = 1,
     this.suffixText,
     this.suffixTextStyle,
     this.scrollPadding,
@@ -72,6 +74,7 @@ class AppTextField extends StatelessWidget {
   final List<TextInputFormatter> inputFormatters;
   final TextInputType keyboardType;
   final bool autoFocus;
+  final bool obscure;
   final BorderRadius borderRadius;
   final Widget suffixIcon;
   final Widget prefixIcon;
@@ -80,7 +83,8 @@ class AppTextField extends StatelessWidget {
   final String suffixText;
   final TextStyle suffixTextStyle;
   //executes on every change
-  AutovalidateMode autovalidateMode;
+  final AutovalidateMode autovalidateMode;
+  final int maxLines;
   final Function onChanged;
   final Function onTap;
   final TextAlign textAlign;
@@ -130,12 +134,13 @@ class AppTextField extends StatelessWidget {
                   : UiConstants.kTextFieldTextColor,
             ),
         textAlign: textAlign,
-        maxLines: null,
+        maxLines: maxLines,
         minLines: null,
         maxLength: maxLength,
         autofocus: autoFocus,
         keyboardType: keyboardType,
         onChanged: onChanged,
+        obscureText: obscure,
         onTap: onTap ?? () {},
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
@@ -328,7 +333,7 @@ class AppPositiveBtn extends StatelessWidget {
     Key key,
     @required this.btnText,
     @required this.onPressed,
-    @required this.width,
+    this.width,
     this.height,
   }) : super(key: key);
   final String btnText;
@@ -340,7 +345,7 @@ class AppPositiveBtn extends StatelessWidget {
       children: [
         Container(
           height: height ?? SizeConfig.screenWidth * 0.1556,
-          width: width,
+          width: width ?? SizeConfig.screenWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
               SizeConfig.buttonBorderRadius,
@@ -365,7 +370,7 @@ class AppPositiveBtn extends StatelessWidget {
         ),
         Container(
           height: SizeConfig.padding2,
-          width: width - SizeConfig.padding4,
+          width: (width ?? SizeConfig.screenWidth) - SizeConfig.padding4,
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding2,
           ),

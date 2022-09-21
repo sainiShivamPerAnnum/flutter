@@ -17,7 +17,7 @@ import 'package:lottie/lottie.dart';
 
 class CongratulatoryView extends StatelessWidget {
   CongratulatoryView({Key key}) : super(key: key);
-  // final TransactionService _txnService = locator<TransactionService>();
+  // final AugmontTransactionService _augTxnService = locator<AugmontTransactionService>();
   // final _userservice = locator<UserService>();
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,9 @@ class CongratulatoryView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text((TransactionService.currentTxnAmount.toInt()).toString(),
+              Text(
+                  (AugmontTransactionService.currentTxnAmount.toInt())
+                      .toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
@@ -113,7 +115,7 @@ class CongratulatoryView extends StatelessWidget {
                           Text("Invested", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(TransactionService.currentTxnAmount)}",
+                              "₹ ${BaseUtil.getIntOrDouble(AugmontTransactionService.currentTxnAmount)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -133,7 +135,7 @@ class CongratulatoryView extends StatelessWidget {
                         children: [
                           Text("Bought", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${TransactionService.currentTxnGms} gms",
+                          Text("${AugmontTransactionService.currentTxnGms} gms",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
