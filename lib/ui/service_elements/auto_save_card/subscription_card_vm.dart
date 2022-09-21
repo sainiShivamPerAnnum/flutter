@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -13,6 +14,7 @@ import 'package:intl/intl.dart';
 
 class SubscriptionCardViewModel extends BaseModel {
   final _paytmService = locator<PaytmService>();
+  final _userService = locator<UserService>();
   bool _isResumingInProgress = false;
   bool _isLoading = false;
 
@@ -26,6 +28,10 @@ class SubscriptionCardViewModel extends BaseModel {
 
   init() async {
     await _paytmService.getActiveSubscriptionDetails();
+  }
+
+  isUserProfileComplete() {
+    return _userService.userJourneyStats.mlIndex > 1;
   }
 
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {
