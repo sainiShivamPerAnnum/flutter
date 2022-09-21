@@ -297,6 +297,11 @@ class Assets {
   static final String gt_none = "assets/svg/gt_none.svg";
   static final String newTokenAsset = "assets/svg/token_asset_new.svg";
 
+  static final String tambolaCardAsset = "assets/svg/tambola_card_asset.svg";
+  static final String noReferalAsset = "assets/svg/no_referal_asset.svg";
+  static final String noTransactionAsset = "assets/svg/no_transactions.svg";
+  static final String noWinnersAsset = "assets/svg/no_winners_asset.svg";
+
   //Prize claim assets
   static final List<String> prizeClaimAssets = [
     "assets/svg/prize_asset_0.svg",

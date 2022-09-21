@@ -28,7 +28,7 @@ class TambolaCardModel extends BaseModel {
     this._isGameModelLoading = _isGameModelLoading;
   }
 
-  int get dailyPicksCount => _tambolaService.dailyPicksCount;
+  int get dailyPicksCount => _tambolaService.dailyPicksCount ?? 0;
   List<int> get todaysPicks => _tambolaService.todaysPicks;
 
   init() async {

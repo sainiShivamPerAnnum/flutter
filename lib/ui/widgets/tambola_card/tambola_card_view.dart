@@ -37,7 +37,7 @@ class TambolaCard extends StatelessWidget {
         child: Column(
           children: [
             SvgPicture.asset(
-              "assets/svg/tambola_card_asset.svg",
+              Assets.tambolaCardAsset,
               width: SizeConfig.screenWidth * 0.5,
             ),
             Stack(
@@ -83,10 +83,16 @@ class TambolaCard extends StatelessWidget {
                     todaysPicks: List.generate(
                         model.dailyPicksCount, (index) => Random().nextInt(90)),
                   )
-                : CurrentPicks(
-                    dailyPicksCount: model.dailyPicksCount,
-                    todaysPicks: model.todaysPicks,
-                  ),
+                : model.todaysPicks != null
+                    ? CurrentPicks(
+                        dailyPicksCount: model.dailyPicksCount,
+                        todaysPicks: model.todaysPicks,
+                      )
+                    : CurrentPicks(
+                        dailyPicksCount: model.dailyPicksCount,
+                        todaysPicks:
+                            List.generate(model.dailyPicksCount, (index) => 0),
+                      ),
             SizedBox(
               height: SizeConfig.padding12,
             ),

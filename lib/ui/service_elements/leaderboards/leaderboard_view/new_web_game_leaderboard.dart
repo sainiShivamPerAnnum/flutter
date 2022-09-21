@@ -46,20 +46,20 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                     currentUserRank: m.currentUserRank,
                     isUserInTopThree: m.isUserInTopThree,
                   )
-                : Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                    decoration: BoxDecoration(
-                      color: UiConstants.gameCardColor,
-                      borderRadius: BorderRadius.circular(
-                        SizeConfig.roundness8,
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: SizeConfig.padding16),
+                      SvgPicture.asset(
+                        Assets.noWinnersAsset,
                       ),
-                    ),
-                    padding: EdgeInsets.only(bottom: SizeConfig.padding80 * 3),
-                    child: NoRecordDisplayWidget(
-                      asset: "images/leaderboard.png",
-                      text: "Leaderboard will be updated soon",
-                    ),
+                      SizedBox(height: SizeConfig.padding16),
+                      Text(
+                        "No winners yet",
+                        style: TextStyles.sourceSans.body2.colour(Colors.white),
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                    ],
                   ));
       },
     );
