@@ -150,7 +150,7 @@ class NoRecordDisplayWidget extends StatelessWidget {
         Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyles.body2.bold,
+          style: TextStyles.body2.bold.colour(Colors.white),
         ),
         if (bottomPadding) SizedBox(height: SizeConfig.padding16),
       ],

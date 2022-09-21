@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -44,7 +45,11 @@ class AugmontModel extends ChangeNotifier {
   final UserService _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final TransactionService _txnService = locator<TransactionService>();
+  final TransactionHistoryService _txnHistoryService =
+      locator<TransactionHistoryService>();
   final _analyticsService = locator<AnalyticsService>();
+  List<String> _sellingReasons = [];
+  String _selectedReasonForSelling = '';
 
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
@@ -53,10 +58,24 @@ class AugmontModel extends ChangeNotifier {
   String _apiKey;
   var headers;
 
+  List<String> get sellingReasons => _sellingReasons;
+  String get selectedReasonForSelling => _selectedReasonForSelling;
+
+  set selectedReasonForSelling(String val) {
+    this._selectedReasonForSelling = val;
+    notifyListeners();
+  }
+
   ApiResponse<DepositResponseModel> _initialDepositResponse;
   ApiResponse<String> _tranIdResponse;
 
   Future<bool> _init() async {
+    _sellingReasons = [
+      'Not interested anymore',
+      'Not interested anymore',
+      'Not interested anymore',
+      'Others'
+    ];
     if (_dbModel == null) return false;
     Map<String, String> cMap = await _dbModel.getActiveAwsAugmontApiKey();
     if (cMap == null) return false;
@@ -316,7 +335,7 @@ class AugmontModel extends ChangeNotifier {
             _onCompleteDepositResponse.model.gtId;
       }
       //add this to augmontBuyVM
-      _txnService.updateTransactions();
+      _txnHistoryService.updateTransactions();
 
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
@@ -404,7 +423,7 @@ class AugmontModel extends ChangeNotifier {
             enqueuedTaskDetails: _initialDepositResponse
                 .model.response.transactionDoc.enqueuedTaskDetails);
 
-    _txnService.updateTransactions();
+    _txnHistoryService.updateTransactions();
     if (_onCancleUserDepositResponse.code == 400) {
       _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.CompleteUserDepositApiFailed, {
@@ -530,7 +549,7 @@ class AugmontModel extends ChangeNotifier {
         }
         _baseProvider.currentAugmontTxn = _onSellCompleteResponse
             .model.response.transactionDoc.transactionDetail;
-        _txnService.updateTransactions();
+        _txnHistoryService.updateTransactions();
         if (_augmontTxnProcessListener != null)
           _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
       } catch (e) {

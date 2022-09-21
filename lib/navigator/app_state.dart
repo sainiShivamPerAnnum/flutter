@@ -29,27 +29,26 @@ class PageAction {
 class AppState extends ChangeNotifier {
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
-  int _rootIndex = 1;
-  bool _isTxnLoaderInView = false;
+  int _rootIndex = 0;
+  // bool _isTxnLoaderInView = false;
+  static PageController homeTabPageController = PageController(initialPage: 0);
+  // Future _txnFunction;
+  // Timer _txnTimer;
   Future _txnFunction;
-  Timer _txnTimer;
   static Timer pollingPeriodicTimer;
-  static bool isIOSTxnInProgress = false;
-  static double currentTxnAmount = 0.0;
-  static String currentTxnOrderId;
+
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
   static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
-  static bool unsavedPrefs = false;
   static bool isWebGameLInProgress = false;
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
   static bool isDrawerOpened = false;
-
+  static bool isUserSignedIn = false;
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
 
@@ -62,19 +61,19 @@ class AppState extends ChangeNotifier {
 
   get rootIndex => this._rootIndex;
 
-  get isTxnLoaderInView => this._isTxnLoaderInView;
+  // get isTxnLoaderInView => this._isTxnLoaderInView;
 
-  Timer get txnTimer => this._txnTimer;
+  // Timer get txnTimer => this._txnTimer;
 
   set rootIndex(value) {
     this._rootIndex = value;
     notifyListeners();
   }
 
-  set isTxnLoaderInView(bool val) {
-    this._isTxnLoaderInView = val;
-    notifyListeners();
-  }
+  // set isTxnLoaderInView(bool val) {
+  //   this._isTxnLoaderInView = val;
+  //   notifyListeners();
+  // }
 
   // Future get txnFunction => this._txnFunction;
 
@@ -82,12 +81,6 @@ class AppState extends ChangeNotifier {
   //   this._txnFunction = function;
   //   notifyListeners();
   // }
-
-  set txnTimer(Timer timer) {
-    if (txnTimer != null) this.txnTimer.cancel();
-    this._txnTimer = timer;
-    notifyListeners();
-  }
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;
@@ -112,12 +105,21 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  static blockNavigation() {
+    screenStack.add(ScreenItem.loader);
+  }
+
+  static unblockNavigation() {
+    if (screenStack.last == ScreenItem.loader) screenStack.removeLast();
+  }
+
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex ?? 1;
+  int get getCurrentTabIndex => _rootIndex ?? 0;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
+    // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
       _winnerService.fetchTopWinner();
       _lbService.fetchReferralLeaderBoard();
@@ -131,7 +133,7 @@ class AppState extends ChangeNotifier {
   }
 
   returnHome() {
-    _rootIndex = 1;
+    _rootIndex = 0;
     print(_rootIndex);
 
     notifyListeners();

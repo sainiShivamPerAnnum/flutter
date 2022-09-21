@@ -17,7 +17,11 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../../core/service/api.dart';
+import '../../../../../util/assets.dart';
 
 class TopSaverViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
@@ -35,12 +39,69 @@ class TopSaverViewModel extends BaseModel {
 
   String saverFreq = "daily";
 
+  String subTitle = "Save a penny a day";
+
+  int weekDay = DateTime.now().weekday;
+
   int _userRank = 0;
+  double _userAmount = 0;
+  double _highestSavings = 0;
   String winnerTitle = "Past Winners";
   EventModel event;
   bool showStandingsAndWinners = true;
   String eventStandingsType = "HIGHEST_SAVER";
   String actionTitle = "Buy Digital Gold";
+
+  bool isStreamLoading = true;
+
+  int _tabNo = 0;
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
+  PageController _pageController;
+
+  PageController get pageController => _pageController;
+
+  bool infoBoxOpen = false;
+
+  int get tabNo => _tabNo;
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
+
+  double get tabPosWidthFactor => _tabPosWidthFactor;
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
+
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
+  }
+
+  //Related to the info box/////////////////
+  String boxHeading = "How to participate?";
+  List<String> boxAssets = [
+    Assets.singleStarAsset,
+    Assets.singleCoinAsset,
+    Assets.singleTmbolaTicket,
+  ];
+  List<String> boxTitlles = [
+    'Choose a product for\nsaving.',
+    'Enter an amount you\nwant to save. ',
+    'Play games with tokens\nearned.'
+  ];
+  ////////////////////////////////////////////
 
   List<ScoreBoard> currentParticipants;
   List<PastHighestSaver> _pastWinners;
@@ -61,16 +122,36 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get highestSavings => this._highestSavings;
+
+  set highestSavings(value) {
+    this._highestSavings = value;
+    notifyListeners();
+  }
+
+  get userAmount => this._userAmount;
+
+  set userAmount(value) {
+    this._userAmount = value;
+    notifyListeners();
+  }
+
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
-    event = await getSingleEventDetails(eventType);
+
+    this.event = await getSingleEventDetails(eventType);
+    _pageController = PageController(initialPage: 0);
+    infoBoxOpen = false;
+    getRealTimeFinanceStream();
     setState(ViewState.Idle);
+
     campaignType = event.type;
     // eventService.getEventType(event.type);
     _logger
         .d("Top Saver Viewmodel initialised with saver type : ${event.type}");
     setAppbarTitle();
     fetchTopSavers();
+
     fetchPastWinners();
     // _logger.d(CodeFromFreq.getPastDayCode());
     // _logger.d(CodeFromFreq.getPastWeekCode());
@@ -145,8 +226,15 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
+  toggleInfoBox() {
+    infoBoxOpen = !infoBoxOpen;
+    notifyListeners();
+  }
+
   Future<EventModel> getSingleEventDetails(String eventType) async {
     EventModel event;
+    _logger.d(eventType);
+
     final response = await _campaignRepo.getOngoingEvents();
     if (response.code == 200) {
       List<EventModel> ongoingEvents = response.model;
@@ -155,6 +243,8 @@ class TopSaverViewModel extends BaseModel {
         if (element.type == eventType) event = element;
       });
     }
+
+    _logger.d(event.toString());
     return event;
   }
 
@@ -165,6 +255,7 @@ class TopSaverViewModel extends BaseModel {
     );
     if (response.code == 200) {
       currentParticipants = LeaderboardModel.fromMap(response.model).scoreboard;
+
       getUserRankIfAny();
     } else
       currentParticipants = [];
@@ -191,6 +282,8 @@ class TopSaverViewModel extends BaseModel {
           );
         }
       }
+
+      notifyListeners();
     } else
       pastWinners = [];
 
@@ -203,9 +296,8 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Future<String> getWinnerDP(int index) async {
-    String dpUrl = await _dbModel.getUserDP(pastWinners[index].userid);
-    return dpUrl;
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
   }
 
   getUserRankIfAny() {
@@ -214,10 +306,55 @@ class TopSaverViewModel extends BaseModel {
               (e) => e.userid == _userService.baseUser.uid,
               orElse: () => null) !=
           null) {
+        final ScoreBoard curentUserStat = currentParticipants
+            .firstWhere((e) => e.userid == _userService.baseUser.uid);
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
+        _userAmount =
+            BaseUtil.digitPrecision(curentUserStat.score, 4, false); //TODO
       }
+
+      fetchHighestSavings();
+    }
+  }
+
+  Stream<DatabaseEvent> getRealTimeFinanceStream() {
+    return Api().fetchRealTimeFinanceStats();
+  }
+
+  String sortPlayerNumbers(String number) {
+    double num = double.parse(number);
+
+    if (num < 1000) {
+      return num.toStringAsFixed(0);
+    } else {
+      num = num / 1000;
+      return "${num.toStringAsFixed(1)}K";
+    }
+  }
+
+  String getPathForRealTimeFinanceStats(String campaignType) {
+    if (campaignType == Constants.HS_DAILY_SAVER) {
+      return Constants.DAILY;
+    } else if (campaignType == Constants.HS_WEEKLY_SAVER) {
+      return Constants.WEEKLY;
+    } else if (campaignType == Constants.HS_MONTHLY_SAVER) {
+      return Constants.MONTHLY;
+    } else {
+      return "";
+    }
+  }
+
+  String getDeafultRealTimeStat(String value) {
+    if (value == Constants.HS_DAILY_SAVER) {
+      return "50+";
+    } else if (value == Constants.HS_WEEKLY_SAVER) {
+      return "100+";
+    } else if (value == Constants.HS_MONTHLY_SAVER) {
+      return "1K+";
+    } else {
+      return "-";
     }
   }
 
@@ -239,6 +376,14 @@ class TopSaverViewModel extends BaseModel {
         {
           return CodeFromFreq.getDayFromCode(code);
         }
+    }
+  }
+
+  fetchHighestSavings() {
+    for (ScoreBoard e in currentParticipants) {
+      if ((e.score) > _highestSavings) {
+        _highestSavings = (e.score);
+      }
     }
   }
 

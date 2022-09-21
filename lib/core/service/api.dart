@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -5,6 +7,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +19,11 @@ class Api {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
+
+  final db2 = rdb.FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL:
+          'https://fello-dev-station.asia-southeast1.firebasedatabase.app/');
 
   final logger = locator<CustomLogger>();
 
@@ -329,6 +337,28 @@ class Api {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  Stream<rdb.DatabaseEvent> fetchRealTimePlayingStats(String gameType) {
+    try {
+      var data = _realtimeDatabase.ref().child("stats").child(gameType).onValue;
+
+      return data;
+    } catch (e) {
+      print("Exception:${e.toString()}");
+      return null;
+    }
+  }
+
+  Stream<rdb.DatabaseEvent> fetchRealTimeFinanceStats() {
+    try {
+      var data = db2.ref().child("finance-stats").onValue;
+
+      return data;
+    } catch (e) {
+      print("Exception:${e.toString()}");
+      return null;
     }
   }
 }

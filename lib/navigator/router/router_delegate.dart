@@ -5,26 +5,32 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
-import 'package:felloapp/ui/pages/hamburger/freshdesk_help.dart';
-import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
-import 'package:felloapp/ui/pages/hamburger/support.dart';
+import 'package:felloapp/ui/pages/help_and_support/faq/faq_page.dart';
+import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
+import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
+import 'package:felloapp/ui/pages/help_and_support/support.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/autosave_walkthrough.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
@@ -49,8 +55,9 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
-import 'package:felloapp/ui/pages/static/poolview.dart';
 import 'package:felloapp/ui/pages/static/transactions_view.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -59,11 +66,11 @@ import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final _analytics = locator<AnalyticsService>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final List<Page> _pages = [];
 
@@ -74,6 +81,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
     appState.addListener(() {
+      log(navigatorKey.currentState.toString());
       notifyListeners();
     });
   }
@@ -125,7 +133,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       print("Current Stack: ${AppState.screenStack}");
+      if (AppState.screenStack.length == 1)
+        _journeyService.checkForMilestoneLevelChange();
       notifyListeners();
+
       return Future.value(true);
     }
     notifyListeners();
@@ -146,6 +157,29 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       name: pageConfig.path,
       arguments: pageConfig,
     );
+  }
+
+  MaterialPage _insertPage(Widget child, PageConfiguration pageConfig) {
+    return MaterialPage(
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
+  }
+
+  void _insertPageData(Widget child, PageConfiguration pageConfig,
+      {int index}) {
+    AppState.screenStack
+        .insert(index ?? AppState.screenStack.length, ScreenItem.page);
+    print("Inseted a page ${pageConfig.key} to Index $index");
+    log("Current Stack: ${AppState.screenStack}");
+    _analytics.trackScreen(screen: pageConfig.name);
+    _pages.insert(
+      index ?? _pages.length - 1,
+      _insertPage(child, pageConfig),
+    );
+    //notifyListeners();
   }
 
   void _addPageData(Widget child, PageConfiguration pageConfig) {
@@ -271,9 +305,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AllParticipantsView:
           _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
           break;
-        case Pages.GoldBalanceDetailsView:
+        case Pages.AllParticipantsWinnersTopReferersView:
+          _addPageData(AllParticipantsWinnersTopReferers(),
+              AllParticipantsWinnersTopReferersConfig);
+          break;
+        case Pages.RedeemSucessfulScreenView:
           _addPageData(
-              GoldBalanceDetailsView(), GoldBalanceDetailsViewPageConfig);
+              RedeemSucessfulScreen(), RedeemSucessfulScreenPageConfig);
+          break;
+        case Pages.SharePriceScreenView:
+          _addPageData(SharePriceScreen(), SharePriceScreenPageConfig);
           break;
         // case Pages.WebHomeView:
         //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
@@ -296,6 +337,28 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AutosaveTransactionsView:
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
+          break;
+        case Pages.TopPlayerLeaderboard:
+          _addPageData(
+              TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
+          break;
+        case Pages.JourneyView:
+          _addPageData(JourneyView(), JourneyViewPageConfig);
+          break;
+        case Pages.OnBoardingView:
+          _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
+          break;
+        case Pages.CompleteProfileView:
+          _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
+          break;
+        case Pages.BlogPostWebView:
+          _addPageData(BlogWebView(), BlogPostWebViewConfig);
+          break;
+        case Pages.CampaignView:
+          _addPageData(CampaignView(), CampaignViewPageConfig);
+          break;
+        case Pages.SaveAssetView:
+          _addPageData(SaveAssetView(), SaveAssetsViewConfig);
           break;
         default:
           break;
@@ -340,6 +403,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     routes.forEach((route) {
       addPage(route);
     });
+  }
+
+  void pushBelow(Widget child, PageConfiguration newRoute, {int index}) {
+    _insertPageData(child, newRoute, index: index);
   }
 
   // 7
@@ -496,9 +563,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AllParticipantsView:
         AllParticipantsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldBalanceDetailsView:
-        GoldBalanceDetailsViewPageConfig.currentPageAction = action;
-        break;
+
       case Pages.PoolView:
         PoolViewPageConfig.currentPageAction = action;
         break;
@@ -522,6 +587,42 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AutosaveWalkthrough:
         AutosaveWalkThroughConfig.currentPageAction = action;
+        break;
+      case Pages.NewWebHomeView:
+        NewWebHomeViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TopPlayerLeaderboard:
+        TopPlayerLeaderboardPageConfig.currentPageAction = action;
+        break;
+      case Pages.JourneyView:
+        JourneyViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.OnBoardingView:
+        OnBoardingViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.CompleteProfileView:
+        CompleteProfileViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.CampaignView:
+        CampaignViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SaveAssetView:
+        SaveAssetsViewConfig.currentPageAction = action;
+        break;
+      case Pages.SellConfirmationView:
+        SellConfirmationViewConfig.currentPageAction = action;
+        break;
+      case Pages.ViewAllBlogsView:
+        ViewAllBlogsViewConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsWinnersTopReferersView:
+        AllParticipantsWinnersTopReferersConfig.currentPageAction = action;
+        break;
+      case Pages.RedeemSucessfulScreenView:
+        RedeemSucessfulScreenPageConfig.currentPageAction = action;
+        break;
+      case Pages.SharePriceScreenView:
+        SharePriceScreenPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -556,6 +657,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         // 8
         _setPageAction(appState.currentAction);
         pushWidget(appState.currentAction.widget, appState.currentAction.page);
+        break;
+      case PageState.addBelow:
+        _setPageAction(appState.currentAction);
+        pushBelow(appState.currentAction.widget, appState.currentAction.page);
+
         break;
       case PageState.addAll:
         // 9
@@ -625,16 +731,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void screenCheck(String screenKey) {
     PageConfiguration pageConfiguration;
     switch (screenKey) {
-      case 'save':
+      case 'journey':
         appState.setCurrentTabIndex = 0;
         break;
       case 'play':
         appState.setCurrentTabIndex = 1;
         break;
-      case 'win':
+      case 'save':
         appState.setCurrentTabIndex = 2;
         break;
-      case 'editProfile':
+      case 'win':
+        appState.setCurrentTabIndex = 3;
+        break;
+      case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'augDetails':
@@ -719,11 +828,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'milestones':
         pageConfiguration = GoldenMilestonesViewPageConfig;
         break;
-      case 'goldBalanceDetails':
-        pageConfiguration = GoldBalanceDetailsViewPageConfig;
-        break;
+
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
+        break;
+      case 'goldDetails':
+        pageConfiguration = SaveAssetsViewConfig;
         break;
       case 'autosaveDetails':
         pageConfiguration = AutosaveDetailsViewPageConfig;
@@ -743,6 +853,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'AutosaveWalkthrough':
         pageConfiguration = AutosaveWalkThroughConfig;
         break;
+      case 'completeProfile':
+        pageConfiguration = CompleteProfileViewPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -752,33 +865,47 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   openTopSaverScreen(String eventType) {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        widget: TopSaverView(
-          eventType: eventType,
-        ),
-        page: TopSaverViewPageConfig);
+      page: CampaignViewPageConfig,
+      state: PageState.addWidget,
+      widget: CampaignView(eventType: eventType),
+    );
   }
+
+  // NOTE: UNCOMMENT THIS FUNCTION FOR OLD VIEW
+  // openWebGame(String game) {
+  //   AppState.delegate.appState.currentAction = PageAction(
+  //       state: PageState.addWidget,
+  //       widget: WebHomeView(game: game),
+  //       page: WebHomeViewPageConfig);
+  // }
 
   openWebGame(String game) {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        widget: WebHomeView(game: game),
-        page: WebHomeViewPageConfig);
+      state: PageState.addWidget,
+      widget: WebHomeView(game: game),
+      page: WebHomeViewPageConfig,
+    );
   }
 
   openAppWalkthrough() {
+    // AppState.delegate.appState.currentAction = PageAction(
+    //   state: PageState.addWidget,
+    //   widget: WalkThroughPage(
+    //     lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
+    //     titleList: ["SAVE", "PLAY", "WIN"],
+    //     descList: [
+    //       "Save and invest in strong assets and earn tokens 🪙",
+    //       "Use these tokens to play fun and exciting games 🎮",
+    //       "Stand to win exclusive prizes and fun rewards 🎉"
+    //     ],
+    //   ),
+    //   page: WalkThroughConfig,
+    // );
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        widget: WalkThroughPage(
-          lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
-          titleList: ["SAVE", "PLAY", "WIN"],
-          descList: [
-            "Save and invest in strong assets and earn tokens 🪙",
-            "Use these tokens to play fun and exciting games 🎮",
-            "Stand to win exclusive prizes and fun rewards 🎉"
-          ],
-        ),
-        page: WalkThroughConfig);
+      state: PageState.addWidget,
+      widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
+      page: OnBoardingViewPageConfig,
+    );
   }
 
   // openAutosaveWalkthrough() {
@@ -792,10 +919,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   bool checkForRatingDialog() {
     bool isUserAlreadyRated =
-        PreferenceHelper.exist(PreferenceHelper.CACHE_RATING_IS_RATED);
+        PreferenceHelper.exists(PreferenceHelper.CACHE_RATING_IS_RATED);
     if (isUserAlreadyRated) return false;
 
-    if (PreferenceHelper.exist(
+    if (PreferenceHelper.exists(
         PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
       int expiryTimeStampInMSE = PreferenceHelper.getInt(
           PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);

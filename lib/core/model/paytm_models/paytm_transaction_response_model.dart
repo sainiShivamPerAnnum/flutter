@@ -86,7 +86,7 @@ class Data {
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
       status: map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
-      isUpdating: map['isUpdating'] as bool ?? false,
+      isUpdating: map['isUpdating'] as bool ?? true,
     );
   }
 

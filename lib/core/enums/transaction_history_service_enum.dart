@@ -1,0 +1,1 @@
+enum TransactionHistoryServiceProperties { TransactionHistoryList }

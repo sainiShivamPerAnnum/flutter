@@ -1,11 +1,14 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -20,27 +23,45 @@ class FcmHandler extends ChangeNotifier {
   final _logger = locator<CustomLogger>();
   final _userservice = locator<UserService>();
 
-  final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
+  // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
   final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
   final _webGameViewModel = locator<WebGameViewModel>();
   final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
   final _txnService = locator<TransactionService>();
+  final _journeyService = locator<JourneyService>();
 
   ValueChanged<Map> notifListener;
 
+  Map lastFcmData;
   Future<bool> handleMessage(Map data, MsgSource source) async {
     _logger.d(
-        "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data");
+      "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
+    );
+    if (lastFcmData != null) {
+      if (lastFcmData == data) {
+        _logger.d(
+          "Duplicate Fcm Data, exiting method",
+        );
+        return false;
+      }
+    } else {
+      lastFcmData = data;
+    }
     bool showSnackbar = true;
     String title = data['dialog_title'];
     String body = data['dialog_body'];
     String command = data['command'];
     String url = data['deep_uri'];
 
+    // if (data["test_txn"] == "paytm") {
+    // _txnService.isOngoingTxn = false;
+    //   return true;
+    // }
+
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
-      if (AppState.isIOSTxnInProgress) {
+      if (TransactionService.isIOSTxnInProgress) {
         // TODO
         // ios transaction completed and app is in background
       } else if (source == MsgSource.Background ||
@@ -56,9 +77,17 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          if (AppState.delegate.appState.isTxnLoaderInView == false)
-            showSnackbar = true;
+          if (_txnService.currentTransactionState ==
+              TransactionState.idleTrasantion) showSnackbar = true;
           _txnService.fcmTransactionResponseUpdate(data['payload']);
+          break;
+        case FcmCommands.COMMAND_JOURNEY_UPDATE:
+          log("User journey stats update fcm response");
+          _journeyService.fcmHandleJourneyUpdateStats(data);
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+          log("Golden Ticket win update fcm response");
+          _journeyService.fcmHandleJourneyUpdateStats(data);
           break;
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
           _webGameViewModel.handleCricketHeroRoundEnd(

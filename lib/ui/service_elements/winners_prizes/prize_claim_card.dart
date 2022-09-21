@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -39,51 +40,33 @@ class PrizeClaimCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(SizeConfig.roundness16),
-                          color: UiConstants.scaffoldColor,
+                          color: UiConstants.kAutopayAmountDeactiveTabColor,
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding16,
-                          vertical: SizeConfig.padding20,
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.padding16,
                         ),
                         child: Column(
                           children: [
                             Container(
                               margin: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding6),
-                              child: Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircleAvatar(
-                                    backgroundColor: UiConstants.primaryColor
-                                        .withOpacity(0.2),
-                                    child: Image.asset(
-                                      Assets.moneyIcon,
-                                      width: SizeConfig.iconSize1,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding12,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FittedBox(
-                                          child: Text(
-                                            "My Active Winnings: ",
-                                            style: TextStyles.body1,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding12),
                                   Text(
-                                    "₹${m.userFundWallet.unclaimedBalance ?? '-'}",
-                                    style: TextStyles.body1.bold
-                                        .colour(UiConstants.primaryColor),
+                                    "Total Cashback",
+                                    style:
+                                        TextStyles.body1.colour(Colors.white),
+                                  ),
+                                  Text(
+                                    "₹ ${m.userFundWallet.unclaimedBalance ?? '-'}",
+                                    style: TextStyles.rajdhaniB.bold
+                                        .colour(UiConstants
+                                            .kcashBackAmountTextColor)
+                                        .copyWith(
+                                            fontSize: SizeConfig.padding54),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
@@ -94,6 +77,8 @@ class PrizeClaimCard extends StatelessWidget {
                                 m.userFundWallet.augGoldPrinciple >=
                                     refUnlockAmt)
                               Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding16),
                                 margin: EdgeInsets.symmetric(
                                     vertical: SizeConfig.padding6),
                                 child: Row(
@@ -126,8 +111,8 @@ class PrizeClaimCard extends StatelessWidget {
                             if (m.userFundWallet.unclaimedBalance <
                                 minWithdrawPrizeAmt)
                               Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding6),
+                                margin:
+                                    EdgeInsets.only(top: SizeConfig.padding6),
                                 width: SizeConfig.screenWidth,
                                 height: SizeConfig.padding54,
                                 padding: EdgeInsets.symmetric(
@@ -135,21 +120,21 @@ class PrizeClaimCard extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness16),
-                                  color: Colors.red.withOpacity(0.05),
+                                  color: Colors.white.withOpacity(0.07),
                                 ),
                                 child: FittedBox(
                                   child: Text(
                                     "Winnings can be redeemed on reaching ₹$minWithdrawPrize",
-                                    style: TextStyles.body3
-                                        .colour(Colors.redAccent),
+                                    style:
+                                        TextStyles.body3.colour(Colors.white),
                                   ),
                                 ),
                               )
                             else if (m.userFundWallet.augGoldPrinciple <
                                 refUnlockAmt)
                               Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding6),
+                                margin:
+                                    EdgeInsets.only(top: SizeConfig.padding6),
                                 width: SizeConfig.screenWidth,
                                 height: SizeConfig.padding54,
                                 padding: EdgeInsets.symmetric(
@@ -157,21 +142,20 @@ class PrizeClaimCard extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness16),
-                                  color: UiConstants.tertiaryLight
-                                      .withOpacity(0.5),
+                                  color: Colors.white.withOpacity(0.07),
                                 ),
                                 child: FittedBox(
                                   child: Text(
                                     "Savings of ₹$refUnlock required to redeem your winnings.",
-                                    style: TextStyles.body3
-                                        .colour(Colors.redAccent),
+                                    style:
+                                        TextStyles.body3.colour(Colors.white),
                                   ),
                                 ),
                               ),
                           ],
                         ),
                       )
-                    : SizedBox(height: 10),
+                    : SizedBox(height: SizeConfig.padding2),
               ],
             ));
   }
@@ -201,45 +185,12 @@ class ClaimButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: FelloButton(
-        onPressed: onTap,
-        activeButtonUI: Container(
-          height: SizeConfig.screenWidth * 0.2,
-          width: SizeConfig.screenWidth * 0.422,
-          decoration: BoxDecoration(
-            color: color ?? UiConstants.primaryColor,
-            borderRadius: BorderRadius.circular(SizeConfig.padding20),
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding12,
-            vertical: SizeConfig.padding16,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: SizeConfig.padding24,
-                backgroundColor: Colors.white.withOpacity(0.3),
-                child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding6),
-                  child: Image.asset(
-                    image ?? Assets.amazonClaim,
-                  ),
-                ),
-              ),
-              SizedBox(width: SizeConfig.padding12),
-              Container(
-                width: SizeConfig.screenWidth * 0.5,
-                child: Text(
-                  text ?? "Redeem for amazon pay",
-                  style: TextStyles.body1.colour(Colors.white).bold,
-                  maxLines: 2,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
+      child: Container(
+        margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+        child: AppPositiveBtn(
+          onPressed: onTap,
+          btnText: text ?? "Redeem for amazon pay",
+          width: double.maxFinite,
         ),
       ),
     );

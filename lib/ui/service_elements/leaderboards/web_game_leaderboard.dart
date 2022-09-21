@@ -1,5 +1,4 @@
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
-import 'package:felloapp/core/model/leader_board_modal.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -22,20 +21,21 @@ class WebGameLeaderBoardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
-            LeaderBoardServiceProperties>(
-        properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
-        builder: (context, m, properties) {
-          return m.WebGameLeaderBoard == null
-              ? NoRecordDisplayWidget(
-                  asset: "images/leaderboard.png",
-                  text: "Leaderboard will be updated soon",
-                )
-              : LeaderBoardView(
-                  model: m.WebGameLeaderBoard,
-                  controller: m.parentController,
-                  ownController: m.ownController,
-                );
-        });
+        LeaderBoardServiceProperties>(
+      properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
+      builder: (context, m, properties) {
+        return m.WebGameLeaderBoard == null
+            ? NoRecordDisplayWidget(
+                asset: "images/leaderboard.png",
+                text: "Leaderboard will be updated soon",
+              )
+            : LeaderBoardView(
+                model: m.WebGameLeaderBoard,
+                controller: m.parentController,
+                ownController: m.ownController,
+              );
+      },
+    );
   }
 }
 

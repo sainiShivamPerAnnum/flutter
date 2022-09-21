@@ -9,16 +9,18 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
-import 'package:felloapp/core/repository/investment_actions_repo.dart';
-import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/signzy_repo.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -29,33 +31,41 @@ import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset.vm.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
+import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_balance_details/gold_balance-details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
@@ -63,6 +73,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicks
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
+import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.dart';
@@ -78,6 +89,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_v
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/static/txn_completed_ui/txn_completed_vm.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
@@ -111,6 +123,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppFlyerAnalytics());
 
   locator.registerLazySingleton(() => InternalOpsService());
+  locator.registerLazySingleton(() => SellService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
@@ -119,11 +132,14 @@ void setupLocator() {
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => UserCoinService());
   locator.registerLazySingleton(() => TransactionService());
+  locator.registerLazySingleton(() => TransactionHistoryService());
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
   locator.registerLazySingleton(() => WinnerService());
   locator.registerLazySingleton(() => LeaderboardService());
   locator.registerLazySingleton(() => GoldenTicketService());
+  locator.registerLazySingleton(() => JourneyService());
+  locator.registerLazySingleton(() => GoogleSignInService());
   locator.registerLazySingleton(() => RazorpayModel());
 
   //Repository
@@ -139,13 +155,15 @@ void setupLocator() {
   locator.registerLazySingleton(() => SignzyRepository());
   locator.registerLazySingleton(() => CouponRepository());
   locator.registerLazySingleton(() => PaytmRepository());
+  locator.registerLazySingleton(() => JourneyRepository());
+  locator.registerLazySingleton(() => GameRepo());
   locator.registerLazySingleton(() => ReferralRepo());
   locator.registerLazySingleton(() => GoldenTicketRepository());
-  locator.registerLazySingleton(() => PaymentRepository());
+  locator.registerLazySingleton(() => TransactionHistoryRepository());
   locator.registerLazySingleton(() => GetterRepository());
   locator.registerLazySingleton(() => InternalOpsRepository());
   locator.registerLazySingleton(() => SubscriptionRepo());
-  locator.registerLazySingleton(() => GameRepo());
+  locator.registerLazySingleton(() => SaveRepo());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
@@ -154,15 +172,15 @@ void setupLocator() {
   locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
+  locator.registerFactory(() => JourneyPageViewModel());
   locator.registerFactory(() => RootViewModel());
 
   //REST
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
   locator.registerFactory(() => UsernameInputScreenViewModel());
-  locator.registerFactory(() => OtpInputScreenViewModel());
-  locator.registerFactory(() => NameInputScreenViewModel());
-  locator.registerFactory(() => MobileInputScreenViewModel());
+  locator.registerFactory(() => LoginOtpViewModel());
+  locator.registerFactory(() => LoginMobileViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());
@@ -170,10 +188,10 @@ void setupLocator() {
   locator.registerFactory(() => AugmontGoldBuyViewModel());
   locator.registerFactory(() => AugmontGoldSellViewModel());
   locator.registerFactory(() => AugmontGoldDetailsViewModel());
-  locator.registerFactory(() => GoldBalanceDetailsViewModel());
   locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
+  locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(() => WebGameViewModel());
   locator.registerFactory(() => PicksCardViewModel());
   locator.registerFactory(() => ReferralDetailsViewModel());
@@ -189,11 +207,17 @@ void setupLocator() {
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
   locator.registerFactory(() => AutosaveTransactionsViewModel());
+  locator.registerFactory(() => CompleteProfileViewModel());
   locator.registerFactory(() => CampaignRepo());
+  locator.registerFactory(() => OnboardingViewModel());
+  locator.registerFactory(() => JourneyBannersViewModel());
+  locator.registerFactory(() => FaqPageViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());
   locator.registerFactory(() => MiniTransactionCardViewModel());
   locator.registerFactory(() => FelloCoinBarViewModel());
   locator.registerFactory(() => FAQCardViewModel());
+  locator.registerFactory(() => SourceAdaptiveAssetViewModel());
+  locator.registerFactory(() => SubscriptionCardViewModel());
 }

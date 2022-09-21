@@ -1,8 +1,11 @@
-// import 'package:device_preview/device_preview.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -12,11 +15,14 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -26,7 +32,6 @@ import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -65,11 +70,13 @@ Future mainInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await PreferenceHelper.initiate();
+
     await Firebase.initializeApp();
   } catch (e) {
     print('Firebase initialisation error: $e');
   }
-  FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
+  FirebaseMessaging.onBackgroundMessage(
+      BackgroundFcmHandler.myBackgroundMessageHandler);
 }
 
 class MyApp extends StatefulWidget {
@@ -124,41 +131,52 @@ class _MyAppState extends State<MyApp> {
           ),
           ChangeNotifierProvider(create: (_) => appState),
         ],
-        child: PropertyChangeProvider<LeaderboardService,
-            LeaderBoardServiceProperties>(
-          value: locator<LeaderboardService>(),
-          child: PropertyChangeProvider<TransactionService,
-              TransactionServiceProperties>(
-            value: locator<TransactionService>(),
-            child: PropertyChangeProvider<UserCoinService,
-                UserCoinServiceProperties>(
-              value: locator<UserCoinService>(),
-              child: PropertyChangeProvider<UserService, UserServiceProperties>(
-                value: locator<UserService>(),
-                child: PropertyChangeProvider<WinnerService,
-                    WinnerServiceProperties>(
-                  value: locator<WinnerService>(),
-                  child: PropertyChangeProvider<PaytmService,
-                      PaytmServiceProperties>(
-                    value: locator<PaytmService>(),
-                    child: MaterialApp.router(
-                      // locale: DevicePreview.locale(context),
-                      // Add the locale here
-                      // builder: DevicePreview.appBuilder,
-                      title: Constants.APP_NAME,
-                      theme: FelloTheme.lightMode(),
-                      debugShowCheckedModeBanner: false,
-                      backButtonDispatcher: backButtonDispatcher,
-                      routerDelegate: delegate,
-                      useInheritedMediaQuery: FlavorConfig.isQA(),
-                      routeInformationParser: parser,
-                      localizationsDelegates: [
-                        S.delegate,
-                        GlobalMaterialLocalizations.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                      ],
-                      supportedLocales: S.delegate.supportedLocales,
+        child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
+          value: locator<JourneyService>(),
+          child: PropertyChangeProvider<LeaderboardService,
+              LeaderBoardServiceProperties>(
+            value: locator<LeaderboardService>(),
+            child: PropertyChangeProvider<TransactionHistoryService,
+                TransactionHistoryServiceProperties>(
+              value: locator<TransactionHistoryService>(),
+              child: PropertyChangeProvider<TransactionService,
+                  TransactionServiceProperties>(
+                value: locator<TransactionService>(),
+                child: PropertyChangeProvider<UserCoinService,
+                    UserCoinServiceProperties>(
+                  value: locator<UserCoinService>(),
+                  child: PropertyChangeProvider<UserService,
+                      UserServiceProperties>(
+                    value: locator<UserService>(),
+                    child: PropertyChangeProvider<WinnerService,
+                        WinnerServiceProperties>(
+                      value: locator<WinnerService>(),
+                      child: PropertyChangeProvider<PaytmService,
+                          PaytmServiceProperties>(
+                        value: locator<PaytmService>(),
+                        child: PropertyChangeProvider<SellService,
+                            SellServiceProperties>(
+                          value: locator<SellService>(),
+                          child: MaterialApp.router(
+                            locale: DevicePreview.locale(context),
+                            builder: DevicePreview.appBuilder,
+                            title: Constants.APP_NAME,
+                            theme: FelloTheme.darkMode(),
+                            useInheritedMediaQuery: true,
+                            debugShowCheckedModeBanner: false,
+                            backButtonDispatcher: backButtonDispatcher,
+                            routerDelegate: delegate,
+                            routeInformationParser: parser,
+                            localizationsDelegates: [
+                              S.delegate,
+                              GlobalMaterialLocalizations.delegate,
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                            ],
+                            supportedLocales: S.delegate.supportedLocales,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),

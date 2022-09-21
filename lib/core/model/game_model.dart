@@ -24,6 +24,7 @@ class GameModel {
   final String gameCode;
   final String thumbnailUri;
   final String analyticEvent;
+  final String icon;
 
   static final helper = HelperModel<GameModel>(
     (map) => GameModel.fromMap(map),
@@ -44,6 +45,7 @@ class GameModel {
     this.gameCode,
     this.code,
     this.analyticEvent,
+    this.icon,
   });
 
   GameModel copyWith({
@@ -59,6 +61,7 @@ class GameModel {
     String route,
     String gameCode,
     String code,
+    String icon,
   }) {
     return GameModel(
       id: id ?? this.id,
@@ -76,6 +79,7 @@ class GameModel {
       order: order ?? this.order,
       isTrending: isTrending ?? this.isTrending,
       event: event ?? this.event,
+      icon: icon ?? this.icon,
     );
   }
 
@@ -96,6 +100,7 @@ class GameModel {
       'gameCode': gameCode,
       'code': code,
       'analyticEvent': analyticEvent,
+      'icon': icon
     };
   }
 
@@ -116,6 +121,7 @@ class GameModel {
       code: map['code'],
       isGOW: map['isGOW'],
       order: map['order'],
+      icon: map['icon'],
       isTrending: map['isTrending'],
       event: map['event'],
     );
@@ -129,7 +135,7 @@ class GameModel {
 
   @override
   String toString() {
-    return 'GameModel(id: $id, gameUri: $gameUri gameName: $gameName, thumbnailUri: $thumbnailUri, playCost: $playCost, prizeAmount: $prizeAmount, shadowColor: $shadowColor, route: $route, event: $event, isGOW: $isGOW, order: $order, isTrending: $isTrending, gameCode: $gameCode, code: $code, analyticEvent: $analyticEvent)';
+    return 'GameModel(id: $id, gameUri: $gameUri gameName: $gameName, thumbnailUri: $thumbnailUri, playCost: $playCost, prizeAmount: $prizeAmount, shadowColor: $shadowColor, route: $route, event: $event, isGOW: $isGOW, order: $order, isTrending: $isTrending, gameCode: $gameCode, code: $code, analyticEvent: $analyticEvent, icon: $icon)';
   }
 
   @override
@@ -149,6 +155,7 @@ class GameModel {
         other.isTrending == isTrending &&
         other.gameCode == gameCode &&
         other.code == code &&
+        other.icon == icon &&
         other.analyticEvent == analyticEvent;
   }
 
@@ -164,6 +171,7 @@ class GameModel {
         isGOW.hashCode ^
         order.hashCode ^
         isTrending.hashCode ^
+        icon.hashCode ^
         gameCode.hashCode ^
         code.hashCode ^
         analyticEvent.hashCode;

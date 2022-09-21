@@ -9,13 +9,13 @@ environment:
   sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
-  cached_network_image: ^3.1.0
+  cached_network_image: ^3.2.0
   cloud_firestore: ^3.1.6
   confetti: ^0.6.0
   connectivity_plus: ^2.2.0
   device_info_plus: ^3.2.2
-  # device_preview: ^1.0.0
   device_unlock: ^1.1.2
+  device_preview: 1.0.0
   encrypt: ^5.0.0
   firebase_analytics: ^9.0.5
   firebase_auth: ^3.0.1
@@ -67,13 +67,21 @@ dependencies:
   webview_flutter: ^3.0.0
   flutter_rating_bar: ^4.0.0
   in_app_review: ^2.0.3
-  scratcher: ^2.1.0
+  scratcher: 2.2.0
   timelines: ^0.1.0
   truecaller_sdk: ^0.1.1
   sliding_up_panel: ^2.0.0+1
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   external_app_launcher: ^2.0.2
+  shimmer: ^2.0.0
+  animations: ^2.0.2
+  flutter_inset_box_shadow: ^1.0.8
+  space_fixer: ^0.1.1
+  shared_preferences_android: ^2.0.13
+  shared_preferences_ios: ^2.1.1
+  flutter_html: ^3.0.0-alpha.5
+
   isar: ^2.4.0
   isar_flutter_libs: 2.4.0
   upi_pay:
@@ -103,23 +111,17 @@ flutter:
     - resources/public.key
     - assets/images/
     - assets/images/icons/
+    - assets/svg/userAvatars/
     - assets/vectors/
     - assets/vectors/icons/
     - assets/vectors/drawer/
     - assets/lotties/
     - assets/videos/
+    - assets/temp/
+    - assets/svg/
+    - assets/svg/BottomNavBarIcons/
+    - assets/lotties/nav/
 
-  fonts:
-    - family: Cucciolo
-      fonts:
-        - asset: fonts/Cucciolo Rough.ttf
-    - family: Arctick
-      fonts:
-        - asset: fonts/arctick/arctik-2.ttf
-        - asset: fonts/arctick/arctik-3.5.ttf
-          weight: 500
-        - asset: fonts/arctick/arctik-5.ttf
-          weight: 700
 
 flutter_intl:
   main_locale: en_US

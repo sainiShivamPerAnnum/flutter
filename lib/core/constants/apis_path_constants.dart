@@ -42,8 +42,17 @@ class ApiPath {
   static const kDeviceId = "/device";
   static String getCoinBalance(uid) => "/$uid/wallet/coin";
   static String getFundBalance(uid) => "/$uid/wallet/fund";
+  static String getCompleteOnboarding(uid) => "/walkthrough/$uid";
+  static String getBlogs(noOfBlogs) =>
+      "/blogs?per_page=$noOfBlogs&status=publish&_fields=id,title.rendered,slug,date,yoast_head_json.og_image,acf&orderby=date&order=desc";
+  static String kWalkthrough(uid) => "/walkthrough/$uid";
+  static String kVerifyVPAAddress(uid) => '/vpa?uid=$uid';
+  static String sendOtp = '/auth/otp';
+  static String verifyOtp = '/auth/verify/otp';
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
   static String logOut(String uid) => "/user/$uid/logout";
+
+  static String goldenTickets(uid) => '/user/$uid/golden_tickets';
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
@@ -77,6 +86,7 @@ class ApiPath {
       "/user/$uid/gt/$goldenTicketId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static const String prizes = '/prizes';
+  static prizeBySubtype(String uid) => '/user/$uid/gt';
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
@@ -91,6 +101,7 @@ class ApiPath {
       "/leaderboard/past/type/$type/freq/$freq";
 
   static const String amountChips = "/amount/chips/";
+  static const String faqs = "/faqs";
 
   // Internal Ops
   static const String failureReport = '/fail/report';
@@ -110,4 +121,12 @@ class ApiPath {
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
   static String getReferralHistory(String uid) => "/referrals/$uid";
+
+  //Journey
+  get kMilestones => '/milestones';
+  get kJourney => "/journey";
+  static String getJourney(int page) => "/journey/$page";
+  static String journeyStats(String uid) => "/user/$uid/journey/stats";
+  static String kJourneyLevel = '/levels';
+  static String kSkipMilestone(String uid) => "/user/$uid/skip/milestone";
 }

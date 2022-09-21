@@ -6,6 +6,7 @@ import 'package:felloapp/util/logger.dart';
 class ReferralDetail {
   static Log log = new Log('ReferralDetail');
   final String _userName;
+  final String _uid;
   final TimestampModel _timestamp;
   bool _isUserBonusUnlocked;
   bool _isRefereeBonusUnlocked;
@@ -19,7 +20,7 @@ class ReferralDetail {
   static const String fldUserReferralCount = 'ref_count';
 
   ReferralDetail(this._userName, this._timestamp, this._isUserBonusUnlocked,
-      this._isRefereeBonusUnlocked, this._refCount, this._bonusMap);
+      this._isRefereeBonusUnlocked, this._refCount, this._bonusMap, this._uid);
 
   // ReferralDetail.fromMap(Map<String, dynamic> rMap)
   //     : this(
@@ -32,12 +33,14 @@ class ReferralDetail {
 
   factory ReferralDetail.fromMap(Map<String, dynamic> rMap) {
     return ReferralDetail(
-        rMap['usr_name'],
-        TimestampModel.fromMap(rMap['timestamp']),
-        rMap[fldUsrBonusFlag],
-        rMap[fldRefereeBonusFlag],
-        rMap[fldUserReferralCount],
-        rMap['bonus_values']);
+      rMap['usr_name'],
+      TimestampModel.fromMap(rMap['timestamp']),
+      rMap[fldUsrBonusFlag],
+      rMap[fldRefereeBonusFlag],
+      rMap[fldUserReferralCount],
+      rMap['bonus_values'],
+      rMap['id'],
+    );
   }
 
   toJson() => {
@@ -53,6 +56,8 @@ class ReferralDetail {
   Timestamp get timestamp => _timestamp;
 
   String get userName => _userName;
+
+  String get uid => _uid;
 
   int get refCount => _refCount;
 

@@ -11,6 +11,8 @@ class PreferenceHelper {
   // static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
+  static const CACHE_ONBOARDING_COMPLETION = "onboardingCompletion";
+  static const FCM_TOKEN = "fcm_token";
 
   static SharedPreferences _prefs;
 
@@ -73,11 +75,15 @@ class PreferenceHelper {
     return _prefs.remove(key);
   }
 
-  static bool exist(String key) {
+  static bool exists(String key) {
     return _prefs.containsKey(key);
   }
 
   static void clear() {
     _prefs.clear();
+  }
+
+  static void reload() {
+    _prefs.reload();
   }
 }

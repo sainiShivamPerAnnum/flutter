@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
@@ -15,9 +18,13 @@ import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ReferralDetailsViewModel extends BaseModel {
@@ -28,6 +35,37 @@ class ReferralDetailsViewModel extends BaseModel {
   final _appFlyer = locator<AppFlyerAnalytics>();
   final _userRepo = locator<UserRepository>();
   final _refRepo = locator<ReferralRepo>();
+  final _dbModel = locator<DBModel>();
+
+  PageController _pageController;
+  int _tabNo = 0;
+
+  bool _isShareAlreadyClicked = false;
+
+  bool get isShareAlreadyClicked => _isShareAlreadyClicked;
+
+  int get tabNo => _tabNo;
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
+
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
+
+  double get tabPosWidthFactor => _tabPosWidthFactor;
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
+
+  PageController get pageController => _pageController;
+
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+
+  List<ReferralDetail> _referalList;
+
+  List<ReferralDetail> get referalList => _referalList;
 
   String appShareMessage =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
@@ -42,14 +80,20 @@ class ReferralDetailsViewModel extends BaseModel {
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
 
+  bool _isReferalsFetched = false;
+
   get refUrl => _refUrl;
   get refCode => _refCode;
+  get isReferalsFetched => _isReferalsFetched;
 
-  init() {
+  init(BuildContext context) {
     this.generateLink().then((value) {
       _refUrl = value;
     });
+    _pageController = PageController(initialPage: 0);
+
     this.fetchReferralCode();
+    this.fetchReferalsList(context);
   }
 
   void copyReferCode() {
@@ -73,6 +117,42 @@ class ReferralDetailsViewModel extends BaseModel {
     refresh();
   }
 
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
+  }
+
+  fetchReferalsList(BuildContext context) {
+    print("Method to fetch");
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    final _referralRepo = locator<ReferralRepo>();
+
+    if (!baseProvider.referralsFetched) {
+      _referralRepo.getReferralHistory().then((refHisModel) {
+        baseProvider.referralsFetched = true;
+        baseProvider.userReferralsList = refHisModel.model ?? [];
+        _referalList = baseProvider.userReferralsList;
+
+        notifyListeners();
+      });
+    } else {
+      _referalList = baseProvider.userReferralsList;
+
+      notifyListeners();
+    }
+  }
+
   Future<String> generateLink() async {
     if (_refUrl != "") return _refUrl;
 
@@ -90,7 +170,23 @@ class ReferralDetailsViewModel extends BaseModel {
     return url;
   }
 
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
+  }
+
+  String getUserMembershipDate(Timestamp tmp) {
+    if (tmp != null) {
+      DateTime _dt = tmp.toDate();
+      return DateFormat("dd MMM, yyyy").format(_dt);
+    } else {
+      return '\'Unavailable\'';
+    }
+  }
+
   Future<void> shareLink() async {
+    _isShareAlreadyClicked = true;
+    notifyListeners();
+
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
@@ -124,6 +220,31 @@ class ReferralDetailsViewModel extends BaseModel {
         });
       }
     }
+
+    Future.delayed(Duration(seconds: 3), () {
+      _isShareAlreadyClicked = false;
+      notifyListeners();
+    });
+  }
+
+  bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {
+    for (ReferralDetail e in list) {
+      if (e.isRefereeBonusUnlocked) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool bonusLockedReferalPresent(List<ReferralDetail> list) {
+    for (ReferralDetail e in list) {
+      if (e.isRefereeBonusUnlocked == false) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   Future<void> shareWhatsApp() async {

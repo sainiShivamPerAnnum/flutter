@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,8 +14,9 @@ import 'package:lottie/lottie.dart';
 class FAQCardView extends StatelessWidget {
   final String category;
   final bool catTitle;
+  final Color bgColor;
 
-  FAQCardView({@required this.category, this.catTitle});
+  FAQCardView({@required this.category, this.catTitle, this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -24,43 +26,27 @@ class FAQCardView extends StatelessWidget {
           return Container(
             width: SizeConfig.screenWidth,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: Offset(5, 5),
-                      spreadRadius: 5,
-                      blurRadius: 5)
-                ]),
-            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              color: bgColor ?? UiConstants.kBackgroundColor,
+            ),
             padding: EdgeInsets.only(
-                top: 12, left: 10, bottom: SizeConfig.padding24),
+                top: SizeConfig.padding12, bottom: SizeConfig.padding24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   (catTitle != null && catTitle == true)
                       ? category.replaceAll("_", " ").toUpperCase()
                       : "FAQs",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.black,
-                    fontSize: SizeConfig.largeTextSize,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyles.title3.semiBold.colour(Colors.white),
                 ),
                 SizedBox(height: 10),
                 model.state == ViewState.Busy
                     ? Container(
                         height: SizeConfig.screenHeight * 0.2,
-                        child: Center(
-                          child: SpinKitWave(
-                            color: UiConstants.primaryColor,
-                            size: 30,
-                          ),
-                        ),
+                        child: Center(child: FullScreenLoader()),
                       )
                     : (model.faqHeaders != null && model.faqHeaders.length > 0
-                        ? _buildItems(model)
+                        ? _buildItems(model, context)
                         : Container(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +55,7 @@ class FAQCardView extends StatelessWidget {
                                     height: SizeConfig.screenHeight * 0.2),
                                 Text(
                                   "No FAQs available at the moment",
-                                  style: TextStyles.body2.light,
+                                  style: TextStyles.body2.colour(Colors.white),
                                 ),
                                 SizedBox(height: SizeConfig.padding16)
                               ],
@@ -81,38 +67,41 @@ class FAQCardView extends StatelessWidget {
         });
   }
 
-  _buildItems(FAQCardViewModel model) {
+  _buildItems(FAQCardViewModel model, BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      // borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       child: Container(
         width: SizeConfig.screenWidth,
         child: Column(
           children: [
-            ExpansionPanelList(
-              animationDuration: Duration(milliseconds: 600),
-              expandedHeaderPadding: EdgeInsets.all(0),
-              dividerColor: Colors.grey.withOpacity(0.2),
-              elevation: 0,
-              children: List.generate(
-                model.faqHeaders.length,
-                (index) => ExpansionPanel(
-                  canTapOnHeader: true,
-                  headerBuilder: (ctx, isOpen) =>
-                      _prizeFAQHeader(model.faqHeaders[index]),
-                  isExpanded: model.detStatus[index],
-                  body: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 6,
+            Theme(
+              data: ThemeData(brightness: Brightness.dark),
+              child: ExpansionPanelList(
+                animationDuration: Duration(milliseconds: 600),
+                expandedHeaderPadding: EdgeInsets.all(0),
+                dividerColor: UiConstants.kDividerColor.withOpacity(0.3),
+                elevation: 0,
+                children: List.generate(
+                  model.faqHeaders.length,
+                  (index) => ExpansionPanel(
+                    backgroundColor: bgColor ?? UiConstants.kBackgroundColor,
+                    canTapOnHeader: true,
+                    headerBuilder: (ctx, isOpen) =>
+                        _prizeFAQHeader(model.faqHeaders[index]),
+                    isExpanded: model.detStatus[index],
+                    body: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(model.faqResponses[index],
+                          textAlign: TextAlign.start,
+                          style: TextStyles.body3
+                              .colour(UiConstants.kFAQsAnswerColor)),
                     ),
-                    child: Text(model.faqResponses[index],
-                        textAlign: TextAlign.start, style: TextStyles.body2),
                   ),
                 ),
+                expansionCallback: (i, isOpen) {
+                  model.updateDetStatus(i, !isOpen);
+                },
               ),
-              expansionCallback: (i, isOpen) {
-                model.updateDetStatus(i, !isOpen);
-              },
             ),
           ],
         ),
@@ -123,10 +112,11 @@ class FAQCardView extends StatelessWidget {
   _prizeFAQHeader(String title) {
     return Padding(
       padding: EdgeInsets.only(
-          top: SizeConfig.padding20,
-          bottom: SizeConfig.padding20,
-          left: SizeConfig.pageHorizontalMargins),
-      child: Text(title, style: TextStyles.body2.bold),
+        top: SizeConfig.padding20,
+        bottom: SizeConfig.padding20,
+      ),
+      child:
+          Text(title, style: TextStyles.sourceSans.body2.colour(Colors.white)),
     );
   }
 }

@@ -1,0 +1,11 @@
+<svg width="62" height="70" viewBox="0 0 62 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="34.2035" height="35.1836" rx="1.40734" transform="matrix(0.866025 -0.5 0.866025 0.5 0.604004 17.1018)" fill="white" stroke="black" stroke-width="1.05551" stroke-linejoin="bevel"/>
+<rect width="35.1836" height="35.1836" rx="1.40734" transform="matrix(0.866025 0.5 -2.20305e-08 1 0.810547 16.8879)" fill="white" stroke="black" stroke-width="1.05551"/>
+<path d="M30.3271 35.9718C30.3271 35.1962 30.8706 34.253 31.5423 33.8629L59.5746 17.583C60.2492 17.1912 60.797 17.5057 60.797 18.2845L60.797 50.6493C60.797 51.4265 60.2514 52.3717 59.5782 52.7603L31.5459 68.9448C30.8728 69.3334 30.3271 69.0183 30.3271 68.2411L30.3271 35.9718Z" fill="#F79780" stroke="black" stroke-width="1.05551" stroke-linejoin="round"/>
+<circle r="3.8702" transform="matrix(0.866025 -0.5 2.20305e-08 1 45.327 43.0999)" fill="#232326"/>
+<circle r="2.99061" transform="matrix(0.866025 -0.5 0.866025 0.5 30.6193 11.0828)" fill="#232326"/>
+<circle r="2.99061" transform="matrix(0.866025 -0.5 0.866025 0.5 30.6193 20.2305)" fill="#232326"/>
+<circle r="2.81469" transform="matrix(0.866025 0.5 -2.20305e-08 1 15.9146 43.9794)" fill="#232326"/>
+<circle r="2.81469" transform="matrix(0.866025 0.5 -2.20305e-08 1 22.2479 55.5902)" fill="#232326"/>
+<circle r="2.81469" transform="matrix(0.866025 0.5 -2.20305e-08 1 9.5809 33.0726)" fill="#232326"/>
+</svg>

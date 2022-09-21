@@ -40,6 +40,7 @@ class Constants {
   static final String COLN_APPCAMPAIGNS = "inappcampaigns";
   static final String COLN_COUPONS = 'coupons';
   static final String COLN_INAPPRESOURCES = "inappresources";
+  static final String COLN_GAMES = "games";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
@@ -65,6 +66,12 @@ class Constants {
   static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
   static final String DOC_IAR_DAILY_CHIPS = "daily";
   static final String DOC_IAR_WEEKLY_CHIPS = "weekly";
+
+  //Fetch real time finance stats from rtdb
+  static final String DAILY = "daily";
+  static final String WEEKLY = "weekly";
+
+  static final String MONTHLY = "monthly";
 
   //Sub-Collection docs Collection docs
   static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
@@ -115,6 +122,11 @@ class Constants {
   static const SUBSCRIPTION_INACTIVE = "INACTIVE";
   static const SUBSCRIPTION_CANCELLED = "CANCELLED";
 
+  //Notification Titles Startings
+  static const GOLDEN_TICKET_NOTIFICATION = "You won a new golden ticket";
+  static const COUPONS_APPLIED_NOTIFICATION = "Coupon Applied";
+
+  static const DEPOSIT_COMPLETE_NOTIFICATION = "Deposit Complete";
   static const TXN_STATUS_RESPONSE_SUCCESS = "SUCCESS";
   static const TXN_STATUS_RESPONSE_FAILURE = "FAIL";
   static const TXN_STATUS_RESPONSE_PENDING = "PENDING";

@@ -13,11 +13,12 @@ class CurrentPriceWidget extends StatefulWidget {
   final bool isFetching;
   final bool mini;
 
-  CurrentPriceWidget(
-      {this.fetchGoldRates,
-      this.goldprice,
-      this.isFetching,
-      this.mini = false});
+  CurrentPriceWidget({
+    this.fetchGoldRates,
+    this.goldprice,
+    this.isFetching,
+    this.mini = false,
+  });
 
   @override
   _CurrentPriceWidgetState createState() => _CurrentPriceWidgetState();
@@ -37,16 +38,18 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
       ..addListener(() {
         setState(() {});
       })
-      ..addStatusListener((status) {
-        print(status.toString());
-        if (status == AnimationStatus.completed) {
-          widget.fetchGoldRates();
-          controller.reset();
-          controller.forward();
-        } else if (status == AnimationStatus.dismissed) {
-          controller.forward();
-        }
-      });
+      ..addStatusListener(
+        (status) {
+          print(status.toString());
+          if (status == AnimationStatus.completed) {
+            widget.fetchGoldRates();
+            controller.reset();
+            controller.forward();
+          } else if (status == AnimationStatus.dismissed) {
+            controller.forward();
+          }
+        },
+      );
 
     controller.forward();
     super.initState();
@@ -65,40 +68,19 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Blinker(
-                child: CircleAvatar(
-                  backgroundColor: UiConstants.primaryColor,
-                  radius: SizeConfig.padding4,
-                ),
-              ),
-              SizedBox(width: SizeConfig.padding6),
-              Text(
-                "Current Gold Price: ",
-                style: TextStyles.body3.colour(Colors.black54),
-              ),
               widget.isFetching
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.primaryColor,
                     )
                   : // SizedBox(height: SizeConfig.padding4),
-                  Text("₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
-                      style: TextStyles.body3.extraBold.colour(Colors.black54)),
-              Spacer(),
-              RichText(
-                text: TextSpan(
-                  text: "Valid for next ",
-                  style: TextStyles.body4.colour(Colors.grey).light,
-                  children: [
-                    TextSpan(
-                      text:
-                          "${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}",
-                      style: TextStyles.body4
-                          .colour(UiConstants.primaryColor)
-                          .bold,
-                    ),
-                  ],
-                ),
+                  Text(" ₹${widget.goldprice.toStringAsFixed(2)}/gm",
+                      style: TextStyles.sourceSans.body4.colour(
+                          UiConstants.kModalSheetMutedTextBackgroundColor)),
+              Text(
+                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+                style: TextStyles.body4
+                    .colour(UiConstants.kModalSheetMutedTextBackgroundColor),
               ),
             ],
           )
@@ -130,7 +112,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                             color: UiConstants.primaryColor,
                           )
                         : Text(
-                            "₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
+                            "₹ ${widget.goldprice.toStringAsFixed(1)}/gm",
                             style: TextStyles.body1
                                 .colour(UiConstants.primaryColor)
                                 .bold,
@@ -159,5 +141,89 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
               ],
             ),
           );
+  }
+}
+
+class NewCurrentGoldPriceWidget extends StatefulWidget {
+  NewCurrentGoldPriceWidget({
+    this.fetchGoldRates,
+    this.goldprice,
+    this.isFetching,
+    this.mini = false,
+    Key key,
+  });
+  final Function fetchGoldRates;
+  final double goldprice;
+  final bool isFetching;
+  final bool mini;
+
+  @override
+  State<NewCurrentGoldPriceWidget> createState() =>
+      _NewCurrentGoldPriceWidgetState();
+}
+
+class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
+    with SingleTickerProviderStateMixin {
+  Animation<Duration> animation;
+  AnimationController controller;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: Duration(minutes: 3));
+    animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
+        .animate(controller)
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener(
+        (status) {
+          print(status.toString());
+          if (status == AnimationStatus.completed) {
+            widget.fetchGoldRates();
+            controller.reset();
+            controller.forward();
+          } else if (status == AnimationStatus.dismissed) {
+            controller.forward();
+          }
+        },
+      );
+
+    controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    animation.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.mini
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widget.isFetching
+                  ? SpinKitThreeBounce(
+                      size: SizeConfig.body2,
+                      color: UiConstants.primaryColor,
+                    )
+                  : Text(
+                      "₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kPrimaryColor),
+                    ),
+              Text(
+                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+                style: TextStyles.sourceSans.body4
+                    .colour(UiConstants.kTextFieldTextColor),
+              ),
+            ],
+          )
+        : Container();
   }
 }

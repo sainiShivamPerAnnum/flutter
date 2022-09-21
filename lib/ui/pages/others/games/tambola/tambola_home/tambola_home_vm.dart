@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/leader_board_modal.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -11,6 +13,7 @@ import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -21,6 +24,7 @@ class TambolaHomeViewModel extends BaseModel {
   final _baseUtil = locator<BaseUtil>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
@@ -29,6 +33,7 @@ class TambolaHomeViewModel extends BaseModel {
   LeaderboardModel _tLeaderBoard;
   ScrollController scrollController;
   double cardOpacity = 1;
+  GameModel game;
 
   Map<String, IconData> tambolaOdds = {
     "Full House": Icons.apps,
@@ -57,9 +62,12 @@ class TambolaHomeViewModel extends BaseModel {
     refresh();
   }
 
-  init() {
+  init() async {
+    setState(ViewState.Busy);
+    await getGameDetails();
     getLeaderboard();
     if (tPrizes == null) getPrizes();
+    setState(ViewState.Idle);
   }
 
   Future<void> getLeaderboard() async {
@@ -95,5 +103,13 @@ class TambolaHomeViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.startPlayingTambola);
     // _baseUtil.cacheGameorder('TA');
     BaseUtil().openTambolaGame();
+  }
+
+  getGameDetails() async {
+    final response =
+        await _gamesRepo.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
+    if (response.isSuccess()) {
+      game = response.model;
+    }
   }
 }

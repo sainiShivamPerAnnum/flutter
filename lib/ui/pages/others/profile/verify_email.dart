@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart'
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -20,7 +21,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -166,8 +166,8 @@ class VerifyEmailState extends State<VerifyEmail> {
       ApiResponse<bool> res = await _userRepo.updateUser(
         uid: _userService.baseUser.uid,
         dMap: {
-          'email': _userService.baseUser.email,
-          'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+          BaseUser.fldEmail: _userService.baseUser.email,
+          BaseUser.fldIsEmailVerified: _userService.baseUser.isEmailVerified,
         },
       );
 
@@ -215,8 +215,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         ApiResponse<bool> res = await _userRepo.updateUser(
           uid: _userService.baseUser.uid,
           dMap: {
-            'email': _userService.baseUser.email,
-            'mIsEmailVerified': _userService.baseUser.isEmailVerified,
+            BaseUser.fldEmail: _userService.baseUser.email,
+            BaseUser.fldIsEmailVerified: _userService.baseUser.isEmailVerified,
           },
         );
         if (res.model) {

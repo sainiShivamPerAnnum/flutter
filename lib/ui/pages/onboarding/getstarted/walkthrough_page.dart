@@ -1,5 +1,7 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
@@ -7,11 +9,15 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:lottie/lottie.dart';
 
 class WalkThroughPage extends StatefulWidget {
@@ -28,8 +34,20 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   PageController _pageController;
   ValueNotifier<double> _pageNotifier;
   bool showLotties = false;
+  bool _isLoading = false;
+
+  get isLoading => this._isLoading;
+
+  set isLoading(value) {
+    setState(() {
+      this._isLoading = value;
+    });
+  }
+
   GoldenTicketService _gtService = GoldenTicketService();
   final _analyticsService = locator<AnalyticsService>();
+  final UserRepository _userRepository = locator<UserRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   @override
   void initState() {
@@ -57,214 +75,233 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     _pageNotifier.value = _pageController.page;
   }
 
+  checkForMilestoneCompletion() async {
+    isLoading = true;
+    if (_journeyService.avatarRemoteMlIndex == 1)
+      await _userRepository.updateUserWalkthroughCompletion();
+    isLoading = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: HomeBackground(
-      child: SafeArea(
-        child: Container(
-          margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.04),
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding40),
-              topRight: Radius.circular(SizeConfig.padding40),
+      body: HomeBackground(
+        child: SafeArea(
+          child: Container(
+            margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.04),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.padding40),
+                topRight: Radius.circular(SizeConfig.padding40),
+              ),
+              color: Colors.white,
             ),
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              Spacer(),
-              ValueListenableBuilder(
-                valueListenable: _pageNotifier,
-                builder: (ctx, value, _) {
-                  return Text(widget.titleList[value.toInt()],
-                      style: TextStyles.title1.bold);
-                },
-              ),
-              Spacer(),
-              Container(
-                height: SizeConfig.screenHeight * 0.38,
-                width: SizeConfig.screenHeight * 0.38,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: CustomPaint(
-                        painter: LottieBackground(),
-                        size: Size(
-                            SizeConfig.screenHeight * 0.4,
-                            (SizeConfig.screenHeight * 0.4 * 0.9779874213836478)
-                                .toDouble()),
-                      ),
-                    ),
-                    showLotties
-                        ? ValueListenableBuilder(
-                            valueListenable: _pageNotifier,
-                            builder: (ctx, value, _) {
-                              return Positioned(
-                                child: Container(
-                                  height: SizeConfig.screenWidth,
-                                  width: SizeConfig.screenWidth,
-                                  child: PageView(
-                                    controller: _pageController,
-                                    children: [
-                                      Transform.scale(
-                                        scale: 1.2,
-                                        child: Lottie.asset(
-                                          Assets.onb1,
-                                          animate: value != 0.0 ? false : true,
-                                          height: SizeConfig.screenWidth,
-                                          width: SizeConfig.screenWidth,
-                                        ),
-                                      ),
-                                      Transform.scale(
-                                        scale: 1.1,
-                                        child: Lottie.asset(
-                                          Assets.onb2,
-                                          animate: value != 1.0 ? false : true,
-                                          height: SizeConfig.screenWidth,
-                                          width: SizeConfig.screenWidth,
-                                        ),
-                                      ),
-                                      Lottie.asset(
-                                        Assets.onb3,
-                                        animate: value != 2.0 ? false : true,
-                                        height: SizeConfig.screenWidth,
-                                        width: SizeConfig.screenWidth,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : Positioned(
-                            child: Container(
-                              height: SizeConfig.screenWidth,
-                              width: SizeConfig.screenWidth,
-                              child: PageView(
-                                controller: _pageController,
-                                children: [
-                                  Transform.scale(
-                                    scale: 1.2,
-                                    child: Lottie.asset(
-                                      Assets.onb1,
-                                      height: SizeConfig.screenWidth,
-                                      animate: false,
-                                      width: SizeConfig.screenWidth,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(
-                  SizeConfig.screenHeight * 0.03,
-                ),
-                child: ValueListenableBuilder(
+            child: Column(
+              children: [
+                Spacer(),
+                ValueListenableBuilder(
                   valueListenable: _pageNotifier,
                   builder: (ctx, value, _) {
-                    return Text(widget.descList[value.toInt()],
+                    return Text(widget.titleList[value.toInt()],
+                        style: TextStyles.title1.bold);
+                  },
+                ),
+                Spacer(),
+                Container(
+                  height: SizeConfig.screenHeight * 0.38,
+                  width: SizeConfig.screenHeight * 0.38,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CustomPaint(
+                          painter: LottieBackground(),
+                          size: Size(
+                              SizeConfig.screenHeight * 0.4,
+                              (SizeConfig.screenHeight *
+                                      0.4 *
+                                      0.9779874213836478)
+                                  .toDouble()),
+                        ),
+                      ),
+                      showLotties
+                          ? ValueListenableBuilder(
+                              valueListenable: _pageNotifier,
+                              builder: (ctx, value, _) {
+                                return Positioned(
+                                  child: Container(
+                                    height: SizeConfig.screenWidth,
+                                    width: SizeConfig.screenWidth,
+                                    child: PageView(
+                                      controller: _pageController,
+                                      children: [
+                                        Transform.scale(
+                                          scale: 1.2,
+                                          child: Lottie.asset(
+                                            Assets.onb1,
+                                            animate:
+                                                value != 0.0 ? false : true,
+                                            height: SizeConfig.screenWidth,
+                                            width: SizeConfig.screenWidth,
+                                          ),
+                                        ),
+                                        Transform.scale(
+                                          scale: 1.1,
+                                          child: Lottie.asset(
+                                            Assets.onb2,
+                                            animate:
+                                                value != 1.0 ? false : true,
+                                            height: SizeConfig.screenWidth,
+                                            width: SizeConfig.screenWidth,
+                                          ),
+                                        ),
+                                        Lottie.asset(
+                                          Assets.onb3,
+                                          animate: value != 2.0 ? false : true,
+                                          height: SizeConfig.screenWidth,
+                                          width: SizeConfig.screenWidth,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : Positioned(
+                              child: Container(
+                                height: SizeConfig.screenWidth,
+                                width: SizeConfig.screenWidth,
+                                child: PageView(
+                                  controller: _pageController,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.2,
+                                      child: Lottie.asset(
+                                        Assets.onb1,
+                                        height: SizeConfig.screenWidth,
+                                        animate: false,
+                                        width: SizeConfig.screenWidth,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(
+                    SizeConfig.screenHeight * 0.03,
+                  ),
+                  child: ValueListenableBuilder(
+                    valueListenable: _pageNotifier,
+                    builder: (ctx, value, _) {
+                      return Text(
+                        widget.descList[value.toInt()],
                         textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.clip,
-                        style: TextStyles.body1);
-                  },
+                        style: TextStyles.body1,
+                      );
+                    },
+                  ),
                 ),
-              ),
-              ValueListenableBuilder(
-                  valueListenable: _pageNotifier,
-                  builder: (ctx, value, _) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TabPageSelectorIndicator(
-                            backgroundColor: value.toInt() == 0
-                                ? UiConstants.primaryColor
-                                : Colors.grey[400],
-                            borderColor: value.toInt() == 0
-                                ? UiConstants.primaryColor
-                                : Colors.grey[400],
-                            size: 10),
-                        TabPageSelectorIndicator(
-                            backgroundColor: value.toInt() == 1
-                                ? UiConstants.primaryColor
-                                : Colors.grey[400],
-                            borderColor: value.toInt() == 1
-                                ? UiConstants.primaryColor
-                                : Colors.grey[400],
-                            size: 10),
-                        TabPageSelectorIndicator(
-                            backgroundColor: value.toInt() == 2
-                                ? UiConstants.primaryColor
-                                : Colors.grey[400],
-                            borderColor: value.toInt() == 2
-                                ? UiConstants.primaryColor
-                                : Colors.grey[400],
-                            size: 10),
-                      ],
-                    );
-                  }),
-              Spacer(),
-              Container(
-                width: SizeConfig.screenWidth,
-                child: ValueListenableBuilder(
-                  valueListenable: _pageNotifier,
-                  builder: (ctx, value, _) {
-                    return FelloButtonLg(
-                      child: Text(
-                        value.toInt() == 2 ? "FINISH" : "NEXT",
-                        style: TextStyles.body2.bold.colour(Colors.white),
-                      ),
-                      onPressed: () {
-                        if (value.toInt() == 2) {
-                          AppState.backButtonDispatcher.didPopRoute();
-                          _gtService
-                              .fetchAndVerifyGoldenTicketByID()
-                              .then((bool res) {
-                            if (res)
-                              _gtService.showInstantGoldenTicketView(
+                ValueListenableBuilder(
+                    valueListenable: _pageNotifier,
+                    builder: (ctx, value, _) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TabPageSelectorIndicator(
+                              backgroundColor: value.toInt() == 0
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey[400],
+                              borderColor: value.toInt() == 0
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey[400],
+                              size: 10),
+                          TabPageSelectorIndicator(
+                              backgroundColor: value.toInt() == 1
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey[400],
+                              borderColor: value.toInt() == 1
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey[400],
+                              size: 10),
+                          TabPageSelectorIndicator(
+                              backgroundColor: value.toInt() == 2
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey[400],
+                              borderColor: value.toInt() == 2
+                                  ? UiConstants.primaryColor
+                                  : Colors.grey[400],
+                              size: 10),
+                        ],
+                      );
+                    }),
+                Spacer(),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  child: ValueListenableBuilder(
+                    valueListenable: _pageNotifier,
+                    builder: (ctx, value, _) {
+                      return FelloButtonLg(
+                        child: Text(
+                          value.toInt() == 2 ? "FINISH" : "NEXT",
+                          style: TextStyles.body2.bold.colour(Colors.white),
+                        ),
+                        onPressed: () {
+                          if (value.toInt() == 2) {
+                            AppState.backButtonDispatcher.didPopRoute();
+                            _gtService
+                                .fetchAndVerifyGoldenTicketByID()
+                                .then((bool res) {
+                              if (res)
+                                _gtService.showInstantGoldenTicketView(
                                   title: 'Welcome to Fello',
-                                  source: GTSOURCE.newuser);
-                          });
-                        } else
-                          _pageController.nextPage(
-                            duration: Duration(milliseconds: 400),
-                            curve: Curves.easeIn,
-                          );
-                      },
-                    );
+                                  source: GTSOURCE.newuser,
+                                );
+                            });
+                          } else
+                            _pageController.nextPage(
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeIn,
+                            );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                    _gtService
+                        .fetchAndVerifyGoldenTicketByID()
+                        .then((bool res) {
+                      if (res)
+                        _gtService.showInstantGoldenTicketView(
+                          title: 'Welcome to Fello',
+                          source: GTSOURCE.newuser,
+                        );
+                    });
                   },
+                  child: Text(
+                    "Skip",
+                    style: TextStyles.body3.colour(Colors.grey),
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-                    if (res)
-                      _gtService.showInstantGoldenTicketView(
-                          title: 'Welcome to Fello', source: GTSOURCE.newuser);
-                  });
-                },
-                child: Text(
-                  "Skip",
-                  style: TextStyles.body3.colour(Colors.grey),
+                SizedBox(
+                  height: kToolbarHeight / 2,
                 ),
-              ),
-              SizedBox(
-                height: kToolbarHeight / 2,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 }
 

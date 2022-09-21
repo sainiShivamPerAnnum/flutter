@@ -48,16 +48,7 @@ class RazorpayModel extends ChangeNotifier {
     String paymentId = response.paymentId;
     String checkoutOrderId = response.orderId;
     String paySignature = response.signature;
-    AppState.delegate.appState.isTxnLoaderInView = true;
-    _paytmService.handleTransactionPolling();
-    AppState.delegate.appState.txnTimer =
-        Timer(Duration(seconds: 30), () async {
-      AppState.pollingPeriodicTimer?.cancel();
-      if (AppState.delegate.appState.isTxnLoaderInView) {
-        AppState.delegate.appState.isTxnLoaderInView = false;
-        _paytmService.showTransactionPendingDialog();
-      }
-    });
+    _txnService.initiatePolling();
     log.debug(
         "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
     _currentTxn.rzp[UserTransaction.subFldRzpPaymentId] = paymentId;
@@ -71,9 +62,9 @@ class RazorpayModel extends ChangeNotifier {
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    if (AppState.delegate.appState.isTxnLoaderInView == true) {
-      AppState.delegate.appState.isTxnLoaderInView = false;
-    }
+    // if (AppState.delegate.appState.isTxnLoaderInView == true) {
+    //   AppState.delegate.appState.isTxnLoaderInView = false;
+    // }
     BaseUtil.showNegativeAlert(
       'Transaction failed',
       'Your transaction was unsuccessful. Please try again',
@@ -118,9 +109,9 @@ class RazorpayModel extends ChangeNotifier {
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
     print(paytmSubscriptionApiResponse.model.data.orderId);
-    AppState.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.txnId;
-    AppState.currentTxnAmount = amount;
-    _logger.d("Current Txn Id: ${AppState.currentTxnOrderId}");
+    TransactionService.currentTxnOrderId =
+        paytmSubscriptionApiResponse.model.data.txnId;
+    TransactionService.currentTxnAmount = amount;
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     var options = {
       'key': _keyId,

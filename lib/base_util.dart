@@ -6,8 +6,6 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -29,12 +27,16 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
+import 'package:felloapp/ui/widgets/alert_snackbar/alert_snackbar.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -42,15 +44,17 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:math' as math;
 import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -108,9 +112,6 @@ class BaseUtil extends ChangeNotifier {
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
   String zeroBalanceAssetUri;
-  static List<GameModel> gamesList;
-  static List<GameModel> _focusGameList;
-  static List<GameModel> _restGamesList;
   static String manualReferralCode;
   static String referrerUserId;
   static bool isNewUser, isFirstFetchDone; // = 'jdF1';
@@ -199,7 +200,6 @@ class BaseUtil extends ChangeNotifier {
       BaseAnalytics.analytics.logAppOpen();
 
       setPackageInfo();
-      await setGameDefaults();
 
       ///fetch on-boarding status and User details
       firebaseUser = _userService.firebaseUser;
@@ -239,144 +239,6 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
-  Future<void> setGameDefaults() async {
-    final gameResponse = await _gameRepo.getGames();
-    if (gameResponse.code == 200) gamesList = gameResponse.model;
-    if (gamesList == null || gamesList.isEmpty)
-      gamesList = [
-        GameModel(
-          gameName: "Football",
-          route: "/footballHome",
-          code: 'FO',
-          gameUri:
-              "https://d2qfyj2eqvh06a.cloudfront.net/football-kickoff/index.html",
-          gameCode: Constants.GAME_TYPE_FOOTBALL,
-          shadowColor: Color(0xff4B489E),
-          thumbnailUri: BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.FOOTBALL_THUMBNAIL_URI),
-          playCost: 25,
-          prizeAmount: 25000,
-          analyticEvent: AnalyticsEvents.selectPlayFootball,
-        ),
-        GameModel(
-          gameName: "Cricket",
-          route: "/cricketHome",
-          code: 'CR',
-          gameUri:
-              "https://d2qfyj2eqvh06a.cloudfront.net/cricket-hero/index.html",
-          gameCode: Constants.GAME_TYPE_CRICKET,
-          shadowColor: Color(0xff4B489E),
-          thumbnailUri: BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.CRICKET_THUMBNAIL_URI),
-          playCost: 20,
-          prizeAmount: 25000,
-          analyticEvent: AnalyticsEvents.selectPlayCricket,
-        ),
-        GameModel(
-          gameName: "Pool Club",
-          route: "/poolHome",
-          code: 'PO',
-          gameUri: "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html",
-          gameCode: Constants.GAME_TYPE_POOLCLUB,
-          shadowColor: Color(0xff00982B),
-          thumbnailUri: BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.POOLCLUB_THUMBNAIL_URI),
-          playCost: 20,
-          prizeAmount: 25000,
-          analyticEvent: AnalyticsEvents.selectPlayPoolClub,
-        ),
-        GameModel(
-          gameName: "Candy Fiesta",
-          route: "/candyFiestaHome",
-          code: 'CA',
-          gameUri: "https://fl-games-candy-fiesta.onrender.com/",
-          gameCode: Constants.GAME_TYPE_CANDYFIESTA,
-          shadowColor: Color(0xff4B489E),
-          thumbnailUri: BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.CANDYFIESTA_THUMBNAIL_URI),
-          playCost: 20,
-          prizeAmount: 25000,
-          analyticEvent: AnalyticsEvents.selectCandyFiesta,
-        ),
-        GameModel(
-          gameName: "Tambola",
-          route: "/tambolaHome",
-          code: 'TA',
-          gameCode: Constants.GAME_TYPE_TAMBOLA,
-          shadowColor: Color(0xff1D173D),
-          thumbnailUri: BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.TAMBOLA_THUMBNAIL_URI),
-          playCost: 20,
-          prizeAmount: 25000,
-          analyticEvent: AnalyticsEvents.selectPlayTambola,
-        ),
-      ];
-    //Arrange Games according to the position defined in baseremoteconfig.
-    arrangeGames();
-  }
-
-  void arrangeGames() {
-    // List<GameModel> tempFocusGameList = [];
-    // List<GameModel> tempRestGamesList = [];
-    // List<GameModel> tempGameList = [];
-    // List<String> gamesOrder = BaseRemoteConfig.remoteConfig
-    //     .getString(BaseRemoteConfig.GAME_POSITION)
-    //     .split('-');
-    // gamesOrder.forEach(
-    //   (gameCode) {
-    //     tempGameList.add(
-    //       gamesList.firstWhere((game) => game.code == gameCode),
-    //     );
-    //   },
-    // );
-
-    // final String userlastPlayedGames =
-    //     PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
-    // if (userlastPlayedGames != null && userlastPlayedGames.isNotEmpty) {
-    //   List<String> lastgamesOrder = userlastPlayedGames.split("-");
-    //   lastgamesOrder.forEach((code) {
-    //     tempFocusGameList
-    //         .add(tempGameList.firstWhere((game) => game.code == code));
-    //   });
-    //   if (tempFocusGameList.length < 2) {
-    //     for (int i = 0; i < tempGameList.length; i++) {
-    //       if (!tempFocusGameList.contains(tempGameList[i])) {
-    //         tempFocusGameList.add(tempGameList[i]);
-    //         if (tempFocusGameList.length >= 2) break;
-    //       }
-    //     }
-    //   } else if (tempFocusGameList.length > 2) {
-    //     while (tempFocusGameList.length > 2) {
-    //       tempFocusGameList.removeLast();
-    //     }
-    //   }
-    // } else {
-    //   List<String> newUserGamesOrder = BaseRemoteConfig.remoteConfig
-    //       .getString(BaseRemoteConfig.NEW_USER_GAMES_ORDER)
-    //       .split('-');
-    //   newUserGamesOrder.forEach((code) {
-    //     tempFocusGameList
-    //         .add(tempGameList.firstWhere((game) => game.code == code));
-    //   });
-    // }
-    // tempGameList.forEach((game) {
-    //   if (!tempFocusGameList.contains(game)) tempRestGamesList.add(game);
-    // });
-    focusGamesList = gamesList.sublist(0, 2);
-    restGamesList = gamesList.sublist(2);
-    // tempFocusGameList;
-    // restGamesList = tempRestGamesList;
-    // logger.d(
-    //     "Focused games list: $focusGamesList \nRest games List: $restGamesList");
-    // dev.log("Games List: $gamePosition");
-    // gamesList = [];
-    // gamePosition.forEach((code) {
-    //   gamesList.add(
-    //     gamesList.firstWhere((game) => game.code == code),
-    //   );
-    // });
-  }
-
   Future<void> refreshFunds() async {
     //TODO: ADD LOADER
     print("-----------------> I got called");
@@ -391,28 +253,33 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  static Widget getAppBar(BuildContext context, String title) {
-    return AppBar(
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_rounded,
-          color: Colors.white,
+  openProfileDetailsScreen() {
+    if (JourneyService.isAvatarAnimationInProgress) return;
+    if (_userService.userJourneyStats.mlIndex > 1) {
+      AppState.delegate.parseRoute(Uri.parse("profile"));
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Proflie locked", "Complete milestone 2 to unlock profile");
+    }
+  }
+
+  openRechargeModalSheet({int amt, bool isSkipMl}) {
+    if (_userService.userJourneyStats.mlIndex == 1)
+      return BaseUtil.showNegativeAlert("Complete your profile",
+          "You can make deposits only after completing profile");
+    else
+      return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: RechargeModalSheet(
+          amount: amt ?? 201,
+          skipMl: isSkipMl ?? false,
         ),
-        onPressed: () {
-          AppState.backButtonDispatcher.didPopRoute();
-        },
-      ),
-      elevation: 1.0,
-      backgroundColor: UiConstants.primaryColor,
-      iconTheme: IconThemeData(
-        color: UiConstants.accentColor, //change your color here
-      ),
-      title: Text(title ?? '${Constants.APP_NAME}',
-          style: GoogleFonts.montserrat(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: SizeConfig.largeTextSize)),
-    );
+      );
   }
 
   bool get checkKycMissing {
@@ -431,25 +298,39 @@ class BaseUtil extends ChangeNotifier {
 
   static showPositiveAlert(String title, String message, {int seconds = 3}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
         icon: Icon(
           Icons.flag,
           size: 28.0,
-          color: Colors.white,
+          color: UiConstants.primaryColor,
         ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
+        margin: EdgeInsets.only(
+            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
+                ? SizeConfig.navBarHeight +
+                    math.max(SizeConfig.viewInsets.bottom,
+                        SizeConfig.pageHorizontalMargins)
+                : SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
         title: title,
         message: message,
         duration: Duration(seconds: seconds),
-        backgroundGradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
-        ),
+        // backgroundGradient: LinearGradient(
+        //   begin: Alignment.topRight,
+        //   end: Alignment.bottomLeft,
+        //   colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
+        // ),
+        backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor,
@@ -463,21 +344,32 @@ class BaseUtil extends ChangeNotifier {
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Flushbar(
-        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
         icon: Icon(
           Icons.assignment_late,
           size: 28.0,
-          color: Colors.white,
+          color: UiConstants.tertiarySolid,
         ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
+        margin: EdgeInsets.only(
+            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
+                ? SizeConfig.navBarHeight + SizeConfig.pageHorizontalMargins
+                : SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
         title: title,
         message: message,
         duration: Duration(seconds: seconds ?? 3),
-        backgroundColor: UiConstants.negativeAlertColor,
+        backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
             color: UiConstants.negativeAlertColor,
@@ -503,8 +395,8 @@ class BaseUtil extends ChangeNotifier {
           size: 28.0,
           color: Colors.white,
         ),
-        margin: EdgeInsets.all(10),
-        borderRadius: 8,
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
         title: "No Internet",
         message: "Please check your network connection and try again",
         duration: Duration(seconds: 2),
@@ -574,19 +466,23 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static Future openModalBottomSheet(
-      {Widget content,
-      bool addToScreenStack,
-      bool hapticVibrate,
-      Color backgroundColor,
-      bool isBarrierDismissable,
-      BorderRadius borderRadius,
-      bool isScrollControlled = false}) {
+  static Future openModalBottomSheet({
+    Widget content,
+    bool addToScreenStack,
+    bool hapticVibrate,
+    Color backgroundColor,
+    bool isBarrierDismissable,
+    BorderRadius borderRadius,
+    bool isScrollControlled = false,
+    BoxConstraints boxContraints,
+    bool enableDrag = false,
+  }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     return showModalBottomSheet(
-        enableDrag: false,
+        enableDrag: enableDrag,
+        constraints: boxContraints,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.zero),
         isScrollControlled: isScrollControlled ?? false,
@@ -595,14 +491,6 @@ class BaseUtil extends ChangeNotifier {
         isDismissible: isBarrierDismissable,
         context: AppState.delegate.navigatorKey.currentContext,
         builder: (ctx) => content);
-  }
-
-  AuthCredential generateAuthCredential(String verificationId, String smsCode) {
-    final AuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: smsCode,
-    );
-    return credential;
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
@@ -625,7 +513,7 @@ class BaseUtil extends ChangeNotifier {
       logger.d('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
 
-      //remove fcm token from remote
+      //remove  token from remote
       //await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required
@@ -787,6 +675,13 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
+  static getIntOrDouble(double x) {
+    if (x - x.round() != 0)
+      return x;
+    else
+      return x.toInt();
+  }
+
   static double digitPrecision(double x, [int offset = 2, bool round = true]) {
     double y = x * pow(10, offset);
     int z = (round) ? y.round() : y.truncate();
@@ -826,40 +721,6 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<GameModel> get focusGamesList => _focusGameList;
-
-  set focusGamesList(List<GameModel> games) {
-    _focusGameList = games;
-    notifyListeners();
-  }
-
-  List<GameModel> get restGamesList => _restGamesList;
-
-  set restGamesList(List<GameModel> games) {
-    _restGamesList = games;
-    notifyListeners();
-  }
-
-  // cacheGameorder(String gameCode) {
-  //   String gamesOrder =
-  //       PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_PLAYED_GAMES);
-
-  //   if (gamesOrder != null && gamesOrder.isNotEmpty) {
-  //     List<String> cachedGamesList = gamesOrder.split('-');
-
-  //     if (!cachedGamesList.contains(gameCode)) {
-  //       cachedGamesList.insert(0, gameCode);
-  //       while (cachedGamesList.length > 2) cachedGamesList.removeLast();
-  //     }
-  //     gamesOrder = cachedGamesList.join('-');
-  //   } else {
-  //     gamesOrder = gameCode;
-  //   }
-  //   PreferenceHelper.setString(
-  //       PreferenceHelper.CACHE_LAST_PLAYED_GAMES, gamesOrder);
-  // arrangeGames();
-  // }
-
   void refreshAugmontBalance() async {
     _userRepo.getFundBalance().then((aValue) {
       if (aValue.code == 200) {
@@ -870,10 +731,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> fetchUserAugmontDetail() async {
-    ApiResponse<UserAugmontDetail> augmontDetailResponse =
-        await _userRepo.getUserAugmontDetails();
-    if (augmontDetailResponse.code == 200) {
-      augmontDetail = augmontDetailResponse.model;
+    if (augmontDetail == null) {
+      ApiResponse<UserAugmontDetail> augmontDetailResponse =
+          await _userRepo.getUserAugmontDetails();
+      if (augmontDetailResponse.code == 200)
+        augmontDetail = augmontDetailResponse.model;
     }
   }
 
@@ -916,8 +778,6 @@ class BaseUtil extends ChangeNotifier {
 
   void flipSecurityValue(bool value) {
     _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
-    // saveSecurityValue(this.isSecurityEnabled);
-    AppState.unsavedPrefs = true;
     notifyListeners();
   }
 
@@ -1029,5 +889,12 @@ class BaseUtil extends ChangeNotifier {
   set isGoogleSignInProgress(value) {
     this._isGoogleSignInProgress = value;
     notifyListeners();
+  }
+
+  static String toOriginalFormatString(DateTime dateTime) {
+    final y = dateTime.year.toString().padLeft(4, '0');
+    final m = dateTime.month.toString().padLeft(2, '0');
+    final d = dateTime.day.toString().padLeft(2, '0');
+    return "$y$m$d";
   }
 }

@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transactions_de
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -121,7 +123,8 @@ class AutosaveTransactionsView extends StatelessWidget {
 class SubscriptionTransactionTile extends StatelessWidget {
   // final AutosaveTransactionsViewModel model;
   final AutosaveTransactionModel txn;
-  final _txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
   SubscriptionTransactionTile({
     // @required this.model,
     this.txn,
@@ -144,10 +147,10 @@ class SubscriptionTransactionTile extends StatelessWidget {
         padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
         height: SizeConfig.blockSizeVertical * 5,
         width: SizeConfig.blockSizeVertical * 5,
-        child: _txnService.getTileLead(txn.status),
+        child: _txnHistoryService.getTileLead(txn.status),
       ),
       title: Text(
-        _txnService.getTileTitle(
+        _txnHistoryService.getTileTitle(
           UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD,
         ),
         style: TextStyle(
@@ -155,9 +158,9 @@ class SubscriptionTransactionTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        _txnService.getTileSubtitle(UserTransaction.TRAN_TYPE_DEPOSIT),
+        _txnHistoryService.getTileSubtitle(UserTransaction.TRAN_TYPE_DEPOSIT),
         style: TextStyle(
-          color: _txnService.getTileColor(txn.status),
+          color: _txnHistoryService.getTileColor(txn.status),
           fontSize: SizeConfig.smallTextSize,
         ),
       ),
@@ -166,7 +169,7 @@ class SubscriptionTransactionTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            _txnService.getFormattedTxnAmount(txn.amount),
+            _txnHistoryService.getFormattedTxnAmount(txn.amount),
             style: TextStyle(
               // color: _txnService.getTileColor(txn.tranStatus),
               fontSize: SizeConfig.mediumTextSize,
@@ -174,7 +177,7 @@ class SubscriptionTransactionTile extends StatelessWidget {
           ),
           SizedBox(height: 4),
           Text(
-            _txnService.getFormattedTime(txn.createdOn),
+            _txnHistoryService.getFormattedTime(txn.createdOn),
             style: TextStyle(
                 // color: _txnService.getTileColor(txn.tranStatus),
                 color: Colors.black45,

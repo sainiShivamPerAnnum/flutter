@@ -1,22 +1,37 @@
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
@@ -25,6 +40,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _apiCacheManager = locator<ApiCacheManager>();
   final _userRepo = locator<UserRepository>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _journeyRepo = locator<JourneyRepository>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -34,26 +50,30 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String _dob;
   String _gender;
   String _idToken;
+  String _avatarId;
+  String _email;
 
   UserFundWallet _userFundWallet;
+  UserJourneyStatsModel _userJourneyStats;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
   bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
-  bool showOnboardingTutorial = false;
+  // bool showOnboardingTutorial = true;
   bool showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
 
+  String get avatarId => _avatarId;
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
-
+  String get email => _email;
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
@@ -73,6 +93,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   UserFundWallet get userFundWallet => _userFundWallet;
+  UserJourneyStatsModel get userJourneyStats => _userJourneyStats;
 
   set firebaseUser(User firebaseUser) => _firebaseUser = firebaseUser;
 
@@ -81,6 +102,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.myUserDpUrl);
     _logger.d(
         "My user dp url updated in userservice, property listeners notified");
+  }
+
+  setMyAvatarId(String avId) {
+    _avatarId = avId;
+    notifyListeners(UserServiceProperties.myAvatarId);
+    _logger.d(
+        "My user avatar Id updated in userservice, property listeners notified");
   }
 
   setMyUserName(String name) {
@@ -105,7 +133,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setEmail(String email) {
-    _baseUser.email = email;
+    _email = email;
     notifyListeners(UserServiceProperties.myEmail);
     _logger
         .d("My user email updated in userservice, property listeners notified");
@@ -115,6 +143,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
     _logger.d("Wallet updated in userservice, property listeners notified");
+  }
+
+  set userJourneyStats(UserJourneyStatsModel stats) {
+    _userJourneyStats = stats;
+    notifyListeners(UserServiceProperties.myJourneyStats);
+    _logger
+        .d("Journey Stats updated in userservice, property listeners notified");
   }
 
   set augGoldPrinciple(double principle) {
@@ -167,9 +202,19 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         isEmailVerified = baseUser.isEmailVerified ?? false;
         isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-        await Future.wait([setProfilePicture(), getUserFundWalletData()]);
-        checkForNewNotifications();
-        checkForUnscratchedGTStatus();
+        setEmail(baseUser.email);
+        setMyAvatarId(baseUser.avatarId);
+        setMyUserName(baseUser.name);
+        setDateOfBirth(baseUser.dob);
+        setGender(baseUser.gender);
+
+        await Future.wait([
+          // note: Already Setting profile in Root uneccessary Calling
+          // setProfilePicture(),
+          getUserJourneyStats()
+        ]);
+        // checkForNewNotifications();
+        // checkForUnscratchedGTStatus();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -232,25 +277,26 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<void> setProfilePicture() async {
-    if (await CacheManager.readCache(key: 'dpUrl') == null) {
-      try {
-        if (_baseUser != null) {
-          setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
-          _logger.d("No cached profile picture found. updated from server");
-        }
-        if (_myUserDpUrl != null) {
-          await CacheManager.writeCache(
-              key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
-          _logger.d("Profile picture fetched from server and cached");
-        }
-      } catch (e) {
-        _logger.e(e.toString());
-      }
-    } else {
-      setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
-    }
-  }
+  // Note: Already Setting in Root uneccessary Calling
+  // Future<void> setProfilePicture() async {
+  //   if (await CacheManager.readCache(key: 'dpUrl') == null) {
+  //     try {
+  //       if (_baseUser != null) {
+  //         setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
+  //         _logger.d("No cached profile picture found. updated from server");
+  //       }
+  //       if (_myUserDpUrl != null) {
+  //         await CacheManager.writeCache(
+  //             key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
+  //         _logger.d("Profile picture fetched from server and cached");
+  //       }
+  //     } catch (e) {
+  //       _logger.e(e.toString());
+  //     }
+  //   } else {
+  //     setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
+  //   }
+  // }
 
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
@@ -260,6 +306,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       else
         userFundWallet = temp;
     }
+  }
+
+  Future<bool> getUserJourneyStats() async {
+    // NOTE: CACHE REQUIRED, FOR CALLED FROM JOURUNY SERVICE AGAIN
+    if (baseUser != null) {
+      ApiResponse<UserJourneyStatsModel> res =
+          await _journeyRepo.getUserJourneyStats();
+      if (res.isSuccess()) {
+        userJourneyStats = res.model;
+        return true;
+      } else {
+        _logger.e("Error fetching User journey stats data");
+        return false;
+      }
+    }
+    return false;
   }
 
   _compileUserWallet() {
@@ -334,5 +396,112 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     ApiResponse<bool> response =
         await _userRepo.updateFcmToken(fcmToken: token);
     return response.model;
+  }
+
+  // Future<bool> completeOnboarding() async {
+  //   ApiResponse response = await _userRepo.completeOnboarding();
+  //   return response.model;
+  // }
+
+  Future<bool> checkGalleryPermission() async {
+    if (await BaseUtil.showNoInternetAlert()) return false;
+    var _status = await Permission.photos.status;
+    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "Request Permission",
+          description:
+              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+          buttonText: "Continue",
+          asset: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Image.asset(
+              "images/gallery.png",
+              height: SizeConfig.screenWidth * 0.24,
+            ),
+          ),
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return true;
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    } else if (_status.isGranted) {
+      return true;
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Permission Unavailable',
+        'Please enable permission from settings to continue',
+      );
+      return false;
+    }
+    return false;
+  }
+
+  Future<bool> updateProfilePicture(XFile selectedProfilePicture) async {
+    Directory supportDir;
+    UploadTask uploadTask;
+    try {
+      supportDir = await getApplicationSupportDirectory();
+    } catch (e1) {
+      _logger.e('Support Directory not found');
+      _logger.e('$e1');
+      return false;
+    }
+
+    String imageName = selectedProfilePicture.path.split("/").last;
+    String targetPath = "${supportDir.path}/c-$imageName";
+    print("temp path: " + targetPath);
+    print("orignal path: " + selectedProfilePicture.path);
+
+    File compressedFile = File(selectedProfilePicture.path);
+
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("dps/${baseUser.uid}/image");
+      uploadTask = ref.putFile(compressedFile);
+    } catch (e2) {
+      _logger.e('putFile Failed. Reference Error');
+      _logger.e('$e2');
+      return false;
+    }
+
+    try {
+      TaskSnapshot res = await uploadTask;
+      String url = await res.ref.getDownloadURL();
+      final updateUserAvatarResponse = await _userRepo.updateUser(
+          dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser.uid);
+      if (url != null &&
+          updateUserAvatarResponse.isSuccess() &&
+          updateUserAvatarResponse.model) {
+        await CacheManager.writeCache(
+            key: 'dpUrl', value: url, type: CacheType.string);
+        setMyUserDpUrl(url);
+        setMyAvatarId('CUSTOM');
+        //_baseUtil.setDisplayPictureUrl(url);
+        _logger.d('Final DP Uri: $url');
+        return true;
+      } else
+        return false;
+    } catch (e) {
+      if (baseUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'error_msg': 'Method call to upload picture failed',
+        };
+        _internalOpsService.logFailure(
+          baseUser.uid,
+          FailType.ProfilePictureUpdateFailed,
+          errorDetails,
+        );
+      }
+      print('$e');
+      return false;
+    }
   }
 }

@@ -25,87 +25,87 @@ class GoldenTicketsView extends StatelessWidget {
       onModelReady: (model) => model.init(openFirst),
       onModelDispose: (model) => model.finish(),
       builder: (ctx, model, child) {
-        return Expanded(
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (scrollInfo.metrics.maxScrollExtent ==
-                  scrollInfo.metrics.pixels) {
-                model.requestMoreData();
-              }
-              return true;
-            },
-            child: StreamBuilder<List<DocumentSnapshot>>(
-              stream: model.streamController.stream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-                if (snapshot.hasError)
-                  return new NoRecordDisplayWidget(
-                    asset: "Assets.badticket.png",
-                    text: "Unable to load your tickets at the moment",
+        return NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.maxScrollExtent ==
+                scrollInfo.metrics.pixels) {
+              model.requestMoreData();
+            }
+            return true;
+          },
+          child: StreamBuilder<List<DocumentSnapshot>>(
+            stream: model.streamController.stream,
+            builder: (BuildContext context,
+                AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+              if (snapshot.hasError)
+                return new NoRecordDisplayWidget(
+                  asset: "Assets.badticket.png",
+                  text: "Unable to load your tickets at the moment",
+                );
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(
+                    child: SpinKitWave(
+                        color: UiConstants.primaryColor,
+                        size: SizeConfig.padding32),
                   );
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return Center(
-                      child: SpinKitWave(
-                          color: UiConstants.primaryColor,
-                          size: SizeConfig.padding32),
-                    );
-                  default:
-                    log("Items: " + snapshot.data.length.toString());
-                    model.arrangeGoldenTickets(snapshot.data, openFirst);
+                default:
+                  log("Items: " + snapshot.data.length.toString());
+                  model.arrangeGoldenTickets(snapshot.data, openFirst);
 
-                    return model.arrangedGoldenTicketList == null ||
-                            model.arrangedGoldenTicketList.length == 0
-                        ? ListView(
-                            shrinkWrap: true,
-                            children: [
-                              NoRecordDisplayWidget(
-                                assetLottie: Assets.noData,
-                                text: "No Golden Tickets won",
-                              )
-                            ],
-                          )
-                        : GridView.builder(
-                            itemCount: model.arrangedGoldenTicketList.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisSpacing: SizeConfig.padding8,
-                                    childAspectRatio: 1 / 1,
-                                    crossAxisCount: 2,
-                                    mainAxisSpacing: SizeConfig.padding8),
-                            padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding16,
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            itemBuilder: (ctx, i) {
-                              return InkWell(
-                                onTap: () {
-                                  AppState.screenStack.add(ScreenItem.dialog);
-                                  Navigator.of(AppState
-                                          .delegate.navigatorKey.currentContext)
-                                      .push(
-                                    HeroDialogRoute(
-                                      builder: (context) {
-                                        return GTDetailedView(
-                                          ticket:
-                                              model.arrangedGoldenTicketList[i],
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: GoldenTicketGridItemCard(
-                                  ticket: model.arrangedGoldenTicketList[i],
-                                  titleStyle: TextStyles.body2,
-                                  titleStyle2: TextStyles.body3,
-                                  width: SizeConfig.screenWidth * 0.36,
-                                  subtitleStyle: TextStyles.body4,
-                                ),
-                              );
-                            },
-                          );
-                }
-              },
-            ),
+                  return model.arrangedGoldenTicketList == null ||
+                          model.arrangedGoldenTicketList.length == 0
+                      ? ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          children: [
+                            NoRecordDisplayWidget(
+                              assetLottie: Assets.noData,
+                              text: "No Golden Tickets won",
+                            )
+                          ],
+                        )
+                      : GridView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: model.arrangedGoldenTicketList.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisSpacing: SizeConfig.padding8,
+                                  childAspectRatio: 1 / 1,
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: SizeConfig.padding8),
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding16,
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          itemBuilder: (ctx, i) {
+                            return InkWell(
+                              onTap: () {
+                                AppState.screenStack.add(ScreenItem.dialog);
+                                Navigator.of(AppState
+                                        .delegate.navigatorKey.currentContext)
+                                    .push(
+                                  HeroDialogRoute(
+                                    builder: (context) {
+                                      return GTDetailedView(
+                                        ticket:
+                                            model.arrangedGoldenTicketList[i],
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: GoldenTicketGridItemCard(
+                                ticket: model.arrangedGoldenTicketList[i],
+                                titleStyle: TextStyles.body2,
+                                titleStyle2: TextStyles.body3,
+                                width: SizeConfig.screenWidth * 0.36,
+                                subtitleStyle: TextStyles.body4,
+                              ),
+                            );
+                          },
+                        );
+              }
+            },
           ),
         );
       },

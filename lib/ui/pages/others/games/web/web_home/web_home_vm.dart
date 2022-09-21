@@ -10,8 +10,10 @@ import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -23,7 +25,18 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+class RechargeOption {
+  final Color color;
+  final int amount;
+  final bool isCustom;
+
+  RechargeOption({this.color, this.amount, this.isCustom = false});
+}
 
 class WebHomeViewModel extends BaseModel {
   //Dependency Injection
@@ -34,8 +47,8 @@ class WebHomeViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
-  final _baseUtil = locator<BaseUtil>();
-  final _gameRepo = locator<GameRepo>();
+  final _coinService = locator<UserCoinService>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
 
   //Local Variables
 
@@ -52,9 +65,30 @@ class WebHomeViewModel extends BaseModel {
   String _sessionId;
   String _gameEndpoint;
   String token = "";
+  bool _isLoading;
   String gameCode;
   GameModel _currentGameModel;
+  List<RechargeOption> rechargeOptions = [
+    RechargeOption(
+      color: Color(0xff5948B2),
+      amount: 100,
+    ),
+    RechargeOption(
+      color: Color(0xff9A3538),
+      amount: 200,
+    ),
+    RechargeOption(
+      color: Color(0xff9A3538),
+      amount: 500,
+    ),
+    RechargeOption(
+      isCustom: true,
+      color: Color(0xff39393C),
+      amount: 0,
+    )
+  ];
   String gameToken;
+  int _currentCoinValue;
 
   //Getters
   String get currentGame => this._currentGame;
@@ -63,8 +97,14 @@ class WebHomeViewModel extends BaseModel {
   int get getGameIndex => this.gameIndex;
   String get message => _message;
   String get sessionID => _sessionId;
+  get isLoading => this._isLoading;
   GameModel get currentGameModel => _currentGameModel;
-  bool get isGameLoading => this._isGameLoading;
+  int get currentCoinValue => _currentCoinValue;
+
+  set isLoading(value) {
+    this._isLoading = value;
+    notifyListeners();
+  }
 
   //Setters
   set currentGame(value) {
@@ -95,62 +135,76 @@ class WebHomeViewModel extends BaseModel {
   //Super Methods
   init(String game) async {
     currentGame = game;
-    print(currentGame);
-    scrollController = _lbService.parentController;
-    pageController = new PageController(initialPage: 0);
+    isLoading = true;
+    // await loadGameLists();
     await fetchGame(game);
-    refreshPrizes();
-    refreshLeaderboard();
+    // scrollController = _lbService.parentController;
+    // pageController = new PageController(initialPage: 0);
+    // refreshPrizes();
+    fetchUsersCurrentCoins();
+    isLoading = false;
+  }
+
+  newInit(String game) async {
+    currentGame = game;
   }
 
   clear() {}
 
-  refreshPrizes() async {
-    isPrizesLoading = true;
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        if (_prizeService.poolClubPrizes == null)
-          await _prizeService.fetchPoolClubPrizes();
-        prizes = _prizeService.poolClubPrizes;
-        gameCode = "PO";
+  // refreshPrizes() async {
+  //   isPrizesLoading = true;
+  //   switch (currentGame) {
+  //     case Constants.GAME_TYPE_POOLCLUB:
+  //       if (_prizeService.poolClubPrizes == null)
+  //         await _prizeService.fetchPoolClubPrizes();
+  //       prizes = _prizeService.poolClubPrizes;
+  //       gameCode = "PO";
 
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        if (_prizeService.cricketPrizes == null)
-          await _prizeService.fetchCricketPrizes();
-        prizes = _prizeService.cricketPrizes;
-        gameCode = "CR";
+  //       break;
+  //     case Constants.GAME_TYPE_CRICKET:
+  //       if (_prizeService.cricketPrizes == null)
+  //         await _prizeService.fetchCricketPrizes();
+  //       prizes = _prizeService.cricketPrizes;
+  //       gameCode = "CR";
 
-        break;
-      case Constants.GAME_TYPE_TAMBOLA:
-        if (_prizeService.tambolaPrizes == null)
-          await _prizeService.fetchTambolaPrizes();
-        prizes = _prizeService.tambolaPrizes;
-        gameCode = "TA";
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        if (_prizeService.footballPrizes == null)
-          await _prizeService.fetchFootballPrizes();
-        prizes = _prizeService.footballPrizes;
-        gameCode = "FO";
-        break;
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        if (_prizeService.candyFiestaPrizes == null)
-          await _prizeService.fetchCandyFiestaPrizes();
-        prizes = _prizeService.candyFiestaPrizes;
-        gameCode = "CA";
-        break;
-    }
-    isPrizesLoading = false;
-    if (prizes == null)
-      BaseUtil.showNegativeAlert("Unable to fetch prizes at the moment",
-          "Please try again after sometime");
-  }
+  //       break;
+  //     case Constants.GAME_TYPE_TAMBOLA:
+  //       if (_prizeService.tambolaPrizes == null)
+  //         await _prizeService.fetchTambolaPrizes();
+  //       prizes = _prizeService.tambolaPrizes;
+  //       gameCode = "TA";
+  //       break;
+  //     case Constants.GAME_TYPE_FOOTBALL:
+  //       if (_prizeService.footballPrizes == null)
+  //         await _prizeService.fetchFootballPrizes();
+  //       prizes = _prizeService.footballPrizes;
+  //       gameCode = "FO";
+  //       break;
+  //     case Constants.GAME_TYPE_CANDYFIESTA:
+  //       if (_prizeService.candyFiestaPrizes == null)
+  //         await _prizeService.fetchCandyFiestaPrizes();
+  //       prizes = _prizeService.candyFiestaPrizes;
+  //       gameCode = "CA";
+  //       break;
+  //   }
+  //   isPrizesLoading = false;
+  //   if (prizes == null)
+  //     BaseUtil.showNegativeAlert("Unable to fetch prizes at the moment",
+  //         "Please try again after sometime");
+  // }
 
   Future<bool> setupGame() async {
     await getBearerToken();
-    // _baseUtil.cacheGameorder(gameCode);
     return _setupCurrentGame();
+  }
+
+  Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
+    return Api().fetchRealTimePlayingStats(game);
+  }
+
+  fetchUsersCurrentCoins() {
+    _currentCoinValue = _coinService.flcBalance;
+    notifyListeners();
   }
 
   launchGame() {
@@ -191,10 +245,10 @@ class WebHomeViewModel extends BaseModel {
 
   Future<bool> _setupCurrentGame() async {
     setState(ViewState.Busy);
-    int _playCost = currentGameModel.playCost;
+    int _playCost = _currentGameModel.playCost;
     ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     final response =
-        await _gameRepo.getGameToken(gameName: currentGameModel.gameCode);
+        _gamesRepo.getGameToken(gameName: currentGameModel.gameCode);
     if (response.isSuccess()) gameToken = response.model;
     setState(ViewState.Idle);
     if (_flcResponse.model.flcBalance != null &&
@@ -259,11 +313,14 @@ class WebHomeViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(
-        isInsufficientBalance: true,
+      backgroundColor: UiConstants.gameCardColor,
+      content: WantMoreTicketsModalSheet(isInsufficientBalance: true),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness24),
+        topRight: Radius.circular(SizeConfig.roundness24),
       ),
       hapticVibrate: true,
-      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       isBarrierDismissable: true,
     );
   }
@@ -271,8 +328,8 @@ class WebHomeViewModel extends BaseModel {
   void viewpage(int index) {
     currentPage = index;
     print(currentPage);
-    pageController.animateToPage(currentPage,
-        duration: Duration(milliseconds: 200), curve: Curves.decelerate);
+    // pageController.animateToPage(currentPage,
+    //     duration: Duration(milliseconds: 200), curve: Curves.decelerate);
     refresh();
   }
 
@@ -282,16 +339,27 @@ class WebHomeViewModel extends BaseModel {
 
   fetchGame(String game) async {
     isGameLoading = true;
-    currentGameModel = BaseUtil.gamesList
-        .firstWhere((element) => element.gameCode == game, orElse: null);
-
-    if (currentGameModel == null) {
-      ApiResponse<GameModel> response =
-          await _gameRepo.getGameByCode(gameCode: game);
-      if (response.code == 200) {
-        currentGameModel = response.model;
-      }
+    final GameModel gameData =
+        _gamesRepo.allgames.firstWhere((g) => g.gameCode == game, orElse: null);
+    if (gameData != null) {
+      currentGameModel = gameData;
+      return;
+    }
+    final response = await _gamesRepo.getGameByCode(gameCode: game);
+    if (response.isSuccess()) {
+      currentGameModel = response.model;
     }
     isGameLoading = false;
+  }
+
+  String sortPlayerNumbers(String number) {
+    double num = double.parse(number);
+
+    if (num < 1000) {
+      return num.toStringAsFixed(0);
+    } else {
+      num = num / 1000;
+      return "${num.toStringAsFixed(1)}K";
+    }
   }
 }

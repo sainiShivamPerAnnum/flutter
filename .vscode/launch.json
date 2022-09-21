@@ -89,5 +89,16 @@
                 "--release"
               ]
         },
+        {
+            "name": "felloapp-qa",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_qa.dart",
+            "args": [
+                "--flavor",
+                "qa",
+                "--debug"
+              ]
+        },
     ]
 }

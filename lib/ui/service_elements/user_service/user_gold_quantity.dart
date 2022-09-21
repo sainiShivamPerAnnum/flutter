@@ -22,7 +22,10 @@ class UserGoldQuantitySE extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myUserFund],
+      properties: [
+        UserServiceProperties.myUserFund,
+        UserServiceProperties.myUserWallet
+      ],
       builder: (context, model, property) => Text(
         "${getGoldQuantity(model.userFundWallet?.augGoldQuantity)} gm" ?? "-",
         style: style ??

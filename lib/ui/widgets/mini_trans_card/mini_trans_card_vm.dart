@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -10,17 +11,18 @@ import 'package:felloapp/util/locator.dart';
 
 class MiniTransactionCardViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
-  final _txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
   AppState appState;
 
-  List<UserTransaction> get txnList => _txnService.txnList;
+  List<UserTransaction> get txnList => _txnHistoryService.txnList;
 
-  TransactionService get txnService => _txnService;
+  TransactionHistoryService get txnHistoryService => _txnHistoryService;
 
   getMiniTransactions() async {
     _logger.d("Getting mini transactions");
     setState(ViewState.Busy);
-    await _txnService.updateTransactions();
+    await _txnHistoryService.updateTransactions();
     setState(ViewState.Idle);
   }
 

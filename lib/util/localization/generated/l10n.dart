@@ -369,11 +369,11 @@ class S {
 
   // skipped getter for the '-----------------------------------' key
 
-  /// `Save`
-  String get navBarFinance {
+  /// `Journey`
+  String get navBarJourney {
     return Intl.message(
-      'Save',
-      name: 'navBarFinance',
+      'Journey',
+      name: 'navBarJourney',
       desc: '',
       args: [],
     );
@@ -553,7 +553,99 @@ class S {
     );
   }
 
+  /// `Balance`
+  String get balanceText {
+    return Intl.message(
+      'Balance',
+      name: 'balanceText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest safely in Gold\nwith our Auto SIP to win tokens`
+  String get investSafelyInGoldText {
+    return Intl.message(
+      'Invest safely in Gold\nwith our Auto SIP to win tokens',
+      name: 'investSafelyInGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started with a weekly/ daily SIP`
+  String get getStartedWithSIP {
+    return Intl.message(
+      'Get started with a weekly/ daily SIP',
+      name: 'getStartedWithSIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello Flo`
+  String get felloFloText {
+    return Intl.message(
+      'Fello Flo',
+      name: 'felloFloText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital Gold`
+  String get digitalGoldText {
+    return Intl.message(
+      'Digital Gold',
+      name: 'digitalGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------' key
+
+  /// `Add Bank information`
+  String get addBankInformationText {
+    return Intl.message(
+      'Add Bank information',
+      name: 'addBankInformationText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With every transaction, some\ntokens will be deducted.`
+  String get tokenDeductionOnTransaction {
+    return Intl.message(
+      'With every transaction, some\ntokens will be deducted.',
+      name: 'tokenDeductionOnTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To enable selling gold, complete the following:`
+  String get enableSellGold {
+    return Intl.message(
+      'To enable selling gold, complete the following:',
+      name: 'enableSellGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete KYC`
+  String get completeKYCText {
+    return Intl.message(
+      'Complete KYC',
+      name: 'completeKYCText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------------------' key
 
   /// `My Winnings`
   String get winMyWinnings {

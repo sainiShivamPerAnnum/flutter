@@ -8,7 +8,7 @@ class CustomAnimText extends AnimatedWidget {
   //final opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
 
   CustomAnimText(
-      {Key key, Animation<double> animation, this.animText, this.textStyle})
+      {Key key, Animation<double> animation, this.animText, this.textStyle,})
       : super(key: key, listenable: animation);
 
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class CustomAnimText extends AnimatedWidget {
       opacity: _opacityTween.evaluate(animation),
       child: Text(
         animText ?? 'Loading',
-        style: textStyle ?? TextStyle(color: Colors.grey[800], fontSize: 20),
+        style: textStyle ?? TextStyle(color: Colors.white, fontSize: 20),
       ),
     );
     //);

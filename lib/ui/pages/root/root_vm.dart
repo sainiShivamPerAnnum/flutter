@@ -1,16 +1,23 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -29,12 +36,15 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class RootViewModel extends BaseModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -45,9 +55,14 @@ class RootViewModel extends BaseModel {
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
+  final DBModel _dbModel = locator<DBModel>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
-  final txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
 
@@ -55,6 +70,28 @@ class RootViewModel extends BaseModel {
 
   BuildContext rootContext;
   bool _isInitialized = false;
+  bool _isUploading = false;
+
+  get isUploading => this._isUploading;
+  String _svgSource = '';
+
+  String get svgSource => this._svgSource;
+  int get bottomNavBarIndex => this._bottomNavBarIndex;
+
+  set svgSource(value) {
+    this._svgSource = value;
+    notifyListeners();
+  }
+
+  set isUploading(value) {
+    this._isUploading = value;
+    notifyListeners();
+  }
+
+  set bottomNavBarIndex(int index) {
+    this._bottomNavBarIndex = index;
+    notifyListeners();
+  }
 
   String get myUserDpUrl => _userService.myUserDpUrl;
   //int get currentTabIndex => _appState.rootIndex;
@@ -63,9 +100,10 @@ class RootViewModel extends BaseModel {
     if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
-    txnService.signOut();
+    _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await txnService.fetchTransactions();
+    await _txnHistoryService.fetchTransactions();
+    await _journeyService.checkForMilestoneLevelChange();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -75,13 +113,16 @@ class RootViewModel extends BaseModel {
   onInit() {
     // pages = <Widget>[Save(), Play(), Win()];
     // AppState.delegate.appState.setCurrentTabIndex = 1;
+    AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
+    initialize();
   }
 
   onDispose() {
     // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
+    AppState.isUserSignedIn = false;
     _fcmListener.addIncomingMessageListener(null);
   }
 
@@ -98,31 +139,40 @@ class RootViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
   }
 
-  showTicketModal(BuildContext context) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return WantMoreTicketsModalSheet();
-        });
-  }
+  // showTicketModal(BuildContext context) {
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (ctx) {
+  //         return WantMoreTicketsModalSheet();
+  //       });
+  // }
 
   void onItemTapped(int index) {
+    if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
+      //TODO: use the analytics event provided for journey.
       case 0:
-        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        print('journey triggered');
         break;
       case 1:
         _analyticsService.track(eventName: AnalyticsEvents.playSection);
         break;
       case 2:
+        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        break;
+      case 3:
         _analyticsService.track(eventName: AnalyticsEvents.winSection);
         break;
+
       default:
     }
+    bottomNavBarIndex = index;
     _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
-    notifyListeners();
+    Haptic.vibrate();
+    if (AppState.delegate.appState.getCurrentTabIndex == 0)
+      _journeyService.checkAndAnimateAvatar();
   }
 
   _initAdhocNotifications() {
@@ -134,6 +184,53 @@ class RootViewModel extends BaseModel {
         }
       });
     }
+  }
+
+  // uploadMilestone(){
+
+  // }
+
+  downloadJourneyPage() {
+    _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+  }
+
+  // uploadJourneyPage() async {
+  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
+  //   log(json.encode(jourenyPages.last.toMap()));
+  // }
+
+  // uploadMilestones() async {
+  //   // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
+  //   //       log(milestone.toMap().toString());
+  //   //     }));
+  //   log(json.encode(jourenyPages
+  //       .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
+  //       .toList()));
+  // }
+
+  // completeNViewDownloadSaveLViewAsset() async {
+  //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
+  //     log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
+  //     svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+  //   } else {
+  //     svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
+  //     log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
+  //     await Future.delayed(Duration(seconds: 5));
+  //     final bool result = await _journeyRepo.downloadAndSaveFile(
+  //         "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
+  //     if (result) {
+  //       log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
+
+  //       svgSource = _journeyRepo.getAssetLocalFilePath('b1');
+  //     } else {
+  //       log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
+  //     }
+  //   }
+  // }
+
+  Future<void> openJourneyView() async {
+    AppState.delegate.appState.currentAction =
+        PageAction(page: JourneyViewPageConfig, state: PageState.addPage);
   }
 
   void _showSecurityBottomSheet() {
@@ -148,95 +245,91 @@ class RootViewModel extends BaseModel {
   }
 
   initialize() async {
-    bool canExecuteStartupNotification = true;
-    if (!_isInitialized) {
-      bool showSecurityPrompt = false;
-      if (_userService.showSecurityPrompt == null) {
-        showSecurityPrompt = await _lModel.showSecurityPrompt();
-        _userService.showSecurityPrompt = showSecurityPrompt;
-      }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      bool canExecuteStartupNotification = true;
 
-      _isInitialized = true;
+      // bool showSecurityPrompt = false;
+      // if (_userService.showSecurityPrompt == null) {
+      //   showSecurityPrompt = await _lModel.showSecurityPrompt();
+      //   _userService.showSecurityPrompt = showSecurityPrompt;
+      // }
+
+      _userService.getUserFundWalletData();
+      _userService.checkForNewNotifications();
+      _userService.checkForUnscratchedGTStatus();
+      _baseUtil.getProfilePicture();
+      // await _baseUtil.getProfilePicture();
+
       _initAdhocNotifications();
 
-      _localDBModel.showHomeTutorial.then((value) {
-        if (_userService.showOnboardingTutorial) {
-          //show tutorial
-          canExecuteStartupNotification = false;
-          _userService.showOnboardingTutorial = false;
-          _localDBModel.setShowHomeTutorial = false;
-          // AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          AppState.delegate.parseRoute(Uri.parse('/AppWalkthrough'));
-          notifyListeners();
-        }
-      });
-
-      _baseUtil.getProfilePicture();
       // show security modal
-      if (showSecurityPrompt &&
-          _userService.baseUser.isAugmontOnboarded &&
-          _userService.userFundWallet.augGoldQuantity > 0 &&
-          _userService.baseUser.userPreferences
-                  .getPreference(Preferences.APPLOCK) ==
-              0) {
-        canExecuteStartupNotification = false;
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
-          _showSecurityBottomSheet();
-          _localDBModel.updateSecurityPrompt(false);
-        });
-      }
+      // if (showSecurityPrompt &&
+      //     _userService.baseUser.isAugmontOnboarded &&
+      //     _userService.userFundWallet.augGoldQuantity > 0 &&
+      //     _userService.baseUser.userPreferences
+      //             .getPreference(Preferences.APPLOCK) ==
+      //         0) {
+      //   canExecuteStartupNotification = false;
+      //   WidgetsBinding.instance?.addPostFrameCallback((_) {
+      //     _showSecurityBottomSheet();
+      //     _localDBModel.updateSecurityPrompt(false);
+      //   });
+      // }
 
       if (canExecuteStartupNotification &&
           AppState.startupNotifMessage != null) {
         canExecuteStartupNotification = false;
-        _logger
-            .d("terminated startup message: ${AppState.startupNotifMessage}");
+        _logger.d(
+          "terminated startup message: ${AppState.startupNotifMessage}",
+        );
         _fcmListener.handleMessage(
-            AppState.startupNotifMessage, MsgSource.Terminated);
+          AppState.startupNotifMessage,
+          MsgSource.Terminated,
+        );
       }
 
-      if (canExecuteStartupNotification &&
-          _userService.isAnyUnscratchedGTAvailable) {
-        int lastWeekday;
-        if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
-          lastWeekday = await CacheManager.readCache(
-              key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
-        // _logger.d("Unscratched Golden Ticket Show Count: $count");
-        if (lastWeekday == null ||
-            lastWeekday == 7 ||
-            lastWeekday < DateTime.now().weekday)
-          BaseUtil.openDialog(
-            addToScreenStack: true,
-            hapticVibrate: true,
-            isBarrierDismissable: false,
-            content: FelloInfoDialog(
-              showCrossIcon: true,
-              asset: Assets.goldenTicket,
-              title: "Your Golden Tickets are waiting",
-              subtitle:
-                  "You have unopened Golden Tickets available in your rewards wallet",
-              action: FelloButtonLg(
-                child: Text(
-                  "Open Rewards",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.currentAction = PageAction(
-                    widget: MyWinningsView(openFirst: true),
-                    page: MyWinnigsPageConfig,
-                    state: PageState.addWidget,
-                  );
-                },
-              ),
-            ),
-          );
-        CacheManager.writeCache(
-            key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-            value: DateTime.now().weekday,
-            type: CacheType.int);
-      }
-    }
+      // if (canExecuteStartupNotification &&
+      //     _userService.isAnyUnscratchedGTAvailable) {
+      //   int lastWeekday;
+      //   if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
+      //     lastWeekday = await CacheManager.readCache(
+      //         key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
+      //   // _logger.d("Unscratched Golden Ticket Show Count: $count");
+      //   if (lastWeekday == null ||
+      //       lastWeekday == 7 ||
+      //       lastWeekday < DateTime.now().weekday)
+      //     BaseUtil.openDialog(
+      //       addToScreenStack: true,
+      //       hapticVibrate: true,
+      //       isBarrierDismissable: false,
+      //       content: FelloInfoDialog(
+      //         showCrossIcon: true,
+      //         asset: Assets.goldenTicket,
+      //         title: "Your Golden Tickets are waiting",
+      //         subtitle:
+      //             "You have unopened Golden Tickets available in your rewards wallet",
+      //         action: FelloButtonLg(
+      //           child: Text(
+      //             "Open Rewards",
+      //             style: TextStyles.body2.bold.colour(Colors.white),
+      //           ),
+      //           onPressed: () {
+      //             AppState.backButtonDispatcher.didPopRoute();
+      //             AppState.delegate.appState.currentAction = PageAction(
+      //               widget: MyWinningsView(openFirst: true),
+      //               page: MyWinnigsPageConfig,
+      //               state: PageState.addWidget,
+      //             );
+      //           },
+      //         ),
+      //       ),
+      //     );
+      //   CacheManager.writeCache(
+      //       key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
+      //       value: DateTime.now().weekday,
+      //       type: CacheType.int);
+      // }
+    });
   }
 
   Future<dynamic> _verifyReferral(BuildContext context) async {
@@ -439,16 +532,29 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  void earnMoreTokens() {
-    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      content: WantMoreTicketsModalSheet(),
-      hapticVibrate: true,
-      backgroundColor: Colors.transparent,
-      isBarrierDismissable: true,
-    );
-  }
+  // void earnMoreTokens() {
+  //   _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+  //        BaseUtil.openModalBottomSheet(
+  //                     addToScreenStack: true,
+  //                     backgroundColor: UiConstants.gameCardColor,
+  //                     content: WantMoreTicketsModalSheet(),
+  //                     borderRadius: BorderRadius.only(
+  //                       topLeft: Radius.circular(SizeConfig.roundness24),
+  //                       topRight: Radius.circular(SizeConfig.roundness24),
+  //                     ),
+  //                     hapticVibrate: true,
+  //                     isScrollControlled: true,
+  //                     isBarrierDismissable: true,
+  //                   );
+  // }
+
+  // addJourneyPage() async {
+  //   isUploading = true;
+  //   jourenyPages.forEach((page) async {
+  //     await _dbModel.addJourneypage(page);
+  //   });
+  //   isUploading = false;
+  // }
 
   void focusBuyField() {
     Haptic.vibrate();

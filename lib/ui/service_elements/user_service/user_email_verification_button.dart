@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -12,28 +13,34 @@ class UserEmailVerificationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myEmailVerification],
+      properties: [
+        UserServiceProperties.myEmailVerification,
+        UserServiceProperties.myEmail
+      ],
       builder: (context, model, property) => model.isEmailVerified
-          ? SizedBox()
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: InkWell(
-                      child: Text(
-                        "Verify",
-                        style:
-                            TextStyles.body3.colour(UiConstants.primaryColor),
-                      ),
-                      onTap: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage,
-                            page: VerifyEmailPageConfig);
-                      }),
-                )
-              ],
-            ),
+          ? Icon(
+              Icons.verified,
+              color: UiConstants.primaryColor,
+              size: SizeConfig.iconSize1,
+            )
+          : model.email == null || model.email.isEmpty
+              ? SizedBox()
+              : InkWell(
+                  child: SizedBox(),
+                  // FittedBox(
+                  //   child: Text(
+                  //     "Verify",
+                  //     style: TextStyles.body3.bold
+                  //         .colour(UiConstants.primaryColor),
+                  //   ),
+                  // ),
+                  onTap: () {
+                    AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: VerifyEmailPageConfig,
+                    );
+                  },
+                ),
     );
   }
 }

@@ -17,7 +17,7 @@ class HomeBackground extends StatelessWidget {
           height: SizeConfig.screenHeight / 2,
           alignment: Alignment.topCenter,
           decoration: BoxDecoration(
-            color: UiConstants.primaryColor,
+            color: UiConstants.kBackgroundColor,
           ),
         ),
         Positioned(
@@ -51,7 +51,7 @@ class WhiteBackground extends StatelessWidget {
         width: SizeConfig.screenWidth,
         height: (SizeConfig.screenHeight - query.padding.top) - height,
         decoration: BoxDecoration(
-          color: color ?? UiConstants.scaffoldColor,
+          color: color ?? UiConstants.kBackgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness40),
             topRight: Radius.circular(SizeConfig.roundness40),

@@ -11,7 +11,9 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/event_instructions_modal.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
@@ -19,6 +21,7 @@ import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/winners_marquee.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -30,10 +33,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-extension TruncateDoubles on double {
-  double truncateToDecimalPlaces(int fractionalDigits) =>
-      (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
-}
+import '../../../../../util/constants.dart';
+import '../../../notifications/notifications_view.dart';
 
 class TopSaverView extends StatelessWidget {
   final String eventType;
@@ -47,6 +48,7 @@ class TopSaverView extends StatelessWidget {
         model.init(eventType, isGameRedirected);
       },
       builder: (context, model, child) {
+        print(model.highestSavings);
         return Scaffold(
           backgroundColor: UiConstants.primaryColor,
           body: HomeBackground(
@@ -623,9 +625,8 @@ class EventLeaderboard extends StatelessWidget {
                                                     .appState.currentAction =
                                                 PageAction(
                                                     widget: AllParticipantsView(
-                                                      participants: model
-                                                          .currentParticipants,
-                                                      type: model.campaignType,
+                                                      model: model,
+                                                      forPastWinners: false,
                                                     ),
                                                     page:
                                                         AllParticipantsViewPageConfig,

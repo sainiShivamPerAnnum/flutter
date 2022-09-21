@@ -38,7 +38,6 @@ class InternalOpsService extends ChangeNotifier {
           _deviceId = iosDeviceInfo.identifierForVendor;
           isPhysicalDevice = iosDeviceInfo.isPhysicalDevice;
           brand = "apple";
-
           _platform = "ios";
           logger.d(
               "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
@@ -49,10 +48,9 @@ class InternalOpsService extends ChangeNotifier {
           _deviceId = androidDeviceInfo.androidId;
           brand = androidDeviceInfo.brand;
           isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
-
           _platform = "android";
           logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+              "Device Information - \n phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
         isDeviceInfoInitiated = true;
         return {

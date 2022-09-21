@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:felloapp/navigator/app_state.dart';
 
 const String SplashPath = '/splash';
@@ -47,7 +46,6 @@ const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
-const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
@@ -55,6 +53,21 @@ const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
 const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
+const String NewGameHomeViewPath = '/newGameHome';
+const String NewWebHomeViewPath = '/newWebHomeView';
+const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
+const String JourneyViewPath = '/journeyViewPath';
+const String OnBoardingPath = '/onBoardingPath';
+const String CompleteProfilePath = '/CompleteProfileView';
+const String BlogPostWebViewPath = '/blogPostWebView';
+const String CampaignViewPath = '/campaignViewPath';
+const String SaveAssetViewPath = '/saveAssetViewPath';
+const String SellConfirmationViewPath = '/sellConfirmationViewPath';
+const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
+const String AllParticipantsWinnersTopReferersPath =
+    "/allParticipantsWinnersTopReferersPath";
+const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
+const String SharePriceScreenPath = "/SharePriceScreenPath";
 
 enum Pages {
   Splash,
@@ -103,7 +116,6 @@ enum Pages {
   GoldenMilestonesView,
   TopSaverView,
   AllParticipantsView,
-  GoldBalanceDetailsView,
   PoolView,
   WebHomeView,
   WebGameView,
@@ -111,6 +123,19 @@ enum Pages {
   AutosaveProcessView,
   UserAutosaveDetailsView,
   AutosaveTransactionsView,
+  NewWebHomeView,
+  TopPlayerLeaderboard,
+  JourneyView,
+  OnBoardingView,
+  CompleteProfileView,
+  BlogPostWebView,
+  CampaignView,
+  SaveAssetView,
+  SellConfirmationView,
+  ViewAllBlogsView,
+  AllParticipantsWinnersTopReferersView,
+  RedeemSucessfulScreenView,
+  SharePriceScreenView,
 }
 
 class PageConfiguration {
@@ -453,12 +478,7 @@ PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
   uiPage: Pages.AllParticipantsView,
   name: 'AllParticipantsView screen',
 );
-PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
-  key: 'GoldBalanceDetailsView',
-  path: GoldBalanceDetailsViewPath,
-  uiPage: Pages.GoldBalanceDetailsView,
-  name: 'Gold Balance Details Screen',
-);
+
 PageConfiguration WebHomeViewPageConfig = PageConfiguration(
   key: 'WebHomeView',
   path: WebHomeViewPath,
@@ -502,3 +522,89 @@ PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
     path: AutosaveTransactionsViewPath,
     uiPage: Pages.AutosaveTransactionsView,
     name: "Autosave transaction Screen");
+
+PageConfiguration NewWebHomeViewPageConfig = PageConfiguration(
+  key: 'NewWebHomeView',
+  path: NewWebHomeViewPath,
+  uiPage: Pages.NewWebHomeView,
+  name: "New Web Home Screen",
+);
+
+PageConfiguration TopPlayerLeaderboardPageConfig = PageConfiguration(
+  key: 'TopPlayerLeaderboard',
+  path: TopPlayerLeaderboard,
+  uiPage: Pages.TopPlayerLeaderboard,
+  name: "Top Player Leaderboard Screen",
+);
+PageConfiguration JourneyViewPageConfig = PageConfiguration(
+    key: 'JourneyView',
+    path: JourneyViewPath,
+    uiPage: Pages.JourneyView,
+    name: "Journey Screen");
+
+PageConfiguration OnBoardingViewPageConfig = PageConfiguration(
+  key: 'OnBoardingView',
+  path: OnBoardingPath,
+  uiPage: Pages.OnBoardingView,
+  name: "On Boarding View",
+);
+PageConfiguration CompleteProfileViewPageConfig = PageConfiguration(
+    key: 'CompleteProfileView',
+    path: CompleteProfilePath,
+    uiPage: Pages.CompleteProfileView,
+    name: "Level2 Screen");
+
+PageConfiguration BlogPostWebViewConfig = PageConfiguration(
+    key: 'BlogPostWeb',
+    path: BlogPostWebViewPath,
+    uiPage: Pages.BlogPostWebView,
+    name: "Journey Screen");
+
+PageConfiguration CampaignViewPageConfig = PageConfiguration(
+  key: 'CampaignView',
+  path: CampaignViewPath,
+  uiPage: Pages.CampaignView,
+  name: "Campaign View Screen",
+);
+
+PageConfiguration SaveAssetsViewConfig = PageConfiguration(
+  key: 'SaveAssetsView',
+  path: SaveAssetViewPath,
+  uiPage: Pages.SaveAssetView,
+  name: "Save Asset View",
+);
+
+PageConfiguration SellConfirmationViewConfig = PageConfiguration(
+  key: 'SellConfirmationView',
+  path: SellConfirmationViewPath,
+  uiPage: Pages.SellConfirmationView,
+  name: "Sell Confirmation View",
+);
+
+PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
+  key: 'SellConfirmationView',
+  path: ViewAllBlogsViewPath,
+  uiPage: Pages.ViewAllBlogsView,
+  name: "View All Blogs View",
+);
+
+PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
+  key: 'AllParticipantsWinnersTopReferersView',
+  path: AllParticipantsWinnersTopReferersPath,
+  uiPage: Pages.AllParticipantsWinnersTopReferersView,
+  name: "View All Participants for Win View",
+);
+
+PageConfiguration RedeemSucessfulScreenPageConfig = PageConfiguration(
+  key: 'RedeemSucessfulScreenView',
+  path: RedeemSucessfulScreenPath,
+  uiPage: Pages.RedeemSucessfulScreenView,
+  name: "Redeem Sucessfull View",
+);
+
+PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
+  key: 'SharePriceScreenView',
+  path: SharePriceScreenPath,
+  uiPage: Pages.SharePriceScreenView,
+  name: "Reward sharing screen",
+);

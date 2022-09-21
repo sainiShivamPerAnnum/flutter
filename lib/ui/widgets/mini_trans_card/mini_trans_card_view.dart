@@ -1,18 +1,23 @@
-import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
+import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MiniTransactionCard extends StatelessWidget {
@@ -23,123 +28,131 @@ class MiniTransactionCard extends StatelessWidget {
         model.getMiniTransactions();
       },
       builder: (ctx, model, child) {
-        return PropertyChangeConsumer<TransactionService,
-            TransactionServiceProperties>(
-          properties: [TransactionServiceProperties.transactionList],
+        return PropertyChangeConsumer<TransactionHistoryService,
+            TransactionHistoryServiceProperties>(
+          properties: [
+            TransactionHistoryServiceProperties.TransactionHistoryList
+          ],
           builder: (ctx, m, child) {
             return Column(
               children: [
                 Container(
                   child: model.state == ViewState.Busy || m.txnList == null
-                      ? Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(
-                            bottom: SizeConfig.padding24,
-                          ),
-                          child: CircularProgressIndicator(),
-                        )
+                      ? SizedBox()
+                      // Container(
+                      //     height: SizeConfig.screenWidth * 0.5,
+                      //     alignment: Alignment.center,
+                      //     child: Center(child: FullScreenLoader()),
+                      //   )
                       : (m.txnList.length == 0
-                          ? Container(
+                          ? SizedBox()
+                          // Container(
+                          //     padding: EdgeInsets.symmetric(
+                          //         vertical: SizeConfig.padding24),
+                          //     alignment: Alignment.center,
+                          //     child: Transform.scale(
+                          //         scale: 0.8, child: NoTransactionsContent()),
+                          //   )
+                          : Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding20),
-                              alignment: Alignment.center,
-                              child: Transform.scale(
-                                  scale: 0.8, child: NoTransactionsContent()),
-                            )
-                          : Column(
-                              children: List.generate(
-                                m.txnList.length < 5 ? m.txnList.length : 4,
-                                (i) {
-                                  return ListTile(
-                                    onTap: () {
-                                      Haptic.vibrate();
-                                      bool freeBeerStatus = model.txnService
-                                          .getBeerTicketStatus(m.txnList[i]);
-                                      showDialog(
-                                          context: AppState.delegate
-                                              .navigatorKey.currentContext,
-                                          builder: (BuildContext context) {
-                                            AppState.screenStack
-                                                .add(ScreenItem.dialog);
-                                            return TransactionDetailsDialog(
-                                                m.txnList[i], freeBeerStatus);
-                                          });
-                                    },
-                                    dense: true,
-                                    leading: Container(
-                                      padding: EdgeInsets.all(
-                                          SizeConfig.blockSizeHorizontal * 2),
-                                      height: SizeConfig.blockSizeVertical * 5,
-                                      width: SizeConfig.blockSizeVertical * 5,
-                                      child: model.txnService
-                                          .getTileLead(m.txnList[i].tranStatus),
-                                    ),
-                                    title: Text(
-                                      model.txnService.getTileTitle(
-                                        m.txnList[i].subType.toString(),
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: SizeConfig.mediumTextSize,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      model.txnService
-                                          .getTileSubtitle(m.txnList[i].type),
-                                      style: TextStyle(
-                                        color: model.txnService.getTileColor(
-                                            m.txnList[i].tranStatus),
-                                        fontSize: SizeConfig.smallTextSize,
-                                      ),
-                                    ),
-                                    trailing: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          model.txnService
-                                              .getFormattedTxnAmount(
-                                                  m.txnList[i].amount),
-                                          style: TextStyle(
-                                            // color: model.txnService
-                                            //     .getTileColor(
-                                            //         m.txnList[i].tranStatus),
-                                            fontSize: SizeConfig.mediumTextSize,
+                                  horizontal: SizeConfig.padding10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: SizeConfig.padding24,
+                                  ),
+                                  TitleSubtitleContainer(title: 'Transactions'),
+                                  Column(
+                                    children: List.generate(
+                                      m.txnList.length < 4
+                                          ? m.txnList.length
+                                          : 3,
+                                      (i) {
+                                        return ListTile(
+                                          onTap: () {
+                                            Haptic.vibrate();
+                                            BaseUtil.openModalBottomSheet(
+                                                addToScreenStack: true,
+                                                isBarrierDismissable: true,
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                content:
+                                                    TransactionDetailsBottomSheet(
+                                                        transaction:
+                                                            m.txnList[i]));
+                                          },
+                                          dense: true,
+                                          title: Text(
+                                              model.txnHistoryService
+                                                  .getTileSubtitle(
+                                                m.txnList[i].type.toString(),
+                                              ),
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor)),
+                                          subtitle: Text(
+                                            model.txnHistoryService
+                                                .getFormattedDate(
+                                                    m.txnList[i].timestamp),
+                                            style: TextStyles.sourceSans.body4
+                                                .colour(
+                                                    UiConstants.kTextColor2),
                                           ),
-                                        ),
-                                        Text(
-                                          model.txnService.getFormattedTime(
-                                              m.txnList[i].timestamp),
-                                          style: TextStyle(
-                                              // color: model.txnService
-                                              //     .getTileColor(
-                                              //         m.txnList[i].tranStatus),
-                                              color: Colors.black45,
-                                              fontSize:
-                                                  SizeConfig.smallTextSize),
-                                        )
-                                      ],
+                                          trailing: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                  model.txnHistoryService
+                                                      .getFormattedTxnAmount(
+                                                          m.txnList[i].amount),
+                                                  style: TextStyles
+                                                      .sourceSansSB.body2
+                                                      .colour(model
+                                                          .txnHistoryService
+                                                          .getTransactionTypeColor(
+                                                              model.txnList[i]
+                                                                  .type))),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
+                                  ),
+                                ],
                               ),
                             )),
                 ),
-                m.txnList != null &&
+                model.state == ViewState.Idle &&
+                        m.txnList != null &&
                         m.txnList.isNotEmpty &&
-                        m.txnList.length > 5
-                    ? FelloButton(
+                        m.txnList.length > 3
+                    ? TextButton(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: SizeConfig.padding2,
+                              ),
+                              child: Text('See All',
+                                  style: TextStyles.rajdhaniSB.body2),
+                            ),
+                            SvgPicture.asset(Assets.chevRonRightArrow,
+                                height: SizeConfig.padding24,
+                                width: SizeConfig.padding24,
+                                color: Colors.white)
+                          ],
+                        ),
                         onPressed: () => model.viewAllTransaction(),
-                        defaultButtonText: "View All",
-                        defaultButtonColor: Colors.white,
-                        textStyle: TextStyles.body1.bold
-                            .colour(UiConstants.primaryColor),
                       )
                     : SizedBox(),
-                SizedBox(
-                  height: 8,
-                )
+                SizedBox(height: SizeConfig.padding12),
               ],
             );
           },

@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -20,6 +21,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +34,7 @@ class WebGameViewModel extends BaseModel {
   final _userRepo = locator<UserRepository>();
   final _userCoinService = locator<UserCoinService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _journeyService = locator<JourneyService>();
 
   String _currentGame;
 
@@ -114,11 +118,14 @@ class WebGameViewModel extends BaseModel {
       Future.delayed(Duration(milliseconds: 700), () async {
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
-          content: WantMoreTicketsModalSheet(
-            isInsufficientBalance: true,
+          backgroundColor: UiConstants.gameCardColor,
+          content: WantMoreTicketsModalSheet(isInsufficientBalance: true),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness24),
+            topRight: Radius.circular(SizeConfig.roundness24),
           ),
           hapticVibrate: true,
-          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
           isBarrierDismissable: true,
         );
       });
@@ -128,7 +135,9 @@ class WebGameViewModel extends BaseModel {
   handleGameEndRound(Map<String, dynamic> data, String game) {
     _logger.d(
         "$game round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
-
+    if (data['mlIndex'] != null)
+      _journeyService.avatarRemoteMlIndex = data["mlIndex"];
+    _logger.d("MLIndex found: ${data['mlIndex']}");
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
       _logger.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");

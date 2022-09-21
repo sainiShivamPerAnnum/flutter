@@ -6,6 +6,8 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,5 +107,17 @@ class NotificationsViewModel extends BaseModel {
   updateHighlightStatus(int index) {
     notifications[index].isHighlighted = false;
     notifyListeners();
+  }
+
+  String getNotificationAsset(String title) {
+    if (title.startsWith(Constants.GOLDEN_TICKET_NOTIFICATION)) {
+      return Assets.goldenTicketAsset;
+    } else if (title.startsWith(Constants.COUPONS_APPLIED_NOTIFICATION)) {
+      return Assets.couponsAsset;
+    } else if (title.startsWith(Constants.DEPOSIT_COMPLETE_NOTIFICATION)) {
+      return Assets.depositCompleteAsset;
+    } else {
+      return Assets.logoShortform;
+    }
   }
 }
