@@ -64,9 +64,9 @@ import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
@@ -189,7 +189,7 @@ void setupLocator() {
   locator.registerFactory(() => UserProfileVM());
   locator.registerFactory(() => KYCDetailsViewModel());
   locator.registerFactory(() => BankDetailsViewModel());
-  locator.registerFactory(() => AugmontGoldBuyViewModel());
+  locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
   locator.registerFactory(() => AugmontGoldDetailsViewModel());
   locator.registerFactory(() => TambolaHomeViewModel());

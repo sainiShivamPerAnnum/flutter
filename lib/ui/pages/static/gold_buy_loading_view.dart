@@ -5,26 +5,22 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
-class GoldSellLoadingView extends StatelessWidget {
-  final GoldSellViewModel model;
-  final AugmontTransactionService augTxnservice;
+class GoldBuyLoadingView extends StatelessWidget {
+  final GoldBuyViewModel model;
+  GoldBuyLoadingView({@required this.model});
+
   final _augTxnService = locator<AugmontTransactionService>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView(
-      {Key key, @required this.model, @required this.augTxnservice})
-      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -79,12 +75,12 @@ class GoldSellLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // await _augTxnService
-                //     .processPolling(AppState.pollingPeriodicTimer);
-                // if (_augTxnService.currentTransactionState !=
-                //     TransactionState.ongoingTransaction) return;
+                await _augTxnService
+                    .processPolling(AppState.pollingPeriodicTimer);
+                if (_augTxnService.currentTransactionState !=
+                    TransactionState.ongoingTransaction) return;
 
-                // AppState.pollingPeriodicTimer?.cancel();
+                AppState.pollingPeriodicTimer?.cancel();
 
                 _augTxnService.currentTransactionState =
                     TransactionState.idleTrasantion;

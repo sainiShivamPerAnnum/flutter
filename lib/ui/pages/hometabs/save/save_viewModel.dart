@@ -17,7 +17,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_input_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -242,13 +242,13 @@ class SaveViewModel extends BaseViewModel {
         widget: SaveAssetView());
   }
 
-  navigateToSellGoldPage() {
-    Haptic.vibrate();
-    AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: AugmontGoldSellPageConfig,
-        widget: GoldSellInputView());
-  }
+  // navigateToSellGoldPage() {
+  //   Haptic.vibrate();
+  //   AppState.delegate.appState.currentAction = PageAction(
+  //       state: PageState.addWidget,
+  //       page: AugmontGoldSellPageConfig,
+  //       widget: GoldSellInputView( ));
+  // }
 
   navigateToCompleteKYC() {
     Haptic.vibrate();

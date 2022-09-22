@@ -29,7 +29,6 @@ import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart'
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
@@ -266,9 +265,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
-        case Pages.AugGoldSell:
-          _addPageData(GoldSellInputView(), AugmontGoldSellPageConfig);
-          break;
+
         case Pages.AugGoldDetails:
           _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
           break;

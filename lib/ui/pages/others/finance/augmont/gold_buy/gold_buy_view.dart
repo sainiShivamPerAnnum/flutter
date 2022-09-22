@@ -3,16 +3,57 @@ import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_loading_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_success_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_input_view.dart';
+import 'package:felloapp/ui/pages/static/gold_buy_succes_view.dart';
+import 'package:felloapp/ui/pages/static/gold_buy_loading_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class GoldSellView extends StatelessWidget {
+class GoldBuyView extends StatefulWidget {
+  final int amount;
+  final bool skipMl;
+  const GoldBuyView({Key key, this.amount = 250, this.skipMl = false})
+      : super(key: key);
+
+  @override
+  State<GoldBuyView> createState() => _GoldBuyViewState();
+}
+
+class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
+  final AugmontTransactionService _txnService =
+      locator<AugmontTransactionService>();
+  AppLifecycleState appLifecycleState;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _txnService.currentTransactionState = TransactionState.idleTrasantion;
+    });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    appLifecycleState = state;
+    if (appLifecycleState == AppLifecycleState.resumed) {
+      if (!AugmontTransactionService.isIOSTxnInProgress) return;
+      AugmontTransactionService.isIOSTxnInProgress = false;
+      _txnService.initiatePolling();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<AugmontTransactionService,
@@ -50,12 +91,12 @@ class GoldSellView extends StatelessWidget {
                     secondaryAnimation: secondaryAnimation,
                   );
                 },
-                child: BaseView<GoldSellViewModel>(
-                  onModelReady: (model) {
-                    model.init();
+                child: BaseView<GoldBuyViewModel>(
+                  onModelReady: (model) =>
+                      model.init(widget.amount, widget.skipMl),
+                  builder: (ctx, model, child) {
+                    return _getView(txnService, model);
                   },
-                  onModelDispose: (model) {},
-                  builder: (ctx, model, child) => _getView(txnService, model),
                 ),
               ),
             ],
@@ -66,18 +107,26 @@ class GoldSellView extends StatelessWidget {
   }
 
   Widget _getView(
-      AugmontTransactionService txnService, GoldSellViewModel model) {
+      AugmontTransactionService txnService, GoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      // return GoldSellInputView(model: model, augTxnservice: txnService);
-      GoldSellLoadingView(model: model, augTxnservice: txnService);
+      return GoldBuyInputView(
+        amount: widget.amount,
+        skipMl: widget.skipMl,
+        model: model,
+        txnService: txnService,
+      );
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
-      return GoldSellLoadingView(model: model, augTxnservice: txnService);
+      return GoldBuyLoadingView(model: model);
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
-      return GoldSellSuccessView(model: model, augTxnservice: txnService);
+      return GoldBuySuccessView();
     }
-    return GoldSellInputView(model: model, augTxnservice: txnService);
+    // else if (txnService.currentTransactionState ==
+    //     TransactionState.successCoinTransaction) {
+    //   return CongratulatoryCoinView();
+    // }
+    return GoldBuyLoadingView(model: model);
   }
 
   double _getHeight(txnService) {
@@ -90,6 +139,10 @@ class GoldSellView extends StatelessWidget {
         TransactionState.successTransaction) {
       return SizeConfig.screenHeight;
     }
+    // else if (txnService.currentTransactionState ==
+    //     TransactionState.successCoinTransaction) {
+    //   return SizeConfig.screenHeight;
+    // }
     return 0;
   }
 
@@ -125,6 +178,10 @@ class GoldSellView extends StatelessWidget {
         color: UiConstants.kBackgroundColor2,
       );
     }
+    // else if (txnService.currentTransactionState ==
+    //     TransactionState.successCoinTransaction) {
+    //   return NewSquareBackground();
+    // }
     return Container();
   }
 }

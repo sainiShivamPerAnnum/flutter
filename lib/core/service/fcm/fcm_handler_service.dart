@@ -8,7 +8,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -32,7 +32,6 @@ class FcmHandler extends ChangeNotifier {
 
   final _journeyService = locator<JourneyService>();
   final _augOps = locator<GoldSellViewModel>();
-
   ValueChanged<Map> notifListener;
   // Timestamp latestFcmtimeStamp;
   String latestFcmCommand;

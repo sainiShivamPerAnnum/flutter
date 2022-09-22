@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
   CouponModalSheet({Key key, @required this.model}) : super(key: key);
-  final AugmontGoldBuyViewModel model;
+  final GoldBuyViewModel model;
   final TextEditingController couponCodeController =
       new TextEditingController();
   final _formKey = GlobalKey<FormState>();

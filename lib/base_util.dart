@@ -32,7 +32,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -249,7 +249,7 @@ class BaseUtil extends ChangeNotifier {
         isBarrierDismissable: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
-        content: RechargeModalSheet(
+        content: GoldBuyView(
           amount: amt ?? 201,
           skipMl: isSkipMl ?? false,
         ),

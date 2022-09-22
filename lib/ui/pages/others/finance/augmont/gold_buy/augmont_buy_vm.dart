@@ -30,7 +30,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-class AugmontGoldBuyViewModel extends BaseViewModel {
+class GoldBuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
@@ -524,7 +524,7 @@ class AugmontGoldBuyViewModel extends BaseViewModel {
       _onboardUserManually();
   }
 
-  void showOfferModal(AugmontGoldBuyViewModel model) {
+  void showOfferModal(GoldBuyViewModel model) {
     BaseUtil.openModalBottomSheet(
       content: CouponModalSheet(model: model),
       addToScreenStack: true,
