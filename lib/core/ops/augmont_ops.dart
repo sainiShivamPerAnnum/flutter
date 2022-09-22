@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -44,7 +45,8 @@ class AugmontModel extends ChangeNotifier {
   final BaseUtil _baseProvider = locator<BaseUtil>();
   final UserService _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
-  final TransactionService _txnService = locator<TransactionService>();
+  final AugmontTransactionService _augTxnService =
+      locator<AugmontTransactionService>();
   final TransactionHistoryService _txnHistoryService =
       locator<TransactionHistoryService>();
   final _analyticsService = locator<AnalyticsService>();
@@ -226,265 +228,267 @@ class AugmontModel extends ChangeNotifier {
     }
   }
 
-  _onRazorpayPaymentProcessed(UserTransaction goldTxn) {
-    String key = _baseProvider.currentAugmontTxn.docKey;
-    goldTxn.docKey =
-        key; //add the firebase document key to this object as it was added later
-    _baseProvider.currentAugmontTxn = goldTxn;
+  // _onRazorpayPaymentProcessed(UserTransaction goldTxn) {
+  //   String key = _baseProvider.currentAugmontTxn.docKey;
+  //   goldTxn.docKey =
+  //       key; //add the firebase document key to this object as it was added later
+  //   _baseProvider.currentAugmontTxn = goldTxn;
 
-    if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
-        UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
-      //payment completed successfully
-      _analyticsService.track(
-          eventName: AnalyticsEvents.investedInGold,
-          properties: {'goldQuantity': goldTxn.amount});
-      _onPaymentComplete();
-    } else {
-      _onPaymentFailed();
-    }
-  }
+  //   if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
+  //       UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
+  //     //payment completed successfully
+  //     _analyticsService.track(
+  //         eventName: AnalyticsEvents.investedInGold,
+  //         properties: {'goldQuantity': goldTxn.amount});
+  //     _onPaymentComplete();
+  //   } else {
+  //     _onPaymentFailed();
+  //   }
+  // }
 
   ///submit gold purchase augmont api
   ///update object
-  _onPaymentComplete() async {
-    Map<String, String> _params = {
-      SubmitGoldPurchase.fldMobile: _userService.baseUser.mobile,
-      SubmitGoldPurchase.fldStateId: _baseProvider.augmontDetail.userStateId,
-      SubmitGoldPurchase.fldAmount:
-          _baseProvider.currentAugmontTxn.amount.toString(),
-      SubmitGoldPurchase.fldUsername: _baseProvider.augmontDetail.userName,
-      SubmitGoldPurchase.fldUid: _baseProvider.augmontDetail.userId,
-      SubmitGoldPurchase.fldBlockId: _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
-      SubmitGoldPurchase.fldLockPrice: _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice]
-          .toString(),
-      SubmitGoldPurchase.fldPaymode: _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
-      SubmitGoldPurchase.fldMerchantTranId:
-          _baseProvider.currentAugmontTxn.docKey
-    };
+  // _onPaymentComplete() async {
+  //   Map<String, String> _params = {
+  //     SubmitGoldPurchase.fldMobile: _userService.baseUser.mobile,
+  //     SubmitGoldPurchase.fldStateId: _baseProvider.augmontDetail.userStateId,
+  //     SubmitGoldPurchase.fldAmount:
+  //         _baseProvider.currentAugmontTxn.amount.toString(),
+  //     SubmitGoldPurchase.fldUsername: _baseProvider.augmontDetail.userName,
+  //     SubmitGoldPurchase.fldUid: _baseProvider.augmontDetail.userId,
+  //     SubmitGoldPurchase.fldBlockId: _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
+  //     SubmitGoldPurchase.fldLockPrice: _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice]
+  //         .toString(),
+  //     SubmitGoldPurchase.fldPaymode: _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
+  //     SubmitGoldPurchase.fldMerchantTranId:
+  //         _baseProvider.currentAugmontTxn.docKey
+  //   };
 
-    Map<String, dynamic> rzpUpdates = {
-      "rOrderId":
-          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
-      "rPaymentId": _baseProvider
-          .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
-      "rStatus":
-          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
-    };
+  //   Map<String, dynamic> rzpUpdates = {
+  //     "rOrderId":
+  //         _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
+  //     "rPaymentId": _baseProvider
+  //         .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
+  //     "rStatus":
+  //         _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
+  //   };
 
-    _logger.d(_baseProvider.currentAugmontTxn.amount);
-    _logger.d(rzpUpdates);
-    _logger.d(_params);
-    _logger.d(_userService.baseUser.uid);
-    _logger
-        .d(_initialDepositResponse.model.response.transactionDoc.transactionId);
-    _logger.d(_initialDepositResponse
-        .model.response.transactionDoc.enqueuedTaskDetails);
+  //   _logger.d(_baseProvider.currentAugmontTxn.amount);
+  //   _logger.d(rzpUpdates);
+  //   _logger.d(_params);
+  //   _logger.d(_userService.baseUser.uid);
+  //   _logger
+  //       .d(_initialDepositResponse.model.response.transactionDoc.transactionId);
+  //   _logger.d(_initialDepositResponse
+  //       .model.response.transactionDoc.enqueuedTaskDetails);
 
-    ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
-        await _investmentActionsRepository.completeUserDeposit(
-      amount: _baseProvider.currentAugmontTxn.amount,
-      rzpUpdates: rzpUpdates,
-      submitGoldUpdates: _params,
-      userUid: _userService.baseUser.uid,
-      txnId:
-          _initialDepositResponse.model.response.transactionDoc.transactionId,
-      enqueuedTaskDetails: _initialDepositResponse
-          .model.response.transactionDoc.enqueuedTaskDetails,
-    );
+  //   ApiResponse<DepositResponseModel> _onCompleteDepositResponse =
+  //       await _investmentActionsRepository.completeUserDeposit(
+  //     amount: _baseProvider.currentAugmontTxn.amount,
+  //     rzpUpdates: rzpUpdates,
+  //     submitGoldUpdates: _params,
+  //     userUid: _userService.baseUser.uid,
+  //     txnId:
+  //         _initialDepositResponse.model.response.transactionDoc.transactionId,
+  //     enqueuedTaskDetails: _initialDepositResponse
+  //         .model.response.transactionDoc.enqueuedTaskDetails,
+  //   );
 
-    if (_onCompleteDepositResponse.code == 200) {
-      //Update these feilds from deposit API
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          _onCompleteDepositResponse.model.augResponse.data.transactionId;
-      _baseProvider
-              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          _onCompleteDepositResponse
-              .model.augResponse.data.merchantTransactionId;
-      _baseProvider.currentAugmontTxn
-          .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
-              _onCompleteDepositResponse.model.augResponse.data.goldBalance) ??
-          0.0;
+  //   if (_onCompleteDepositResponse.code == 200) {
+  //     //Update these feilds from deposit API
+  //     _baseProvider.currentAugmontTxn.tranStatus =
+  //         UserTransaction.TRAN_STATUS_COMPLETE;
+  //     _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+  //         _onCompleteDepositResponse.model.augResponse.data.transactionId;
+  //     _baseProvider
+  //             .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+  //         _onCompleteDepositResponse
+  //             .model.augResponse.data.merchantTransactionId;
+  //     _baseProvider.currentAugmontTxn
+  //         .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+  //             _onCompleteDepositResponse.model.augResponse.data.goldBalance) ??
+  //         0.0;
 
-      double newAugPrinciple =
-          _onCompleteDepositResponse.model.response.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        //add this to augmontBuyVM
-        _userService.augGoldPrinciple = newAugPrinciple;
-      }
-      double newAugQuantity =
-          _onCompleteDepositResponse.model.response.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity > 0) {
-        //add this to augmontBuyVM
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      //add this to augmontBuyVM
-      int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
-      _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
-          .model.response.transactionDoc.transactionDetail;
-      //add this to augmontBuyVM
-      if (_onCompleteDepositResponse.model.gtId != null) {
-        GoldenTicketService.goldenTicketId =
-            _onCompleteDepositResponse.model.gtId;
-      }
-      //add this to augmontBuyVM
-      _txnHistoryService.updateTransactions();
+  //     double newAugPrinciple =
+  //         _onCompleteDepositResponse.model.response.augmontPrinciple;
+  //     if (newAugPrinciple != null && newAugPrinciple > 0) {
+  //       //add this to augmontBuyVM
+  //       _userService.augGoldPrinciple = newAugPrinciple;
+  //     }
+  //     double newAugQuantity =
+  //         _onCompleteDepositResponse.model.response.augmontGoldQty;
+  //     if (newAugQuantity != null && newAugQuantity > 0) {
+  //       //add this to augmontBuyVM
+  //       _userService.augGoldQuantity = newAugQuantity;
+  //     }
+  //     //add this to augmontBuyVM
+  //     int newFlcBalance = _onCompleteDepositResponse.model.response.flcBalance;
+  //     if (newFlcBalance > 0) {
+  //       _userCoinService.setFlcBalance(newFlcBalance);
+  //     }
+  //     _baseProvider.currentAugmontTxn = _onCompleteDepositResponse
+  //         .model.response.transactionDoc.transactionDetail;
+  //     //add this to augmontBuyVM
+  //     if (_onCompleteDepositResponse.model.gtId != null) {
+  //       GoldenTicketService.goldenTicketId =
+  //           _onCompleteDepositResponse.model.gtId;
+  //     }
+  //     //add this to augmontBuyVM
+  //     _augTxnService.updateTransactions();
 
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-    } else {
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid,
-          FailType.CompleteUserDepositApiFailed,
-          {'message': _initialDepositResponse?.errorMessage});
+  //     if (_augmontTxnProcessListener != null)
+  //       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+  //   } else {
+  //     _internalOpsService.logFailure(
+  //         _userService.baseUser.uid,
+  //         FailType.CompleteUserDepositApiFailed,
+  //         {'message': _initialDepositResponse?.errorMessage});
 
-      if (_onCompleteDepositResponse?.model != null &&
-          _onCompleteDepositResponse?.model?.note != null &&
-          _onCompleteDepositResponse?.model?.note?.title != null &&
-          _onCompleteDepositResponse.model.note.title.isNotEmpty) {
-        final title = _onCompleteDepositResponse.model.note.title;
-        String body =
-            'Your transaction is being verified and will be updated shortly';
+  //     if (_onCompleteDepositResponse?.model != null &&
+  //         _onCompleteDepositResponse?.model?.note != null &&
+  //         _onCompleteDepositResponse?.model?.note?.title != null &&
+  //         _onCompleteDepositResponse.model.note.title.isNotEmpty) {
+  //       final title = _onCompleteDepositResponse.model.note.title;
+  //       String body =
+  //           'Your transaction is being verified and will be updated shortly';
 
-        if (_onCompleteDepositResponse?.model?.note?.body != null &&
-            _onCompleteDepositResponse.model.note.body.isNotEmpty) {
-          body = _onCompleteDepositResponse.model.note.body;
-        }
+  //       if (_onCompleteDepositResponse?.model?.note?.body != null &&
+  //           _onCompleteDepositResponse.model.note.body.isNotEmpty) {
+  //         body = _onCompleteDepositResponse.model.note.body;
+  //       }
 
-        BaseUtil.showNegativeAlert(title, body);
-      } else {
-        BaseUtil.showNegativeAlert('Verifying transaction',
-            'Your transaction is being verified and will be updated shortly');
-      }
+  //       BaseUtil.showNegativeAlert(title, body);
+  //     } else {
+  //       BaseUtil.showNegativeAlert('Verifying transaction',
+  //           'Your transaction is being verified and will be updated shortly');
+  //     }
 
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_CANCELLED;
+  //     _baseProvider.currentAugmontTxn.tranStatus =
+  //         UserTransaction.TRAN_STATUS_CANCELLED;
 
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+  //     if (_augmontTxnProcessListener != null)
+  //       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      //  AppState.backButtonDispatcher.didPopRoute();
-    }
-  }
+  //     //  AppState.backButtonDispatcher.didPopRoute();
+  //   }
+  // }
 
-  _onPaymentFailed() async {
-    log.error('Query Failed');
+  // _onPaymentFailed() async {
+  //   log.error('Query Failed');
 
-    Map<String, dynamic> rzpMap = {
-      "rOrderId":
-          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
-      "rPaymentId": _baseProvider
-          .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
-      "rStatus":
-          _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
-    };
+  //   Map<String, dynamic> rzpMap = {
+  //     "rOrderId":
+  //         _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpOrderId],
+  //     "rPaymentId": _baseProvider
+  //         .currentAugmontTxn.rzp[UserTransaction.subFldRzpPaymentId],
+  //     "rStatus":
+  //         _baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus],
+  //   };
 
-    Map<String, dynamic> augMap = {
-      "aTranId": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
-      "aAugTranId": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
-      "aGoldBalance": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
-      "aBlockId": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
-      "aLockPrice": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
-      "aPaymode": "RZP",
-      "aGoldInTxn": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugCurrentGoldGm],
-      "aTaxedGoldBalance": _baseProvider
-          .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
-    };
+  //   Map<String, dynamic> augMap = {
+  //     "aTranId": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+  //     "aAugTranId": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId],
+  //     "aGoldBalance": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
+  //     "aBlockId": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
+  //     "aLockPrice": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
+  //     "aPaymode": "RZP",
+  //     "aGoldInTxn": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugCurrentGoldGm],
+  //     "aTaxedGoldBalance": _baseProvider
+  //         .currentAugmontTxn.augmnt[UserTransaction.subFldAugPostTaxTotal],
+  //   };
 
-    Map<String, dynamic> _failMap = {
-      'txnDocId': _baseProvider.currentAugmontTxn.docKey
-    };
+  //   Map<String, dynamic> _failMap = {
+  //     'txnDocId': _baseProvider.currentAugmontTxn.docKey
+  //   };
 
-    await _internalOpsService.logFailure(_userService.baseUser.uid,
-        FailType.UserRazorpayPurchaseFailed, _failMap);
-    _baseProvider.currentAugmontTxn.tranStatus =
-        UserTransaction.TRAN_STATUS_CANCELLED;
+  //   await _internalOpsService.logFailure(_userService.baseUser.uid,
+  //       FailType.UserRazorpayPurchaseFailed, _failMap);
+  //   _baseProvider.currentAugmontTxn.tranStatus =
+  //       UserTransaction.TRAN_STATUS_CANCELLED;
 
-    ApiResponse<DepositResponseModel> _onCancleUserDepositResponse =
-        await _investmentActionsRepository.cancelUserDeposit(
-            txnId: _initialDepositResponse
-                .model.response.transactionDoc.transactionId,
-            userUid: _userService.baseUser.uid,
-            rzpMap: rzpMap,
-            augMap: augMap,
-            enqueuedTaskDetails: _initialDepositResponse
-                .model.response.transactionDoc.enqueuedTaskDetails);
+  //   ApiResponse<DepositResponseModel> _onCancleUserDepositResponse =
+  //       await _investmentActionsRepository.cancelUserDeposit(
+  //           txnId: _initialDepositResponse
+  //               .model.response.transactionDoc.transactionId,
+  //           userUid: _userService.baseUser.uid,
+  //           rzpMap: rzpMap,
+  //           augMap: augMap,
+  //           enqueuedTaskDetails: _initialDepositResponse
+  //               .model.response.transactionDoc.enqueuedTaskDetails);
 
-    _txnHistoryService.updateTransactions();
-    if (_onCancleUserDepositResponse.code == 400) {
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.CompleteUserDepositApiFailed, {
-        'message': _onCancleUserDepositResponse?.errorMessage ??
-            "Cancel user deposit failed"
-      });
+  //   _augTxnService.updateTransactions();
+  //   if (_onCancleUserDepositResponse.code == 400) {
+  //     _internalOpsService.logFailure(
+  //         _userService.baseUser.uid, FailType.CompleteUserDepositApiFailed, {
+  //       'message': _onCancleUserDepositResponse?.errorMessage ??
+  //           "Cancel user deposit failed"
+  //     });
 
-      if (_onCancleUserDepositResponse?.model != null &&
-          _onCancleUserDepositResponse?.model?.note != null &&
-          _onCancleUserDepositResponse?.model?.note?.title != null &&
-          _onCancleUserDepositResponse.model.note.title.isNotEmpty) {
-        final title = _onCancleUserDepositResponse.model.note.title;
-        String body = 'Your payment failed. Please try again';
+  //     if (_onCancleUserDepositResponse?.model != null &&
+  //         _onCancleUserDepositResponse?.model?.note != null &&
+  //         _onCancleUserDepositResponse?.model?.note?.title != null &&
+  //         _onCancleUserDepositResponse.model.note.title.isNotEmpty) {
+  //       final title = _onCancleUserDepositResponse.model.note.title;
+  //       String body = 'Your payment failed. Please try again';
 
-        if (_onCancleUserDepositResponse?.model?.note?.body != null &&
-            _onCancleUserDepositResponse.model.note.body.isNotEmpty) {
-          body = _onCancleUserDepositResponse.model.note.body;
-        }
+  //       if (_onCancleUserDepositResponse?.model?.note?.body != null &&
+  //           _onCancleUserDepositResponse.model.note.body.isNotEmpty) {
+  //         body = _onCancleUserDepositResponse.model.note.body;
+  //       }
 
-        BaseUtil.showNegativeAlert(title, body);
-      } else {
-        BaseUtil.showNegativeAlert('Transaction failed',
-            'Your gold purchase did not complete successfully');
-      }
+  //       BaseUtil.showNegativeAlert(title, body);
+  //     } else {
+  //       BaseUtil.showNegativeAlert('Transaction failed',
+  //           'Your gold purchase did not complete successfully');
+  //     }
 
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_CANCELLED;
+  //     _baseProvider.currentAugmontTxn.tranStatus =
+  //         UserTransaction.TRAN_STATUS_CANCELLED;
 
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+  //     if (_augmontTxnProcessListener != null)
+  //       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
 
-      AppState.backButtonDispatcher.didPopRoute();
-    } else {
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-    }
-  }
+  //     AppState.backButtonDispatcher.didPopRoute();
+  //   } else {
+  //     if (_augmontTxnProcessListener != null)
+  //       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+  //   }
+  // }
 
   ///submit gold purchase augmont api
   ///update object
   initiateWithdrawal(AugmontRates sellRates, double quantity) async {
     if (!isInit()) await _init();
 
-    if (_baseProvider.augmontDetail == null ||
-        _baseProvider.augmontDetail.userId == null ||
-        _baseProvider.augmontDetail.userName == null ||
-        _baseProvider.augmontDetail.bankHolderName == null ||
-        _baseProvider.augmontDetail.bankAccNo == null ||
-        _baseProvider.augmontDetail.ifsc == null ||
-        sellRates == null ||
-        quantity == null ||
-        quantity <= 0.0) {
-      return null;
-    }
+    // if (_baseProvider.augmontDetail == null ||
+    //     _baseProvider.augmontDetail.userId == null ||
+    //     _baseProvider.augmontDetail.userName == null ||
+    //     _baseProvider.augmontDetail.bankHolderName == null ||
+    //     _baseProvider.augmontDetail.bankAccNo == null ||
+    //     _baseProvider.augmontDetail.ifsc == null ||
+    //     sellRates == null ||
+    //     quantity == null ||
+    //     quantity <= 0.0) {
+    //   return null;
+    // }
 
-    _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(
-        BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice),
-        sellRates.blockId,
-        sellRates.goldSellPrice,
-        quantity,
-        _userService.baseUser.uid);
+    // if (_userService.upiId == null || _userService.upiId.isEmpty) return null;
+
+    // _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(
+    //     BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice),
+    //     sellRates.blockId,
+    //     sellRates.goldSellPrice,
+    //     quantity,
+    //     _userService.baseUser.uid);
 
     _tranIdResponse = await _investmentActionsRepository.createTranId(
         userUid: _userService.baseUser.uid);
@@ -495,107 +499,135 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    Map<String, String> _params = {
-      SubmitGoldSell.fldMobile: _userService.baseUser.mobile,
-      SubmitGoldSell.fldQuantity: quantity.toString(),
-      SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    // Map<String, String> _params = {
+    //   SubmitGoldSell.fldMobile: _userService.baseUser.mobile,
+    //   SubmitGoldSell.fldQuantity: quantity.toString(),
+    //   SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    //   SubmitGoldSell.fldBlockId: sellRates.blockId,
+    //   SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
+    //   SubmitGoldSell.fldAccHolderName:
+    //       _baseProvider.augmontDetail.bankHolderName,
+    //   SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
+    //   SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
+    //   SubmitGoldSell.fldMerchantTranId: _tranIdResponse.model
+    // };
+
+    Map<String, dynamic> _params = {
+      SubmitGoldSell.fldQuantity: quantity,
       SubmitGoldSell.fldBlockId: sellRates.blockId,
-      SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
-      SubmitGoldSell.fldAccHolderName:
-          _baseProvider.augmontDetail.bankHolderName,
-      SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
-      SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
-      SubmitGoldSell.fldMerchantTranId: _tranIdResponse.model
+      SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice,
     };
 
     _logger.d(_params);
-    ApiResponse<DepositResponseModel> _onSellCompleteResponse =
+    ApiResponse<bool> _onSellCompleteResponse =
         await _investmentActionsRepository.withdrawlComplete(
             tranDocId: _tranIdResponse.model,
-            amount: -1 * _baseProvider.currentAugmontTxn.amount,
+            amount: -1 *
+                BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice),
             sellGoldMap: _params,
             userUid: _userService.baseUser.uid);
 
-    bool _successFlag = true;
+    // bool _successFlag = true;
     if (_onSellCompleteResponse.code == 200) {
-      try {
-        _baseProvider.currentAugmontTxn.tranStatus =
-            UserTransaction.TRAN_STATUS_COMPLETE;
-        _baseProvider
-                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-            _onSellCompleteResponse.model.augResponse.data.transactionId;
-        _baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldMerchantTranId] =
-            _onSellCompleteResponse
-                .model.augResponse.data.merchantTransactionId;
-        _baseProvider.currentAugmontTxn
-            .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
-                _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
-            0.0;
+      AppState.delegate.appState.isTxnLoaderInView = true;
+      AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
+        if (AppState.delegate.appState.isTxnLoaderInView == true) {
+          AppState.delegate.appState.isTxnLoaderInView = false;
+          showTransactionPendingDialog();
+        }
 
-        double newAugPrinciple =
-            _onSellCompleteResponse.model.response.augmontPrinciple;
-        if (newAugPrinciple != null && newAugPrinciple > 0) {
-          _userService.augGoldPrinciple = newAugPrinciple;
-        }
-        double newAugQuantity =
-            _onSellCompleteResponse.model.response.augmontGoldQty;
-        if (newAugQuantity != null && newAugQuantity >= 0) {
-          _userService.augGoldQuantity = newAugQuantity;
-        }
-        int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
-        if (newFlcBalance > 0) {
-          _userCoinService.setFlcBalance(newFlcBalance);
-        }
-        _baseProvider.currentAugmontTxn = _onSellCompleteResponse
-            .model.response.transactionDoc.transactionDetail;
-        _txnHistoryService.updateTransactions();
-        if (_augmontTxnProcessListener != null)
-          _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-      } catch (e) {
-        _successFlag = false;
-      }
+        AppState.delegate.appState.txnTimer.cancel();
+        _logger.d("timer cancelled");
+      });
+
+      // try {
+      //   _baseProvider.currentAugmontTxn.tranStatus =
+      //       UserTransaction.TRAN_STATUS_COMPLETE;
+      //   _baseProvider
+      //           .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+      //       _onSellCompleteResponse.model.augResponse.data.transactionId;
+      //   _baseProvider.currentAugmontTxn
+      //           .augmnt[UserTransaction.subFldMerchantTranId] =
+      //       _onSellCompleteResponse
+      //           .model.augResponse.data.merchantTransactionId;
+      //   _baseProvider.currentAugmontTxn
+      //       .augmnt[UserTransaction.subFldAugTotalGoldGm] = double.tryParse(
+      //           _onSellCompleteResponse.model.augResponse.data.goldBalance) ??
+      //       0.0;
+
+      //   double newAugPrinciple =
+      //       _onSellCompleteResponse.model.response.augmontPrinciple;
+      //   if (newAugPrinciple != null && newAugPrinciple > 0) {
+      //     _userService.augGoldPrinciple = newAugPrinciple;
+      //   }
+      //   double newAugQuantity =
+      //       _onSellCompleteResponse.model.response.augmontGoldQty;
+      //   if (newAugQuantity != null && newAugQuantity >= 0) {
+      //     _userService.augGoldQuantity = newAugQuantity;
+      //   }
+      //   int newFlcBalance = _onSellCompleteResponse.model.response.flcBalance;
+      //   if (newFlcBalance > 0) {
+      //     _userCoinService.setFlcBalance(newFlcBalance);
+      //   }
+      //   _baseProvider.currentAugmontTxn = _onSellCompleteResponse
+      //       .model.response.transactionDoc.transactionDetail;
+      //   _augTxnService.updateTransactions();
+      //   if (_augmontTxnProcessListener != null)
+      //     _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      // } catch (e) {
+      //   _successFlag = false;
+      // }
     } else {
-      _successFlag = false;
-    }
+      //  if
+      //(_onSellCompleteResponse?.model != null &&
+      //   _onSellCompleteResponse?.model?.note != null &&
+      //   _onSellCompleteResponse?.model?.note?.title != null &&
+      //   _onSellCompleteResponse.model.note.title.isNotEmpty) {
+      // final title = _onSellCompleteResponse.model.note.title;
+      // String body =
+      //     'Your transaction is being verified and will be updated shortly';
 
-    if (!_successFlag) {
+      // if (_onSellCompleteResponse?.model?.note?.body != null &&
+      //     _onSellCompleteResponse.model.note.body.isNotEmpty) {
+      //   body = _onSellCompleteResponse.model.note.body;
+      // }
+
+      // BaseUtil.showNegativeAlert(title, body);
+      // } else
+      if (_onSellCompleteResponse.errorMessage != null &&
+          _onSellCompleteResponse.errorMessage.isNotEmpty)
+        BaseUtil.showNegativeAlert(
+            _onSellCompleteResponse.errorMessage, 'Please try again!');
+      else
+        BaseUtil.showNegativeAlert('Verifying transaction',
+            'Your transaction is being verified and will be updated shortly');
+
       _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
             _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
-
-      if (_onSellCompleteResponse?.model != null &&
-          _onSellCompleteResponse?.model?.note != null &&
-          _onSellCompleteResponse?.model?.note?.title != null &&
-          _onSellCompleteResponse.model.note.title.isNotEmpty) {
-        final title = _onSellCompleteResponse.model.note.title;
-        String body =
-            'Your transaction is being verified and will be updated shortly';
-
-        if (_onSellCompleteResponse?.model?.note?.body != null &&
-            _onSellCompleteResponse.model.note.body.isNotEmpty) {
-          body = _onSellCompleteResponse.model.note.body;
-        }
-
-        BaseUtil.showNegativeAlert(title, body);
-      } else {
-        BaseUtil.showNegativeAlert('Verifying transaction',
-            'Your transaction is being verified and will be updated shortly');
-      }
-
-      _baseProvider.currentAugmontTxn.tranStatus =
-          UserTransaction.TRAN_STATUS_CANCELLED;
-      if (_augmontTxnProcessListener != null)
-        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
-
       AppState.backButtonDispatcher.didPopRoute();
     }
   }
 
+  showTransactionPendingDialog() {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: PendingDialog(
+        title: "Withdrawal processing",
+        subtitle:
+            "The amount will be credited to your UPI registered bank account shortly.",
+        duration: '',
+      ),
+    );
+  }
+
   ///returns path where invoice is generated and saved
-  Future<String> generatePurchaseInvoicePdf(String txnId) async {
+  Future<String> generatePurchaseInvoicePdf(
+      String txnId, Map<String, String> userDetails) async {
     AugmontInvoiceService _pdfService = AugmontInvoiceService();
     if (!isInit()) await _init();
     var _params = {
@@ -617,7 +649,7 @@ class AugmontModel extends ChangeNotifier {
       // final pdfFile =
       //     await PdfInvoiceApi.generate(await generateInvoiceContent());
       // return pdfFile.path;
-      String _path = await _pdfService.generateInvoice(resMap);
+      String _path = await _pdfService.generateInvoice(resMap, userDetails);
       return _path;
     }
   }
@@ -680,12 +712,12 @@ class AugmontModel extends ChangeNotifier {
     }
   }
 
-  setAugmontTxnProcessListener(ValueChanged<UserTransaction> listener) {
-    _augmontTxnProcessListener = listener;
-  }
+  // setAugmontTxnProcessListener(ValueChanged<UserTransaction> listener) {
+  //   _augmontTxnProcessListener = listener;
+  // }
 
   completeTransaction() {
-    _baseProvider.currentAugmontTxn = null;
+    // _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 
     _baseProvider.userMiniTxnList = null;

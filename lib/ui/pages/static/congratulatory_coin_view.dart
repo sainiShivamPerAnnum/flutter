@@ -17,7 +17,7 @@
 //   CongratulatoryCoinView({
 //     Key key,
 //   }) : super(key: key);
-//   final TransactionService _txnService = locator<TransactionService>();
+//   final AugmontTransactionService _augTxnService = locator<AugmontTransactionService>();
 //   @override
 //   Widget build(BuildContext context) {
 //     return Column(
@@ -37,7 +37,7 @@
 //               if (AppState.screenStack.last == ScreenItem.loader) {
 //                 AppState.screenStack.remove(AppState.screenStack.last);
 //                 AppState.backButtonDispatcher.didPopRoute();
-//                 _txnService.currentTransactionState =
+//                 _augTxnService.currentTransactionState =
 //                     TransactionState.idleTrasantion;
 //               }
 //             },

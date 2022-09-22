@@ -30,14 +30,14 @@ class RazorpayModel extends ChangeNotifier {
   Razorpay _razorpay;
   PaytmService _paytmService;
   PaytmRepository _paytmRepo;
-  TransactionService _txnService;
+  AugmontTransactionService _augTxnService;
 
   bool init() {
     _razorpay = Razorpay();
     _logger = locator<CustomLogger>();
     _paytmService = locator<PaytmService>();
     _paytmRepo = locator<PaytmRepository>();
-    _txnService = locator<TransactionService>();
+    _augTxnService = locator<AugmontTransactionService>();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
@@ -48,7 +48,7 @@ class RazorpayModel extends ChangeNotifier {
     String paymentId = response.paymentId;
     String checkoutOrderId = response.orderId;
     String paySignature = response.signature;
-    _txnService.initiatePolling();
+    _augTxnService.initiatePolling();
     log.debug(
         "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
     _currentTxn.rzp[UserTransaction.subFldRzpPaymentId] = paymentId;
@@ -109,9 +109,9 @@ class RazorpayModel extends ChangeNotifier {
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
     print(paytmSubscriptionApiResponse.model.data.orderId);
-    TransactionService.currentTxnOrderId =
+    AugmontTransactionService.currentTxnOrderId =
         paytmSubscriptionApiResponse.model.data.txnId;
-    TransactionService.currentTxnAmount = amount;
+    AugmontTransactionService.currentTxnAmount = amount;
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     var options = {
       'key': _keyId,

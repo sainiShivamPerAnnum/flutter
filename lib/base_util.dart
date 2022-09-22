@@ -89,7 +89,6 @@ class BaseUtil extends ChangeNotifier {
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
-  UserTransaction _currentAugmontTxn;
   AugmontRates augmontGoldRates;
 
   ///KYC global object
@@ -144,6 +143,7 @@ class BaseUtil extends ChangeNotifier {
       _isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
+      _isUpiInfoMissing,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int ticketCountBeforeRequest, infoSliderIndex;
@@ -181,6 +181,7 @@ class BaseUtil extends ChangeNotifier {
     isGoogleSignInProgress = false;
     isDeviceOffline = false;
     ticketRequestSent = false;
+    isUpiInfoMissing = true;
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
@@ -230,7 +231,7 @@ class BaseUtil extends ChangeNotifier {
   Future<void> setUserDefaults() async {
     panService = new PanService();
     if (!checkKycMissing) {
-      userRegdPan = await panService.getUserPan();
+      panService.getUserPan().then((value) => userRegdPan = value);
     }
   }
 
@@ -539,7 +540,6 @@ class BaseUtil extends ChangeNotifier {
       panService = null;
       _augmontDetail = null;
       augmontGoldRates = null;
-      _currentAugmontTxn = null;
       prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
@@ -552,6 +552,7 @@ class BaseUtil extends ChangeNotifier {
       lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
+      isUpiInfoMissing = true;
 
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
@@ -869,12 +870,6 @@ class BaseUtil extends ChangeNotifier {
 
   bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
 
-  UserTransaction get currentAugmontTxn => _currentAugmontTxn;
-
-  set currentAugmontTxn(UserTransaction value) {
-    _currentAugmontTxn = value;
-  }
-
   DateTime get userCreationTimestamp => _userCreationTimestamp;
 
   int get ticketCount => _ticketCount;
@@ -896,5 +891,12 @@ class BaseUtil extends ChangeNotifier {
     final m = dateTime.month.toString().padLeft(2, '0');
     final d = dateTime.day.toString().padLeft(2, '0');
     return "$y$m$d";
+  }
+
+  bool get isUpiInfoMissing => this._isUpiInfoMissing;
+
+  set isUpiInfoMissing(bool value) {
+    this._isUpiInfoMissing = value;
+    notifyListeners();
   }
 }

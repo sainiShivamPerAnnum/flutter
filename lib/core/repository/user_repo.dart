@@ -400,7 +400,6 @@ class UserRepository extends BaseRepo {
 
       // clear cache
       await _cacheService.invalidateByKey(CacheKeys.USER);
-      await getUserById(id: userService.baseUser.uid);
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {

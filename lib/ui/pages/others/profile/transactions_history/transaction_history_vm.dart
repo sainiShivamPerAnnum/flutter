@@ -140,6 +140,25 @@ class TransactionsHistoryViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
+  refreshTransactions() async {
+    await _txnHistoryService.updateTransactions();
+    filteredList = _txnHistoryService.txnList;
+    notifyListeners();
+  }
+  // getTransactionsFromApi() async {
+  //   ApiResponse<List<UserTransaction>> res;
+  //   if (apiTxns.isNotEmpty)
+  //     res = await _augTxnService.getUserTransactionsfromApi(
+  //         start: apiTxns[0].docKey);
+  //   else
+  //     res = await _augTxnService.getUserTransactionsfromApi();
+  //   if (res.model != null && res.model.isNotEmpty)
+  //     res.model.forEach((element) {
+  //       apiTxns.add(element);
+  //     });
+  //   log("Length of Transaction List: ${apiTxns.length}");
+  // }
+
   getMoreTransactions() async {
     _logger.d("fetching more transactions...");
     isMoreTxnsBeingFetched = true;

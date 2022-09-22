@@ -38,8 +38,8 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
-class TransactionService
-    extends PropertyChangeNotifier<TransactionServiceProperties> {
+class AugmontTransactionService
+    extends PropertyChangeNotifier<GoldTransactionServiceProperties> {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _userCoinService = locator<UserCoinService>();
@@ -67,12 +67,12 @@ class TransactionService
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
-    notifyListeners(TransactionServiceProperties.transactionStatus);
+    notifyListeners(GoldTransactionServiceProperties.transactionStatus);
   }
 
   set currentTransactionState(TransactionState state) {
     _currentTransactionState = state;
-    notifyListeners(TransactionServiceProperties.transactionState);
+    notifyListeners(GoldTransactionServiceProperties.transactionState);
   }
 
   Future<void> initateAugmontTransaction(

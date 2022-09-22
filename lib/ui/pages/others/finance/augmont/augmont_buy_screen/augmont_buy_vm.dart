@@ -58,7 +58,8 @@ class AugmontGoldBuyViewModel extends BaseModel {
   final AugmontModel _augmontModel = locator<AugmontModel>();
   final UserService _userService = locator<UserService>();
   final _razorpayOpsModel = locator<RazorpayModel>();
-  final TransactionService _txnService = locator<TransactionService>();
+  final AugmontTransactionService _augTxnService =
+      locator<AugmontTransactionService>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
@@ -266,7 +267,7 @@ class AugmontGoldBuyViewModel extends BaseModel {
   //1
   initiateBuy() async {
     if (!await initChecks()) return;
-    await _txnService.initateAugmontTransaction(
+    await _augTxnService.initateAugmontTransaction(
       details: GoldPurchaseDetails(
           goldBuyAmount: goldBuyAmount,
           goldRates: goldRates,

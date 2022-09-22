@@ -51,7 +51,7 @@ const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _paytmRepo = locator<PaytmRepository>();
-  // final _txnService = locator<TransactionService>();
+  // final _augTxnService = locator<AugmontTransactionService>();
   final _getterRepo = locator<GetterRepository>();
 
   final String devMid = "qpHRfp13374268724583";
@@ -189,9 +189,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
             amount, augMap, couponCode ?? '', skipMl ?? false);
     if (!paytmSubscriptionApiResponse.isSuccess()) return null;
-    TransactionService.currentTxnOrderId =
+    AugmontTransactionService.currentTxnOrderId =
         paytmSubscriptionApiResponse.model.data.orderId;
-    TransactionService.currentTxnAmount = amount;
+    AugmontTransactionService.currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;
   }
 
@@ -204,7 +204,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       var response = await AllInOneSdk.startTransaction(
           mid,
           paytmSubscriptionModel.data.orderId,
-          TransactionService.currentTxnAmount.toString(),
+          AugmontTransactionService.currentTxnAmount.toString(),
           paytmSubscriptionModel.data.temptoken,
           paytmSubscriptionModel.data.callbackUrl,
           isStaging,
@@ -494,8 +494,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       }
       launchUrl(Uri.parse(url)).then((value) async {
         AppState.backButtonDispatcher.didPopRoute();
-        TransactionService.isIOSTxnInProgress = true;
-        TransactionService.currentTxnAmount = amount;
+        AugmontTransactionService.isIOSTxnInProgress = true;
+        AugmontTransactionService.currentTxnAmount = amount;
       });
       return true;
     }

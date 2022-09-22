@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -68,6 +70,7 @@ const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
 const String SharePriceScreenPath = "/SharePriceScreenPath";
+const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 
 enum Pages {
   Splash,
@@ -136,6 +139,7 @@ enum Pages {
   AllParticipantsWinnersTopReferersView,
   RedeemSucessfulScreenView,
   SharePriceScreenView,
+  UserUpiDetailsView,
 }
 
 class PageConfiguration {
@@ -608,3 +612,8 @@ PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
   uiPage: Pages.SharePriceScreenView,
   name: "Reward sharing screen",
 );
+PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
+    key: 'UserUpiDetailsView',
+    path: UserUPIDetailsViewPath,
+    uiPage: Pages.UserUpiDetailsView,
+    name: "User Upi details Screen");

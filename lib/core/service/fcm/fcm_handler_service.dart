@@ -2,6 +2,9 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -16,6 +19,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
 
 enum MsgSource { Foreground, Background, Terminated }
 
@@ -28,10 +32,13 @@ class FcmHandler extends ChangeNotifier {
   final _webGameViewModel = locator<WebGameViewModel>();
   final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
-  final _txnService = locator<TransactionService>();
+  final _augTxnService = locator<AugmontTransactionService>();
   final _journeyService = locator<JourneyService>();
+  final _augOps = locator<GoldSellViewModel>();
 
   ValueChanged<Map> notifListener;
+  // Timestamp latestFcmtimeStamp;
+  String latestFcmCommand;
 
   Map lastFcmData;
   Future<bool> handleMessage(Map data, MsgSource source) async {
@@ -55,13 +62,13 @@ class FcmHandler extends ChangeNotifier {
     String url = data['deep_uri'];
 
     // if (data["test_txn"] == "paytm") {
-    // _txnService.isOngoingTxn = false;
+    // _augTxnService.isOngoingTxn = false;
     //   return true;
     // }
 
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
-      if (TransactionService.isIOSTxnInProgress) {
+      if (AugmontTransactionService.isIOSTxnInProgress) {
         // TODO
         // ios transaction completed and app is in background
       } else if (source == MsgSource.Background ||
@@ -77,9 +84,9 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          if (_txnService.currentTransactionState ==
+          if (_augTxnService.currentTransactionState ==
               TransactionState.idleTrasantion) showSnackbar = true;
-          _txnService.fcmTransactionResponseUpdate(data['payload']);
+          _augTxnService.fcmTransactionResponseUpdate(data['payload']);
           break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
@@ -89,6 +96,10 @@ class FcmHandler extends ChangeNotifier {
           log("Golden Ticket win update fcm response");
           _journeyService.fcmHandleJourneyUpdateStats(data);
           break;
+        case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
+          _augOps.handleWithdrawalFcmResponse(data['payload']);
+          break;
+
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
           _webGameViewModel.handleCricketHeroRoundEnd(
               data, Constants.GAME_TYPE_CRICKET);

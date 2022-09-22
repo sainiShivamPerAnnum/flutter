@@ -19,8 +19,7 @@ class RechargeLoadingView extends StatelessWidget {
   final AugmontGoldBuyViewModel model;
   RechargeLoadingView({@required this.model});
 
-  final _txnService = locator<TransactionService>();
-  final _paytmService = locator<PaytmService>();
+  final _augTxnService = locator<AugmontTransactionService>();
   final int waitTimeInSec = 45;
 
   @override
@@ -77,13 +76,14 @@ class RechargeLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _txnService.processPolling(AppState.pollingPeriodicTimer);
-                if (_txnService.currentTransactionState !=
+                await _augTxnService
+                    .processPolling(AppState.pollingPeriodicTimer);
+                if (_augTxnService.currentTransactionState !=
                     TransactionState.ongoingTransaction) return;
 
                 AppState.pollingPeriodicTimer?.cancel();
 
-                _txnService.currentTransactionState =
+                _augTxnService.currentTransactionState =
                     TransactionState.idleTrasantion;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
