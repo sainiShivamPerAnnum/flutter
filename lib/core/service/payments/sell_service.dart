@@ -1,13 +1,11 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/sell_service_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
-import 'package:felloapp/core/repository/save_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -16,9 +14,9 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _txnHistoryService = locator<TransactionHistoryService>();
-  final _baseUtil = locator<BaseUtil>();
   final _paymentRepo = locator<PaymentRepository>();
   final _bankingRepo = locator<BankingRepository>();
+  final _userRepo = locator<UserRepository>();
   String _userPan;
 
   get userPan => this._userPan;
@@ -118,7 +116,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   }
 
   checkForUserPanDetails() async {
-    final res = await _bankingRepo.getUserPan();
+    final res = await _userRepo.getUserPan();
     if (res.isSuccess()) {
       userPan = res.model;
     }
