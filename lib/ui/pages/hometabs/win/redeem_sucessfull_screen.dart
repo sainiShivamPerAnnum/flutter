@@ -169,7 +169,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                               style: TextStyles.sourceSans.body2
                                   .colour(Colors.white),
                             ),
-                            UserGoldQuantitySE(
+                            UserFundQuantitySE(
                               style: TextStyles.sourceSans.body1
                                   .colour(Colors.white),
                             )

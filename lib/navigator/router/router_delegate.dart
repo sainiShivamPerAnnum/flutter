@@ -33,7 +33,6 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.da
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/upi/upi_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
@@ -331,10 +330,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AutosaveTransactionsView:
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
-
           break;
-        case Pages.UserUpiDetailsView:
-          _addPageData(UserUPIDetailsView(), UserUpiDetailsViewPageConfig);
           break;
         case Pages.TopPlayerLeaderboard:
           _addPageData(

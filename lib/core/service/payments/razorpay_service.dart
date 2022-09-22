@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -61,6 +63,7 @@ class RazorpayService extends ChangeNotifier {
     // if (AppState.delegate.appState.isTxnLoaderInView == true) {
     //   AppState.delegate.appState.isTxnLoaderInView = false;
     // }
+    _augTxnService.currentTransactionState = TransactionState.idle;
     BaseUtil.showNegativeAlert(
       'Transaction failed',
       'Your transaction was unsuccessful. Please try again',
@@ -78,30 +81,26 @@ class RazorpayService extends ChangeNotifier {
   }
 
   //generate order id // update transaction //creatre<UserTransaction> submitAu
-  Future initiateRazorpayTxn(
-      {String mobile,
-      String email,
-      double amount,
-      AugmontRates augmontRates,
-      String couponCode}) async {
+  Future initiateRazorpayTxn({
+    String mobile,
+    String email,
+    double amount,
+    Map<String, dynamic> augMap,
+    Map<String, dynamic> lbMap,
+    String couponCode,
+    @required InvestmentType investmentType,
+  }) async {
     if (!init()) return null; //initialise razorpay
 
-    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
-
-    final augMap = {
-      "aBlockId": augmontRates.blockId.toString(),
-      "aLockPrice": augmontRates.goldBuyPrice,
-      "aPaymode": 'RZP',
-      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice),
-      "aTaxedGoldBalance":
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
-    };
-
     final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse =
-        await _paytmRepo.createTransaction(amount, augMap, couponCode, true);
+        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
+      amount,
+      augMap,
+      lbMap,
+      couponCode,
+      true,
+      investmentType,
+    );
 
     final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
     print(paytmSubscriptionApiResponse.model.data.orderId);

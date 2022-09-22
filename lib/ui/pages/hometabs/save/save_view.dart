@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
@@ -177,17 +178,21 @@ class SaveNetWorthSection extends StatelessWidget {
               onCardTap: () => saveViewModel.navigateToSaveAssetView(),
               onTap: () {
                 Haptic.vibrate();
-                return BaseUtil().openRechargeModalSheet();
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.AUGGOLD99,
+                );
               },
             ),
             SaveCustomCard(
               title: 'Fello Flo',
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
-              cardAssetName: Assets.stableFello,
+              cardAssetName: Assets.felloFlo,
               investedAmount: 0.0,
               onTap: () {
                 Haptic.vibrate();
-                return BaseUtil().openRechargeModalSheet();
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.LENDBOXP2P,
+                );
               },
             ),
             SizedBox(
@@ -235,7 +240,7 @@ class CampaignCardSection extends StatelessWidget {
                   child: CampaignCard(
                     isLoading: saveVm.isChallengesLoading,
                     topPadding: SizeConfig.padding16,
-                    leftPadding: SizeConfig.padding24,
+                    leftPadding: SizeConfig.padding20,
                     event: event,
                     subText: FittedBox(
                       fit: BoxFit.contain,
@@ -334,7 +339,7 @@ class CampaignCard extends StatelessWidget {
                     Text(
                       suffix.toUpperCase(),
                       style: TextStyles.sourceSansEB.title50
-                          .letterSpace(0.7)
+                          .letterSpace(0.6)
                           .colour(
                             event.color.toColor(),
                           )

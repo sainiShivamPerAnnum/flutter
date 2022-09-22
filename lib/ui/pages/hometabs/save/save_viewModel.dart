@@ -56,7 +56,7 @@ class SaveViewModel extends BaseViewModel {
   bool _isKYCVerified = false;
   bool _isVPAVerified = false;
   bool _isGoldSaleActive = false;
-  bool _isOngoingTransaction = false;
+  bool _isongoing = false;
   bool _isLockInReached = false;
   bool _isSellButtonVisible = false;
 
@@ -75,7 +75,7 @@ class SaveViewModel extends BaseViewModel {
   // bool get isKYCVerified => _isKYCVerified;
   // bool get isVPAVerified => _isVPAVerified;
   bool get isGoldSaleActive => _isGoldSaleActive;
-  bool get isOngoingTransaction => _isOngoingTransaction;
+  bool get isongoing => _isongoing;
   bool get isLockInReached => _isLockInReached;
   bool get isSellButtonVisible => _isSellButtonVisible;
   UserService get userService => _userService;

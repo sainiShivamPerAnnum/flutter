@@ -712,10 +712,6 @@ class AugmontService extends ChangeNotifier {
     }
   }
 
-  // setAugmontTxnProcessListener(ValueChanged<UserTransaction> listener) {
-  //   _augmontTxnProcessListener = listener;
-  // }
-
   completeTransaction() {
     // _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;

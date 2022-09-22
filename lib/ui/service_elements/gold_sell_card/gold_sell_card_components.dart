@@ -73,8 +73,8 @@ class AugmontDownCard extends StatelessWidget {
   }
 }
 
-class OngoingTransactionCard extends StatelessWidget {
-  const OngoingTransactionCard({Key key}) : super(key: key);
+class ongoingCard extends StatelessWidget {
+  const ongoingCard({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

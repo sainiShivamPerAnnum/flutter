@@ -40,7 +40,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   bool _isKYCVerified = false;
   bool _isBankDetailsAdded = false;
-  bool _isOngoingTransaction = false;
+  bool _isongoing = false;
   bool _isSellButtonVisible = false;
   bool _isLockInReached = false;
   bool _isSellLocked = false;
@@ -55,7 +55,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
-  bool get isOngoingTransaction => _isOngoingTransaction;
+  bool get isongoing => _isongoing;
   bool get isSellButtonVisible => _isSellButtonVisible;
   get sellNotice => this._sellNotice;
   get isSellLocked => this._isSellLocked;
@@ -70,9 +70,9 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     notifyListeners(SellServiceProperties.bankDetailsVerified);
   }
 
-  set setOngoingTransaction(bool val) {
-    _isOngoingTransaction = val;
-    notifyListeners(SellServiceProperties.ongoingTransaction);
+  set setongoing(bool val) {
+    _isongoing = val;
+    notifyListeners(SellServiceProperties.ongoing);
   }
 
   set sellNotice(value) {
@@ -104,7 +104,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     await checkForUserPanDetails();
     verifyKYCStatus();
     verifyBankDetails();
-    verifyOngoingTransaction();
+    verifyongoing();
     checkForSellNotice();
     checkIfSellIsLocked();
   }
@@ -152,7 +152,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
       sellNotice = _userService.userAugmontDetails.sellNotice;
   }
 
-  verifyOngoingTransaction() async {
+  verifyongoing() async {
     await _txnHistoryService.updateTransactions();
     if (_txnHistoryService.txnList != null &&
         _txnHistoryService.txnList.length > 0) {
@@ -162,7 +162,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
               element.tranStatus != "COMPLETE", orElse: () {
         return null;
       });
-      setOngoingTransaction = ongoingTxn != null ? true : false;
+      setongoing = ongoingTxn != null ? true : false;
     }
   }
 
@@ -178,7 +178,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   //     _isLockInReached = true;
   //   }
   //   _isGoldSaleActive = _baseUtil.augmontDetail?.isSellLocked ?? false;
-  //   _isOngoingTransaction = isOngoingTransaction ?? false;
+  //   _isongoing = isongoing ?? false;
   //   notifyListeners();
   // }
 }

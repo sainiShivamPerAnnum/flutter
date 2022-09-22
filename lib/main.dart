@@ -14,6 +14,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -141,7 +142,7 @@ class _MyAppState extends State<MyApp> {
                 TransactionHistoryServiceProperties>(
               value: locator<TransactionHistoryService>(),
               child: PropertyChangeProvider<AugmontTransactionService,
-                  GoldTransactionServiceProperties>(
+                  TransactionServiceProperties>(
                 value: locator<AugmontTransactionService>(),
                 child: PropertyChangeProvider<UserCoinService,
                     UserCoinServiceProperties>(
@@ -158,23 +159,28 @@ class _MyAppState extends State<MyApp> {
                         child: PropertyChangeProvider<SellService,
                             SellServiceProperties>(
                           value: locator<SellService>(),
-                          child: MaterialApp.router(
-                            locale: DevicePreview.locale(context),
-                            builder: DevicePreview.appBuilder,
-                            title: Constants.APP_NAME,
-                            theme: FelloTheme.darkMode(),
-                            useInheritedMediaQuery: true,
-                            debugShowCheckedModeBanner: false,
-                            backButtonDispatcher: backButtonDispatcher,
-                            routerDelegate: delegate,
-                            routeInformationParser: parser,
-                            localizationsDelegates: [
-                              S.delegate,
-                              GlobalMaterialLocalizations.delegate,
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                            ],
-                            supportedLocales: S.delegate.supportedLocales,
+                          child: PropertyChangeProvider<
+                              LendboxTransactionService,
+                              TransactionServiceProperties>(
+                            value: locator<LendboxTransactionService>(),
+                            child: MaterialApp.router(
+                              locale: DevicePreview.locale(context),
+                              builder: DevicePreview.appBuilder,
+                              title: Constants.APP_NAME,
+                              theme: FelloTheme.darkMode(),
+                              useInheritedMediaQuery: true,
+                              debugShowCheckedModeBanner: false,
+                              backButtonDispatcher: backButtonDispatcher,
+                              routerDelegate: delegate,
+                              routeInformationParser: parser,
+                              localizationsDelegates: [
+                                S.delegate,
+                                GlobalMaterialLocalizations.delegate,
+                                GlobalWidgetsLocalizations.delegate,
+                                GlobalCupertinoLocalizations.delegate,
+                              ],
+                              supportedLocales: S.delegate.supportedLocales,
+                            ),
                           ),
                         ),
                       ),

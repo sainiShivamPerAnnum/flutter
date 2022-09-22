@@ -1,31 +1,33 @@
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_input_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_loading_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_success_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_input_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_loading_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_success_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class GoldBuyView extends StatefulWidget {
+class LendboxBuyView extends StatefulWidget {
   final int amount;
   final bool skipMl;
-  const GoldBuyView({Key key, this.amount = 250, this.skipMl = false})
+
+  const LendboxBuyView({Key key, this.amount = 250, this.skipMl = false})
       : super(key: key);
 
   @override
-  State<GoldBuyView> createState() => _GoldBuyViewState();
+  State<LendboxBuyView> createState() => _LendboxBuyViewState();
 }
 
-class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
-  final AugmontTransactionService _txnService =
-      locator<AugmontTransactionService>();
+class _LendboxBuyViewState extends State<LendboxBuyView>
+    with WidgetsBindingObserver {
+  final LendboxTransactionService _txnService =
+      locator<LendboxTransactionService>();
   AppLifecycleState appLifecycleState;
 
   @override
@@ -47,8 +49,8 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!AugmontTransactionService.isIOSTxnInProgress) return;
-      AugmontTransactionService.isIOSTxnInProgress = false;
+      if (!LendboxTransactionService.isIOSTxnInProgress) return;
+      LendboxTransactionService.isIOSTxnInProgress = false;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
@@ -56,7 +58,7 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<AugmontTransactionService,
+    return PropertyChangeConsumer<LendboxTransactionService,
         TransactionServiceProperties>(
       properties: [
         TransactionServiceProperties.transactionState,
@@ -91,11 +93,16 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
                     secondaryAnimation: secondaryAnimation,
                   );
                 },
-                child: BaseView<GoldBuyViewModel>(
-                  onModelReady: (model) =>
-                      model.init(widget.amount, widget.skipMl),
+                child: BaseView<LendboxBuyViewModel>(
+                  onModelReady: (model) => model.init(
+                    widget.amount,
+                    widget.skipMl,
+                  ),
                   builder: (ctx, model, child) {
-                    return _getView(txnService, model);
+                    return _getView(
+                      txnService,
+                      model,
+                    );
                   },
                 ),
               ),
@@ -107,20 +114,19 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
   }
 
   Widget _getView(
-      AugmontTransactionService txnService, GoldBuyViewModel model) {
+      LendboxTransactionService txnService, LendboxBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return GoldBuyInputView(
+      return LendboxBuyInputView(
         amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
-        txnService: txnService,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return GoldBuyLoadingView(model: model);
+      return LendboxBuyLoadingView();
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return GoldBuySuccessView();
+      return LendboxBuySuccessView();
     }
-    return GoldBuyLoadingView(model: model);
+    return LendboxBuyLoadingView();
   }
 
   double _getHeight(txnService) {
@@ -134,7 +140,7 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
     return 0;
   }
 
-  _getBackground(AugmontTransactionService txnService) {
+  _getBackground(LendboxTransactionService txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(

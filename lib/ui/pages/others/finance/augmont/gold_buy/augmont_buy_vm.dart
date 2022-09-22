@@ -20,12 +20,12 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -98,7 +98,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   TextEditingController goldAmountController;
   TextEditingController vpaController;
-  List<double> chipAmountList = [101, 201, 501, 1001];
+  List<int> chipAmountList = [101, 201, 501, 1001];
   List<CouponModel> _couponList;
 
   bool get couponApplyInProgress => _couponApplyInProgress;
@@ -252,11 +252,12 @@ class GoldBuyViewModel extends BaseViewModel {
     if (!await initChecks()) return;
     await _augTxnService.initateAugmontTransaction(
       details: GoldPurchaseDetails(
-          goldBuyAmount: goldBuyAmount,
-          goldRates: goldRates,
-          couponCode: appliedCoupon?.code ?? '',
-          skipMl: skipMl ?? false,
-          goldInGrams: goldAmountInGrams),
+        goldBuyAmount: goldBuyAmount,
+        goldRates: goldRates,
+        couponCode: appliedCoupon?.code ?? '',
+        skipMl: skipMl ?? false,
+        goldInGrams: goldAmountInGrams,
+      ),
     );
   }
 
@@ -315,10 +316,12 @@ class GoldBuyViewModel extends BaseViewModel {
 
 // UI ESSENTIALS
 
-  Widget amoutChip(int index) {
-    double amt = chipAmountList[index];
-    return GestureDetector(
-      onTap: () {
+  Widget amountChip(int index) {
+    int amt = chipAmountList[index];
+    return AmountChip(
+      isActive: lastTappedChipIndex == index,
+      amt: amt,
+      onClick: (int amt) {
         if (couponApplyInProgress || isGoldBuyInProgress) return;
         showMaxCapText = false;
         showMinCapText = false;
@@ -332,32 +335,6 @@ class GoldBuyViewModel extends BaseViewModel {
         appliedCoupon = null;
         notifyListeners();
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding8, horizontal: SizeConfig.padding12),
-        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-          border: Border.all(
-            color: lastTappedChipIndex == index
-                ? Color(0xFFFEF5DC)
-                : Color(0xFFFEF5DC).withOpacity(0.2),
-            width: SizeConfig.border0,
-          ),
-          // color: lastTappedChipIndex == index
-          //     ? UiConstants.primaryColor
-          //     : UiConstants.primaryLight.withOpacity(0.5),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          "₹ ${amt.toInt()}",
-          style: TextStyles.sourceSansL.body2.colour(
-              // lastTappedChipIndex == index
-              Colors.white
-              // : UiConstants.primaryColor,
-              ),
-        ),
-      ),
     );
   }
 
@@ -595,9 +572,6 @@ class GoldBuyViewModel extends BaseViewModel {
           "Coupon not applied", "Please try another coupon");
     }
   }
-
-  //------------------------------- TEST -------------------------------- //
-
 }
 
 class PendingDialog extends StatelessWidget {

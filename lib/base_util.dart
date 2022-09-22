@@ -9,6 +9,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -33,6 +34,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -237,7 +239,11 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  openRechargeModalSheet({int amt, bool isSkipMl}) {
+  openRechargeModalSheet({
+    int amt,
+    bool isSkipMl,
+    @required InvestmentType investmentType,
+  }) {
     if (_userService.userJourneyStats.mlIndex == 1)
       return BaseUtil.showNegativeAlert("Complete your profile",
           "You can make deposits only after completing profile");
@@ -249,10 +255,15 @@ class BaseUtil extends ChangeNotifier {
         isBarrierDismissable: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
-        content: GoldBuyView(
-          amount: amt ?? 201,
-          skipMl: isSkipMl ?? false,
-        ),
+        content: investmentType == InvestmentType.AUGGOLD99
+            ? GoldBuyView(
+                amount: amt ?? 201,
+                skipMl: isSkipMl ?? false,
+              )
+            : LendboxBuyView(
+                amount: amt ?? 201,
+                skipMl: isSkipMl ?? false,
+              ),
       );
   }
 

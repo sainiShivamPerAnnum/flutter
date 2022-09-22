@@ -27,7 +27,7 @@ class GoldSellCardView extends StatelessWidget {
         SellServiceProperties.augmontSellDisabled,
         SellServiceProperties.bankDetailsVerified,
         SellServiceProperties.kycVerified,
-        SellServiceProperties.ongoingTransaction,
+        SellServiceProperties.ongoing,
       ],
       builder: (ctx, sellService, child) =>
           //  BaseView<GoldSellCardViewModel>(
@@ -115,7 +115,7 @@ class GoldSellCardView extends StatelessWidget {
                     '${sellService.nonWithdrawableQnt}g is locked. Digital Gold can be withdrawn after 48 hours of successful deposit',
               ),
 
-            if (sellService.isOngoingTransaction)
+            if (sellService.isongoing)
               SellCardInfoStrips(
                 leadingIcon: SpinKitFadingCircle(
                   size: SizeConfig.iconSize0,

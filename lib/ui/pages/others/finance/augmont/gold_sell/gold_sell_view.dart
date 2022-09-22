@@ -17,10 +17,10 @@ class GoldSellView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<AugmontTransactionService,
-        GoldTransactionServiceProperties>(
+        TransactionServiceProperties>(
       properties: [
-        GoldTransactionServiceProperties.transactionState,
-        GoldTransactionServiceProperties.transactionStatus
+        TransactionServiceProperties.transactionState,
+        TransactionServiceProperties.transactionStatus
       ],
       builder: (transactionContext, txnService, transactionProperty) {
         return AnimatedContainer(
@@ -68,34 +68,30 @@ class GoldSellView extends StatelessWidget {
 
   Widget _getView(
       AugmontTransactionService txnService, GoldSellViewModel model) {
-    if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
+    if (txnService.currentTransactionState == TransactionState.idle) {
       // return GoldSellInputView(model: model, augTxnservice: txnService);
       GoldSellLoadingView(model: model, augTxnservice: txnService);
-    } else if (txnService.currentTransactionState ==
-        TransactionState.ongoingTransaction) {
+    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldSellLoadingView(model: model, augTxnservice: txnService);
-    } else if (txnService.currentTransactionState ==
-        TransactionState.successTransaction) {
+    } else if (txnService.currentTransactionState == TransactionState.success) {
       return GoldSellSuccessView(model: model, augTxnservice: txnService);
     }
     return GoldSellInputView(model: model, augTxnservice: txnService);
   }
 
   double _getHeight(txnService) {
-    if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
+    if (txnService.currentTransactionState == TransactionState.idle) {
       return SizeConfig.screenHeight * 0.9;
-    } else if (txnService.currentTransactionState ==
-        TransactionState.ongoingTransaction) {
+    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return SizeConfig.screenHeight * 0.95;
-    } else if (txnService.currentTransactionState ==
-        TransactionState.successTransaction) {
+    } else if (txnService.currentTransactionState == TransactionState.success) {
       return SizeConfig.screenHeight;
     }
     return 0;
   }
 
   _getBackground(AugmontTransactionService txnService) {
-    if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
+    if (txnService.currentTransactionState == TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(
           color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -107,8 +103,7 @@ class GoldSellView extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
       );
-    } else if (txnService.currentTransactionState ==
-        TransactionState.ongoingTransaction) {
+    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return Container(
         decoration: BoxDecoration(
           color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -120,8 +115,7 @@ class GoldSellView extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
       );
-    } else if (txnService.currentTransactionState ==
-        TransactionState.successTransaction) {
+    } else if (txnService.currentTransactionState == TransactionState.success) {
       return Container(
         color: UiConstants.kBackgroundColor2,
       );

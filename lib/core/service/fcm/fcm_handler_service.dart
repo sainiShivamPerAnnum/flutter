@@ -80,8 +80,8 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          if (_augTxnService.currentTransactionState ==
-              TransactionState.idleTrasantion) showSnackbar = true;
+          if (_augTxnService.currentTransactionState == TransactionState.idle)
+            showSnackbar = true;
           _augTxnService.fcmTransactionResponseUpdate(data['payload']);
           break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
