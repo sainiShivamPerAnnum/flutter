@@ -29,17 +29,7 @@ abstract class API {
 }
 
 class APIService implements API {
-  // String _baseUrl = 'http://028b-103-108-4-230.ngrok.io/fello-dev-station/asia-south1';
   String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
-  //"https://asia-south1-fello-dev-station.cloudfunctions.net";
-
-  // String _awsdeviceUrl = FlavorConfig.isProduction()
-  //     ? "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/prod"
-  //     : "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/dev";
-
-  // String _awstxnUrl = FlavorConfig.isProduction()
-  //     ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
-  //     : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
   final logger = locator<CustomLogger>();
   final userService = locator<UserService>();
   String _versionString = "";

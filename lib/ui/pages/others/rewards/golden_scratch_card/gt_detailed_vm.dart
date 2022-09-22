@@ -17,7 +17,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 
 import '../../../../../util/locator.dart';
 
-class GTDetailedViewModel extends BaseModel {
+class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratcher = false;
   double _detailsModalHeight = 0;
   bool _bottompadding = true;

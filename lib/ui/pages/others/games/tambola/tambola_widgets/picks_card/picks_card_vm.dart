@@ -5,7 +5,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
-class PicksCardViewModel extends BaseModel {
+class PicksCardViewModel extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
   int get dailyPicksCount => _tambolaService.dailyPicksCount;
   List<int> get todaysPicks => _tambolaService.todaysPicks;

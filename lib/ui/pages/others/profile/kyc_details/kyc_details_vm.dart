@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -5,18 +7,19 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/repository/signzy_repo.dart';
+import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/service/payments/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -24,7 +27,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 
-class KYCDetailsViewModel extends BaseModel {
+class KYCDetailsViewModel extends BaseViewModel {
   String stateChosenValue;
   TextEditingController nameController, panController;
   bool inEditMode = true;
@@ -34,7 +37,7 @@ class KYCDetailsViewModel extends BaseModel {
   final _httpModel = locator<HttpModel>();
   final _baseUtil = locator<BaseUtil>();
   final _analyticsService = locator<AnalyticsService>();
-  final _signzyRepository = locator<SignzyRepository>();
+  final _bankingRepo = locator<BankingRepository>();
   final _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _sellService = locator<SellService>();
@@ -48,14 +51,14 @@ class KYCDetailsViewModel extends BaseModel {
 
   final depositformKey3 = GlobalKey<FormState>();
 
-  bool _isKycInProgress = false;
+  // bool _isKycInProgress = false;
 
-  get isKycInProgress => _isKycInProgress;
+  // get isKycInProgress => _isKycInProgress;
 
-  set isKycInProgress(val) {
-    this._isKycInProgress = val;
-    notifyListeners();
-  }
+  // set isKycInProgress(val) {
+  //   this._isKycInProgress = val;
+  //   notifyListeners();
+  // }
 
   init() {
     nameController = new TextEditingController();
@@ -102,12 +105,11 @@ class KYCDetailsViewModel extends BaseModel {
 
   checkForKycExistence() async {
     setState(ViewState.Busy);
-    String pan = await _baseUtil.panService.getUserPan();
     if (_userService.baseUser.isSimpleKycVerified != null &&
-        pan != null &&
-        pan.isNotEmpty) {
+        _sellService.userPan != null &&
+        _sellService.userPan.isNotEmpty) {
       if (_userService.baseUser.isSimpleKycVerified) {
-        panController.text = pan;
+        panController.text = _sellService.userPan;
         nameController.text = _userService.baseUser.kycName;
         inEditMode = false;
       }
@@ -149,138 +151,135 @@ class KYCDetailsViewModel extends BaseModel {
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
-    Map<String, dynamic> veriDetails =
-        await _getVerifiedDetails(panController.text, nameController.text);
 
-    if (veriDetails != null &&
-        veriDetails['flag'] != null &&
-        veriDetails['flag']) {
-      if (veriDetails['upstreamName'] != null &&
-          veriDetails['upstreamName'] != '') {
-        await _userRepo.updateUser(dMap: {
-          BaseUser.fldIsSimpleKycVerified: true,
-          BaseUser.fldName: veriDetails['upstreamName'],
-          BaseUser.fldKycName: veriDetails['upstreamName'],
-        });
+    try {
+      ApiResponse<VerifyPanResponseModel> response =
+          await _bankingRepo.verifyPan(
+              uid: _userService.baseUser.uid,
+              panNumber: panController.text.trim(),
+              panName: nameController.text.trim());
 
-        await _userService.setBaseUser();
-      }
-
-      _analyticsService.track(
-        eventName: AnalyticsEvents.panVerified,
-        properties: {'userId': _userService.baseUser.uid},
-      );
-
-      isUpadtingKycDetails = false;
-
-      BaseUtil.showPositiveAlert(
-          'Verification Successful', 'You are successfully verified!');
-      isKycInProgress = false;
-
-      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-        if (res)
-          _gtService.showInstantGoldenTicketView(
-              title: 'Your KYC is complete', source: GTSOURCE.panVerify);
-      });
-
-      AppState.backButtonDispatcher.didPopRoute();
-    } else {
-      isUpadtingKycDetails = false;
-      if (veriDetails['fail_code'] == 0) {
-        BaseUtil.openDialog(
-          addToScreenStack: true,
-          content: MoreInfoDialog(
-            text: veriDetails['reason'],
-            imagePath: Assets.dummyPanCardShowNumber,
-            title: 'Invalid Details',
-          ),
-          hapticVibrate: true,
-          isBarrierDismissable: false,
-        );
-      } else
-        BaseUtil.showNegativeAlert(
-            'Registration failed', veriDetails['reason'] ?? 'Please try again');
-
-      isKycInProgress = false;
-
-      _analyticsService.track(
-        eventName: AnalyticsEvents.kycVerificationFailed,
-        properties: {'userId': _userService.baseUser.uid},
-      );
-    }
-  }
-
-  Future<Map<String, dynamic>> _getVerifiedDetails(
-      String enteredPan, String enteredPanName) async {
-    if (enteredPan == null || enteredPan.isEmpty)
-      return {'flag': false, 'reason': 'Invalid Details'};
-    bool _flag = true;
-    int _failCode = 0;
-    String _reason = '';
-    String upstreamName = '';
-
-    bool registeredFlag = await _httpModel.isPanRegistered(enteredPan);
-    if (registeredFlag) {
-      _flag = false;
-      _failCode = 1;
-      _reason =
-          'This PAN number is already associated with a different account';
-    }
-
-    if (_flag) {
-      try {
-        ApiResponse<VerifyPanResponseModel> _response =
-            await _signzyRepository.verifyPan(
-                uid: _userService.baseUser.uid,
-                panNumber: enteredPan,
-                panName: enteredPanName);
-
-        if (_response.code == 200) {
-          if (_response.model.gtId != null && _response.model.gtId.isNotEmpty)
-            GoldenTicketService.goldenTicketId = _response.model.gtId;
-          // clear cache
+      if (response.code == 200) {
+        if (response.model.flag) {
           await _cacheService.invalidateByKey(CacheKeys.USER);
-          _flag = true;
-        } else {
-          _flag = false;
-        }
+          await _userService.setBaseUser();
+          _sellService.checkForUserPanDetails();
+          _sellService.isKYCVerified = true;
+          _analyticsService.track(
+            eventName: AnalyticsEvents.panVerified,
+            properties: {'userId': _userService.baseUser.uid},
+          );
 
-        if (!_flag) {
-          _reason =
-              'The name on your PAN card does not match with the entered name. Please try again.';
-        } else {
-          upstreamName = _response.model.upstreamName;
+          isUpadtingKycDetails = false;
+
+          BaseUtil.showPositiveAlert(
+              'Verification Successful', 'You are successfully verified!');
+          // isKycInProgress = false;
+
+          _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+            if (res)
+              _gtService.showInstantGoldenTicketView(
+                  title: 'Your KYC is complete', source: GTSOURCE.panVerify);
+          });
+
+          AppState.backButtonDispatcher.didPopRoute();
         }
-      } catch (e) {
-        _flag = false;
-        _logger.e(e.toString());
-        _reason =
-            'The name on your PAN card does not match with the entered name. Please try again.';
+      } else {
+        isUpadtingKycDetails = false;
+        // if (veriDetails['fail_code'] == 0) {
+        //   BaseUtil.openDialog(
+        //     addToScreenStack: true,
+        //     content: MoreInfoDialog(
+        //       text: veriDetails['reason'],
+        //       imagePath: Assets.dummyPanCardShowNumber,
+        //       title: 'Invalid Details',
+        //     ),
+        //     hapticVibrate: true,
+        //     isBarrierDismissable: false,
+        //   );
+        // } else
+        BaseUtil.showNegativeAlert(
+            'Registration failed', response.errorMessage ?? 'Please try again');
+
+        _analyticsService.track(
+          eventName: AnalyticsEvents.kycVerificationFailed,
+          properties: {'userId': _userService.baseUser.uid},
+        );
       }
-    }
-    if (!_flag) {
-      _analyticsService.track(
-        eventName: AnalyticsEvents.kycVerificationFailed,
-        properties: {'userId': _userService.baseUser.uid},
+    } on BadRequestException catch (e) {
+      return ApiResponse(
+        model: false,
+        code: 400,
+        errorMessage: e.toString(),
       );
-
-      print('returning false flag');
-      Map<String, dynamic> _data = {
-        'flag': _flag,
-        'fail_code': _failCode,
-        'reason': _reason,
-        'user_pan_name': enteredPanName,
-        'user_pan_number': enteredPan,
-        'upstream_name': upstreamName,
-      };
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
-      return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
+    } catch (e) {
+      _logger.e(e.toString());
     }
-
-    return {
-      'upstreamName': upstreamName,
-      'flag': true,
-    };
   }
+
+  // Future<Map<String, dynamic>> _getVerifiedDetails(
+  //     String enteredPan, String enteredPanName) async {
+  //   if (enteredPan == null || enteredPan.isEmpty)
+  //     return {'flag': false, 'reason': 'Invalid Details'};
+  //   bool _flag = true;
+  //   int _failCode = 0;
+  //   String _reason = '';
+  //   String upstreamName = '';
+
+  //   try {
+  //     ApiResponse<VerifyPanResponseModel> _response =
+  //         await _bankingRepo.verifyPan(
+  //             uid: _userService.baseUser.uid,
+  //             panNumber: enteredPan,
+  //             panName: enteredPanName);
+
+  //     if (_response.isSuccess()) {
+  //       if (_response.model.gtId != null && _response.model.gtId.isNotEmpty)
+  //         GoldenTicketService.goldenTicketId = _response.model.gtId;
+  //       // clear cache
+  //       await _cacheService.invalidateByKey(CacheKeys.USER);
+  //       _flag = true;
+  //     } else {
+  //       _flag = false;
+  //       _reason = _response.errorMessage;
+  //     }
+
+  //     if (!_flag) {
+  //       _reason =
+  //           'The name on your PAN card does not match with the entered name. Please try again.';
+  //     } else {
+  //       upstreamName = _response.model.upstreamName;
+  //     }
+  //   } catch (e) {
+  //     _flag = false;
+  //     _logger.e(e.toString());
+  //     _reason =
+  //         'The name on your PAN card does not match with the entered name. Please try again.';
+  //   }
+  //   // }
+  //   // if (!_flag) {
+  //   //   _analyticsService.track(
+  //   //     eventName: AnalyticsEvents.kycVerificationFailed,
+  //   //     properties: {'userId': _userService.baseUser.uid},
+  //   //   );
+
+  //   //   print('returning false flag');
+  //   //   Map<String, dynamic> _data = {
+  //   //     'flag': _flag,
+  //   //     'fail_code': _failCode,
+  //   //     'reason': _reason,
+  //   //     'user_pan_name': enteredPanName,
+  //   //     'user_pan_number': enteredPan,
+  //   //     'upstream_name': upstreamName,
+  //   //   };
+  //   //   _internalOpsService.logFailure(
+  //   //       _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
+  //   //   return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
+  //   // }
+
+  //   return {
+  //     'upstreamName': upstreamName,
+  //     'flag': true,
+  //   };
+  // }
 }

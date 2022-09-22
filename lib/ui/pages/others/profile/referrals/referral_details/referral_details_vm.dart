@@ -27,7 +27,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ReferralDetailsViewModel extends BaseModel {
+class ReferralDetailsViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();

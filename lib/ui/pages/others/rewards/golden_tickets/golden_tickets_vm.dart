@@ -17,7 +17,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class GoldenTicketsViewModel extends BaseModel {
+class GoldenTicketsViewModel extends BaseViewModel {
   //Dependencies
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();

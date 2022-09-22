@@ -13,7 +13,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -31,11 +31,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class GoldSellViewModel extends BaseModel {
+class GoldSellViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
-  AugmontModel _augmontModel = locator<AugmontModel>();
+  AugmontService _augmontModel = locator<AugmontService>();
   UserService _userService = locator<UserService>();
   UserCoinService _userCoinService = locator<UserCoinService>();
   AugmontTransactionService _augTxnService =

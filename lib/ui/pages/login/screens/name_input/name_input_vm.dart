@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class NameInputScreenViewModel extends BaseModel {
+class NameInputScreenViewModel extends BaseViewModel {
   final BaseUtil baseProvider = locator<BaseUtil>();
   final HttpModel httpProvider = locator<HttpModel>();
   final UserService _userService = locator<UserService>();

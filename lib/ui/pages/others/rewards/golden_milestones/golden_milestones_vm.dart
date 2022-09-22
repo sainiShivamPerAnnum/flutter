@@ -9,7 +9,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 
-class GoldenMilestonesViewModel extends BaseModel {
+class GoldenMilestonesViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _gtService = locator<GoldenTicketService>();
   final _gtRepo = locator<GoldenTicketRepository>();

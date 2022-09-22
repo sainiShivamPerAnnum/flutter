@@ -9,7 +9,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 
 // enum STATUS { Pending, Complete, Cancel }
 
-class AutosaveProcessViewModel extends BaseModel {
+class AutosaveProcessViewModel extends BaseViewModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();

@@ -3,7 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'dart:math' as math;
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -48,212 +48,206 @@ class GoldSellInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return BaseView<GoldSellViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
-// <<<<<<< HEAD
-      builder: (ctx, model, child) => Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: SizeConfig.padding16),
-          RechargeModalSheetAppBar(txnService: augTxnservice),
-          SizedBox(
-            height: SizeConfig.padding54,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding12,
-                horizontal: SizeConfig.pageHorizontalMargins * 2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Saleable Gold Balance',
-                  style: TextStyles.sourceSans.body3
-                      .colour(UiConstants.kTextColor2),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: SizeConfig.padding16),
+        RechargeModalSheetAppBar(txnService: augTxnservice),
+        SizedBox(
+          height: SizeConfig.padding54,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding12,
+              horizontal: SizeConfig.pageHorizontalMargins * 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Saleable Gold Balance',
+                style:
+                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+              ),
+              PropertyChangeConsumer<UserService, UserServiceProperties>(
+                properties: [UserServiceProperties.myUserFund],
+                builder: (ctx, model, child) => Text(
+                  locale.saveGoldBalanceValue(
+                      model.userFundWallet.augGoldQuantity ?? 0.0),
+                  style: TextStyles.sourceSansSB.body0
+                      .colour(UiConstants.kTextColor),
                 ),
-                PropertyChangeConsumer<UserService, UserServiceProperties>(
-                  properties: [UserServiceProperties.myUserFund],
-                  builder: (ctx, model, child) => Text(
-                    locale.saveGoldBalanceValue(
-                        model.userFundWallet.augGoldQuantity ?? 0.0),
-                    style: TextStyles.sourceSansSB.body0
-                        .colour(UiConstants.kTextColor),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: SizeConfig.padding10,
-          ),
-          Container(
-            height: SizeConfig.screenWidth * 0.22,
-            width: SizeConfig.screenWidth,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                border: Border.all(
-                    color: Colors.grey.withOpacity(0.4),
-                    width: 0.5,
-                    style: BorderStyle.solid)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: SizeConfig.screenWidth * 0.5,
-                  width: SizeConfig.screenWidth * 0.42,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(
-                          SizeConfig.roundness12,
-                        ),
-                        bottomLeft: Radius.circular(
-                          SizeConfig.roundness12,
-                        )),
-                    child: TextField(
-                      focusNode: model.sellFieldNode,
-                      enabled: !model.isGoldSellInProgress,
-                      controller: model.goldAmountController,
-                      enableInteractiveSelection: false,
-                      textAlign: TextAlign.center,
-                      cursorHeight: SizeConfig.padding46,
-                      keyboardType: TextInputType.numberWithOptions(
-                          decimal: true, signed: true),
-                      style: TextStyles.rajdhaniB.title2,
-                      onChanged: (val) {
-                        model.goldSellGrams = double.tryParse(val);
-                        model.updateGoldAmount();
-                      },
-                      autofocus: true,
-                      showCursor: false,
-                      textInputAction: TextInputAction.done,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(6),
-                      ],
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding24,
-                            horizontal: SizeConfig.padding28),
-                        fillColor:
-                            UiConstants.kFAQDividerColor.withOpacity(0.5),
-                        filled: true,
-                        suffix: Padding(
-                          padding: EdgeInsets.only(right: SizeConfig.padding10),
-                          child: Text("g",
-                              style: TextStyles.rajdhaniB.title2
-                                  .colour(UiConstants.kTextColor)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(
-                                SizeConfig.roundness12,
-                              ),
-                              bottomLeft: Radius.circular(
-                                SizeConfig.roundness12,
-                              )),
-                          borderSide: BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                              color: Colors.transparent),
-                        ),
-                        focusedBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
+        ),
+        SizedBox(
+          height: SizeConfig.padding6,
+        ),
+        Container(
+          height: SizeConfig.screenWidth * 0.22,
+          width: SizeConfig.screenWidth,
+          margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              border: Border.all(
+                  color: Colors.grey.withOpacity(0.4),
+                  width: 0.5,
+                  style: BorderStyle.solid)),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                height: SizeConfig.screenWidth * 0.5,
+                width: SizeConfig.screenWidth * 0.42,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(
+                        SizeConfig.roundness12,
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: SizeConfig.screenWidth * 0.4,
-                  height: SizeConfig.screenWidth * 0.22,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(SizeConfig.roundness12),
-                      bottomRight: Radius.circular(SizeConfig.roundness12),
-                    ),
-                    color: UiConstants.kModalSheetBackgroundColor,
-                  ),
-                  padding: EdgeInsets.only(left: SizeConfig.padding10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      FittedBox(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "₹ ${model.goldAmountFromGrams.toStringAsFixed(1)}",
-                          style: TextStyles.sourceSansSB.body1.colour(
-                              UiConstants.kModalSheetMutedTextBackgroundColor),
-                        ),
-                      ),
-                      FittedBox(
-                        alignment: Alignment.center,
-                        child: CurrentPriceWidget(
-                          fetchGoldRates: model.fetchGoldRates,
-                          goldprice: model.goldSellPrice ?? 0.0,
-                          isFetching: model.isGoldRateFetching,
-                          mini: true,
-                        ),
-                      ),
+                      bottomLeft: Radius.circular(
+                        SizeConfig.roundness12,
+                      )),
+                  child: TextField(
+                    focusNode: model.sellFieldNode,
+                    enabled: !model.isGoldSellInProgress,
+                    controller: model.goldAmountController,
+                    enableInteractiveSelection: false,
+                    textAlign: TextAlign.center,
+                    cursorHeight: SizeConfig.padding46,
+                    keyboardType: TextInputType.numberWithOptions(
+                        decimal: true, signed: true),
+                    style: TextStyles.rajdhaniB.title2,
+                    onChanged: (val) {
+                      model.goldSellGrams = double.tryParse(val);
+                      model.updateGoldAmount();
+                    },
+                    autofocus: true,
+                    showCursor: false,
+                    textInputAction: TextInputAction.done,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(6),
                     ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Spacer(),
-          Padding(
-              padding: EdgeInsets.only(
-                  left: SizeConfig.padding34,
-                  right: SizeConfig.padding34,
-                  bottom: MediaQuery.of(context).viewInsets.bottom * 0.5 ?? 0),
-              child: Text(
-                _buildNonWithdrawString(model),
-                style: TextStyles.body4.colour(Colors.grey),
-                textAlign: TextAlign.center,
-              )),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(
-                vertical: SizeConfig.pageHorizontalMargins),
-            child: ReactivePositiveAppButton(
-              btnText: 'SELL',
-              width: SizeConfig.screenWidth * 0.813,
-              onPressed: () async {
-                if (!model.isGoldSellInProgress && !model.isQntFetching) {
-                  FocusScope.of(context).unfocus();
-                  bool isDetailComplete = await model.verifyGoldSaleDetails();
-                  if (isDetailComplete)
-                    BaseUtil.openDialog(
-                      addToScreenStack: true,
-                      hapticVibrate: true,
-                      isBarrierDismissable: false,
-                      content: ConfirmationDialog(
-                        title: 'Are you sure you want\nto sell?',
-                        asset: SvgPicture.asset(Assets.magicalSpiritBall),
-                        description:
-                            'Your ${model.goldSellGrams} gms could have grown to\n${(model.goldSellGrams * 12).toStringAsPrecision(2)} gms by 2025',
-                        buttonText: 'SELL',
-                        confirmAction: () async {
-                          AppState.backButtonDispatcher.didPopRoute();
-                          await model.initiateSell();
-                        },
-                        cancelAction: () {
-                          AppState.backButtonDispatcher.didPopRoute();
-                        },
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding24,
+                          horizontal: SizeConfig.padding28),
+                      fillColor: UiConstants.kFAQDividerColor.withOpacity(0.5),
+                      filled: true,
+                      suffix: Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding10),
+                        child: Text("g",
+                            style: TextStyles.rajdhaniB.title2
+                                .colour(UiConstants.kTextColor)),
                       ),
-                    );
-                }
-              },
-            ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                              SizeConfig.roundness12,
+                            ),
+                            bottomLeft: Radius.circular(
+                              SizeConfig.roundness12,
+                            )),
+                        borderSide: BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                            color: Colors.transparent),
+                      ),
+                      focusedBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: SizeConfig.screenWidth * 0.4,
+                height: SizeConfig.screenWidth * 0.22,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(SizeConfig.roundness12),
+                    bottomRight: Radius.circular(SizeConfig.roundness12),
+                  ),
+                  color: UiConstants.kModalSheetBackgroundColor,
+                ),
+                padding: EdgeInsets.only(left: SizeConfig.padding10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FittedBox(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "₹ ${model.goldAmountFromGrams.toStringAsFixed(1)}",
+                        style: TextStyles.sourceSansSB.body1.colour(
+                            UiConstants.kModalSheetMutedTextBackgroundColor),
+                      ),
+                    ),
+                    FittedBox(
+                      alignment: Alignment.center,
+                      child: CurrentPriceWidget(
+                        fetchGoldRates: model.fetchGoldRates,
+                        goldprice: model.goldSellPrice ?? 0.0,
+                        isFetching: model.isGoldRateFetching,
+                        mini: true,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        ],
-      ),
+        ),
+        Spacer(),
+        Padding(
+            padding: EdgeInsets.only(
+                left: SizeConfig.padding34,
+                right: SizeConfig.padding34,
+                bottom: MediaQuery.of(context).viewInsets.bottom * 0.5 ?? 0),
+            child: Text(
+              _buildNonWithdrawString(model),
+              style: TextStyles.body4.colour(Colors.grey),
+              textAlign: TextAlign.center,
+            )),
+        SizedBox(
+          height: SizeConfig.padding24,
+        ),
+        Container(
+          margin:
+              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          child: ReactivePositiveAppButton(
+            btnText: 'SELL',
+            onPressed: () async {
+              if (!model.isGoldSellInProgress && !model.isQntFetching) {
+                FocusScope.of(context).unfocus();
+                bool isDetailComplete = await model.verifyGoldSaleDetails();
+                if (isDetailComplete)
+                  BaseUtil.openDialog(
+                    addToScreenStack: true,
+                    hapticVibrate: true,
+                    isBarrierDismissable: false,
+                    content: ConfirmationDialog(
+                      title: 'Are you sure you want\nto sell?',
+                      asset: SvgPicture.asset(Assets.magicalSpiritBall),
+                      description:
+                          'Your ${model.goldSellGrams} gms could have grown to\n${(model.goldSellGrams * 12).toStringAsPrecision(2)} gms by 2025',
+                      buttonText: 'SELL',
+                      confirmAction: () async {
+                        AppState.backButtonDispatcher.didPopRoute();
+                        await model.initiateSell();
+                      },
+                      cancelAction: () {
+                        AppState.backButtonDispatcher.didPopRoute();
+                      },
+                    ),
+                  );
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 

@@ -2,16 +2,13 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -19,7 +16,6 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
 
 enum MsgSource { Foreground, Background, Terminated }
 
@@ -33,6 +29,7 @@ class FcmHandler extends ChangeNotifier {
   final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
   final _paytmService = locator<PaytmService>();
   final _augTxnService = locator<AugmontTransactionService>();
+
   final _journeyService = locator<JourneyService>();
   final _augOps = locator<GoldSellViewModel>();
 

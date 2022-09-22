@@ -24,7 +24,7 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
   final TextEditingController _trandIdController = TextEditingController();
 
   final TextEditingController _uidController = TextEditingController();
-  final AugmontModel _augmontModel = locator<AugmontModel>();
+  final AugmontService _augmontModel = locator<AugmontService>();
   final DBModel _dbModel = locator<DBModel>();
   final UserRepository _userRepo = locator<UserRepository>();
   bool _isLoading = false;

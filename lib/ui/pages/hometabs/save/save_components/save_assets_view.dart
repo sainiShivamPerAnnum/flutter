@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/sell_service_enum.dart';
-import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/service/payments/sell_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';

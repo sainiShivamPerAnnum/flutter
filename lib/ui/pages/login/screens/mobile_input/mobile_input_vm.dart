@@ -9,7 +9,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-class LoginMobileViewModel extends BaseModel {
+class LoginMobileViewModel extends BaseViewModel {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();

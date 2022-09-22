@@ -27,7 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class WebGameViewModel extends BaseModel {
+class WebGameViewModel extends BaseViewModel {
   final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();

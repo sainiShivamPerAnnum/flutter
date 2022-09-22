@@ -11,7 +11,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CompleteProfileViewModel extends BaseModel {
+class CompleteProfileViewModel extends BaseViewModel {
   PageController pageController = PageController(),
       avatarsPageController = PageController(
         viewportFraction: 0.43,

@@ -6,7 +6,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:rive/rive.dart';
 
-class DailyPicksDrawViewModel extends BaseModel {
+class DailyPicksDrawViewModel extends BaseViewModel {
   TambolaService _tambolaService = locator<TambolaService>();
   final Log log = new Log("DailyPicksDraw-ViewModel");
   bool isInitCompleted = false;

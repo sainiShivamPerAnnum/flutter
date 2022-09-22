@@ -9,7 +9,7 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
-import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/service/payments/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -26,7 +26,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class SaveViewModel extends BaseModel {
+class SaveViewModel extends BaseViewModel {
   final _campaignRepo = locator<CampaignRepo>();
   final _saveRepo = locator<SaveRepo>();
   final _userService = locator<UserService>();
@@ -72,8 +72,8 @@ class SaveViewModel extends BaseModel {
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
   Map<String, dynamic> get filteredBlogList => _filteredList;
-  bool get isKYCVerified => _isKYCVerified;
-  bool get isVPAVerified => _isVPAVerified;
+  // bool get isKYCVerified => _isKYCVerified;
+  // bool get isVPAVerified => _isVPAVerified;
   bool get isGoldSaleActive => _isGoldSaleActive;
   bool get isOngoingTransaction => _isOngoingTransaction;
   bool get isLockInReached => _isLockInReached;

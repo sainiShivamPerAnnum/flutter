@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
@@ -23,39 +24,29 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
-import 'package:felloapp/ui/widgets/alert_snackbar/alert_snackbar.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:math' as math;
-import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -64,7 +55,6 @@ class BaseUtil extends ChangeNotifier {
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();
-  final _gameRepo = locator<GameRepo>();
   final _internalOpsService = locator<InternalOpsService>();
 
   BaseUser _myUser;
@@ -75,17 +65,10 @@ class BaseUtil extends ChangeNotifier {
   List<FeedCard> feedCards;
   String userRegdPan;
 
-  ///Tambola global objects
-  // int _dailyPickCount;
-  // List<int> todaysPicks;
-  // DailyPick weeklyDigits;
-  // List<TambolaBoard> userWeeklyBoards;
-
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
   UserTransaction _currentICICINonInstantWthrlTxn;
-  PanService panService;
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
@@ -185,8 +168,6 @@ class BaseUtil extends ChangeNotifier {
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
-    // _atomicTicketGenerationLeftCount = 0;
-    // atomicTicketDeletionLeftCount = 0;
 
     firstAugmontTransaction = null;
   }
@@ -216,7 +197,6 @@ class BaseUtil extends ChangeNotifier {
         ///pick zerobalance asset
         Random rnd = new Random();
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
-        setUserDefaults();
       }
     } catch (e) {
       logger.e(e.toString());
@@ -225,13 +205,6 @@ class BaseUtil extends ChangeNotifier {
         FailType.Splash,
         {'error': "base util init : $e"},
       );
-    }
-  }
-
-  Future<void> setUserDefaults() async {
-    panService = new PanService();
-    if (!checkKycMissing) {
-      panService.getUserPan().then((value) => userRegdPan = value);
     }
   }
 
@@ -326,11 +299,6 @@ class BaseUtil extends ChangeNotifier {
         title: title,
         message: message,
         duration: Duration(seconds: seconds),
-        // backgroundGradient: LinearGradient(
-        //   begin: Alignment.topRight,
-        //   end: Alignment.bottomLeft,
-        //   colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
-        // ),
         backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
@@ -537,7 +505,7 @@ class BaseUtil extends ChangeNotifier {
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
-      panService = null;
+
       _augmontDetail = null;
       augmontGoldRates = null;
       prizeLeaders = [];
@@ -744,7 +712,7 @@ class BaseUtil extends ChangeNotifier {
     if (augmontDetail == null ||
         (userFundWallet.augGoldQuantity == 0 &&
             userFundWallet.augGoldBalance == 0)) return;
-    AugmontModel().getRates().then((currRates) {
+    AugmontService().getRates().then((currRates) {
       if (currRates == null ||
           currRates.goldSellPrice == null ||
           userFundWallet.augGoldQuantity == 0) return;
