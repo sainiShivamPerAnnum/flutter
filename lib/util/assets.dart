@@ -8,7 +8,6 @@ class Assets {
   static final String logoShortformSVG = 'assets/svg/fello-short-logo.svg';
 
   static final String referGraphic = 'images/transfer.png';
-  static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
   static final String augmontLogo = "images/aug-logo.png";
   static final String augLogo = "images/aug-logo.png";
