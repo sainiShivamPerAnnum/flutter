@@ -514,4 +514,20 @@ class UserRepository extends BaseRepo {
       return false;
     }
   }
+
+  Future<ApiResponse<String>> getUserPan() async {
+    try {
+      final String token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.kGetPan(userService.baseUser.uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+      final String pan = response["data"]["pan"];
+      return ApiResponse(model: pan ?? '', code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
+    }
+  }
 }

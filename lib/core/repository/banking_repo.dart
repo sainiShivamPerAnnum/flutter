@@ -1,6 +1,4 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/transfer_amount_api_model.dart';
-import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -53,22 +51,6 @@ class BankingRepository extends BaseRepo {
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<String>> getUserPan() async {
-    try {
-      final String token = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.kGetPan(userService.baseUser.uid),
-        token: token,
-        cBaseUrl: _baseUrl,
-      );
-      final String pan = response["data"]["pan"];
-      return ApiResponse(model: pan ?? '', code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
     }
   }
 }
