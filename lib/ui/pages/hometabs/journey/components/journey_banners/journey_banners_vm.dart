@@ -6,7 +6,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:flutter/material.dart';
 
-class JourneyBannersViewModel extends BaseModel {
+class JourneyBannersViewModel extends BaseViewModel {
   final _getterRepo = locator<GetterRepository>();
   final PageController promoPageController = new PageController(initialPage: 0);
   int _currentPage = 0;

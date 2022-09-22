@@ -1,9 +1,9 @@
 import "dart:math" as math;
 
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -17,12 +17,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class NewAugmontBuyView extends StatelessWidget {
+class GoldBuyInputView extends StatelessWidget {
   final int amount;
   final bool skipMl;
   final AugmontTransactionService txnService;
-  final AugmontGoldBuyViewModel model;
-  const NewAugmontBuyView(
+  final GoldBuyViewModel model;
+  const GoldBuyInputView(
       {Key key,
       this.amount,
       this.skipMl,
@@ -242,7 +242,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
 class EnterAmountView extends StatelessWidget {
   EnterAmountView({Key key, @required this.model, @required this.txnService})
       : super(key: key);
-  final AugmontGoldBuyViewModel model;
+  final GoldBuyViewModel model;
   final AugmontTransactionService txnService;
   @override
   Widget build(BuildContext context) {

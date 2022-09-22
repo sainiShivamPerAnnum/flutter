@@ -16,7 +16,6 @@ import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 
-
 // ignore: must_be_immutable
 class TransactionDetailsBottomSheet extends StatefulWidget {
   final UserTransaction transaction;
@@ -30,7 +29,7 @@ class TransactionDetailsBottomSheet extends StatefulWidget {
 class _TransactionDetailsBottomSheetState
     extends State<TransactionDetailsBottomSheet> {
   bool _showInvoiceButton = false;
-  final AugmontModel augmontProvider = locator<AugmontModel>();
+  final AugmontService augmontProvider = locator<AugmontService>();
   final BaseUtil baseProvider = locator<BaseUtil>();
   bool _isInvoiceLoading = false;
 

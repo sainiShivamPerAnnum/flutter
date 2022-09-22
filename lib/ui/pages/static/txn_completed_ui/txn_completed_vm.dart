@@ -1,5 +1,5 @@
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -7,7 +7,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
-class TransactionCompletedConfirmationScreenViewModel extends BaseModel {
+class TransactionCompletedConfirmationScreenViewModel extends BaseViewModel {
   final _coinService = locator<UserCoinService>();
   final _paytmService = locator<PaytmService>();
 

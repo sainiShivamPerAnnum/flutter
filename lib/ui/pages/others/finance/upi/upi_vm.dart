@@ -9,7 +9,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 
-class UserUPIDetailsViewModel extends BaseModel {
+class UserUPIDetailsViewModel extends BaseViewModel {
   // TextEditingController _upiController;
   // bool _inEditMode = true;
   // bool _isUpiVerificationInProgress = false;

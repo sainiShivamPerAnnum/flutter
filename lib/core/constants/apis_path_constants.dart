@@ -28,9 +28,11 @@ class ApiPath {
   //User Ops Apis
   get kAddNewUser => "/api/v3/newuser";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
-  get kAmountTransfer => "/account/transfer";
-  get kVerifyTransfer => "/verify/transfer";
+  get kAddBankAccount => "/bank";
+  static String kGetBankAccountDetails(String uid) => '/$uid/bank';
+  // get kVerifyTransfer => "/verify/transfer";
   get kVerifyPan => "/verify/pan";
+  static String kGetPan(String uid) => "/$uid/pan";
   static String kUpdateBankDetails(String uid) => '/user/$uid/bank';
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";

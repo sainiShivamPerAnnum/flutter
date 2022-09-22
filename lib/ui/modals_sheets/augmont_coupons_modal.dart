@@ -1,5 +1,5 @@
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AugmontCouponsModalSheet extends StatelessWidget {
-  final AugmontGoldBuyViewModel model;
+  final GoldBuyViewModel model;
   final _formKey = GlobalKey<FormState>();
   AugmontCouponsModalSheet({this.model});
   final TextEditingController couponCodeController =
@@ -143,7 +143,7 @@ class CouponItem extends StatelessWidget {
   }) : super(key: key);
   final Widget trailingWidget;
 
-  final AugmontGoldBuyViewModel model;
+  final GoldBuyViewModel model;
   final Function onTap;
   final String couponCode;
   final String desc;

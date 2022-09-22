@@ -21,7 +21,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class JourneyPageViewModel extends BaseModel {
+class JourneyPageViewModel extends BaseViewModel {
   final logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _journeyService = locator<JourneyService>();

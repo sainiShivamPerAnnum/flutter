@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -16,10 +15,11 @@ import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -32,8 +32,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:felloapp/util/custom_logger.dart';
 
-class AugmontModel extends ChangeNotifier {
-  final Log log = new Log('AugmontModel');
+class AugmontService extends ChangeNotifier {
+  final Log log = new Log('AugmontService');
   final CustomLogger _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   final _internalOpsService = locator<InternalOpsService>();

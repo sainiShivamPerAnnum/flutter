@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
-class TambolaGameViewModel extends BaseModel {
+class TambolaGameViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
   final tambolaService = locator<TambolaService>();
   final _coinService = locator<UserCoinService>();

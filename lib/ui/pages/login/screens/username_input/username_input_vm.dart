@@ -7,7 +7,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class UsernameInputScreenViewModel extends BaseModel {
+class UsernameInputScreenViewModel extends BaseViewModel {
   final BaseUtil baseProvider = locator<BaseUtil>();
   final DBModel dbProvider = locator<DBModel>();
 

@@ -42,10 +42,10 @@ import '../../../util/haptic.dart';
 
 enum LoginSource { FIREBASE, TRUECALLER }
 
-class LoginControllerViewModel extends BaseModel {
+class LoginControllerViewModel extends BaseViewModel {
   //Locators
   final fcmListener = locator<FcmListener>();
-  final augmontProvider = locator<AugmontModel>();
+  final augmontProvider = locator<AugmontService>();
   final _analyticsService = locator<AnalyticsService>();
   final userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();

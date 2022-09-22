@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -15,8 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
-class CongratulatoryView extends StatelessWidget {
-  CongratulatoryView({Key key}) : super(key: key);
+class GoldBuySuccessView extends StatelessWidget {
+  GoldBuySuccessView({Key key}) : super(key: key);
   // final AugmontTransactionService _augTxnService = locator<AugmontTransactionService>();
   // final _userservice = locator<UserService>();
   @override

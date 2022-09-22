@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/service/api.dart';
 import '../../../../../util/assets.dart';
 
-class TopSaverViewModel extends BaseModel {
+class TopSaverViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();

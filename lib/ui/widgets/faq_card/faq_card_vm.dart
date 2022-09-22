@@ -6,7 +6,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
-class FAQCardViewModel extends BaseModel {
+class FAQCardViewModel extends BaseViewModel {
   static const String FAQ_CAT_GENERAL = 'general';
   static const String FAQ_CAT_AUGMONT = 'digital_gold';
   static const String FAQ_CAT_REFERRALS = 'referrals';

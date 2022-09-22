@@ -4,7 +4,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -17,7 +17,7 @@ import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
-class GTInstantViewModel extends BaseModel {
+class GTInstantViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();

@@ -1,12 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_loading_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_success_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_input_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_loading_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_success_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
+
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,8 @@ class GoldSellView extends StatelessWidget {
   Widget _getView(
       AugmontTransactionService txnService, GoldSellViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return GoldSellInputView(model: model, augTxnservice: txnService);
+      // return GoldSellInputView(model: model, augTxnservice: txnService);
+      GoldSellLoadingView(model: model, augTxnservice: txnService);
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
       return GoldSellLoadingView(model: model, augTxnservice: txnService);
@@ -89,7 +91,6 @@ class GoldSellView extends StatelessWidget {
         TransactionState.successTransaction) {
       return SizeConfig.screenHeight;
     }
-
     return 0;
   }
 

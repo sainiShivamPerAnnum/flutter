@@ -1,9 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/banking_repo.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -13,9 +15,28 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
-  final _saveRepo = locator<SaveRepo>();
   final _txnHistoryService = locator<TransactionHistoryService>();
   final _baseUtil = locator<BaseUtil>();
+  final _paymentRepo = locator<PaymentRepository>();
+  final _bankingRepo = locator<BankingRepository>();
+  String _userPan;
+
+  get userPan => this._userPan;
+
+  set userPan(value) {
+    this._userPan = value;
+    notifyListeners(SellServiceProperties.kycVerified);
+  }
+
+  BankAccountDetailsModel _activeBankAccountDetails;
+
+  BankAccountDetailsModel get activeBankAccountDetails =>
+      this._activeBankAccountDetails;
+
+  set activeBankAccountDetails(value) {
+    this._activeBankAccountDetails = value;
+    notifyListeners(SellServiceProperties.bankDetailsVerified);
+  }
 
   bool _isKYCVerified = false;
   bool _isBankDetailsAdded = false;
@@ -79,6 +100,8 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   init() async {
     await _userService.fetchUserAugmontDetail();
+    await checkForUserBankAccountDetails();
+    await checkForUserPanDetails();
     verifyKYCStatus();
     verifyBankDetails();
     verifyOngoingTransaction();
@@ -86,10 +109,25 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     checkIfSellIsLocked();
   }
 
+  checkForUserBankAccountDetails() async {
+    final res = await _paymentRepo.getActiveBankAccountDetails();
+    if (res.isSuccess()) {
+      activeBankAccountDetails = res.model;
+      isBankDetailsAdded = true;
+    }
+  }
+
+  checkForUserPanDetails() async {
+    final res = await _bankingRepo.getUserPan();
+    if (res.isSuccess()) {
+      userPan = res.model;
+    }
+  }
+
   verifyBankDetails() async {
-    if (_userService.userAugmontDetails != null &&
-        _userService.userAugmontDetails.bankAccNo != null &&
-        _userService.userAugmontDetails.bankAccNo.isNotEmpty) {
+    if (activeBankAccountDetails != null &&
+        activeBankAccountDetails.account != null &&
+        activeBankAccountDetails.account.isNotEmpty) {
       isBankDetailsAdded = true;
     }
   }

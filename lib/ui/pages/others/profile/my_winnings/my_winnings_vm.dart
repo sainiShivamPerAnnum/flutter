@@ -13,7 +13,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -33,7 +33,7 @@ import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class MyWinningsViewModel extends BaseModel {
+class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final _logger = locator<CustomLogger>();
   final _httpModel = locator<HttpModel>();

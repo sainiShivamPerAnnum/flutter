@@ -1,12 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_input_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/gold_sell_view.dart';
+
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SellingReasonBottomSheet extends StatelessWidget {
   final List<String> _sellingReasons = [

@@ -5,7 +5,7 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 
-class FaqPageViewModel extends BaseModel {
+class FaqPageViewModel extends BaseViewModel {
   final _gettersRepo = locator<GetterRepository>();
 
   List<FAQDataModel> _list = [];

@@ -18,7 +18,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
-class TambolaHomeViewModel extends BaseModel {
+class TambolaHomeViewModel extends BaseViewModel {
   final _getterRepo = locator<GetterRepository>();
   final _prizeService = locator<PrizeService>();
   final _baseUtil = locator<BaseUtil>();

@@ -1,31 +1,29 @@
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/new_augmont_buy_view.dart';
-import 'package:felloapp/ui/pages/static/congratulatory_view.dart';
-import 'package:felloapp/ui/pages/static/recharge_loading_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_input_view.dart';
+import 'package:felloapp/ui/pages/static/gold_buy_succes_view.dart';
+import 'package:felloapp/ui/pages/static/gold_buy_loading_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class RechargeModalSheet extends StatefulWidget {
+class GoldBuyView extends StatefulWidget {
   final int amount;
   final bool skipMl;
-  const RechargeModalSheet({Key key, this.amount = 250, this.skipMl = false})
+  const GoldBuyView({Key key, this.amount = 250, this.skipMl = false})
       : super(key: key);
 
   @override
-  State<RechargeModalSheet> createState() => _RechargeModalSheetState();
+  State<GoldBuyView> createState() => _GoldBuyViewState();
 }
 
-class _RechargeModalSheetState extends State<RechargeModalSheet>
-    with WidgetsBindingObserver {
+class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
   AppLifecycleState appLifecycleState;
@@ -93,7 +91,7 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
                     secondaryAnimation: secondaryAnimation,
                   );
                 },
-                child: BaseView<AugmontGoldBuyViewModel>(
+                child: BaseView<GoldBuyViewModel>(
                   onModelReady: (model) =>
                       model.init(widget.amount, widget.skipMl),
                   builder: (ctx, model, child) {
@@ -109,9 +107,9 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
   }
 
   Widget _getView(
-      AugmontTransactionService txnService, AugmontGoldBuyViewModel model) {
+      AugmontTransactionService txnService, GoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return NewAugmontBuyView(
+      return GoldBuyInputView(
         amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
@@ -119,16 +117,16 @@ class _RechargeModalSheetState extends State<RechargeModalSheet>
       );
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
-      return RechargeLoadingView(model: model);
+      return GoldBuyLoadingView(model: model);
     } else if (txnService.currentTransactionState ==
         TransactionState.successTransaction) {
-      return CongratulatoryView();
+      return GoldBuySuccessView();
     }
     // else if (txnService.currentTransactionState ==
     //     TransactionState.successCoinTransaction) {
     //   return CongratulatoryCoinView();
     // }
-    return RechargeLoadingView(model: model);
+    return GoldBuyLoadingView(model: model);
   }
 
   double _getHeight(txnService) {
