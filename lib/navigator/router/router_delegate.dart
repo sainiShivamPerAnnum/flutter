@@ -28,11 +28,11 @@ import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
@@ -264,9 +264,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
-
-        case Pages.AugGoldDetails:
-          _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
+        case Pages.LendboxDetails:
+          _addPageData(LendboxDetailsView(), LendboxDetailsPageConfig);
           break;
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
@@ -527,6 +526,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
         break;
+      case Pages.LendboxDetails:
+        LendboxDetailsPageConfig.currentPageAction = action;
+        break;
       case Pages.ReferralDetails:
         ReferralDetailsPageConfig.currentPageAction = action;
         break;
@@ -745,6 +747,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'augDetails':
         pageConfiguration = AugmontGoldDetailsPageConfig;
+        break;
+      case 'lendboxDetails':
+        pageConfiguration = LendboxDetailsPageConfig;
         break;
       case 'kycVerify':
         pageConfiguration = KycDetailsPageConfig;

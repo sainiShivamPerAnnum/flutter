@@ -237,18 +237,11 @@ class SaveViewModel extends BaseViewModel {
   navigateToSaveAssetView() {
     Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: SaveAssetsViewConfig,
-        widget: SaveAssetView());
+      state: PageState.addWidget,
+      page: SaveAssetsViewConfig,
+      widget: SaveAssetView(),
+    );
   }
-
-  // navigateToSellGoldPage() {
-  //   Haptic.vibrate();
-  //   AppState.delegate.appState.currentAction = PageAction(
-  //       state: PageState.addWidget,
-  //       page: AugmontGoldSellPageConfig,
-  //       widget: GoldSellInputView( ));
-  // }
 
   navigateToCompleteKYC() {
     Haptic.vibrate();
