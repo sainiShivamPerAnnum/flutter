@@ -1,26 +1,25 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
-import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/sell_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_input_view.dart';
-import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -234,13 +233,23 @@ class SaveViewModel extends BaseViewModel {
         ));
   }
 
-  navigateToSaveAssetView() {
+  void navigateToSaveAssetView(
+    InvestmentType investmentType,
+  ) {
     Haptic.vibrate();
-    AppState.delegate.appState.currentAction = PageAction(
-      state: PageState.addWidget,
-      page: SaveAssetsViewConfig,
-      widget: SaveAssetView(),
-    );
+
+    if (investmentType == InvestmentType.AUGGOLD99)
+      AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: SaveAssetsViewConfig,
+        widget: SaveAssetView(),
+      );
+    else
+      AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: LendboxDetailsPageConfig,
+        widget: LendboxDetailsView(),
+      );
   }
 
   navigateToCompleteKYC() {

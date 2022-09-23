@@ -9,6 +9,7 @@ import 'package:felloapp/util/custom_logger.dart';
 class FAQCardViewModel extends BaseViewModel {
   static const String FAQ_CAT_GENERAL = 'general';
   static const String FAQ_CAT_AUGMONT = 'digital_gold';
+  static const String FELLO_FLO = 'fello_flo';
   static const String FAQ_CAT_REFERRALS = 'referrals';
   static const String FAQ_CAT_TAMBOLA = 'tambola';
   static const String FAQ_CAT_MUTUALFUNDS = 'mututalfunds';

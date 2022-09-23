@@ -203,7 +203,7 @@ class LendboxTransactionService extends BaseTransactionService {
         }
       }
 
-      _txnHistoryService.updateTransactions();
+      _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
     } catch (e) {
       _logger.e(e);
       _internalOpsService.logFailure(

@@ -12,9 +12,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class TransactionDetailsBottomSheet extends StatefulWidget {
@@ -66,6 +64,8 @@ class _TransactionDetailsBottomSheetState
   }
 
   Widget dialogContent(BuildContext context) {
+    final isGold =
+        widget.transaction.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
     return WillPopScope(
       onWillPop: () async {
         AppState.screenStack.removeLast();
@@ -74,10 +74,12 @@ class _TransactionDetailsBottomSheetState
       child: Container(
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-            color: UiConstants.kModalSheetBackgroundColor,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.roundness32),
-                topRight: Radius.circular(SizeConfig.roundness32))),
+          color: UiConstants.kModalSheetBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32),
+          ),
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding24,
@@ -90,8 +92,10 @@ class _TransactionDetailsBottomSheetState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Transaction Details',
-                        style: TextStyles.sourceSans.body2),
+                    Text(
+                      'Transaction Details',
+                      style: TextStyles.sourceSans.body2,
+                    ),
                     GestureDetector(
                       onTap: () {
                         AppState.backButtonDispatcher.didPopRoute();
@@ -110,7 +114,7 @@ class _TransactionDetailsBottomSheetState
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.asset(
-                    Assets.digitalGoldBar,
+                    isGold ? Assets.digitalGoldBar : Assets.felloFlo,
                     height: SizeConfig.screenWidth * 0.12,
                     width: SizeConfig.screenWidth * 0.12,
                   ),
@@ -121,11 +125,17 @@ class _TransactionDetailsBottomSheetState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(
-                          child: Text('Digital Gold',
-                              style: TextStyles.rajdhaniM.body2)),
-                      Text('Safest digital investment',
-                          style: TextStyles.rajdhani.body4
-                              .colour(UiConstants.kTextColor2)),
+                        child: Text(
+                          isGold ? 'Digital Gold' : 'Fello Flo',
+                          style: TextStyles.rajdhaniM.body2,
+                        ),
+                      ),
+                      Text(
+                        'Safest digital investment',
+                        style: TextStyles.rajdhani.body4.colour(
+                          UiConstants.kTextColor2,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -278,19 +288,6 @@ class _TransactionDetailsBottomSheetState
                     ],
                   ),
                 ),
-              // if (_showInvoiceButton && _isInvoiceLoading)
-              //   Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Padding(
-              //         padding: EdgeInsets.all(20),
-              //         child: SpinKitThreeBounce(
-              //           color: UiConstants.primaryColor,
-              //           size: 18.0,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
               SizedBox(height: SizeConfig.padding12)
             ],
           ),
