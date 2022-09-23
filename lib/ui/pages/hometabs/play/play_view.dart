@@ -48,6 +48,7 @@ class Play extends StatelessWidget {
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
+                  height: SizeConfig.screenWidth * 0.3,
                 ),
                 MoreGamesSection(model: model),
                 SafetyWidget(),

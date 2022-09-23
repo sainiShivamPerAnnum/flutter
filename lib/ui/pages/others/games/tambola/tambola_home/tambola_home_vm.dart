@@ -5,13 +5,17 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -25,6 +29,8 @@ class TambolaHomeViewModel extends BaseModel {
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
   final GameRepo _gamesRepo = locator<GameRepo>();
+  final WinnerService _winnerService = locator<WinnerService>();
+  final _dbModel = locator<DBModel>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
@@ -34,7 +40,9 @@ class TambolaHomeViewModel extends BaseModel {
   ScrollController scrollController;
   double cardOpacity = 1;
   GameModel game;
+  List<Winners> _winners = [];
 
+  //Constant values
   Map<String, IconData> tambolaOdds = {
     "Full House": Icons.apps,
     "Top Row": Icons.border_top,
@@ -42,6 +50,26 @@ class TambolaHomeViewModel extends BaseModel {
     "Bottom Row": Icons.border_bottom,
     "Corners": Icons.border_outer
   };
+
+  List<IconData> leadingIconList = [
+    Icons.apps,
+    Icons.border_top,
+    Icons.border_horizontal,
+    Icons.border_bottom,
+    Icons.border_outer
+  ];
+  String boxHeading = "How to Play";
+
+  List<String> boxTitlles = [
+    "Your ticket comprises of 15 randomly placed numbers, refreshed every Monday",
+    "3 random numbers are picked everyday from 1 to 90 at 6 pm.",
+    "Numbers that match your ticket gets automatically crossed out.",
+  ];
+  List<String> boxAssets = [
+    Assets.howToPlayAsset1Tambola,
+    Assets.howToPlayAsset2Tambola,
+    Assets.howToPlayAsset3Tambola,
+  ];
 
   udpateCardOpacity() {
     cardOpacity = 1 -
@@ -53,6 +81,7 @@ class TambolaHomeViewModel extends BaseModel {
 
   LeaderboardModel get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
+  List<Winners> get winners => _winners;
 
   viewpage(int index) {
     currentPage = index;
@@ -66,8 +95,21 @@ class TambolaHomeViewModel extends BaseModel {
     setState(ViewState.Busy);
     await getGameDetails();
     getLeaderboard();
+
+    fetchWinners();
     if (tPrizes == null) getPrizes();
     setState(ViewState.Idle);
+  }
+
+  fetchWinners() async {
+    _winnerService.fetchtambolaWinners();
+    _winners = _winnerService.winners;
+
+    notifyListeners();
+  }
+
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
   }
 
   Future<void> getLeaderboard() async {

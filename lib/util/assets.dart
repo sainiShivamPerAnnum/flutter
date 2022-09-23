@@ -279,6 +279,12 @@ class Assets {
 
   static final String iPadPNG = "images/ipad.png";
 
+  //How to play aseets (Tambola Screen)
+  static const String howToPlayAsset1Tambola = "assets/svg/tambola_inst_1.svg";
+  static const String howToPlayAsset2Tambola = "assets/svg/tambola_inst_2.svg";
+
+  static const String howToPlayAsset3Tambola = "assets/svg/tambola_inst_3.svg";
+
   //Notificatiion alert screen
   static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
 

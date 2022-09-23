@@ -120,6 +120,34 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     _logger.d("New Fello winners successfully fetched");
   }
 
+  fetchtambolaWinners() async {
+    _winners.clear();
+    WinnersModel _tambolaWinners = await getWinners(
+      Constants.GAME_TYPE_TAMBOLA,
+      "weekly",
+    );
+
+    if (_tambolaWinners != null &&
+        _tambolaWinners.winners != null &&
+        _tambolaWinners?.winners?.length != 0) {
+      _timestamp = _tambolaWinners.timestamp;
+      _tambolaWinnersLength = _tambolaWinners?.winners?.length;
+      _winners.addAll(_tambolaWinners.winners);
+      _logger.d("Only Tambola Winners added to leaderboard");
+    } else {
+      _logger.i("Tambola Winners not added to leaderboard");
+    }
+
+    if (_winners != null)
+      _winners.sort((a, b) => (a.amount == null || b.amount == null)
+          ? -1
+          : b.amount.compareTo(a.amount));
+    else
+      _winners = [];
+
+    setWinners();
+  }
+
   fetchWinners() async {
     _winners.clear();
     WinnersModel _cricketWinners = await getWinners(

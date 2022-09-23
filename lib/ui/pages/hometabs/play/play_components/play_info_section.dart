@@ -155,12 +155,14 @@ class InfoComponent2 extends StatelessWidget {
     @required this.heading,
     @required this.assetList,
     @required this.titleList,
+    @required this.height,
     Key key,
   }) : super(key: key);
 
   String heading;
   List<String> assetList;
   List<String> titleList;
+  double height;
 
   double heightOfObject = SizeConfig.screenWidth * 0.3;
 
@@ -171,7 +173,7 @@ class InfoComponent2 extends StatelessWidget {
       children: [
         GameTitleWithSubTitle(title: heading),
         Container(
-          height: heightOfObject + SizeConfig.padding80,
+          height: height + SizeConfig.padding80,
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
           child: ListView.builder(
