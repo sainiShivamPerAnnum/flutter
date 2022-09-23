@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';

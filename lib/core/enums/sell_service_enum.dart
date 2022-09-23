@@ -3,6 +3,6 @@ enum SellServiceProperties {
   bankDetailsVerified,
   augmontSellNotice,
   augmontSellDisabled,
-  ongoingTransaction,
+  ongoing,
   reachedLockIn
 }

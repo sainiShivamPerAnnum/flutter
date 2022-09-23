@@ -1,10 +1,7 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/pages/static/seprator.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,10 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
-class GoldBuySuccessView extends StatelessWidget {
-  GoldBuySuccessView({Key key}) : super(key: key);
-  // final AugmontTransactionService _augTxnService = locator<AugmontTransactionService>();
-  // final _userservice = locator<UserService>();
+class LendboxBuySuccessView extends StatelessWidget {
+  final _txnService = locator<LendboxTransactionService>();
+
+  LendboxBuySuccessView({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -72,26 +70,32 @@ class GoldBuySuccessView extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins,
               vertical: SizeConfig.padding12,
             ),
-            child: Row(children: [
-              Text("Tokens Won", style: TextStyles.rajdhani.body1),
-              Spacer(),
-              SvgPicture.asset(
-                'assets/temp/Tokens.svg',
-                width: SizeConfig.padding26,
-                height: SizeConfig.padding26,
-              ),
-              SizedBox(
-                width: SizeConfig.padding6,
-              ),
-              Text(
-                  (AugmontTransactionService.currentTxnAmount.toInt())
-                      .toString(),
-                  style: TextStyles.rajdhaniB.title3),
-            ]),
+            child: Row(
+              children: [
+                Text("Tokens Won", style: TextStyles.rajdhani.body1),
+                Spacer(),
+                SvgPicture.asset(
+                  'assets/temp/Tokens.svg',
+                  width: SizeConfig.padding26,
+                  height: SizeConfig.padding26,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding6,
+                ),
+                Text(
+                  (_txnService.currentTxnAmount.toInt()).toString(),
+                  style: TextStyles.rajdhaniB.title3,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
           ),
           Container(
             margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins * 2),
+              horizontal: SizeConfig.pageHorizontalMargins * 2,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(SizeConfig.roundness12),
@@ -100,49 +104,22 @@ class GoldBuySuccessView extends StatelessWidget {
               color: UiConstants.darkPrimaryColor2,
             ),
             child: IntrinsicHeight(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.padding16,
-                          top: SizeConfig.padding16,
-                          bottom: SizeConfig.padding16,
-                          right: SizeConfig.padding8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Invested", style: TextStyles.sourceSans.body2),
-                          SizedBox(height: SizeConfig.padding16),
-                          Text(
-                              "₹ ${BaseUtil.getIntOrDouble(AugmontTransactionService.currentTxnAmount)}",
-                              style: TextStyles.rajdhaniB.title3),
-                          SizedBox(height: SizeConfig.padding12),
-                        ],
-                      ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding16,
+                  vertical: SizeConfig.padding8,
+                ),
+                child: Row(
+                  children: [
+                    Text("Invested", style: TextStyles.sourceSans.body2),
+                    Spacer(),
+                    Text(
+                      "₹ ${BaseUtil.getIntOrDouble(_txnService.currentTxnAmount)}",
+                      style: TextStyles.rajdhaniB.title3,
                     ),
-                  ),
-                  VerticalDivider(width: 3),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.padding8,
-                          top: SizeConfig.padding16,
-                          bottom: SizeConfig.padding16,
-                          right: SizeConfig.padding16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Bought", style: TextStyles.sourceSans.body2),
-                          SizedBox(height: SizeConfig.padding16),
-                          Text("${AugmontTransactionService.currentTxnGms} gms",
-                              style: TextStyles.rajdhaniB.title4),
-                          SizedBox(height: SizeConfig.padding12),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+                    SizedBox(height: SizeConfig.padding12),
+                  ],
+                ),
               ),
             ),
           ),
@@ -162,15 +139,20 @@ class GoldBuySuccessView extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins,
               vertical: SizeConfig.padding12,
             ),
-            child: Row(children: [
-              Text("Gold Balance",
+            child: Row(
+              children: [
+                Text(
+                  "Total Balance",
                   style: TextStyles.rajdhani.body3
-                      .colour(UiConstants.kBackgroundColor)),
-              Spacer(),
-              UserGoldQuantitySE(
-                style: TextStyles.sourceSans.body2,
-              )
-            ]),
+                      .colour(UiConstants.kBackgroundColor),
+                ),
+                Spacer(),
+                UserFundQuantitySE(
+                  style: TextStyles.sourceSans.body2,
+                  investmentType: InvestmentType.LENDBOXP2P,
+                )
+              ],
+            ),
           ),
           SizedBox(height: SizeConfig.padding24),
           TextButton(

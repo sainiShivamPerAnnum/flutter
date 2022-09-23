@@ -3,7 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/upi_intent_view.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -38,8 +41,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
-class AugmontTransactionService
-    extends PropertyChangeNotifier<GoldTransactionServiceProperties> {
+class AugmontTransactionService extends BaseTransactionService {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _userCoinService = locator<UserCoinService>();
@@ -50,98 +52,37 @@ class AugmontTransactionService
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
-  static double currentTxnAmount = 0.0;
+
   static double currentTxnGms = 0.0;
-  static String currentTxnOrderId;
-  static bool isIOSTxnInProgress = false;
 
   DepositFcmResponseModel depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication upiApplication;
-  String selectedUpiApplicationName;
-  TransactionState _currentTransactionState = TransactionState.idleTrasantion;
   GoldPurchaseDetails currentGoldPurchaseDetails;
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
-  TransactionState get currentTransactionState => _currentTransactionState;
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
-    notifyListeners(GoldTransactionServiceProperties.transactionStatus);
-  }
-
-  set currentTransactionState(TransactionState state) {
-    _currentTransactionState = state;
-    notifyListeners(GoldTransactionServiceProperties.transactionState);
+    notifyListeners(TransactionServiceProperties.transactionStatus);
   }
 
   Future<void> initateAugmontTransaction(
       {@required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
-    String paymentMode = "PAYTM-PG";
-    if (Platform.isAndroid)
-      paymentMode = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID);
-    else if (Platform.isIOS)
-      paymentMode = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.ACTIVE_PG_IOS);
+    String paymentMode = this.getPaymentMode();
 
     switch (paymentMode) {
       case "PAYTM-PG":
         processPaytmTransaction();
         break;
       case "PAYTM":
-        getUserUpiAppChoice();
+        getUserUpiAppChoice(this);
         break;
       case "RZP-PG":
         processRazorpayTransaction();
         break;
     }
+
     return null;
-  }
-
-  getUPIApps() async {
-    try {
-      List<ApplicationMeta> allUpiApps =
-          await UpiPay.getInstalledUpiApplications(
-              statusType: UpiApplicationDiscoveryAppStatusType.all);
-      allUpiApps.forEach((element) {
-        if (element.upiApplication.appName == "Paytm" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('P')) {
-          appMetaList.add(element);
-        }
-        if (element.upiApplication.appName == "PhonePe" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('E')) {
-          appMetaList.add(element);
-        }
-        if (element.upiApplication.appName == "Google Pay" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('G')) {
-          appMetaList.add(element);
-        }
-      });
-    } catch (e) {
-      BaseUtil.showNegativeAlert(
-          "Unable to get Upi apps", "Please try again in sometime");
-    }
-  }
-
-  //5 -- UPI
-  getUserUpiAppChoice() async {
-    await getUPIApps();
-    BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        backgroundColor: Colors.transparent,
-        isBarrierDismissable: false,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.roundness12),
-            topRight: Radius.circular(SizeConfig.roundness12)),
-        content: UPIAppsBottomSheet(txnServiceInstance: this));
   }
 
   //6 -- UPI
@@ -150,7 +91,7 @@ class AugmontTransactionService
     AppState.blockNavigation();
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     CreatePaytmTransactionModel createdPaytmTransactionData =
-        await _paytmService.createPaytmTransaction(
+        await this.createPaytmTransaction(
       PaymentMode.UPI,
       currentGoldPurchaseDetails.goldBuyAmount,
       currentGoldPurchaseDetails.goldRates,
@@ -168,6 +109,7 @@ class AugmontTransactionService
           orderId: createdPaytmTransactionData.data.orderId,
           upiApplication: upiApplication,
           url: deepUri,
+          investmentType: InvestmentType.AUGGOLD99,
         );
         if (res && Platform.isAndroid) initiatePolling();
         // resetBuyOptions();
@@ -189,29 +131,46 @@ class AugmontTransactionService
     }
   }
 
-  //7 -- RAZORPAY
-  processRazorpayTransaction() async {
+  // RAZORPAY
+  Future<void> processRazorpayTransaction() async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
+    final amount = currentGoldPurchaseDetails.goldBuyAmount;
+    final augmontRates = currentGoldPurchaseDetails.goldRates;
+    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+
+    final augMap = {
+      "aBlockId": augmontRates.blockId.toString(),
+      "aLockPrice": augmontRates.goldBuyPrice,
+      "aPaymode": 'RZP',
+      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
+          augmontRates.goldBuyPrice),
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+    };
+
     await _razorpayService.initiateRazorpayTxn(
       amount: currentGoldPurchaseDetails.goldBuyAmount,
-      augmontRates: currentGoldPurchaseDetails.goldRates,
+      augMap: augMap,
+      lbMap: {},
       couponCode: currentGoldPurchaseDetails.couponCode,
       email: _userService.baseUser.email,
       mobile: _userService.baseUser.mobile,
+      investmentType: InvestmentType.AUGGOLD99,
     );
+
     isGoldBuyInProgress = false;
     AppState.unblockNavigation();
-    // resetBuyOptions();
   }
-//PAYTM METHODS
 
+  // PAYTM METHODS
   Future<void> processPaytmTransaction() async {
     AppState.blockNavigation();
     isGoldBuyInProgress = true;
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     CreatePaytmTransactionModel createdPaytmTransactionData =
-        await _paytmService.createPaytmTransaction(
+        await this.createPaytmTransaction(
       PaymentMode.PAYTM,
       currentGoldPurchaseDetails.goldBuyAmount,
       currentGoldPurchaseDetails.goldRates,
@@ -222,18 +181,20 @@ class AugmontTransactionService
       currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
       bool _status = await _paytmService.initiatePaytmPGTransaction(
-          paytmSubscriptionModel: createdPaytmTransactionData,
-          restrictAppInvoke: FlavorConfig.isDevelopment());
+        paytmSubscriptionModel: createdPaytmTransactionData,
+        restrictAppInvoke: FlavorConfig.isDevelopment(),
+        investmentType: InvestmentType.AUGGOLD99,
+      );
 
       if (_status) {
-        currentTransactionState = TransactionState.ongoingTransaction;
+        currentTransactionState = TransactionState.ongoing;
         AppState.blockNavigation();
         _logger
             .d("Txn Timer Function reinitialised and set with 30 secs delay");
         initiatePolling();
       } else {
-        if (currentTransactionState == TransactionState.ongoingTransaction) {
-          currentTransactionState = TransactionState.idleTrasantion;
+        if (currentTransactionState == TransactionState.ongoing) {
+          currentTransactionState = TransactionState.idle;
         }
         AppState.unblockNavigation();
         BaseUtil.showNegativeAlert(
@@ -266,7 +227,7 @@ class AugmontTransactionService
     _logger.i("Updating fcm response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     // AppState.delegate.appState.txnTimer?.cancel();
-    AppState.pollingPeriodicTimer?.cancel();
+    this.pollingPeriodicTimer?.cancel();
     _logger.d("timer cancelled");
 
     try {
@@ -311,11 +272,11 @@ class AugmontTransactionService
         _userCoinService.setFlcBalance(newFlcBalance);
       }
       _userService.getUserFundWalletData();
-      if (currentTransactionState == TransactionState.ongoingTransaction) {
+      if (currentTransactionState == TransactionState.ongoing) {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.remove(AppState.screenStack.last);
         }
-        currentTransactionState = TransactionState.successTransaction;
+        currentTransactionState = TransactionState.success;
         Haptic.vibrate();
         GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
         if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
@@ -359,11 +320,11 @@ class AugmontTransactionService
       }
       _userService.getUserFundWalletData();
       print(gtId);
-      if (currentTransactionState == TransactionState.ongoingTransaction) {
+      if (currentTransactionState == TransactionState.ongoing) {
         if (AppState.screenStack.last == ScreenItem.loader) {
           AppState.screenStack.remove(AppState.screenStack.last);
         }
-        currentTransactionState = TransactionState.successTransaction;
+        currentTransactionState = TransactionState.success;
         Haptic.vibrate();
 
         GoldenTicketService.goldenTicketId = gtId;
@@ -381,13 +342,6 @@ class AugmontTransactionService
       _internalOpsService.logFailure(
           _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
-  }
-
-  Future<void> initiatePolling() async {
-    AppState.pollingPeriodicTimer = Timer.periodic(
-      Duration(seconds: 5),
-      this.processPolling,
-    );
   }
 
   Future<void> processPolling(Timer timer) async {
@@ -416,36 +370,54 @@ class AugmontTransactionService
       }
     }
   }
+
+  Future<CreatePaytmTransactionModel> createPaytmTransaction(
+    PaymentMode mode,
+    double amount,
+    AugmontRates augmontRates,
+    String couponCode,
+    bool skipMl,
+  ) async {
+    if (augmontRates == null || amount == null || augmontRates == null)
+      return null;
+
+    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+
+    final Map<String, dynamic> augMap = {
+      "aBlockId": augmontRates.blockId.toString(),
+      "aLockPrice": augmontRates.goldBuyPrice,
+      "aPaymode": 'PYTM',
+      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
+          augmontRates.goldBuyPrice),
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+    };
+
+    final ApiResponse<CreatePaytmTransactionModel>
+        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
+      amount,
+      augMap,
+      null,
+      couponCode ?? '',
+      skipMl ?? false,
+      InvestmentType.AUGGOLD99,
+    );
+
+    if (!paytmSubscriptionApiResponse.isSuccess()) return null;
+    this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
+    this.currentTxnAmount = amount;
+    return paytmSubscriptionApiResponse.model;
+  }
+
+  double _getGoldQuantityFromTaxedAmount(double amount, double rate) {
+    return BaseUtil.digitPrecision((amount / rate), 4, false);
+  }
+
+  double _getTaxOnAmount(double amount, double taxRate) {
+    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+  }
 }
-
-// BEER FEST SPECIFIC CODE
-
-// bool isOfferStillValid(Timestamp time) {
-//   String _timeoutMins = BaseRemoteConfig.remoteConfig
-//       .getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
-//   if (_timeoutMins == null || _timeoutMins.isEmpty) _timeoutMins = '10';
-//   int _timeout = int.tryParse(_timeoutMins);
-
-//   DateTime tTime =
-//       DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
-//   Duration difference = DateTime.now().difference(tTime);
-//   if (difference.inSeconds <= _timeout * 60) {
-//     return true;
-//   }
-//   return false;
-// }
-
-// bool getBeerTicketStatus(UserTransaction transaction) {
-//   double minBeerDeposit = double.tryParse(BaseRemoteConfig.remoteConfig
-//           .getString(BaseRemoteConfig.OCT_FEST_MIN_DEPOSIT) ??
-//       '150.0');
-//   _logger.d(_baseUtil.firstAugmontTransaction);
-//   if (_baseUtil.firstAugmontTransaction != null &&
-//       _baseUtil.firstAugmontTransaction == transaction &&
-//       transaction.amount >= minBeerDeposit &&
-//       isOfferStillValid(transaction.timestamp)) return true;
-//   return false;
-// }
 
 class GoldPurchaseDetails {
   double goldBuyAmount;
@@ -453,6 +425,7 @@ class GoldPurchaseDetails {
   String couponCode;
   bool skipMl;
   double goldInGrams;
+
   GoldPurchaseDetails({
     @required this.goldBuyAmount,
     @required this.goldRates,

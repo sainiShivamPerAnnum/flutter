@@ -5,6 +5,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/flc_actions_repo.dart';
@@ -69,7 +71,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/upi/upi_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -132,6 +134,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => UserCoinService());
   locator.registerLazySingleton(() => AugmontTransactionService());
+  locator.registerLazySingleton(() => LendboxTransactionService());
   locator.registerLazySingleton(() => TransactionHistoryService());
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
@@ -176,7 +179,7 @@ void setupLocator() {
   locator.registerFactory(() => JourneyPageViewModel());
   locator.registerFactory(() => RootViewModel());
 
-  //REST
+  // VIEW MODELS
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
   locator.registerFactory(() => UsernameInputScreenViewModel());
@@ -188,7 +191,6 @@ void setupLocator() {
   locator.registerFactory(() => BankDetailsViewModel());
   locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
-  // locator.registerFactory(() => AugmontGoldDetailsViewModel());
   locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
@@ -211,7 +213,7 @@ void setupLocator() {
   locator.registerFactory(() => OnboardingViewModel());
   locator.registerFactory(() => JourneyBannersViewModel());
   locator.registerFactory(() => FaqPageViewModel());
-  locator.registerFactory(() => UserUPIDetailsViewModel());
+  locator.registerFactory(() => LendboxBuyViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FDrawerVM());

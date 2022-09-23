@@ -104,7 +104,7 @@ class JourneyAppBar extends StatelessWidget {
                         children: [
                           JourneyAppBarAssetDetailsTile(
                             asset: Assets.digitalGoldBar,
-                            value: UserGoldQuantitySE(
+                            value: UserFundQuantitySE(
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
@@ -114,7 +114,7 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
-                            asset: Assets.stableFello,
+                            asset: Assets.felloFlo,
                             value: Text(
                               "₹ 3000",
                               style: TextStyles.sourceSansSB.body1

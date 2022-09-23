@@ -1,25 +1,21 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
-
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
-class GoldSellSuccessView extends StatelessWidget {
-  final GoldSellViewModel model;
-  final AugmontTransactionService augTxnservice;
+class GoldBuySuccessView extends StatelessWidget {
+  final _txnService = locator<AugmontTransactionService>();
 
-  const GoldSellSuccessView(
-      {Key key, @required this.model, @required this.augTxnservice})
-      : super(key: key);
+  GoldBuySuccessView({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,7 +42,7 @@ class GoldSellSuccessView extends StatelessWidget {
           ),
           Expanded(
             child: Lottie.asset(
-              Assets.goldSellCompleteLottie,
+              Assets.goldDepostSuccessLottie,
             ),
           ),
           Text(
@@ -55,7 +51,7 @@ class GoldSellSuccessView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your withdrawal was successfully processed",
+            "Your investment was successfully processed",
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(
@@ -74,7 +70,7 @@ class GoldSellSuccessView extends StatelessWidget {
               vertical: SizeConfig.padding12,
             ),
             child: Row(children: [
-              Text("Tokens Deducted", style: TextStyles.rajdhani.body1),
+              Text("Tokens Won", style: TextStyles.rajdhani.body1),
               Spacer(),
               SvgPicture.asset(
                 'assets/temp/Tokens.svg',
@@ -84,7 +80,7 @@ class GoldSellSuccessView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text((augTxnservice.currentTxnAmount.toInt()).toString(),
+              Text((_txnService.currentTxnAmount.toInt()).toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
@@ -104,17 +100,18 @@ class GoldSellSuccessView extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.padding24,
+                          left: SizeConfig.padding16,
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding16,
-                          right: SizeConfig.padding16),
+                          right: SizeConfig.padding8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Sold", style: TextStyles.sourceSans.body2),
+                          Text("Invested", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${AugmontTransactionService.currentTxnGms} gms",
-                              style: TextStyles.rajdhaniB.title4),
+                          Text(
+                              "₹ ${BaseUtil.getIntOrDouble(_txnService.currentTxnAmount)}",
+                              style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
                       ),
@@ -124,24 +121,22 @@ class GoldSellSuccessView extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.padding24,
+                          left: SizeConfig.padding8,
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding16,
-                          right: SizeConfig.padding8),
+                          right: SizeConfig.padding16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Received", style: TextStyles.sourceSans.body2),
+                          Text("Bought", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text(
-
-                              "₹ ${BaseUtil.getIntOrDouble(augTxnservice.currentTxnAmount)}",
-                              style: TextStyles.rajdhaniB.title3),
+                          Text("${AugmontTransactionService.currentTxnGms} gms",
+                              style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -176,9 +171,10 @@ class GoldSellSuccessView extends StatelessWidget {
           TextButton(
             onPressed: () {
               AppState.backButtonDispatcher.didPopRoute();
+              AppState.delegate.appState.setCurrentTabIndex = 1;
             },
             child: Text(
-              "Done",
+              "START PLAYING",
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

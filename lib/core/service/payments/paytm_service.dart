@@ -4,10 +4,9 @@ import 'dart:io';
 import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/enums/payment_mode_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
-import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
@@ -19,6 +18,8 @@ import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/base_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -47,7 +48,6 @@ const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _paytmRepo = locator<PaytmRepository>();
-  // final _augTxnService = locator<AugmontTransactionService>();
   final _getterRepo = locator<GetterRepository>();
 
   final String devMid = "qpHRfp13374268724583";
@@ -75,6 +75,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   String get nextDebitString => this._nextDebitString;
   String get processText => this._processText;
   ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
+
+  BaseTransactionService _txnService;
 
   set nextDebitString(String nextDebitString) {
     this._nextDebitString = nextDebitString;
@@ -119,6 +121,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     AmountChipsModel(order: 0, value: 750, best: false),
     AmountChipsModel(order: 0, value: 1000, best: false),
   ];
+
   //CONSTRUCTOR
   PaytmService() {
     final stage = FlavorConfig.instance.values.paytmStage;
@@ -132,14 +135,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       postPrefix = prodPostPrefix;
     }
   }
+
   //INIT
   Future init() async {
     await getActiveSubscriptionDetails();
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
       isFirstTime = await CacheManager.readCache(
-          key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
-          type: CacheType.bool);
+        key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
+        type: CacheType.bool,
+      );
     }
   }
 
@@ -157,54 +162,27 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   //TRANSACTION METHODS -- START
 
   //Initiate paytm pg transaction
-
-  Future<CreatePaytmTransactionModel> createPaytmTransaction(
-    PaymentMode mode,
-    double amount,
-    AugmontRates augmontRates,
-    String couponCode,
-    bool skipMl,
-  ) async {
-    if (augmontRates == null || amount == null || augmontRates == null)
-      return null;
-
-    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
-
-    final Map<String, dynamic> augMap = {
-      "aBlockId": augmontRates.blockId.toString(),
-      "aLockPrice": augmontRates.goldBuyPrice,
-      "aPaymode": 'PYTM',
-      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice),
-      "aTaxedGoldBalance":
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
-    };
-
-    final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
-            amount, augMap, couponCode ?? '', skipMl ?? false);
-    if (!paytmSubscriptionApiResponse.isSuccess()) return null;
-    AugmontTransactionService.currentTxnOrderId =
-        paytmSubscriptionApiResponse.model.data.orderId;
-    AugmontTransactionService.currentTxnAmount = amount;
-    return paytmSubscriptionApiResponse.model;
-  }
-
-  Future<bool> initiatePaytmPGTransaction(
-      {bool restrictAppInvoke = false,
-      CreatePaytmTransactionModel paytmSubscriptionModel}) async {
+  Future<bool> initiatePaytmPGTransaction({
+    bool restrictAppInvoke = false,
+    CreatePaytmTransactionModel paytmSubscriptionModel,
+    @required InvestmentType investmentType,
+  }) async {
     try {
+      _txnService = investmentType == InvestmentType.LENDBOXP2P
+          ? locator<LendboxTransactionService>()
+          : locator<AugmontTransactionService>();
       _logger.d("Transaction order id: ${paytmSubscriptionModel.data.txnId}");
       _logger.d("Transaction app invoke: $restrictAppInvoke");
       var response = await AllInOneSdk.startTransaction(
-          mid,
-          paytmSubscriptionModel.data.orderId,
-          AugmontTransactionService.currentTxnAmount.toString(),
-          paytmSubscriptionModel.data.temptoken,
-          paytmSubscriptionModel.data.callbackUrl,
-          isStaging,
-          restrictAppInvoke);
+        mid,
+        paytmSubscriptionModel.data.orderId,
+        _txnService.currentTxnAmount.toString(),
+        paytmSubscriptionModel.data.temptoken,
+        paytmSubscriptionModel.data.callbackUrl,
+        isStaging,
+        restrictAppInvoke,
+      );
+
       _logger.d("Transaction Response:${response.toString()}");
       return true;
     } catch (onError) {
@@ -394,14 +372,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     subscriptionFlowPageController.jumpToPage(index);
   }
 
-  double _getGoldQuantityFromTaxedAmount(double amount, double rate) {
-    return BaseUtil.digitPrecision((amount / rate), 4, false);
-  }
-
-  double _getTaxOnAmount(double amount, double taxRate) {
-    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
-  }
-
   Future<List<AmountChipsModel>> getAmountChips({@required String freq}) async {
     ApiResponse<List<AmountChipsModel>> data =
         await _getterRepo.getAmountChips(freq: freq);
@@ -447,6 +417,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     double amount,
     String orderId,
     UpiApplication upiApplication,
+    @required InvestmentType investmentType,
   }) async {
     if (url.isEmpty) {
       BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
@@ -489,9 +460,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         url = "phonepe:" + url.split(":").last;
       }
       launchUrl(Uri.parse(url)).then((value) async {
+        _txnService = investmentType == InvestmentType.LENDBOXP2P
+            ? locator<LendboxTransactionService>()
+            : locator<AugmontTransactionService>();
+
         AppState.backButtonDispatcher.didPopRoute();
-        AugmontTransactionService.isIOSTxnInProgress = true;
-        AugmontTransactionService.currentTxnAmount = amount;
+        _txnService.isIOSTxnInProgress = true;
+        _txnService.currentTxnAmount = amount;
       });
       return true;
     }

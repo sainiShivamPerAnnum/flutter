@@ -327,7 +327,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   initiateSell() async {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
-    AugmontTransactionService.currentTxnAmount = goldAmountFromGrams;
+    _augTxnService.currentTxnAmount = goldAmountFromGrams;
     AugmontTransactionService.currentTxnGms = sellGramAmount;
     isGoldSellInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);
@@ -336,10 +336,9 @@ class GoldSellViewModel extends BaseViewModel {
     isGoldSellInProgress = false;
 
     if (res)
-      _augTxnService.currentTransactionState =
-          TransactionState.ongoingTransaction;
+      _augTxnService.currentTransactionState = TransactionState.ongoing;
     else
-      _augTxnService.currentTransactionState = TransactionState.idleTrasantion;
+      _augTxnService.currentTransactionState = TransactionState.idle;
     // _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
     final totalSellAmount =
@@ -357,15 +356,12 @@ class GoldSellViewModel extends BaseViewModel {
     final response = json.decode(data);
     AppState.unblockNavigation();
     print(response['status']);
-    if (_augTxnService.currentTransactionState ==
-        TransactionState.ongoingTransaction) {
+    if (_augTxnService.currentTransactionState == TransactionState.ongoing) {
       if (response['status'] != null) {
         if (response['status'])
-          _augTxnService.currentTransactionState =
-              TransactionState.successTransaction;
+          _augTxnService.currentTransactionState = TransactionState.success;
         else {
-          _augTxnService.currentTransactionState =
-              TransactionState.idleTrasantion;
+          _augTxnService.currentTransactionState = TransactionState.idle;
           AppState.backButtonDispatcher.didPopRoute();
           BaseUtil.showNegativeAlert(
               'Sell did not complete',

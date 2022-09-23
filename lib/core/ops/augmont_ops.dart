@@ -597,7 +597,7 @@ class AugmontService extends ChangeNotifier {
 
       // BaseUtil.showNegativeAlert(title, body);
       // } else
-      _augTxnService.currentTransactionState = TransactionState.idleTrasantion;
+      _augTxnService.currentTransactionState = TransactionState.idle;
       AppState.unblockNavigation();
       if (_onSellCompleteResponse.errorMessage != null &&
           _onSellCompleteResponse.errorMessage.isNotEmpty)
@@ -717,10 +717,6 @@ class AugmontService extends ChangeNotifier {
       return null;
     }
   }
-
-  // setAugmontTxnProcessListener(ValueChanged<UserTransaction> listener) {
-  //   _augmontTxnProcessListener = listener;
-  // }
 
   completeTransaction() {
     // _baseProvider.currentAugmontTxn = null;

@@ -1,4 +1,5 @@
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UPIAppsBottomSheet extends StatelessWidget {
-  final AugmontTransactionService txnServiceInstance;
+  final BaseTransactionService txnServiceInstance;
 
   const UPIAppsBottomSheet({Key key, this.txnServiceInstance})
       : super(key: key);
@@ -110,7 +111,8 @@ class UPIAppsBottomSheet extends StatelessWidget {
                           );
                         },
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
+                          crossAxisCount: 3,
+                        ),
                       ),
                     ),
             ],

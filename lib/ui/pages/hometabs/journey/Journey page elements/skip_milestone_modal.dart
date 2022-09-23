@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -184,6 +185,8 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                       return BaseUtil().openRechargeModalSheet(
                                         amt: widget.milestone.skipCost['amt'],
                                         isSkipMl: true,
+                                        investmentType:
+                                            InvestmentType.AUGGOLD99,
                                       );
                                     },
                                     width: SizeConfig.screenWidth),

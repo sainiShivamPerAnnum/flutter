@@ -23,7 +23,8 @@ class GOWCard extends StatelessWidget {
       children: [
         GameTitleWithSubTitle(
           title: "Game of the week",
-          subtitle: "Win upto ${model?.gow?.prizeAmount}",
+
+          subtitle: "Win upto ${model.gow?.prizeAmount ?? 25000}",
         ),
         (model.isGamesListDataLoading)
             ? GameCardShimmer()

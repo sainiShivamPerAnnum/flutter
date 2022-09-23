@@ -32,13 +32,14 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.da
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/upi/upi_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
@@ -264,7 +265,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
-
+        case Pages.LendboxDetails:
+          _addPageData(LendboxDetailsView(), LendboxDetailsPageConfig);
+          break;
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
           break;
@@ -306,14 +309,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SharePriceScreenView:
           _addPageData(SharePriceScreen(), SharePriceScreenPageConfig);
           break;
-        // case Pages.WebHomeView:
-        //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
-        //   break;
-        // case Pages.WebGameView:
-        //   _addPageData(WebGameView(), WebGameViewPageConfig);
-        //   break;
-        // case Pages.PoolView:
-        //   _addPageData(PoolView(), PoolViewPageConfig);
+        case Pages.WebHomeView:
+          _addPageData(WebHomeView(), WebHomeViewPageConfig);
+          break;
+        case Pages.WebGameView:
+          _addPageData(WebGameView(), WebGameViewPageConfig);
+          break;
+
         case Pages.AutosaveDetailsView:
           _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
@@ -327,10 +329,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AutosaveTransactionsView:
           _addPageData(
               AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
-
           break;
-        case Pages.UserUpiDetailsView:
-          _addPageData(UserUPIDetailsView(), UserUpiDetailsViewPageConfig);
           break;
         case Pages.TopPlayerLeaderboard:
           _addPageData(
@@ -526,6 +525,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.LendboxDetails:
+        LendboxDetailsPageConfig.currentPageAction = action;
         break;
       case Pages.ReferralDetails:
         ReferralDetailsPageConfig.currentPageAction = action;
@@ -746,6 +748,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augDetails':
         pageConfiguration = AugmontGoldDetailsPageConfig;
         break;
+      case 'lendboxDetails':
+        pageConfiguration = LendboxDetailsPageConfig;
+        break;
       case 'kycVerify':
         pageConfiguration = KycDetailsPageConfig;
         break;
@@ -871,14 +876,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
-  // NOTE: UNCOMMENT THIS FUNCTION FOR OLD VIEW
-  // openWebGame(String game) {
-  //   AppState.delegate.appState.currentAction = PageAction(
-  //       state: PageState.addWidget,
-  //       widget: WebHomeView(game: game),
-  //       page: WebHomeViewPageConfig);
-  // }
-
   openWebGame(String game) {
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -888,34 +885,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openAppWalkthrough() {
-    // AppState.delegate.appState.currentAction = PageAction(
-    //   state: PageState.addWidget,
-    //   widget: WalkThroughPage(
-    //     lottieList: [Assets.onb1, Assets.onb2, Assets.onb3],
-    //     titleList: ["SAVE", "PLAY", "WIN"],
-    //     descList: [
-    //       "Save and invest in strong assets and earn tokens 🪙",
-    //       "Use these tokens to play fun and exciting games 🎮",
-    //       "Stand to win exclusive prizes and fun rewards 🎉"
-    //     ],
-    //   ),
-    //   page: WalkThroughConfig,
-    // );
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
       page: OnBoardingViewPageConfig,
     );
   }
-
-  // openAutosaveWalkthrough() {
-  //   AppState.delegate.appState.currentAction = PageAction(
-  //       state: PageState.addWidget,
-  //       widget: WalkThroughPage(
-
-  //       ),
-  //       page: WalkThroughConfig);
-  // }
 
   bool checkForRatingDialog() {
     bool isUserAlreadyRated =

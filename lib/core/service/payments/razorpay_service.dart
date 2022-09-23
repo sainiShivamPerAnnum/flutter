@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
+import 'package:felloapp/core/service/payments/base_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -26,14 +29,16 @@ class RazorpayService extends ChangeNotifier {
   Razorpay _razorpay;
   PaytmService _paytmService;
   PaytmRepository _paytmRepo;
-  AugmontTransactionService _augTxnService;
+  BaseTransactionService _txnService;
 
-  bool init() {
+  bool init(InvestmentType investmentType) {
     _razorpay = Razorpay();
     _logger = locator<CustomLogger>();
     _paytmService = locator<PaytmService>();
     _paytmRepo = locator<PaytmRepository>();
-    _augTxnService = locator<AugmontTransactionService>();
+    _txnService = investmentType == InvestmentType.LENDBOXP2P
+        ? locator<LendboxTransactionService>()
+        : locator<AugmontTransactionService>();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
@@ -44,7 +49,8 @@ class RazorpayService extends ChangeNotifier {
     String paymentId = response.paymentId;
     String checkoutOrderId = response.orderId;
     String paySignature = response.signature;
-    _augTxnService.initiatePolling();
+    _txnService.currentTransactionState = TransactionState.ongoing;
+    _txnService.initiatePolling();
     log.debug(
         "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
     _currentTxn.rzp[UserTransaction.subFldRzpPaymentId] = paymentId;
@@ -61,6 +67,7 @@ class RazorpayService extends ChangeNotifier {
     // if (AppState.delegate.appState.isTxnLoaderInView == true) {
     //   AppState.delegate.appState.isTxnLoaderInView = false;
     // }
+    _txnService.currentTransactionState = TransactionState.idle;
     BaseUtil.showNegativeAlert(
       'Transaction failed',
       'Your transaction was unsuccessful. Please try again',
@@ -78,42 +85,38 @@ class RazorpayService extends ChangeNotifier {
   }
 
   //generate order id // update transaction //creatre<UserTransaction> submitAu
-  Future initiateRazorpayTxn(
-      {String mobile,
-      String email,
-      double amount,
-      AugmontRates augmontRates,
-      String couponCode}) async {
-    if (!init()) return null; //initialise razorpay
+  Future initiateRazorpayTxn({
+    String mobile,
+    String email,
+    double amount,
+    Map<String, dynamic> augMap,
+    Map<String, dynamic> lbMap,
+    String couponCode,
+    @required InvestmentType investmentType,
+  }) async {
+    if (!init(investmentType)) return null; //initialise razorpay
 
-    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+    final ApiResponse<CreatePaytmTransactionModel> txnResponse =
+        await _paytmRepo.createTransaction(
+      amount,
+      augMap,
+      lbMap,
+      couponCode,
+      true,
+      investmentType,
+    );
 
-    final augMap = {
-      "aBlockId": augmontRates.blockId.toString(),
-      "aLockPrice": augmontRates.goldBuyPrice,
-      "aPaymode": 'RZP',
-      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice),
-      "aTaxedGoldBalance":
-          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
-    };
+    final txnModel = txnResponse.model;
+    print(txnResponse.model.data.orderId);
 
-    final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse =
-        await _paytmRepo.createTransaction(amount, augMap, couponCode, true);
-
-    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
-    print(paytmSubscriptionApiResponse.model.data.orderId);
-    AugmontTransactionService.currentTxnOrderId =
-        paytmSubscriptionApiResponse.model.data.txnId;
-    AugmontTransactionService.currentTxnAmount = amount;
+    _txnService.currentTxnOrderId = txnResponse.model.data.txnId;
+    _txnService.currentTxnAmount = amount;
     String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
-    var options = {
+    final options = {
       'key': _keyId,
       'amount': amount.toInt() * 100,
       'name': 'Digital Gold Purchase',
-      'order_id': paytmSubscriptionModel.data.orderId,
+      'order_id': txnModel.data.orderId,
       'description': 'GOLD',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,
@@ -129,14 +132,6 @@ class RazorpayService extends ChangeNotifier {
 
     _razorpay.open(options);
     return _currentTxn;
-  }
-
-  double _getTaxOnAmount(double amount, double taxRate) {
-    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
-  }
-
-  double _getGoldQuantityFromTaxedAmount(double amount, double rate) {
-    return BaseUtil.digitPrecision((amount / rate), 4, false);
   }
 
   void cleanListeners() {
