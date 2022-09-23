@@ -41,6 +41,7 @@ class TambolaHomeViewModel extends BaseModel {
   double cardOpacity = 1;
   GameModel game;
   List<Winners> _winners = [];
+  bool _showBuyModal = true;
 
   //Constant values
   Map<String, IconData> tambolaOdds = {
@@ -82,6 +83,12 @@ class TambolaHomeViewModel extends BaseModel {
   LeaderboardModel get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
   List<Winners> get winners => _winners;
+  get showBuyModal => _showBuyModal;
+
+  set showBuyModal(value) {
+    _showBuyModal = value;
+    notifyListeners();
+  }
 
   viewpage(int index) {
     currentPage = index;

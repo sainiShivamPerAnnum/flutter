@@ -4,12 +4,14 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/game_card_big.dart';
 import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
+import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
@@ -55,6 +57,7 @@ import 'dart:math' as math;
 //                           SizedBox(
 //                               height: SizeConfig.screenWidth * 0.1 +
 //                                   SizeConfig.viewInsets.top),
+
 //                           InkWell(
 //                             onTap: model.openGame,
 //                             child: AnimatedOpacity(
@@ -265,6 +268,13 @@ class TambolaHomeView extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: model.getLeaderboard,
           child: Scaffold(
+            appBar: FAppBar(
+              showAvatar: false,
+              showCoinBar: false,
+              showHelpButton: false,
+              title: "Tambola",
+              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+            ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
               children: [
@@ -272,10 +282,10 @@ class TambolaHomeView extends StatelessWidget {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 100,
+                      //Today and Weekly Picks
+                      TodayWeeklyPicksCard(
+                        model: model,
                       ),
-
                       //How to play
                       InfoComponent2(
                           heading: model.boxHeading,
@@ -298,6 +308,41 @@ class TambolaHomeView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class TodayWeeklyPicksCard extends StatelessWidget {
+  const TodayWeeklyPicksCard({
+    Key key,
+    @required this.model,
+  }) : super(key: key);
+
+  final TambolaHomeViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        top: SizeConfig.pageHorizontalMargins,
+        bottom: SizeConfig.pageHorizontalMargins + SizeConfig.padding16,
+      ),
+      decoration: BoxDecoration(
+        color: UiConstants.kArowButtonBackgroundColor,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(
+            SizeConfig.roundness32,
+          ),
+          bottomRight: Radius.circular(
+            SizeConfig.roundness32,
+          ),
+        ),
+      ),
+      child: PicksCardView(
+        showBuyTicketModal: (value) {
+          model.showBuyModal = value;
+        },
+      ),
     );
   }
 }
@@ -652,6 +697,7 @@ class TambolaPrize extends StatelessWidget {
           ),
         ),
         Container(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
           width: SizeConfig.screenWidth * 0.3,
           height: SizeConfig.screenWidth * 0.3,
           decoration: BoxDecoration(
