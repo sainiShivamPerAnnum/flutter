@@ -48,7 +48,7 @@ class GoldSellLoadingView extends StatelessWidget {
         Column(
           children: [
             Text(
-              "Your transaction is in progress",
+              "Your withdrawal is in progress",
               style:
                   TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
             ),
@@ -91,7 +91,7 @@ class GoldSellLoadingView extends StatelessWidget {
                     TransactionState.idleTrasantion;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
-                  AppState.screenStack.remove(AppState.screenStack.last);
+                  AppState.screenStack.removeLast();
                 }
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
@@ -126,7 +126,7 @@ class GoldSellLoadingView extends StatelessWidget {
       content: PendingDialog(
         title: "We're still processing!",
         subtitle:
-            "Your transaction is taking longer than usual. We'll get back to you in ",
+            "Your withdrawal is taking longer than usual. We'll get back to you in ",
         duration: '15 minutes',
       ),
     );

@@ -202,7 +202,7 @@ class WinViewModel extends BaseViewModel {
 
     fetchReferralCode();
     fectchBasicConstantValues();
-    _baseUtil.fetchUserAugmontDetail();
+    // _baseUtil.fetchUserAugmontDetail();
 
     _lbService.fetchReferralLeaderBoard();
 

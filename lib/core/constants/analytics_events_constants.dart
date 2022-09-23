@@ -17,6 +17,7 @@ class AnalyticsEvents {
   static const saveBalance = "Selecting Gold Balance";
   static const saveSell = "Selling Gold";
   static const sellGold = "Selling Gold Succcessful";
+  static const sellGoldReason = "Selling gold reason";
 
   // play section
   static const playSection = "Play section";

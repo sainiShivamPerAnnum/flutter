@@ -141,9 +141,11 @@ class MoreGames extends StatelessWidget {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: UiConstants.kLastUpdatedTextColor,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(SizeConfig.roundness12))),
+                                color: UiConstants.playButtonColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(SizeConfig.roundness8),
+                                ),
+                              ),
                               padding: EdgeInsets.symmetric(
                                   horizontal: SizeConfig.padding28,
                                   vertical: SizeConfig.padding12),

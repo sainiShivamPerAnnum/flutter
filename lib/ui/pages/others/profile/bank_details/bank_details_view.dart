@@ -168,7 +168,10 @@ class BankDetailsView extends StatelessWidget {
                                   btnText: 'Edit',
                                   onPressed: () {
                                     model.inEditMode = true;
-                                    model.nameFocusNode.requestFocus();
+                                    Future.delayed(Duration(milliseconds: 200),
+                                        () {
+                                      model.nameFocusNode.requestFocus();
+                                    });
                                   },
                                 ),
                         ),

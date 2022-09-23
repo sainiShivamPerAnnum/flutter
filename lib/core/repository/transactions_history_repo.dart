@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -54,6 +56,7 @@ class TransactionHistoryRepository extends BaseRepo {
       );
 
       final responseData = response["data"];
+      log("Transactions data: $responseData");
       responseData["transactions"].forEach((e) {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });

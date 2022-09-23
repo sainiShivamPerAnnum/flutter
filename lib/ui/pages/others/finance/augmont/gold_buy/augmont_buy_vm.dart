@@ -211,7 +211,7 @@ class GoldBuyViewModel extends BaseViewModel {
     getAvailableCoupons();
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     _onboardUserAutomatically(userAugmontState);
-    await _baseUtil.fetchUserAugmontDetail();
+    await _userService.fetchUserAugmontDetail();
     delayedAugmontCall();
     checkIfDepositIsLocked();
     setState(ViewState.Idle);
@@ -219,16 +219,16 @@ class GoldBuyViewModel extends BaseViewModel {
 
   //INIT CHECKS
   checkIfDepositIsLocked() {
-    if (_baseUtil.augmontDetail != null &&
-        _baseUtil.augmontDetail.depNotice != null &&
-        _baseUtil.augmontDetail.depNotice.isNotEmpty)
-      buyNotice = _baseUtil.augmontDetail.depNotice;
+    if (_userService.userAugmontDetails != null &&
+        _userService.userAugmontDetails.depNotice != null &&
+        _userService.userAugmontDetails.depNotice.isNotEmpty)
+      buyNotice = _userService.userAugmontDetails.depNotice;
   }
 
   delayedAugmontCall() async {
-    if (_baseUtil.augmontDetail == null && !_augmontSecondFetchDone) {
+    if (_userService.userAugmontDetails == null && !_augmontSecondFetchDone) {
       await Future.delayed(Duration(seconds: 2));
-      await _baseUtil.fetchUserAugmontDetail();
+      await _userService.fetchUserAugmontDetail();
       _augmontSecondFetchDone = true;
       notifyListeners();
     }
@@ -279,12 +279,12 @@ class GoldBuyViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
       return false;
     }
-    if (goldBuyAmount < 0) {
+    if (goldBuyAmount < 10) {
       showMinCapText = true;
       return false;
     }
 
-    if (_baseUtil.augmontDetail == null) {
+    if (_userService.userAugmontDetails == null) {
       BaseUtil.showNegativeAlert(
         'Deposit Failed',
         'Please try again in sometime or contact us',
@@ -292,7 +292,7 @@ class GoldBuyViewModel extends BaseViewModel {
       return false;
     }
 
-    if (_baseUtil.augmontDetail.isDepLocked) {
+    if (_userService.userAugmontDetails.isDepLocked) {
       BaseUtil.showNegativeAlert(
         'Purchase Failed',
         "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
@@ -472,9 +472,9 @@ class GoldBuyViewModel extends BaseViewModel {
     if (status == STATUS_REGISTER && userAugmontState != null) {
       augOnbRegInProgress = true;
       _logger.d("Augmont Onboarding started automagically");
-      _baseUtil.augmontDetail = await _augmontModel.createSimpleUser(
-          _userService.baseUser.mobile, userAugmontState);
-      if (_baseUtil.augmontDetail == null) {
+      _userService.setUserAugmontDetails(await _augmontModel.createSimpleUser(
+          _userService.baseUser.mobile, userAugmontState));
+      if (_userService.userAugmontDetails == null) {
         augOnbRegInProgress = false;
         augRegFailed = true;
         return;

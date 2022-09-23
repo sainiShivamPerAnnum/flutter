@@ -238,22 +238,22 @@ class BaseUtil extends ChangeNotifier {
   }
 
   openRechargeModalSheet({int amt, bool isSkipMl}) {
-    if (_userService.userJourneyStats.mlIndex == 1)
-      return BaseUtil.showNegativeAlert("Complete your profile",
-          "You can make deposits only after completing profile");
-    else
-      return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissable: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: GoldBuyView(
-          amount: amt ?? 201,
-          skipMl: isSkipMl ?? false,
-        ),
-      );
+    // if (_userService.userJourneyStats.mlIndex == 1)
+    //   return BaseUtil.showNegativeAlert("Complete your profile",
+    //       "You can make deposits only after completing profile");
+    // else
+    return BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: GoldBuyView(
+        amount: amt ?? 201,
+        skipMl: isSkipMl ?? false,
+      ),
+    );
   }
 
   bool get checkKycMissing {
@@ -699,14 +699,14 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  Future<void> fetchUserAugmontDetail() async {
-    if (augmontDetail == null) {
-      ApiResponse<UserAugmontDetail> augmontDetailResponse =
-          await _userRepo.getUserAugmontDetails();
-      if (augmontDetailResponse.code == 200)
-        augmontDetail = augmontDetailResponse.model;
-    }
-  }
+  // Future<void> fetchUserAugmontDetail() async {
+  //   if (augmontDetail == null) {
+  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
+  //         await _userRepo.getUserAugmontDetails();
+  //     if (augmontDetailResponse.code == 200)
+  //       augmontDetail = augmontDetailResponse.model;
+  //   }
+  // }
 
   Future<void> _updateAugmontBalance() async {
     if (augmontDetail == null ||

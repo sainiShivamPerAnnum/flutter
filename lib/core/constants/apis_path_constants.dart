@@ -93,7 +93,7 @@ class ApiPath {
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
-      "/user/$uid/gold/withdrawable";
+      "/user/$uid/gold/instant/withdrawable";
   static String get validateVPA => "/vpa";
   static String get vpa => "/vpa";
   static String get withdrawal => "/withdrawal";

@@ -14,6 +14,13 @@ class MiniTransactionCardViewModel extends BaseViewModel {
 
   final _txnHistoryService = locator<TransactionHistoryService>();
   AppState appState;
+  bool _isRefreshing = false;
+  bool get isRefreshing => this._isRefreshing;
+
+  set isRefreshing(bool value) {
+    this._isRefreshing = value;
+    notifyListeners();
+  }
 
   List<UserTransaction> get txnList => _txnHistoryService.txnList;
 
@@ -24,6 +31,12 @@ class MiniTransactionCardViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     await _txnHistoryService.updateTransactions();
     setState(ViewState.Idle);
+  }
+
+  refreshTransactions() async {
+    isRefreshing = true;
+    await _txnHistoryService.updateTransactions();
+    isRefreshing = false;
   }
 
   viewAllTransaction() async {

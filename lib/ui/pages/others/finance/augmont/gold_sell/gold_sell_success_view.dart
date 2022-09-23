@@ -46,7 +46,7 @@ class GoldSellSuccessView extends StatelessWidget {
           ),
           Expanded(
             child: Lottie.asset(
-              Assets.goldDepostSuccessLottie,
+              Assets.goldSellCompleteLottie,
             ),
           ),
           Text(
@@ -55,7 +55,7 @@ class GoldSellSuccessView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your investment was successfully processed",
+            "Your withdrawal was successfully processed",
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(
@@ -106,7 +106,7 @@ class GoldSellSuccessView extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.padding8,
+                          left: SizeConfig.padding24,
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding16,
                           right: SizeConfig.padding16),
@@ -126,7 +126,7 @@ class GoldSellSuccessView extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.padding16,
+                          left: SizeConfig.padding24,
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding16,
                           right: SizeConfig.padding8),
@@ -136,7 +136,7 @@ class GoldSellSuccessView extends StatelessWidget {
                           Text("Received", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(AugmontTransactionService.currentTxnAmount)}",
+                              "₹ ${BaseUtil.digitPrecision(AugmontTransactionService.currentTxnAmount, 2)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -177,10 +177,9 @@ class GoldSellSuccessView extends StatelessWidget {
           TextButton(
             onPressed: () {
               AppState.backButtonDispatcher.didPopRoute();
-              AppState.delegate.appState.setCurrentTabIndex = 1;
             },
             child: Text(
-              "START PLAYING",
+              "Done",
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),
