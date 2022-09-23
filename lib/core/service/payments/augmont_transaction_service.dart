@@ -41,9 +41,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
-class AugmontTransactionService
-    extends PropertyChangeNotifier<TransactionServiceProperties>
-    with BaseTransactionService {
+class AugmontTransactionService extends BaseTransactionService {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _userCoinService = locator<UserCoinService>();
@@ -54,30 +52,17 @@ class AugmontTransactionService
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
-  
-  static double currentTxnAmount = 0.0;
+
   static double currentTxnGms = 0.0;
-  static String currentTxnOrderId;
-  static bool isIOSTxnInProgress = false;
 
   DepositFcmResponseModel depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication upiApplication;
-  String selectedUpiApplicationName;
-  TransactionState _currentTransactionState = TransactionState.idle;
   GoldPurchaseDetails currentGoldPurchaseDetails;
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
-  TransactionState get currentTransactionState => _currentTransactionState;
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
     notifyListeners(TransactionServiceProperties.transactionStatus);
-  }
-
-  set currentTransactionState(TransactionState state) {
-    _currentTransactionState = state;
-    notifyListeners(TransactionServiceProperties.transactionState);
   }
 
   Future<void> initateAugmontTransaction(
@@ -90,60 +75,14 @@ class AugmontTransactionService
         processPaytmTransaction();
         break;
       case "PAYTM":
-        getUserUpiAppChoice();
+        getUserUpiAppChoice(this);
         break;
       case "RZP-PG":
         processRazorpayTransaction();
         break;
     }
-    
+
     return null;
-  }
-
-  getUPIApps() async {
-    try {
-      List<ApplicationMeta> allUpiApps =
-          await UpiPay.getInstalledUpiApplications(
-              statusType: UpiApplicationDiscoveryAppStatusType.all);
-      allUpiApps.forEach((element) {
-        if (element.upiApplication.appName == "Paytm" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('P')) {
-          appMetaList.add(element);
-        }
-        if (element.upiApplication.appName == "PhonePe" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('E')) {
-          appMetaList.add(element);
-        }
-        if (element.upiApplication.appName == "Google Pay" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('G')) {
-          appMetaList.add(element);
-        }
-      });
-    } catch (e) {
-      BaseUtil.showNegativeAlert(
-          "Unable to get Upi apps", "Please try again in sometime");
-    }
-  }
-
-  //5 -- UPI
-  getUserUpiAppChoice() async {
-    await getUPIApps();
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      backgroundColor: Colors.transparent,
-      isBarrierDismissable: false,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness12),
-        topRight: Radius.circular(SizeConfig.roundness12),
-      ),
-      content: UPIAppsBottomSheet(txnServiceInstance: this),
-    );
   }
 
   //6 -- UPI
@@ -170,6 +109,7 @@ class AugmontTransactionService
           orderId: createdPaytmTransactionData.data.orderId,
           upiApplication: upiApplication,
           url: deepUri,
+          investmentType: InvestmentType.AUGGOLD99,
         );
         if (res && Platform.isAndroid) initiatePolling();
         // resetBuyOptions();
@@ -243,6 +183,7 @@ class AugmontTransactionService
       bool _status = await _paytmService.initiatePaytmPGTransaction(
         paytmSubscriptionModel: createdPaytmTransactionData,
         restrictAppInvoke: FlavorConfig.isDevelopment(),
+        investmentType: InvestmentType.AUGGOLD99,
       );
 
       if (_status) {
@@ -286,7 +227,7 @@ class AugmontTransactionService
     _logger.i("Updating fcm response value. $fcmDataPayload");
     // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
     // AppState.delegate.appState.txnTimer?.cancel();
-    AppState.pollingPeriodicTimer?.cancel();
+    this.pollingPeriodicTimer?.cancel();
     _logger.d("timer cancelled");
 
     try {
@@ -403,13 +344,6 @@ class AugmontTransactionService
     }
   }
 
-  Future<void> initiatePolling() async {
-    AppState.pollingPeriodicTimer = Timer.periodic(
-      Duration(seconds: 5),
-      this.processPolling,
-    );
-  }
-
   Future<void> processPolling(Timer timer) async {
     final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
@@ -471,9 +405,8 @@ class AugmontTransactionService
     );
 
     if (!paytmSubscriptionApiResponse.isSuccess()) return null;
-    AugmontTransactionService.currentTxnOrderId =
-        paytmSubscriptionApiResponse.model.data.orderId;
-    AugmontTransactionService.currentTxnAmount = amount;
+    this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
+    this.currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;
   }
 

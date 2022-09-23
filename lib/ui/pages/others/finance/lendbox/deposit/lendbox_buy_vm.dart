@@ -21,8 +21,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   static const int STATUS_OPEN = 2;
 
   final _logger = locator<CustomLogger>();
-  final  _baseUtil = locator<BaseUtil>();
-  final  _userService = locator<UserService>();
+  final _baseUtil = locator<BaseUtil>();
+  final _userService = locator<UserService>();
   final _razorpayService = locator<RazorpayService>();
   final _txnService = locator<LendboxTransactionService>();
 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
@@ -26,11 +25,8 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
-class LendboxTransactionService
-    extends PropertyChangeNotifier<TransactionServiceProperties>
-    with BaseTransactionService {
+class LendboxTransactionService extends BaseTransactionService {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _userCoinService = locator<UserCoinService>();
@@ -42,48 +38,38 @@ class LendboxTransactionService
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
 
-  double currentTxnAmount = 0;
-  String currentTxnOrderId;
-
-  static bool isIOSTxnInProgress = false;
-
-  TransactionState _currentTransactionState = TransactionState.idle;
-  TransactionState get currentTransactionState => _currentTransactionState;
-  Timer pollingPeriodicTimer;
-
-  set currentTransactionState(TransactionState state) {
-    _currentTransactionState = state;
-    notifyListeners(TransactionServiceProperties.transactionState);
-  }
+  bool skipMl = false;
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
     this.currentTxnAmount = txnAmount;
+    this.skipMl = skipMl;
     String paymentMode = this.getPaymentMode();
 
     switch (paymentMode) {
       case "PAYTM-PG":
-        await processPaytmTransaction(skipMl);
+        await processPaytmTransaction();
         break;
-      // case "PAYTM":
-      //   getUserUpiAppChoice();
-      //   break;
-      // case "RZP-PG":
-      //   processRazorpayTransaction();
-      //   break;
+      case "PAYTM":
+        await getUserUpiAppChoice(this);
+        break;
+      case "RZP-PG":
+        await processRazorpayTransaction();
+        break;
     }
 
     return null;
   }
 
-  Future<void> processPaytmTransaction(bool skipMl) async {
+  Future<void> processPaytmTransaction() async {
     AppState.blockNavigation();
-    final CreatePaytmTransactionModel createdPaytmTransactionData =
-        await this.createPaytmTransaction(skipMl);
+    final createdPaytmTransactionData =
+        await this.createPaytmTransaction(this.skipMl);
 
     if (createdPaytmTransactionData != null) {
       bool _status = await _paytmService.initiatePaytmPGTransaction(
         paytmSubscriptionModel: createdPaytmTransactionData,
         restrictAppInvoke: FlavorConfig.isDevelopment(),
+        investmentType: InvestmentType.LENDBOXP2P,
       );
 
       currentTransactionState = TransactionState.ongoing;
@@ -132,11 +118,19 @@ class LendboxTransactionService
     return paytmSubscriptionApiResponse.model;
   }
 
-  Future<void> initiatePolling() async {
-    this.pollingPeriodicTimer = Timer.periodic(
-      Duration(seconds: 5),
-      this.processPolling,
+  Future<void> processRazorpayTransaction() async {
+    AppState.blockNavigation();
+
+    await _razorpayService.initiateRazorpayTxn(
+      amount: this.currentTxnAmount,
+      augMap: {},
+      lbMap: {},
+      email: _userService.baseUser.email,
+      mobile: _userService.baseUser.mobile,
+      investmentType: InvestmentType.LENDBOXP2P,
     );
+
+    AppState.unblockNavigation();
   }
 
   Future<void> processPolling(Timer timer) async {
@@ -167,7 +161,7 @@ class LendboxTransactionService
     }
   }
 
-  transactionResponseUpdate({String gtId, double amount}) async {
+  Future<void> transactionResponseUpdate({String gtId, double amount}) async {
     _logger.d("Polling response processing");
     try {
       if (gtId != null) {
@@ -222,5 +216,10 @@ class LendboxTransactionService
       return amount;
     else
       return amount.toInt();
+  }
+
+  @override
+  Future<void> processUpiTransaction() {
+    throw UnimplementedError();
   }
 }

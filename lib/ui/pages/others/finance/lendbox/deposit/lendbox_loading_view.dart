@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -73,7 +72,8 @@ class LendboxBuyLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _txnService.processPolling(_txnService.pollingPeriodicTimer);
+                await _txnService
+                    .processPolling(_txnService.pollingPeriodicTimer);
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
 

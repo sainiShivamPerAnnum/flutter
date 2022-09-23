@@ -271,7 +271,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   initiateSell() async {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
-    AugmontTransactionService.currentTxnAmount = goldAmountFromGrams;
+    _augTxnService.currentTxnAmount = goldAmountFromGrams;
     AugmontTransactionService.currentTxnGms = sellGramAmount;
     isGoldSellInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);

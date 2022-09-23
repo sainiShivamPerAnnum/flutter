@@ -49,8 +49,8 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!LendboxTransactionService.isIOSTxnInProgress) return;
-      LendboxTransactionService.isIOSTxnInProgress = false;
+      if (!_txnService.isIOSTxnInProgress) return;
+      _txnService.isIOSTxnInProgress = false;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);

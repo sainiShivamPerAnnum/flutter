@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
@@ -17,6 +18,8 @@ import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/base_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -72,6 +75,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   String get nextDebitString => this._nextDebitString;
   String get processText => this._processText;
   ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
+
+  BaseTransactionService _txnService;
 
   set nextDebitString(String nextDebitString) {
     this._nextDebitString = nextDebitString;
@@ -137,8 +142,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
       isFirstTime = await CacheManager.readCache(
-          key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
-          type: CacheType.bool);
+        key: CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME,
+        type: CacheType.bool,
+      );
     }
   }
 
@@ -156,16 +162,21 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   //TRANSACTION METHODS -- START
 
   //Initiate paytm pg transaction
-  Future<bool> initiatePaytmPGTransaction(
-      {bool restrictAppInvoke = false,
-      CreatePaytmTransactionModel paytmSubscriptionModel}) async {
+  Future<bool> initiatePaytmPGTransaction({
+    bool restrictAppInvoke = false,
+    CreatePaytmTransactionModel paytmSubscriptionModel,
+    @required InvestmentType investmentType,
+  }) async {
     try {
+      _txnService = investmentType == InvestmentType.LENDBOXP2P
+          ? locator<LendboxTransactionService>()
+          : locator<AugmontTransactionService>();
       _logger.d("Transaction order id: ${paytmSubscriptionModel.data.txnId}");
       _logger.d("Transaction app invoke: $restrictAppInvoke");
       var response = await AllInOneSdk.startTransaction(
         mid,
         paytmSubscriptionModel.data.orderId,
-        AugmontTransactionService.currentTxnAmount.toString(),
+        _txnService.currentTxnAmount.toString(),
         paytmSubscriptionModel.data.temptoken,
         paytmSubscriptionModel.data.callbackUrl,
         isStaging,
@@ -406,6 +417,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     double amount,
     String orderId,
     UpiApplication upiApplication,
+    @required InvestmentType investmentType,
   }) async {
     if (url.isEmpty) {
       BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
@@ -448,9 +460,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         url = "phonepe:" + url.split(":").last;
       }
       launchUrl(Uri.parse(url)).then((value) async {
+        _txnService = investmentType == InvestmentType.LENDBOXP2P
+            ? locator<LendboxTransactionService>()
+            : locator<AugmontTransactionService>();
+
         AppState.backButtonDispatcher.didPopRoute();
-        AugmontTransactionService.isIOSTxnInProgress = true;
-        AugmontTransactionService.currentTxnAmount = amount;
+        _txnService.isIOSTxnInProgress = true;
+        _txnService.currentTxnAmount = amount;
       });
       return true;
     }

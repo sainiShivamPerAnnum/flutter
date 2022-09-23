@@ -3,6 +3,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
+  final _txnService = locator<AugmontTransactionService>();
+
   GoldBuySuccessView({Key key}) : super(key: key);
 
   @override
@@ -77,9 +80,7 @@ class GoldBuySuccessView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text(
-                  (AugmontTransactionService.currentTxnAmount.toInt())
-                      .toString(),
+              Text((_txnService.currentTxnAmount.toInt()).toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
@@ -109,7 +110,7 @@ class GoldBuySuccessView extends StatelessWidget {
                           Text("Invested", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(AugmontTransactionService.currentTxnAmount)}",
+                              "₹ ${BaseUtil.getIntOrDouble(_txnService.currentTxnAmount)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],

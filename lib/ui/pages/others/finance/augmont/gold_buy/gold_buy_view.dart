@@ -47,8 +47,8 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!AugmontTransactionService.isIOSTxnInProgress) return;
-      AugmontTransactionService.isIOSTxnInProgress = false;
+      if (!_txnService.isIOSTxnInProgress) return;
+      _txnService.isIOSTxnInProgress = false;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);

@@ -64,7 +64,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
-      if (AugmontTransactionService.isIOSTxnInProgress) {
+      if (_augTxnService.isIOSTxnInProgress) {
         // TODO
         // ios transaction completed and app is in background
       } else if (source == MsgSource.Background ||

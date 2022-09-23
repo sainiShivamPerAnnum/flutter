@@ -84,9 +84,7 @@ class GoldSellSuccessView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text(
-                  (AugmontTransactionService.currentTxnAmount.toInt())
-                      .toString(),
+              Text((augTxnservice.currentTxnAmount.toInt()).toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
@@ -136,7 +134,7 @@ class GoldSellSuccessView extends StatelessWidget {
                           Text("Received", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(AugmontTransactionService.currentTxnAmount)}",
+                              "₹ ${BaseUtil.getIntOrDouble(augTxnservice.currentTxnAmount)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
