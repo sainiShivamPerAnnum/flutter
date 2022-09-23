@@ -97,26 +97,13 @@ class NotficationsPage extends StatelessWidget {
                                             .withOpacity(0.1),
                                         radius:
                                             SizeConfig.notificationAvatarRadius,
-                                        child: model.getNotificationAsset(model
-                                                    .notifications[index]
-                                                    .title) ==
-                                                Assets.logoShortform
-                                            ? Image.asset(
-                                                model.getNotificationAsset(model
-                                                    .notifications[index]
-                                                    .title),
-                                                color: UiConstants.primaryColor,
-                                                height: SizeConfig.iconSize1,
-                                                fit: BoxFit.contain,
-                                              )
-                                            : SvgPicture.asset(
-                                                model.getNotificationAsset(model
-                                                    .notifications[index]
-                                                    .title),
-                                                color: UiConstants.primaryColor,
-                                                height: SizeConfig.iconSize1,
-                                                fit: BoxFit.contain,
-                                              ),
+                                        child: SvgPicture.asset(
+                                          model.getNotificationAsset(
+                                              model.notifications[index].title),
+                                          color: UiConstants.primaryColor,
+                                          height: SizeConfig.iconSize1,
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                       SizedBox(width: SizeConfig.padding24),
                                       Expanded(

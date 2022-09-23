@@ -70,7 +70,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                         title: "Tambola",
                         actions: [
                           FelloCoinBar(
-                            svgAsset: Assets.aFelloToken,
+                            svgAsset: Assets.token,
                           ),
                           SizedBox(width: SizeConfig.padding8),
                           CircleAvatar(
@@ -276,7 +276,7 @@ class _TambolaGameViewState extends State<TambolaGameView>
                                 style: TextStyles.body3,
                               ),
                               SvgPicture.asset(
-                                Assets.tokens,
+                                Assets.token,
                                 height: SizeConfig.iconSize1,
                               ),
                             ],

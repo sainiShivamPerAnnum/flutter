@@ -2,6 +2,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -31,7 +32,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
+            SignupHeroAsset(asset: Assets.flatIsland),
             Text(
               'Get Started!',
               style: TextStyles.rajdhaniB.title2,

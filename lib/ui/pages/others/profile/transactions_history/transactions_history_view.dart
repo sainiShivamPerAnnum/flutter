@@ -109,7 +109,7 @@ class SingleTransactionView extends StatelessWidget {
                 ),
                 iconEnabledColor: UiConstants.kTextColor,
                 elevation: 0,
-                icon: SvgPicture.asset(Assets.dropDownVector),
+                icon: Icon(Icons.keyboard_arrow_down_rounded),
                 hint: Text(
                   'Type',
                   style: TextStyles.sourceSans.body4

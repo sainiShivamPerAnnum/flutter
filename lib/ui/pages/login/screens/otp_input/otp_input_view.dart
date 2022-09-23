@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -55,7 +56,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
         return Column(
           children: [
             SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
+            SignupHeroAsset(asset: Assets.flatIsland),
             Text(
               'Enter OTP',
               style: TextStyles.rajdhaniB.title2,

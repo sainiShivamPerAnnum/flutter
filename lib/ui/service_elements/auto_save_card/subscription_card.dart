@@ -233,8 +233,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     color: UiConstants
                                                         .kBackgroundColor),
                                                 child: Center(
-                                                  child: Image.asset(
-                                                    Assets.upiSvg,
+                                                  child: SvgPicture.asset(
+                                                    Assets.upiIcon,
                                                     height:
                                                         SizeConfig.padding14,
                                                     width: SizeConfig.padding14,

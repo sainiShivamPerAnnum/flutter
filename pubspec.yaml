@@ -109,15 +109,11 @@ flutter:
     - resources/public.key
     - assets/images/
     - assets/images/icons/
-    - assets/svg/userAvatars/
+    - assets/svg/
     - assets/vectors/
     - assets/vectors/icons/
-    - assets/vectors/drawer/
+    - assets/vectors/userAvatars/
     - assets/lotties/
-    - assets/videos/
-    - assets/temp/
-    - assets/svg/
-    - assets/svg/BottomNavBarIcons/
     - assets/lotties/nav/
 
 

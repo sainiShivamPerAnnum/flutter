@@ -1,6 +1,7 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -44,7 +45,7 @@ class CouponModalSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SvgPicture.asset(
-                  'assets/temp/ticket.svg',
+                  Assets.ticketTilted,
                   width: SizeConfig.iconSize0,
                   height: SizeConfig.iconSize0,
                 ),
@@ -160,7 +161,7 @@ class CouponModalSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                'assets/temp/ticket.svg',
+                Assets.ticketTilted,
                 width: SizeConfig.iconSize0,
                 height: SizeConfig.iconSize0,
                 color: UiConstants.kpurpleTicketColor,

@@ -258,7 +258,7 @@ class NewUserNavBar extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: Colors.black,
                         radius: SizeConfig.avatarRadius * 2,
-                        child: SvgPicture.asset(Assets.aFelloToken,
+                        child: SvgPicture.asset(Assets.token,
                             height: SizeConfig.padding32),
                       ),
                     ),

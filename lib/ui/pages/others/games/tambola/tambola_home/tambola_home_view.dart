@@ -158,7 +158,7 @@ class TambolaHomeView extends StatelessWidget {
                   leading: FelloAppBarBackButton(),
                   actions: [
                     FelloCoinBar(
-                      svgAsset: Assets.aFelloToken,
+                      svgAsset: Assets.token,
                     ),
                     SizedBox(width: 16),
                     NotificationButton(),

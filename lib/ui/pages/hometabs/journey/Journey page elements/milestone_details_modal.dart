@@ -301,7 +301,7 @@ class _JourneyMilestoneDetailsModalSheetState
   getLeadingAsset(String type) {
     switch (type) {
       case 'flc':
-        return Assets.aFelloToken;
+        return Assets.token;
       case 'amt':
         return Assets.moneyIcon;
       case 'rupee':

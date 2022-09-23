@@ -55,7 +55,7 @@ class GoldBuyInputView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          'assets/temp/ticket.svg',
+                          Assets.ticketTilted,
                           width: SizeConfig.iconSize0,
                           height: SizeConfig.iconSize0,
                           color: UiConstants.kpurpleTicketColor,
@@ -96,7 +96,7 @@ class GoldBuyInputView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                'assets/temp/ticket.svg',
+                                Assets.ticketTilted,
                                 width: SizeConfig.iconSize0,
                                 height: SizeConfig.iconSize0,
                               ),

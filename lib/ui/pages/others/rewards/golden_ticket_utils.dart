@@ -233,7 +233,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           Row(
             children: [
               SvgPicture.asset(
-                Assets.newTokenAsset,
+                Assets.token,
                 width: SizeConfig.padding32,
                 height: SizeConfig.padding32,
               ),
@@ -351,7 +351,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               Row(
                 children: [
                   SvgPicture.asset(
-                    Assets.newTokenAsset,
+                    Assets.token,
                     width: SizeConfig.padding24,
                     height: SizeConfig.padding24,
                   ),

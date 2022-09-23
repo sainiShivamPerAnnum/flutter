@@ -249,7 +249,7 @@ class Win extends StatelessWidget {
                                             height: 17,
                                             width: 17,
                                             child: SvgPicture.asset(
-                                              Assets.aFelloToken,
+                                              Assets.token,
                                             ),
                                           )),
                                           TextSpan(
@@ -560,7 +560,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                           height: 17,
                           width: 17,
                           child: SvgPicture.asset(
-                            Assets.aFelloToken,
+                            Assets.token,
                           ),
                         )),
                         TextSpan(

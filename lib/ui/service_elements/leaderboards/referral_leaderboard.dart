@@ -226,8 +226,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                           if (!snapshot
                                                               .hasData) {
                                                             return Image.asset(
-                                                              Assets
-                                                                  .defaultProfilePlaceholder,
+                                                              Assets.cvtar1,
                                                               width: SizeConfig
                                                                   .iconSize5,
                                                               height: SizeConfig
@@ -269,8 +268,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                                   (a, b, c) {
                                                                 return Image
                                                                     .asset(
-                                                                  Assets
-                                                                      .defaultProfilePlaceholder,
+                                                                  Assets.cvtar2,
                                                                   width: SizeConfig
                                                                       .iconSize5,
                                                                   height: SizeConfig

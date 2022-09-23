@@ -77,7 +77,7 @@ class GoldSellSuccessView extends StatelessWidget {
               Text("Tokens Deducted", style: TextStyles.rajdhani.body1),
               Spacer(),
               SvgPicture.asset(
-                'assets/temp/Tokens.svg',
+                Assets.token,
                 width: SizeConfig.padding26,
                 height: SizeConfig.padding26,
               ),
@@ -134,7 +134,6 @@ class GoldSellSuccessView extends StatelessWidget {
                           Text("Received", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-
                               "₹ ${BaseUtil.getIntOrDouble(augTxnservice.currentTxnAmount)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),

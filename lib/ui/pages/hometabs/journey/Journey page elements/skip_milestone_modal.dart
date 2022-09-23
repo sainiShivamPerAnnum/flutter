@@ -153,7 +153,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                             SizedBox(height: SizeConfig.padding6),
                             Row(
                               children: [
-                                SvgPicture.asset(Assets.tokens,
+                                SvgPicture.asset(Assets.token,
                                     height: SizeConfig.iconSize1),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(

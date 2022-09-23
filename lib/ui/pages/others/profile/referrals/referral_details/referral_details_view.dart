@@ -147,7 +147,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       height: 17,
                                       width: 17,
                                       child: SvgPicture.asset(
-                                        Assets.aFelloToken,
+                                        Assets.token,
                                       ),
                                     )),
                                     TextSpan(
@@ -465,7 +465,7 @@ class BonusLockedReferals extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
+                                          Assets.cvtar1,
                                           width: SizeConfig.iconSize5_5,
                                           height: SizeConfig.iconSize5_5,
                                         );
@@ -490,7 +490,7 @@ class BonusLockedReferals extends StatelessWidget {
                                           ),
                                           errorWidget: (a, b, c) {
                                             return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
+                                              Assets.cvtar2,
                                               width: SizeConfig.iconSize5,
                                               height: SizeConfig.iconSize5,
                                             );
@@ -626,7 +626,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
+                                          Assets.cvtar3,
                                           width: SizeConfig.iconSize5_5,
                                           height: SizeConfig.iconSize5_5,
                                         );
@@ -651,7 +651,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                           ),
                                           errorWidget: (a, b, c) {
                                             return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
+                                              Assets.cvtar4,
                                               width: SizeConfig.iconSize5,
                                               height: SizeConfig.iconSize5,
                                             );

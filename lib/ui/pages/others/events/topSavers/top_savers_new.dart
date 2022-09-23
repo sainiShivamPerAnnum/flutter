@@ -251,7 +251,7 @@ class CampaignView extends StatelessWidget {
                                                     child: Row(
                                                   children: [
                                                     SvgPicture.asset(
-                                                      Assets.rankIconAsset,
+                                                      Assets.rewardGameAsset,
                                                     ),
                                                     const SizedBox(
                                                       width: 5,
@@ -591,8 +591,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Image.asset(
-                                                  Assets
-                                                      .defaultProfilePlaceholder,
+                                                  Assets.cvtar1,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                 );
@@ -619,8 +618,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                   ),
                                                   errorWidget: (a, b, c) {
                                                     return Image.asset(
-                                                      Assets
-                                                          .defaultProfilePlaceholder,
+                                                      Assets.cvtar2,
                                                       width:
                                                           SizeConfig.iconSize5,
                                                       height:
@@ -786,8 +784,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Image.asset(
-                                                  Assets
-                                                      .defaultProfilePlaceholder,
+                                                  Assets.cvtar3,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                 );
@@ -814,8 +811,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                   ),
                                                   errorWidget: (a, b, c) {
                                                     return Image.asset(
-                                                      Assets
-                                                          .defaultProfilePlaceholder,
+                                                      Assets.cvtar4,
                                                       width:
                                                           SizeConfig.iconSize5,
                                                       height:

@@ -121,7 +121,7 @@ class MoreGames extends StatelessWidget {
                           Row(
                             children: [
                               SvgPicture.asset(
-                                Assets.aFelloToken,
+                                Assets.token,
                                 height: SizeConfig.padding20,
                               ),
                               SizedBox(width: SizeConfig.padding6),

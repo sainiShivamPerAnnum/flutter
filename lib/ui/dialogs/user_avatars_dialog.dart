@@ -85,7 +85,7 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
                           ),
                           shape: BoxShape.circle),
                       child: SvgPicture.asset(
-                        "assets/svg/userAvatars/AV${i + 1}.svg",
+                        "assets/vectors/userAvatars/AV${i + 1}.svg",
                         fit: BoxFit.cover,
                       ),
                     ),
