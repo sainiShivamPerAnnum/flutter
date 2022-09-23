@@ -38,6 +38,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
+const String LendboxDetailsPath = '/lendboxDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -103,12 +104,12 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-
   TxnHistory,
   KycDetails,
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
+  LendboxDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -415,6 +416,13 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   path: AugmontGoldDetailsPath,
   uiPage: Pages.AugGoldDetails,
   name: 'About Digital Gold Screen',
+);
+
+PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+  key: 'lendboxDetails',
+  path: LendboxDetailsPath,
+  uiPage: Pages.LendboxDetails,
+  name: 'About Fello Flo Screen',
 );
 
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(

@@ -3,36 +3,28 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
-
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
-class GoldSellLoadingView extends StatelessWidget {
-  final GoldSellViewModel model;
-  final AugmontTransactionService augTxnservice;
-  final _augTxnService = locator<AugmontTransactionService>();
+class LendboxBuyLoadingView extends StatelessWidget {
+  final _txnService = locator<LendboxTransactionService>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView(
-      {Key key, @required this.model, @required this.augTxnservice})
-      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.padding32),
-        Text('Digital Gold', style: TextStyles.rajdhaniSB.body2),
+        Text('Fello Flo', style: TextStyles.rajdhaniSB.body2),
         SizedBox(
           height: SizeConfig.padding12,
           width: SizeConfig.screenWidth,
@@ -48,7 +40,7 @@ class GoldSellLoadingView extends StatelessWidget {
         Column(
           children: [
             Text(
-              "Your withdrawal is in progress",
+              "Your transaction is in progress",
               style:
                   TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
             ),
@@ -80,17 +72,17 @@ class GoldSellLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // await _augTxnService
-                //     .processPolling(AppState.pollingPeriodicTimer);
-                // if (_augTxnService.currentTransactionState !=
-                //     TransactionState.ongoing) return;
+                await _txnService
+                    .processPolling(_txnService.pollingPeriodicTimer);
+                if (_txnService.currentTransactionState !=
+                    TransactionState.ongoing) return;
 
-                // AppState.pollingPeriodicTimer?.cancel();
+                _txnService.pollingPeriodicTimer?.cancel();
 
-                _augTxnService.currentTransactionState = TransactionState.idle;
+                _txnService.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
-                  AppState.screenStack.removeLast();
+                  AppState.screenStack.remove(AppState.screenStack.last);
                 }
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
@@ -125,7 +117,7 @@ class GoldSellLoadingView extends StatelessWidget {
       content: PendingDialog(
         title: "We're still processing!",
         subtitle:
-            "Your withdrawal is taking longer than usual. We'll get back to you in ",
+            "Your transaction is taking longer than usual. We'll get back to you in ",
         duration: '15 minutes',
       ),
     );

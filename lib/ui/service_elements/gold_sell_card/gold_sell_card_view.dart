@@ -23,7 +23,7 @@ class GoldSellCardView extends StatelessWidget {
         SellServiceProperties.augmontSellDisabled,
         SellServiceProperties.bankDetailsVerified,
         SellServiceProperties.kycVerified,
-        SellServiceProperties.ongoingTransaction,
+        SellServiceProperties.ongoing,
       ],
       builder: (ctx, sellService, child) =>
           //  BaseView<GoldSellCardViewModel>(

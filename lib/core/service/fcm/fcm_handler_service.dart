@@ -64,7 +64,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
-      if (AugmontTransactionService.isIOSTxnInProgress) {
+      if (_augTxnService.isIOSTxnInProgress) {
         // TODO
         // ios transaction completed and app is in background
       } else if (source == MsgSource.Background ||
@@ -80,8 +80,8 @@ class FcmHandler extends ChangeNotifier {
       showSnackbar = false;
       switch (command) {
         case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          if (_augTxnService.currentTransactionState ==
-              TransactionState.idleTrasantion) showSnackbar = true;
+          if (_augTxnService.currentTransactionState == TransactionState.idle)
+            showSnackbar = true;
           _augTxnService.fcmTransactionResponseUpdate(data['payload']);
           break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:

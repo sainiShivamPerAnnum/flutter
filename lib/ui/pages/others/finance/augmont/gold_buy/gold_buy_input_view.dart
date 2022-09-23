@@ -2,7 +2,6 @@ import "dart:math" as math;
 
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
@@ -368,10 +367,10 @@ class EnterAmountView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              model.amoutChip(0),
-              model.amoutChip(1),
-              model.amoutChip(2),
-              model.amoutChip(3),
+              model.amountChip(0),
+              model.amountChip(1),
+              model.amountChip(2),
+              model.amountChip(3),
             ],
           ),
           SizedBox(

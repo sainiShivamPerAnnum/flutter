@@ -76,14 +76,13 @@ class GoldBuyLoadingView extends StatelessWidget {
               ),
               onEnd: () async {
                 await _augTxnService
-                    .processPolling(AppState.pollingPeriodicTimer);
+                    .processPolling(_augTxnService.pollingPeriodicTimer);
                 if (_augTxnService.currentTransactionState !=
-                    TransactionState.ongoingTransaction) return;
+                    TransactionState.ongoing) return;
 
-                AppState.pollingPeriodicTimer?.cancel();
+                _augTxnService.pollingPeriodicTimer?.cancel();
 
-                _augTxnService.currentTransactionState =
-                    TransactionState.idleTrasantion;
+                _augTxnService.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
                   AppState.screenStack.remove(AppState.screenStack.last);

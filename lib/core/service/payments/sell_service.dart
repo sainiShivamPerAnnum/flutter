@@ -152,14 +152,4 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     return false;
   }
 
-  // updateSellButtonDetails() async {
-  //   _isKYCVerified = isKYCVerified ?? false;
-  //   _isVPAVerified = isVPAVerified ?? false;
-  //   if (withdrawableQnt <= nonWithdrawableQnt) {
-  //     _isLockInReached = true;
-  //   }
-  //   _isGoldSaleActive = _userService.userAugmontDetails?.isSellLocked ?? false;
-  //   _isOngoingTransaction = isOngoingTransaction ?? false;
-  //   notifyListeners();
-  // }
 }

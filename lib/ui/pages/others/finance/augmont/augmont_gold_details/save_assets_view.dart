@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
@@ -135,7 +136,7 @@ class GoldAssetCard extends StatelessWidget {
                                   ),
                                   Column(
                                     children: [
-                                      UserGoldQuantitySE(
+                                      UserFundQuantitySE(
                                         style: TextStyles.sourceSans.body0
                                             .colour(Colors.white),
                                       ),
@@ -176,7 +177,8 @@ class GoldAssetCard extends StatelessWidget {
                             ),
                             CustomSaveButton(
                               onTap: () {
-                                return BaseUtil().openRechargeModalSheet();
+                                return BaseUtil().openRechargeModalSheet(
+                                    investmentType: InvestmentType.AUGGOLD99);
                               },
                               title: 'Save',
                               isFullScreen: true,

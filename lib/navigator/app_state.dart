@@ -35,7 +35,6 @@ class AppState extends ChangeNotifier {
   // Future _txnFunction;
   Timer _txnTimer;
   Future _txnFunction;
-  static Timer pollingPeriodicTimer;
 
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();

@@ -124,7 +124,7 @@ class Assets {
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String processing = "assets/vectors/processing.svg";
   static final String digitalGoldBar = 'assets/vectors/gold_bar.webp';
-  static final String stableFello = 'assets/vectors/stable_fello.webp';
+  static final String felloFlo = 'assets/vectors/stable_fello.webp';
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
   static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';
