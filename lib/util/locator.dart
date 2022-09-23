@@ -67,7 +67,6 @@ import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
@@ -83,7 +82,6 @@ import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
