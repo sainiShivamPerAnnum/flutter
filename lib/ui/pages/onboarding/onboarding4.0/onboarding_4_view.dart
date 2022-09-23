@@ -39,7 +39,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
       () {
         WidgetsBinding.instance.addPostFrameCallback(
           (timeStamp) {
-            controller.animateTo(0.25);
+            controller.animateTo(0.26);
           },
         );
       },

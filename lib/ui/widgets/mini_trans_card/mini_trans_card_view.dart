@@ -1,14 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
@@ -17,6 +12,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -59,10 +55,26 @@ class MiniTransactionCard extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
-                                    height: SizeConfig.padding24,
-                                  ),
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: [
                                   TitleSubtitleContainer(title: 'Transactions'),
+                                  // model.isRefreshing
+                                  //     ? SpinKitCircle(
+                                  //         color: UiConstants.primaryColor,
+                                  //         size: SizeConfig.iconSize0)
+                                  //     : IconButton(
+                                  //         icon: Icon(
+                                  //           Icons.refresh,
+                                  //           color: UiConstants.kTextColor,
+                                  //           size: SizeConfig.iconSize0,
+                                  //         ),
+                                  //         onPressed:
+                                  //             model.refreshTransactions,
+                                  //       )
+                                  //   ],
+                                  // ),
                                   Column(
                                     children: List.generate(
                                       m.txnList.length < 4
@@ -70,6 +82,8 @@ class MiniTransactionCard extends StatelessWidget {
                                           : 3,
                                       (i) {
                                         return ListTile(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.padding26),
                                           onTap: () {
                                             Haptic.vibrate();
                                             BaseUtil.openModalBottomSheet(

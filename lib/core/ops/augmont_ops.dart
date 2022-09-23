@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
@@ -466,7 +467,8 @@ class AugmontService extends ChangeNotifier {
 
   ///submit gold purchase augmont api
   ///update object
-  initiateWithdrawal(AugmontRates sellRates, double quantity) async {
+  Future<bool> initiateWithdrawal(
+      AugmontRates sellRates, double quantity) async {
     if (!isInit()) await _init();
 
     // if (_baseProvider.augmontDetail == null ||
@@ -529,16 +531,17 @@ class AugmontService extends ChangeNotifier {
 
     // bool _successFlag = true;
     if (_onSellCompleteResponse.code == 200) {
-      AppState.delegate.appState.isTxnLoaderInView = true;
-      AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
-        if (AppState.delegate.appState.isTxnLoaderInView == true) {
-          AppState.delegate.appState.isTxnLoaderInView = false;
-          showTransactionPendingDialog();
-        }
+      return true;
+      // AppState.delegate.appState.isTxnLoaderInView = true;
+      // AppState.delegate.appState.txnTimer = Timer(Duration(seconds: 30), () {
+      //   if (AppState.delegate.appState.isTxnLoaderInView == true) {
+      //     AppState.delegate.appState.isTxnLoaderInView = false;
+      //     showTransactionPendingDialog();
+      //   }
 
-        AppState.delegate.appState.txnTimer.cancel();
-        _logger.d("timer cancelled");
-      });
+      //   AppState.delegate.appState.txnTimer.cancel();
+      //   _logger.d("timer cancelled");
+      // });
 
       // try {
       //   _baseProvider.currentAugmontTxn.tranStatus =
@@ -594,6 +597,8 @@ class AugmontService extends ChangeNotifier {
 
       // BaseUtil.showNegativeAlert(title, body);
       // } else
+      _augTxnService.currentTransactionState = TransactionState.idleTrasantion;
+      AppState.unblockNavigation();
       if (_onSellCompleteResponse.errorMessage != null &&
           _onSellCompleteResponse.errorMessage.isNotEmpty)
         BaseUtil.showNegativeAlert(
@@ -608,6 +613,7 @@ class AugmontService extends ChangeNotifier {
             _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
       AppState.backButtonDispatcher.didPopRoute();
+      return false;
     }
   }
 

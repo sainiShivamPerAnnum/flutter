@@ -53,6 +53,10 @@ class GoldSellView extends StatelessWidget {
                 },
                 child: BaseView<GoldSellViewModel>(
                   onModelReady: (model) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      txnService.currentTransactionState =
+                          TransactionState.idleTrasantion;
+                    });
                     model.init();
                   },
                   onModelDispose: (model) {},
@@ -69,8 +73,7 @@ class GoldSellView extends StatelessWidget {
   Widget _getView(
       AugmontTransactionService txnService, GoldSellViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      // return GoldSellInputView(model: model, augTxnservice: txnService);
-      GoldSellLoadingView(model: model, augTxnservice: txnService);
+      return GoldSellInputView(model: model, augTxnservice: txnService);
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
       return GoldSellLoadingView(model: model, augTxnservice: txnService);
@@ -83,7 +86,7 @@ class GoldSellView extends StatelessWidget {
 
   double _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idleTrasantion) {
-      return SizeConfig.screenHeight * 0.9;
+      return SizeConfig.screenHeight * 0.8;
     } else if (txnService.currentTransactionState ==
         TransactionState.ongoingTransaction) {
       return SizeConfig.screenHeight * 0.95;

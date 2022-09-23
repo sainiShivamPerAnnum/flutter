@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
+import 'package:felloapp/core/model/withdrawable_gold_details_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -16,10 +17,13 @@ class PaymentRepository extends BaseRepo {
 
   final UserService _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  Future<ApiResponse<Map<String, dynamic>>>
+  Future<ApiResponse<WithdrawableGoldResponseModel>>
       getWithdrawableAugGoldQuantity() async {
     try {
       String withdrawableQtyResponse = "";
+      double balance = 0;
+      double lockedQuantity = 0;
+      double quantity = 0;
       final token = await getBearerToken();
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
@@ -28,25 +32,17 @@ class PaymentRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
         token: token,
       );
+      WithdrawableGoldResponseModel responseModel =
+          WithdrawableGoldResponseModel.fromMap(quantityResponse);
 
-      final quantity = quantityResponse["data"]["quantity"].toDouble();
-
-      if (quantityResponse["data"]["lockedQuantity"] != null &&
-          quantityResponse["data"]["lockedQuantity"] != 0)
-        withdrawableQtyResponse = quantityResponse["message"];
-
-      // if (quantityResponse["data"]["vpa"] != null &&
-      //     quantityResponse["data"]["vpa"].toString().isNotEmpty) {
-      //   // _userService.setMyUpiId(quantityResponse["data"]["vpa"]);
-      //   _baseUtil.isUpiInfoMissing = false;
-      // }
-
-      return ApiResponse(
-          model: {"quantity": quantity, "message": withdrawableQtyResponse},
-          code: 200);
+      return ApiResponse(model: responseModel, code: 200);
+    } on BadRequestException catch (e) {
+      logger.e(e.toString());
+      BaseUtil.showNegativeAlert(
+          e.toString() ?? "Unable to fetch gold details", "Please try again");
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch QUNTITY", 400);
+      return ApiResponse.withError("Unable to fetch quantity", 400);
     }
   }
 
@@ -100,8 +96,11 @@ class PaymentRepository extends BaseRepo {
         token: token,
       );
       final Map responseData = response["data"];
-      final BankAccountDetailsModel bankAccountDetails =
-          BankAccountDetailsModel.fromMap(responseData);
+      BankAccountDetailsModel bankAccountDetails;
+      if (responseData != null) {
+        bankAccountDetails = BankAccountDetailsModel.fromMap(responseData);
+      }
+
       return ApiResponse(model: bankAccountDetails, code: 200);
     } catch (e) {
       logger.e(e.toString());

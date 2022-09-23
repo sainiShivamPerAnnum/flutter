@@ -14,8 +14,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
+import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_input_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
@@ -109,7 +109,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   init() {
-    _baseUtil.fetchUserAugmontDetail();
+    // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
     getCampaignEvents();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

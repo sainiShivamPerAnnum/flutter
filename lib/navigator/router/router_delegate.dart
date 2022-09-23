@@ -14,7 +14,7 @@ import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/help_and_support/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
@@ -28,7 +28,6 @@ import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
@@ -266,9 +265,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
 
-        case Pages.AugGoldDetails:
-          _addPageData(AugmontGoldDetailsView(), AugmontGoldDetailsPageConfig);
-          break;
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
           break;

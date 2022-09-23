@@ -11,7 +11,7 @@ class UiConstants {
   static final Color felloBlue = const Color(0xff26A6F4);
   static final Color autosaveColor = const Color(0xff6b7AA1);
   static final Color gameCardColor = const Color(0xff39393C);
-
+  static final Color playButtonColor = const Color(0xff5A5A5D);
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color(0XFF02484D);
   static final Color darkPrimaryColor2 = const Color(0XFF1B262C);

@@ -112,7 +112,7 @@ class JourneyPageViewModel extends BaseViewModel {
       _journeyService.placeAvatarAtTheCurrentMileStone();
     }
 
-    _journeyService.mainController = ScrollController(initialScrollOffset: 400);
+    _journeyService.mainController = ScrollController(initialScrollOffset: 600);
     isLoading = false;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       if (_journeyService.avatarRemoteMlIndex < 3) {

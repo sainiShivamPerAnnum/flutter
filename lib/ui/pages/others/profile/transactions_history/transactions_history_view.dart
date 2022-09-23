@@ -368,6 +368,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     child: Container(
                         height: SizeConfig.padding24,
                         width: SizeConfig.padding44,
+                        color: Colors.transparent,
                         child: Text('Single',
                             style: TextStyles.sourceSansSB.body2))),
                 SizedBox(
@@ -383,6 +384,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     child: Container(
                         height: SizeConfig.padding24,
                         width: SizeConfig.padding32,
+                        color: Colors.transparent,
                         child:
                             Text('SIP', style: TextStyles.sourceSansSB.body2))),
               ],

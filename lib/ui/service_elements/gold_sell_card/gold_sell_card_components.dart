@@ -1,5 +1,4 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/augmont_gold_details_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -139,7 +138,7 @@ class SellCardInfoStrips extends StatelessWidget {
   final Color textColor;
   const SellCardInfoStrips(
       {Key key,
-      @required this.leadingIcon,
+      this.leadingIcon,
       @required this.content,
       this.textColor,
       this.backgroundColor})
@@ -163,7 +162,8 @@ class SellCardInfoStrips extends StatelessWidget {
       ),
       child: Row(
         children: [
-          leadingIcon,
+          leadingIcon ??
+              Icon(Icons.warning_amber_rounded, color: UiConstants.kTextColor),
           SizedBox(width: SizeConfig.padding16),
           Expanded(
             child: Text(

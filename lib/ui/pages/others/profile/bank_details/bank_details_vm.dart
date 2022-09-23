@@ -2,33 +2,20 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
-import 'package:felloapp/core/model/transfer_amount_api_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
-import 'package:felloapp/core/model/verify_amount_api_response_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
-import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/payments/sell_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsViewModel extends BaseViewModel {
   final BaseAnalyticsService _analyticsService = locator<AnalyticsService>();
-  final BankingRepository _bankingRepo = locator<BankingRepository>();
-  final CustomLogger _logger = locator<CustomLogger>();
-  final UserService _userService = locator<UserService>();
   final SellService _sellService = locator<SellService>();
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final formKey = GlobalKey<FormState>();

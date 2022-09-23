@@ -38,7 +38,6 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   bool _isKYCVerified = false;
   bool _isBankDetailsAdded = false;
-  bool _isOngoingTransaction = false;
   bool _isSellButtonVisible = false;
   bool _isLockInReached = false;
   bool _isSellLocked = false;
@@ -53,7 +52,6 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
-  bool get isOngoingTransaction => _isOngoingTransaction;
   bool get isSellButtonVisible => _isSellButtonVisible;
   get sellNotice => this._sellNotice;
   get isSellLocked => this._isSellLocked;
@@ -66,11 +64,6 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   set isBankDetailsAdded(bool val) {
     _isBankDetailsAdded = val;
     notifyListeners(SellServiceProperties.bankDetailsVerified);
-  }
-
-  set setOngoingTransaction(bool val) {
-    _isOngoingTransaction = val;
-    notifyListeners(SellServiceProperties.ongoingTransaction);
   }
 
   set sellNotice(value) {
@@ -102,12 +95,12 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
     await checkForUserPanDetails();
     verifyKYCStatus();
     verifyBankDetails();
-    verifyOngoingTransaction();
     checkForSellNotice();
     checkIfSellIsLocked();
   }
 
   checkForUserBankAccountDetails() async {
+    if (activeBankAccountDetails != null) return;
     final res = await _paymentRepo.getActiveBankAccountDetails();
     if (res.isSuccess()) {
       activeBankAccountDetails = res.model;
@@ -150,22 +143,12 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
       sellNotice = _userService.userAugmontDetails.sellNotice;
   }
 
-  verifyOngoingTransaction() async {
-    await _txnHistoryService.updateTransactions();
-    if (_txnHistoryService.txnList != null &&
-        _txnHistoryService.txnList.length > 0) {
-      UserTransaction ongoingTxn = _txnHistoryService.txnList.firstWhere(
-          (element) =>
-              element.subType == 'WITHDRAWL' &&
-              element.tranStatus != "COMPLETE", orElse: () {
-        return null;
-      });
-      setOngoingTransaction = ongoingTxn != null ? true : false;
-    }
-  }
-
   bool getButtonAvailibility() {
-    if (isKYCVerified && isBankDetailsAdded && !isSellLocked) return true;
+    if (isKYCVerified &&
+        isBankDetailsAdded &&
+        !isSellLocked &&
+        userPan != null &&
+        activeBankAccountDetails != null) return true;
     return false;
   }
 
@@ -175,7 +158,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   //   if (withdrawableQnt <= nonWithdrawableQnt) {
   //     _isLockInReached = true;
   //   }
-  //   _isGoldSaleActive = _baseUtil.augmontDetail?.isSellLocked ?? false;
+  //   _isGoldSaleActive = _userService.userAugmontDetails?.isSellLocked ?? false;
   //   _isOngoingTransaction = isOngoingTransaction ?? false;
   //   notifyListeners();
   // }
