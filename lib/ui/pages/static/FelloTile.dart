@@ -161,8 +161,6 @@ class FelloBriefTile extends StatelessWidget {
                         SizedBox(height: 2),
                       ],
                     ),
-                    // Lottie.asset("assets/lotties/instant.json",
-                    //     height: SizeConfig.body1),
                   ])
               ],
             )),

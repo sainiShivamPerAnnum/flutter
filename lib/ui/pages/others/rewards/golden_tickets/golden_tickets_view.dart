@@ -39,7 +39,7 @@ class GoldenTicketsView extends StatelessWidget {
                 AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
               if (snapshot.hasError)
                 return new NoRecordDisplayWidget(
-                  asset: "Assets.badticket.png",
+                  assetLottie: Assets.noData,
                   text: "Unable to load your tickets at the moment",
                 );
               switch (snapshot.connectionState) {

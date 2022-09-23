@@ -4,7 +4,6 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_part
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_win.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/processing.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -51,40 +50,38 @@ class _WeeklyResultState extends State<WeeklyResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomeBackground(
-        child: Column(
-          children: [
-            FelloAppBar(
-              leading: FelloAppBarBackButton(
-                onBackPress: showBack == true
-                    ? () => AppState.backButtonDispatcher.didPopRoute()
-                    : () {},
-              ),
-              title: showBack == true ? "Tambola" : "Processing",
+      body: Column(
+        children: [
+          FelloAppBar(
+            leading: FelloAppBarBackButton(
+              onBackPress: showBack == true
+                  ? () => AppState.backButtonDispatcher.didPopRoute()
+                  : () {},
             ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.padding40),
-                    topRight: Radius.circular(SizeConfig.padding40),
-                  ),
-                  color: Colors.white,
+            title: showBack == true ? "Tambola" : "Processing",
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.padding40),
+                  topRight: Radius.circular(SizeConfig.padding40),
                 ),
-                child: PageView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: _pageController,
-                  children: [
-                    const PrizeProcessing(),
-                    const Loser(),
-                    PrizeWin(winningsMap: widget.winningsmap),
-                    PrizePWin(winningsMap: widget.winningsmap)
-                  ],
-                ),
+                color: Colors.white,
+              ),
+              child: PageView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: _pageController,
+                children: [
+                  const PrizeProcessing(),
+                  const Loser(),
+                  PrizeWin(winningsMap: widget.winningsmap),
+                  PrizePWin(winningsMap: widget.winningsmap)
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

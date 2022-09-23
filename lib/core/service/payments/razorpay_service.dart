@@ -91,6 +91,7 @@ class RazorpayService extends ChangeNotifier {
     double amount,
     Map<String, dynamic> augMap,
     Map<String, dynamic> lbMap,
+    bool skipMl,
     String couponCode,
     @required InvestmentType investmentType,
   }) async {
@@ -102,7 +103,7 @@ class RazorpayService extends ChangeNotifier {
       augMap,
       lbMap,
       couponCode,
-      true,
+      skipMl,
       investmentType,
     );
 

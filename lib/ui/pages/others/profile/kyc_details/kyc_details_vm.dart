@@ -186,18 +186,7 @@ class KYCDetailsViewModel extends BaseViewModel {
         }
       } else {
         isUpadtingKycDetails = false;
-        // if (veriDetails['fail_code'] == 0) {
-        //   BaseUtil.openDialog(
-        //     addToScreenStack: true,
-        //     content: MoreInfoDialog(
-        //       text: veriDetails['reason'],
-        //       imagePath: Assets.dummyPanCardShowNumber,
-        //       title: 'Invalid Details',
-        //     ),
-        //     hapticVibrate: true,
-        //     isBarrierDismissable: false,
-        //   );
-        // } else
+
         BaseUtil.showNegativeAlert(
             'Registration failed', response.errorMessage ?? 'Please try again');
 

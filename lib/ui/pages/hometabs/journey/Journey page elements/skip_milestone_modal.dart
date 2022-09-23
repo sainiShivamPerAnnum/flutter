@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -29,6 +30,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   final GoldenTicketRepository _goldenTicketRepo =
       locator<GoldenTicketRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
 
   get skippingInProgress => this._skippingInProgress;
@@ -44,6 +46,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
     skippingInProgress = true;
     final res = await _goldenTicketRepo.skipMilestone();
     if (res.isSuccess()) {
+      _userCoinService.getUserCoinBalance();
       skippingInProgress = false;
       AppState.screenStack.removeLast();
       while (AppState.screenStack.length > 1)

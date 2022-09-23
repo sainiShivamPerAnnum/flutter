@@ -85,8 +85,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get hasNewNotifications => _hasNewNotifications;
   UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
 
-  FocusScopeNode buyFieldFocusNode = FocusScopeNode();
-
   set baseUser(baseUser) {
     _baseUser = baseUser;
   }

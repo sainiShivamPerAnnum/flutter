@@ -141,32 +141,6 @@ class SubscriptionCardViewModel extends BaseViewModel {
     }
   }
 
-  getImage(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return Assets.preautosave;
-    }
-    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return Assets.preautosave;
-    } else {
-      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return Assets.postautosave;
-      }
-      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
-          return Assets.preautosave;
-        else {
-          if (subscription.resumeDate.isEmpty)
-            return Assets.preautosave;
-          else
-            return Assets.autopause;
-        }
-      }
-      return Assets.preautosave;
-    }
-  }
-
   getFreq(String freq) {
     if (freq == "DAILY") return "/day";
     if (freq == "WEEKLY") return "/week";

@@ -276,11 +276,6 @@ class GoldenTicketService extends ChangeNotifier {
                   topLeft: Radius.circular(SizeConfig.roundness40),
                   topRight: Radius.circular(SizeConfig.roundness40),
                 ),
-                image: DecorationImage(
-                  alignment: Alignment.topCenter,
-                  image: AssetImage(Assets.splashBackground),
-                  fit: BoxFit.fitWidth,
-                ),
               ),
               child: Padding(
                 padding: EdgeInsets.only(
@@ -289,7 +284,7 @@ class GoldenTicketService extends ChangeNotifier {
                   right: SizeConfig.pageHorizontalMargins,
                 ),
                 child: Image.asset(
-                  Assets.preautosave,
+                  Assets.preAutosave,
                   height: SizeConfig.screenHeight * 0.2,
                 ),
               ),

@@ -8,6 +8,8 @@ class AnalyticsEvents {
   static const signupComplete = "Completed Signup";
   static const termsAndConditions = "Terms And Conditions";
 
+  // Journey section
+  static const journeySection = "Journey Section";
   // save section
   static const saveSection = "Save Section";
   static const saveBuy = "Select Buy Digital Gold";

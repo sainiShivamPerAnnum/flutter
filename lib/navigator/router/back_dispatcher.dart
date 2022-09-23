@@ -68,13 +68,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (AppState.delegate.appState.isTxnLoaderInView) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
-    Future.delayed(Duration(milliseconds: 20), () {
-      if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
-          _userService.buyFieldFocusNode.hasFocus) {
-        logger.d("field has focus");
-        FocusManager.instance.primaryFocus.unfocus();
-      }
-    });
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
         AppState.screenStack.last == ScreenItem.modalsheet) {

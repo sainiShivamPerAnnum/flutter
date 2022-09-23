@@ -686,36 +686,6 @@ class WinViewModel extends BaseViewModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
-  openVoucherModal(
-    String asset,
-    String title,
-    String subtitle,
-    Color color,
-    bool commingsoon,
-    List<String> instructions,
-  ) {
-    if (Platform.isIOS && commingsoon)
-      return;
-    else
-      return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        content: VoucherModal(
-          color: color,
-          asset: asset,
-          commingSoon: commingsoon,
-          title: title,
-          subtitle: subtitle,
-          instructions: instructions,
-        ),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding24),
-            topRight: Radius.circular(SizeConfig.padding24)),
-        // backgroundColor: Color(0xffFFDBF6),
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-      );
-  }
-
   double calculateFillHeight(
       double winningAmount, double containerHeight, int redeemAmount) {
     double fillPercent = (winningAmount / redeemAmount) * 100;

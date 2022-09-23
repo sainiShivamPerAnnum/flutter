@@ -1,7 +1,6 @@
 //Project Imports
-import 'dart:io';
-
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -13,24 +12,16 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
-//Pub Imports
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key key}) : super(key: key);
@@ -78,109 +69,106 @@ class _SupportPageState extends State<SupportPage> {
       init();
     }
     return Scaffold(
-      body: HomeBackground(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                FelloAppBar(
-                  leading: FelloAppBarBackButton(),
-                  title: "Help & Support",
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                      ),
-                      color: Colors.white,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              FelloAppBar(
+                leading: FelloAppBarBackButton(),
+                title: "Help & Support",
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
                     ),
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: [
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsCustomerService,
-                          title: "Contact Us",
-                          onTap: () {
-                            Haptic.vibrate();
+                    color: Colors.white,
+                  ),
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      FelloBriefTile(
+                        leadingAsset: Assets.hsCustomerService,
+                        title: "Contact Us",
+                        onTap: () {
+                          Haptic.vibrate();
 
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: FreshDeskHelpPageConfig);
-                          },
-                        ),
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsFaqs,
-                          title: "FAQs",
-                          onTap: () {
-                            Haptic.vibrate();
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage, page: FaqPageConfig);
-                          },
-                        ),
-                        FelloBriefTile(
-                          leadingAsset: Assets.hsFdbk,
-                          title: "Feedback",
-                          onTap: () {
-                            AppState.screenStack.add(ScreenItem.dialog);
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => WillPopScope(
-                                onWillPop: () {
-                                  AppState.backButtonDispatcher.didPopRoute();
-                                  return Future.value(true);
+                          appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: FreshDeskHelpPageConfig);
+                        },
+                      ),
+                      FelloBriefTile(
+                        leadingAsset: Assets.hsFaqs,
+                        title: "FAQs",
+                        onTap: () {
+                          Haptic.vibrate();
+                          appState.currentAction = PageAction(
+                              state: PageState.addPage, page: FaqPageConfig);
+                        },
+                      ),
+                      FelloBriefTile(
+                        leadingAsset: Assets.hsFdbk,
+                        title: "Feedback",
+                        onTap: () {
+                          AppState.screenStack.add(ScreenItem.dialog);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => WillPopScope(
+                              onWillPop: () {
+                                AppState.backButtonDispatcher.didPopRoute();
+                                return Future.value(true);
+                              },
+                              child: FeedbackDialog(
+                                title: "Tell us what you think",
+                                description: "We'd love to hear from you",
+                                buttonText: "Submit",
+                                dialogAction: (String fdbk) {
+                                  if (fdbk != null && fdbk.isNotEmpty) {
+                                    //feedback submission allowed even if user not signed in
+                                    dbProvider
+                                        .submitFeedback(
+                                            (_userService.firebaseUser ==
+                                                        null ||
+                                                    _userService
+                                                            .firebaseUser.uid ==
+                                                        null)
+                                                ? 'UNKNOWN'
+                                                : baseProvider.firebaseUser.uid,
+                                            fdbk)
+                                        .then((flag) {
+                                      AppState.backButtonDispatcher
+                                          .didPopRoute();
+                                      if (flag) {
+                                        BaseUtil.showPositiveAlert(
+                                          'Thank You',
+                                          'We appreciate your feedback!',
+                                        );
+                                      }
+                                    });
+                                  }
                                 },
-                                child: FeedbackDialog(
-                                  title: "Tell us what you think",
-                                  description: "We'd love to hear from you",
-                                  buttonText: "Submit",
-                                  dialogAction: (String fdbk) {
-                                    if (fdbk != null && fdbk.isNotEmpty) {
-                                      //feedback submission allowed even if user not signed in
-                                      dbProvider
-                                          .submitFeedback(
-                                              (_userService.firebaseUser ==
-                                                          null ||
-                                                      _userService.firebaseUser
-                                                              .uid ==
-                                                          null)
-                                                  ? 'UNKNOWN'
-                                                  : baseProvider
-                                                      .firebaseUser.uid,
-                                              fdbk)
-                                          .then((flag) {
-                                        AppState.backButtonDispatcher
-                                            .didPopRoute();
-                                        if (flag) {
-                                          BaseUtil.showPositiveAlert(
-                                            'Thank You',
-                                            'We appreciate your feedback!',
-                                          );
-                                        }
-                                      });
-                                    }
-                                  },
-                                ),
                               ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            Positioned(
-              bottom: SizeConfig.blockSizeVertical,
-              left: 0,
-              right: 0,
-              child: const TermsRow(),
-            )
-          ],
-        ),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: SizeConfig.blockSizeVertical,
+            left: 0,
+            right: 0,
+            child: const TermsRow(),
+          )
+        ],
       ),
     );
   }

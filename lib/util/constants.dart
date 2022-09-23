@@ -66,8 +66,6 @@ class Constants {
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";
 
-  static const String GOLDENTICKET_DYNAMICLINK_PREFIX =
-      "https://fello.in/goldenticket";
   static const String APP_DOWNLOAD_LINK = "https://fello.in/download";
   static const String APP_NAVIGATION_LINK = "https://fello.in/app/goto/";
 

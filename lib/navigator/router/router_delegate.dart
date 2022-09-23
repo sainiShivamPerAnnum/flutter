@@ -19,18 +19,14 @@ import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
-import 'package:felloapp/ui/pages/login/profile_setup/complete_profile_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/autosave_walkthrough.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_transaction/autopay_transactions_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -45,16 +41,13 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_milestones/golden_milestones_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
-import 'package:felloapp/ui/pages/static/transactions_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
@@ -212,9 +205,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
           break;
 
-        case Pages.Transaction:
-          _addPageData(Transactions(), TransactionPageConfig);
-          break;
         case Pages.TxnHistory:
           _addPageData(TransactionsHistory(), TransactionsHistoryPageConfig);
           break;
@@ -256,9 +246,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TWalkthrough:
           _addPageData(Walkthrough(), TWalkthroughPageConfig);
           break;
-        case Pages.AutosaveWalkthrough:
-          _addPageData(AutosaveWalkthrough(), AutosaveWalkThroughConfig);
-          break;
+
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
@@ -271,9 +259,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
           break;
-        case Pages.ReferralHistory:
-          _addPageData(ReferralHistoryView(), ReferralHistoryPageConfig);
-          break;
+
         case Pages.MyWinnings:
           _addPageData(MyWinningsView(), MyWinnigsPageConfig);
           break;
@@ -289,12 +275,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.GoldenTicketsView:
           _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
           break;
-        case Pages.GoldenMilestonesView:
-          _addPageData(GoldenMilestonesView(), GoldenMilestonesViewPageConfig);
-          break;
-        case Pages.TopSaverView:
-          _addPageData(TopSaverView(), TopSaverViewPageConfig);
-          break;
+
         case Pages.AllParticipantsView:
           _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
           break;
@@ -326,11 +307,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               UserAutosaveDetailsView(), UserAutosaveDetailsViewPageConfig);
           break;
-        case Pages.AutosaveTransactionsView:
-          _addPageData(
-              AutosaveTransactionsView(), AutosaveTransactionsViewPageConfig);
-          break;
-          break;
+
         case Pages.TopPlayerLeaderboard:
           _addPageData(
               TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
@@ -341,9 +318,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.OnBoardingView:
           _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
           break;
-        case Pages.CompleteProfileView:
-          _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
-          break;
+        // case Pages.CompleteProfileView:
+        //   _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
+        //   break;
         case Pages.BlogPostWebView:
           _addPageData(BlogWebView(), BlogPostWebViewConfig);
           break;
