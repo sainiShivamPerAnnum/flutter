@@ -2,9 +2,11 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,9 +33,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
+            SignupHeroAsset(asset: Assets.flatIsland),
             Text(
-              'Get Started!',
+              'Login/Signup',
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding32),
@@ -46,7 +48,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
             Form(
               key: model.formKey,
               child: AppTextField(
-                hintText: ' Enter mobile number',
+                hintText: ' Enter your 10 digit phone number',
                 isEnabled: true,
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
@@ -69,26 +71,55 @@ class LoginMobileViewState extends State<LoginMobileView> {
               ),
             ),
             Spacer(),
-            Text(
-              '100% Safe & Secure',
-              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-            ),
-            SizedBox(height: SizeConfig.padding16),
             if (!isKeyboardOpen)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
                 children: [
-                  BankingLogo(
-                    asset: 'assets/images/augmont_logo.png',
+                  Text(
+                    '100% Safe & Secure',
+                    style:
+                        TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
                   ),
-                  BankingLogo(
-                    asset: 'assets/images/icici_logo.png',
+                  SizedBox(height: SizeConfig.padding16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BankingLogo(
+                        asset: 'assets/images/augmont_logo.png',
+                      ),
+                      BankingLogo(
+                        asset: 'assets/images/icici_logo.png',
+                      ),
+                      BankingLogo(
+                        asset: 'assets/images/cbi_logo.png',
+                      ),
+                    ],
                   ),
-                  BankingLogo(
-                    asset: 'assets/images/cbi_logo.png',
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 16, 10, 0),
+                    child: RichText(
+                      text: new TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: 'By continuing, you agree to our ',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2),
+                          ),
+                          new TextSpan(
+                            text: 'Terms of Service',
+                            style: TextStyles.sourceSans.body3.underline
+                                .colour(UiConstants.kTextColor),
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () {
+                                model.onTermsAndConditionsClicked();
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
+
             SizedBox(
               height: SizeConfig.screenWidth * 0.1 +
                   MediaQuery.of(context).viewInsets.bottom,

@@ -21,7 +21,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/components/sign_in_options.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
@@ -196,6 +196,7 @@ class UserProfileVM extends BaseViewModel {
     setGender();
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
+    if (_userService.isEmailVerified) isgmailFieldEnabled = false;
   }
 
   setGender() {

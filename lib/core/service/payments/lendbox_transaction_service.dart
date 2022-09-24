@@ -127,6 +127,7 @@ class LendboxTransactionService extends BaseTransactionService {
       lbMap: {},
       email: _userService.baseUser.email,
       mobile: _userService.baseUser.mobile,
+      skipMl: this.skipMl,
       investmentType: InvestmentType.LENDBOXP2P,
     );
 

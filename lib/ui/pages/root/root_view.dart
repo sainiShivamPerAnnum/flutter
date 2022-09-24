@@ -12,7 +12,6 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/widgets/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';

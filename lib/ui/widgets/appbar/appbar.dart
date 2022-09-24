@@ -47,7 +47,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         Row(
           children: [
-            if (showCoinBar) FelloCoinBar(svgAsset: Assets.aFelloToken),
+            if (showCoinBar) FelloCoinBar(svgAsset: Assets.token),
             if (type != null) FaqButtonRounded(type: type),
             SizedBox(width: SizeConfig.padding20)
           ],

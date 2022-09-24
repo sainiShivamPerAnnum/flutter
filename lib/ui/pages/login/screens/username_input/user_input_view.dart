@@ -1,6 +1,7 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -106,7 +107,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                     onChanged: (val) {},
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins * 2),
-                    maxLength: 10,
+                    maxLength: 6,
                     isEnabled: true,
                     scrollPadding:
                         EdgeInsets.only(bottom: SizeConfig.padding80),
@@ -234,7 +235,7 @@ class FelloUserAvatar extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: SizeConfig.padding8),
           child: SvgPicture.asset(
-            'assets/svg/user_avatar_svg.svg',
+            Assets.customAvatar,
             height: SizeConfig.screenWidth * 0.3067,
             width: SizeConfig.screenWidth * 0.3067,
           ),

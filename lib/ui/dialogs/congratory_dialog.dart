@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -64,13 +65,8 @@ class AppCongratulatoryDialog extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.padding32,
               ),
-              // SvgPicture.asset(
-              //   'assets/temp/congratulation_dialog_logo.svg',
-              //   width: SizeConfig.screenWidth * 0.4778,
-              //   height: SizeConfig.screenWidth * 0.4111,
-              // ),
               Image.asset(
-                'assets/temp/congratulation_dialog_logo.png',
+                Assets.completeCheck,
                 width: SizeConfig.screenWidth * 0.4778,
                 height: SizeConfig.screenWidth * 0.4111,
               ),

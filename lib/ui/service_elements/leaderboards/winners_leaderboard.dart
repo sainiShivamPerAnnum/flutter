@@ -260,7 +260,7 @@ class WinnerboardView extends StatelessWidget {
                                                                     .nextInt(4);
                                                             return SvgPicture
                                                                 .asset(
-                                                              "assets/svg/userAvatars/AV$rand.svg",
+                                                              "assets/vectors/userAvatars/AV$rand.svg",
                                                               width: SizeConfig
                                                                   .iconSize5,
                                                               height: SizeConfig
@@ -306,7 +306,7 @@ class WinnerboardView extends StatelessWidget {
                                                                             4);
                                                                 return SvgPicture
                                                                     .asset(
-                                                                  "assets/svg/userAvatars/AV$rand.svg",
+                                                                  "assets/vectors/userAvatars/AV$rand.svg",
                                                                   width: SizeConfig
                                                                       .iconSize5,
                                                                   height: SizeConfig

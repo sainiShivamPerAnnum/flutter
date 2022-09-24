@@ -99,7 +99,7 @@ class TrendingGames extends StatelessWidget {
             Column(
               children: [
                 SvgPicture.asset(
-                  Assets.aFelloToken,
+                  Assets.token,
                   height: SizeConfig.padding20,
                 ),
                 SizedBox(height: SizeConfig.padding6),

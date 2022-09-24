@@ -46,14 +46,6 @@ class PicksCardView extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                child: SvgPicture.asset(
-                  Assets.dailyPickCard,
-                  width: SizeConfig.screenWidth -
-                      SizeConfig.pageHorizontalMargins * 2,
-                ),
-              ),
               AnimatedContainer(
                 width: SizeConfig.screenWidth,
                 height: model.topCardHeight,

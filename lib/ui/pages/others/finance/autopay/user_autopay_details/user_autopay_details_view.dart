@@ -255,8 +255,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Image.asset(
-                    "assets/temp/upi_payment_logo.png",
+                  child: SvgPicture.asset(
+                    Assets.upiIcon,
                     width: SizeConfig.iconSize0,
                     height: SizeConfig.iconSize0,
                   ),
@@ -277,10 +277,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
                       SizedBox(
                         width: SizeConfig.padding8,
                       ),
-                      SvgPicture.asset(
-                        'assets/temp/verified.svg',
-                        width: SizeConfig.padding20,
-                        height: SizeConfig.padding20,
+                      Icon(
+                        Icons.verified,
+                        color: UiConstants.primaryColor,
+                        size: SizeConfig.padding20,
                       ),
                     ],
                   ),

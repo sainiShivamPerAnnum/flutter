@@ -39,6 +39,9 @@ class _AutosaveCardState extends State<AutosaveCard> {
                 onTap: () async {
                   if (connectivityStatus == ConnectivityStatus.Offline)
                     return BaseUtil.showNoInternetAlert();
+                  if (!subscriptionModel.isUserProfileComplete())
+                    return BaseUtil.showNegativeAlert("Autosave Locked",
+                        "Please complete profile to unlock autosave");
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;
@@ -233,8 +236,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     color: UiConstants
                                                         .kBackgroundColor),
                                                 child: Center(
-                                                  child: Image.asset(
-                                                    Assets.upiSvg,
+                                                  child: SvgPicture.asset(
+                                                    Assets.upiIcon,
                                                     height:
                                                         SizeConfig.padding14,
                                                     width: SizeConfig.padding14,

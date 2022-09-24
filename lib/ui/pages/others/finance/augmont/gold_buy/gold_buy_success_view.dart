@@ -73,7 +73,7 @@ class GoldBuySuccessView extends StatelessWidget {
               Text("Tokens Won", style: TextStyles.rajdhani.body1),
               Spacer(),
               SvgPicture.asset(
-                'assets/temp/Tokens.svg',
+                Assets.token,
                 width: SizeConfig.padding26,
                 height: SizeConfig.padding26,
               ),

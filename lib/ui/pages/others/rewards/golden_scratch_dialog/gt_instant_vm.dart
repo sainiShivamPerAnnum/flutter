@@ -1,4 +1,3 @@
-import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -27,7 +26,6 @@ class GTInstantViewModel extends BaseViewModel {
 
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
-  ConfettiController confettiController;
   AnimationController lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
@@ -106,9 +104,6 @@ class GTInstantViewModel extends BaseViewModel {
                 _paytmService.activeSubscription.resumeDate.isNotEmpty));
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
-    confettiController = new ConfettiController(
-      duration: new Duration(seconds: 2),
-    );
 
     Future.delayed(Duration(seconds: 18), () {
       if (!isCardScratchStarted) {

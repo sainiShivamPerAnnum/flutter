@@ -157,6 +157,7 @@ class AugmontTransactionService extends BaseTransactionService {
       couponCode: currentGoldPurchaseDetails.couponCode,
       email: _userService.baseUser.email,
       mobile: _userService.baseUser.mobile,
+      skipMl: currentGoldPurchaseDetails.skipMl,
       investmentType: InvestmentType.AUGGOLD99,
     );
 
