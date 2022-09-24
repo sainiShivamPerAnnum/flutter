@@ -1,14 +1,12 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions_history/transaction_history_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -22,11 +20,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TransactionsHistory extends StatelessWidget {
+  final InvestmentType investmentType;
+
+  const TransactionsHistory({Key key, this.investmentType}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BaseView<TransactionsHistoryViewModel>(
       onModelReady: (model) {
-        model.init();
+        model.init(investmentType);
       },
       child: NoTransactionsContent(),
       builder: (ctx, model, child) {
@@ -41,34 +43,38 @@ class TransactionsHistory extends StatelessWidget {
               ),
             ),
             backgroundColor: UiConstants.kBackgroundColor,
-            body: Column(
-              children: [
-                SizedBox(
-                  height: SizeConfig.padding10,
-                ),
-                TransactionChoiceSelectionTab(model: model),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Expanded(
-                  child: PageView(
-                    controller: model.pageController,
-                    pageSnapping: true,
-                    scrollDirection: Axis.horizontal,
-                    allowImplicitScrolling: true,
-                    physics: NeverScrollableScrollPhysics(),
+            body: investmentType == InvestmentType.LENDBOXP2P
+                ? SingleTransactionView(
+                    model: model,
+                  )
+                : Column(
                     children: [
-                      SingleTransactionView(
-                        model: model,
+                      SizedBox(
+                        height: SizeConfig.padding10,
                       ),
-                      SIPTransactionHistoryView(
-                        model: model,
-                      )
+                      TransactionChoiceSelectionTab(model: model),
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
+                      Expanded(
+                        child: PageView(
+                          controller: model.pageController,
+                          pageSnapping: true,
+                          scrollDirection: Axis.horizontal,
+                          allowImplicitScrolling: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            SingleTransactionView(
+                              model: model,
+                            ),
+                            SIPTransactionHistoryView(
+                              model: model,
+                            )
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ],
-            ));
+                  ));
       },
     );
   }
@@ -89,47 +95,48 @@ class SingleTransactionView extends StatelessWidget {
             height: SizeConfig.padding40,
             width: SizeConfig.screenWidth / 3.8,
             child: DropdownButtonFormField<String>(
-                dropdownColor: UiConstants.kSecondaryBackgroundColor,
-                iconSize: SizeConfig.padding20,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: UiConstants.kSecondaryBackgroundColor, width: 2),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: UiConstants.kSecondaryBackgroundColor, width: 2),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  ),
-                  filled: true,
-                  fillColor: UiConstants.kBackgroundColor,
+              dropdownColor: UiConstants.kSecondaryBackgroundColor,
+              iconSize: SizeConfig.padding20,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: UiConstants.kSecondaryBackgroundColor, width: 2),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
-                iconEnabledColor: UiConstants.kTextColor,
-                elevation: 0,
-                icon: SvgPicture.asset(Assets.dropDownVector),
-                hint: Text(
-                  'Type',
-                  style: TextStyles.sourceSans.body4
-                      .colour(UiConstants.kTextColor),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: UiConstants.kSecondaryBackgroundColor, width: 2),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
-                value: model.filterValue ?? "Type",
-                items: model.tranTypeFilterItems
-                    .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(
-                          e,
-                          style: TextStyles.sourceSans.body4,
-                        )))
-                    .toList(),
-                onChanged: (val) {
-                  model.filterValue = val;
-                  model.filter =
-                      model.tranTypeFilterItems.indexOf(model.filterValue) + 1;
-                  model.filterTransactions(update: true);
-                }),
+                filled: true,
+                fillColor: UiConstants.kBackgroundColor,
+              ),
+              iconEnabledColor: UiConstants.kTextColor,
+              elevation: 0,
+              icon: SvgPicture.asset(Assets.dropDownVector),
+              hint: Text(
+                'Type',
+                style:
+                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor),
+              ),
+              value: model.filterValue ?? "Type",
+              items: model.tranTypeFilterItems
+                  .map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(
+                        e,
+                        style: TextStyles.sourceSans.body4,
+                      )))
+                  .toList(),
+              onChanged: (val) {
+                model.filterValue = val;
+                model.filter =
+                    model.tranTypeFilterItems.indexOf(model.filterValue) + 1;
+                model.filterTransactions(update: true);
+              },
+            ),
           ),
         ),
         Expanded(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
@@ -16,6 +17,7 @@ class TransactionHistoryService
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
+
   List<UserTransaction> _txnList;
   String lastTxnDocId;
   String lastPrizeTxnDocId;
@@ -48,12 +50,12 @@ class TransactionHistoryService
   fetchTransactions({
     String status,
     String type,
-    String subtype,
+    InvestmentType subtype,
   }) async {
     //fetch filtered transactions
     final response = await _transactionHistoryRepo.getUserTransactions(
       type: type,
-      subtype: subtype,
+      subtype: subtype.name,
       status: status,
       start: getLastTxnDocType(status: status, type: type),
     );
@@ -72,9 +74,10 @@ class TransactionHistoryService
     // set proper lastDocument snapshot for further fetches
     if (response.model.transactions.isNotEmpty)
       setLastTxnDocType(
-          status: status,
-          type: type,
-          lastDocId: response.model.transactions.last.docKey);
+        status: status,
+        type: type,
+        lastDocId: response.model.transactions.last.docKey,
+      );
     // check and set which category has no more items to fetch
     if (response.model.isLastPage)
       setHasMoreTxnsValue(type: type, status: status);
@@ -144,7 +147,7 @@ class TransactionHistoryService
     }
   }
 
-  updateTransactions() async {
+  updateTransactions(InvestmentType investmentType) async {
     lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
@@ -152,7 +155,7 @@ class TransactionHistoryService
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
     txnList?.clear();
-    await fetchTransactions();
+    await fetchTransactions(subtype: investmentType);
     _logger.i("Transactions got updated");
   }
 

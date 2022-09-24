@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
@@ -58,6 +59,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   int get tabIndex => _tabIndex;
   bool get getHasMoreTxns => this._hasMoreSIPTxns;
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
+  InvestmentType _investmentType;
 
   //setters
   set filter(int val) {
@@ -100,9 +102,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  init(InvestmentType investmentType) {
+    this._investmentType = investmentType;
     _scrollController = ScrollController();
     _pageController = PageController(initialPage: 0);
+
     if (_txnHistoryService.txnList == null ||
         _txnHistoryService.txnList.length < 5) {
       getTransactions().then((_) {
@@ -112,6 +116,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         });
       });
     }
+
     if (_txnHistoryService.txnList != null) {
       filteredList = _txnHistoryService.txnList;
       WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -121,6 +126,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     } else {
       filteredList = [];
     }
+
     _scrollController.addListener(() async {
       if (_scrollController.offset >=
               _scrollController.position.maxScrollExtent &&
@@ -130,34 +136,18 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         }
       }
     });
+
     getLatestSIPTransactions();
   }
 
   Future getTransactions() async {
     setState(ViewState.Busy);
-    await _txnHistoryService.fetchTransactions();
+    await _txnHistoryService.fetchTransactions(
+      subtype: _investmentType,
+    );
     _filteredList = _txnHistoryService.txnList;
     setState(ViewState.Idle);
   }
-
-  refreshTransactions() async {
-    await _txnHistoryService.updateTransactions();
-    filteredList = _txnHistoryService.txnList;
-    notifyListeners();
-  }
-  // getTransactionsFromApi() async {
-  //   ApiResponse<List<UserTransaction>> res;
-  //   if (apiTxns.isNotEmpty)
-  //     res = await _augTxnService.getUserTransactionsfromApi(
-  //         start: apiTxns[0].docKey);
-  //   else
-  //     res = await _augTxnService.getUserTransactionsfromApi();
-  //   if (res.model != null && res.model.isNotEmpty)
-  //     res.model.forEach((element) {
-  //       apiTxns.add(element);
-  //     });
-  //   log("Length of Transaction List: ${apiTxns.length}");
-  // }
 
   getMoreTransactions() async {
     _logger.d("fetching more transactions...");
@@ -165,32 +155,37 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     switch (filter) {
       case 1:
         if (_txnHistoryService.hasMoreTxns)
-          await _txnHistoryService.fetchTransactions();
+          await _txnHistoryService.fetchTransactions(
+            subtype: _investmentType,
+          );
         break;
       case 2:
         if (_txnHistoryService.hasMoreDepositTxns)
           await _txnHistoryService.fetchTransactions(
+              subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_DEPOSIT);
         break;
       case 3:
         if (_txnHistoryService.hasMoreWithdrawalTxns)
           await _txnHistoryService.fetchTransactions(
+              subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_WITHDRAW);
         break;
       case 4:
         if (_txnHistoryService.hasMorePrizeTxns)
           await _txnHistoryService.fetchTransactions(
-              type: UserTransaction.TRAN_TYPE_PRIZE);
+              subtype: _investmentType, type: UserTransaction.TRAN_TYPE_PRIZE);
 
         break;
       case 5:
         if (_txnHistoryService.hasMoreRefundedTxns)
           await _txnHistoryService.fetchTransactions(
+              subtype: _investmentType,
               status: UserTransaction.TRAN_STATUS_REFUNDED);
         break;
       default:
         // if (_txnHistoryService.hasMoreTxns)
-        //   await _txnHistoryService.fetchTransactions(limit: 30);
+        //   await _txnHistoryService.fetchTransactions(subtype: _investmentType,limit: 30);
         break;
     }
     filterTransactions(update: false);
