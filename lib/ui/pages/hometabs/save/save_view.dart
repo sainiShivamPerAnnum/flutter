@@ -174,8 +174,10 @@ class SaveNetWorthSection extends StatelessWidget {
               title: 'Digital Gold',
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
-              isGoldAssets: true,
-              onCardTap: () => saveViewModel.navigateToSaveAssetView(),
+              investmentType: InvestmentType.AUGGOLD99,
+              onCardTap: () => saveViewModel.navigateToSaveAssetView(
+                InvestmentType.AUGGOLD99,
+              ),
               onTap: () {
                 Haptic.vibrate();
                 return BaseUtil().openRechargeModalSheet(
@@ -187,7 +189,10 @@ class SaveNetWorthSection extends StatelessWidget {
               title: 'Fello Flo',
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
-              investedAmount: 0.0,
+              investmentType: InvestmentType.LENDBOXP2P,
+              onCardTap: () => saveViewModel.navigateToSaveAssetView(
+                InvestmentType.LENDBOXP2P,
+              ),
               onTap: () {
                 Haptic.vibrate();
                 return BaseUtil().openRechargeModalSheet(

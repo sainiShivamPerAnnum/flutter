@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -267,13 +268,15 @@ class MyWinningsViewModel extends BaseViewModel {
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-        _userService.baseUser.uid,
-        _userService.baseUser.username,
-        _userService.userFundWallet.unclaimedBalance,
-        choice);
+      _userService.baseUser.uid,
+      _userService.baseUser.username,
+      _userService.userFundWallet.unclaimedBalance,
+      choice,
+    );
+
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 

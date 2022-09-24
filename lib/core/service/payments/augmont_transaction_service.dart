@@ -288,7 +288,7 @@ class AugmontTransactionService extends BaseTransactionService {
               source: GTSOURCE.prize);
         }
       }
-      _txnHistoryService.updateTransactions();
+      _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     } catch (e) {
       _logger.e(e);
       _internalOpsService.logFailure(
@@ -337,7 +337,7 @@ class AugmontTransactionService extends BaseTransactionService {
         }
       }
 
-      _txnHistoryService.updateTransactions();
+      _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     } catch (e) {
       _logger.e(e);
       _internalOpsService.logFailure(

@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/event_model.dart';
@@ -514,7 +515,7 @@ class WinViewModel extends BaseViewModel {
         choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 

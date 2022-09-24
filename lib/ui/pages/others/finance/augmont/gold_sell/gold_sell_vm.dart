@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -351,7 +352,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   handleWithdrawalFcmResponse(String data) {
     _userCoinService.getUserCoinBalance();
-    _transactionHistoryService.updateTransactions();
+    _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     _userService.getUserFundWalletData();
     final response = json.decode(data);
     AppState.unblockNavigation();

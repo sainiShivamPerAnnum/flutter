@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -26,21 +28,20 @@ class MiniTransactionCardViewModel extends BaseViewModel {
 
   TransactionHistoryService get txnHistoryService => _txnHistoryService;
 
-  getMiniTransactions() async {
+  getMiniTransactions(InvestmentType investmentType) async {
     _logger.d("Getting mini transactions");
     setState(ViewState.Busy);
-    await _txnHistoryService.updateTransactions();
+    await _txnHistoryService.updateTransactions(investmentType);
     setState(ViewState.Idle);
   }
 
-  refreshTransactions() async {
-    isRefreshing = true;
-    await _txnHistoryService.updateTransactions();
-    isRefreshing = false;
-  }
-
-  viewAllTransaction() async {
+  viewAllTransaction(InvestmentType investmentType) async {
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addPage, page: TransactionsHistoryPageConfig);
+      state: PageState.addWidget,
+      page: TransactionsHistoryPageConfig,
+      widget: TransactionsHistory(
+        investmentType: investmentType,
+      ),
+    );
   }
 }
