@@ -17,7 +17,8 @@ class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
   final _txnService = locator<LendboxTransactionService>();
 
-  LendboxSuccessView({Key key, @required this.transactionType}) : super(key: key);
+  LendboxSuccessView({Key key, @required this.transactionType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

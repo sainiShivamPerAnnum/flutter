@@ -20,7 +20,8 @@ class LendboxLoadingView extends StatelessWidget {
   final _txnService = locator<LendboxTransactionService>();
   final int waitTimeInSec = 45;
 
-  LendboxLoadingView({Key key, @required this.transactionType}) : super(key: key);
+  LendboxLoadingView({Key key, @required this.transactionType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

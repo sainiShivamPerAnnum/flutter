@@ -56,7 +56,9 @@ class SaveAssetView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SellCardView(investmentType: InvestmentType.AUGGOLD99,),
+                  SellCardView(
+                    investmentType: InvestmentType.AUGGOLD99,
+                  ),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
