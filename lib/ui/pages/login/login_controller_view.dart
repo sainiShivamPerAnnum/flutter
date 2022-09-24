@@ -37,16 +37,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
   _LoginControllerViewState(this.initPage);
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -54,7 +44,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelReady: (model) {
         model.init(initPage, model);
         if (Platform.isAndroid) {
-          model.initTruecaller();
+          Future.delayed(Duration(seconds: 2), () {
+            model.initTruecaller();
+          });
         }
       },
       onModelDispose: (model) => model.exit(),
@@ -107,7 +99,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: new NeverScrollableScrollPhysics(),
+                              // physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,

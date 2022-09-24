@@ -39,6 +39,9 @@ class _AutosaveCardState extends State<AutosaveCard> {
                 onTap: () async {
                   if (connectivityStatus == ConnectivityStatus.Offline)
                     return BaseUtil.showNoInternetAlert();
+                  if (!subscriptionModel.isUserProfileComplete())
+                    return BaseUtil.showNegativeAlert("Autosave Locked",
+                        "Please complete profile to unlock autosave");
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;

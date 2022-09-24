@@ -58,7 +58,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
             SizedBox(height: SizeConfig.padding80),
             SignupHeroAsset(asset: Assets.flatIsland),
             Text(
-              'Enter OTP',
+              'Verify OTP',
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding32),
@@ -188,7 +188,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                   ),
                 ],
               ),
-            SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );
       },

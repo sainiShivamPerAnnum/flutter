@@ -107,7 +107,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                     onChanged: (val) {},
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins * 2),
-                    maxLength: 10,
+                    maxLength: 6,
                     isEnabled: true,
                     scrollPadding:
                         EdgeInsets.only(bottom: SizeConfig.padding80),
