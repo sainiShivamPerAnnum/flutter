@@ -6,7 +6,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class BuyInputView extends StatefulWidget {
+class AmountInputView extends StatefulWidget {
   final TextEditingController amountController;
   final List<int> chipAmounts;
   final String notice;
@@ -15,7 +15,7 @@ class BuyInputView extends StatefulWidget {
   final int minAmount;
   final Function(int val) onAmountChange;
 
-  const BuyInputView({
+  const AmountInputView({
     Key key,
     @required this.chipAmounts,
     @required this.onAmountChange,
@@ -27,23 +27,23 @@ class BuyInputView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BuyInputView> createState() => _BuyInputViewState();
+  State<AmountInputView> createState() => _AmountInputViewState();
 }
 
-class _BuyInputViewState extends State<BuyInputView> {
+class _AmountInputViewState extends State<AmountInputView> {
   double _fieldWidth = 0;
   int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    _fieldWidth =
-        (SizeConfig.padding40 * widget.amountController.text.length.toDouble());
+    updateFieldWidth();
   }
 
   void updateFieldWidth() {
-    _fieldWidth =
-        (SizeConfig.padding40 * widget.amountController.text.length.toDouble());
+    int n = widget.amountController.text.length;
+    if (n == 0) n++;
+    _fieldWidth = (SizeConfig.padding40 * n.toDouble());
   }
 
   @override

@@ -11,7 +11,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/service_elements/bank_details_card.dart';
-import 'package:felloapp/ui/service_elements/gold_sell_card/gold_sell_card_components.dart';
+import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -65,9 +65,10 @@ class GoldSellInputView extends StatelessWidget {
                     properties: [UserServiceProperties.myUserFund],
                     builder: (ctx, umodel, child) => Text(
                       locale.saveGoldBalanceValue(
-                          umodel.userFundWallet?.augGoldQuantity ??
-                              0.0 - model.nonWithdrawableQnt ??
-                              0),
+                        umodel.userFundWallet?.augGoldQuantity ??
+                            0.0 - model.nonWithdrawableQnt ??
+                            0,
+                      ),
                       style: TextStyles.sourceSansSB.body0
                           .colour(UiConstants.kTextColor),
                     ),

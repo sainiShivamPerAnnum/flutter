@@ -34,11 +34,16 @@ class LendboxTransactionService extends BaseTransactionService {
   final _gtService = GoldenTicketService();
   final _internalOpsService = locator<InternalOpsService>();
   final _txnHistoryService = locator<TransactionHistoryService>();
-  final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
 
   bool skipMl = false;
+
+  Future<void> initiateWithdrawal(double txnAmount, String txnId) async {
+    this.currentTxnOrderId = txnId;
+    this.currentTransactionState = TransactionState.ongoing;
+    this.initiatePolling();
+  }
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
     this.currentTxnAmount = txnAmount;

@@ -1,19 +1,23 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sell_service_enum.dart';
 import 'package:felloapp/core/service/payments/sell_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modals_sheets/gold_sell_reason_modal_sheet.dart';
-import 'package:felloapp/ui/service_elements/gold_sell_card/gold_sell_card_components.dart';
+import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class GoldSellCardView extends StatelessWidget {
-  const GoldSellCardView({Key key}) : super(key: key);
+class SellCardView extends StatelessWidget {
+  final InvestmentType investmentType;
+
+  const SellCardView({Key key, @required this.investmentType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +29,7 @@ class GoldSellCardView extends StatelessWidget {
         SellServiceProperties.kycVerified,
         SellServiceProperties.ongoing,
       ],
-      builder: (ctx, sellService, child) =>
-          //  BaseView<GoldSellCardViewModel>(
-          //   onModelReady: (model) {},
-          //   onModelDispose: (model) {},
-          //   builder: (ctx, model, child) =>
-          Container(
+      builder: (ctx, sellService, child) => Container(
         width: SizeConfig.screenWidth,
         child: Column(
           children: [
@@ -40,26 +39,31 @@ class GoldSellCardView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SellGoldText(),
-                    SellButton(
-                        onTap: () {
-                          BaseUtil.openModalBottomSheet(
-                              backgroundColor:
-                                  UiConstants.kModalSheetBackgroundColor,
-                              isBarrierDismissable: true,
-                              addToScreenStack: true,
-                              borderRadius: BorderRadius.only(
-                                  topLeft:
-                                      Radius.circular(SizeConfig.roundness32),
-                                  topRight:
-                                      Radius.circular(SizeConfig.roundness32)),
-                              content: SellingReasonBottomSheet());
-                        },
-                        isActive: sellService.getButtonAvailibility()),
-                  ]),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SellText(
+                    investmentType: investmentType,
+                  ),
+                  SellButton(
+                    onTap: () {
+                      BaseUtil.openModalBottomSheet(
+                        backgroundColor: UiConstants.kModalSheetBackgroundColor,
+                        isBarrierDismissable: true,
+                        addToScreenStack: true,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.roundness32),
+                          topRight: Radius.circular(SizeConfig.roundness32),
+                        ),
+                        content: SellingReasonBottomSheet(
+                          investmentType: investmentType,
+                        ),
+                      );
+                    },
+                    isActive: sellService.getButtonAvailibility(),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(right: SizeConfig.padding24),
@@ -70,8 +74,9 @@ class GoldSellCardView extends StatelessWidget {
                         ? SizedBox()
                         : Text(
                             'To enable selling gold,\ncomplete the following:',
-                            style: TextStyles.sourceSans.body4
-                                .colour(Colors.grey.withOpacity(0.7)),
+                            style: TextStyles.sourceSans.body4.colour(
+                              Colors.grey.withOpacity(0.7),
+                            ),
                             textAlign: TextAlign.end,
                           ),
               ),
@@ -91,8 +96,10 @@ class GoldSellCardView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding12),
             if (sellService.sellNotice != null)
               SellCardInfoStrips(
-                leadingIcon: Icon(Icons.warning_amber_rounded,
-                    color: UiConstants.tertiarySolid.withOpacity(0.5)),
+                leadingIcon: Icon(
+                  Icons.warning_amber_rounded,
+                  color: UiConstants.tertiarySolid.withOpacity(0.5),
+                ),
                 content: "sellService.sellNotice",
                 textColor: Colors.amber,
                 backgroundColor: Colors.amber.withOpacity(0.16),
@@ -106,9 +113,15 @@ class GoldSellCardView extends StatelessWidget {
     );
   }
 
-  navigateToKycScreen() => AppState.delegate.appState.currentAction =
-      PageAction(state: PageState.addPage, page: KycDetailsPageConfig);
+  navigateToKycScreen() =>
+      AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: KycDetailsPageConfig,
+      );
 
-  navigateToBankDetailsScreen() => AppState.delegate.appState.currentAction =
-      PageAction(state: PageState.addPage, page: BankDetailsPageConfig);
+  navigateToBankDetailsScreen() =>
+      AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: BankDetailsPageConfig,
+      );
 }

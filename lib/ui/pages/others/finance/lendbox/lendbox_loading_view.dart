@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -14,9 +15,12 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class LendboxBuyLoadingView extends StatelessWidget {
+class LendboxLoadingView extends StatelessWidget {
+  final TransactionType transactionType;
   final _txnService = locator<LendboxTransactionService>();
   final int waitTimeInSec = 45;
+
+  LendboxLoadingView({Key key, @required this.transactionType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

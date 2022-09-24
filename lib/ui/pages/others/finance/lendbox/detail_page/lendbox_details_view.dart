@@ -1,16 +1,17 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/lendbox_principle_value.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
+import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
-import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
-import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -28,6 +29,12 @@ class LendboxDetailsView extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0,
         leading: FelloAppBarBackButton(),
+        actions: [
+          FaqButtonRounded(type: FaqsType.savings),
+          SizedBox(
+            width: SizeConfig.padding24,
+          )
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -49,19 +56,13 @@ class LendboxDetailsView extends StatelessWidget {
                         height: SizeConfig.padding24,
                       ),
                       MiniTransactionCard(
-                          investmentType: InvestmentType.LENDBOXP2P),
+                        investmentType: InvestmentType.LENDBOXP2P,
+                      ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding24,
-                    vertical: SizeConfig.padding8,
-                  ),
-                  child: FAQCardView(
-                    category: FAQCardViewModel.FELLO_FLO,
-                    bgColor: UiConstants.kDarkBackgroundColor,
-                  ),
+                SellCardView(
+                  investmentType: InvestmentType.LENDBOXP2P,
                 ),
                 SizedBox(
                   height: SizeConfig.screenWidth * 0.2,
@@ -103,8 +104,10 @@ class AssetCard extends StatelessWidget {
                   child: Column(
                     children: [
                       Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
-                      Text('Safer way to invest',
-                          style: TextStyles.sourceSans.body4),
+                      Text(
+                        'Safer way to invest',
+                        style: TextStyles.sourceSans.body4,
+                      ),
                       SizedBox(
                         height: SizeConfig.padding40,
                       ),

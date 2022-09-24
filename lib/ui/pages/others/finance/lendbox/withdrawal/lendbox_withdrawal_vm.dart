@@ -4,16 +4,22 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-class LendboxBuyViewModel extends BaseViewModel {
+class LendboxWithdrawalViewModel extends BaseViewModel {
+  final _logger = locator<CustomLogger>();
   final _txnService = locator<LendboxTransactionService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _lendboxRepo = locator<LendboxRepo>();
+  final _paymentRepo = locator<PaymentRepository>();
 
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -22,15 +28,14 @@ class LendboxBuyViewModel extends BaseViewModel {
   int lastTappedChipIndex = 1;
   bool _skipMl = false;
 
-  FocusNode buyFieldNode = FocusNode();
+  FocusNode fieldNode = FocusNode();
   String buyNotice;
 
-  bool _isBuyInProgress = false;
-  get isBuyInProgress => this._isBuyInProgress;
+  bool _inProgress = false;
+  get inProgress => this._inProgress;
 
   TextEditingController amountController;
   TextEditingController vpaController;
-  List<int> chipAmountList = [101, 201, 501, 1001];
 
   bool get skipMl => this._skipMl;
 
@@ -43,29 +48,52 @@ class LendboxBuyViewModel extends BaseViewModel {
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
     amountController = TextEditingController(
-      text: amount.toString() ?? chipAmountList[1].toInt().toString(),
+      text: "1",
     );
     setState(ViewState.Idle);
   }
 
   resetBuyOptions() {
-    amountController.text = chipAmountList[1].toInt().toString();
+    amountController.text = '1';
     lastTappedChipIndex = 1;
     notifyListeners();
   }
 
   //BUY FLOW
   //1
-  initiateBuy() async {
+  initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
 
     log(amount.toString());
-    _isBuyInProgress = true;
+    _inProgress = true;
     notifyListeners();
 
-    await _txnService.initiateTransaction(amount.toDouble(), false);
-    _isBuyInProgress = false;
+    final bankRes = await _paymentRepo.getActiveBankAccountDetails();
+    if (bankRes.isSuccess()) {
+      final withdrawalTxn = await _lendboxRepo.createWithdrawal(
+        amount,
+        bankRes.model.id,
+      );
+
+      if (withdrawalTxn.isSuccess()) {
+        await _txnService.initiateWithdrawal(
+          amount.toDouble(),
+          withdrawalTxn.model,
+        );
+      } else {
+        _logger.e(withdrawalTxn.errorMessage);
+        BaseUtil.showNegativeAlert(
+          'Withdrawal Failed',
+          withdrawalTxn.errorMessage,
+        );
+      }
+    } else {
+      _logger.e(bankRes.errorMessage);
+      BaseUtil.showNegativeAlert('Withdrawal Failed', bankRes.errorMessage);
+    }
+
+    _inProgress = false;
     notifyListeners();
   }
 

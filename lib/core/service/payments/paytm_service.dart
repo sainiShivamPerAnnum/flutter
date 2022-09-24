@@ -54,6 +54,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final String prodMid = "CMTNKX90967647249644";
   final String devPostPrefix = "https://securegw-stage.paytm.in/order/pay?";
   final String prodPostPrefix = "https://securegw.paytm.in/order/pay?";
+
   final PageController subscriptionFlowPageController = new PageController();
   int _fraction = 0;
   bool isOnSubscriptionFlow = false;
@@ -159,8 +160,6 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     isOnSubscriptionFlow = false;
   }
 
-  //TRANSACTION METHODS -- START
-
   //Initiate paytm pg transaction
   Future<bool> initiatePaytmPGTransaction({
     bool restrictAppInvoke = false,
@@ -171,9 +170,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _txnService = investmentType == InvestmentType.LENDBOXP2P
           ? locator<LendboxTransactionService>()
           : locator<AugmontTransactionService>();
+
       _logger.d("Transaction order id: ${paytmSubscriptionModel.data.txnId}");
       _logger.d("Transaction app invoke: $restrictAppInvoke");
-      var response = await AllInOneSdk.startTransaction(
+
+      final response = await AllInOneSdk.startTransaction(
         mid,
         paytmSubscriptionModel.data.orderId,
         _txnService.currentTxnAmount.toString(),
@@ -204,9 +205,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return ApiResponse.withError("Couldn't verify txn details", 400);
     }
   }
-  //TRANSACTION METHODS -- END
 
-  //SUBSCRIPTION METHODS -- START
   Future<void> getActiveSubscriptionDetails() async {
     ApiResponse<ActiveSubscriptionModel> response =
         await _paytmRepo.getActiveSubscription();

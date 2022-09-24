@@ -10,6 +10,7 @@ class AmountChipsModel {
   static final helper = HelperModel<AmountChipsModel>(
     (map) => AmountChipsModel.fromMap(map),
   );
+  
   AmountChipsModel({
     @required this.order,
     @required this.value,

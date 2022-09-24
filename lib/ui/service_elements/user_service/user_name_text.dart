@@ -13,7 +13,9 @@ class UserNameTextSE extends StatelessWidget {
       builder: (context, model, property) => Text(
         "${model.myUserName?.split(' ')?.first ?? "user"}",
         style: GoogleFonts.sourceSansPro(
-            fontWeight: FontWeight.w600, fontSize: SizeConfig.largeTextSize),
+          fontWeight: FontWeight.w600,
+          fontSize: SizeConfig.largeTextSize,
+        ),
       ),
     );
   }

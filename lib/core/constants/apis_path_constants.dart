@@ -135,4 +135,7 @@ class ApiPath {
   static String journeyStats(String uid) => "/user/$uid/journey/stats";
   static String kJourneyLevel = '/levels';
   static String kSkipMilestone(String uid) => "/user/$uid/skip/milestone";
+
+  // lendbox
+  static String lendboxWithdrawal(String uid) => "/user/$uid/withdrawal";
 }
