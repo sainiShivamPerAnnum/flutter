@@ -93,6 +93,8 @@ class UiConstants {
   static const Color kSaveStableFelloCardBg = const Color(0xFF01656B);
   static const Color kBlogTitleColor = const Color(0xFF93B5FE);
   static const Color kcashBackAmountTextColor = const Color(0xFFFFE9B1);
+  static const Color kTicketPeachColor = const Color(0xFFFFCCBF);
+  static const Color kSelectedDotColor = const Color(0xFFCEF8F5);
 
   static const Color kFAQsAnswerColor = const Color(0xFFA9C6D6);
 

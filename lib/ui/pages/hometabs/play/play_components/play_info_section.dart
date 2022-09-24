@@ -284,10 +284,6 @@ class _InfoComponent2State extends State<InfoComponent2> {
                 )
               : SizedBox.shrink(),
         ),
-        if (!isOpen)
-          SizedBox(
-            height: SizeConfig.padding10,
-          ),
       ],
     );
   }

@@ -180,4 +180,6 @@ extension FontSize on TextStyle {
 
   /// Body 4 Size == 12
   TextStyle get body4 => copyWith(fontSize: SizeConfig.body4);
+
+  TextStyle get body5 => copyWith(fontSize: SizeConfig.body5);
 }

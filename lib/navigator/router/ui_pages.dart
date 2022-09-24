@@ -68,6 +68,7 @@ const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
 const String SharePriceScreenPath = "/SharePriceScreenPath";
+const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
 
 enum Pages {
   Splash,
@@ -136,6 +137,7 @@ enum Pages {
   AllParticipantsWinnersTopReferersView,
   RedeemSucessfulScreenView,
   SharePriceScreenView,
+  AllTambolaTicketsView,
 }
 
 class PageConfiguration {
@@ -607,4 +609,11 @@ PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
   path: SharePriceScreenPath,
   uiPage: Pages.SharePriceScreenView,
   name: "Reward sharing screen",
+);
+
+PageConfiguration AllTambolaTicketsPageConfig = PageConfiguration(
+  key: 'AllTambolaTickets',
+  path: AllTambolaTicketsPath,
+  uiPage: Pages.AllTambolaTicketsView,
+  name: "All Tambola tickets screen",
 );
