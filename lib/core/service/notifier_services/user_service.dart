@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -16,24 +18,24 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
@@ -211,6 +213,90 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
 
     return false;
+  }
+
+  Future<UserBootUp> userBootUpEE() async {
+    UserBootUp _userBootUp;
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      setLastOpened();
+      dayOPenCount();
+
+      String userId, deviceId, platform, appVersion, lastOpened;
+      int dayOpenCount;
+
+      userId = FirebaseAuth.instance.currentUser.uid;
+
+      Map<String, dynamic> response =
+          await _internalOpsService.initDeviceInfo();
+      if (response != null) {
+        deviceId = response["deviceId"];
+        platform = response["platform"];
+      }
+
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      appVersion = packageInfo.buildNumber;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      lastOpened = prefs.getString(Constants.LAST_OPENED) ?? "";
+      dayOpenCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+
+      final response_temp = await _userRepo.fetchUserBootUpRssponse(
+          userId: userId,
+          deviceId: deviceId,
+          platform: platform,
+          appVersion: appVersion,
+          lastOpened: lastOpened,
+          dayOpenCount: dayOpenCount);
+
+      _userBootUp = response_temp;
+      return _userBootUp;
+    } else {
+      //No user logged in
+    }
+
+    return null;
+  }
+
+  void dayOPenCount() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      var now = new DateTime.now();
+      var formatter = new DateFormat('dd-MM-yyyy');
+      String today = formatter.format(now);
+
+      String savedDate = prefs.getString(Constants.DATE_TODAY) ?? "";
+
+      if (savedDate == today) {
+        //The count is for today
+        //Increase the count
+        int current_count = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+        current_count = current_count + 1;
+        prefs.setInt(Constants.DAY_OPENED_COUNT, current_count);
+      } else {
+        //Date has changed
+        prefs.setString(Constants.DATE_TODAY, today);
+        prefs.setInt(Constants.DAY_OPENED_COUNT, 0);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void setLastOpened() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var now = new DateTime.now();
+      var formatter = new DateFormat('dd-MM-yyyy');
+      String formattedTime = DateFormat('kk:mm:ss:a').format(now);
+      String formattedDate = formatter.format(now);
+
+      prefs.setString(
+          Constants.LAST_OPENED, formattedDate + " " + formattedTime);
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> init() async {

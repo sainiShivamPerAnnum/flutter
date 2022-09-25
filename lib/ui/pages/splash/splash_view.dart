@@ -1,13 +1,14 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter and dart imports
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';

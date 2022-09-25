@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
@@ -24,6 +26,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:http/http.dart' as http;
 
 import 'base_repo.dart';
 
@@ -512,6 +515,45 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e);
       return false;
+    }
+  }
+
+  //Method to fetch the user-boot-up-ee
+
+  Future<UserBootUp> fetchUserBootUpRssponse(
+      {@required String userId,
+      @required String deviceId,
+      @required String platform,
+      @required String appVersion,
+      @required String lastOpened,
+      @required int dayOpenCount}) async {
+    UserBootUp userBootUp;
+
+    try {
+      Map<String, dynamic> queryParameters = {
+        'deviceId': deviceId,
+        'platform': platform,
+        'appVersion': appVersion,
+        'lastOpened': lastOpened,
+        'dayOpenCount': dayOpenCount.toString(),
+      };
+
+      final token = await getBearerToken();
+
+      final respone = await APIService.instance.getData(
+          ApiPath.userBootUp(
+            userService.baseUser.uid,
+          ),
+          token: token,
+          queryParams: queryParameters,
+          cBaseUrl: _baseUrl);
+
+      userBootUp = UserBootUp.fromJson(respone);
+
+      return userBootUp;
+    } catch (e) {
+      logger.d("Unable to fetch user boot up ee ${e.toString()}");
+      return userBootUp;
     }
   }
 
