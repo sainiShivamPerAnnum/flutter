@@ -1,5 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 parseTimeStamp(dynamic data) {
@@ -10,6 +17,37 @@ parseTimeStamp(dynamic data) {
       return Timestamp(data["_seconds"], data["_nanoseconds"]);
   } else
     return null;
+}
+
+parseTransactionStatusSummary(List<dynamic> summary) {
+  List<TransactionStatusMapItemModel> txnSummary = [];
+  summary.forEach((s) {
+    final response = s.entries.first.value;
+    TimestampModel timeStamp;
+    String result;
+    // print("Summary Timestamp : $s");
+    // print("Summary Timestamp : ${s.entries.first.value.runtimeType}");
+
+    // Map<String, dynamic> res;
+    // res.entries.first.value
+    if (response.runtimeType == String) {
+      print("Summary Timestamp : $response");
+      result = response.toString();
+    } else
+      timeStamp = TimestampModel.fromMap(response as Map<String, dynamic>);
+
+    if (timeStamp != null) {
+      txnSummary.add(TransactionStatusMapItemModel(
+          title: s.entries.first.key, timestamp: timeStamp));
+    } else if (result != null)
+      txnSummary.add(TransactionStatusMapItemModel(
+          title: s.entries.first.key, value: result));
+    else
+      txnSummary.add(TransactionStatusMapItemModel(
+          title: s.entries.first.key, value: "NA"));
+  });
+
+  return txnSummary;
 }
 
 class UserTransaction {
@@ -30,6 +68,7 @@ class UserTransaction {
   Map<String, dynamic> _paytmMap;
   Timestamp _timestamp;
   Timestamp _updatedTime;
+  List<TransactionStatusMapItemModel> miscMap;
 
   static final String fldAmount = 'tAmount';
   static final String fldPaytmMap = 'paytmMap';
@@ -46,6 +85,7 @@ class UserTransaction {
   static final String fldUserId = 'tUserId';
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
+  static const String fldMiscMap = "miscMap";
 
   ///paytm submap feilds
   static final String subFldPaytmBankName = 'bankName';
@@ -113,22 +153,24 @@ class UserTransaction {
   static const String TRAN_REDEEMTYPE_AMZ_VOUCHER = "AMZ_VOUCHER";
 
   UserTransaction(
-      this._docKey,
-      this._amount,
-      this._closingBalance,
-      this._note,
-      this._subType,
-      this._type,
-      this._redeemType,
-      this._ticketUpCount,
-      this._userId,
-      this._tranStatus,
-      this._icici,
-      this._rzp,
-      this._augmnt,
-      this._timestamp,
-      this._paytmMap,
-      this._updatedTime);
+    this._docKey,
+    this._amount,
+    this._closingBalance,
+    this._note,
+    this._subType,
+    this._type,
+    this._redeemType,
+    this._ticketUpCount,
+    this._userId,
+    this._tranStatus,
+    this._icici,
+    this._rzp,
+    this._augmnt,
+    this._timestamp,
+    this._paytmMap,
+    this._updatedTime,
+    this.miscMap,
+  );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
       : this(
@@ -148,6 +190,7 @@ class UserTransaction {
           parseTimeStamp(data[fldTimestamp]),
           data[fldPaytmMap],
           parseTimeStamp(data[fldUpdatedTime]),
+          parseTransactionStatusSummary(data[fldMiscMap]),
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -167,7 +210,8 @@ class UserTransaction {
             data[fldAugmontMap],
             null,
             data[fldPaytmMap],
-            null);
+            null,
+            data[fldMiscMap]);
   //TODO JSON response received as HashMap for Timestamps
 
   // //ICICI investment initiated by new investor
@@ -267,7 +311,8 @@ class UserTransaction {
             },
             Timestamp.now(),
             null,
-            Timestamp.now());
+            Timestamp.now(),
+            []);
 
   //Augmont gold investment initiated by investor
   UserTransaction.newGoldWithdrawal(double amount, String blockId,
@@ -292,7 +337,8 @@ class UserTransaction {
             },
             Timestamp.now(),
             null,
-            Timestamp.now());
+            Timestamp.now(),
+            []);
 
   toJson() {
     return {
@@ -405,4 +451,67 @@ class UserTransaction {
   set timestamp(Timestamp value) {
     _timestamp = value;
   }
+}
+
+class TransactionStatusMapItemModel {
+  String title;
+  TimestampModel timestamp;
+  String value;
+  TransactionStatusMapItemModel({
+    @required this.title,
+    this.timestamp,
+    this.value,
+  });
+
+  TransactionStatusMapItemModel copyWith({
+    String title,
+    TimestampModel timestamp,
+    String value,
+  }) {
+    return TransactionStatusMapItemModel(
+      title: title ?? this.title,
+      timestamp: timestamp ?? this.timestamp,
+      value: value ?? this.value,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'title': title,
+      'timestamp': timestamp.toMap(),
+      'value': value,
+    };
+  }
+
+  factory TransactionStatusMapItemModel.fromMap(Map<String, dynamic> map) {
+    return TransactionStatusMapItemModel(
+      title: map.keys.first,
+      timestamp: map.values.first.runtimeType == Map
+          ? TimestampModel.fromMap(map.values.first as Map<String, dynamic>)
+          : null,
+      value: map.values.first.runtimeType == String ? map.values.first : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory TransactionStatusMapItemModel.fromJson(String source) =>
+      TransactionStatusMapItemModel.fromMap(
+          json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'TransactionStatusMapItemModel(title: $title, timestamp: $timestamp, value: $value)';
+
+  @override
+  bool operator ==(covariant TransactionStatusMapItemModel other) {
+    if (identical(this, other)) return true;
+
+    return other.title == title &&
+        other.timestamp == timestamp &&
+        other.value == value;
+  }
+
+  @override
+  int get hashCode => title.hashCode ^ timestamp.hashCode ^ value.hashCode;
 }
