@@ -82,7 +82,7 @@ class TopPlayer extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   child: Padding(
                     padding: EdgeInsets.only(right: SizeConfig.padding20),
-                    child: SvgPicture.asset('assets/temp/chevron_left.svg'),
+                    child: Icon(Icons.arrow_back_ios_rounded),
                   ),
                 ),
                 if (model.lastupdated != null)

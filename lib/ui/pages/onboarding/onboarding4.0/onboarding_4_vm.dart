@@ -13,7 +13,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 
-class OnboardingViewModel extends BaseModel {
+class OnboardingViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _userService = locator<UserService>();
   final UserRepository _userRepository = locator<UserRepository>();
@@ -59,15 +59,15 @@ class OnboardingViewModel extends BaseModel {
     onboardingData = [
       [
         'Save and Invest',
-        'Strong, low risk assets with steady\ngrowth',
+        'In strong, low risk assets with steady growth',
       ],
       [
         'Play games',
-        'Get Fello tokens and tambola tickets for\nyour savings and play weekly games'
+        'Earn tambola tickets and Fello tokens for your savings and play weekly games'
       ],
       [
         'Win rewards',
-        'Win the daily and weekly games and get\nrewards and prizes!',
+        'Win the daily and weekly games and get rewards and prizes!',
       ],
     ];
   }

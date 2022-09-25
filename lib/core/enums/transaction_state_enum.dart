@@ -1,6 +1,6 @@
 enum TransactionState {
-  idleTrasantion,
-  ongoingTransaction,
-  successTransaction,
-  successCoinTransaction,
+  idle,
+  ongoing,
+  success,
+  // successCoinTransaction,
 }

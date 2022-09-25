@@ -51,6 +51,7 @@ class SizeConfig {
 
   // TEXT SIZES
   static double get title68 => screenWidth * 0.181; //68
+  static double get title50 => screenWidth * 0.120; //50
   static double get title0 => screenWidth * 0.106; //40
   static double get title1 => screenWidth * 0.093; //35
   static double get title2 => screenWidth * 0.08; //30
@@ -75,6 +76,7 @@ class SizeConfig {
   static double get iconSize7 => screenWidth * 0.194; //70
 
   // PADDINGS
+  static double get padding1 => screenWidth * 0.0024;
   static double get padding2 => screenWidth * 0.0048;
   static double get padding4 => screenWidth * 0.0096;
   static double get padding6 => screenWidth * 0.014;
@@ -114,9 +116,10 @@ class SizeConfig {
   static double get roundness32 => screenWidth * 0.077; //32
   static double get roundness40 => screenWidth * 0.096; //40
   static double get roundness56 => screenWidth * 0.135; //56
+  static double get roundness112 => screenWidth * 0.270; //56
 
   //SLIVER APP BAR (Campaign Screen)
-  static double get sliverAppExpandableSize => screenWidth * 0.5;
+  static double get sliverAppExpandableSize => screenWidth * 0.6;
   static double get sliverAppBarPaddingSmall => screenWidth * 0.05;
   static double get sliverAppBarPaddingLarge => screenWidth * 0.128;
   static double get boxWidthLarge => screenWidth * 0.371;
@@ -133,7 +136,8 @@ class SizeConfig {
       math.max(SizeConfig.viewInsets.bottom / 2, SizeConfig.padding8);
 
   //Avatar
-  static double get avatarRadius => screenWidth * 0.052;
+  static double get avatarRadius => screenWidth * 0.048;
+  static double get roundedButtonRadius => screenWidth * 0.048;
   static double get tileAvatarRadius => screenWidth * 0.057;
   static double get notificationAvatarRadius => screenWidth * 0.06;
 
@@ -150,4 +154,6 @@ class SizeConfig {
   // Button Border Radius
   static double get buttonBorderRadius => screenWidth * 0.0139; // 5
 
+//Assets
+  static double get onboardingAssetsDimens => screenWidth * 0.4;
 }

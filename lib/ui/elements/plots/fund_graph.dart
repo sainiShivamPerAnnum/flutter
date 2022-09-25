@@ -51,7 +51,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   List<GoldGraphPoint> graphPoints = [];
   List<FlSpot> dataItems = [];
-  AugmontModel augmontProvider;
+  AugmontService augmontProvider;
   DBModel dbProvider;
   BaseUtil baseProvider;
   String _dataPointsState = "loading";
@@ -60,7 +60,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    augmontProvider = Provider.of<AugmontService>(context, listen: false);
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context, listen: false);
     if (_dataPointsState == "loading") {

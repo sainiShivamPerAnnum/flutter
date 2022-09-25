@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
@@ -41,7 +42,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       hapticVibrate: true,
       content: RotatedBox(
         quarterTurns: 0,
-        child: AppDefaultDialog(
+        child: ConfirmationDialog(
           asset:
               SvgPicture.asset(Assets.noTickets, height: SizeConfig.padding54),
           title: title,
@@ -64,15 +65,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   Future<bool> didPopRoute() {
     log("Back Request called");
     if (JourneyService.isAvatarAnimationInProgress) return null;
+    if (AppState.delegate.appState.isTxnLoaderInView) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;
 
-    Future.delayed(Duration(milliseconds: 20), () {
-      if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
-          _userService.buyFieldFocusNode.hasFocus) {
-        logger.d("field has focus");
-        FocusManager.instance.primaryFocus.unfocus();
-      }
-    });
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
         AppState.screenStack.last == ScreenItem.modalsheet) {

@@ -12,10 +12,13 @@ class UserWinningsSE extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myUserFund],
+      properties: [
+        UserServiceProperties.myUserFund,
+        UserServiceProperties.myUserWallet
+      ],
       builder: (context, model, property) {
         // double lockedBal = model.userFundWallet.lockedPrizeBalance ?? 0.0;
-        double unclaimedBal = model.userFundWallet.unclaimedBalance ?? 0.0;
+        double unclaimedBal = model.userFundWallet?.prizeBalance ?? 0.0;
         return Text(
           locale.saveWinningsValue((unclaimedBal).toInt() ?? "-"),
           style: style ?? TextStyles.body3.bold.colour(Colors.white),

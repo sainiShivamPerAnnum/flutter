@@ -12,7 +12,6 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/widgets/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -40,7 +39,7 @@ class Root extends StatelessWidget {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: RootViewModel.scaffoldKey,
-          drawer: FDrawer(),
+          // drawer: FDrawer(),
           drawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
@@ -59,24 +58,24 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              if (AppState.delegate.appState.getCurrentTabIndex == 3)
-                FelloAppBar(
-                  showAppBar: false,
-                  leading: InkWell(
-                    onTap: model.showDrawer,
-                    child: Container(
-                      width: SizeConfig.padding38,
-                      height: SizeConfig.padding38,
-                      // color: Colors.red,
-                    ),
-                  ),
-                ),
-              Consumer<AppState>(
-                builder: (ctx, m, child) =>
-                    AppState.delegate.appState.isTxnLoaderInView
-                        ? TransactionLoader()
-                        : SizedBox(),
-              ),
+              // if (AppState.delegate.appState.getCurrentTabIndex == 3)
+              //   FelloAppBar(
+              //     showAppBar: false,
+              //     leading: InkWell(
+              //       onTap: model.showDrawer,
+              //       child: Container(
+              //         width: SizeConfig.padding38,
+              //         height: SizeConfig.padding38,
+              //         // color: Colors.red,
+              //       ),
+              //     ),
+              //   ),
+              // Consumer<AppState>(
+              //   builder: (ctx, m, child) =>
+              //       AppState.delegate.appState.isTxnLoaderInView
+              //           ? TransactionLoader()
+              //           : SizedBox(),
+              // ),
               BottomNavBar(
                 parentModel: model,
               ),

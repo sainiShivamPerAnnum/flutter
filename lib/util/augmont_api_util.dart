@@ -66,7 +66,7 @@ class SubmitGoldPurchase {
  * */
 class SubmitGoldSell {
   static final String path = 'api/submitGoldQntSell';
-  static final String fldLockPrice = 'lockprice';
+  static final String fldLockPrice = 'lockPrice';
   static final String fldAmount = 'amount';
   static final String fldQuantity = 'quantity';
   static final String fldMobile = 'mobile';
@@ -75,7 +75,7 @@ class SubmitGoldSell {
   static final String fldAccHolderName = 'acctname';
   static final String fldAccNo = 'accno';
   static final String fldIfsc = 'ifsc';
-  static final String fldBlockId = 'blockid';
+  static final String fldBlockId = 'blockId';
   static final String fldMerchantTranId = 'merchantTranId';
 
   static final String resTranId = 'merchantTransactionId';

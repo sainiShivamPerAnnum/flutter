@@ -3,13 +3,13 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 3.3.3+120
+version: 3.3.3+124
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
-  cached_network_image: ^3.1.0
+  cached_network_image: ^3.2.0
   cloud_firestore: ^3.1.6
   confetti: ^0.6.0
   connectivity_plus: ^2.2.0
@@ -80,7 +80,7 @@ dependencies:
   space_fixer: ^0.1.1
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
-
+  flutter_html: ^3.0.0-alpha.5
 
   isar: ^2.4.0
   isar_flutter_libs: 2.4.0
@@ -104,22 +104,16 @@ flutter:
   assets:
     - images/
     - images/Tambola/
-    - images/svgs/
-    - images/lottie/
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
     - resources/public.key
     - assets/images/
     - assets/images/icons/
-    - assets/svg/userAvatars/
+    - assets/svg/
     - assets/vectors/
     - assets/vectors/icons/
-    - assets/vectors/drawer/
+    - assets/vectors/userAvatars/
     - assets/lotties/
-    - assets/videos/
-    - assets/temp/
-    - assets/svg/
-    - assets/svg/BottomNavBarIcons/
     - assets/lotties/nav/
 
 

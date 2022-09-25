@@ -36,9 +36,10 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         return m.isLeaderboardLoading
             ? LeaderboardShimmer()
             : (m.WebGameLeaderBoard != null &&
-                    m.WebGameLeaderBoard.scoreboard != null &&
-                    (m.userProfilePicUrl.length >=
-                        m.WebGameLeaderBoard.scoreboard.length)
+                    m.WebGameLeaderBoard.scoreboard != null
+                // &&
+                // (m.userProfilePicUrl.length >=
+                //     m.WebGameLeaderBoard.scoreboard.length)
                 ? NewLeaderBoardView(
                     scoreBoard: m.WebGameLeaderBoard.scoreboard,
                     userProfilePicUrl: m.userProfilePicUrl,
@@ -135,7 +136,8 @@ class NewLeaderBoardView extends StatelessWidget {
                     width: SizeConfig.padding6,
                   ),
                   SvgPicture.asset(
-                    'assets/temp/chevron_right.svg',
+                    Assets.chevRonRightArrow,
+                    color: Colors.white,
                     width: SizeConfig.iconSize1,
                     height: SizeConfig.iconSize1,
                   )
@@ -190,7 +192,7 @@ class RemainingRank extends StatelessWidget {
                       width: SizeConfig.padding20,
                     ),
                     userProfilePicUrl[countedIndex] == null
-                        ? Image.asset(
+                        ? SvgPicture.asset(
                             getDefaultProfilePicture(countedIndex),
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
@@ -238,11 +240,11 @@ class RemainingRank extends StatelessWidget {
   getDefaultProfilePicture(int rank) {
     switch (rank) {
       case 4:
-        return "assets/temp/rank_three_profile.png";
+        return Assets.cvtar4;
       case 5:
-        return "assets/temp/rank_one_profile.png";
+        return Assets.cvtar4;
       case 6:
-        return "assets/temp/rank_two_profile.png";
+        return Assets.cvtar1;
       default:
         return Assets.profilePic;
     }

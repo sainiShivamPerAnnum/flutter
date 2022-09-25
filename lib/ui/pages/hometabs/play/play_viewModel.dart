@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:felloapp/base_util.dart';
 import '../../../../util/assets.dart';
 
-class PlayViewModel extends BaseModel {
+class PlayViewModel extends BaseViewModel {
   final _getterRepo = locator<GetterRepository>();
   final _analyticsService = locator<AnalyticsService>();
   final GameRepo gamesRepo = locator<GameRepo>();

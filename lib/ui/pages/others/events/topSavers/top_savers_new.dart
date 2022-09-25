@@ -2,18 +2,15 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,21 +19,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../core/enums/page_state_enum.dart';
-import '../../../../../core/service/api.dart';
 import '../../../../../navigator/router/ui_pages.dart';
 import '../../../../service_elements/user_service/profile_image.dart';
 import '../../../../widgets/helpers/height_adaptive_pageview.dart';
 import '../../../hometabs/play/play_components/play_info_section.dart';
-import '../../../hometabs/play/play_components/titlesGames.dart';
 import '../../../static/app_widget.dart';
 import '../../../static/game_card.dart';
 import '../../../static/new_square_background.dart';
-import '../../games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
-import '../../games/web/reward_leaderboard/components/reward_shimmer.dart';
 import 'all_participants.dart';
-import '../../../onboarding/blocked_user.dart';
-import '../../../onboarding/update_screen.dart';
-import '../../profile/my_winnings/my_winnings_view.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
@@ -78,160 +68,49 @@ class CampaignView extends StatelessWidget {
                 controller: _controller,
                 physics: BouncingScrollPhysics(),
                 slivers: [
-                  SliverLayoutBuilder(builder: (context, constraints) {
-                    final scrolled = constraints.scrollOffset > 0;
-                    return SliverAppBar(
-                      title: scrolled
-                          ? Text(
-                              model.appbarTitle,
-                              style: TextStyles.body1.colour(Colors.white),
-                            )
-                          : SizedBox.shrink(),
-                      pinned: true,
-                      backgroundColor: UiConstants.kSliverAppBarBackgroundColor,
-                      leading: IconButton(
+                  SliverLayoutBuilder(
+                    builder: (context, constraints) {
+                      final scrolled = constraints.scrollOffset > 0;
+                      return SliverAppBar(
+                        title: scrolled
+                            ? Text(
+                                model.appbarTitle,
+                                style: TextStyles.body1.colour(Colors.white),
+                              )
+                            : SizedBox.shrink(),
+                        pinned: true,
+                        backgroundColor: UiConstants.kBackgroundColor,
+                        leading: IconButton(
                           onPressed: () {
                             AppState.backButtonDispatcher.didPopRoute();
                           },
-                          icon: Icon(Icons.arrow_back_ios)),
-                      expandedHeight: SizeConfig.sliverAppExpandableSize,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          children: [
-                            SvgPicture.asset(
-                              Assets.visualGridAsset,
-                              fit: BoxFit.cover,
-                              width: double.maxFinite,
-                              height: double.maxFinite,
-                            ),
-                            //The title and sub title
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      Assets.coinsIconAsset,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          model.appbarTitle,
-                                          style: TextStyles.body1
-                                              .colour(Colors.white),
-                                        ),
-                                        Text(
-                                          model.subTitle,
-                                          style: TextStyles.title3
-                                              .colour(Colors.white)
-                                              .bold,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(
-                                      0,
-                                      SizeConfig.sliverAppBarPaddingLarge,
-                                      0,
-                                      SizeConfig.sliverAppBarPaddingSmall),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        width: SizeConfig.padding10,
-                                        height: SizeConfig.padding10,
-                                        decoration: const BoxDecoration(
-                                            color: UiConstants.kPrimaryColor,
-                                            shape: BoxShape.circle),
-                                      ),
-                                      StreamBuilder(
-                                        stream:
-                                            model.getRealTimeFinanceStream(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasError) {
-                                            return Text(
-                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
-                                              style: TextStyles.body3
-                                                  .colour(Colors.white),
-                                            );
-                                          }
-
-                                          if (!snapshot.hasData) {
-                                            return Text(
-                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
-                                              style: TextStyles.body3
-                                                  .colour(Colors.white),
-                                            );
-                                          }
-
-                                          if ((snapshot.data
-                                                      as rdb.DatabaseEvent)
-                                                  .snapshot
-                                                  .value !=
-                                              null) {
-                                            final fetchedData = Map<dynamic,
-                                                    dynamic>.from(
-                                                (snapshot.data as DatabaseEvent)
-                                                        .snapshot
-                                                        .value
-                                                    as Map<dynamic, dynamic>);
-
-                                            Map<dynamic, dynamic> sortedData =
-                                                fetchedData[model
-                                                    .getPathForRealTimeFinanceStats(
-                                                        eventType)];
-
-                                            return AnimatedSwitcher(
-                                              duration: const Duration(
-                                                  milliseconds: 500),
-                                              transitionBuilder: (Widget child,
-                                                  Animation<double> animation) {
-                                                return ScaleTransition(
-                                                    scale: animation,
-                                                    child: child);
-                                              },
-                                              child: Text(
-                                                "${model.sortPlayerNumbers(sortedData['value'].toString())}+  Participants",
-                                                style: TextStyles.body3
-                                                    .colour(Colors.white),
-                                                key: ValueKey<String>(
-                                                    sortedData['value']
-                                                        .toString()),
-                                              ),
-                                            );
-                                          } else {
-                                            return Text(
-                                              "${model.getDeafultRealTimeStat(eventType)} Participants",
-                                              style: TextStyles.body3
-                                                  .colour(Colors.white),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
+                          icon: Icon(Icons.arrow_back_ios),
                         ),
-                      ),
-                    );
-                  }),
+                        expandedHeight: SizeConfig.sliverAppExpandableSize,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Padding(
+                            padding: EdgeInsets.only(
+                              // left: SizeConfig.padding24,
+                              // right: SizeConfig.padding24,
+                              bottom: SizeConfig.padding24,
+                            ),
+                            child: CampaignCard(
+                              event: model.event,
+                              subText: Padding(
+                                padding: EdgeInsets.only(
+                                  top: SizeConfig.padding24,
+                                ),
+                                child: _realtimeView(model),
+                              ),
+                              isLoading: model.event == null,
+                              topPadding: 90,
+                              leftPadding: SizeConfig.padding38,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   SliverToBoxAdapter(
                     child: Container(
                       padding: EdgeInsets.all(SizeConfig.padding34),
@@ -270,6 +149,7 @@ class CampaignView extends StatelessWidget {
                                     children: [
                                       ProfileImageSE(
                                         radius: SizeConfig.profileDPSize,
+                                        reactive: false,
                                       ),
                                       const SizedBox(
                                         height: 10,
@@ -371,7 +251,7 @@ class CampaignView extends StatelessWidget {
                                                     child: Row(
                                                   children: [
                                                     SvgPicture.asset(
-                                                      Assets.rankIconAsset,
+                                                      Assets.rewardGameAsset,
                                                     ),
                                                     const SizedBox(
                                                       width: 5,
@@ -591,6 +471,67 @@ class CampaignView extends StatelessWidget {
       },
     );
   }
+
+  Row _realtimeView(TopSaverViewModel model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(right: 10),
+          width: SizeConfig.padding10,
+          height: SizeConfig.padding10,
+          decoration: const BoxDecoration(
+            color: UiConstants.kPrimaryColor,
+            shape: BoxShape.circle,
+          ),
+        ),
+        StreamBuilder(
+          stream: model.getRealTimeFinanceStream(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text(
+                "${model.getDeafultRealTimeStat(eventType)} Participants",
+                style: TextStyles.body3.colour(Colors.white),
+              );
+            }
+
+            if (!snapshot.hasData) {
+              return Text(
+                "${model.getDeafultRealTimeStat(eventType)} Participants",
+                style: TextStyles.body3.colour(Colors.white),
+              );
+            }
+
+            if ((snapshot.data as rdb.DatabaseEvent).snapshot.value != null) {
+              final fetchedData = Map<dynamic, dynamic>.from(
+                  (snapshot.data as DatabaseEvent).snapshot.value
+                      as Map<dynamic, dynamic>);
+
+              Map<dynamic, dynamic> sortedData =
+                  fetchedData[model.getPathForRealTimeFinanceStats(eventType)];
+
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                child: Text(
+                  "${model.sortPlayerNumbers(sortedData['value'].toString())}+  Participants",
+                  style: TextStyles.body3.colour(Colors.white),
+                  key: ValueKey<String>(sortedData['value'].toString()),
+                ),
+              );
+            } else {
+              return Text(
+                "${model.getDeafultRealTimeStat(eventType)} Participants",
+                style: TextStyles.body3.colour(Colors.white),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
 }
 
 //To generate page with current participamnts list
@@ -650,8 +591,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Image.asset(
-                                                  Assets
-                                                      .defaultProfilePlaceholder,
+                                                  Assets.cvtar1,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                 );
@@ -678,8 +618,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                   ),
                                                   errorWidget: (a, b, c) {
                                                     return Image.asset(
-                                                      Assets
-                                                          .defaultProfilePlaceholder,
+                                                      Assets.cvtar2,
                                                       width:
                                                           SizeConfig.iconSize5,
                                                       height:
@@ -845,8 +784,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Image.asset(
-                                                  Assets
-                                                      .defaultProfilePlaceholder,
+                                                  Assets.cvtar3,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                 );
@@ -873,8 +811,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                   ),
                                                   errorWidget: (a, b, c) {
                                                     return Image.asset(
-                                                      Assets
-                                                          .defaultProfilePlaceholder,
+                                                      Assets.cvtar4,
                                                       width:
                                                           SizeConfig.iconSize5,
                                                       height:

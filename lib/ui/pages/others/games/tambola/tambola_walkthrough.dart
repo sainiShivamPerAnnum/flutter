@@ -6,7 +6,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -62,97 +61,90 @@ class Walkthrough extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomeBackground(
-        child: Column(
-          children: [
-            FelloAppBar(
-              leading: FelloAppBarBackButton(),
-              title: "Walkthrough",
-              actions: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  child: InkWell(
-                    child: SvgPicture.asset("images/support-log.svg",
-                        width: SizeConfig.padding24, color: Colors.white),
-                    onTap: () {
-                      HapticFeedback.vibrate();
-                      AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addPage, page: SupportPageConfig);
-                    },
-                  ),
-                )
-              ],
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.roundness40),
-                        topRight: Radius.circular(SizeConfig.roundness40)),
-                    color: Colors.white),
-                padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.pageHorizontalMargins),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: Text(
-                        "The Daily Picks",
-                        style: GoogleFonts.montserrat(
-                          fontSize: SizeConfig.title3,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    PicksCardView(
-                      isForDemo: true,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(children: generatePoints(dailyPicks)),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding12),
-                            child: Text(
-                              "The Daily Picks",
-                              style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.title3,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Image.asset(
-                            Assets.tambolaWalkthrough,
-                            width: SizeConfig.screenWidth,
-                            fit: BoxFit.cover,
-                          ),
-                          Column(children: generatePoints(tambolatickets)),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Text(
-                              "How to Win",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Column(children: generatePoints(prizes)),
-                        ],
-                      ),
-                    )
-                  ],
+      body: Column(
+        children: [
+          FelloAppBar(
+            leading: FelloAppBarBackButton(),
+            title: "Walkthrough",
+            actions: [
+              CircleAvatar(
+                backgroundColor: Colors.black,
+                child: InkWell(
+                  child: Icon(Icons.info,
+                      size: SizeConfig.padding24, color: Colors.white),
+                  onTap: () {
+                    HapticFeedback.vibrate();
+                    AppState.delegate.appState.currentAction = PageAction(
+                        state: PageState.addPage, page: SupportPageConfig);
+                  },
                 ),
+              )
+            ],
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness40),
+                      topRight: Radius.circular(SizeConfig.roundness40)),
+                  color: Colors.white),
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: Text(
+                      "The Daily Picks",
+                      style: GoogleFonts.montserrat(
+                        fontSize: SizeConfig.title3,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  PicksCardView(
+                    isForDemo: true,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(children: generatePoints(dailyPicks)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding12),
+                          child: Text(
+                            "The Daily Picks",
+                            style: GoogleFonts.montserrat(
+                              fontSize: SizeConfig.title3,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Column(children: generatePoints(tambolatickets)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Text(
+                            "How to Win",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Column(children: generatePoints(prizes)),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

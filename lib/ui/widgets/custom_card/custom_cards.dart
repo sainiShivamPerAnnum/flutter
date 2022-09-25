@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,28 +14,27 @@ class SaveCustomCard extends StatelessWidget {
   final Color cardBgColor;
   final String cardAssetName;
   final Function() onTap;
-  final double investedAmount;
-  final bool isGoldAssets;
+  final InvestmentType investmentType;
 
-  const SaveCustomCard(
-      {Key key,
-      this.title,
-      this.cardBgColor,
-      this.cardAssetName,
-      this.onTap,
-      this.investedAmount = 0,
-      this.onCardTap,
-      this.isGoldAssets = false})
-      : super(key: key);
+  const SaveCustomCard({
+    Key key,
+    this.title,
+    this.cardBgColor,
+    this.cardAssetName,
+    this.onTap,
+    this.onCardTap,
+    @required this.investmentType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     S locale = S();
     return Padding(
       padding: EdgeInsets.only(
-          right: SizeConfig.padding16,
-          top: SizeConfig.padding20,
-          bottom: SizeConfig.padding20),
+        right: SizeConfig.padding16,
+        top: SizeConfig.padding20,
+        bottom: SizeConfig.padding20,
+      ),
       child: GestureDetector(
         onTap: onCardTap,
         child: Container(
@@ -47,7 +47,9 @@ class SaveCustomCard extends StatelessWidget {
                 padding: EdgeInsets.only(left: SizeConfig.padding16),
                 child: CustomPaint(
                   size: Size(
-                      SizeConfig.screenWidth, SizeConfig.screenWidth * 0.351),
+                    SizeConfig.screenWidth,
+                    SizeConfig.screenWidth * 0.351,
+                  ),
                   painter: CustomSaveCardPainter(cardBgColor),
                 ),
               ),
@@ -97,20 +99,17 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      locale.investedText,
+                                      "Balance",
                                       style: TextStyles.sourceSansM.body4,
                                     ),
-                                    isGoldAssets
-                                        ? UserGoldQuantitySE(
-                                            style:
-                                                TextStyles.sourceSansSB.title4,
-                                          )
-                                        : Text(
-                                            investedAmount.toString() ??
-                                                0.toString(),
-                                            style:
-                                                TextStyles.sourceSansSB.title4,
-                                          ),
+                                    UserFundQuantitySE(
+                                      style: TextStyles.sourceSansSB.title4,
+                                      investmentType: investmentType,
+                                      prefix: investmentType ==
+                                              InvestmentType.LENDBOXP2P
+                                          ? "₹"
+                                          : null,
+                                    )
                                   ],
                                 ),
                                 CustomSaveButton(
@@ -255,12 +254,8 @@ class CustomSaveButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Colors.grey.shade300,
-              UiConstants.kBackgroundColor,
-              UiConstants.kTextColor2,
-            ], begin: Alignment(2, -3), end: Alignment(-2, 2)),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        ),
         child: Padding(
           padding: EdgeInsets.all(SizeConfig.padding2),
           child: Container(
@@ -268,7 +263,7 @@ class CustomSaveButton extends StatelessWidget {
             width: isFullScreen ? width : SizeConfig.screenWidth * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-              color: UiConstants.kBackgroundDividerColor,
+              color: UiConstants.kBackgroundDividerColor.withAlpha(200),
             ),
             child: Center(
               child: Text(

@@ -5,8 +5,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -17,15 +17,13 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -52,12 +50,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   String _myUserDpUrl;
   String _myUserName;
+  // String _myUpiId;
   String _dob;
   String _gender;
   String _idToken;
+  String _avatarId;
+  String _email;
 
   UserFundWallet _userFundWallet;
   UserJourneyStatsModel _userJourneyStats;
+  UserAugmontDetail _userAugmontDetails;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
@@ -70,18 +72,20 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
 
+  String get avatarId => _avatarId;
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
   String get idToken => _idToken;
   String get dob => _dob;
   String get gender => _gender;
+  String get email => _email;
+  // String get upiId => _myUpiId;
 
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
-
-  FocusScopeNode buyFieldFocusNode = FocusScopeNode();
+  UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
 
   set baseUser(baseUser) {
     _baseUser = baseUser;
@@ -106,12 +110,26 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         "My user dp url updated in userservice, property listeners notified");
   }
 
+  setMyAvatarId(String avId) {
+    _avatarId = avId;
+    notifyListeners(UserServiceProperties.myAvatarId);
+    _logger.d(
+        "My user avatar Id updated in userservice, property listeners notified");
+  }
+
   setMyUserName(String name) {
     _myUserName = name;
     notifyListeners(UserServiceProperties.myUserName);
     _logger
         .d("My user name updated in userservice, property listeners notified");
   }
+
+  // setMyUpiId(String upi) {
+  //   _myUpiId = upi;
+  //   notifyListeners(UserServiceProperties.myUpiId);
+  //   _logger.d(
+  //       "My user upi Id updated in userservice, property listeners notified");
+  // }
 
   setDateOfBirth(String dob) {
     _dob = dob;
@@ -128,7 +146,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setEmail(String email) {
-    _baseUser.email = email;
+    _email = email;
     notifyListeners(UserServiceProperties.myEmail);
     _logger
         .d("My user email updated in userservice, property listeners notified");
@@ -171,6 +189,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _isSimpleKycVerified = val;
     notifyListeners(UserServiceProperties.mySimpleKycVerified);
     _logger.d("Email:User simple kyc verified, property listeners notified");
+  }
+
+  setUserAugmontDetails(value) {
+    this._userAugmontDetails = value;
+    notifyListeners(UserServiceProperties.myAugmontDetails);
+    _logger.d(
+        "AgmontDetails :User augmontDetails updated, property listeners notified");
   }
 
   bool get isUserOnborded {
@@ -278,18 +303,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
-      if (baseUser != null) {
-        isEmailVerified = baseUser.isEmailVerified ?? false;
-        isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-        await Future.wait([
-          // note: Already Setting profile in Root uneccessary Calling
-          // setProfilePicture(),
-          // getUserFundWalletData(),
-          getUserJourneyStats()
-        ]);
-        // checkForNewNotifications();
-        // checkForUnscratchedGTStatus();
-      }
+      if (baseUser != null) await getUserJourneyStats();
     } catch (e) {
       _logger.e(e.toString());
       _internalOpsService
@@ -318,6 +332,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
       showSecurityPrompt = null;
+      _userAugmontDetails = null;
+      // _myUpiId = null;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");
@@ -345,7 +361,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               .d("Current FCM token from baseUser : ${_baseUser?.client_token}")
           : _logger.d("No FCM token in firestored");
 
-      _myUserName = _baseUser?.name;
+      isEmailVerified = baseUser.isEmailVerified ?? false;
+      isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
+      setEmail(baseUser.email);
+      setMyAvatarId(baseUser.avatarId);
+      setMyUserName(baseUser?.kycName ?? baseUser.name);
+      setDateOfBirth(baseUser.dob);
+      setGender(baseUser.gender);
     } else {
       _logger.d("Firebase User is null");
     }
@@ -472,6 +494,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
+  Future<void> fetchUserAugmontDetail() async {
+    if (userAugmontDetails == null) {
+      ApiResponse<UserAugmontDetail> augmontDetailResponse =
+          await _userRepo.getUserAugmontDetails();
+      if (augmontDetailResponse.isSuccess())
+        setUserAugmontDetails(augmontDetailResponse.model);
+    }
+  }
   // Future<bool> completeOnboarding() async {
   //   ApiResponse response = await _userRepo.completeOnboarding();
   //   return response.model;
@@ -484,7 +514,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       BaseUtil.openDialog(
         isBarrierDismissable: false,
         addToScreenStack: true,
-        content: AppDefaultDialog(
+        content: ConfirmationDialog(
           title: "Request Permission",
           description:
               "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
@@ -549,11 +579,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
-      if (url != null) {
+      final updateUserAvatarResponse = await _userRepo.updateUser(
+          dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser.uid);
+      if (url != null &&
+          updateUserAvatarResponse.isSuccess() &&
+          updateUserAvatarResponse.model) {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
         setMyUserDpUrl(url);
-        baseUser.avatarId = 'CUSTOM';
+        setMyAvatarId('CUSTOM');
         //_baseUtil.setDisplayPictureUrl(url);
         _logger.d('Final DP Uri: $url');
         return true;

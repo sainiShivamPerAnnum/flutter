@@ -4,52 +4,40 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
-import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RootViewModel extends BaseModel {
+class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
@@ -64,14 +52,14 @@ class RootViewModel extends BaseModel {
   int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
-  final txnService = locator<TransactionService>();
+
+  final _txnHistoryService = locator<TransactionHistoryService>();
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
 
   final _refRepo = locator<ReferralRepo>();
 
   BuildContext rootContext;
-  bool _isInitialized = false;
   bool _isUploading = false;
 
   get isUploading => this._isUploading;
@@ -102,9 +90,9 @@ class RootViewModel extends BaseModel {
     if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
-    txnService.signOut();
+    _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await txnService.fetchTransactions();
+    await _txnHistoryService.fetchTransactions();
     await _journeyService.checkForMilestoneLevelChange();
   }
 
@@ -134,28 +122,11 @@ class RootViewModel extends BaseModel {
         PageAction(state: PageState.addPage, page: NotificationsConfig);
   }
 
-  showDrawer() {
-    // print("drawer opened");
-    //AppState.screenStack.add(ScreenItem.dialog);
-    scaffoldKey.currentState.openDrawer();
-    _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
-  }
-
-  // showTicketModal(BuildContext context) {
-  //   AppState.screenStack.add(ScreenItem.dialog);
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (ctx) {
-  //         return WantMoreTicketsModalSheet();
-  //       });
-  // }
-
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
-      //TODO: use the analytics event provided for journey.
       case 0:
-        print('journey triggered');
+        _analyticsService.track(eventName: AnalyticsEvents.journeySection);
         break;
       case 1:
         _analyticsService.track(eventName: AnalyticsEvents.playSection);
@@ -170,7 +141,6 @@ class RootViewModel extends BaseModel {
       default:
     }
     bottomNavBarIndex = index;
-    _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     Haptic.vibrate();
     if (AppState.delegate.appState.getCurrentTabIndex == 0)
@@ -195,40 +165,6 @@ class RootViewModel extends BaseModel {
   downloadJourneyPage() {
     _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
-
-  // uploadJourneyPage() async {
-  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
-  //   log(json.encode(jourenyPages.last.toMap()));
-  // }
-
-  // uploadMilestones() async {
-  //   // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
-  //   //       log(milestone.toMap().toString());
-  //   //     }));
-  //   log(json.encode(jourenyPages
-  //       .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
-  //       .toList()));
-  // }
-
-  // completeNViewDownloadSaveLViewAsset() async {
-  //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
-  //     log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
-  //     svgSource = _journeyRepo.getAssetLocalFilePath('b1');
-  //   } else {
-  //     svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
-  //     log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
-  //     await Future.delayed(Duration(seconds: 5));
-  //     final bool result = await _journeyRepo.downloadAndSaveFile(
-  //         "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
-  //     if (result) {
-  //       log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
-
-  //       svgSource = _journeyRepo.getAssetLocalFilePath('b1');
-  //     } else {
-  //       log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
-  //     }
-  //   }
-  // }
 
   Future<void> openJourneyView() async {
     AppState.delegate.appState.currentAction =
@@ -258,7 +194,7 @@ class RootViewModel extends BaseModel {
         isBarrierDismissable: false,
         hapticVibrate: true,
         addToScreenStack: true,
-        content: AppDefaultDialog(
+        content: ConfirmationDialog(
           title: "App Update Avilable",
           description:
               "A new version of the app is avilable. Update now to enjoy the hastle free experience.",
@@ -289,7 +225,7 @@ class RootViewModel extends BaseModel {
         isBarrierDismissable: false,
         hapticVibrate: true,
         addToScreenStack: true,
-        content: AppDefaultDialog(
+        content: ConfirmationDialog(
           title: "Notice",
           description: msg,
           buttonText: "Ok",
@@ -478,10 +414,7 @@ class RootViewModel extends BaseModel {
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
 
-    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
-      //Golden ticket dynamic link
-      int flag = await _submitGoldenTicket(userId, _uri, context);
-    } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
     } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
       try {
@@ -551,92 +484,5 @@ class RootViewModel extends BaseModel {
       _logger.e(e);
       return false;
     }
-  }
-
-  Future<int> _submitGoldenTicket(
-      String userId, String deepLink, BuildContext context) async {
-    try {
-      String prefix = "https://fello.in/goldenticketdynlnk/";
-      if (!deepLink.startsWith(prefix)) return -1;
-      String docId = deepLink.replaceAll(prefix, '');
-      if (docId != null && docId.isNotEmpty) {
-        return _httpModel
-            .postGoldenTicketRedemption(userId, docId)
-            .then((redemptionMap) {
-          //_logger.d('Flag is ${tckCount.toString()}');
-          if (redemptionMap != null &&
-              redemptionMap['flag'] &&
-              redemptionMap['count'] > 0) {
-            _userCoinService.getUserCoinBalance();
-            _userService.getUserFundWalletData();
-
-            AppState.screenStack.add(ScreenItem.dialog);
-            return showDialog(
-              context: context,
-              builder: (_) => GoldenTicketClaimDialog(
-                ticketCount: redemptionMap['count'],
-                cashPrize: redemptionMap['amt'],
-              ),
-            );
-          } else {
-            AppState.screenStack.add(ScreenItem.dialog);
-            return showDialog(
-              context: context,
-              builder: (_) => GoldenTicketClaimDialog(
-                ticketCount: 0,
-                failMsg: redemptionMap['fail_msg'],
-              ),
-            );
-          }
-        });
-      }
-      return -1;
-    } catch (e) {
-      _logger.e('$e');
-      return -1;
-    }
-  }
-
-  // void earnMoreTokens() {
-  //   _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
-  //        BaseUtil.openModalBottomSheet(
-  //                     addToScreenStack: true,
-  //                     backgroundColor: UiConstants.gameCardColor,
-  //                     content: WantMoreTicketsModalSheet(),
-  //                     borderRadius: BorderRadius.only(
-  //                       topLeft: Radius.circular(SizeConfig.roundness24),
-  //                       topRight: Radius.circular(SizeConfig.roundness24),
-  //                     ),
-  //                     hapticVibrate: true,
-  //                     isScrollControlled: true,
-  //                     isBarrierDismissable: true,
-  //                   );
-  // }
-
-  // addJourneyPage() async {
-  //   isUploading = true;
-  //   jourenyPages.forEach((page) async {
-  //     await _dbModel.addJourneypage(page);
-  //   });
-  //   isUploading = false;
-  // }
-
-  void focusBuyField() {
-    Haptic.vibrate();
-    if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
-        _userService.buyFieldFocusNode.hasFocus) {
-      _logger.d("field has focus");
-      FocusManager.instance.primaryFocus.unfocus();
-    }
-    Future.delayed(Duration(milliseconds: 100), () {
-      _userService.buyFieldFocusNode.requestFocus();
-    });
-  }
-
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
-
-    return token;
   }
 }

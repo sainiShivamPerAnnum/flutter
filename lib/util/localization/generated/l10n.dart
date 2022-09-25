@@ -553,11 +553,11 @@ class S {
     );
   }
 
-  /// `Invested`
-  String get investedText {
+  /// `Balance`
+  String get balanceText {
     return Intl.message(
-      'Invested',
-      name: 'investedText',
+      'Balance',
+      name: 'balanceText',
       desc: '',
       args: [],
     );
@@ -583,11 +583,11 @@ class S {
     );
   }
 
-  /// `Stable Fello`
-  String get stableFelloText {
+  /// `Fello Flo`
+  String get felloFloText {
     return Intl.message(
-      'Stable Fello',
-      name: 'stableFelloText',
+      'Fello Flo',
+      name: 'felloFloText',
       desc: '',
       args: [],
     );

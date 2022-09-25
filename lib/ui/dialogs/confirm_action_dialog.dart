@@ -1,33 +1,32 @@
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class ConfirmActionDialog extends StatefulWidget {
+class ConfirmationDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
   final Widget asset;
 
-  ConfirmActionDialog(
-      {@required this.title,
-      @required this.description,
-      @required this.buttonText,
-      @required this.confirmAction,
-      @required this.cancelAction,
-      this.asset,
-      this.cancelBtnText = 'Cancel'});
+  ConfirmationDialog({
+    @required this.title,
+    this.description = '',
+    @required this.buttonText,
+    @required this.confirmAction,
+    @required this.cancelAction,
+    this.asset,
+    this.cancelBtnText = 'Cancel',
+  });
 
   @override
   State createState() => _FormDialogState();
 }
 
-class _FormDialogState extends State<ConfirmActionDialog> {
-  Log log = new Log('ConfirmActionDialog');
-  final _formKey = GlobalKey<FormState>();
-  final fdbkController = TextEditingController();
+class _FormDialogState extends State<ConfirmationDialog> {
+  Log log = new Log('ConfirmationDialog');
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,95 +37,104 @@ class _FormDialogState extends State<ConfirmActionDialog> {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: dialogContent(context),
+      insetPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
     );
   }
 
   dialogContent(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        //...bottom card part,
-        Container(
-          padding: EdgeInsets.only(
-            top: 5 + SizeConfig.cardBorderRadius,
-            bottom: SizeConfig.cardBorderRadius,
-            left: SizeConfig.cardBorderRadius,
-            right: SizeConfig.cardBorderRadius,
-          ),
-          margin: EdgeInsets.all(10),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
-            children: <Widget>[
-              Text(
-                widget.title,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              widget.asset ?? SizedBox(),
-              Text(
-                widget.description,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(
-                  fontSize: SizeConfig.mediumTextSize,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: TextButton(
-                      onPressed: () {
-                        Haptic.vibrate();
-                        log.debug('DialogAction cancelled');
-                        AppState.backButtonDispatcher.didPopRoute();
-                        return widget.cancelAction();
-                      },
-                      child: Text(
-                        widget.cancelBtnText,
-                        style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Haptic.vibrate();
-                        log.debug('DialogAction clicked');
-                        AppState.backButtonDispatcher.didPopRoute();
-                        return widget.confirmAction();
-                      },
-                      child: Text(
-                        widget.buttonText,
-                        style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+    return Container(
+      decoration: new BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.white.withOpacity(0.3),
+            Colors.black.withOpacity(0),
+            Colors.white.withOpacity(0.3),
+          ],
         ),
-      ],
+      ),
+      width: SizeConfig.screenWidth,
+      child: Container(
+        padding: EdgeInsets.only(
+          bottom: SizeConfig.padding12,
+          right: SizeConfig.padding12,
+          left: SizeConfig.padding12,
+          top: SizeConfig.padding32,
+        ),
+        margin: EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          color: UiConstants.kSecondaryBackgroundColor,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.title,
+              style: TextStyles.rajdhaniB.title3,
+              textAlign: TextAlign.center,
+            ),
+            if (widget.asset != null)
+              Padding(padding: EdgeInsets.zero, child: widget.asset),
+            if (widget.description.isNotEmpty)
+              Container(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.padding12,
+                ),
+                width: SizeConfig.screenWidth * 0.75,
+                child: Text(
+                  widget.description,
+                  style: TextStyles.sourceSans.body2.colour(
+                    UiConstants.kTextColor.withOpacity(0.60),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            isLoading
+                ? Column(
+                    children: [
+                      CircularProgressIndicator(
+                        strokeWidth: 0.5,
+                      ),
+                      SizedBox(height: SizeConfig.padding16)
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppNegativeBtn(
+                        width: SizeConfig.screenWidth * 0.40,
+                        btnText: widget.cancelBtnText,
+                        onPressed: () {
+                          return widget.cancelAction();
+                        },
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding10,
+                      ),
+                      AppPositiveBtn(
+                        btnText: widget.buttonText,
+                        width: SizeConfig.screenWidth * 0.40,
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          return widget.confirmAction();
+                        },
+                      ),
+                    ],
+                  ),
+          ],
+        ),
+      ),
     );
   }
 }

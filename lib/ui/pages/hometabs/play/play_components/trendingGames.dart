@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -22,25 +23,35 @@ class TrendingGamesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenWidth * 0.536,
-      width: SizeConfig.screenWidth,
-      margin: EdgeInsets.only(bottom: SizeConfig.padding35),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        itemCount: model.isGamesListDataLoading
-            ? 3
-            : model.trendingGamesListData.length,
-        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-        itemBuilder: (ctx, index) {
-          return model.isGamesListDataLoading
-              ? TrendingGamesShimmer()
-              : TrendingGames(
-                  game: model.trendingGamesListData[index],
-                );
-        },
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GameTitleWithSubTitle(
+            title: "Your favorites",
+            subtitle:
+                "Play using fello tokens. Money from savings will not be deducted"),
+        Container(
+          height: SizeConfig.screenWidth * 0.6,
+          width: SizeConfig.screenWidth,
+          margin:
+              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            itemCount: model.isGamesListDataLoading
+                ? 3
+                : model.trendingGamesListData.length,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+            itemBuilder: (ctx, index) {
+              return model.isGamesListDataLoading
+                  ? TrendingGamesShimmer()
+                  : TrendingGames(
+                      game: model.trendingGamesListData[index],
+                    );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -54,7 +65,7 @@ class TrendingGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Haptic.vibrate();
         AppState.delegate.parseRoute(
@@ -62,77 +73,42 @@ class TrendingGames extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.only(right: SizeConfig.padding16),
-        height: SizeConfig.screenWidth * 0.536,
-        width: SizeConfig.screenWidth * 0.610,
+        margin: EdgeInsets.only(right: SizeConfig.padding20),
+        width: SizeConfig.screenWidth * 0.32,
+        padding: EdgeInsets.all(SizeConfig.padding12),
         decoration: BoxDecoration(
-          color: Color(0xff39393C),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        ),
+            color: UiConstants.kSecondaryBackgroundColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.roundness112))),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Hero(
-              tag: game.code,
-              child: Container(
-                margin: EdgeInsets.all(SizeConfig.padding6),
-                height: SizeConfig.screenWidth * 0.314,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness8),
-                    topRight: Radius.circular(SizeConfig.roundness8),
-                  ),
-                  image: DecorationImage(
-                      image: CachedNetworkImageProvider(game.thumbnailUri),
-                      fit: BoxFit.cover),
-                ),
+            ClipOval(
+              child: SvgPicture.network(
+                game.icon,
+                fit: BoxFit.cover,
+                width: SizeConfig.screenWidth * 0.32,
               ),
             ),
-            Row(
+            Text(
+              game.gameName,
+              textAlign: TextAlign.center,
+              style: TextStyles.sourceSans.body1.colour(Colors.white),
+            ),
+            SizedBox(height: SizeConfig.padding12),
+            Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.padding8,
-                        top: SizeConfig.padding6,
-                        bottom: SizeConfig.padding16,
-                      ),
-                      child: Text(
-                        game.gameName,
-                        style: TextStyles.rajdhaniSB.body2,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: SizeConfig.padding8),
-                      child: GameRewards(prizeAmount: game.prizeAmount),
-                    ),
-                  ],
+                SvgPicture.asset(
+                  Assets.token,
+                  height: SizeConfig.padding20,
                 ),
-                Spacer(),
-                Padding(
-                  padding: EdgeInsets.only(right: SizeConfig.padding12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            Assets.aFelloToken,
-                            height: SizeConfig.padding16,
-                          ),
-                          SizedBox(width: SizeConfig.padding2),
-                          Text(
-                            game.playCost.toString(),
-                            style: TextStyles.sourceSansSB.body2,
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                SizedBox(height: SizeConfig.padding6),
+                Text(
+                  game.playCost.toString(),
+                  style: TextStyles.sourceSans.body2.colour(Colors.white),
+                )
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -148,39 +124,56 @@ class TrendingGamesShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: SizeConfig.padding16),
-      height: SizeConfig.screenWidth * 0.688,
-      width: SizeConfig.screenWidth * 0.610,
+      margin: EdgeInsets.only(right: SizeConfig.padding20),
+      width: SizeConfig.screenWidth * 0.32,
+      padding: EdgeInsets.all(SizeConfig.padding12),
       decoration: BoxDecoration(
-        color: Color(0xff39393C),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-      ),
+          color: UiConstants.kSecondaryBackgroundColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(SizeConfig.roundness112))),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         child: Shimmer.fromColors(
           baseColor: UiConstants.kUserRankBackgroundColor,
           highlightColor: UiConstants.kBackgroundColor,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.all(SizeConfig.padding16),
+                height: SizeConfig.screenWidth * 0.23,
+                width: SizeConfig.screenWidth * 0.23,
                 decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                   color: Colors.grey.shade600,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
-                height: SizeConfig.screenWidth * 0.300,
-                width: SizeConfig.screenWidth * 0.610,
               ),
-              //
               Container(
-                margin: EdgeInsets.all(SizeConfig.padding16),
+                height: SizeConfig.padding14,
+                width: double.maxFinite,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade600,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
-                height: SizeConfig.screenWidth * 0.07,
-                width: SizeConfig.screenWidth * 0.610,
               ),
+              Column(
+                children: [
+                  Container(
+                    height: SizeConfig.padding20,
+                    width: SizeConfig.padding20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding6),
+                  Container(
+                    height: SizeConfig.padding14,
+                    width: SizeConfig.padding24,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

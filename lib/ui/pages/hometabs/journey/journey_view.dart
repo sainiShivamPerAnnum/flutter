@@ -3,18 +3,22 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/focus_ring.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -37,30 +41,18 @@ class JourneyView extends StatefulWidget {
 }
 
 class _JourneyViewState extends State<JourneyView>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
-  AppLifecycleState _appLifecycleState;
+    with TickerProviderStateMixin {
   JourneyPageViewModel modelInstance;
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _appLifecycleState = state;
-    });
-    modelInstance.checkIfThereIsAMilestoneLevelChange();
-    print(_appLifecycleState);
-    super.didChangeAppLifecycleState(state);
-  }
 
   @override
   Widget build(BuildContext context) {
     log("ROOT: Journey view build called");
     return BaseView<JourneyPageViewModel>(
       onModelReady: (model) async {
-        WidgetsBinding.instance?.addObserver(this);
         modelInstance = model;
         await model.init(this);
       },
       onModelDispose: (model) {
-        WidgetsBinding.instance?.removeObserver(this);
         model.dump();
       },
       builder: (ctx, model, child) {
@@ -90,7 +82,10 @@ class _JourneyViewState extends State<JourneyView>
           //       child: Icon(Icons.stop),
           //       onPressed: //model.controller.stop
           //           () {
-          //         print(model.journeyRepo());
+          //         _animationController.reset();
+          //         _animationController.forward().then((value) {
+          //           showButton = true;
+          //         });
           //       }),
           // ),
           body: model.isLoading && model.pages == null
@@ -100,9 +95,9 @@ class _JourneyViewState extends State<JourneyView>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xffB9D1FE),
-                        Color(0xffD6E0FF),
-                        Color(0xffF1EFFF)
+                        Color(0xFF097178).withOpacity(0.2),
+                        Color(0xFF0C867C),
+                        Color(0xff0B867C),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -112,13 +107,12 @@ class _JourneyViewState extends State<JourneyView>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Lottie.asset("assets/lotties/cat-loader.json",
-                          height: SizeConfig.screenWidth / 3),
+                      Lottie.asset(Assets.fullScreenLoaderLottie,
+                          height: SizeConfig.screenWidth / 2),
                       SizedBox(height: 20),
                       Text(
                         'Loading',
-                        style:
-                            GoogleFonts.josefinSans(fontSize: SizeConfig.body1),
+                        style: TextStyles.rajdhaniEB.title2,
                       )
                     ],
                   ),
@@ -156,6 +150,7 @@ class _JourneyViewState extends State<JourneyView>
                                 AvatarPathPainter(model: model),
                               ActiveMilestoneBaseGlow(),
                               Milestones(model: model),
+                              FocusRing(),
                               Avatar(model: model),
                               LevelBlurView()
                             ],
@@ -167,7 +162,8 @@ class _JourneyViewState extends State<JourneyView>
                     JourneyAppBar(),
                     // JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
-                    NewUserNavBar(model: model),
+                    // NewUserNavBar(model: model),
+
                     JPageLoader(model: model)
                   ],
                 ),
@@ -225,72 +221,71 @@ class NewUserNavBar extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
       builder: (context, m, properties) {
-        return m.avatarRemoteMlIndex > 2
-            ? SizedBox()
-            : Positioned(
-                bottom: 0,
-                child: SafeArea(
-                  child: GestureDetector(
-                      onTap: () {
+        return
+            //  m.avatarRemoteMlIndex > 2
+            //     ? SizedBox()
+            //     :
+            Positioned(
+          bottom: 0,
+          child: SafeArea(
+            child: GestureDetector(
+                onTap: () {
+                  model.showMilestoneDetailsModalSheet(
+                      model.currentMilestoneList.firstWhere((milestone) =>
+                          milestone.index == m.avatarRemoteMlIndex),
+                      context);
+                },
+                child: Container(
+                  width: SizeConfig.screenWidth -
+                      SizeConfig.pageHorizontalMargins * 2,
+                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  decoration: BoxDecoration(
+                    color: UiConstants.gameCardColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding4,
+                        vertical: SizeConfig.pageHorizontalMargins),
+                    leading: GestureDetector(
+                      onDoubleTap: () {
+                        AppState.delegate.appState.currentAction = PageAction(
+                          page: UserProfileDetailsConfig,
+                          state: PageState.addWidget,
+                          widget: UserProfileDetails(isNewUser: true),
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black,
+                        radius: SizeConfig.avatarRadius * 2,
+                        child: SvgPicture.asset(Assets.token,
+                            height: SizeConfig.padding32),
+                      ),
+                    ),
+                    title: FittedBox(
+                      child: Text(
+                        "Welcome to Fello",
+                        style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+                      ),
+                    ),
+                    subtitle: Text(
+                      "Lets get started with the journey",
+                      style: TextStyles.sourceSans.body3.colour(Colors.white60),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.navigate_next_rounded,
+                          color: Colors.white),
+                      onPressed: () {
                         model.showMilestoneDetailsModalSheet(
                             model.currentMilestoneList.firstWhere((milestone) =>
                                 milestone.index == m.avatarRemoteMlIndex),
                             context);
                       },
-                      child: Container(
-                        width: SizeConfig.screenWidth -
-                            SizeConfig.pageHorizontalMargins * 2,
-                        margin:
-                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                        decoration: BoxDecoration(
-                          color: UiConstants.gameCardColor,
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness24),
-                        ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding4,
-                              vertical: SizeConfig.pageHorizontalMargins),
-                          leading: GestureDetector(
-                            onDoubleTap: () {
-                              AppState.delegate
-                                  .parseRoute(Uri.parse("profile"));
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.black,
-                              radius: SizeConfig.avatarRadius * 2,
-                              child: SvgPicture.asset(Assets.aFelloToken,
-                                  height: SizeConfig.padding32),
-                            ),
-                          ),
-                          title: FittedBox(
-                            child: Text(
-                              "Welcome to Fello",
-                              style: TextStyles.rajdhaniB.title3
-                                  .colour(Colors.white),
-                            ),
-                          ),
-                          subtitle: Text(
-                            "Lets get started with the journey",
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white60),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.navigate_next_rounded,
-                                color: Colors.white),
-                            onPressed: () {
-                              model.showMilestoneDetailsModalSheet(
-                                  model.currentMilestoneList.firstWhere(
-                                      (milestone) =>
-                                          milestone.index ==
-                                          m.avatarRemoteMlIndex),
-                                  context);
-                            },
-                          ),
-                        ),
-                      )),
-                ),
-              );
+                    ),
+                  ),
+                )),
+          ),
+        );
       },
     );
   }
@@ -303,7 +298,7 @@ class JPageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-      top: (model.isLoading && model.pages != null && model.pages.length > 0)
+      top: (model.isLoading && model.isLoaderRequired)
           ? SizeConfig.pageHorizontalMargins
           : -400,
       duration: Duration(seconds: 1),
@@ -447,13 +442,17 @@ class Avatar extends StatelessWidget {
           // curve: Curves.decelerate,
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
-          child: GestureDetector(
-            onTap: () => _baseUtil.openProfileDetailsScreen(),
-            child: Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 3, color: Colors.white)),
-              child: ProfileImageSE(radius: SizeConfig.avatarRadius * 1.2),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                width: 3,
+                color: Colors.white,
+              ),
+            ),
+            child: ProfileImageSE(
+              radius: SizeConfig.avatarRadius * 0.9,
+              reactive: false,
             ),
           ),
         );

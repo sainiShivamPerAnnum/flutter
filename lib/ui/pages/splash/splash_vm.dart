@@ -18,7 +18,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -45,7 +45,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../core/repository/user_repo.dart';
 
-class LauncherViewModel extends BaseModel {
+class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   Stopwatch _logoWatch;
@@ -57,6 +57,8 @@ class LauncherViewModel extends BaseModel {
 
   UserBootUp _userBootUp;
 
+  AnimationController loopOutlottieAnimationController;
+  int loopLottieDuration = 2500;
   // LOCATORS
   final _baseUtil = locator<BaseUtil>();
   final _fcmListener = locator<FcmListener>();
@@ -145,9 +147,10 @@ class LauncherViewModel extends BaseModel {
         [
           // Note: BaseUtil Alredy in Sync
           _baseUtil.init(),
-          _fcmListener.setupFcm(),
         ],
       );
+
+      _fcmListener.setupFcm();
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -177,21 +180,22 @@ class LauncherViewModel extends BaseModel {
 
     // log(_logoWatch.elapsed.inMilliseconds.toString());
 
-    int delayedSecond = _logoWatch.elapsed.inMilliseconds % 2500;
+    int delayedSecond = _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
 
-    delayedSecond = 2500 - delayedSecond;
+    delayedSecond = loopLottieDuration - delayedSecond;
     log('Delayed seconds: $delayedSecond');
     await Future.delayed(
       new Duration(milliseconds: delayedSecond),
     );
     isFetchingData = false;
+    loopOutlottieAnimationController.forward();
 
     // 21 FPS = 350 millisecods : Cal
     // = 1000 / 60 = 16.66
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 720),
+      new Duration(milliseconds: 820),
     );
 
     try {

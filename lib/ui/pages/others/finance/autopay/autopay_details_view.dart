@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -63,8 +64,8 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
               height: SizeConfig.screenWidth * 0.12,
             ),
             _buildAutosaveStepTile(
-              image: Image.asset(
-                'assets/temp/upi_payment_logo.png',
+              image: SvgPicture.asset(
+                Assets.upiIcon,
                 height: SizeConfig.screenWidth * 0.0667,
                 width: SizeConfig.screenWidth * 0.0667,
               ),
@@ -96,10 +97,10 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
               ),
             ),
             _buildAutosaveStepTile(
-              image: SvgPicture.asset(
-                'assets/temp/verified.svg',
-                height: SizeConfig.screenWidth * 0.112,
-                width: SizeConfig.screenWidth * 0.112,
+              image: Icon(
+                Icons.verified,
+                color: UiConstants.primaryColor,
+                size: SizeConfig.screenWidth * 0.112,
               ),
               title: "Approve Request on UPI app",
               subtitle: RichText(
@@ -129,7 +130,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             ),
             _buildAutosaveStepTile(
               image: SvgPicture.asset(
-                'assets/temp/indian_rupee.svg',
+                Assets.rupee,
                 height: SizeConfig.screenWidth * 0.064,
                 width: SizeConfig.screenWidth * 0.064,
               ),

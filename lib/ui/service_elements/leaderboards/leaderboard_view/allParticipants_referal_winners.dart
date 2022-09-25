@@ -37,22 +37,22 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: UiConstants.kBackgroundColor,
+        elevation: 0.0,
+        title: Text(
+          isForTopReferers ? 'Top Referers' : 'Top Winners',
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          style: TextStyles.title4.bold.colour(Colors.white),
+        ),
+      ),
       body: Stack(
         children: [
           NewSquareBackground(),
           SingleChildScrollView(
             child: Column(
               children: [
-                AppBar(
-                  backgroundColor: UiConstants.kBackgroundColor,
-                  elevation: 0.0,
-                  title: Text(
-                    isForTopReferers ? 'Top Referers' : 'Highest Scoreers',
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-                    style: TextStyles.title4.bold.colour(Colors.white),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   child: Column(
@@ -62,11 +62,6 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                             (i) {
                               return Container(
                                 width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding12),
-                                margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding8,
-                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.transparent,
                                 ),
@@ -110,11 +105,17 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                         )
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
                                     if (i + 1 < referralLeaderBoard.length)
                                       Divider(
                                         color: Colors.white,
                                         thickness: 0.2,
-                                      )
+                                      ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
                                   ],
                                 ),
                               );

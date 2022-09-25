@@ -1,13 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';

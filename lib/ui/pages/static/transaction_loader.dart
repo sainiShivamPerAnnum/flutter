@@ -7,6 +7,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 
 class TransactionLoader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  TransactionLoader({this.subtitle, this.title});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +38,10 @@ class TransactionLoader extends StatelessWidget {
                       size: SizeConfig.padding24,
                       color: UiConstants.primaryColor),
                   SizedBox(height: SizeConfig.padding20),
-                  Text("Processing...", style: TextStyles.title4.bold),
+                  Text(title ?? "Processing...", style: TextStyles.title4.bold),
                   SizedBox(height: SizeConfig.padding8),
                   Text(
-                    "We are currently verifying your payment.",
+                    subtitle ?? "We are currently verifying your payment.",
                     style: TextStyles.body2.colour(Colors.black45),
                     textAlign: TextAlign.center,
                   ),
@@ -59,6 +62,8 @@ class TransactionLoader extends StatelessWidget {
                           onEnd: () {
                             print('Timer ended');
                             AppState.backButtonDispatcher.didPopRoute();
+                            AppState.delegate.appState.isTxnLoaderInView =
+                                false;
                           },
                           builder: (BuildContext context, Duration value,
                               Widget child) {

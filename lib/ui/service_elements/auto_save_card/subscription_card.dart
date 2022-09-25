@@ -1,9 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -24,43 +25,49 @@ class AutosaveCard extends StatefulWidget {
 class _AutosaveCardState extends State<AutosaveCard> {
   bool isResumingInProgress = false;
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
     return BaseView<SubscriptionCardViewModel>(
-        onModelReady: (model) async => await model.init(),
-        builder: (context, subscriptionModel, child) =>
-            PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-              builder: (context, model, property) => model.autosaveVisible
-                  ? GestureDetector(
-                      onTap: () async {
-                        if (connectivityStatus == ConnectivityStatus.Offline)
-                          return BaseUtil.showNoInternetAlert();
-                        if (isLoading) return;
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await subscriptionModel.getActiveButtonAction();
-                        setState(() {
-                          isLoading = false;
-                        });
-                      },
-                      child: (model.activeSubscription != null &&
-                              model.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_ACTIVE)
-                          ? ActiveOrPausedAutosaveCard(
-                              isLoading: isLoading,
-                              isResumingInProgress: isResumingInProgress,
-                              subscriptionModel: subscriptionModel,
-                            )
-                          : InitAutosaveCard(
-                              onTap: () {
-                                subscriptionModel.getActiveButtonAction();
-                              },
-                            ))
-                  : SizedBox(),
-            ));
+      onModelReady: (model) async => await model.init(),
+      builder: (context, subscriptionModel, child) =>
+          PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+        builder: (context, model, property) => model.autosaveVisible
+            ? GestureDetector(
+                onTap: () async {
+                  if (connectivityStatus == ConnectivityStatus.Offline)
+                    return BaseUtil.showNoInternetAlert();
+                  if (!subscriptionModel.isUserProfileComplete())
+                    return BaseUtil.showNegativeAlert("Autosave Locked",
+                        "Please complete profile to unlock autosave");
+                  if (isLoading) return;
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await subscriptionModel.getActiveButtonAction();
+                  setState(() {
+                    isLoading = false;
+                  });
+                },
+                child: (model.activeSubscription != null &&
+                        model.activeSubscription.status ==
+                            Constants.SUBSCRIPTION_ACTIVE)
+                    ? ActiveOrPausedAutosaveCard(
+                        isLoading: isLoading,
+                        isResumingInProgress: isResumingInProgress,
+                        subscriptionModel: subscriptionModel,
+                      )
+                    : InitAutosaveCard(
+                        onTap: () {
+                          subscriptionModel.getActiveButtonAction();
+                        },
+                      ),
+              )
+            : SizedBox(),
+      ),
+    );
   }
 }
 
@@ -74,54 +81,75 @@ class InitAutosaveCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: SizeConfig.screenWidth * 0.4,
         width: SizeConfig.screenWidth,
         color: UiConstants.kBackgroundColor,
         child: Padding(
           padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding24, horizontal: SizeConfig.padding38),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            vertical: SizeConfig.padding24,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Fello Autosave',
-                    style: TextStyles.sourceSansSB.body0,
-                  ),
-                  ConstrainedBox(
-                      constraints:
-                          BoxConstraints(maxWidth: SizeConfig.screenWidth / 2),
-                      child: Text(
-                          'Invest safely in Gold with our Auto SIP to win tokens',
-                          style: TextStyles.sourceSans.body4
-                              .colour(UiConstants.kTextColor2)))
-                ],
+              TitleSubtitleContainer(
+                title: 'Start a New SIP',
+                subTitle:
+                    'Invest safely in Gold with our Auto SIP to win tokens',
               ),
-              Column(
-                children: [
-                  SvgPicture.asset(Assets.autoSaveDefault,
-                      height: SizeConfig.screenWidth * 0.22,
-                      width: SizeConfig.screenWidth * 0.22),
-                  SizedBox(
-                    height: SizeConfig.padding4,
-                  ),
-                  Row(
-                    children: [
-                      Text('Start an SIP'.toUpperCase(),
-                          style: TextStyles.rajdhaniSB.body3),
-                      SizedBox(
-                        height: SizeConfig.padding4,
+              Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
+              SizedBox(
+                height: SizeConfig.padding32,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.padding24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 45,
+                      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+                      child: SvgPicture.asset(
+                        Assets.autoSaveDefault,
+                        width: 75,
+                        height: 70,
                       ),
-                      SvgPicture.asset(
-                        Assets.chevRonRightArrow,
-                      )
-                    ],
-                  )
-                ],
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding24,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: SizeConfig.screenWidth * 0.5,
+                          ),
+                          child: Text('Invest in Fello Autosave today',
+                              style: TextStyles.sourceSans.bold.body1),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        Row(
+                          children: [
+                            Text('START', style: TextStyles.rajdhaniSB.body3),
+                            SizedBox(
+                              height: SizeConfig.padding4,
+                            ),
+                            SvgPicture.asset(
+                              Assets.chevRonRightArrow,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(
+                height: SizeConfig.padding32,
+              ),
+              Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
             ],
           ),
         ),
@@ -208,8 +236,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     color: UiConstants
                                                         .kBackgroundColor),
                                                 child: Center(
-                                                  child: Image.asset(
-                                                    Assets.upiSvg,
+                                                  child: SvgPicture.asset(
+                                                    Assets.upiIcon,
                                                     height:
                                                         SizeConfig.padding14,
                                                     width: SizeConfig.padding14,

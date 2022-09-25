@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/service/api.dart';
 import '../../../../../util/assets.dart';
 
-class TopSaverViewModel extends BaseModel {
+class TopSaverViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
@@ -139,7 +139,7 @@ class TopSaverViewModel extends BaseModel {
   init(String eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
 
-    event = await getSingleEventDetails(eventType);
+    this.event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
     infoBoxOpen = false;
     getRealTimeFinanceStream();

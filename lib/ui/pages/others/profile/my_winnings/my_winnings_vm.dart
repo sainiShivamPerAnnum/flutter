@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -12,7 +13,8 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -32,12 +34,12 @@ import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class MyWinningsViewModel extends BaseModel {
+class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final _logger = locator<CustomLogger>();
   final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
-  final _transactionService = locator<TransactionService>();
+  final _transactionHistoryService = locator<TransactionHistoryService>();
   final _localDBModel = locator<LocalDBModel>();
   final _analyticsService = locator<AnalyticsService>();
   final _internalOpsService = locator<InternalOpsService>();
@@ -64,7 +66,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   UserService get userService => _userService;
-  TransactionService get txnService => _transactionService;
+  // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
     this._choice = value;
@@ -266,13 +268,15 @@ class MyWinningsViewModel extends BaseModel {
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-        _userService.baseUser.uid,
-        _userService.baseUser.username,
-        _userService.userFundWallet.unclaimedBalance,
-        choice);
+      _userService.baseUser.uid,
+      _userService.baseUser.username,
+      _userService.userFundWallet.unclaimedBalance,
+      choice,
+    );
+
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
-      _transactionService.updateTransactions();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 

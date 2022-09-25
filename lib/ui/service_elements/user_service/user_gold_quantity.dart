@@ -1,20 +1,36 @@
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class UserGoldQuantitySE extends StatelessWidget {
+class UserFundQuantitySE extends StatelessWidget {
+  final String prefix;
   final TextStyle style;
-  UserGoldQuantitySE({this.style});
+  final InvestmentType investmentType;
 
-  getGoldQuantity(double quantity) {
+  UserFundQuantitySE({
+    this.prefix,
+    this.style,
+    this.investmentType = InvestmentType.AUGGOLD99,
+  });
+
+  String getQuantity(UserFundWallet fund) {
+    final suffix = investmentType == InvestmentType.AUGGOLD99 ? "gm" : '';
+    final quantity = investmentType == InvestmentType.AUGGOLD99
+        ? fund?.augGoldQuantity
+        : fund?.wLbBalance;
+
     if (quantity != null) {
       if (quantity == 0.0) {
-        return "0";
-      } else
-        return quantity.toStringAsFixed(4);
+        if (prefix != null) return "$prefix 0 $suffix";
+        return "0 $suffix";
+      } else if (prefix != null)
+        return "$prefix ${quantity.toStringAsFixed(2)} $suffix";
+      return "${quantity.toStringAsFixed(2)} $suffix";
     } else
       return "--";
   }
@@ -22,9 +38,12 @@ class UserGoldQuantitySE extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myUserFund],
+      properties: [
+        UserServiceProperties.myUserFund,
+        UserServiceProperties.myUserWallet
+      ],
       builder: (context, model, property) => Text(
-        "${getGoldQuantity(model.userFundWallet?.augGoldQuantity)} gm" ?? "-",
+        "${getQuantity(model.userFundWallet)}",
         style: style ??
             GoogleFonts.montserrat(
               fontWeight: FontWeight.w500,

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -36,6 +38,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
+const String LendboxDetailsPath = '/lendboxDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -46,7 +49,6 @@ const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
-const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
@@ -67,6 +69,9 @@ const String SellConfirmationViewPath = '/sellConfirmationViewPath';
 const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
 const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
+const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
+const String SharePriceScreenPath = "/SharePriceScreenPath";
+const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 
 enum Pages {
   Splash,
@@ -99,12 +104,12 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-
   TxnHistory,
   KycDetails,
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
+  LendboxDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -115,7 +120,6 @@ enum Pages {
   GoldenMilestonesView,
   TopSaverView,
   AllParticipantsView,
-  GoldBalanceDetailsView,
   PoolView,
   WebHomeView,
   WebGameView,
@@ -133,7 +137,10 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
-  AllParticipantsWinnersTopReferersView
+  AllParticipantsWinnersTopReferersView,
+  RedeemSucessfulScreenView,
+  SharePriceScreenView,
+  UserUpiDetailsView,
 }
 
 class PageConfiguration {
@@ -411,6 +418,13 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   name: 'About Digital Gold Screen',
 );
 
+PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+  key: 'lendboxDetails',
+  path: LendboxDetailsPath,
+  uiPage: Pages.LendboxDetails,
+  name: 'About Fello Flo Screen',
+);
+
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
   key: 'referDetails',
   path: ReferralDetailsPath,
@@ -476,12 +490,7 @@ PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
   uiPage: Pages.AllParticipantsView,
   name: 'AllParticipantsView screen',
 );
-PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
-  key: 'GoldBalanceDetailsView',
-  path: GoldBalanceDetailsViewPath,
-  uiPage: Pages.GoldBalanceDetailsView,
-  name: 'Gold Balance Details Screen',
-);
+
 PageConfiguration WebHomeViewPageConfig = PageConfiguration(
   key: 'WebHomeView',
   path: WebHomeViewPath,
@@ -597,3 +606,22 @@ PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
   uiPage: Pages.AllParticipantsWinnersTopReferersView,
   name: "View All Participants for Win View",
 );
+
+PageConfiguration RedeemSucessfulScreenPageConfig = PageConfiguration(
+  key: 'RedeemSucessfulScreenView',
+  path: RedeemSucessfulScreenPath,
+  uiPage: Pages.RedeemSucessfulScreenView,
+  name: "Redeem Sucessfull View",
+);
+
+PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
+  key: 'SharePriceScreenView',
+  path: SharePriceScreenPath,
+  uiPage: Pages.SharePriceScreenView,
+  name: "Reward sharing screen",
+);
+PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
+    key: 'UserUpiDetailsView',
+    path: UserUPIDetailsViewPath,
+    uiPage: Pages.UserUpiDetailsView,
+    name: "User Upi details Screen");

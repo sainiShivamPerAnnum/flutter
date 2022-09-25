@@ -18,6 +18,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -31,26 +32,25 @@ class JourneyAppBar extends StatelessWidget {
       properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
       builder: (context, m, properties) {
         return Positioned(
-          top: m.avatarRemoteMlIndex > 2
-              ? SizeConfig.padding6
-              : -SizeConfig.screenHeight / 2,
+          top: 0,
           left: SizeConfig.padding10,
           child: SafeArea(
               child: Container(
             width: SizeConfig.screenWidth - SizeConfig.padding20,
-            height: SizeConfig.screenWidth * 0.32,
+            height: SizeConfig.screenWidth * 0.28,
             child: Stack(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                   child: BlurFilter(
-                      sigmaX: 6,
-                      sigmaY: 8,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.24),
-                        ),
-                      )),
+                    sigmaX: 6,
+                    sigmaY: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.3),
+                      ),
+                    ),
+                  ),
                 ),
                 Container(
                   child: Column(children: [
@@ -60,8 +60,12 @@ class JourneyAppBar extends StatelessWidget {
                             horizontal: SizeConfig.padding16),
                         child: Row(
                           children: [
-                            GestureDetector(
-                              onTap: () => _baseUtil.openProfileDetailsScreen(),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              padding: EdgeInsets.all(SizeConfig.padding2),
                               child: ProfileImageSE(
                                   radius: SizeConfig.avatarRadius),
                             ),
@@ -70,34 +74,16 @@ class JourneyAppBar extends StatelessWidget {
                               child: PropertyChangeConsumer<UserService,
                                   UserServiceProperties>(
                                 properties: [
-                                  UserServiceProperties.myUserName,
                                   UserServiceProperties.myJourneyStats
                                 ],
                                 builder: (context, model, properties) {
                                   return GestureDetector(
                                     onTap: () =>
                                         _baseUtil.openProfileDetailsScreen(),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FittedBox(
-                                          child: Text(
-                                            "Hi ${model?.myUserName?.split(" ")?.first ?? ''}",
-                                            style: TextStyles.rajdhaniSB.title5
-                                                .colour(Colors.white),
-                                          ),
-                                        ),
-                                        Text(
-                                          "Level ${model.userJourneyStats?.level}",
-                                          style: TextStyles.sourceSansM.body3
-                                              .colour(
-                                                  Colors.white.withOpacity(0.8))
-                                              .setHeight(0.8),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      "Level ${model.userJourneyStats?.level}",
+                                      style: TextStyles.rajdhaniSB.title5
+                                          .colour(UiConstants.kTextColor),
                                     ),
                                   );
                                 },
@@ -118,7 +104,7 @@ class JourneyAppBar extends StatelessWidget {
                         children: [
                           JourneyAppBarAssetDetailsTile(
                             asset: Assets.digitalGoldBar,
-                            value: UserGoldQuantitySE(
+                            value: UserFundQuantitySE(
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
@@ -128,7 +114,7 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
-                            asset: Assets.stableFello,
+                            asset: Assets.felloFlo,
                             value: Text(
                               "₹ 3000",
                               style: TextStyles.sourceSansSB.body1
@@ -175,8 +161,8 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
             Image.asset(
               asset,
               height: asset == Assets.digitalGoldBar
-                  ? SizeConfig.padding38
-                  : SizeConfig.padding54,
+                  ? SizeConfig.padding32
+                  : SizeConfig.padding40,
             ),
             value,
           ],

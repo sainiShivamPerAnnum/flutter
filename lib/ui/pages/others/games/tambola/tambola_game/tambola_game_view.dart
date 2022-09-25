@@ -12,7 +12,6 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
@@ -60,239 +59,235 @@ class _TambolaGameViewState extends State<TambolaGameView>
         return NotificationListener<ScrollNotification>(
           onNotification: model.handleScrollNotification,
           child: Scaffold(
-            body: HomeBackground(
-              child: Stack(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight,
-                    child: Column(
-                      children: [
-                        FelloAppBar(
-                          leading: FelloAppBarBackButton(),
-                          title: "Tambola",
-                          actions: [
-                            FelloCoinBar(
-                              svgAsset: Assets.aFelloToken,
-                            ),
-                            SizedBox(width: SizeConfig.padding8),
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              child: IconButton(
-                                icon: Icon(Icons.info),
-                                color: Colors.white.withOpacity(0.8),
-                                onPressed: () {
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                    state: PageState.addPage,
-                                    page: TWalkthroughPageConfig,
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.padding40),
-                              topRight: Radius.circular(SizeConfig.padding40),
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                child: Column(
-                                  children: [
-                                    PicksCardView(
-                                      showBuyTicketModal: (value) {
-                                        model.showBuyModal = value;
-                                      },
-                                    ),
-                                    // For TESTING
-                                    // Padding(
-                                    //   padding: EdgeInsets.all(40),
-                                    //   child: ElevatedButton(
-                                    //     child: Text("Results"),
-                                    //     onPressed: () => AppState
-                                    //         .delegate
-                                    //         .appState
-                                    //         .currentAction = PageAction(
-                                    //       state: PageState.addWidget,
-                                    //       page: TWeeklyResultPageConfig,
-                                    //       widget: WeeklyResult(
-                                    //         winningsmap: {}, // {"12324": 1},
-                                    //         isEligible: false,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    connectivityStatus !=
-                                            ConnectivityStatus.Offline
-                                        ? buildCards(model)
-                                        : Center(
-                                            child: NetworkBar(
-                                              textColor: Colors.black,
-                                            ),
-                                          ),
-                                    SizedBox(height: SizeConfig.padding20),
-                                    (Platform.isIOS)
-                                        ? Text(
-                                            'Apple is not associated with Fello Tambola',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w100,
-                                                fontSize:
-                                                    SizeConfig.mediumTextSize,
-                                                color: Colors.blueGrey),
-                                          )
-                                        : Container(),
-                                    SizedBox(height: SizeConfig.padding40),
-                                  ],
-                                ),
-                              ),
-                            ),
+            body: Stack(
+              children: [
+                Container(
+                  height: SizeConfig.screenHeight,
+                  child: Column(
+                    children: [
+                      FelloAppBar(
+                        leading: FelloAppBarBackButton(),
+                        title: "Tambola",
+                        actions: [
+                          FelloCoinBar(
+                            svgAsset: Assets.token,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom:
-                        model.showBuyModal ? 0 : -SizeConfig.screenWidth * 0.4,
-                    child: SizeTransition(
-                      sizeFactor: model.animationController,
-                      axisAlignment: -1.0,
-                      child: Container(
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
+                          SizedBox(width: SizeConfig.padding8),
+                          CircleAvatar(
+                            backgroundColor: Colors.black,
+                            child: IconButton(
+                              icon: Icon(Icons.info),
+                              color: Colors.white.withOpacity(0.8),
+                              onPressed: () {
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                  state: PageState.addPage,
+                                  page: TWalkthroughPageConfig,
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: ClipRRect(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(SizeConfig.padding40),
                             topRight: Radius.circular(SizeConfig.padding40),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                offset: Offset(0, -5),
-                                color: Colors.black.withOpacity(0.05),
-                                spreadRadius: 5)
-                          ],
-                          color: Colors.white,
-                        ),
-                        margin: EdgeInsets.only(top: SizeConfig.padding16),
-                        padding:
-                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: SizeConfig.screenWidth * 0.135,
-                              child: Row(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: SingleChildScrollView(
+                              physics: BouncingScrollPhysics(),
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    child: Container(
-                                      child: TextField(
-                                        controller: model.ticketCountController,
-                                        enableInteractiveSelection: false,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                signed: true),
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                        ],
-                                        onChanged: (String text) {
-                                          model.updateTicketCount();
-                                        },
-                                        cursorColor: UiConstants.primaryColor,
-                                        decoration: InputDecoration(
-                                            hintText: 'Enter no of tickets'),
-                                      ),
-                                    ),
+                                  PicksCardView(
+                                    showBuyTicketModal: (value) {
+                                      model.showBuyModal = value;
+                                    },
                                   ),
-                                  SizedBox(width: SizeConfig.padding16),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.135,
-                                    height: SizeConfig.screenWidth * 0.135,
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.primaryLight
-                                          .withOpacity(0.8),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
-                                    ),
-                                    child: IconButton(
-                                      icon: Icon(Icons.add),
-                                      color: UiConstants.primaryColor,
-                                      onPressed: model.increaseTicketCount,
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding12),
-                                  MaterialButton(
-                                    onPressed: model.decreaseTicketCount,
-                                    splashColor: Colors.grey,
-                                    highlightColor: Colors.grey,
-                                    child: Container(
-                                      width: SizeConfig.screenWidth * 0.135,
-                                      height: SizeConfig.screenWidth * 0.135,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness12),
-                                      ),
-                                      child: Icon(
-                                        Icons.remove,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding16),
-                                  Expanded(
-                                    child: Container(
-                                      child: FelloButtonLg(
-                                        //color: UiConstants.tertiarySolid,
-                                        child: model.ticketBuyInProgress
-                                            ? SpinKitThreeBounce(
-                                                color: Colors.white,
-                                                size: SizeConfig.body2,
-                                              )
-                                            : Text("Buy",
-                                                style: TextStyles.body2
-                                                    .colour(Colors.white)),
-                                        onPressed: () {
-                                          FocusScope.of(context).unfocus();
-                                          model.buyTickets(context);
-                                        },
-                                      ),
-                                    ),
-                                  )
+                                  // For TESTING
+                                  // Padding(
+                                  //   padding: EdgeInsets.all(40),
+                                  //   child: ElevatedButton(
+                                  //     child: Text("Results"),
+                                  //     onPressed: () => AppState
+                                  //         .delegate
+                                  //         .appState
+                                  //         .currentAction = PageAction(
+                                  //       state: PageState.addWidget,
+                                  //       page: TWeeklyResultPageConfig,
+                                  //       widget: WeeklyResult(
+                                  //         winningsmap: {}, // {"12324": 1},
+                                  //         isEligible: false,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  connectivityStatus !=
+                                          ConnectivityStatus.Offline
+                                      ? buildCards(model)
+                                      : Center(
+                                          child: NetworkBar(
+                                            textColor: Colors.black,
+                                          ),
+                                        ),
+                                  SizedBox(height: SizeConfig.padding20),
+                                  (Platform.isIOS)
+                                      ? Text(
+                                          'Apple is not associated with Fello Tambola',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w100,
+                                              fontSize:
+                                                  SizeConfig.mediumTextSize,
+                                              color: Colors.blueGrey),
+                                        )
+                                      : Container(),
+                                  SizedBox(height: SizeConfig.padding40),
                                 ],
                               ),
                             ),
-                            SizedBox(height: SizeConfig.padding12),
-                            Row(
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom:
+                      model.showBuyModal ? 0 : -SizeConfig.screenWidth * 0.4,
+                  child: SizeTransition(
+                    sizeFactor: model.animationController,
+                    axisAlignment: -1.0,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.padding40),
+                          topRight: Radius.circular(SizeConfig.padding40),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 10,
+                              offset: Offset(0, -5),
+                              color: Colors.black.withOpacity(0.05),
+                              spreadRadius: 5)
+                        ],
+                        color: Colors.white,
+                      ),
+                      margin: EdgeInsets.only(top: SizeConfig.padding16),
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: SizeConfig.screenWidth * 0.135,
+                            child: Row(
                               children: [
-                                Text(
-                                  '${model.ticketPurchaseCost} tokens = 1 Tambola ticket',
-                                  style: TextStyles.body3.colour(Colors.grey),
+                                Expanded(
+                                  child: Container(
+                                    child: TextField(
+                                      controller: model.ticketCountController,
+                                      enableInteractiveSelection: false,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: true),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      onChanged: (String text) {
+                                        model.updateTicketCount();
+                                      },
+                                      cursorColor: UiConstants.primaryColor,
+                                      decoration: InputDecoration(
+                                          hintText: 'Enter no of tickets'),
+                                    ),
+                                  ),
                                 ),
-                                Spacer(),
-                                Text(
-                                  "Requires ${model.buyTicketCount * 10} ",
-                                  style: TextStyles.body3,
+                                SizedBox(width: SizeConfig.padding16),
+                                Container(
+                                  width: SizeConfig.screenWidth * 0.135,
+                                  height: SizeConfig.screenWidth * 0.135,
+                                  decoration: BoxDecoration(
+                                    color: UiConstants.primaryLight
+                                        .withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(Icons.add),
+                                    color: UiConstants.primaryColor,
+                                    onPressed: model.increaseTicketCount,
+                                  ),
                                 ),
-                                SvgPicture.asset(
-                                  Assets.tokens,
-                                  height: SizeConfig.iconSize1,
+                                SizedBox(width: SizeConfig.padding12),
+                                MaterialButton(
+                                  onPressed: model.decreaseTicketCount,
+                                  splashColor: Colors.grey,
+                                  highlightColor: Colors.grey,
+                                  child: Container(
+                                    width: SizeConfig.screenWidth * 0.135,
+                                    height: SizeConfig.screenWidth * 0.135,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12),
+                                    ),
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
+                                SizedBox(width: SizeConfig.padding16),
+                                Expanded(
+                                  child: Container(
+                                    child: FelloButtonLg(
+                                      //color: UiConstants.tertiarySolid,
+                                      child: model.ticketBuyInProgress
+                                          ? SpinKitThreeBounce(
+                                              color: Colors.white,
+                                              size: SizeConfig.body2,
+                                            )
+                                          : Text("Buy",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white)),
+                                      onPressed: () {
+                                        FocusScope.of(context).unfocus();
+                                        model.buyTickets(context);
+                                      },
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
-                            SizedBox(height: SizeConfig.padding16)
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: SizeConfig.padding12),
+                          Row(
+                            children: [
+                              Text(
+                                '${model.ticketPurchaseCost} tokens = 1 Tambola ticket',
+                                style: TextStyles.body3.colour(Colors.grey),
+                              ),
+                              Spacer(),
+                              Text(
+                                "Requires ${model.buyTicketCount * 10} ",
+                                style: TextStyles.body3,
+                              ),
+                              SvgPicture.asset(
+                                Assets.token,
+                                height: SizeConfig.iconSize1,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: SizeConfig.padding16)
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

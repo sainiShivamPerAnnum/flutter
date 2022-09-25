@@ -47,6 +47,7 @@ class UserRank extends StatelessWidget {
                 ),
                 ProfileImageSE(
                   radius: SizeConfig.iconSize1,
+                  reactive: false,
                 ),
                 SizedBox(
                   width: SizeConfig.padding12,

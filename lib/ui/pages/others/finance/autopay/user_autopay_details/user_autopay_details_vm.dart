@@ -9,7 +9,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -22,7 +22,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class UserAutosaveDetailsViewModel extends BaseModel {
+class UserAutosaveDetailsViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();

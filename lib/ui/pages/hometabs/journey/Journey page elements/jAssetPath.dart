@@ -128,73 +128,69 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
-          JourneyServiceProperties.BaseGlow,
-          JourneyServiceProperties.Pages,
-        ],
-        builder: (context, model, properties) {
-          final JourneyPathModel base = model.journeyPathItemsList.firstWhere(
-              (element) =>
-                  element.mlIndex == model.avatarRemoteMlIndex &&
-                  element.isBase,
-              orElse: null);
-          print("Base id: $base");
-          return base != null
-              ? Positioned(
-                  left: model.pageWidth * base.x,
-                  bottom: model.pageHeight * (base.page - 1) +
-                      model.pageHeight * base.y,
-                  child: AnimatedOpacity(
-                    opacity: model.baseGlow,
-                    curve: Curves.easeInCubic,
-                    duration: Duration(milliseconds: 700),
-                    child: Container(
-                      width: model.pageWidth * base.asset.width,
-                      height: model.pageHeight * base.asset.height * 2,
-                      // color: Colors.black,
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: ClipPath(
-                              clipper: const BackBeamClipper(),
-                              child: Container(
-                                width: model.pageWidth * base.asset.width * 4,
-                                height:
-                                    model.pageHeight * base.asset.height * 1.5,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        UiConstants.primaryColor
-                                            .withOpacity(0.01),
-                                        UiConstants.primaryColor
-                                            .withOpacity(0.5),
-                                        UiConstants.primaryColor
-                                            .withOpacity(0.3),
-                                        UiConstants.primaryColor
-                                            .withOpacity(0.1),
-                                        UiConstants.primaryColor
-                                            .withOpacity(0.01)
-                                      ],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter),
-                                ),
+      properties: [
+        JourneyServiceProperties.BaseGlow,
+        JourneyServiceProperties.Pages,
+      ],
+      builder: (context, model, properties) {
+        final JourneyPathModel base = model.journeyPathItemsList.firstWhere(
+            (element) =>
+                element.mlIndex == model.avatarRemoteMlIndex && element.isBase,
+            orElse: null);
+        print("Base id: $base");
+        return base != null
+            ? Positioned(
+                left: model.pageWidth * base.x,
+                bottom: model.pageHeight * (base.page - 1) +
+                    model.pageHeight * base.y,
+                child: AnimatedOpacity(
+                  opacity: model.baseGlow,
+                  curve: Curves.easeInCubic,
+                  duration: Duration(milliseconds: 700),
+                  child: Container(
+                    width: model.pageWidth * base.asset.width,
+                    height: model.pageHeight * base.asset.height * 2,
+                    // color: Colors.black,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: ClipPath(
+                            clipper: const BackBeamClipper(),
+                            child: Container(
+                              width: model.pageWidth * base.asset.width * 4,
+                              height:
+                                  model.pageHeight * base.asset.height * 1.5,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      UiConstants.primaryColor
+                                          .withOpacity(0.01),
+                                      UiConstants.primaryColor.withOpacity(0.5),
+                                      UiConstants.primaryColor.withOpacity(0.3),
+                                      UiConstants.primaryColor.withOpacity(0.1),
+                                      UiConstants.primaryColor.withOpacity(0.01)
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter),
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: BaseRings(
-                              size: model.pageWidth * base.asset.width * 0.6,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        // Align(
+                        //   alignment: Alignment.bottomCenter,
+                        //   child: BaseRings(
+                        //     size: model.pageWidth * base.asset.width * 0.6,
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ),
-                )
-              : SizedBox();
-        });
+                ),
+              )
+            : SizedBox();
+      },
+    );
   }
 }
 

@@ -27,7 +27,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ReferralDetailsViewModel extends BaseModel {
+class ReferralDetailsViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final _fcmListener = locator<FcmListener>();
   final _userService = locator<UserService>();
@@ -39,6 +39,10 @@ class ReferralDetailsViewModel extends BaseModel {
 
   PageController _pageController;
   int _tabNo = 0;
+
+  bool _isShareAlreadyClicked = false;
+
+  bool get isShareAlreadyClicked => _isShareAlreadyClicked;
 
   int get tabNo => _tabNo;
   set tabNo(value) {
@@ -180,6 +184,9 @@ class ReferralDetailsViewModel extends BaseModel {
   }
 
   Future<void> shareLink() async {
+    _isShareAlreadyClicked = true;
+    notifyListeners();
+
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
@@ -213,6 +220,11 @@ class ReferralDetailsViewModel extends BaseModel {
         });
       }
     }
+
+    Future.delayed(Duration(seconds: 3), () {
+      _isShareAlreadyClicked = false;
+      notifyListeners();
+    });
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {

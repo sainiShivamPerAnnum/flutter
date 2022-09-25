@@ -22,40 +22,21 @@ class Constants {
   //Collections
   static final String COLN_USERS = "users";
   static final String COLN_ANNOUNCEMENTS = "announcements";
-  static final String COLN_TICKETREQUEST = "ticketrequests";
-  static final String COLN_DAILYPICKS = "dailypicks";
-  static final String COLN_WINNERS = "winners";
-  static final String COLN_REFERRALS = "referrals";
   static final String COLN_FEEDBACK = "feedback";
-  static final String COLN_FAILREPORTS = "failreports";
   static final String COLN_CREDENTIALS = "credentials";
-  static final String COLN_POLLS = "polls";
-  static final String COLN_HOMECARDS = "homefeed";
-  static final String COLN_PROMOS = "promos";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
-  static final String COLN_STATISTICS = "statistics";
   static final String WINNERS = "winners";
-  static final String COLN_PRIZES = "prizes";
   static final String COLN_FAQS = "faqs";
-  static final String COLN_APPCAMPAIGNS = "inappcampaigns";
-  static final String COLN_COUPONS = 'coupons';
-  static final String COLN_INAPPRESOURCES = "inappresources";
   static final String COLN_GAMES = "games";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
-  static final String SUBCOLN_USER_TICKETS = "tickets";
   static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
-  static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
   static final String SUBCOLN_USER_PRTD = "prtd";
   static final String SUBCOLN_USER_TXNS = "txns";
   static final String SUBCOLN_USER_WALLET = "wallet";
-  static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
-  static final String SUBCOLN_USER_ALERTS = "alerts";
   static final String SUBCOLN_USER_REWARDS = "rewards";
-  static final String SUBCOLN_USER_STATS = "stats";
-  static final String SUBCOLN_USER_SUBSCRIPTION = "subscription";
-  static final String SUBCOLN_USER_SUB_TXN = "sub-txns";
+
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
@@ -85,16 +66,8 @@ class Constants {
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";
 
-  static const String GOLDENTICKET_DYNAMICLINK_PREFIX =
-      "https://fello.in/goldenticket";
   static const String APP_DOWNLOAD_LINK = "https://fello.in/download";
   static const String APP_NAVIGATION_LINK = "https://fello.in/app/goto/";
-
-  //home feed
-  static const String LEARN_FEED_CARD_TYPE = 'L';
-  static const String PRIZE_FEED_CARD_TYPE = 'P';
-  static const String TAMBOLA_FEED_CARD_TYPE = 'T';
-  static const String DEFAULT_FEED_CARD_TYPE = 'T';
 
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;

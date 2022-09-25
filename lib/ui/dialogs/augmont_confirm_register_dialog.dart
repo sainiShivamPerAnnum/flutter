@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -63,18 +64,8 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
         print(AppState.screenStack);
         return false;
       },
-      child: Container(
-        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        child: Dialog(
-          insetPadding:
-              EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          child: dialogContent(context),
-        ),
+      child: BaseDialog(
+        content: dialogContent(context),
       ),
     );
   }
@@ -85,108 +76,92 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
       children: <Widget>[
         SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.globalMargin * 2,
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: SizeConfig.globalMargin,
-                      left: SizeConfig.globalMargin),
-                  child: Text(
-                    'Is this information correct?',
-                    style: TextStyle(
-                        fontSize: SizeConfig.largeTextSize,
-                        fontWeight: FontWeight.w700,
-                        color: widget.dialogColor),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Column(
-                  children: [
-                    (widget.panNumber != null)
-                        ? _buildRow('PAN Number', widget.panNumber)
-                        : Container(),
-                    (widget.panNumber != null)
-                        ? _buildRow('Name as per PAN', widget.panName)
-                        : Container(),
-                    (widget.bankAccNo != null && widget.bankAccNo.isNotEmpty)
-                        ? _buildRow('Bank Account No', widget.bankAccNo)
-                        : Container(),
-                    (widget.bankHolderName != null &&
-                            widget.bankHolderName.isNotEmpty)
-                        ? _buildRow('Name of Bank account holder',
-                            widget.bankHolderName)
-                        : Container(),
-                    (widget.bankName != null && widget.bankName.isNotEmpty)
-                        ? _buildRow('Name of Bank', widget.bankName)
-                        : Container(),
-                    (widget.bankBranchName != null &&
-                            widget.bankBranchName.isNotEmpty)
-                        ? _buildRow('Bank Branch Name', widget.bankBranchName)
-                        : Container(),
-                    (widget.bankIfsc != null && widget.bankIfsc.isNotEmpty)
-                        ? _buildRow('Bank IFSC', widget.bankIfsc)
-                        : Container(),
-                    (widget.panNumber != null)
-                        ? Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              "This information can't be changed later",
-                              style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: SizeConfig.smallTextSize),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Confirm Details', style: TextStyles.rajdhaniB.title4),
+              SizedBox(
+                height: 10,
+              ),
+              Column(
+                children: [
+                  (widget.panNumber != null)
+                      ? _buildRow('PAN Number', widget.panNumber)
+                      : Container(),
+                  (widget.panNumber != null)
+                      ? _buildRow('Name as per PAN', widget.panName)
+                      : Container(),
+                  (widget.bankAccNo != null && widget.bankAccNo.isNotEmpty)
+                      ? _buildRow('Bank Account No', widget.bankAccNo)
+                      : Container(),
+                  (widget.bankHolderName != null &&
+                          widget.bankHolderName.isNotEmpty)
+                      ? _buildRow(
+                          'Name of Bank account holder', widget.bankHolderName)
+                      : Container(),
+                  (widget.bankName != null && widget.bankName.isNotEmpty)
+                      ? _buildRow('Name of Bank', widget.bankName)
+                      : Container(),
+                  (widget.bankBranchName != null &&
+                          widget.bankBranchName.isNotEmpty)
+                      ? _buildRow('Bank Branch Name', widget.bankBranchName)
+                      : Container(),
+                  (widget.bankIfsc != null && widget.bankIfsc.isNotEmpty)
+                      ? _buildRow('Bank IFSC', widget.bankIfsc)
+                      : Container(),
+                  (widget.panNumber != null)
+                      ? Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            "This information can't be changed later",
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: SizeConfig.smallTextSize),
+                          ),
+                        )
+                      : Container(),
+                  (widget.customMessage != null &&
+                          widget.customMessage.isNotEmpty)
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            widget.customMessage,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: SizeConfig.mediumTextSize,
                             ),
-                          )
-                        : Container(),
-                    (widget.customMessage != null &&
-                            widget.customMessage.isNotEmpty)
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            child: Text(
-                              widget.customMessage,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: FelloButtonLg(
-                    onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+              Container(
+                width: SizeConfig.screenWidth,
+                child: FelloButtonLg(
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
 
-                      widget.onAccept();
-                    },
-                    child: Text("Confirm",
-                        style: TextStyles.body2.bold.colour(Colors.white)),
-                  ),
+                    widget.onAccept();
+                  },
+                  child: Text("Confirm",
+                      style: TextStyles.body2.bold.colour(Colors.white)),
                 ),
-                SizedBox(height: SizeConfig.padding12),
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: FelloButtonLg(
-                    onPressed: () {
-                      widget.onReject();
-                      AppState.backButtonDispatcher.didPopRoute();
-                    },
-                    color: UiConstants.tertiarySolid,
-                    child: Text("Cancel", style: TextStyles.body2.bold),
-                  ),
+              ),
+              SizedBox(height: SizeConfig.padding12),
+              Container(
+                width: SizeConfig.screenWidth,
+                child: FelloButtonLg(
+                  onPressed: () {
+                    widget.onReject();
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
+                  color: UiConstants.tertiarySolid,
+                  child: Text("Cancel", style: TextStyles.body2.bold),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         )
       ],
@@ -197,24 +172,14 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
     return ListTile(
       title: Container(
         width: SizeConfig.screenWidth * 0.2,
-        child: Text(
-          '$title: ',
-          style: TextStyle(
-            color: UiConstants.accentColor,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
-        ),
+        child: Text('$title: ',
+            style: TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2)),
       ),
       trailing: Container(
         width: SizeConfig.screenWidth * 0.3,
-        child: Text(
-          value,
-          overflow: TextOverflow.clip,
-          style: TextStyle(
-            fontSize: SizeConfig.mediumTextSize,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        child: Text(value,
+            overflow: TextOverflow.clip,
+            style: TextStyles.sourceSans.body2.colour(UiConstants.kTextColor)),
       ),
     );
   }

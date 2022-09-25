@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -12,7 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
   CouponModalSheet({Key key, @required this.model}) : super(key: key);
-  final AugmontGoldBuyViewModel model;
+  final GoldBuyViewModel model;
   final TextEditingController couponCodeController =
       new TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -46,7 +45,7 @@ class CouponModalSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SvgPicture.asset(
-                  'assets/temp/ticket.svg',
+                  Assets.ticketTilted,
                   width: SizeConfig.iconSize0,
                   height: SizeConfig.iconSize0,
                 ),
@@ -113,17 +112,21 @@ class CouponModalSheet extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               children: List.generate(
                 model.couponList.length,
-                (i) => Container(
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
-                  child: _buildCoupenListTile(
-                    couponCode: model.couponList[i].code,
-                    desc: model.couponList[i].description,
-                    onTap: () {
-                      model.applyCoupon(model.couponList[i].code);
-                      AppState.backButtonDispatcher.didPopRoute();
-                    },
-                  ),
-                ),
+                (i) => model.couponList[i].code == null ||
+                        model.couponList[i].description == null
+                    ? SizedBox()
+                    : Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                        child: _buildCoupenListTile(
+                          couponCode: model.couponList[i].code,
+                          desc: model.couponList[i].description,
+                          onTap: () {
+                            model.applyCoupon(model.couponList[i].code);
+                            AppState.backButtonDispatcher.didPopRoute();
+                          },
+                        ),
+                      ),
               ),
             ),
             // child: ListView.builder(
@@ -158,7 +161,7 @@ class CouponModalSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                'assets/temp/ticket.svg',
+                Assets.ticketTilted,
                 width: SizeConfig.iconSize0,
                 height: SizeConfig.iconSize0,
                 color: UiConstants.kpurpleTicketColor,

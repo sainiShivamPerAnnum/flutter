@@ -1,7 +1,8 @@
 enum SellServiceProperties {
   kycVerified,
   bankDetailsVerified,
+  augmontSellNotice,
   augmontSellDisabled,
-  ongoingTransaction,
+  ongoing,
   reachedLockIn
 }

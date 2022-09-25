@@ -141,7 +141,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.putData(
         _apiPaths.kUpdateUserAppflyer,
         body: body,
-        token: 'Bearer $token',
+        token: token,
       );
 
       // clear cache
@@ -395,9 +395,9 @@ class UserRepository extends BaseRepo {
     final token = await getBearerToken();
     try {
       await APIService.instance.putData(
-        ApiPath.kGetUserById(uid),
+        ApiPath.kGetUserById(userService.baseUser.uid),
         body: dMap,
-        token: "Bearer $token",
+        token: token,
         cBaseUrl: _baseUrl,
       );
 
@@ -426,7 +426,7 @@ class UserRepository extends BaseRepo {
           "token": fcmToken,
         },
         cBaseUrl: _baseUrl,
-        token: "Bearer $token",
+        token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -499,7 +499,7 @@ class UserRepository extends BaseRepo {
         final res = await APIService.instance.putData(
             ApiPath.logOut(userService.baseUser.uid),
             cBaseUrl: _baseUrl,
-            token: "Bearer $token",
+            token: token,
             body: {
               "uid": userService.baseUser.uid ?? "",
               "deviceId": deviceId ?? "",
@@ -554,6 +554,22 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.d("Unable to fetch user boot up ee ${e.toString()}");
       return userBootUp;
+    }
+  }
+
+  Future<ApiResponse<String>> getUserPan() async {
+    try {
+      final String token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.kGetPan(userService.baseUser.uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+      final String pan = response["data"]["pan"];
+      return ApiResponse(model: pan ?? '', code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
     }
   }
 }

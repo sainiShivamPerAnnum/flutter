@@ -28,9 +28,12 @@ class ApiPath {
   //User Ops Apis
   get kAddNewUser => "/api/v3/newuser";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
-  get kAmountTransfer => "/userOps/api/v3/accountTransfer";
-  get kVerifyTransfer => "/userOps/api/v3/verifyTransfer";
-  get kVerifyPan => "/userOps/api/v3/verifyPan";
+  get kAddBankAccount => "/bank";
+  static String kGetBankAccountDetails(String uid) => '/$uid/bank';
+  // get kVerifyTransfer => "/verify/transfer";
+  get kVerifyPan => "/verify/pan";
+  static String kGetPan(String uid) => "/$uid/pan";
+  static String kUpdateBankDetails(String uid) => '/user/$uid/bank';
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static const String updateFcm = '/fcm/client_token';
@@ -52,6 +55,8 @@ class ApiPath {
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
   static String logOut(String uid) => "/user/$uid/logout";
   static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
+
+  static String goldenTickets(uid) => '/user/$uid/golden_tickets';
 
   //GT Rewards
   get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
@@ -89,7 +94,10 @@ class ApiPath {
 
   // Payment Apis
   static String getWithdrawableGoldQuantity(String uid) =>
-      "/user/$uid/gold/withdrawable";
+      "/user/$uid/gold/instant/withdrawable";
+  static String get validateVPA => "/vpa";
+  static String get vpa => "/vpa";
+  static String get withdrawal => "/withdrawal";
 
   // Getter Apis
   static const String statistics = '/statistics';
@@ -100,6 +108,7 @@ class ApiPath {
       "/leaderboard/past/type/$type/freq/$freq";
 
   static const String amountChips = "/amount/chips/";
+  static const String faqs = "/faqs";
 
   // Internal Ops
   static const String failureReport = '/fail/report';

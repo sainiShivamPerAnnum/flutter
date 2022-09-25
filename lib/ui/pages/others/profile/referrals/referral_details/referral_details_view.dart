@@ -1,40 +1,22 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralDetailsView extends StatelessWidget {
@@ -45,6 +27,25 @@ class ReferralDetailsView extends StatelessWidget {
 
   var _unselectedTextStyle = TextStyles.sourceSansSB.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
+
+  List<Shadow> shadowDrawerList = [
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ];
+
+  getHeadingCustomTextStyle(Color color) {
+    return TextStyles.rajdhaniEB.title50
+        .colour(color)
+        .copyWith(shadows: shadowDrawerList);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,12 +93,44 @@ class ReferralDetailsView extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                child: SvgPicture.asset(Assets.referAndEarn,
-                                    height: SizeConfig.padding90 +
-                                        SizeConfig.padding20),
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          bottom: SizeConfig.padding1),
+                                      child: SvgPicture.asset(
+                                          Assets.refreAndEarnBackgroundAsset,
+                                          width: SizeConfig.screenWidth * 0.5),
+                                    ),
+                                    Image.asset(Assets.iPadPNG,
+                                        fit: BoxFit.cover,
+                                        width: SizeConfig.screenWidth * 0.3)
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                        text: 'REFER ',
+                                        style: getHeadingCustomTextStyle(
+                                            UiConstants.kTabBorderColor)),
+                                    TextSpan(
+                                        text: '& ',
+                                        style: getHeadingCustomTextStyle(
+                                            Colors.white)),
+                                    TextSpan(
+                                        text: 'EARN',
+                                        style: getHeadingCustomTextStyle(
+                                            UiConstants
+                                                .kWinnerPlayerPrimaryColor)),
+                                  ],
+                                ),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding28,
+                                height: SizeConfig.padding16,
                               ),
                               RichText(
                                 textAlign: TextAlign.center,
@@ -114,7 +147,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       height: 17,
                                       width: 17,
                                       child: SvgPicture.asset(
-                                        Assets.aFelloToken,
+                                        Assets.token,
                                       ),
                                     )),
                                     TextSpan(
@@ -162,15 +195,18 @@ class ReferralDetailsView extends StatelessWidget {
                                           icon: Icon(
                                             Icons.copy,
                                             color: UiConstants.kTabBorderColor,
+                                            size: SizeConfig.padding28,
                                           ),
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            model.shareLink();
+                                            if (!model.isShareAlreadyClicked)
+                                              model.shareLink();
                                           },
                                           icon: Icon(
                                             Icons.share,
                                             color: UiConstants.kTabBorderColor,
+                                            size: SizeConfig.padding28,
                                           ),
                                         )
                                       ],
@@ -217,7 +253,9 @@ class ReferralDetailsView extends StatelessWidget {
                             horizontal: SizeConfig.padding16),
                         child: Row(
                           children: [
-                            ProfileImageSE(radius: SizeConfig.avatarRadius),
+                            ProfileImageSE(
+                              reactive: false,
+                            ),
                             SizedBox(
                               width: SizeConfig.padding12,
                             ),
@@ -229,6 +267,7 @@ class ReferralDetailsView extends StatelessWidget {
                               ],
                               builder: (context, m, properties) {
                                 return FittedBox(
+                                  fit: BoxFit.scaleDown,
                                   child: Text(
                                     "${m?.myUserName?.split(" ")?.first ?? ''}",
                                     style: TextStyles.sourceSans.body1.colour(
@@ -287,7 +326,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () => model.switchTab(0),
                                           child: Text(
-                                            'Invested',
+                                            'Successful',
                                             style: model.tabNo == 0
                                                 ? _selectedTextStyle
                                                 : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
@@ -301,7 +340,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () => model.switchTab(1),
                                           child: Text(
-                                            'Not Invested',
+                                            'Have not saved',
                                             style: model.tabNo == 1
                                                 ? _selectedTextStyle
                                                 : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
@@ -361,7 +400,7 @@ class ReferralDetailsView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -426,7 +465,7 @@ class BonusLockedReferals extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
+                                          Assets.cvtar1,
                                           width: SizeConfig.iconSize5_5,
                                           height: SizeConfig.iconSize5_5,
                                         );
@@ -451,7 +490,7 @@ class BonusLockedReferals extends StatelessWidget {
                                           ),
                                           errorWidget: (a, b, c) {
                                             return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
+                                              Assets.cvtar2,
                                               width: SizeConfig.iconSize5,
                                               height: SizeConfig.iconSize5,
                                             );
@@ -587,7 +626,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
+                                          Assets.cvtar3,
                                           width: SizeConfig.iconSize5_5,
                                           height: SizeConfig.iconSize5_5,
                                         );
@@ -612,7 +651,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                           ),
                                           errorWidget: (a, b, c) {
                                             return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
+                                              Assets.cvtar4,
                                               width: SizeConfig.iconSize5,
                                               height: SizeConfig.iconSize5,
                                             );
@@ -699,8 +738,8 @@ class HowToEarnComponment extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
-  Function onStateChanged;
-  ReferralDetailsViewModel model;
+  final Function onStateChanged;
+  final ReferralDetailsViewModel model;
   var locale;
 
   @override
@@ -708,7 +747,7 @@ class HowToEarnComponment extends StatefulWidget {
 }
 
 class _InfoComponentState extends State<HowToEarnComponment> {
-  bool isBoxOpen = false;
+  bool isBoxOpen = true;
 
   @override
   Widget build(BuildContext context) {

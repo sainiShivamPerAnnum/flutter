@@ -33,12 +33,9 @@ class AppState extends ChangeNotifier {
   bool _isTxnLoaderInView = false;
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
-  // Timer _txnTimer;
+  Timer _txnTimer;
   Future _txnFunction;
-  static Timer pollingPeriodicTimer;
-  static bool isIOSTxnInProgress = false;
-  static double currentTxnAmount = 0.0;
-  static String currentTxnOrderId;
+
   static Map<String, dynamic> startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -65,7 +62,11 @@ class AppState extends ChangeNotifier {
 
   get isTxnLoaderInView => this._isTxnLoaderInView;
 
-  // Timer get txnTimer => this._txnTimer;
+  Timer get txnTimer => this._txnTimer;
+
+  set txnTimer(Timer timer) {
+    this._txnTimer = timer;
+  }
 
   set rootIndex(value) {
     this._rootIndex = value;
@@ -79,10 +80,10 @@ class AppState extends ChangeNotifier {
 
   // Future get txnFunction => this._txnFunction;
 
-  // set txnFunction(Future function) {
-  //   this._txnFunction = function;
-  //   notifyListeners();
-  // }
+  set txnFunction(Future function) {
+    this._txnFunction = function;
+    notifyListeners();
+  }
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;
@@ -107,7 +108,7 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  static blockNavgiation() {
+  static blockNavigation() {
     screenStack.add(ScreenItem.loader);
   }
 

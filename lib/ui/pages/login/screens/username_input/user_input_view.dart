@@ -1,9 +1,7 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
-import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,99 +30,98 @@ class LoginUserNameView extends StatefulWidget {
 
 class LoginUserNameViewState extends State<LoginUserNameView> {
   UsernameInputScreenViewModel model;
-
   @override
   Widget build(BuildContext context) {
-    bool isKeyboardOpen =
-        MediaQuery.of(context).viewInsets.bottom == SizeConfig.viewInsets.bottom
-            ? false
-            : true;
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return BaseView<UsernameInputScreenViewModel>(
-      onModelReady: (model) => this.model = model,
+      onModelReady: (model) {
+        this.model = model;
+        model.init();
+      },
       onModelDispose: (model) => model.disposeModel(),
       builder: (ctx, model, child) {
         return ListView(
           // mainAxisAlignment: MainAxisAlignment.start,
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding40),
-            Text(
-              'What do we call you?',
-              style: TextStyles.rajdhaniB.title2,
-              textAlign: TextAlign.center,
-            ),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              height: SizeConfig.screenWidth * 0.05,
-            ),
-            Text(
-              'Come up with a unique name to get\nstarted on yoru fello journey',
-              style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-              textAlign: TextAlign.center,
-            ),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              height: isKeyboardOpen
-                  ? SizeConfig.screenWidth * 0.03
-                  : SizeConfig.screenWidth * 0.08,
-            ),
+            SizedBox(height: SizeConfig.padding44),
+
             FelloUserAvatar(),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              height: isKeyboardOpen
-                  ? SizeConfig.screenWidth * 0.023
-                  : SizeConfig.screenWidth * 0.101,
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Enter Username',
+                style: TextStyles.rajdhaniB.title2,
+              ),
             ),
+            SizedBox(height: SizeConfig.padding32),
+
             //input
             Form(
               key: model.formKey,
-              child: LogInTextField(
-                focusNode: model.focusNode,
+              child: AppTextField(
+                focusNode: model.usernameFocusNode,
                 hintText: 'Your username',
+                margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins * 2,
+                ),
                 onTap: () {},
+                prefixText: '@',
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 textAlign: TextAlign.center,
-                controller: model.usernameController,
-                enabled: model.enabled,
-                inputFormatter: [
+                textEditingController: model.usernameController,
+                isEnabled: model.enabled,
+                inputFormatters: [
                   FilteringTextInputFormatter.allow(
                     RegExp(r'[a-z0-9.]'),
                   )
                 ],
                 validator: (val) {
                   if (val == null || val.isEmpty)
-                    return "Username cannot be empty";
-                  return null;
+                    return "";
+                  else
+                    return null;
                 },
-                onChanged: (value) {
+                onChanged: (String value) {
                   model.validate();
                 },
               ),
             ),
-            // SizedBox(height: SizeConfig.padding20),
             Container(
-              margin: EdgeInsets.only(
-                top: SizeConfig.padding16,
-                bottom: SizeConfig.padding24,
-              ),
-              alignment: Alignment.center,
-              child: model.showResult(),
+              height: model.errorPadding,
             ),
+            if (model.showResult().runtimeType != SizedBox)
+              Container(
+                margin: EdgeInsets.only(
+                  // top: SizeConfig.padding8,
+                  bottom: SizeConfig.padding24,
+                ),
+                alignment: Alignment.center,
+                child: model.showResult(),
+              ),
             SizedBox(height: SizeConfig.padding20),
             model.hasReferralCode
-                ? LogInTextField(
-                    controller: model.referralCodeController,
+                ? AppTextField(
+                    textEditingController: model.referralCodeController,
                     onChanged: (val) {},
-                    maxLength: 10,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins * 2),
+                    maxLength: 6,
+                    isEnabled: true,
+                    scrollPadding:
+                        EdgeInsets.only(bottom: SizeConfig.padding80),
                     // decoration: InputDecoration(
                     hintText: "Enter your referral code here",
                     textAlign: TextAlign.center,
                     //   hintStyle: TextStyles.body3.colour(Colors.grey),
                     // ),
-                    inputFormatter: [
+                    inputFormatters: [
                       FilteringTextInputFormatter.allow(
                         RegExp(r'[a-zA-Z0-9]'),
                       )
                     ],
+
                     validator: (val) {
                       if (val.trim().length == 0 || val == null) return null;
                       if (val.trim().length < 3 || val.trim().length > 10)
@@ -154,7 +151,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
                   style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
                 ),
               ),
-            SizedBox(height: SizeConfig.padding80 * 1.4),
+            SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );
       },
@@ -173,15 +170,19 @@ class FelloUserAvatar extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-          width: SizeConfig.screenWidth * 0.6667,
-          height: SizeConfig.screenWidth * 0.5333,
+          width: SizeConfig.screenWidth * 0.54,
+          height: SizeConfig.screenWidth * 0.54,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.screenWidth),
             boxShadow: [
               BoxShadow(
-                color: Color(0xff135756).withOpacity(0.35),
-                blurRadius: SizeConfig.padding46,
-                spreadRadius: SizeConfig.padding35,
+                color: UiConstants.primaryColor.withOpacity(0.2),
+                blurRadius: 82,
+                spreadRadius: 0,
+                offset: Offset(
+                  0,
+                  SizeConfig.padding32,
+                ),
               ),
             ],
           ),
@@ -234,7 +235,7 @@ class FelloUserAvatar extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: SizeConfig.padding8),
           child: SvgPicture.asset(
-            'assets/svg/user_avatar_svg.svg',
+            Assets.customAvatar,
             height: SizeConfig.screenWidth * 0.3067,
             width: SizeConfig.screenWidth * 0.3067,
           ),

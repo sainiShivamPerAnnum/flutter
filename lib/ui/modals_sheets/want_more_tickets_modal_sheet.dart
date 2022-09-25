@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
+import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -39,49 +40,60 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenWidth * 0.08,
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.only(top: SizeConfig.padding12),
-            child: Container(
-              width: SizeConfig.screenWidth * 0.3,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
             child: Column(children: [
-              (isInsufficientBalance)
-                  ? SizedBox(height: SizeConfig.padding16)
-                  : SizedBox(),
-              (isInsufficientBalance)
+              Container(
+                margin: EdgeInsets.only(
+                  top: SizeConfig.padding24,
+                  bottom: SizeConfig.padding12,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.kBackgroundColor3,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                  vertical: SizeConfig.padding12,
+                ),
+                child: Row(children: [
+                  Text("Current Tokens:", style: TextStyles.rajdhani.body1),
+                  Spacer(),
+                  SvgPicture.asset(
+                    Assets.token,
+                    width: SizeConfig.padding26,
+                    height: SizeConfig.padding26,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding6,
+                  ),
+                  CoinBalanceTextSE(
+                    style: TextStyles.rajdhaniB.title3,
+                  )
+                ]),
+              ),
+              isInsufficientBalance
                   ? Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding6),
+                      margin: EdgeInsets.only(
+                        // top: SizeConfig.padding6,
+                        bottom: SizeConfig.padding12,
+                      ),
                       width: SizeConfig.screenWidth,
-                      height: SizeConfig.padding32,
                       padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding12,
                           horizontal: SizeConfig.padding32),
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness12),
-                        color: Colors.red.withOpacity(0.05),
+                        // color: Colors.red.withOpacity(0.05),
                       ),
-                      child: Center(
-                        child: Text(
-                          "You don't have enough Fello tokens",
-                          style: TextStyles.body2.colour(Colors.redAccent),
-                        ),
+                      child: Text(
+                        "You ran out of Fello tokens, here are some ways to get back on the track:",
+                        style: TextStyles.body2.colour(Colors.redAccent).italic,
+                        textAlign: TextAlign.start,
                       ),
                     )
-                  : SizedBox(),
-              (isInsufficientBalance)
-                  ? SizedBox(height: SizeConfig.padding16)
-                  : SizedBox(),
+                  : SizedBox(height: SizeConfig.padding12),
               FelloTile(
                 leadingAsset: Assets.wmtsaveMoney,
                 title: "Save More Money",

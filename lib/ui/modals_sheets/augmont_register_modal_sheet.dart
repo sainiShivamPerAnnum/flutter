@@ -39,14 +39,14 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
   BaseUtil baseProvider;
   final depositformKey3 = GlobalKey<FormState>();
   bool _isInitialized = false;
-  AugmontModel augmontProvider;
+  AugmontService augmontProvider;
   HttpModel httpProvider;
   DBModel dbProvider;
   static String stateChosenValue;
 
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    augmontProvider = Provider.of<AugmontService>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return new Wrap(

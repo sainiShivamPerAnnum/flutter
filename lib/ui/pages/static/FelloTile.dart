@@ -3,6 +3,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class FelloTile extends StatelessWidget {
   final String leadingAsset;
@@ -85,16 +86,19 @@ class FelloBriefTile extends StatelessWidget {
   final String leadingAsset;
   final IconData leadingIcon;
   final String title;
+  final String subtitle;
   final IconData trailingIcon;
   final Function onTap;
+  final bool coloredIcon;
 
-  FelloBriefTile({
-    this.leadingIcon,
-    this.leadingAsset,
-    this.title,
-    this.trailingIcon,
-    this.onTap,
-  });
+  FelloBriefTile(
+      {this.leadingIcon,
+      this.leadingAsset,
+      this.title,
+      this.trailingIcon,
+      this.subtitle,
+      this.onTap,
+      this.coloredIcon = false});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -118,24 +122,48 @@ class FelloBriefTile extends StatelessWidget {
                       size: SizeConfig.padding24,
                       color: UiConstants.primaryColor,
                     )
-                  : SvgPicture.asset(
-                      leadingAsset ?? "assets/vectors/icons/tickets.svg",
-                      height: SizeConfig.padding24,
-                      width: SizeConfig.padding24,
-                      color: UiConstants.primaryColor,
-                    ),
+                  : (coloredIcon
+                      ? SvgPicture.asset(
+                          leadingAsset ?? "assets/vectors/icons/tickets.svg",
+                          height: SizeConfig.padding24,
+                          width: SizeConfig.padding24,
+                          color: UiConstants.primaryColor,
+                        )
+                      : SvgPicture.asset(
+                          leadingAsset ?? "assets/vectors/icons/tickets.svg",
+                          height: SizeConfig.padding24,
+                          width: SizeConfig.padding24,
+                        )),
             ),
             SizedBox(
               width: SizeConfig.padding12,
             ),
             Expanded(
-              child: Text(
-                title ?? "title",
-                overflow: TextOverflow.clip,
-                maxLines: 2,
-                style: TextStyles.body2.bold,
-              ),
-            ),
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title ?? "title",
+                  overflow: TextOverflow.clip,
+                  maxLines: 2,
+                  style: TextStyles.body2.bold,
+                ),
+                if (subtitle != null && subtitle.isNotEmpty)
+                  Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Column(
+                      children: [
+                        Text(
+                          subtitle,
+                          style: TextStyles.body4.bold.italic
+                              .colour(UiConstants.primaryColor),
+                        ),
+                        SizedBox(height: 2),
+                      ],
+                    ),
+                  ])
+              ],
+            )),
             SizedBox(width: SizeConfig.padding12),
             Icon(
               trailingIcon ?? Icons.arrow_right_rounded,
