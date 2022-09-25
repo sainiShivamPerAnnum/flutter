@@ -14,7 +14,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -32,7 +32,7 @@ import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';
 
-class LauncherViewModel extends BaseModel {
+class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   Stopwatch _logoWatch;

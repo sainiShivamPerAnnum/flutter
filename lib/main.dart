@@ -14,16 +14,17 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
-import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/payments/sell_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -115,11 +116,12 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
           ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
-          ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
+          ChangeNotifierProvider(create: (_) => locator<AugmontService>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
-          ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
-          ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
+          ChangeNotifierProvider(
+              create: (_) => locator<AugmontTransactionService>()),
+          ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),
           StreamProvider<ConnectivityStatus>(
             create: (_) {
               ConnectivityService connectivityService =
@@ -139,9 +141,9 @@ class _MyAppState extends State<MyApp> {
             child: PropertyChangeProvider<TransactionHistoryService,
                 TransactionHistoryServiceProperties>(
               value: locator<TransactionHistoryService>(),
-              child: PropertyChangeProvider<TransactionService,
+              child: PropertyChangeProvider<AugmontTransactionService,
                   TransactionServiceProperties>(
-                value: locator<TransactionService>(),
+                value: locator<AugmontTransactionService>(),
                 child: PropertyChangeProvider<UserCoinService,
                     UserCoinServiceProperties>(
                   value: locator<UserCoinService>(),
@@ -157,23 +159,28 @@ class _MyAppState extends State<MyApp> {
                         child: PropertyChangeProvider<SellService,
                             SellServiceProperties>(
                           value: locator<SellService>(),
-                          child: MaterialApp.router(
-                            locale: DevicePreview.locale(context),
-                            builder: DevicePreview.appBuilder,
-                            title: Constants.APP_NAME,
-                            theme: FelloTheme.darkMode(),
-                            useInheritedMediaQuery: true,
-                            debugShowCheckedModeBanner: false,
-                            backButtonDispatcher: backButtonDispatcher,
-                            routerDelegate: delegate,
-                            routeInformationParser: parser,
-                            localizationsDelegates: [
-                              S.delegate,
-                              GlobalMaterialLocalizations.delegate,
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                            ],
-                            supportedLocales: S.delegate.supportedLocales,
+                          child: PropertyChangeProvider<
+                              LendboxTransactionService,
+                              TransactionServiceProperties>(
+                            value: locator<LendboxTransactionService>(),
+                            child: MaterialApp.router(
+                              locale: DevicePreview.locale(context),
+                              builder: DevicePreview.appBuilder,
+                              title: Constants.APP_NAME,
+                              theme: FelloTheme.darkMode(),
+                              useInheritedMediaQuery: true,
+                              debugShowCheckedModeBanner: false,
+                              backButtonDispatcher: backButtonDispatcher,
+                              routerDelegate: delegate,
+                              routeInformationParser: parser,
+                              localizationsDelegates: [
+                                S.delegate,
+                                GlobalMaterialLocalizations.delegate,
+                                GlobalWidgetsLocalizations.delegate,
+                                GlobalCupertinoLocalizations.delegate,
+                              ],
+                              supportedLocales: S.delegate.supportedLocales,
+                            ),
                           ),
                         ),
                       ),

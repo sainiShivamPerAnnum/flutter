@@ -6,7 +6,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -80,7 +79,7 @@ class WebHomeView extends StatelessWidget {
                                 EdgeInsets.only(right: SizeConfig.padding4),
                             child: Row(
                               children: [
-                                FelloCoinBar(svgAsset: Assets.aFelloToken),
+                                FelloCoinBar(svgAsset: Assets.token),
                               ],
                             ),
                           ),
@@ -174,7 +173,7 @@ class WebHomeView extends StatelessWidget {
                                           '${model.currentGameModel.playCost}',
                                       coinText: 'Per Game',
                                       assetHeight: SizeConfig.padding20,
-                                      assetUrl: Assets.aFelloToken,
+                                      assetUrl: Assets.token,
                                     ),
                                   ],
                                 ),
@@ -375,7 +374,6 @@ class StreamView extends StatelessWidget {
             coinText: 'Playing',
             assetHeight: SizeConfig.padding16,
             isDot: true,
-            assetUrl: Assets.circleGameAsset,
           );
         }
 
@@ -398,7 +396,6 @@ class StreamView extends StatelessWidget {
               coinText: 'Playing',
               assetHeight: SizeConfig.padding16,
               isDot: true,
-              assetUrl: Assets.circleGameAsset,
               key: ValueKey<String>(requiredTimeData['value'].toString()),
             ),
           );
@@ -408,7 +405,6 @@ class StreamView extends StatelessWidget {
             coinText: 'Playing',
             assetHeight: SizeConfig.padding16,
             isDot: true,
-            assetUrl: Assets.circleGameAsset,
           );
         }
       },
@@ -467,7 +463,7 @@ class RechargeBox extends StatelessWidget {
                     style: TextStyles.sourceSansSB.body1.bold,
                   ),
                   SvgPicture.asset(
-                    Assets.aFelloToken,
+                    Assets.token,
                     height: SizeConfig.padding24,
                   ),
                   SizedBox(width: SizeConfig.padding4),

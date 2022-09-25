@@ -9,6 +9,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'package:flutter_svg/svg.dart';
+
 class WinnerWidgets extends StatelessWidget {
   const WinnerWidgets({
     Key key,
@@ -49,11 +51,11 @@ class WinnerWidgets extends StatelessWidget {
   getDefaultProfilePicture(int rank) {
     switch (rank) {
       case 1:
-        return "assets/temp/rank_one_profile.png";
+        return Assets.cvtar1;
       case 2:
-        return "assets/temp/rank_two_profile.png";
+        return Assets.cvtar2;
       case 3:
-        return "assets/temp/rank_three_profile.png";
+        return Assets.cvtar3;
       default:
         return Assets.profilePic;
     }
@@ -105,7 +107,7 @@ class WinnerWidgets extends StatelessWidget {
                       : SizeConfig.screenWidth * 0.0083,
                 ),
                 child: userProfilePicUrl[rank] == null
-                    ? Image.asset(
+                    ? SvgPicture.asset(
                         getDefaultProfilePicture(rank),
                         width: rank == 0
                             ? SizeConfig.screenWidth * 0.2344

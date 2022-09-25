@@ -4,25 +4,19 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
-import 'package:felloapp/ui/pages/static/winnings_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
-import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/carousal_widget.dart';
-import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
@@ -180,21 +174,30 @@ class SaveNetWorthSection extends StatelessWidget {
               title: 'Digital Gold',
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
-              isGoldAssets: true,
-              onCardTap: () => saveViewModel.navigateToSaveAssetView(),
+              investmentType: InvestmentType.AUGGOLD99,
+              onCardTap: () => saveViewModel.navigateToSaveAssetView(
+                InvestmentType.AUGGOLD99,
+              ),
               onTap: () {
                 Haptic.vibrate();
-                return BaseUtil().openRechargeModalSheet();
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.AUGGOLD99,
+                );
               },
             ),
             SaveCustomCard(
               title: 'Fello Flo',
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
-              cardAssetName: Assets.stableFello,
-              investedAmount: 0.0,
+              cardAssetName: Assets.felloFlo,
+              investmentType: InvestmentType.LENDBOXP2P,
+              onCardTap: () => saveViewModel.navigateToSaveAssetView(
+                InvestmentType.LENDBOXP2P,
+              ),
               onTap: () {
                 Haptic.vibrate();
-                return BaseUtil().openRechargeModalSheet();
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.LENDBOXP2P,
+                );
               },
             ),
             SizedBox(
@@ -242,7 +245,7 @@ class CampaignCardSection extends StatelessWidget {
                   child: CampaignCard(
                     isLoading: saveVm.isChallengesLoading,
                     topPadding: SizeConfig.padding16,
-                    leftPadding: SizeConfig.padding24,
+                    leftPadding: SizeConfig.padding20,
                     event: event,
                     subText: FittedBox(
                       fit: BoxFit.contain,
@@ -341,7 +344,7 @@ class CampaignCard extends StatelessWidget {
                     Text(
                       suffix.toUpperCase(),
                       style: TextStyles.sourceSansEB.title50
-                          .letterSpace(0.7)
+                          .letterSpace(0.6)
                           .colour(
                             event.color.toColor(),
                           )
@@ -537,7 +540,7 @@ class SaveInfoTile extends StatelessWidget {
                   ? Image.asset(png ?? Assets.moneyIcon,
                       width: SizeConfig.padding40)
                   : SvgPicture.asset(
-                      svg ?? Assets.tokens,
+                      svg ?? Assets.token,
                       width: SizeConfig.padding40,
                     ),
               SizedBox(width: SizeConfig.padding16),

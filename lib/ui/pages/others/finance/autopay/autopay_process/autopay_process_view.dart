@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/segmate_chip.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/sub_process_text.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -268,8 +269,9 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                 ],
-                suffixIcon: SvgPicture.asset(
-                  'assets/temp/verified.svg',
+                suffixIcon: Icon(
+                  Icons.verified,
+                  color: UiConstants.primaryColor,
                 ),
                 hintText: "Enter amount",
               ),
@@ -563,7 +565,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              "assets/temp/star.svg",
+              Assets.star,
               width: SizeConfig.iconSize3,
               height: SizeConfig.iconSize3,
             ),
@@ -621,7 +623,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.padding20,
         ),
         Image.asset(
-          "assets/temp/congratulation_dialog_logo.png",
+          Assets.completeCheck,
           width: SizeConfig.screenWidth * 0.5333,
           height: SizeConfig.screenWidth * 0.5333,
         ),
@@ -679,8 +681,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                           BorderRadius.circular(SizeConfig.roundness24),
                     ),
                     child: Center(
-                      child: Image.asset(
-                        "assets/temp/upi_payment_logo.png",
+                      child: SvgPicture.asset(
+                        Assets.upiIcon,
                         width: SizeConfig.screenWidth * 0.032,
                         height: SizeConfig.screenWidth * 0.032,
                       ),
@@ -730,7 +732,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.asset(
-              "assets/temp/sprout.svg",
+              Assets.sprout,
               width: SizeConfig.iconSize5,
               height: SizeConfig.iconSize5,
             ),
@@ -753,7 +755,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.asset(
-              "assets/temp/horizotal_outlined_ticket.svg",
+              Assets.ticketOutlined,
               width: SizeConfig.padding24,
               height: SizeConfig.padding24,
             ),
@@ -776,7 +778,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.asset(
-              "assets/temp/outline_token.svg",
+              Assets.tokenOutlined,
               width: SizeConfig.padding24,
               height: SizeConfig.padding24,
             ),

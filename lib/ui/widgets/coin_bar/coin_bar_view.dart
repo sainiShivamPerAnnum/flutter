@@ -79,7 +79,7 @@ class FelloCoinBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SvgPicture.asset(
-                      svgAsset ?? Assets.aFelloToken,
+                      svgAsset ?? Assets.token,
                       height: size ?? SizeConfig.padding20,
                       width: size ?? SizeConfig.padding20,
                     ),

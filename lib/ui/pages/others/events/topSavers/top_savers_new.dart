@@ -8,7 +8,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -251,7 +251,7 @@ class CampaignView extends StatelessWidget {
                                                     child: Row(
                                                   children: [
                                                     SvgPicture.asset(
-                                                      Assets.rankIconAsset,
+                                                      Assets.rewardGameAsset,
                                                     ),
                                                     const SizedBox(
                                                       width: 5,
@@ -591,8 +591,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Image.asset(
-                                                  Assets
-                                                      .defaultProfilePlaceholder,
+                                                  Assets.cvtar1,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                 );
@@ -619,8 +618,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                   ),
                                                   errorWidget: (a, b, c) {
                                                     return Image.asset(
-                                                      Assets
-                                                          .defaultProfilePlaceholder,
+                                                      Assets.cvtar2,
                                                       width:
                                                           SizeConfig.iconSize5,
                                                       height:
@@ -786,8 +784,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Image.asset(
-                                                  Assets
-                                                      .defaultProfilePlaceholder,
+                                                  Assets.cvtar3,
                                                   width: SizeConfig.iconSize5,
                                                   height: SizeConfig.iconSize5,
                                                 );
@@ -814,8 +811,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                   ),
                                                   errorWidget: (a, b, c) {
                                                     return Image.asset(
-                                                      Assets
-                                                          .defaultProfilePlaceholder,
+                                                      Assets.cvtar4,
                                                       width:
                                                           SizeConfig.iconSize5,
                                                       height:

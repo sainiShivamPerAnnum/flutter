@@ -52,8 +52,6 @@ class _CircularAnimState extends State<CircularAnim>
     _holeAnimation = CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 1, curve: Curves.easeOutCirc));
-
-
   }
 
   @override
@@ -62,60 +60,43 @@ class _CircularAnimState extends State<CircularAnim>
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return  Stack(
-        children: <Widget>[
-          // SingleChildScrollView(
-          //   reverse: true,
-          //   controller: _scrollController,
-          //   child: Container(
-          //     width: SizeConfig.screenWidth,
-          //     height: SizeConfig.screenWidth * 2.165 * 3,
-          //     decoration: const BoxDecoration(
-          //       image: DecorationImage(
-          //         image: AssetImage("assets/images/jbg.png"),
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          if (isAnimationInProgress)
-            AnimatedScale(
-              scale: scaleFactor,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInQuint,
-              child: Hole(
-                holeAnimation: _holeAnimation,
-              ),
+    return Stack(
+      children: <Widget>[
+        if (isAnimationInProgress)
+          AnimatedScale(
+            scale: scaleFactor,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInQuint,
+            child: Hole(
+              holeAnimation: _holeAnimation,
             ),
-          if (isAnimationInProgress)
-            AnimatedScale(
-              scale: scaleFactor,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInQuint,
-              child: Ring(
-                widthFactor: 2,
-                ringAnimation: _ringOneAnimation,
-              ),
+          ),
+        if (isAnimationInProgress)
+          AnimatedScale(
+            scale: scaleFactor,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInQuint,
+            child: Ring(
+              widthFactor: 2,
+              ringAnimation: _ringOneAnimation,
             ),
-          if (isAnimationInProgress)
-            AnimatedScale(
-              scale: scaleFactor,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInQuint,
-              child: Ring(
-                widthFactor: 1,
-                ringAnimation: _ringTwoAnimation,
-              ),
+          ),
+        if (isAnimationInProgress)
+          AnimatedScale(
+            scale: scaleFactor,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInQuint,
+            child: Ring(
+              widthFactor: 1,
+              ringAnimation: _ringTwoAnimation,
             ),
-
-          Align(
-            alignment: Alignment.bottomRight,
-            child:SafeArea(
-              child: CircleAvatar(
+          ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SafeArea(
+            child: CircleAvatar(
               child: FloatingActionButton(
                 onPressed: () {
                   _controller.reset();
@@ -138,10 +119,10 @@ class _CircularAnimState extends State<CircularAnim>
                 },
                 child: const Icon(Icons.animation, color: Colors.white),
               ),
+            ),
           ),
-            ),)
-        ],
-
+        )
+      ],
     );
   }
 }

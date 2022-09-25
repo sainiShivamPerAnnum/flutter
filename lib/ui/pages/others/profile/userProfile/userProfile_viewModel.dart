@@ -11,17 +11,17 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/components/sign_in_options.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
@@ -38,7 +38,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../core/repository/user_repo.dart';
 
-class UserProfileVM extends BaseModel {
+class UserProfileVM extends BaseViewModel {
   RegExp emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   Log log = new Log('User Profile');
@@ -196,6 +196,7 @@ class UserProfileVM extends BaseModel {
     setGender();
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
+    if (_userService.isEmailVerified) isgmailFieldEnabled = false;
   }
 
   setGender() {
@@ -306,7 +307,8 @@ class UserProfileVM extends BaseModel {
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
               await _userRepo.getUserById(id: _userService.baseUser.uid);
-              _userService.setMyUserName(_userService.baseUser.name);
+              _userService.setMyUserName(_userService?.baseUser?.kycName ??
+                  _userService.baseUser.name);
               _userService.setEmail(_userService.baseUser.email);
               _userService.setDateOfBirth(_userService.baseUser.dob);
               _userService.setGender(_userService.baseUser.gender);

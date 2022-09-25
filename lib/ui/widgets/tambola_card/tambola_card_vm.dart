@@ -4,10 +4,8 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/material.dart';
 
-class TambolaCardModel extends BaseModel {
+class TambolaCardModel extends BaseViewModel {
   final GameRepo _gamesRepo = locator<GameRepo>();
   final TambolaService _tambolaService = locator<TambolaService>();
 

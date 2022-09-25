@@ -1,18 +1,21 @@
 import 'dart:io';
 
-import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-class LoginMobileViewModel extends BaseModel {
+class LoginMobileViewModel extends BaseViewModel {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();
+  final _analyticsService = locator<AnalyticsService>();
   final logger = locator<CustomLogger>();
   final FocusNode mobileFocusNode = FocusNode();
   bool _validate = true;
@@ -63,6 +66,12 @@ class LoginMobileViewModel extends BaseModel {
       return "Enter a valid mobile number";
     else
       return null;
+  }
+
+  void onTermsAndConditionsClicked() {
+    Haptic.vibrate();
+    BaseUtil.launchUrl('https://fello.in/policy/tnc');
+    _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
   String getMobile() => _mobileController.text;

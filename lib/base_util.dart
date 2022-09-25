@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
@@ -8,6 +9,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -23,39 +25,30 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
-import 'package:felloapp/ui/widgets/alert_snackbar/alert_snackbar.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:math' as math;
-import 'core/model/game_model.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -64,7 +57,6 @@ class BaseUtil extends ChangeNotifier {
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();
-  final _gameRepo = locator<GameRepo>();
   final _internalOpsService = locator<InternalOpsService>();
 
   BaseUser _myUser;
@@ -75,21 +67,13 @@ class BaseUtil extends ChangeNotifier {
   List<FeedCard> feedCards;
   String userRegdPan;
 
-  ///Tambola global objects
-  // int _dailyPickCount;
-  // List<int> todaysPicks;
-  // DailyPick weeklyDigits;
-  // List<TambolaBoard> userWeeklyBoards;
-
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
   UserTransaction _currentICICINonInstantWthrlTxn;
-  PanService panService;
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
-  UserTransaction _currentAugmontTxn;
   AugmontRates augmontGoldRates;
 
   ///KYC global object
@@ -144,6 +128,7 @@ class BaseUtil extends ChangeNotifier {
       _isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
+      _isUpiInfoMissing,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int ticketCountBeforeRequest, infoSliderIndex;
@@ -181,11 +166,10 @@ class BaseUtil extends ChangeNotifier {
     isGoogleSignInProgress = false;
     isDeviceOffline = false;
     ticketRequestSent = false;
+    isUpiInfoMissing = true;
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
-    // _atomicTicketGenerationLeftCount = 0;
-    // atomicTicketDeletionLeftCount = 0;
 
     firstAugmontTransaction = null;
   }
@@ -215,7 +199,6 @@ class BaseUtil extends ChangeNotifier {
         ///pick zerobalance asset
         Random rnd = new Random();
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
-        setUserDefaults();
       }
     } catch (e) {
       logger.e(e.toString());
@@ -224,13 +207,6 @@ class BaseUtil extends ChangeNotifier {
         FailType.Splash,
         {'error': "base util init : $e"},
       );
-    }
-  }
-
-  Future<void> setUserDefaults() async {
-    panService = new PanService();
-    if (!checkKycMissing) {
-      userRegdPan = await panService.getUserPan();
     }
   }
 
@@ -263,7 +239,12 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  openRechargeModalSheet({int amt, bool isSkipMl}) {
+
+  openRechargeModalSheet({
+    int amt,
+    bool isSkipMl,
+    @required InvestmentType investmentType,
+  }) {
     if (_userService.userJourneyStats.mlIndex == 1)
       return BaseUtil.showNegativeAlert("Complete your profile",
           "You can make deposits only after completing profile");
@@ -275,10 +256,15 @@ class BaseUtil extends ChangeNotifier {
         isBarrierDismissable: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
-        content: RechargeModalSheet(
-          amount: amt ?? 201,
-          skipMl: isSkipMl ?? false,
-        ),
+        content: investmentType == InvestmentType.AUGGOLD99
+            ? GoldBuyView(
+                amount: amt ?? 201,
+                skipMl: isSkipMl ?? false,
+              )
+            : LendboxBuyView(
+                amount: amt ?? 201,
+                skipMl: isSkipMl ?? false,
+              ),
       );
   }
 
@@ -325,11 +311,6 @@ class BaseUtil extends ChangeNotifier {
         title: title,
         message: message,
         duration: Duration(seconds: seconds),
-        // backgroundGradient: LinearGradient(
-        //   begin: Alignment.topRight,
-        //   end: Alignment.bottomLeft,
-        //   colors: [Colors.lightBlueAccent, UiConstants.primaryColor],
-        // ),
         backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
@@ -536,10 +517,9 @@ class BaseUtil extends ChangeNotifier {
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
-      panService = null;
+
       _augmontDetail = null;
       augmontGoldRates = null;
-      _currentAugmontTxn = null;
       prizeLeaders = [];
       referralLeaders = [];
       myUserDpUrl = null;
@@ -552,6 +532,7 @@ class BaseUtil extends ChangeNotifier {
       lastTransactionListDocument = null;
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
+      isUpiInfoMissing = true;
 
       AppState.delegate.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
@@ -730,20 +711,20 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  Future<void> fetchUserAugmontDetail() async {
-    if (augmontDetail == null) {
-      ApiResponse<UserAugmontDetail> augmontDetailResponse =
-          await _userRepo.getUserAugmontDetails();
-      if (augmontDetailResponse.code == 200)
-        augmontDetail = augmontDetailResponse.model;
-    }
-  }
+  // Future<void> fetchUserAugmontDetail() async {
+  //   if (augmontDetail == null) {
+  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
+  //         await _userRepo.getUserAugmontDetails();
+  //     if (augmontDetailResponse.code == 200)
+  //       augmontDetail = augmontDetailResponse.model;
+  //   }
+  // }
 
   Future<void> _updateAugmontBalance() async {
     if (augmontDetail == null ||
         (userFundWallet.augGoldQuantity == 0 &&
             userFundWallet.augGoldBalance == 0)) return;
-    AugmontModel().getRates().then((currRates) {
+    AugmontService().getRates().then((currRates) {
       if (currRates == null ||
           currRates.goldSellPrice == null ||
           userFundWallet.augGoldQuantity == 0) return;
@@ -869,12 +850,6 @@ class BaseUtil extends ChangeNotifier {
 
   bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
 
-  UserTransaction get currentAugmontTxn => _currentAugmontTxn;
-
-  set currentAugmontTxn(UserTransaction value) {
-    _currentAugmontTxn = value;
-  }
-
   DateTime get userCreationTimestamp => _userCreationTimestamp;
 
   int get ticketCount => _ticketCount;
@@ -896,5 +871,12 @@ class BaseUtil extends ChangeNotifier {
     final m = dateTime.month.toString().padLeft(2, '0');
     final d = dateTime.day.toString().padLeft(2, '0');
     return "$y$m$d";
+  }
+
+  bool get isUpiInfoMissing => this._isUpiInfoMissing;
+
+  set isUpiInfoMissing(bool value) {
+    this._isUpiInfoMissing = value;
+    notifyListeners();
   }
 }

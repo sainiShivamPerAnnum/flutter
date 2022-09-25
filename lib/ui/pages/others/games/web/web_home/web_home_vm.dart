@@ -38,7 +38,7 @@ class RechargeOption {
   RechargeOption({this.color, this.amount, this.isCustom = false});
 }
 
-class WebHomeViewModel extends BaseModel {
+class WebHomeViewModel extends BaseViewModel {
   //Dependency Injection
   final _userService = locator<UserService>();
   final _lbService = locator<LeaderboardService>();

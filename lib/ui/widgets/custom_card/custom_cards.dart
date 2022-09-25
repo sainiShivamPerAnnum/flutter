@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,19 +14,17 @@ class SaveCustomCard extends StatelessWidget {
   final Color cardBgColor;
   final String cardAssetName;
   final Function() onTap;
-  final double investedAmount;
-  final bool isGoldAssets;
+  final InvestmentType investmentType;
 
-  const SaveCustomCard(
-      {Key key,
-      this.title,
-      this.cardBgColor,
-      this.cardAssetName,
-      this.onTap,
-      this.investedAmount = 0,
-      this.onCardTap,
-      this.isGoldAssets = false})
-      : super(key: key);
+  const SaveCustomCard({
+    Key key,
+    this.title,
+    this.cardBgColor,
+    this.cardAssetName,
+    this.onTap,
+    this.onCardTap,
+    @required this.investmentType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,28 +102,21 @@ class SaveCustomCard extends StatelessWidget {
                                       "Balance",
                                       style: TextStyles.sourceSansM.body4,
                                     ),
-                                    isGoldAssets
-                                        ? UserGoldQuantitySE(
-                                            style:
-                                                TextStyles.sourceSansSB.title4,
-                                          )
-                                        : Text(
-                                            "₹" + investedAmount.toString() ??
-                                                0.toString(),
-                                            style:
-                                                TextStyles.sourceSansSB.title4,
-                                          ),
+                                    UserFundQuantitySE(
+                                      style: TextStyles.sourceSansSB.title4,
+                                      investmentType: investmentType,
+                                      prefix: investmentType ==
+                                              InvestmentType.LENDBOXP2P
+                                          ? "₹"
+                                          : null,
+                                    )
                                   ],
                                 ),
-                                title == "Fello Flo"
-                                    ? Icon(Icons.lock,
-                                        size: SizeConfig.padding34,
-                                        color: Colors.black.withOpacity(0.5))
-                                    : CustomSaveButton(
-                                        onTap: onTap,
-                                        title: 'Save',
-                                        isFullScreen: false,
-                                      )
+                                CustomSaveButton(
+                                  onTap: onTap,
+                                  title: 'Save',
+                                  isFullScreen: false,
+                                )
                               ],
                             )
                           ],

@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -10,23 +10,16 @@ import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/game_card_big.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
-import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -35,10 +28,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
-
-import 'package:google_fonts/google_fonts.dart';
-import 'package:isar/isar.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -108,7 +97,7 @@ class TambolaHomeView extends StatelessWidget {
                         model: model,
                       ),
                       //LeaderBoard
-                      TambolaLeaderbBoard(
+                      TambolaLeaderBoard(
                         model: model,
                       ),
                     ],
@@ -249,61 +238,61 @@ class TambolaHomeView extends StatelessWidget {
                   model: model,
                   showIndicatorForAll: false,
                 ),
-                if (model.ticketsBeingGenerated &&
-                    model.tambolaService.ticketGenerateCount > 0)
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: SizeConfig.screenWidth * 0.8,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryColor.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: FractionallySizedBox(
-                              heightFactor: 1,
-                              widthFactor: model
-                                          .tambolaService.ticketGenerateCount ==
-                                      model.tambolaService
-                                          .atomicTicketGenerationLeftCount
-                                  ? 0.1
-                                  : (model.tambolaService.ticketGenerateCount -
-                                          model.tambolaService
-                                              .atomicTicketGenerationLeftCount) /
-                                      model.tambolaService.ticketGenerateCount,
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: UiConstants.primaryColor,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                // if (model.ticketsBeingGenerated &&
+                //     model.tambolaService.ticketGenerateCount > 0)
+                //   Align(
+                //     alignment: Alignment.center,
+                //     child: Container(
+                //       width: SizeConfig.screenWidth,
+                //       height: 140,
+                //       decoration: BoxDecoration(
+                //         color: Colors.white.withOpacity(0.7),
+                //       ),
+                //       padding: EdgeInsets.all(20),
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Container(
+                //             width: SizeConfig.screenWidth * 0.8,
+                //             height: 4,
+                //             decoration: BoxDecoration(
+                //               color: UiConstants.primaryColor.withOpacity(0.3),
+                //               borderRadius: BorderRadius.circular(100),
+                //             ),
+                //             child: FractionallySizedBox(
+                //               heightFactor: 1,
+                //               widthFactor: model
+                //                           .tambolaService.ticketGenerateCount ==
+                //                       model.tambolaService
+                //                           .atomicTicketGenerationLeftCount
+                //                   ? 0.1
+                //                   : (model.tambolaService.ticketGenerateCount -
+                //                           model.tambolaService
+                //                               .atomicTicketGenerationLeftCount) /
+                //                       model.tambolaService.ticketGenerateCount,
+                //               alignment: Alignment.centerLeft,
+                //               child: Container(
+                //                 decoration: BoxDecoration(
+                //                   color: UiConstants.primaryColor,
+                //                   borderRadius: BorderRadius.circular(100),
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //           SizedBox(height: 16),
+                //           Text(
+                //             'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
+                //             style: TextStyle(
+                //               fontWeight: FontWeight.w600,
+                //               fontSize: SizeConfig.mediumTextSize,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
           ),
@@ -314,6 +303,7 @@ class TambolaHomeView extends StatelessWidget {
       if (!model.ticketsLoaded) {
         model.ticketsLoaded = true;
         model.tambolaBoardViews = [];
+
         model.userWeeklyBoards.forEach((board) {
           model.tambolaBoardViews.add(
             Ticket(
@@ -375,61 +365,61 @@ class TambolaHomeView extends StatelessWidget {
                   model: model,
                   showIndicatorForAll: true,
                 ),
-                if (model.ticketsBeingGenerated &&
-                    model.tambolaService.ticketGenerateCount > 0)
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: SizeConfig.screenWidth * 0.8,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryColor.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: FractionallySizedBox(
-                              heightFactor: 1,
-                              widthFactor: model
-                                          .tambolaService.ticketGenerateCount ==
-                                      model.tambolaService
-                                          .atomicTicketGenerationLeftCount
-                                  ? 0.1
-                                  : (model.tambolaService.ticketGenerateCount -
-                                          model.tambolaService
-                                              .atomicTicketGenerationLeftCount) /
-                                      model.tambolaService.ticketGenerateCount,
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: UiConstants.primaryColor,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                // if (model.ticketsBeingGenerated &&
+                //     model.tambolaService.ticketGenerateCount > 0)
+                //   Align(
+                //     alignment: Alignment.center,
+                //     child: Container(
+                //       width: SizeConfig.screenWidth,
+                //       height: 140,
+                //       decoration: BoxDecoration(
+                //         color: Colors.white.withOpacity(0.7),
+                //       ),
+                //       padding: EdgeInsets.all(20),
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Container(
+                //             width: SizeConfig.screenWidth * 0.8,
+                //             height: 4,
+                //             decoration: BoxDecoration(
+                //               color: UiConstants.primaryColor.withOpacity(0.3),
+                //               borderRadius: BorderRadius.circular(100),
+                //             ),
+                //             child: FractionallySizedBox(
+                //               heightFactor: 1,
+                //               widthFactor: model
+                //                           .tambolaService.ticketGenerateCount ==
+                //                       model.tambolaService
+                //                           .atomicTicketGenerationLeftCount
+                //                   ? 0.1
+                //                   : (model.tambolaService.ticketGenerateCount -
+                //                           model.tambolaService
+                //                               .atomicTicketGenerationLeftCount) /
+                //                       model.tambolaService.ticketGenerateCount,
+                //               alignment: Alignment.centerLeft,
+                //               child: Container(
+                //                 decoration: BoxDecoration(
+                //                   color: UiConstants.primaryColor,
+                //                   borderRadius: BorderRadius.circular(100),
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //           SizedBox(height: 16),
+                //           Text(
+                //             'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
+                //             style: TextStyle(
+                //               fontWeight: FontWeight.w600,
+                //               fontSize: SizeConfig.mediumTextSize,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
           ),
@@ -811,8 +801,9 @@ class ButTicketsComponent extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins),
-          child: FelloButtonLg(
+          child: AppPositiveCustomChildBtn(
             //color: UiConstants.tertiarySolid,
+
             child: model.ticketBuyInProgress
                 ? SpinKitThreeBounce(
                     color: Colors.white,
@@ -833,7 +824,7 @@ class ButTicketsComponent extends StatelessWidget {
                           height: 16,
                           width: 16,
                           child: SvgPicture.asset(
-                            Assets.aFelloToken,
+                            Assets.token,
                           ),
                         )),
                         TextSpan(
@@ -843,8 +834,8 @@ class ButTicketsComponent extends StatelessWidget {
                       ],
                     ),
                   ),
-            onPressed: () {
-              model.buyTickets(context);
+            onPressed: () async {
+              await model.buyTickets(context);
             },
           ),
         ),
@@ -870,6 +861,15 @@ class PageViewWithIndicator extends StatefulWidget {
 
 class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
   final _currentPageNotifier = ValueNotifier<int>(0);
+  int ticketsCount = 0;
+
+  @override
+  void initState() {
+    ticketsCount = widget.model.tambolaBoardViews.length > 5
+        ? 5
+        : widget.model.tambolaBoardViews.length;
+    super.initState();
+  }
 
   _buildCircleIndicator() {
     return Positioned(
@@ -879,7 +879,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
       child: Padding(
         padding: EdgeInsets.all(SizeConfig.padding4),
         child: CirclePageIndicator(
-          itemCount: widget.model.tambolaBoardViews.toList().length,
+          itemCount: ticketsCount,
           currentPageNotifier: _currentPageNotifier,
           selectedDotColor: UiConstants.kSelectedDotColor,
           dotColor: Colors.white.withOpacity(0.5),
@@ -900,7 +900,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
             physics: BouncingScrollPhysics(),
             controller: widget.model.ticketPageController,
             scrollDirection: Axis.horizontal,
-            children: widget.model.tambolaBoardViews.toList(),
+            children: widget.model.tambolaBoardViews.sublist(0, ticketsCount),
             onPageChanged: (int index) {
               _currentPageNotifier.value = index;
             },
@@ -997,8 +997,8 @@ class TodayWeeklyPicksCard extends StatelessWidget {
   }
 }
 
-class TambolaLeaderbBoard extends StatelessWidget {
-  const TambolaLeaderbBoard({
+class TambolaLeaderBoard extends StatelessWidget {
+  const TambolaLeaderBoard({
     Key key,
     @required this.model,
   }) : super(key: key);
@@ -1319,7 +1319,7 @@ class TambolaPrize extends StatelessWidget {
                                               MainAxisAlignment.end,
                                           children: [
                                             SvgPicture.asset(
-                                              Assets.tokens,
+                                              Assets.token,
                                               width: SizeConfig.padding12,
                                             ),
                                             SizedBox(

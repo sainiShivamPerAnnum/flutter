@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -47,6 +48,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   String _myUserDpUrl;
   String _myUserName;
+  // String _myUpiId;
   String _dob;
   String _gender;
   String _idToken;
@@ -55,6 +57,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet _userFundWallet;
   UserJourneyStatsModel _userJourneyStats;
+  UserAugmontDetail _userAugmontDetails;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
@@ -74,12 +77,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get dob => _dob;
   String get gender => _gender;
   String get email => _email;
+  // String get upiId => _myUpiId;
+
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
-
-  FocusScopeNode buyFieldFocusNode = FocusScopeNode();
+  UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
 
   set baseUser(baseUser) {
     _baseUser = baseUser;
@@ -117,6 +121,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger
         .d("My user name updated in userservice, property listeners notified");
   }
+
+  // setMyUpiId(String upi) {
+  //   _myUpiId = upi;
+  //   notifyListeners(UserServiceProperties.myUpiId);
+  //   _logger.d(
+  //       "My user upi Id updated in userservice, property listeners notified");
+  // }
 
   setDateOfBirth(String dob) {
     _dob = dob;
@@ -178,6 +189,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User simple kyc verified, property listeners notified");
   }
 
+  setUserAugmontDetails(value) {
+    this._userAugmontDetails = value;
+    notifyListeners(UserServiceProperties.myAugmontDetails);
+    _logger.d(
+        "AgmontDetails :User augmontDetails updated, property listeners notified");
+  }
+
   bool get isUserOnborded {
     try {
       if (_firebaseUser != null &&
@@ -199,23 +217,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
-      if (baseUser != null) {
-        isEmailVerified = baseUser.isEmailVerified ?? false;
-        isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-        setEmail(baseUser.email);
-        setMyAvatarId(baseUser.avatarId);
-        setMyUserName(baseUser.name);
-        setDateOfBirth(baseUser.dob);
-        setGender(baseUser.gender);
-
-        await Future.wait([
-          // note: Already Setting profile in Root uneccessary Calling
-          // setProfilePicture(),
-          getUserJourneyStats()
-        ]);
-        // checkForNewNotifications();
-        // checkForUnscratchedGTStatus();
-      }
+      if (baseUser != null) await getUserJourneyStats();
     } catch (e) {
       _logger.e(e.toString());
       _internalOpsService
@@ -244,6 +246,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
       showSecurityPrompt = null;
+      _userAugmontDetails = null;
+      // _myUpiId = null;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");
@@ -271,7 +275,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               .d("Current FCM token from baseUser : ${_baseUser?.client_token}")
           : _logger.d("No FCM token in firestored");
 
-      _myUserName = _baseUser?.name;
+      isEmailVerified = baseUser.isEmailVerified ?? false;
+      isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
+      setEmail(baseUser.email);
+      setMyAvatarId(baseUser.avatarId);
+      setMyUserName(baseUser?.kycName ?? baseUser.name);
+      setDateOfBirth(baseUser.dob);
+      setGender(baseUser.gender);
     } else {
       _logger.d("Firebase User is null");
     }
@@ -398,6 +408,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
+  Future<void> fetchUserAugmontDetail() async {
+    if (userAugmontDetails == null) {
+      ApiResponse<UserAugmontDetail> augmontDetailResponse =
+          await _userRepo.getUserAugmontDetails();
+      if (augmontDetailResponse.isSuccess())
+        setUserAugmontDetails(augmontDetailResponse.model);
+    }
+  }
   // Future<bool> completeOnboarding() async {
   //   ApiResponse response = await _userRepo.completeOnboarding();
   //   return response.model;

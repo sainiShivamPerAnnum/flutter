@@ -1,7 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
@@ -39,6 +39,9 @@ class _AutosaveCardState extends State<AutosaveCard> {
                 onTap: () async {
                   if (connectivityStatus == ConnectivityStatus.Offline)
                     return BaseUtil.showNoInternetAlert();
+                  if (!subscriptionModel.isUserProfileComplete())
+                    return BaseUtil.showNegativeAlert("Autosave Locked",
+                        "Please complete profile to unlock autosave");
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;
@@ -233,8 +236,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     color: UiConstants
                                                         .kBackgroundColor),
                                                 child: Center(
-                                                  child: Image.asset(
-                                                    Assets.upiSvg,
+                                                  child: SvgPicture.asset(
+                                                    Assets.upiIcon,
                                                     height:
                                                         SizeConfig.padding14,
                                                     width: SizeConfig.padding14,

@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/event_model.dart';
@@ -25,7 +26,6 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -51,7 +51,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class WinViewModel extends BaseModel {
+class WinViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
@@ -203,7 +203,7 @@ class WinViewModel extends BaseModel {
 
     fetchReferralCode();
     fectchBasicConstantValues();
-    _baseUtil.fetchUserAugmontDetail();
+    // _baseUtil.fetchUserAugmontDetail();
 
     _lbService.fetchReferralLeaderBoard();
 
@@ -515,7 +515,7 @@ class WinViewModel extends BaseModel {
         choice);
     if (response['status'] != null && response['status']) {
       _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 
@@ -687,36 +687,6 @@ class WinViewModel extends BaseModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
-  openVoucherModal(
-    String asset,
-    String title,
-    String subtitle,
-    Color color,
-    bool commingsoon,
-    List<String> instructions,
-  ) {
-    if (Platform.isIOS && commingsoon)
-      return;
-    else
-      return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        content: VoucherModal(
-          color: color,
-          asset: asset,
-          commingSoon: commingsoon,
-          title: title,
-          subtitle: subtitle,
-          instructions: instructions,
-        ),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding24),
-            topRight: Radius.circular(SizeConfig.padding24)),
-        // backgroundColor: Color(0xffFFDBF6),
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-      );
-  }
-
   double calculateFillHeight(
       double winningAmount, double containerHeight, int redeemAmount) {
     double fillPercent = (winningAmount / redeemAmount) * 100;
@@ -757,5 +727,6 @@ class WinViewModel extends BaseModel {
       });
     } else
       ongoingEvents = [];
+    setupAutoEventScroll();
   }
 }

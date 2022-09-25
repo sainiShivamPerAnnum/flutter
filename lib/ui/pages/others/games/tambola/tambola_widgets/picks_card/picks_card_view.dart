@@ -2,16 +2,12 @@ import 'dart:math';
 
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // class PicksCardView extends StatelessWidget {
 //   final ValueChanged<bool> showBuyTicketModal;

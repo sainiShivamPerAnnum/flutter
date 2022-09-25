@@ -1,3 +1,4 @@
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class GameRewards extends StatelessWidget {
     return Row(
       children: [
         SvgPicture.asset(
-          'assets/svg/gift_svg.svg',
+          Assets.gift,
           height: SizeConfig.padding20,
         ),
         Text(

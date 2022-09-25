@@ -13,7 +13,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 
-class OnboardingViewModel extends BaseModel {
+class OnboardingViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _userService = locator<UserService>();
   final UserRepository _userRepository = locator<UserRepository>();

@@ -1,99 +1,51 @@
 import 'constants.dart';
 
 class Assets {
-  static final String splashBackground = "assets/images/BG.png";
   static final String logoMaxSize = 'images/fello_logo.png';
-  static final String logoWhite = 'assets/temp/fello_logo.png';
-  static final String logoShortform = 'images/fello-short-logo.png';
-  static final String logoShortformSVG = 'assets/svg/fello-short-logo.svg';
+  static final String logoShortform = 'assets/svg/fello-short-logo.svg';
 
   static final String referGraphic = 'images/transfer.png';
-  static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
-  static final String augmontLogo = "images/aug-logo.png";
-  static final String augLogo = "images/aug-logo.png";
-  static final String sebiGraphic = 'images/sebi.png';
-  static final String amfiGraphic = 'images/amfi.png';
-  static final String prizesGraphic = 'images/prizes-small.png';
   static final String winnersGraphic = 'images/winners-small.png';
-  static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
   static final String onboardCollageGraphic =
       'images/onboard_collage-small.png';
 
-  static final String dummyPanCard = 'images/PAN_card.png';
-  static final String dummyPanCardShowNumber =
-      'images/PAN_card_no_focussed.png';
-  static final String dummyAadhaarCard = 'images/Aadhar_card.jpg';
-  static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
-  static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
-  static final String noTransaction = "images/no-transactions.png";
+  static final String noTransaction = "assets/vectors/no-transactions.png";
   static final String augmontShare = "images/augmont-share.png";
-
-  //AUTOSAVE
-  static final String autosavemain = "assets/images/autosave.png";
-  static final String fasben1 = "assets/images/fasben1.png";
-  static final String fasben2 = "assets/images/fasben2.png";
-  static final String fasben3 = "assets/images/fasben3.png";
-  static final String preautosave = "assets/images/preautosave.png";
-  static final String postautosave = "assets/images/postautosave.png";
-  static final String autopause = "assets/images/autopause.png";
-
-  static final String autosaveSlide1 = "assets/videos/asanim-1.mp4";
-  static final String autosaveSlide2 = "assets/videos/asanim-2.mp4";
-  static final String autosaveSlide3 = "assets/videos/asanim-3.mp4";
+  static final String preAutosave = "assets/images/preautosave.png";
+  static final String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';
   static final String autoSaveDefault = 'assets/svg/auto_save_start.svg';
   static final String autoSavePaused = 'assets/svg/auto_save_paused.svg';
   static final String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
-  static final String upiSvg = 'assets/svg/upi.png';
-  static final String alertTriangle = 'assets/svg/alert_triangle.svg';
-  static final String loadingSvg = 'assets/svg/loader.svg';
-
+  static final String upi = 'assets/images/upi.png';
+  static final String rupee = 'assets/vectors/icons/indian_rupee.svg';
   //APPBAR
 
   static final String alerts = "assets/vectors/icons/alerts.svg";
-  static final String tokens = "assets/vectors/icons/token.svg";
+  static final String token = "assets/vectors/icons/token.svg";
+  static final String tokenOutlined = "assets/vectors/icons/outline_token.svg";
   static final String tickets = "assets/vectors/icons/tickets.svg";
-  //NAVBAR
+  static final String ticketOutlined =
+      "assets/vectors/icons/horizontal_outlined_ticket.svg";
+  static final String ticketTilted = "assets/vectors/ticket_tilted.svg";
 
+  //NAVBAR
   static final String navPlay = "assets/vectors/icons/support.svg";
   static final String navSave = "assets/vectors/icons/wallet.svg";
-  static final String navWin = "assets/vectors/icons/medal.svg";
+  static final String medal = "assets/vectors/icons/medal.svg";
 
   //NAVBAR - 4.0
-  static final String navPlayActive =
-      "assets/svg/BottomNavBarIcons/nav_play_active.svg";
-  static final String navPlayInactive =
-      "assets/svg/BottomNavBarIcons/nav_play_inactive.svg";
-  static final String navJourneyActive =
-      "assets/svg/BottomNavBarIcons/nav_journey_active.svg";
-  static final String navJourneyInactive =
-      "assets/svg/BottomNavBarIcons/nav_journey_inactive.svg";
-  static final String navSaveActive =
-      "assets/svg/BottomNavBarIcons/nav_save_active.svg";
-  static final String navSaveInactive =
-      "assets/svg/BottomNavBarIcons/nav_save_inactive.svg";
-  static final String navWinActive =
-      "assets/svg/BottomNavBarIcons/nav_win_active.svg";
-  static final String navWinInactive =
-      "assets/svg/BottomNavBarIcons/nav_win_inactive.svg";
   static final String navJourneyLottie = "assets/lotties/nav/journey.json";
   static final String navPlayLottie = "assets/lotties/nav/play.json";
   static final String navSaveLottie = "assets/lotties/nav/save.json";
   static final String navWinLottie = "assets/lotties/nav/win.json";
 
+  static final String prizeRankOne = "assets/vectors/rank_first.svg";
+  static final String prizeRankTwo = "assets/vectors/rank_second.svg";
+  static final String prizeRankThird = "assets/vectors/rank_third.svg";
 // ONBOARDING
-  static final String enterPhoneNumber = "assets/vectors/enter_phone.svg";
-  static final String otpAuth = "assets/vectors/otp_auth2.svg";
-  static final String gender = 'images/svgs/gender.svg';
-  static final String username = "assets/vectors/username.svg";
   static final String bankLottie = "assets/lotties/bank.json";
-  static final String onb1 = "assets/lotties/slide1.json";
-  static final String onb2 = "assets/lotties/slide2.json";
-  static final String onb3 = "assets/lotties/slide3.json";
-  static final String indFlag = "assets/images/indflag.jpg";
-  static final String blocked = "assets/images/blocked.png";
-  static final String signout = "assets/vectors/signout.svg";
   static final String truecaller = "assets/images/truecaller.png";
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
@@ -107,57 +59,39 @@ class Assets {
   static final String hsMail = "assets/vectors/icons/hs_mail.svg";
   static final String profilePic = "assets/images/profile.png";
 
+  static final String sprout = "assets/vectors/sprout.svg";
+  static final String star = "assets/vectors/star.svg";
   //HOME TAB//
 
   // PLAY
-  static final String germsPattern = "assets/images/bg_pattern.png";
-  static final String tambolaWalkthrough =
-      "assets/images/tambola_walkthrough.png";
-  static final String scoreIcon = "assets/vectors/icons/score.svg";
 
+  static final String scoreIcon = "assets/vectors/icons/score.svg";
+  static final String completeCheck =
+      'assets/images/congratulation_dialog_logo.png';
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
-  static final String giftBoxOpen = "assets/vectors/gift_box_open.svg";
   static final String moneyIcon = "assets/images/icons/money.png";
   static final String gold24K = "assets/vectors/icons/gold24k.svg";
   static final String goldPure = "assets/vectors/icons/goldPure.svg";
   static final String goldSecure = "assets/vectors/icons/goldSecure.svg";
   static final String couponIcon = "assets/vectors/coupon.svg";
-  static final String processing = "assets/vectors/processing.svg";
   static final String digitalGoldBar = 'assets/vectors/gold_bar.webp';
-  static final String stableFello = 'assets/vectors/stable_fello.webp';
+  static final String felloFlo = 'assets/vectors/stable_fello.webp';
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
-  static final String saveCoinStack = 'assets/svg/save_coin_remaining.svg';
-  static final String saveChevronRight = 'assets/svg/save_chevron_right.svg';
   static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
   static final String rbiLogo = 'assets/vectors/rbi_logo.png';
   static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';
   static final String sebiLogo = 'assets/vectors/sebi_logo.png';
   static final String magicalSpiritBall = 'assets/svg/magical_spirit_ball.svg';
-  static final String rippleAnimation = 'assets/lotties/ripple.json';
-  static final String saleSuccessVector =
-      'assets/vectors/sale_success_vector.png';
-  static final String dropDownVector = 'assets/svg/drop_down_button.svg';
   static final String dailySaver = 'assets/svg/saver_of_daily_card.svg';
   static final String weeklySaver = 'assets/svg/saver_of_week_card.svg';
   static final String monthlySaver = 'assets/svg/saver_of_month_card.svg';
-
+  static final String flatIsland = 'assets/svg/flag_svg.svg';
   // WIN
 
-  static final String goldClaim = "assets/images/gold_claim.png";
   static final String amazonClaim = "assets/images/amazon_claim.png";
   static final String iphone = "assets/images/iphone.png";
   static final String iphone2 = "assets/images/iphone2.png";
-  static final String ipad = "assets/images/ipad.png";
-  static final String amazonGC = "assets/images/amazon_coupon.png";
-  static final String myntraGV = "assets/images/myntra_coupon.png";
-  static final String moneyBag = "assets/images/money_bag.png";
-  static final String clip = "assets/vectors/clip.svg";
-
-  static final String amazonCoupon = "assets/images/amazon_coupon.png";
-  static final String myntraCoupon = "assets/images/myntra_coupon.png";
-  static final String gplayCoupon = "assets/images/google_coupon.png";
-  static final String bdubsCoupon = "assets/images/bdubs_coupon.png";
 
   // TRANSACTIONS
 
@@ -166,67 +100,37 @@ class Assets {
   static final String bank = "assets/vectors/icons/bank.svg";
   static final String repeat = "assets/vectors/icons/repeat.svg";
 
-  //DRAWER
-  static final String dAboutDigitalGold =
-      "assets/vectors/drawer/about_digital_gold.svg";
-  static final String dHelpNSupport = "assets/vectors/drawer/help_support.svg";
-  static final String dHowItWorks = "assets/vectors/drawer/how_it_works.svg";
-  static final String dPanKyc = "assets/vectors/drawer/pan_kyc.svg";
-  static final String dReferNEarn = "assets/vectors/drawer/refer_and_earn.svg";
-  static final String dTransactions = "assets/vectors/drawer/transactions.svg";
-
-  //TAMBOLA
-
-  static final String dailyPickCard = "assets/vectors/daily_picks_card.svg";
-
   // REFERRAL
   static final String referNearn = "images/share-card.png";
-  static final String whatsapp = "images/svgs/whatsapp.svg";
-  static final String plane = "images/svgs/plane.svg";
-  static final String rAeMain = "assets/vectors/refer_and_earn_main.svg";
+  static final String google = "assets/svg/icon/google.svg";
+  static final String whatsapp = "assets/svg/icon/whatsapp.svg";
   static final String paperClip = "assets/vectors/icons/paperclip.svg";
-  static final List<String> onboardingSlide = [
-    'images/save-small.png',
-    'images/grow-small.png',
-    'images/games-small.png',
-    'images/safe-small.png',
-  ];
 
   //DIALOGS
-  static final String goldenTicket = "assets/vectors/golden_ticket_new.svg";
-  static final String prizeClaimConfirm =
-      "assets/vectors/prize_claim_confirm.svg";
-  static final String congrats = "assets/vectors/congrats.svg";
+
   static final String noTickets = "assets/vectors/no_tickets.svg";
   static final String noData = "assets/lotties/no_data.json";
-  static final String snackbarWifiIcon = "assets/svg/snackbar_wifi_icon.svg";
-  static final String snackbarAlertIcon = "assets/svg/snackbar_alert_icon.svg";
-  static final String snackbarLoadingIcon =
-      "assets/svg/snackbar_loading_icon.svg";
 
-  //A default profile placeholder
-  static final String defaultProfilePlaceholder =
-      "assets/temp/rank_one_profile.png";
+  //PROFILE PICTURES
+  static final String cvtar1 = "assets/vectors/userAvatars/AV1.svg";
+  static final String cvtar2 = "assets/vectors/userAvatars/AV2.svg";
+  static final String cvtar3 = "assets/vectors/userAvatars/AV3.svg";
+  static final String cvtar4 = "assets/vectors/userAvatars/AV4.svg";
+  static final String cvtar5 = "assets/vectors/userAvatars/AV5.svg";
 
   //FELLO REWARDS
-  // static final String digitalGold = "images/augmont-share.png";
   static final String amazonGiftVoucher = "images/amazon-share.png";
   static final String felloRewards = "assets/images/fello_prize.png";
   static final String voucherBg = "assets/images/voucher_bg.jpg";
 
   //GT ASSETS
-  static final String gtWon = "assets/images/gtWon.png";
-  static final String gtLose = "assets/images/gtlose.png";
-  static final String gtCover = "assets/images/gtCover.png";
-  static final String txnFinish = "assets/lotties/finish.json";
-  static final String coinStack = "assets/lotties/coin-stack.json";
-  static final String glitter = "assets/lotties/glitter.json";
+
   static final String gtBackground = "assets/images/gtdbg.png";
   static final String gtConfetti = "assets/lotties/confetti.json";
+  static final String upiIcon = "assets/vectors/icons/upi.svg";
 
-  static final String aTambolaTicket = 'assets/svg/frame_svg.svg';
-  static final String aFelloToken = 'assets/temp/token.svg';
-
+  static final String aTambolaTicket = 'assets/vectors/icons/frame_svg.svg';
+  static final String gift = 'assets/vectors/icons/gift_svg.svg';
   // Play Info Section Asset
   // static final String ludoGameAsset = 'assets/svg/play_ludo.svg';
   // static final String leaderboardGameAsset = 'assets/svg/play_leaderboard.svg';
@@ -234,20 +138,11 @@ class Assets {
 
   static final String ludoGameAsset = 'assets/svg/dice_asset_new.svg';
   static final String leaderboardGameAsset = 'assets/svg/star_asset_new.svg';
-  // static final String giftGameAsset = ' assets/svg/gift_asset_new.svg';
 
   // Web Home View (GameInfoBlock Asset)
   static final String rewardGameAsset = 'assets/svg/reward_svg.svg';
-  static final String circleGameAsset = 'assets/svg/circle_svg.svg';
 
   //Campaign Screen
-  static final String visualGridAsset = "assets/svg/visual_grid.svg";
-  static final String coinsIconAsset = "assets/svg/coins.svg";
-  static final String rankIconAsset = "assets/svg/rank.svg";
-  static final String bannerTrophy = "assets/images/banner_trophy.png";
-
-  static final String chevronAsset = " assets/temp/chevron_right.svg";
-
   static final String singleStarAsset = "assets/svg/star_single.svg";
   static final String singleCoinAsset = "assets/svg/coin_single.svg";
   static final String singleTmbolaTicket =
@@ -286,13 +181,16 @@ class Assets {
   static const String howToPlayAsset3Tambola = "assets/svg/tambola_inst_3.svg";
 
   //Notificatiion alert screen
-  static final String depositCompleteAsset = "assets/svg/golden_ticket.svg";
+  static final String goldenTicketAsset =
+      "assets/vectors/icons/golden_ticket.svg";
 
-  static final String goldenTicketAsset = "assets/svg/deposite_complete.svg";
+  static final String depositCompleteAsset =
+      "assets/vectors/icons/deposit_complete.svg";
 
-  static final String couponsAsset = "assets/svg/coupons.svg";
+  static final String couponsAsset = "assets/vectors/icons/coupons.svg";
 
-  static final String chevRonRightArrow = "assets/svg/chevron_right_arrow.svg";
+  static final String chevRonRightArrow =
+      "assets/vectors/icons/chevron_right_arrow.svg";
   //Golden Tickeets screen
   static final String unredemmedGoldenTicketBG = "assets/svg/unredeemed_gt.svg";
   static final String unredemmedGoldenTicketBG_png =
@@ -301,7 +199,6 @@ class Assets {
   static final String gt_cashback = "assets/svg/gt_cashback.svg";
   static final String gt_token_cashback = "assets/svg/gt_cashback_token.svg";
   static final String gt_none = "assets/svg/gt_none.svg";
-  static final String newTokenAsset = "assets/svg/token_asset_new.svg";
 
   static final String tambolaCardAsset = "assets/svg/tambola_card_asset.svg";
   static final String noReferalAsset = "assets/svg/no_referal_asset.svg";
@@ -332,7 +229,6 @@ class Assets {
     'images/process/process-2.png',
     'images/process/process-3.png',
   ];
-  static final checkmarkLottie = 'images/checkmark.json';
   static final String aboutUsDesc =
       'Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
       'We (Manish & Shourya) are two finance folks who started Fello with the vision of helping people save money in a better way and learn about personal finance and investments with an added tinge of fun with games like never before. Now savings are no more boring, it is fun, safe and rewarding!\n\n'
@@ -514,12 +410,14 @@ class Assets {
 
 //Lotties
   static const String felloSplashLoopLogo =
-      'assets/temp/fello_splash_loop.json';
+      'assets/lotties/fello_splash_loop.json';
   static const String felloSplashZoomOutLogo =
-      'assets/temp/fello_splash_out.json';
+      'assets/lotties/fello_splash_out.json';
   static const String goldDepostLoadingLottie =
       "assets/lotties/deposit_progress.json";
   static const String goldDepostSuccessLottie =
       "assets/lotties/deposit_complete.json";
+  static const String goldSellCompleteLottie =
+      "assets/lotties/sell_complete.json";
   static const String fullScreenLoaderLottie = "assets/lotties/loader.json";
 }

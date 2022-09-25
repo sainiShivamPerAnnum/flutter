@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/assets.dart';
 
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -42,7 +43,7 @@ class BlockedUserView extends StatelessWidget {
           Positioned(
               top: SizeConfig.screenHeight * 0.35,
               child: SvgPicture.asset(
-                'assets/svg/flag_svg.svg',
+                Assets.flatIsland,
                 width: SizeConfig.screenWidth * 0.5,
               )),
           Column(

@@ -51,7 +51,7 @@ class ProfileImageSE extends StatelessWidget {
                 backgroundColor: Colors.black,
                 child: model.avatarId != 'CUSTOM' || model.myUserDpUrl == null
                     ? SvgPicture.asset(
-                        "assets/svg/userAvatars/${model.avatarId ?? 'AV2'}.svg",
+                        "assets/vectors/userAvatars/${model.avatarId ?? 'AV2'}.svg",
                         fit: BoxFit.cover,
                       )
                     : SizedBox(),

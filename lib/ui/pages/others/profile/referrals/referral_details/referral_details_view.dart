@@ -1,40 +1,22 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralDetailsView extends StatelessWidget {
@@ -165,7 +147,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       height: 17,
                                       width: 17,
                                       child: SvgPicture.asset(
-                                        Assets.aFelloToken,
+                                        Assets.token,
                                       ),
                                     )),
                                     TextSpan(
@@ -476,7 +458,7 @@ class BonusLockedReferals extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
+                                          Assets.cvtar1,
                                           width: SizeConfig.iconSize5_5,
                                           height: SizeConfig.iconSize5_5,
                                         );
@@ -501,7 +483,7 @@ class BonusLockedReferals extends StatelessWidget {
                                           ),
                                           errorWidget: (a, b, c) {
                                             return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
+                                              Assets.cvtar2,
                                               width: SizeConfig.iconSize5,
                                               height: SizeConfig.iconSize5,
                                             );
@@ -649,7 +631,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
+                                          Assets.cvtar3,
                                           width: SizeConfig.iconSize5_5,
                                           height: SizeConfig.iconSize5_5,
                                         );
@@ -674,7 +656,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                           ),
                                           errorWidget: (a, b, c) {
                                             return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
+                                              Assets.cvtar4,
                                               width: SizeConfig.iconSize5,
                                               height: SizeConfig.iconSize5,
                                             );

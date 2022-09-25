@@ -21,7 +21,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class JourneyPageViewModel extends BaseModel {
+class JourneyPageViewModel extends BaseViewModel {
   final logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _journeyService = locator<JourneyService>();
@@ -112,7 +112,7 @@ class JourneyPageViewModel extends BaseModel {
       _journeyService.placeAvatarAtTheCurrentMileStone();
     }
 
-    _journeyService.mainController = ScrollController(initialScrollOffset: 400);
+    _journeyService.mainController = ScrollController(initialScrollOffset: 600);
     isLoading = false;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       if (_journeyService.avatarRemoteMlIndex < 3) {

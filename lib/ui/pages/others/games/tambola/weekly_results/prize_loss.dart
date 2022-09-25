@@ -34,8 +34,8 @@ class Loser extends StatelessWidget {
               ),
             ),
             Spacer(),
-            SvgPicture.asset(
-              "assets/vectors/broken_piggy_bank.svg",
+            Image.asset(
+              "assets/vectors/gold_bar.webp",
               width: SizeConfig.screenWidth * 0.8,
             ),
             Spacer(),

@@ -43,7 +43,7 @@ class TrendingGamesSection extends StatelessWidget {
                 : model.trendingGamesListData.length,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             itemBuilder: (ctx, index) {
-              return (model.isGamesListDataLoading)
+              return model.isGamesListDataLoading
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
@@ -81,19 +81,13 @@ class TrendingGames extends StatelessWidget {
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.roundness112))),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: SizeConfig.screenWidth * 0.23,
-              width: SizeConfig.screenWidth * 0.23,
-              decoration: BoxDecoration(shape: BoxShape.circle),
-              child: Hero(
-                tag: game.code,
-                child: ClipOval(
-                    child: SvgPicture.network(
-                  game.icon,
-                  fit: BoxFit.cover,
-                )),
+            ClipOval(
+              child: SvgPicture.network(
+                game.icon,
+                fit: BoxFit.cover,
+                width: SizeConfig.screenWidth * 0.32,
               ),
             ),
             Text(
@@ -101,10 +95,11 @@ class TrendingGames extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body1.colour(Colors.white),
             ),
+            SizedBox(height: SizeConfig.padding12),
             Column(
               children: [
                 SvgPicture.asset(
-                  Assets.aFelloToken,
+                  Assets.token,
                   height: SizeConfig.padding20,
                 ),
                 SizedBox(height: SizeConfig.padding6),

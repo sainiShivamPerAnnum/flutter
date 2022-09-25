@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -36,6 +38,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
+const String LendboxDetailsPath = '/lendboxDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -69,6 +72,7 @@ const String AllParticipantsWinnersTopReferersPath =
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
 const String SharePriceScreenPath = "/SharePriceScreenPath";
 const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
+const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 
 enum Pages {
   Splash,
@@ -101,12 +105,12 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-
   TxnHistory,
   KycDetails,
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
+  LendboxDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -138,6 +142,7 @@ enum Pages {
   RedeemSucessfulScreenView,
   SharePriceScreenView,
   AllTambolaTicketsView,
+  UserUpiDetailsView,
 }
 
 class PageConfiguration {
@@ -415,6 +420,13 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   name: 'About Digital Gold Screen',
 );
 
+PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+  key: 'lendboxDetails',
+  path: LendboxDetailsPath,
+  uiPage: Pages.LendboxDetails,
+  name: 'About Fello Flo Screen',
+);
+
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
   key: 'referDetails',
   path: ReferralDetailsPath,
@@ -617,3 +629,8 @@ PageConfiguration AllTambolaTicketsPageConfig = PageConfiguration(
   uiPage: Pages.AllTambolaTicketsView,
   name: "All Tambola tickets screen",
 );
+PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
+    key: 'UserUpiDetailsView',
+    path: UserUPIDetailsViewPath,
+    uiPage: Pages.UserUpiDetailsView,
+    name: "User Upi details Screen");

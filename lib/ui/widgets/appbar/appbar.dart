@@ -32,6 +32,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           showAvatar ? ProfileImageSE() : SizedBox(),
           Text(
@@ -40,13 +41,13 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
         ],
       ),
-      centerTitle: false,
+      centerTitle: !showAvatar,
       elevation: 0,
       backgroundColor: backgroundColor ?? Colors.transparent,
       actions: [
         Row(
           children: [
-            if (showCoinBar) FelloCoinBar(svgAsset: Assets.aFelloToken),
+            if (showCoinBar) FelloCoinBar(svgAsset: Assets.token),
             if (type != null) FaqButtonRounded(type: type),
             SizedBox(width: SizeConfig.padding20)
           ],

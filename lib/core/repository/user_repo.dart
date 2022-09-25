@@ -400,7 +400,6 @@ class UserRepository extends BaseRepo {
 
       // clear cache
       await _cacheService.invalidateByKey(CacheKeys.USER);
-      await getUserById(id: userService.baseUser.uid);
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
@@ -513,6 +512,22 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e);
       return false;
+    }
+  }
+
+  Future<ApiResponse<String>> getUserPan() async {
+    try {
+      final String token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.kGetPan(userService.baseUser.uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+      final String pan = response["data"]["pan"];
+      return ApiResponse(model: pan ?? '', code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
     }
   }
 }

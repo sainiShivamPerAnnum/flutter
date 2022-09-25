@@ -1,20 +1,14 @@
 import 'dart:developer' as dev;
 import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -43,16 +37,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
   _LoginControllerViewState(this.initPage);
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -60,7 +44,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelReady: (model) {
         model.init(initPage, model);
         if (Platform.isAndroid) {
-          model.initTruecaller();
+          Future.delayed(Duration(seconds: 2), () {
+            model.initTruecaller();
+          });
         }
       },
       onModelDispose: (model) => model.exit(),
@@ -113,7 +99,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: new NeverScrollableScrollPhysics(),
+                              // physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
