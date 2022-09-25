@@ -249,7 +249,11 @@ class GoldBuyViewModel extends BaseViewModel {
   //BUY FLOW
   //1
   initiateBuy() async {
-    if (!await initChecks()) return;
+    _augTxnService.isGoldBuyInProgress = true;
+    if (!await initChecks()) {
+      _augTxnService.isGoldBuyInProgress = false;
+      return;
+    }
     await _augTxnService.initateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,
@@ -268,8 +272,6 @@ class GoldBuyViewModel extends BaseViewModel {
       _onboardUserManually();
       return true;
     }
-    if (isGoldBuyInProgress) return false;
-    if (couponApplyInProgress) return false;
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
@@ -321,6 +323,7 @@ class GoldBuyViewModel extends BaseViewModel {
     return AmountChip(
       isActive: lastTappedChipIndex == index,
       amt: amt,
+      isBest: index == 1,
       onClick: (int amt) {
         if (couponApplyInProgress || isGoldBuyInProgress) return;
         showMaxCapText = false;

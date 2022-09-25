@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -103,8 +104,10 @@ class JourneyAppBar extends StatelessWidget {
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
+                            investmentType: InvestmentType.AUGGOLD99,
                             asset: Assets.digitalGoldBar,
                             value: UserFundQuantitySE(
+                              investmentType: InvestmentType.AUGGOLD99,
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
@@ -115,8 +118,9 @@ class JourneyAppBar extends StatelessWidget {
                           ),
                           JourneyAppBarAssetDetailsTile(
                             asset: Assets.felloFlo,
-                            value: Text(
-                              "₹ 3000",
+                            investmentType: InvestmentType.LENDBOXP2P,
+                            value: UserFundQuantitySE(
+                              investmentType: InvestmentType.LENDBOXP2P,
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
@@ -138,8 +142,9 @@ class JourneyAppBar extends StatelessWidget {
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
   final String asset;
   final Widget value;
-
-  JourneyAppBarAssetDetailsTile({@required this.asset, @required this.value});
+  final InvestmentType investmentType;
+  JourneyAppBarAssetDetailsTile(
+      {@required this.asset, @required this.value, this.investmentType});
 
   @override
   Widget build(BuildContext context) {
@@ -149,10 +154,16 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
           if (JourneyService.isAvatarAnimationInProgress) return;
 
           Haptic.vibrate();
-          AppState.delegate.appState.currentAction = PageAction(
-            state: PageState.addPage,
-            page: SaveAssetsViewConfig,
-          );
+          if (investmentType == InvestmentType.AUGGOLD99)
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: SaveAssetsViewConfig,
+            );
+          else
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: LendboxDetailsPageConfig,
+            );
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

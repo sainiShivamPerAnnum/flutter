@@ -113,7 +113,7 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
         amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
-        txnService: txnService,
+        augTxnService: txnService,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldBuyLoadingView(model: model);

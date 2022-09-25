@@ -26,7 +26,7 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/api/v3/newuser";
+  get kAddNewUser => "/v2/new";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAddBankAccount => "/bank";
   static String kGetBankAccountDetails(String uid) => '/$uid/bank';
@@ -54,6 +54,7 @@ class ApiPath {
   static String verifyOtp = '/auth/verify/otp';
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
   static String logOut(String uid) => "/user/$uid/logout";
+  static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
 
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
 

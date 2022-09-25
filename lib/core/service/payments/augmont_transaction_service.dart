@@ -53,8 +53,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
 
-  static double currentTxnGms = 0.0;
-
+  double currentTxnGms = 0.0;
   DepositFcmResponseModel depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
   GoldPurchaseDetails currentGoldPurchaseDetails;
@@ -72,13 +71,13 @@ class AugmontTransactionService extends BaseTransactionService {
 
     switch (paymentMode) {
       case "PAYTM-PG":
-        processPaytmTransaction();
+        return processPaytmTransaction();
         break;
       case "PAYTM":
-        getUserUpiAppChoice(this);
+        return getUserUpiAppChoice(this);
         break;
       case "RZP-PG":
-        processRazorpayTransaction();
+        return processRazorpayTransaction();
         break;
     }
 
@@ -99,6 +98,8 @@ class AugmontTransactionService extends BaseTransactionService {
       currentGoldPurchaseDetails.skipMl,
     );
     if (createdPaytmTransactionData != null) {
+      currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+
       final deepUri = await _paytmService.generateUpiTransactionDeepUri(
         selectedUpiApplicationName,
         createdPaytmTransactionData,
@@ -138,6 +139,7 @@ class AugmontTransactionService extends BaseTransactionService {
     final amount = currentGoldPurchaseDetails.goldBuyAmount;
     final augmontRates = currentGoldPurchaseDetails.goldRates;
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
     final augMap = {
       "aBlockId": augmontRates.blockId.toString(),

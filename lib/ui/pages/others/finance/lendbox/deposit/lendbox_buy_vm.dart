@@ -71,8 +71,14 @@ class LendboxBuyViewModel extends BaseViewModel {
   //BUY FLOW
   //1
   initiateBuy() async {
+    _isBuyInProgress = true;
+    notifyListeners();
     final amount = await initChecks();
-    if (amount == 0) return;
+    if (amount == 0) {
+      _isBuyInProgress = false;
+      notifyListeners();
+      return;
+    }
 
     log(amount.toString());
     _isBuyInProgress = true;

@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -852,6 +853,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'upiDetails':
         pageConfiguration = UserUpiDetailsViewPageConfig;
+        break;
+      case 'goldBuyModal':
+        BaseUtil()
+            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        break;
+      case 'floBuyModal':
+        BaseUtil()
+            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        break;
+      case 'goldDetailsView':
+        pageConfiguration = SaveAssetsViewConfig;
+        break;
+      case 'floDetailsView':
+        pageConfiguration = LendboxDetailsPageConfig;
         break;
     }
     if (pageConfiguration != null) {

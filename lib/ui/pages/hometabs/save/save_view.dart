@@ -157,7 +157,7 @@ class SaveNetWorthSection extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserFund],
       builder: (context, model, property) => Container(
-        height: SizeConfig.screenWidth * 1.4,
+        // height: SizeConfig.screenWidth * 1.4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(SizeConfig.roundness16),
@@ -199,9 +199,6 @@ class SaveNetWorthSection extends StatelessWidget {
                   investmentType: InvestmentType.LENDBOXP2P,
                 );
               },
-            ),
-            SizedBox(
-              height: SizeConfig.padding38,
             ),
             SaveAssetsFooter(),
           ],

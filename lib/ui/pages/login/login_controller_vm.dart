@@ -22,8 +22,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -69,7 +69,7 @@ class LoginControllerViewModel extends BaseViewModel {
   //Screen States
   final _mobileScreenKey = new GlobalKey<LoginMobileViewState>();
   final _otpScreenKey = new GlobalKey<LoginOtpViewState>();
-  final _usernameKey = new GlobalKey<LoginUserNameViewState>();
+  final _nameKey = new GlobalKey<LoginUserNameViewState>();
 
 //Private Variables
   bool _isSignup = false;
@@ -118,7 +118,7 @@ class LoginControllerViewModel extends BaseViewModel {
         mobileNo: this.userMobile,
         loginModel: loginModelInstance,
       ),
-      LoginUserNameView(key: _usernameKey),
+      LoginNameInputView(key: _nameKey),
     ];
   }
 
@@ -190,114 +190,110 @@ class LoginControllerViewModel extends BaseViewModel {
           break;
         }
 
-      case LoginUserNameView.index:
+      case LoginNameInputView.index:
         {
-          if (_usernameKey.currentState.model.formKey.currentState.validate()) {
-            if (!await _usernameKey.currentState.model.validate()) {
-              return false;
-            }
-
-            String refCode = _usernameKey.currentState.model.getReferralCode();
+          if (_nameKey.currentState.model.formKey.currentState.validate()) {
+            String refCode = _nameKey.currentState.model.getReferralCode();
             if (refCode != null && refCode.isNotEmpty)
               BaseUtil.manualReferralCode = refCode;
 
-            if (!_usernameKey.currentState.model.isLoading &&
-                _usernameKey.currentState.model.isValid) {
-              setState(ViewState.Busy);
+            // if (!_nameKey.currentState.model.isLoading &&
+            //     _nameKey.currentState.model.isValid) {
+            setState(ViewState.Busy);
 
-              String username =
-                  _usernameKey.currentState.model.username.replaceAll('.', '@');
+            String name =
+                _nameKey.currentState.model.nameController.text.trim();
 
 //TEST DATA ---STARTS---//
-              if (userService.baseUser == null) {
-                //firebase user should never be null at this point
-                userService.baseUser = BaseUser.newUser(
-                    userService.firebaseUser.uid,
-                    _formatMobileNumber(LoginControllerView.mobileno));
-              }
-              // logger.d(
-              //     "Mobileno : ${_formatMobileNumber(LoginControllerView.mobileno)}");
-              // userService.baseUser.name = "Abc";
+            if (userService.baseUser == null) {
+              //firebase user should never be null at this point
+              userService.baseUser = BaseUser.newUser(
+                  userService.firebaseUser.uid,
+                  _formatMobileNumber(LoginControllerView.mobileno));
+            }
+            // logger.d(
+            //     "Mobileno : ${_formatMobileNumber(LoginControllerView.mobileno)}");
+            // userService.baseUser.name = "Abc";
 
-              // userService.baseUser.email = "abc@gmail.com";
+            // userService.baseUser.email = "abc@gmail.com";
 
-              // userService.baseUser.isEmailVerified = false;
+            // userService.baseUser.isEmailVerified = false;
 
-              // userService.baseUser.dob = "12-05-2000";
+            // userService.baseUser.dob = "12-05-2000";
 
-              // userService.baseUser.gender = "M";
+            // userService.baseUser.gender = "M";
 
-              // cstate = "AR7YPqDj";
+            // cstate = "AR7YPqDj";
 //TEST DATA ----ENDS----
-              if (await dbProvider.checkIfUsernameIsAvailable(username)) {
-                _usernameKey.currentState.model.enabled = false;
-                notifyListeners();
+            // if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+            _nameKey.currentState.model.enabled = false;
+            notifyListeners();
 
-                userService.baseUser.username = username;
-                bool flag = false;
-                String message = "Please try again in sometime";
-                logger.d(userService.baseUser.toJson().toString());
-                userService.baseUser.avatarId = "AV1";
-                try {
-                  final token = await _getBearerToken();
-                  userService.baseUser.mobile = userMobile;
-                  final ApiResponse response = await _userRepo.setNewUser(
-                    userService.baseUser,
-                    token,
-                    cstate,
-                  );
-                  logger.e(response.toString());
-                  if (response.code == 400) {
-                    message = response.errorMessage ??
-                        "Unable to create account, please try again later.";
-                    _usernameKey.currentState.model.enabled = true;
-                    flag = false;
-                  } else {
-                    final gtId = response.model['gtId'];
-                    response.model['flag'] ? flag = true : flag = false;
-
-                    logger.d("Is Golden Ticket Rewarded: $gtId");
-                    if (gtId != null && gtId.toString().isNotEmpty)
-                      GoldenTicketService.goldenTicketId = gtId;
-                  }
-                } catch (e) {
-                  logger.d(e);
-                  _usernameKey.currentState.model.enabled = true;
-                  flag = false;
-                }
-
-                if (flag) {
-                  _analyticsService.track(
-                    eventName: AnalyticsEvents.signupName,
-                    properties: {'userId': userService?.baseUser?.uid},
-                  );
-                  logger.d("User object saved successfully");
-                  // userService.showOnboardingTutorial = true;
-                  _onSignUpComplete();
-                } else {
-                  BaseUtil.showNegativeAlert(
-                    'Update failed',
-                    message,
-                  );
-                  _usernameKey.currentState.model.enabled = true;
-
-                  setState(ViewState.Idle);
-                }
+            userService.baseUser.name = name;
+            bool flag = false;
+            String message = "Please try again in sometime";
+            logger.d(userService.baseUser.toJson().toString());
+            userService.baseUser.avatarId = "AV1";
+            try {
+              final token = await _getBearerToken();
+              userService.baseUser.mobile = userMobile;
+              final ApiResponse response = await _userRepo.setNewUser(
+                userService.baseUser,
+                token,
+                cstate,
+              );
+              logger.e(response.toString());
+              if (response.code == 400) {
+                message = response.errorMessage ??
+                    "Unable to create account, please try again later.";
+                _nameKey.currentState.model.enabled = true;
+                flag = false;
               } else {
-                BaseUtil.showNegativeAlert(
-                  'username not available',
-                  'Please choose another username',
-                );
-                _usernameKey.currentState.model.enabled = true;
+                final gtId = response.model['gtId'];
+                response.model['flag'] ? flag = true : flag = false;
 
-                setState(ViewState.Idle);
+                logger.d("Is Golden Ticket Rewarded: $gtId");
+                if (gtId != null && gtId.toString().isNotEmpty)
+                  GoldenTicketService.goldenTicketId = gtId;
               }
+            } catch (e) {
+              logger.d(e);
+              _nameKey.currentState.model.enabled = true;
+              flag = false;
+            }
+
+            if (flag) {
+              _analyticsService.track(
+                eventName: AnalyticsEvents.signupName,
+                properties: {'userId': userService?.baseUser?.uid},
+              );
+              logger.d("User object saved successfully");
+              // userService.showOnboardingTutorial = true;
+              _onSignUpComplete();
             } else {
               BaseUtil.showNegativeAlert(
-                "Error",
-                "Please try again",
+                'Update failed',
+                message,
               );
+              _nameKey.currentState.model.enabled = true;
+
+              setState(ViewState.Idle);
             }
+            // } else {
+            //   BaseUtil.showNegativeAlert(
+            //     'username not available',
+            //     'Please choose another username',
+            //   );
+            //   _nameKey.currentState.model.enabled = true;
+
+            //   setState(ViewState.Idle);
+            // }
+            // } else {
+            //   BaseUtil.showNegativeAlert(
+            //     "Error",
+            //     "Please try again",
+            //   );
+            // }
           }
 
           break;
@@ -340,20 +336,20 @@ class LoginControllerViewModel extends BaseViewModel {
       BaseUtil.isFirstFetchDone = false;
       if (source == LoginSource.FIREBASE)
         _controller.animateToPage(
-          LoginUserNameView.index,
+          LoginNameInputView.index,
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
         );
       else if (source == LoginSource.TRUECALLER)
         _controller.jumpToPage(
-          LoginUserNameView.index,
+          LoginNameInputView.index,
         );
       loginUsingTrueCaller = false;
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
-      logger.d("User details available: Name: " + user.model.username);
+      logger.d("User details available: Name: " + user.model.name);
       if (source == LoginSource.TRUECALLER)
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
@@ -439,7 +435,7 @@ class LoginControllerViewModel extends BaseViewModel {
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
-      'Welcome to ${Constants.APP_NAME}, ${userService.diplayUsername(userService.baseUser.username)}',
+      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser.name}',
     );
     //process complete
   }

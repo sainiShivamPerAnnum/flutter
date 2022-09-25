@@ -26,10 +26,10 @@ class _FocusRingState extends State<FocusRing>
   AnimationController _animationController;
 
   Animation<double> endingAnimation;
-  final _userservice = locator<UserService>();
+  final _userService = locator<UserService>();
   @override
   void initState() {
-    if (_userservice.userJourneyStats.mlIndex != 1) return;
+    if (_userService.userJourneyStats.mlIndex != 1) return;
     _animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 3));
     endingAnimation = CurvedAnimation(

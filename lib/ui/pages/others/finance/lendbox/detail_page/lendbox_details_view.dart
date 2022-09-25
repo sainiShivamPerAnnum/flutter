@@ -135,7 +135,6 @@ class AssetCard extends StatelessWidget {
                             Column(
                               children: [
                                 UserFundQuantitySE(
-                                  prefix: "\u20b9",
                                   style: TextStyles.sourceSans.body0
                                       .colour(Colors.white),
                                   investmentType: InvestmentType.LENDBOXP2P,
