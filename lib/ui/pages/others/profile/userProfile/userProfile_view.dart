@@ -345,6 +345,46 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding16,
             ),
+            if (model.isNewUser)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextFieldLabel("Username"),
+                  AppTextField(
+                    hintText: 'Your username',
+                    onTap: () {},
+                    prefixText: '@',
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    textEditingController: model.usernameController,
+                    isEnabled: model.inEditMode,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'[a-z0-9.]'),
+                      )
+                    ],
+                    validator: (val) {
+                      if (val == null || val.isEmpty)
+                        return "";
+                      else
+                        return null;
+                    },
+                    onChanged: (String value) {
+                      model.validateUsername();
+                    },
+                  ),
+                  Container(
+                    height: model.errorPadding,
+                  ),
+                  if (model.showResult().runtimeType != SizedBox)
+                    Container(
+                      margin: EdgeInsets.only(
+                        // top: SizeConfig.padding8,
+                        bottom: SizeConfig.padding24,
+                      ),
+                      child: model.showResult(),
+                    ),
+                ],
+              ),
             if (!model.isNewUser)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

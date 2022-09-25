@@ -12,7 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
-  final _txnService = locator<AugmontTransactionService>();
+  final _augTxnService = locator<AugmontTransactionService>();
 
   GoldBuySuccessView({Key key}) : super(key: key);
 
@@ -80,7 +80,7 @@ class GoldBuySuccessView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text((_txnService.currentTxnAmount.toInt()).toString(),
+              Text((_augTxnService.currentTxnAmount.toInt()).toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
@@ -110,7 +110,7 @@ class GoldBuySuccessView extends StatelessWidget {
                           Text("Invested", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(_txnService.currentTxnAmount)}",
+                              "₹ ${BaseUtil.getIntOrDouble(_augTxnService.currentTxnAmount)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -130,7 +130,7 @@ class GoldBuySuccessView extends StatelessWidget {
                         children: [
                           Text("Bought", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${AugmontTransactionService.currentTxnGms} gms",
+                          Text("${_augTxnService.currentTxnGms} gms",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],

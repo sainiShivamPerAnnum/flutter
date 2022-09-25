@@ -105,10 +105,6 @@ class SaveCustomCard extends StatelessWidget {
                                     UserFundQuantitySE(
                                       style: TextStyles.sourceSansSB.title4,
                                       investmentType: investmentType,
-                                      prefix: investmentType ==
-                                              InvestmentType.LENDBOXP2P
-                                          ? "₹"
-                                          : null,
                                     )
                                   ],
                                 ),

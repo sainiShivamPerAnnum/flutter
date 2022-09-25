@@ -1,5 +1,5 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -21,20 +21,20 @@ class LowerCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-class LoginUserNameView extends StatefulWidget {
+class LoginNameInputView extends StatefulWidget {
   static const int index = 2;
-  const LoginUserNameView({Key key}) : super(key: key);
+  const LoginNameInputView({Key key}) : super(key: key);
   @override
-  State<LoginUserNameView> createState() => LoginUserNameViewState();
+  State<LoginNameInputView> createState() => LoginUserNameViewState();
 }
 
-class LoginUserNameViewState extends State<LoginUserNameView> {
-  UsernameInputScreenViewModel model;
+class LoginUserNameViewState extends State<LoginNameInputView> {
+  LoginNameInputViewModel model;
   @override
   Widget build(BuildContext context) {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    return BaseView<UsernameInputScreenViewModel>(
+    return BaseView<LoginNameInputViewModel>(
       onModelReady: (model) {
         this.model = model;
         model.init();
@@ -51,7 +51,7 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                'Enter Username',
+                'Enter Name',
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
@@ -61,45 +61,33 @@ class LoginUserNameViewState extends State<LoginUserNameView> {
             Form(
               key: model.formKey,
               child: AppTextField(
-                focusNode: model.usernameFocusNode,
-                hintText: 'Your username',
+                textEditingController: model.nameController,
+                isEnabled: model.enabled,
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins * 2,
                 ),
-                onTap: () {},
-                prefixText: '@',
+                hintText: "Enter your name",
+                focusNode: model.nameFocusNode,
+                textCapitalization: TextCapitalization.words,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                textAlign: TextAlign.center,
-                textEditingController: model.usernameController,
-                isEnabled: model.enabled,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(
-                    RegExp(r'[a-z0-9.]'),
-                  )
+                    RegExp(r'[a-zA-Z ]'),
+                  ),
                 ],
-                validator: (val) {
-                  if (val == null || val.isEmpty)
-                    return "";
-                  else
+                // suffix: SizedBox(),
+                validator: (value) {
+                  if (value != null && value.isNotEmpty) {
+                    // model.hasInputError = false;
                     return null;
-                },
-                onChanged: (String value) {
-                  model.validate();
+                  } else {
+                    // model.hasInputError = true;
+                    return 'Please enter your name';
+                  }
                 },
               ),
             ),
-            Container(
-              height: model.errorPadding,
-            ),
-            if (model.showResult().runtimeType != SizedBox)
-              Container(
-                margin: EdgeInsets.only(
-                  // top: SizeConfig.padding8,
-                  bottom: SizeConfig.padding24,
-                ),
-                alignment: Alignment.center,
-                child: model.showResult(),
-              ),
+
             SizedBox(height: SizeConfig.padding20),
             model.hasReferralCode
                 ? AppTextField(

@@ -8,18 +8,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserFundQuantitySE extends StatelessWidget {
-  final String prefix;
   final TextStyle style;
   final InvestmentType investmentType;
 
   UserFundQuantitySE({
-    this.prefix,
     this.style,
     this.investmentType = InvestmentType.AUGGOLD99,
   });
 
   String getQuantity(UserFundWallet fund) {
     final suffix = investmentType == InvestmentType.AUGGOLD99 ? "gm" : '';
+    final prefix = investmentType == InvestmentType.AUGGOLD99 ? '' : '₹';
     final quantity = investmentType == InvestmentType.AUGGOLD99
         ? fund?.augGoldQuantity
         : fund?.wLbBalance;
@@ -28,9 +27,12 @@ class UserFundQuantitySE extends StatelessWidget {
       if (quantity == 0.0) {
         if (prefix != null) return "$prefix 0 $suffix";
         return "0 $suffix";
-      } else if (prefix != null)
-        return "$prefix ${quantity.toStringAsFixed(2)} $suffix";
-      return "${quantity.toStringAsFixed(2)} $suffix";
+      } else {
+        if (investmentType == InvestmentType.AUGGOLD99)
+          return "$prefix ${quantity.toStringAsFixed(4)} $suffix";
+        else
+          return "$prefix ${quantity.toStringAsFixed(2)} $suffix";
+      }
     } else
       return "--";
   }

@@ -249,9 +249,9 @@ class GoldBuyViewModel extends BaseViewModel {
   //BUY FLOW
   //1
   initiateBuy() async {
-    isGoldBuyInProgress = true;
+    _augTxnService.isGoldBuyInProgress = true;
     if (!await initChecks()) {
-      isGoldBuyInProgress = false;
+      _augTxnService.isGoldBuyInProgress = false;
       return;
     }
     await _augTxnService.initateAugmontTransaction(
@@ -272,8 +272,6 @@ class GoldBuyViewModel extends BaseViewModel {
       _onboardUserManually();
       return true;
     }
-    if (isGoldBuyInProgress) return false;
-    if (couponApplyInProgress) return false;
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(

@@ -202,7 +202,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           _baseUser != null &&
           _baseUser.uid.isNotEmpty &&
           _baseUser.mobile.isNotEmpty &&
-          _baseUser.username.isNotEmpty) {
+          _baseUser.name.isNotEmpty) {
         _logger.d("Onborded User: ${_baseUser.uid}");
         return true;
       }

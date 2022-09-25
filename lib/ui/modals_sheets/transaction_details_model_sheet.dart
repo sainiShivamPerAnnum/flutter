@@ -246,11 +246,13 @@ class _TransactionDetailsBottomSheetState
                       children: [
                         SizedBox(height: SizeConfig.padding12),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding10),
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.padding16,
+                            bottom: SizeConfig.padding6,
+                          ),
                           child: Text(
                             "Order Summary",
-                            style: TextStyles.sourceSans.body2.underline,
+                            style: TextStyles.sourceSans.body2.underline.bold,
                           ),
                         ),
                         TransactionSummary(summary: widget.transaction.miscMap)
@@ -310,6 +312,7 @@ class _TransactionDetailsBottomSheetState
                       ],
                     ),
                   ),
+                SizedBox(height: SizeConfig.padding24)
               ],
             ),
           ),
@@ -477,18 +480,21 @@ class TransactionSummary extends StatelessWidget {
         ),
         if (showThread)
           Expanded(
-            child: ListTile(
-              title: Text(
-                summary[index].title,
-                style: TextStyles.sourceSans.body2,
-              ),
-              subtitle: Text(
-                subtitle ??
-                    (summary[index].timestamp != null
-                        ? "${_txnHistoryService.getFormattedDate(summary[index].timestamp)} ${_txnHistoryService.getFormattedTime(summary[index].timestamp)}"
-                        : summary[index].value),
-                style:
-                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+            child: Container(
+              height: SizeConfig.padding70,
+              child: ListTile(
+                title: Text(
+                  summary[index].title,
+                  style: TextStyles.sourceSans.body2,
+                ),
+                subtitle: Text(
+                  subtitle ??
+                      (summary[index].timestamp != null
+                          ? "${_txnHistoryService.getFormattedDate(summary[index].timestamp)} ${_txnHistoryService.getFormattedTime(summary[index].timestamp)}"
+                          : summary[index].value),
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTextColor2),
+                ),
               ),
             ),
           )

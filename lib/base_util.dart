@@ -239,6 +239,13 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  // openDepositOptionsModalSheet() {
+  //   return BaseUtil.openModalBottomSheet(
+  //     addToScreenStack: true,
+  //     isScrollControlled: true,
+
+  //   );
+  // }
 
   openRechargeModalSheet({
     int amt,

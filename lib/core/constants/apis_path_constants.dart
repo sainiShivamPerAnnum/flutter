@@ -26,7 +26,7 @@ class ApiPath {
   get kGetGoldRates => "/augmontOps/$stage/api/rates";
 
   //User Ops Apis
-  get kAddNewUser => "/api/v3/newuser";
+  get kAddNewUser => "/v2/new";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAddBankAccount => "/bank";
   static String kGetBankAccountDetails(String uid) => '/$uid/bank';
