@@ -100,7 +100,7 @@ class TambolaCard extends StatelessWidget {
                       : CurrentPicks(
                           dailyPicksCount: model.dailyPicksCount,
                           todaysPicks: List.generate(
-                              model.dailyPicksCount, (index) => 0),
+                              model.dailyPicksCount ?? 0, (index) => 0),
                         ),
               SizedBox(
                 height: SizeConfig.padding12,

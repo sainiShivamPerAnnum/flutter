@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -35,189 +38,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:isar/isar.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
-
-// class TambolaHomeView extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return BaseView<TambolaHomeViewModel>(
-//       onModelReady: (model) {
-//         model.init();
-//         model.scrollController = new ScrollController();
-//         model.scrollController.addListener(() {
-//           model.udpateCardOpacity();
-//         });
-//       },
-//       builder: (ctx, model, child) {
-//         return RefreshIndicator(
-//           onRefresh: model.getLeaderboard,
-//           child: Scaffold(
-//             backgroundColor: UiConstants.primaryColor,
-//             body: HomeBackground(
-//               child: Stack(
-//                 children: [
-//                   WhiteBackground(
-//                     color: UiConstants.scaffoldColor,
-//                     height: SizeConfig.screenHeight * 0.2,
-//                   ),
-//                   SafeArea(
-//                     child: Container(
-//                       width: SizeConfig.screenWidth,
-//                       height: SizeConfig.screenHeight,
-//                       child: ListView(
-//                         controller: model.scrollController,
-//                         children: [
-//                           SizedBox(
-//                               height: SizeConfig.screenWidth * 0.1 +
-//                                   SizeConfig.viewInsets.top),
-//                           InkWell(
-//                             onTap: model.openGame,
-//                             child: AnimatedOpacity(
-//                               duration: Duration(milliseconds: 10),
-//                               curve: Curves.decelerate,
-//                               opacity: model.cardOpacity ?? 1,
-//                               child: BigGameCard(
-//                                 gameData: model.game,
-//                               ),
-//                             ),
-//                           ),
-//                           SizedBox(height: SizeConfig.padding8),
-//                           Container(
-//                             height: SizeConfig.screenHeight * 0.86 -
-//                                 SizeConfig.viewInsets.top,
-//                             padding: EdgeInsets.all(
-//                                 SizeConfig.pageHorizontalMargins),
-//                             decoration: BoxDecoration(
-//                               borderRadius: BorderRadius.only(
-//                                 topLeft:
-//                                     Radius.circular(SizeConfig.roundness40),
-//                                 topRight:
-//                                     Radius.circular(SizeConfig.roundness40),
-//                               ),
-//                               color: Colors.white,
-//                             ),
-//                             child: Column(
-//                               children: [
-//                                 Container(
-//                                   padding: EdgeInsets.only(
-//                                       bottom: SizeConfig.padding4),
-//                                   alignment: Alignment.center,
-//                                   child: Row(
-//                                     mainAxisAlignment: MainAxisAlignment.start,
-//                                     children: [
-//                                       GameChips(
-//                                         model: model,
-//                                         text: "Prizes",
-//                                         page: 0,
-//                                       ),
-//                                       SizedBox(width: 16),
-//                                       // GameChips(
-//                                       //   model: model,
-//                                       //   text: "LeaderBoard",
-//                                       //   page: 1,
-//                                       // )
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 Expanded(
-//                                   child: PageView(
-//                                       physics: NeverScrollableScrollPhysics(),
-//                                       controller: model.pageController,
-//                                       children: [
-//                                         model.isPrizesLoading
-//                                             ? ListLoader()
-//                                             : (model.tPrizes == null
-//                                                 ? NoRecordDisplayWidget(
-//                                                     asset:
-//                                                         "images/week-winners.png",
-//                                                     text:
-//                                                         "Prizes will be updates soon",
-//                                                   )
-//                                                 : PrizesView(
-//                                                     model: model.tPrizes,
-//                                                     controller:
-//                                                         model.scrollController,
-//                                                     subtitle: BaseRemoteConfig
-//                                                             .remoteConfig
-//                                                             .getString(
-//                                                                 BaseRemoteConfig
-//                                                                     .GAME_TAMBOLA_ANNOUNCEMENT) ??
-//                                                         "Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday",
-//                                                     leading: [
-//                                                       Icons.apps,
-//                                                       Icons.border_top,
-//                                                       Icons.border_horizontal,
-//                                                       Icons.border_bottom,
-//                                                       Icons.border_outer
-//                                                     ]
-//                                                         .map((e) => Icon(
-//                                                               e,
-//                                                               color: UiConstants
-//                                                                   .primaryColor,
-//                                                             ))
-//                                                         .toList(),
-//                                                   )),
-//                                         // model.isLeaderboardLoading
-//                                         //     ? ListLoader()
-//                                         //     : (model.tlboard == null ||
-//                                         //             model.tlboard.scoreboard
-//                                         //                 .isEmpty
-//                                         //         ? NoRecordDisplayWidget(
-//                                         //             asset:
-//                                         //                 "images/leaderboard.png",
-//                                         //             text:
-//                                         //                 "Leaderboard will be updated soon",
-//                                         //           )
-//                                         //         : LeaderBoardView(
-//                                         //             controller:
-//                                         //                 model.scrollController,
-//                                         //             model: model.tlboard,
-//                                         //           ))
-//                                       ]),
-//                                 ),
-//                                 SizedBox(height: SizeConfig.padding64)
-//                               ],
-//                             ),
-//                           )
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   FelloAppBar(
-//                     leading: FelloAppBarBackButton(),
-//                     actions: [
-//                       FelloCoinBar(
-//                         svgAsset: Assets.aFelloToken,
-//                       ),
-//                       SizedBox(width: 16),
-//                       NotificationButton(),
-//                     ],
-//                   ),
-//                   Positioned(
-//                     bottom: 0,
-//                     child: Container(
-//                       width: SizeConfig.screenWidth,
-//                       padding: EdgeInsets.symmetric(
-//                           horizontal: SizeConfig.scaffoldMargin, vertical: 16),
-//                       child: FelloButtonLg(
-//                         child: Text(
-//                           'PLAY',
-//                           style: TextStyles.body2.colour(Colors.white),
-//                         ),
-//                         onPressed: model.openGame,
-//                       ),
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
 
 class TambolaHomeView extends StatelessWidget {
   @override
@@ -255,6 +78,7 @@ class TambolaHomeView extends StatelessWidget {
                       TodayWeeklyPicksCard(
                         model: model,
                       ),
+
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
                           ? buildCards(model)
@@ -329,60 +153,59 @@ class TambolaHomeView extends StatelessWidget {
       );
     } else if (model.userWeeklyBoards == null ||
         model.activeTambolaCardCount == 0) {
-      _widget = Center(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Container(
-            width: double.infinity,
-            height: SizeConfig.screenWidth * 0.5,
-            child: Center(
-              child: (model.ticketsBeingGenerated)
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth * 0.8,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: UiConstants.primaryColor.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: FractionallySizedBox(
-                            heightFactor: 1,
-                            widthFactor: model
-                                        .tambolaService.ticketGenerateCount ==
-                                    model.tambolaService
-                                        .atomicTicketGenerationLeftCount
-                                ? 0.1
-                                : (model.tambolaService.ticketGenerateCount -
-                                        model.tambolaService
-                                            .atomicTicketGenerationLeftCount) /
-                                    model.tambolaService.ticketGenerateCount,
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: UiConstants.primaryColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
+      _widget = Padding(
+        padding: EdgeInsets.all(10),
+        child: Container(
+          width: double.infinity,
+          child: Center(
+            child: (model.ticketsBeingGenerated)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: SizeConfig.screenWidth * 0.8,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: UiConstants.primaryColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: FractionallySizedBox(
+                          heightFactor: 1,
+                          widthFactor: model
+                                      .tambolaService.ticketGenerateCount ==
+                                  model.tambolaService
+                                      .atomicTicketGenerationLeftCount
+                              ? 0.1
+                              : (model.tambolaService.ticketGenerateCount -
+                                      model.tambolaService
+                                          .atomicTicketGenerationLeftCount) /
+                                  model.tambolaService.ticketGenerateCount,
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: UiConstants.primaryColor,
+                              borderRadius: BorderRadius.circular(100),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                          style: TextStyles.rajdhani.body2.colour(Colors.white),
-                        ),
-                      ],
-                    )
-                  : NoRecordDisplayWidget(
-                      assetSvg: Assets.noTickets,
-                      text: "You do not have any Tambola tickets",
-                    ),
-            ),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
+                        style: TextStyles.rajdhani.body2.colour(Colors.white),
+                      ),
+                    ],
+                  )
+                : NoRecordDisplayWidget(
+                    assetSvg: Assets.noTickets,
+                    text: "You do not have any Tambola tickets",
+                  ),
           ),
         ),
       );
+
+      return _widget;
     } else if (model.activeTambolaCardCount == 1) {
       //One tambola ticket
       model.tambolaBoardViews = [];
@@ -422,13 +245,9 @@ class TambolaHomeView extends StatelessWidget {
             width: SizeConfig.screenWidth,
             child: Stack(
               children: [
-                Column(
-                  children: [
-                    PageViewWithIndicator(
-                      model: model,
-                      showIndicator: false,
-                    ),
-                  ],
+                TabViewGenerator(
+                  model: model,
+                  showIndicatorForAll: false,
                 ),
                 if (model.ticketsBeingGenerated &&
                     model.tambolaService.ticketGenerateCount > 0)
@@ -552,13 +371,9 @@ class TambolaHomeView extends StatelessWidget {
             width: SizeConfig.screenWidth,
             child: Stack(
               children: [
-                Column(
-                  children: [
-                    PageViewWithIndicator(
-                      model: model,
-                      showIndicator: true,
-                    ),
-                  ],
+                TabViewGenerator(
+                  model: model,
+                  showIndicatorForAll: true,
                 ),
                 if (model.ticketsBeingGenerated &&
                     model.tambolaService.ticketGenerateCount > 0)
@@ -625,6 +440,274 @@ class TambolaHomeView extends StatelessWidget {
   }
 }
 
+class TabViewGenerator extends StatefulWidget {
+  const TabViewGenerator({
+    Key key,
+    @required this.model,
+    @required this.showIndicatorForAll,
+  }) : super(key: key);
+
+  final TambolaHomeViewModel model;
+  final bool showIndicatorForAll;
+
+  @override
+  State<TabViewGenerator> createState() => _TabViewGeneratorState();
+}
+
+class _TabViewGeneratorState extends State<TabViewGenerator>
+    with TickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController =
+        new TabController(vsync: this, length: widget.model.tabList.length);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: widget.model.tabList.length,
+        child: Column(
+          children: [
+            TabBar(
+                controller: _tabController,
+                labelPadding: EdgeInsets.zero,
+                indicatorColor: Colors.transparent,
+                physics: BouncingScrollPhysics(),
+                isScrollable: true,
+                tabs: List.generate(
+                    widget.model.tabList.length,
+                    (index) => Container(
+                          margin: EdgeInsets.only(
+                            right: index == widget.model.tabList.length - 1
+                                ? SizeConfig.pageHorizontalMargins
+                                : SizeConfig.padding10,
+                            left: index == 0
+                                ? SizeConfig.pageHorizontalMargins
+                                : 0.0,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding10,
+                            vertical: SizeConfig.padding16,
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.padding8),
+                              color: UiConstants.gameCardColor,
+                              border: Border.all(
+                                  color: _tabController.index == index
+                                      ? Colors.white
+                                      : Colors.transparent,
+                                  width: _tabController.index == index
+                                      ? 0.5
+                                      : 0.0)),
+                          child: Text(widget.model.tabList[index],
+                              textAlign: TextAlign.center,
+                              style: TextStyles.body4.colour(Colors.white
+                                  .withOpacity(_tabController.index == index
+                                      ? 1
+                                      : 0.5))),
+                        ))),
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+            Container(
+              height: SizeConfig.screenWidth * 0.51,
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  //All tickets
+                  PageViewWithIndicator(
+                    model: widget.model,
+                    showIndicator: widget.showIndicatorForAll,
+                  ),
+
+                  //Top row
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length > 0
+                      ? Odds(
+                          widget.model.weeklyDigits,
+                          widget.model.userWeeklyBoards[0],
+                          widget.model.refreshBestBoards(),
+                          true,
+                          0)
+                      : NoTicketWidget(),
+                  //Middle row
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length > 1
+                      ? Odds(
+                          widget.model.weeklyDigits,
+                          widget.model.userWeeklyBoards[1],
+                          widget.model.refreshBestBoards(),
+                          true,
+                          1)
+                      : NoTicketWidget(),
+                  //Botom row
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length > 2
+                      ? Odds(
+                          widget.model.weeklyDigits,
+                          widget.model.userWeeklyBoards[2],
+                          widget.model.refreshBestBoards(),
+                          true,
+                          2)
+                      : NoTicketWidget(),
+
+                  //Corner
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length > 3
+                      ? Odds(
+                          widget.model.weeklyDigits,
+                          widget.model.userWeeklyBoards[3],
+                          widget.model.refreshBestBoards(),
+                          true,
+                          3)
+                      : NoTicketWidget(),
+
+                  //Full House
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length > 4
+                      ? Odds(
+                          widget.model.weeklyDigits,
+                          widget.model.userWeeklyBoards[4],
+                          widget.model.refreshBestBoards(),
+                          true,
+                          4)
+                      : NoTicketWidget(),
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+}
+
+class NoTicketWidget extends StatelessWidget {
+  const NoTicketWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          Assets.noTickets,
+          width: SizeConfig.screenWidth * 0.2,
+        ),
+        SizedBox(
+          height: SizeConfig.padding14,
+        ),
+        Text(
+          "Oops! looks like nothing to show here.",
+          style: TextStyles.sourceSans.body4.colour(Colors.white),
+        ),
+      ],
+    );
+  }
+}
+
+class Odds extends StatelessWidget {
+  final DailyPick _digitsObj;
+  final TambolaBoard _board;
+  final List<TambolaBoard> _bestBoards;
+  final bool showBestBoard;
+  final int currentIndex;
+
+  Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard,
+      this.currentIndex);
+
+  @override
+  Widget build(BuildContext cx) {
+    if (_board == null) return Container();
+    List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
+    switch (currentIndex) {
+      case 0:
+        return _buildRow(
+            cx,
+            Icons.border_top,
+            'Top Row',
+            _board.getRowOdds(0, _digits).toString() + ' left',
+            _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+            _bestBoards[0],
+            _digits);
+      case 1:
+        return _buildRow(
+            cx,
+            Icons.border_horizontal,
+            'Middle Row',
+            _board.getRowOdds(1, _digits).toString() + ' left',
+            _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
+            _bestBoards[1],
+            _digits);
+      case 2:
+        return _buildRow(
+            cx,
+            Icons.border_bottom,
+            'Bottom Row',
+            _board.getRowOdds(2, _digits).toString() + ' left',
+            _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
+            _bestBoards[2],
+            _digits);
+      case 3:
+        return _buildRow(
+            cx,
+            Icons.border_outer,
+            'Corners',
+            _board.getCornerOdds(_digits).toString() + ' left',
+            _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
+            _bestBoards[3],
+            _digits);
+      case 4:
+        return _buildRow(
+            cx,
+            Icons.apps,
+            'Full House',
+            _board.getFullHouseOdds(_digits).toString() + ' left',
+            _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left',
+            _bestBoards[4],
+            _digits);
+
+      default:
+        return _buildRow(
+            cx,
+            Icons.border_top,
+            'Top Row',
+            _board.getRowOdds(0, _digits).toString() + ' left',
+            _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+            _bestBoards[0],
+            _digits);
+    }
+  }
+
+  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
+      String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
+    return Column(
+      children: [
+        Ticket(
+            dailyPicks: _digitsObj,
+            bestBoards: _bestBoards,
+            board: _bestBoard,
+            showBestOdds: false,
+            calledDigits: _digits),
+        SizedBox(
+          height: SizeConfig.padding8,
+        ),
+        SizedBox(
+          height: SizeConfig.padding6,
+        ),
+      ],
+    );
+  }
+}
+
 class ButTicketsComponent extends StatelessWidget {
   const ButTicketsComponent({
     Key key,
@@ -637,6 +720,9 @@ class ButTicketsComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
         Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(
@@ -821,7 +907,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
           ),
         ),
         SizedBox(
-          height: SizeConfig.padding20,
+          height: SizeConfig.padding8,
         ),
         if (widget.showIndicator) _buildCircleIndicator(),
       ],

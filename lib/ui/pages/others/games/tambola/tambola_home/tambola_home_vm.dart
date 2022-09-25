@@ -91,6 +91,15 @@ class TambolaHomeViewModel extends BaseModel {
     "Corners": Icons.border_outer
   };
 
+  List<String> tabList = [
+    "All",
+    "Top Row",
+    "Middle Row",
+    "Bottom Row",
+    "Corners",
+    "Full House",
+  ];
+
   List<IconData> leadingIconList = [
     Icons.apps,
     Icons.border_top,

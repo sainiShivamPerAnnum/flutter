@@ -86,7 +86,7 @@ class Ticket extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          border: Border.all(color: Colors.white.withOpacity(0.7), width: 0.5)),
+          border: Border.all(color: Colors.white.withOpacity(0.7), width: 0.3)),
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.pageHorizontalMargins,
       ),
@@ -102,7 +102,8 @@ class Ticket extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Full House (2/5)',
+                      // 'Full House (2/5)',
+                      "",
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     ),
                     Row(
@@ -182,7 +183,7 @@ class Ticket extends StatelessWidget {
           //     padding: EdgeInsets.symmetric(
           //       horizontal: SizeConfig.padding16,
           //     ),
-          //     child: Odds(dailyPicks, board, bestBoards, showBestOdds),
+          // child: Odds(dailyPicks, board, bestBoards, showBestOdds),
           //   ),
           // ),
           // Padding(
