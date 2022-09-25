@@ -162,28 +162,15 @@ class ReferralDetailsView extends StatelessWidget {
                                 height: SizeConfig.padding28,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding32,
-                                        vertical: SizeConfig.padding6),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.3),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              SizeConfig.roundness8),
-                                        ),
-                                        border: Border.all(
-                                            color: Colors.white, width: 0.6)),
-                                    child: Text(
-                                      model.loadingRefCode
-                                          ? '-'
-                                          : model.refCode,
-                                      style: TextStyles.rajdhaniEB.title2
-                                          .colour(Colors.white),
-                                    ),
+                                  Text(
+                                    model.loadingRefCode ? '-' : model.refCode,
+                                    style: TextStyles.rajdhaniEB.title2
+                                        .colour(Colors.white),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding14,
                                   ),
                                   Container(
                                     child: Row(
@@ -419,11 +406,17 @@ class BonusLockedReferals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return model.referalList.isEmpty
-        ? NoRecordDisplayWidget(
-            assetLottie: Assets.noData,
-            text: "No Referrals yet",
-            topPadding: false,
-            bottomPadding: false,
+        ? Column(
+            children: [
+              SizedBox(height: SizeConfig.padding16),
+              SvgPicture.asset(Assets.noReferalAsset),
+              SizedBox(height: SizeConfig.padding16),
+              Text(
+                "No referals yet",
+                style: TextStyles.sourceSans.body2.colour(Colors.white),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+            ],
           )
         : model.bonusLockedReferalPresent(model.referalList)
             ? Padding(
@@ -560,11 +553,17 @@ class BonusLockedReferals extends StatelessWidget {
                   ],
                 ),
               )
-            : NoRecordDisplayWidget(
-                assetLottie: Assets.noData,
-                text: "No Referrals yet",
-                topPadding: false,
-                bottomPadding: false,
+            : Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding16),
+                  SvgPicture.asset(Assets.noReferalAsset),
+                  SizedBox(height: SizeConfig.padding16),
+                  Text(
+                    "No referals yet",
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                  ),
+                  SizedBox(height: SizeConfig.padding16),
+                ],
               );
   }
 }
@@ -580,11 +579,17 @@ class BonusUnlockedReferals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return model.referalList.isEmpty
-        ? NoRecordDisplayWidget(
-            assetLottie: Assets.noData,
-            text: "No Referrals yet",
-            topPadding: false,
-            bottomPadding: false,
+        ? Column(
+            children: [
+              SizedBox(height: SizeConfig.padding16),
+              SvgPicture.asset(Assets.noReferalAsset),
+              SizedBox(height: SizeConfig.padding16),
+              Text(
+                "No referals yet",
+                style: TextStyles.sourceSans.body2.colour(Colors.white),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+            ],
           )
         : model.bonusUnlockedReferalPresent(model.referalList)
             ? Padding(
@@ -721,11 +726,17 @@ class BonusUnlockedReferals extends StatelessWidget {
                   ],
                 ),
               )
-            : NoRecordDisplayWidget(
-                assetLottie: Assets.noData,
-                text: "No Referrals yet",
-                topPadding: false,
-                bottomPadding: false,
+            : Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding16),
+                  SvgPicture.asset(Assets.noReferalAsset),
+                  SizedBox(height: SizeConfig.padding16),
+                  Text(
+                    "No referals yet",
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                  ),
+                  SizedBox(height: SizeConfig.padding16),
+                ],
               );
   }
 }

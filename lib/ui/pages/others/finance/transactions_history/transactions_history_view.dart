@@ -151,7 +151,19 @@ class SingleTransactionView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: (model.filteredList.length == 0
-                          ? NoTransactionsContent()
+                          ? Column(
+                              children: [
+                                SizedBox(height: SizeConfig.padding54),
+                                SvgPicture.asset(Assets.noTransactionAsset),
+                                SizedBox(height: SizeConfig.padding16),
+                                Text(
+                                  "No transactions yet",
+                                  style: TextStyles.sourceSans.body2
+                                      .colour(Colors.white),
+                                ),
+                                SizedBox(height: SizeConfig.padding32),
+                              ],
+                            )
                           : ListView(
                               physics: BouncingScrollPhysics(),
                               padding: EdgeInsets.symmetric(
@@ -210,7 +222,19 @@ class SIPTransactionHistoryView extends StatelessWidget {
             children: [
               Expanded(
                   child: (model.filteredSIPList.length == 0)
-                      ? Center(child: NoTransactionsContent())
+                      ? Column(
+                          children: [
+                            SizedBox(height: SizeConfig.padding54),
+                            SvgPicture.asset(Assets.noTransactionAsset),
+                            SizedBox(height: SizeConfig.padding16),
+                            Text(
+                              "No transactions yet",
+                              style: TextStyles.sourceSans.body2
+                                  .colour(Colors.white),
+                            ),
+                            SizedBox(height: SizeConfig.padding32),
+                          ],
+                        )
                       : ListView(
                           physics: BouncingScrollPhysics(),
                           padding: EdgeInsets.symmetric(

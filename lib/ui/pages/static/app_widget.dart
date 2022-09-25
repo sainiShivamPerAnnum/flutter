@@ -394,7 +394,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
     Key key,
     @required this.child,
     @required this.onPressed,
-    @required this.width,
+    this.width,
   }) : super(key: key);
   final Widget child;
   final VoidCallback onPressed;
@@ -407,7 +407,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
         children: [
           Container(
             height: SizeConfig.screenWidth * 0.1556,
-            width: width,
+            width: width ?? SizeConfig.screenWidth,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                 SizeConfig.buttonBorderRadius,
@@ -427,7 +427,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
           ),
           Container(
             height: SizeConfig.padding2,
-            width: width - SizeConfig.padding4,
+            width: (width ?? SizeConfig.screenWidth) - SizeConfig.padding4,
             margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding2,
             ),

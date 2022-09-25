@@ -71,6 +71,7 @@ const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
 const String SharePriceScreenPath = "/SharePriceScreenPath";
+const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
 const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 
 enum Pages {
@@ -140,6 +141,7 @@ enum Pages {
   AllParticipantsWinnersTopReferersView,
   RedeemSucessfulScreenView,
   SharePriceScreenView,
+  AllTambolaTicketsView,
   UserUpiDetailsView,
 }
 
@@ -619,6 +621,13 @@ PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
   path: SharePriceScreenPath,
   uiPage: Pages.SharePriceScreenView,
   name: "Reward sharing screen",
+);
+
+PageConfiguration AllTambolaTicketsPageConfig = PageConfiguration(
+  key: 'AllTambolaTickets',
+  path: AllTambolaTicketsPath,
+  uiPage: Pages.AllTambolaTicketsView,
+  name: "All Tambola tickets screen",
 );
 PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
     key: 'UserUpiDetailsView',

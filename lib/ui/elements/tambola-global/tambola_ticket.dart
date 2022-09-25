@@ -34,21 +34,17 @@ class Ticket extends StatelessWidget {
   // }
 
   getColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) return Color(0xffFDA77F);
-    if (index % 2 == 0) {
-      return UiConstants.primaryLight;
-    } else {
-      return UiConstants.primaryColor;
-    }
+    if (calledDigits.contains(ticketNumbers[index]))
+      return UiConstants.kTicketPeachColor;
+    else
+      return Colors.transparent;
   }
 
   getTextColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) return Colors.white;
-    if (index % 2 != 0) {
-      return UiConstants.primaryLight;
-    } else {
-      return UiConstants.primaryColor;
-    }
+    if (calledDigits.contains(ticketNumbers[index]))
+      return Colors.black;
+    else
+      return Colors.white;
   }
 
   markStatus(int index) {
@@ -62,7 +58,7 @@ class Ticket extends StatelessWidget {
             margin: EdgeInsets.all(2),
             width: 2,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.black,
               borderRadius: BorderRadius.circular(100),
             ),
           ),
@@ -86,16 +82,11 @@ class Ticket extends StatelessWidget {
     if (ticketNumbers.isEmpty) generateNumberList();
     print(calledDigits);
     return Container(
-      height: SizeConfig.screenWidth * 1.3,
       width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
       decoration: BoxDecoration(
-        color: UiConstants.scaffoldColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          width: 0,
-          color: Theme.of(context).scaffoldBackgroundColor,
-        ),
-      ),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          border: Border.all(color: Colors.white.withOpacity(0.7), width: 0.3)),
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.pageHorizontalMargins,
       ),
@@ -107,9 +98,32 @@ class Ticket extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Ticket #${board.getTicketNumber()}',
-                  style: TextStyles.body3.colour(UiConstants.primaryColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      // 'Full House (2/5)',
+                      "",
+                      style: TextStyles.sourceSans.body3.colour(Colors.white),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '#${board.getTicketNumber()}',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.7)),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
+                        Icon(
+                          Icons.info_outline,
+                          size: SizeConfig.padding16,
+                          color: Colors.white.withOpacity(0.7),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(height: SizeConfig.padding16),
                 GridView.builder(
@@ -119,14 +133,29 @@ class Ticket extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 9,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 1,
                   ),
                   itemBuilder: (ctx, i) {
                     return Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: getColor(i),
-                        borderRadius: BorderRadius.circular(
-                            SizeConfig.blockSizeHorizontal * 3),
+                        borderRadius: calledDigits.contains(ticketNumbers[i])
+                            ? null
+                            : BorderRadius.circular(
+                                SizeConfig.blockSizeHorizontal * 1),
+                        border: Border.all(
+                            color: Colors.white
+                                .withOpacity(ticketNumbers[i] == 0 ? 0.4 : 0.7),
+                            width: calledDigits.contains(ticketNumbers[i])
+                                ? 0.0
+                                : ticketNumbers[i] == 0
+                                    ? 0.5
+                                    : 0.7),
+                        shape: calledDigits.contains(ticketNumbers[i])
+                            ? BoxShape.circle
+                            : BoxShape.rectangle,
                       ),
                       child: Stack(
                         children: [
@@ -136,11 +165,8 @@ class Ticket extends StatelessWidget {
                               ticketNumbers[i] == 0
                                   ? ""
                                   : ticketNumbers[i].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: SizeConfig.mediumTextSize,
-                                color: getTextColor(i),
-                              ),
+                              style: TextStyles.rajdhaniB.body3
+                                  .colour(getTextColor(i)),
                             ),
                           ),
                           markStatus(i)
@@ -152,29 +178,29 @@ class Ticket extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-              ),
-              child: Odds(dailyPicks, board, bestBoards, showBestOdds),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            child: InkWell(
-              onTap: () {
-                print(board.getTicketNumber());
-              },
-              child: Text(
-                "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: SizeConfig.smallTextSize,
-                ),
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: Container(
+          //     padding: EdgeInsets.symmetric(
+          //       horizontal: SizeConfig.padding16,
+          //     ),
+          // child: Odds(dailyPicks, board, bestBoards, showBestOdds),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.all(SizeConfig.padding12),
+          //   child: InkWell(
+          //     onTap: () {
+          //       print(board.getTicketNumber());
+          //     },
+          //     child: Text(
+          //       "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
+          //       style: TextStyle(
+          //         color: Colors.grey,
+          //         fontSize: SizeConfig.smallTextSize,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

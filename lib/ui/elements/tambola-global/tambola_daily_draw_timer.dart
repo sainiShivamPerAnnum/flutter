@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,9 +98,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
               mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
               children: [
                 buildTimeCard(time: hours),
-                buildDivider(),
                 buildTimeCard(time: minutes),
-                buildDivider(),
                 buildTimeCard(time: seconds),
               ]),
         ],
@@ -111,14 +110,15 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   Widget buildTimeCard({@required String time}) => Container(
         height: SizeConfig.screenWidth * 0.14,
         width: SizeConfig.screenWidth * 0.14,
+        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
         decoration: BoxDecoration(
-          color: widget.bgColor ?? Colors.black.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
+          color: UiConstants.kBackgroundColor,
+          shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
         child: Text(
           time,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.rajdhani(
               color: Colors.white,
               fontSize: SizeConfig.cardTitleTextSize,
               fontWeight: FontWeight.w700,

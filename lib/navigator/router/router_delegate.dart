@@ -34,6 +34,7 @@ import 'package:felloapp/ui/pages/others/finance/transactions_history/transactio
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_game/tambola_game_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
@@ -291,6 +292,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SharePriceScreenView:
           _addPageData(SharePriceScreen(), SharePriceScreenPageConfig);
           break;
+        case Pages.AllTambolaTicketsView:
+          _addPageData(AllTambolaTickets(), AllTambolaTicketsPageConfig);
+          break;
+        // case Pages.WebHomeView:
+        //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
+        //   break;
+        // case Pages.WebGameView:
+        //   _addPageData(WebGameView(), WebGameViewPageConfig);
+        //   break;
+        // case Pages.PoolView:
+        //   _addPageData(PoolView(), PoolViewPageConfig);
         case Pages.WebHomeView:
           _addPageData(WebHomeView(), WebHomeViewPageConfig);
           break;
@@ -597,6 +609,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.SharePriceScreenView:
         SharePriceScreenPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllTambolaTicketsView:
+        AllTambolaTicketsPageConfig.currentPageAction = action;
         break;
       case Pages.UserUpiDetailsView:
         UserUpiDetailsViewPageConfig.currentPageAction = action;

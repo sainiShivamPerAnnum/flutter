@@ -266,29 +266,17 @@ class Win extends StatelessWidget {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding32,
-                                              vertical: SizeConfig.padding6),
-                                          decoration: BoxDecoration(
-                                              color: UiConstants
-                                                  .kArowButtonBackgroundColor,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    SizeConfig.roundness8),
-                                              ),
-                                              border: Border.all(
-                                                  color: Colors.white,
-                                                  width: 0.6)),
-                                          child: Text(
-                                            model.loadingRefCode
-                                                ? '-'
-                                                : model.refCode,
-                                            style: TextStyles.rajdhaniEB.title2
-                                                .colour(Colors.white),
-                                          ),
+                                        Text(
+                                          model.loadingRefCode
+                                              ? '-'
+                                              : model.refCode,
+                                          style: TextStyles.rajdhaniEB.title2
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding14,
                                         ),
                                         Container(
                                           child: Row(

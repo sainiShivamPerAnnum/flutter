@@ -5,10 +5,12 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/reward_view/new_web_game_reward_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/new_web_game_leaderboard.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RewardLeaderboardView extends StatelessWidget {
   RewardLeaderboardView({Key key, @required this.game}) : super(key: key);
@@ -89,9 +91,20 @@ class RewardLeaderboardView extends StatelessWidget {
         model.isPrizesLoading
             ? RewardShimmer()
             : (model.prizes == null)
-                ? NoRecordDisplayWidget(
-                    asset: "images/week-winners.png",
-                    text: "Prizes will be updates soon",
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: SizeConfig.padding16),
+                      SvgPicture.asset(
+                        Assets.noWinnersAsset,
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                      Text(
+                        "No winners yet",
+                        style: TextStyles.sourceSans.body2.colour(Colors.white),
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                    ],
                   )
                 : RewardView(model: model.prizes),
         NewWebGameLeaderBoardView(),
