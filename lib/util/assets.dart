@@ -101,9 +101,8 @@ class Assets {
   static final String repeat = "assets/vectors/icons/repeat.svg";
 
   // REFERRAL
-  static final String referNearn = "images/share-card.png";
-  static final String google = "assets/svg/icon/google.svg";
-  static final String whatsapp = "assets/svg/icon/whatsapp.svg";
+  static final String google = "assets/vectors/icons/google.svg";
+  static final String whatsapp = "assets/vectors/icons/whatsapp.svg";
   static final String paperClip = "assets/vectors/icons/paperclip.svg";
 
   //DIALOGS

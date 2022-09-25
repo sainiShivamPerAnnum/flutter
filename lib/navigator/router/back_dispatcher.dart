@@ -43,8 +43,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       content: RotatedBox(
         quarterTurns: 0,
         child: ConfirmationDialog(
-          asset:
-              SvgPicture.asset(Assets.noTickets, height: SizeConfig.padding54),
           title: title,
           description: description,
           cancelBtnText: "Exit",

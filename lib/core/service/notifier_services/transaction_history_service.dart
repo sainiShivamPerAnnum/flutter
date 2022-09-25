@@ -61,7 +61,7 @@ class TransactionHistoryService
     );
     if (!response.isSuccess()) {
       return BaseUtil.showNegativeAlert(
-          "Unable to fetch txns", "Please try again");
+          "Unable to fetch transactions", "Please try again");
     }
     // if transaction list is empty
     if (_txnList == null || _txnList.length == 0) {
@@ -174,9 +174,9 @@ class TransactionHistoryService
 
   String getFormattedTxnAmount(double amount) {
     if (amount > 0)
-      return "₹ ${amount.abs().toStringAsFixed(2)}";
+      return "₹${amount == amount.toInt() ? amount.toInt() : amount.abs().toStringAsFixed(2)}";
     else
-      return "- ₹ ${amount.abs().toStringAsFixed(2)}";
+      return "- ₹${amount == amount.toInt() ? amount.toInt() : amount.abs().toStringAsFixed(2)}";
   }
 
   String getFormattedTime(Timestamp tTime) {

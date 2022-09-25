@@ -19,14 +19,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 class GoldBuyInputView extends StatelessWidget {
   final int amount;
   final bool skipMl;
-  final AugmontTransactionService txnService;
+  final AugmontTransactionService augTxnService;
   final GoldBuyViewModel model;
   const GoldBuyInputView(
       {Key key,
       this.amount,
       this.skipMl,
       this.model,
-      @required this.txnService})
+      @required this.augTxnService})
       : super(key: key);
 
   @override
@@ -37,11 +37,11 @@ class GoldBuyInputView extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(height: SizeConfig.padding16),
-        RechargeModalSheetAppBar(txnService: txnService),
+        RechargeModalSheetAppBar(txnService: augTxnService),
         SizedBox(height: SizeConfig.padding32),
         EnterAmountView(
           model: model,
-          txnService: txnService,
+          txnService: augTxnService,
         ),
         Spacer(),
         if (model.showCoupons)
@@ -79,7 +79,7 @@ class GoldBuyInputView extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            if (txnService.isGoldBuyInProgress) return;
+                            if (augTxnService.isGoldBuyInProgress) return;
                             model.appliedCoupon = null;
                           },
                           child: Icon(Icons.cancel,
@@ -87,7 +87,7 @@ class GoldBuyInputView extends StatelessWidget {
                         ),
                       ],
                     )
-                  : txnService.isGoldBuyInProgress
+                  : augTxnService.isGoldBuyInProgress
                       ? SizedBox()
                       : GestureDetector(
                           onTap: () => model.showOfferModal(model),
@@ -165,7 +165,7 @@ class GoldBuyInputView extends StatelessWidget {
             ),
           ),
         if (!model.augOnbRegInProgress && !model.augRegFailed)
-          txnService.isGoldBuyInProgress
+          augTxnService.isGoldBuyInProgress
               ? SpinKitThreeBounce(
                   color: Colors.white,
                   size: 20,
@@ -175,7 +175,7 @@ class GoldBuyInputView extends StatelessWidget {
                       ? 'Invest'
                       : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
                   onPressed: () async {
-                    if (!txnService.isGoldBuyInProgress) {
+                    if (!augTxnService.isGoldBuyInProgress) {
                       FocusScope.of(context).unfocus();
                       model.initiateBuy();
                     }

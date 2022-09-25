@@ -157,6 +157,7 @@ class _BuyInputViewState extends State<BuyInputView> {
               .mapIndexed((item, i) => AmountChip(
                   isActive: _selectedIndex == i,
                   amt: item,
+                  isBest: i == 1,
                   onClick: (amt) {
                     setState(() {
                       _selectedIndex = i;
