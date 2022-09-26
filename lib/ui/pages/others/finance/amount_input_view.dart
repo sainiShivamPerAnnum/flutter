@@ -52,8 +52,8 @@ class _AmountInputViewState extends State<AmountInputView> {
 
   @override
   Widget build(BuildContext context) {
-    final currentAmt = int.tryParse(widget.amountController.text) ?? 0;
-    if (currentAmt == null) widget.amountController.text = "0";
+    final currentAmt = double.tryParse(widget.amountController.text) ?? 0;
+    if (currentAmt == null) widget.amountController.text = "0.0";
     return Column(
       children: [
         Container(
@@ -111,6 +111,15 @@ class _AmountInputViewState extends State<AmountInputView> {
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       onChanged: (String val) {
+                        final amt = int.tryParse(val) ?? 0;
+                        if (amt > widget.maxAmount) {
+                          widget.amountController.text =
+                              widget.maxAmount.toString();
+                          widget.amountController.selection =
+                              TextSelection.collapsed(
+                                  offset: widget.amountController.text.length);
+                        }
+
                         setState(() {
                           this.updateFieldWidth();
                         });
@@ -133,7 +142,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                   ),
                 ],
               ),
-              if (currentAmt > widget.maxAmount)
+              if (currentAmt >= widget.maxAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
@@ -142,7 +151,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                         .colour(Colors.red[400]),
                   ),
                 ),
-              if (currentAmt < widget.minAmount)
+              if (currentAmt <= widget.minAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
