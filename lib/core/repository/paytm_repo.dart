@@ -112,7 +112,8 @@ class PaytmRepository extends BaseRepo {
   }
 
   Future<ApiResponse<TransactionResponseModel>> getTransactionStatus(
-      String orderId) async {
+    String orderId,
+  ) async {
     try {
       final String _uid = userService.baseUser.uid;
       final _token = await getBearerToken();

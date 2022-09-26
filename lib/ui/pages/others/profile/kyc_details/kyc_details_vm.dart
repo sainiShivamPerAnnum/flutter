@@ -12,7 +12,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -40,7 +40,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   final _bankingRepo = locator<BankingRepository>();
   final _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
-  final _sellService = locator<SellService>();
+  final _sellService = locator<BankAndPanService>();
   final _cacheService = new CacheService();
   final _userRepo = locator<UserRepository>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;

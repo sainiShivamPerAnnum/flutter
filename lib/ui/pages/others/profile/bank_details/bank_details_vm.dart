@@ -7,7 +7,7 @@ import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 
 class BankDetailsViewModel extends BaseViewModel {
   final BaseAnalyticsService _analyticsService = locator<AnalyticsService>();
-  final SellService _sellService = locator<SellService>();
+  final BankAndPanService _sellService = locator<BankAndPanService>();
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final formKey = GlobalKey<FormState>();
   bool _isDetailsUpdating = false;

@@ -7,7 +7,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserWinningsSE extends StatelessWidget {
   final TextStyle style;
-  UserWinningsSE({this.style});
+  const UserWinningsSE({this.style});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

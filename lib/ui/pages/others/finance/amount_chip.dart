@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 class AmountChip extends StatelessWidget {
   const AmountChip({
     Key key,
+    this.isBest = false,
     @required this.isActive,
     @required this.amt,
-    this.isBest = false,
     @required this.onClick,
   }) : super(key: key);
 
@@ -58,9 +58,12 @@ class AmountChip extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding4,
-                    vertical: SizeConfig.padding2),
-                decoration: BoxDecoration(color: UiConstants.primaryColor),
+                  horizontal: SizeConfig.padding4,
+                  vertical: SizeConfig.padding2,
+                ),
+                decoration: BoxDecoration(
+                  color: UiConstants.primaryColor,
+                ),
                 child: Text(
                   "BEST",
                   style: TextStyles.rajdhaniSB.body5,

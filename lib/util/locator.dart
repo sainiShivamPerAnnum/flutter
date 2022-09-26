@@ -13,6 +13,7 @@ import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -47,7 +48,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
@@ -68,6 +69,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
@@ -120,7 +122,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppFlyerAnalytics());
 
   locator.registerLazySingleton(() => InternalOpsService());
-  locator.registerLazySingleton(() => SellService());
+  locator.registerLazySingleton(() => BankAndPanService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
@@ -162,6 +164,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaymentRepository());
   locator.registerLazySingleton(() => SubscriptionRepo());
   locator.registerLazySingleton(() => SaveRepo());
+  locator.registerLazySingleton(() => LendboxRepo());
 
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
@@ -185,7 +188,7 @@ void setupLocator() {
   locator.registerFactory(() => BankDetailsViewModel());
   locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
-  // locator.registerFactory(() => TambolaHomeViewModel());
+  locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
   locator.registerFactory(() => RewardLeaderboardViewModel());
@@ -205,6 +208,7 @@ void setupLocator() {
   locator.registerFactory(() => JourneyBannersViewModel());
   locator.registerFactory(() => FaqPageViewModel());
   locator.registerFactory(() => LendboxBuyViewModel());
+  locator.registerFactory(() => LendboxWithdrawalViewModel());
 
   //WIDGETS
   locator.registerFactory(() => MiniTransactionCardViewModel());

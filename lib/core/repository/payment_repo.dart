@@ -17,6 +17,7 @@ class PaymentRepository extends BaseRepo {
 
   final UserService _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
+
   Future<ApiResponse<WithdrawableGoldResponseModel>>
       getWithdrawableAugGoldQuantity() async {
     try {

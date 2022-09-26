@@ -3,17 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/service/payments/base_transaction_service.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/upi_intent_view.dart';
-import 'package:felloapp/util/api_response.dart';
-import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:upi_pay/upi_pay.dart';
-
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
@@ -22,24 +14,26 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
-import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/base_transaction_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:flutter/material.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
   final _userService = locator<UserService>();
@@ -151,6 +145,8 @@ class AugmontTransactionService extends BaseTransactionService {
       "aTaxedGoldBalance":
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
+
+    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
     await _razorpayService.initiateRazorpayTxn(
       amount: currentGoldPurchaseDetails.goldBuyAmount,

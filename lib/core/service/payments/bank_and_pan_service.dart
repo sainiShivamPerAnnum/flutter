@@ -1,21 +1,17 @@
-import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class SellService extends PropertyChangeNotifier<SellServiceProperties> {
+class BankAndPanService
+    extends PropertyChangeNotifier<BankAndPanServiceProperties> {
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
-  final _txnHistoryService = locator<TransactionHistoryService>();
   final _paymentRepo = locator<PaymentRepository>();
-  final _bankingRepo = locator<BankingRepository>();
   final _userRepo = locator<UserRepository>();
   String _userPan;
 
@@ -23,7 +19,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   set userPan(value) {
     this._userPan = value;
-    notifyListeners(SellServiceProperties.kycVerified);
+    notifyListeners(BankAndPanServiceProperties.kycVerified);
   }
 
   BankAccountDetailsModel _activeBankAccountDetails;
@@ -33,7 +29,7 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   set activeBankAccountDetails(value) {
     this._activeBankAccountDetails = value;
-    notifyListeners(SellServiceProperties.bankDetailsVerified);
+    notifyListeners(BankAndPanServiceProperties.bankDetailsVerified);
   }
 
   bool _isKYCVerified = false;
@@ -58,22 +54,22 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
 
   set isKYCVerified(bool val) {
     _isKYCVerified = val;
-    notifyListeners(SellServiceProperties.kycVerified);
+    notifyListeners(BankAndPanServiceProperties.kycVerified);
   }
 
   set isBankDetailsAdded(bool val) {
     _isBankDetailsAdded = val;
-    notifyListeners(SellServiceProperties.bankDetailsVerified);
+    notifyListeners(BankAndPanServiceProperties.bankDetailsVerified);
   }
 
   set sellNotice(value) {
     this._sellNotice = value;
-    notifyListeners(SellServiceProperties.augmontSellNotice);
+    notifyListeners(BankAndPanServiceProperties.augmontSellNotice);
   }
 
   set isSellLocked(value) {
     this._isSellLocked = value;
-    notifyListeners(SellServiceProperties.augmontSellDisabled);
+    notifyListeners(BankAndPanServiceProperties.augmontSellDisabled);
   }
 
   set isLockInReached(value) {
@@ -87,7 +83,6 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
   set withdrawableQnt(val) {
     this._withdrawableQnt = val;
   }
-  //Transaction - check last transaction status(AugmontTransactionService)
 
   init() async {
     await _userService.fetchUserAugmontDetail();
@@ -151,5 +146,4 @@ class SellService extends PropertyChangeNotifier<SellServiceProperties> {
         activeBankAccountDetails != null) return true;
     return false;
   }
-
 }

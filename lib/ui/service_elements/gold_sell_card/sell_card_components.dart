@@ -1,37 +1,47 @@
-import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class SellGoldText extends StatelessWidget {
-  const SellGoldText({Key key}) : super(key: key);
+class SellText extends StatelessWidget {
+  final InvestmentType investmentType;
+
+  const SellText({Key key, @required this.investmentType}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final title = investmentType == InvestmentType.AUGGOLD99
+        ? 'Sell your Digital Gold \nat current market rate'
+        : 'Withdrawal your savings';
+    final subTitle = "With every transaction, some tokens will be deducted.";
     return Expanded(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Sell your Digital Gold \nat current market rate',
-          style: TextStyles.sourceSansSB.body2
-              .colour(Colors.grey.withOpacity(0.8)),
-        ),
-        SizedBox(height: SizeConfig.padding6),
-        Text(
-          "With every transaction, some tokens will be deducted.",
-          maxLines: 2,
-          style:
-              TextStyles.sourceSans.body4.colour(UiConstants.kBlogTitleColor),
-        ),
-      ],
-    ));
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyles.sourceSansSB.body2.colour(
+              Colors.grey.withOpacity(0.8),
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding6),
+          Text(
+            subTitle,
+            maxLines: 2,
+            style:
+                TextStyles.sourceSans.body4.colour(UiConstants.kBlogTitleColor),
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class SellButton extends StatelessWidget {
   final Function onTap;
   final bool isActive;
+
   SellButton({Key key, @required this.onTap, @required this.isActive})
       : super(key: key);
 
@@ -46,16 +56,17 @@ class SellButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           border: Border.all(
-              color: isActive
-                  ? Colors.white
-                  : UiConstants.kSecondaryBackgroundColor,
-              width: 1),
+            color:
+                isActive ? Colors.white : UiConstants.kSecondaryBackgroundColor,
+            width: 1,
+          ),
         ),
         child: Center(
           child: Text(
             'SELL',
             style: TextStyles.rajdhaniSB.body0.colour(
-                isActive ? UiConstants.kTextColor : UiConstants.kTextColor2),
+              isActive ? UiConstants.kTextColor : UiConstants.kTextColor2,
+            ),
           ),
         ),
       ),
@@ -93,10 +104,16 @@ class GoldLockedInCard extends StatelessWidget {
 class SellActionButton extends StatelessWidget {
   final String title;
   final String iconData;
+  final bool isCenter;
   final Function() onTap;
 
-  const SellActionButton({Key key, this.title, this.iconData, this.onTap})
-      : super(key: key);
+  const SellActionButton({
+    Key key,
+    this.title,
+    this.iconData,
+    this.onTap,
+    this.isCenter = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -111,12 +128,15 @@ class SellActionButton extends StatelessWidget {
           height: SizeConfig.screenWidth * 0.16,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-              color: UiConstants.kSecondaryBackgroundColor),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            color: UiConstants.kSecondaryBackgroundColor,
+          ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: this.isCenter
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   title,
@@ -136,13 +156,14 @@ class SellCardInfoStrips extends StatelessWidget {
   final String content;
   final Color backgroundColor;
   final Color textColor;
-  const SellCardInfoStrips(
-      {Key key,
-      this.leadingIcon,
-      @required this.content,
-      this.textColor,
-      this.backgroundColor})
-      : super(key: key);
+
+  const SellCardInfoStrips({
+    Key key,
+    this.leadingIcon,
+    @required this.content,
+    this.textColor,
+    this.backgroundColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -163,13 +184,19 @@ class SellCardInfoStrips extends StatelessWidget {
       child: Row(
         children: [
           leadingIcon ??
-              Icon(Icons.warning_amber_rounded, color: UiConstants.kTextColor),
-          SizedBox(width: SizeConfig.padding16),
+              Padding(
+                padding: EdgeInsets.only(right: SizeConfig.padding16),
+                child: Icon(
+                  Icons.warning_amber_rounded,
+                  color: UiConstants.kTextColor,
+                ),
+              ),
           Expanded(
             child: Text(
               content,
-              style: TextStyles.sourceSans.body4
-                  .colour(textColor ?? UiConstants.kTextColor2),
+              style: TextStyles.sourceSans.body4.colour(
+                textColor ?? UiConstants.kTextColor2,
+              ),
             ),
           ),
         ],

@@ -1,8 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,10 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
-class LendboxBuySuccessView extends StatelessWidget {
+class LendboxSuccessView extends StatelessWidget {
+  final TransactionType transactionType;
   final _txnService = locator<LendboxTransactionService>();
 
-  LendboxBuySuccessView({Key key}) : super(key: key);
+  LendboxSuccessView({Key key, @required this.transactionType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

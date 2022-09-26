@@ -13,6 +13,7 @@ class UserFundWallet {
   //lendbox
   double wLbBalance;
   double wLbPrinciple;
+  double wLbProcessingQty;
 
   //icici
   double _iciciPrinciple;
@@ -47,9 +48,10 @@ class UserFundWallet {
       this._prizeLifetimeWin,
       this._processingRedemptionBalance,
       this.wLbBalance,
-      this.wLbPrinciple);
+      this.wLbPrinciple,
+      this.wLbProcessingQty);
 
-  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
@@ -64,6 +66,7 @@ class UserFundWallet {
           BaseUtil.toDouble(data[fldProcessingRedemption]),
           BaseUtil.toDouble(data['wLbBalance']),
           BaseUtil.toDouble(data['wLbPrinciple']),
+          BaseUtil.toDouble(data['wLbProcessingQty']),
         );
 
   Map<String, dynamic> cloneMap() => {

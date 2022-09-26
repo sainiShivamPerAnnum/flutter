@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sell_service_enum.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
@@ -17,8 +17,9 @@ class BankDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<SellService, SellServiceProperties>(
-        properties: [SellServiceProperties.bankDetailsVerified],
+    return PropertyChangeConsumer<BankAndPanService,
+            BankAndPanServiceProperties>(
+        properties: [BankAndPanServiceProperties.bankDetailsVerified],
         builder: (context, model, property) =>
             model.isBankDetailsAdded && model.activeBankAccountDetails != null
                 ? Column(

@@ -1,4 +1,4 @@
-enum SellServiceProperties {
+enum BankAndPanServiceProperties {
   kycVerified,
   bankDetailsVerified,
   augmontSellNotice,

@@ -1,10 +1,8 @@
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -44,10 +42,11 @@ class UPIAppsBottomSheet extends StatelessWidget {
                       style: TextStyles.title5.bold,
                     ),
                     GestureDetector(
-                        onTap: () {
-                          AppState.backButtonDispatcher.didPopRoute();
-                        },
-                        child: Icon(Icons.close))
+                      onTap: () {
+                        AppState.backButtonDispatcher.didPopRoute();
+                      },
+                      child: Icon(Icons.close),
+                    )
                   ],
                 ),
               ),

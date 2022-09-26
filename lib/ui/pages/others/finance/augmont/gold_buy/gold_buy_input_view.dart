@@ -21,13 +21,14 @@ class GoldBuyInputView extends StatelessWidget {
   final bool skipMl;
   final AugmontTransactionService augTxnService;
   final GoldBuyViewModel model;
-  const GoldBuyInputView(
-      {Key key,
-      this.amount,
-      this.skipMl,
-      this.model,
-      @required this.augTxnService})
-      : super(key: key);
+
+  const GoldBuyInputView({
+    Key key,
+    this.amount,
+    this.skipMl,
+    this.model,
+    @required this.augTxnService,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -397,9 +398,10 @@ class EnterAmountView extends StatelessWidget {
                   ),
                 ),
                 VerticalDivider(
-                    color: UiConstants
-                        .kRechargeModalSheetAmountSectionBackgroundColor,
-                    width: 4),
+                  color: UiConstants
+                      .kRechargeModalSheetAmountSectionBackgroundColor,
+                  width: 4,
+                ),
                 Expanded(
                   child: Center(
                     child: NewCurrentGoldPriceWidget(

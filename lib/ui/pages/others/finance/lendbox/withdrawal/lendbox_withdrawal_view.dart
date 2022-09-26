@@ -4,28 +4,29 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_loading_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_success_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_input_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_success_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-class LendboxBuyView extends StatefulWidget {
+class LendboxWithdrawalView extends StatefulWidget {
   final int amount;
   final bool skipMl;
 
-  const LendboxBuyView({Key key, this.amount = 250, this.skipMl = false})
+  const LendboxWithdrawalView({Key key, this.amount = 250, this.skipMl = false})
       : super(key: key);
 
   @override
-  State<LendboxBuyView> createState() => _LendboxBuyViewState();
+  State<LendboxWithdrawalView> createState() => _LendboxWithdrawalViewState();
 }
 
-class _LendboxBuyViewState extends State<LendboxBuyView>
+class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     with WidgetsBindingObserver {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
@@ -94,7 +95,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                     secondaryAnimation: secondaryAnimation,
                   );
                 },
-                child: BaseView<LendboxBuyViewModel>(
+                child: BaseView<LendboxWithdrawalViewModel>(
                   onModelReady: (model) => model.init(
                     widget.amount,
                     widget.skipMl,
@@ -116,22 +117,19 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   Widget _getView(
     LendboxTransactionService txnService,
-    LendboxBuyViewModel model,
+    LendboxWithdrawalViewModel model,
   ) {
-    final type = TransactionType.DEPOSIT;
+    final type = TransactionType.WITHDRAWAL;
 
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return LendboxBuyInputView(
+      return LendboxWithdrawalInputView(
         amount: widget.amount,
-        skipMl: widget.skipMl,
         model: model,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return LendboxLoadingView(transactionType: type);
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return LendboxSuccessView(
-        transactionType: type,
-      );
+      return LendboxWithdrawalSuccessView();
     }
 
     return LendboxLoadingView(transactionType: type);
@@ -139,7 +137,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   double _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight * 0.8;
+      return SizeConfig.screenHeight * 0.9;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return SizeConfig.screenHeight * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.success) {

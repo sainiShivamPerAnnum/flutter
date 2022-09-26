@@ -3,31 +3,20 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
-import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class LendboxBuyViewModel extends BaseViewModel {
-  static const int STATUS_UNAVAILABLE = 0;
-  static const int STATUS_REGISTER = 1;
-  static const int STATUS_OPEN = 2;
-
-  final _logger = locator<CustomLogger>();
-  final _baseUtil = locator<BaseUtil>();
-  final _userService = locator<UserService>();
-  final _razorpayService = locator<RazorpayService>();
   final _txnService = locator<LendboxTransactionService>();
-
   final _analyticsService = locator<AnalyticsService>();
-  final _paytmService = locator<PaytmService>();
 
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -40,11 +29,13 @@ class LendboxBuyViewModel extends BaseViewModel {
   String buyNotice;
 
   bool _isBuyInProgress = false;
-  get isBuyInProgress => this._isBuyInProgress;
+  bool get isBuyInProgress => this._isBuyInProgress;
 
   TextEditingController amountController;
   TextEditingController vpaController;
-  List<int> chipAmountList = [101, 201, 501, 1001];
+  final List<int> chipAmountList = [101, 201, 501, 1001];
+  final double minAmount = 10;
+  final double maxAmount = 50000;
 
   bool get skipMl => this._skipMl;
 
@@ -98,20 +89,31 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    // if (_baseUtil.augmontDetail.isDepLocked) {
-    //   BaseUtil.showNegativeAlert(
-    //     'Purchase Failed',
-    //     "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-    //   );
-    //   return false;
-    // }
+    if (buyAmount < minAmount) {
+      BaseUtil.showNegativeAlert(
+        'Min amount is ${this.minAmount}',
+        'Please enter an amount grater than ${this.minAmount}',
+      );
+      return 0;
+    }
+
+    if (buyAmount > maxAmount) {
+      BaseUtil.showNegativeAlert(
+        'Max amount is ${this.maxAmount}',
+        'Please enter an amount lower than ${this.maxAmount}',
+      );
+      return 0;
+    }
 
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     return buyAmount;
   }
 
-  double getTaxOnAmount(double amount, double taxRate) {
-    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+  void navigateToKycScreen() {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
   }
 
   int getAmount(int amount) {

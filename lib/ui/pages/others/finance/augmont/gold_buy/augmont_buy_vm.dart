@@ -15,7 +15,6 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
-import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
@@ -36,17 +35,16 @@ class GoldBuyViewModel extends BaseViewModel {
   static const int STATUS_OPEN = 2;
 
   final _logger = locator<CustomLogger>();
-  final BaseUtil _baseUtil = locator<BaseUtil>();
   final DBModel _dbModel = locator<DBModel>();
   final AugmontService _augmontModel = locator<AugmontService>();
   final UserService _userService = locator<UserService>();
-  final _razorpayService = locator<RazorpayService>();
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
 
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
+
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication upiApplication;
@@ -316,7 +314,7 @@ class GoldBuyViewModel extends BaseViewModel {
     return true;
   }
 
-// UI ESSENTIALS
+  // UI ESSENTIALS
 
   Widget amountChip(int index) {
     int amt = chipAmountList[index];
@@ -324,14 +322,14 @@ class GoldBuyViewModel extends BaseViewModel {
       isActive: lastTappedChipIndex == index,
       amt: amt,
       isBest: index == 1,
-      onClick: (int amt) {
+      onClick: (int amount) {
         if (couponApplyInProgress || isGoldBuyInProgress) return;
         showMaxCapText = false;
         showMinCapText = false;
         Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
-        goldBuyAmount = amt.toDouble();
+        goldBuyAmount = chipAmountList[index].toDouble();
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
         //checkIfCouponIsStillApplicable();

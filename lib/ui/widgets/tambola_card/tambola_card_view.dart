@@ -124,6 +124,7 @@ class TambolaCard extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {
                           Haptic.vibrate();
+                          print(model.game.route);
                           AppState.delegate.parseRoute(
                             Uri.parse(model.game.route),
                           );

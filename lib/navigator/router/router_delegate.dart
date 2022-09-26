@@ -233,9 +233,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(SupportPage(), SupportPageConfig);
           break;
 
-        // case Pages.THome:
-        //   _addPageData(TambolaHomeView(), THomePageConfig);
-        //   break;
+        case Pages.THome:
+          _addPageData(TambolaHomeView(), THomePageConfig);
+          break;
         case Pages.TGame: //
           _addPageData(TambolaGameView(), TGamePageConfig);
           break;

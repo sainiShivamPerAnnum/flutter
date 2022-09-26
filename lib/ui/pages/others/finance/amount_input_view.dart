@@ -6,16 +6,18 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class BuyInputView extends StatefulWidget {
+class AmountInputView extends StatefulWidget {
   final TextEditingController amountController;
   final List<int> chipAmounts;
   final String notice;
   final bool isEnabled;
-  final int maxAmount;
-  final int minAmount;
+  final double maxAmount;
+  final double minAmount;
+  final String maxAmountMsg;
+  final String minAmountMsg;
   final Function(int val) onAmountChange;
 
-  const BuyInputView({
+  const AmountInputView({
     Key key,
     @required this.chipAmounts,
     @required this.onAmountChange,
@@ -23,33 +25,35 @@ class BuyInputView extends StatefulWidget {
     @required this.isEnabled,
     @required this.maxAmount,
     @required this.minAmount,
+    @required this.maxAmountMsg,
+    @required this.minAmountMsg,
     this.notice,
   }) : super(key: key);
 
   @override
-  State<BuyInputView> createState() => _BuyInputViewState();
+  State<AmountInputView> createState() => _AmountInputViewState();
 }
 
-class _BuyInputViewState extends State<BuyInputView> {
+class _AmountInputViewState extends State<AmountInputView> {
   double _fieldWidth = 0;
   int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    _fieldWidth =
-        (SizeConfig.padding40 * widget.amountController.text.length.toDouble());
+    updateFieldWidth();
   }
 
   void updateFieldWidth() {
-    _fieldWidth =
-        (SizeConfig.padding40 * widget.amountController.text.length.toDouble());
+    int n = widget.amountController.text.length;
+    if (n == 0) n++;
+    _fieldWidth = (SizeConfig.padding40 * n.toDouble());
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentAmt = int.tryParse(widget.amountController.text) ?? 0;
-    if (currentAmt == null) widget.amountController.text = "0";
+    final currentAmt = double.tryParse(widget.amountController.text) ?? 0;
+    if (currentAmt == null) widget.amountController.text = "0.0";
     return Column(
       children: [
         Container(
@@ -99,6 +103,7 @@ class _BuyInputViewState extends State<BuyInputView> {
                       validator: (val) {
                         return null;
                       },
+                      maxLength: widget.maxAmount.toString().length,
                       keyboardType: TextInputType.numberWithOptions(
                         signed: true,
                         decimal: true,
@@ -118,6 +123,7 @@ class _BuyInputViewState extends State<BuyInputView> {
                         // isCollapsed: true,
                         disabledBorder: InputBorder.none,
                         isDense: true,
+                        counter: Offstage(),
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyles.rajdhaniB.title68.colour(
@@ -129,20 +135,20 @@ class _BuyInputViewState extends State<BuyInputView> {
                   ),
                 ],
               ),
-              if (currentAmt > widget.maxAmount)
+              if (currentAmt >= widget.maxAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
-                    "Upto ₹ ${widget.maxAmount} can be invested at one go.",
+                    widget.maxAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
-                        .colour(UiConstants.primaryColor),
+                        .colour(Colors.red[400]),
                   ),
                 ),
-              if (currentAmt < widget.minAmount)
+              if (currentAmt <= widget.minAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
-                    "Minimum purchase amount is ₹ ${widget.minAmount}",
+                    widget.minAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
                         .colour(Colors.red[400]),
                   ),
@@ -157,7 +163,6 @@ class _BuyInputViewState extends State<BuyInputView> {
               .mapIndexed((item, i) => AmountChip(
                   isActive: _selectedIndex == i,
                   amt: item,
-                  isBest: i == 1,
                   onClick: (amt) {
                     setState(() {
                       _selectedIndex = i;
