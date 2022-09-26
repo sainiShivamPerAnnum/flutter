@@ -68,7 +68,8 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch transactions", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch transactions", 400);
     }
   }
 }

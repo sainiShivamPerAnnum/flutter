@@ -151,6 +151,7 @@ class TambolaGameViewModel extends BaseViewModel {
         _currentBoardView = null;
       } else {
         _logger.d(tickets.errorMessage);
+        BaseUtil.showNegativeAlert(tickets.errorMessage, "");
       }
 
       _examineTicketsForWins();
@@ -249,8 +250,8 @@ class TambolaGameViewModel extends BaseViewModel {
       _refreshTambolaTickets();
     } else {
       return BaseUtil.showNegativeAlert(
-        "Operation Failed",
-        "Failed to buy tickets at the moment. Please try again later",
+        _flcResponse.errorMessage,
+        "Please try again later",
       );
     }
 

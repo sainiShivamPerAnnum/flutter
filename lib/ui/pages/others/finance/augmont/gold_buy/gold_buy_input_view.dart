@@ -258,22 +258,22 @@ class EnterAmountView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      child: Text("One Time",
-                          style: TextStyles.sourceSansSB.body2),
-                      onPressed: () {},
-                    ),
-                    TextButton(
-                      child: Text("Auto SIP",
-                          style: TextStyles.sourceSans.body2
-                              .colour(UiConstants.kTextColor3)),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     TextButton(
+                //       child: Text("One Time",
+                //           style: TextStyles.sourceSansSB.body2),
+                //       onPressed: () {},
+                //     ),
+                //     TextButton(
+                //       child: Text("Auto SIP",
+                //           style: TextStyles.sourceSans.body2
+                //               .colour(UiConstants.kTextColor3)),
+                //       onPressed: () {},
+                //     ),
+                //   ],
+                // ),
                 if (model.buyNotice != null && model.buyNotice.isNotEmpty)
                   Container(
                     margin: EdgeInsets.only(bottom: SizeConfig.padding16),

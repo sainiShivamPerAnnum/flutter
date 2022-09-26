@@ -368,6 +368,8 @@ class RootViewModel extends BaseViewModel {
         referrerId.model,
         _userService.myUserName,
       );
+    } else {
+      BaseUtil.showNegativeAlert(referrerId.errorMessage, '');
     }
   }
 

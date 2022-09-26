@@ -61,7 +61,8 @@ class TransactionHistoryService
     );
     if (!response.isSuccess()) {
       return BaseUtil.showNegativeAlert(
-          "Unable to fetch transactions", "Please try again");
+          response.errorMessage ?? "Unable to fetch transactions",
+          "Please try again");
     }
     // if transaction list is empty
     if (_txnList == null || _txnList.length == 0) {

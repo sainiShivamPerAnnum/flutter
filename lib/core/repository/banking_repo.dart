@@ -17,13 +17,6 @@ class BankingRepository extends BaseRepo {
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
       : "";
 
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
-
-    return token;
-  }
-
   Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
       {String uid, String panName, String panNumber}) async {
     final Map<String, dynamic> body = {
@@ -33,7 +26,7 @@ class BankingRepository extends BaseRepo {
     };
 
     try {
-      final String token = await _getBearerToken();
+      final String token = await getBearerToken();
 
       final response = await APIService.instance.postData(_apiPaths.kVerifyPan,
           body: body, token: token, cBaseUrl: _baseUrl);
@@ -50,7 +43,8 @@ class BankingRepository extends BaseRepo {
       }
     } catch (e) {
       _logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to verify pan", 400);
     }
   }
 }

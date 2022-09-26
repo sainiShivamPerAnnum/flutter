@@ -82,6 +82,8 @@ class PlayViewModel extends BaseViewModel {
     if (response.isSuccess()) {
       gamesListData = response.model;
       isGamesListDataLoading = false;
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
     }
   }
 

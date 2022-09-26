@@ -113,7 +113,9 @@ class LendboxTransactionService extends BaseTransactionService {
       InvestmentType.LENDBOXP2P,
     );
 
-    if (!paytmSubscriptionApiResponse.isSuccess()) return null;
+    if (!paytmSubscriptionApiResponse.isSuccess())
+      return BaseUtil.showNegativeAlert(
+          paytmSubscriptionApiResponse.errorMessage, "");
     this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
     return paytmSubscriptionApiResponse.model;
   }

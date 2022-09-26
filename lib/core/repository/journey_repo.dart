@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
@@ -15,11 +14,9 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 
 class JourneyRepository extends BaseRepo {
   final _cacheService = new CacheService();
@@ -187,12 +184,13 @@ class JourneyRepository extends BaseRepo {
       });
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to journey pages", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to journey pages", 400);
     }
   }
 
-  //Returns User Journey stats
-  //refer UserJourneyStatsModel for the response
+  // Returns User Journey stats
+  // refer UserJourneyStatsModel for the response
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
     try {
       final String _uid = userService.baseUser.uid;
@@ -209,7 +207,8 @@ class JourneyRepository extends BaseRepo {
           model: UserJourneyStatsModel.fromMap(responseData), code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch user stats", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch user stats", 400);
     }
   }
 
@@ -253,7 +252,8 @@ class JourneyRepository extends BaseRepo {
       return ApiResponse(model: journeylevels, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch user levels", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch user levels", 400);
     }
   }
 }

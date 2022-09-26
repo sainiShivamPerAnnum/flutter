@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
               mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
               children: [
                 buildTimeCard(time: hours),
+                TimerDots(),
                 buildTimeCard(time: minutes),
+                TimerDots(),
                 buildTimeCard(time: seconds),
               ]),
         ],
@@ -108,48 +111,41 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   }
 
   Widget buildTimeCard({@required String time}) => Container(
-        height: SizeConfig.screenWidth * 0.14,
-        width: SizeConfig.screenWidth * 0.14,
-        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+        height: SizeConfig.screenWidth * 0.16,
+        width: SizeConfig.screenWidth * 0.16,
+        // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
         decoration: BoxDecoration(
           color: UiConstants.kBackgroundColor,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
-        child: Text(
-          time,
-          style: GoogleFonts.rajdhani(
-              color: Colors.white,
-              fontSize: SizeConfig.cardTitleTextSize,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2,
-              shadows: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: Offset(1, 1),
-                    blurRadius: 5,
-                    spreadRadius: 5)
-              ]),
-        ),
+        child: Text(time, style: TextStyles.rajdhaniSB.title2.letterSpace(2)),
       );
+}
 
-  Widget buildDivider() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        ":",
-        style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontSize: 50,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 2,
-            shadows: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: Offset(1, 1),
-                  blurRadius: 5,
-                  spreadRadius: 5)
-            ]),
+class TimerDots extends StatelessWidget {
+  const TimerDots({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: SizeConfig.screenWidth * 0.14,
+      width: SizeConfig.padding20,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: SizeConfig.padding2,
+            backgroundColor: UiConstants.kTextColor,
+          ),
+          SizedBox(height: SizeConfig.padding8),
+          CircleAvatar(
+            radius: SizeConfig.padding2,
+            backgroundColor: UiConstants.kTextColor2,
+          ),
+        ],
       ),
     );
   }

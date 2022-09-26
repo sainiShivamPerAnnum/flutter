@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -12,7 +13,6 @@ class TambolaCardModel extends BaseViewModel {
   //VARIABLES
   GameModel _game;
   bool _isGameModelLoading = true;
-  bool isForDemo = false;
 
   //GETTER SETTER
 
@@ -39,6 +39,8 @@ class TambolaCardModel extends BaseViewModel {
     if (response.isSuccess()) {
       game = response.model;
       isGameModelLoading = false;
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
     }
   }
 }

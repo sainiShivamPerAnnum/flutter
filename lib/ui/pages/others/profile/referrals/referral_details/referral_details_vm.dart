@@ -108,11 +108,14 @@ class ReferralDetailsViewModel extends BaseViewModel {
     final ApiResponse res = await _refRepo.getReferralCode();
     if (res.code == 200) {
       _refCode = res.model;
+      _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
+          ? appShareMessage
+          : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+    } else {
+      _refCode = '';
+      _shareMsg = '';
+      BaseUtil.showNegativeAlert(res.errorMessage, '');
     }
-    _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
-        ? appShareMessage
-        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
-
     loadingRefCode = false;
     refresh();
   }
@@ -140,11 +143,14 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
     if (!baseProvider.referralsFetched) {
       _referralRepo.getReferralHistory().then((refHisModel) {
-        baseProvider.referralsFetched = true;
-        baseProvider.userReferralsList = refHisModel.model ?? [];
-        _referalList = baseProvider.userReferralsList;
-
-        notifyListeners();
+        if (refHisModel.isSuccess()) {
+          baseProvider.referralsFetched = true;
+          baseProvider.userReferralsList = refHisModel.model ?? [];
+          _referalList = baseProvider.userReferralsList;
+          notifyListeners();
+        } else {
+          BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
+        }
       });
     } else {
       _referalList = baseProvider.userReferralsList;

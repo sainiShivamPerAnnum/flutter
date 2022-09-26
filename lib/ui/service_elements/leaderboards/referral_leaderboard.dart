@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/util/assets.dart';
@@ -130,8 +131,8 @@ class ReferralLeaderboard extends StatelessWidget {
                                 margin: EdgeInsets.symmetric(
                                     vertical: SizeConfig.padding24),
                                 alignment: Alignment.center,
-                                child: SpinKitWave(
-                                  color: UiConstants.primaryColor,
+                                child: FullScreenLoader(
+                                  size: SizeConfig.padding40,
                                 ),
                               )
                             : (model.referralLeaderBoard.isEmpty

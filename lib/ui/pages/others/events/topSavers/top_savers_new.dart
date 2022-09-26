@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -717,7 +718,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                           ),
                         ),
                       ))
-                : ListLoader(
+                : FullScreenLoader(
                     bottomPadding: true,
                   )
           ],
@@ -909,7 +910,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                           ),
                         ),
                       ))
-                : ListLoader(
+                : FullScreenLoader(
                     bottomPadding: true,
                   )
           ],

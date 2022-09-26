@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -56,7 +57,10 @@ class _JourneyMilestoneDetailsModalSheetState
     isLoading = true;
     final res =
         await _gtService.getGTByPrizeSubtype(widget.milestone.prizeSubType);
-    if (res.isSuccess()) ticket = res.model;
+    if (res.isSuccess())
+      ticket = res.model;
+    else
+      BaseUtil.showNegativeAlert(res.errorMessage, "");
     isLoading = false;
   }
 

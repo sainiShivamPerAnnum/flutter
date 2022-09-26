@@ -36,7 +36,8 @@ class GameRepo extends BaseRepo {
     } catch (e) {
       logger.e("Unable to fetch games ${e.toString()}");
       allgames = [];
-      return ApiResponse.withError("Unable to fetch games", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch games", 400);
     }
   }
 
@@ -53,7 +54,8 @@ class GameRepo extends BaseRepo {
       return ApiResponse<GameModel>(model: game, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch game by id", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch game by id", 400);
     }
   }
 

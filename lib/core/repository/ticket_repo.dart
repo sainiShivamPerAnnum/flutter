@@ -41,7 +41,8 @@ class TambolaRepo extends BaseRepo {
       });
     } catch (e) {
       logger.e('get all tambola tickets $e');
-      return ApiResponse.withError("Unable to fetch tambola tickets", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch tambola tickets", 400);
     }
   }
 

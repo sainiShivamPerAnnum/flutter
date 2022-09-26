@@ -5,14 +5,21 @@ import 'package:lottie/lottie.dart';
 
 class FullScreenLoader extends StatelessWidget {
   final double size;
-
-  const FullScreenLoader({Key key, this.size}) : super(key: key);
+  final bool bottomPadding;
+  const FullScreenLoader({Key key, this.size, this.bottomPadding = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset(
-      Assets.fullScreenLoaderLottie,
-      height: size ?? SizeConfig.screenWidth / 2,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Lottie.asset(
+          Assets.fullScreenLoaderLottie,
+          height: size ?? SizeConfig.screenWidth / 2,
+        ),
+        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight * 0.1)
+      ],
     );
   }
 }

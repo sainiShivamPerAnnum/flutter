@@ -35,26 +35,26 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<UserMilestone>>> fetchMilestones() async {
-    try {
-      final token = await getBearerToken();
-      final milestoneRespone = await APIService.instance.getData(
-        ApiPath.getMilestone(
-          this.userService.baseUser.uid,
-        ),
-        cBaseUrl: _baseUrl,
-        token: token,
-      );
+  // Future<ApiResponse<List<UserMilestone>>> fetchMilestones() async {
+  //   try {
+  //     final token = await getBearerToken();
+  //     final milestoneRespone = await APIService.instance.getData(
+  //       ApiPath.getMilestone(
+  //         this.userService.baseUser.uid,
+  //       ),
+  //       cBaseUrl: _baseUrl,
+  //       token: token,
+  //     );
 
-      // final miletones = UserMilestoneModel.fromJson(milestoneRespone).data;
-      final miletones =
-          UserMilestone.helper.fromMapArray(milestoneRespone["data"]);
-      return ApiResponse<List<UserMilestone>>(model: miletones, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch ticket", 400);
-    }
-  }
+  //     // final miletones = UserMilestoneModel.fromJson(milestoneRespone).data;
+  //     final miletones =
+  //         UserMilestone.helper.fromMapArray(milestoneRespone["data"]);
+  //     return ApiResponse<List<UserMilestone>>(model: miletones, code: 200);
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     return ApiResponse.withError("Unable to fetch ticket", 400);
+  //   }
+  // }
 
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
@@ -80,7 +80,6 @@ class GoldenTicketRepository extends BaseRepo {
 
   //Skip milestone
   Future<ApiResponse<bool>> skipMilestone() async {
-    String message = "";
     try {
       final Map<String, int> _body = {
         "mlIndex": userService.userJourneyStats.mlIndex
@@ -102,8 +101,8 @@ class GoldenTicketRepository extends BaseRepo {
         return ApiResponse(model: false, code: 400);
     } catch (e) {
       logger.e(e.toString());
-      message = e.toString();
-      return ApiResponse.withError(message ?? "Unable to skip milestone", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to skip milestone", 400);
     }
   }
 
@@ -124,7 +123,8 @@ class GoldenTicketRepository extends BaseRepo {
       return ApiResponse<GoldenTicket>(model: goldenTicket, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch ticket", 400);
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to fetch ticket", 400);
     }
   }
 }

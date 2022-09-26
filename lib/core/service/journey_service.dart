@@ -196,8 +196,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           FailType.Journey,
           {'error': "failed to fetch journey pages"},
         );
-        return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
-            "Please try again in some time");
+        return BaseUtil.showNegativeAlert("", response.errorMessage);
       } else {
         if (pages == null || pages.isEmpty)
           pages = response.model;
@@ -217,8 +216,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         FailType.Journey,
         {'error': "failed to fetch journey pages"},
       );
-      return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
-          "Please try again in some time");
+      return BaseUtil.showNegativeAlert("", response.errorMessage);
     } else {
       if (pages == null || pages.isEmpty)
         pages = response.model;
@@ -226,12 +224,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         addMorePages(response.model);
     }
   }
-
-  //Get User journey stats from userservice
-  // getUserJourneyStats() {
-  // userJourneyStats = _userService.userJourneyStats;
-  //   avatarRemoteMlIndex = userJourneyStats.mlIndex;
-  // }
 
   //Update the user Journey status
   updateUserJourneyStats() async {

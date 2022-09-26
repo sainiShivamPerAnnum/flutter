@@ -407,7 +407,9 @@ class AugmontTransactionService extends BaseTransactionService {
       InvestmentType.AUGGOLD99,
     );
 
-    if (!paytmSubscriptionApiResponse.isSuccess()) return null;
+    if (!paytmSubscriptionApiResponse.isSuccess())
+      return BaseUtil.showNegativeAlert(
+          paytmSubscriptionApiResponse.errorMessage, "");
     this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
     this.currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;

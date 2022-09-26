@@ -13,7 +13,7 @@ class JourneyBannersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<JourneyBannersViewModel>(
-      onModelReady: (model) => model.loadOfferList(),
+      onModelReady: (model) {}, //=> model.loadOfferList(),
       builder: (ctx, model, child) {
         return Positioned(
           bottom: SizeConfig.navBarHeight,

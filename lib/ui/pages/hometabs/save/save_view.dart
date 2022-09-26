@@ -423,7 +423,6 @@ class SaveBlogSection extends StatelessWidget {
                                   model.blogPosts[index].slug,
                                   model.blogPosts[index].acf.categories);
                             },
-                            blogSideFlagColor: model.getRandomColor(),
                             title: model.blogPosts[index].acf.categories,
                             description: model.blogPosts[index].title.rendered,
                             imageUrl: model.blogPosts[index].yoastHeadJson,
@@ -466,16 +465,14 @@ class SaveBlogTile extends StatelessWidget {
   final String title;
   final String description;
   final String imageUrl;
-  final Color blogSideFlagColor;
 
-  const SaveBlogTile(
-      {Key key,
-      this.onTap,
-      this.title,
-      this.description,
-      this.imageUrl,
-      this.blogSideFlagColor = Colors.red})
-      : super(key: key);
+  const SaveBlogTile({
+    Key key,
+    this.onTap,
+    this.title,
+    this.description,
+    this.imageUrl,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

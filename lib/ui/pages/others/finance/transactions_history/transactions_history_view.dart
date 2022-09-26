@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_history_vm.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -142,8 +143,7 @@ class SingleTransactionView extends StatelessWidget {
         Expanded(
           child: model.state == ViewState.Busy
               ? Center(
-                  child: SpinKitWave(
-                    color: UiConstants.primaryColor,
+                  child: FullScreenLoader(
                     size: SizeConfig.padding32,
                   ),
                 )
@@ -213,8 +213,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return model.state == ViewState.Busy
         ? Center(
-            child: SpinKitWave(
-              color: UiConstants.primaryColor,
+            child: FullScreenLoader(
               size: SizeConfig.padding32,
             ),
           )

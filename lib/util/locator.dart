@@ -7,7 +7,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
-import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
@@ -147,7 +146,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => HttpModel());
   locator.registerLazySingleton(() => AugmontService());
   locator.registerLazySingleton(() => UserRepository());
-  locator.registerLazySingleton(() => FlcActionsRepo());
   locator.registerLazySingleton(() => WinnersRepository());
   locator.registerLazySingleton(() => TambolaRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
@@ -187,7 +185,7 @@ void setupLocator() {
   locator.registerFactory(() => BankDetailsViewModel());
   locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
-  locator.registerFactory(() => TambolaHomeViewModel());
+  // locator.registerFactory(() => TambolaHomeViewModel());
   locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
   locator.registerFactory(() => RewardLeaderboardViewModel());

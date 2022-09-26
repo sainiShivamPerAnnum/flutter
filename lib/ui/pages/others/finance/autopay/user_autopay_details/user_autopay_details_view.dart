@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/us
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
@@ -75,8 +76,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
               SingleChildScrollView(
                 child: model.state == ViewState.Busy
                     ? Center(
-                        child: SpinKitWave(
-                          color: UiConstants.primaryColor,
+                        child: FullScreenLoader(
                           size: SizeConfig.padding32,
                         ),
                       )

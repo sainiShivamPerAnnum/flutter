@@ -408,7 +408,7 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(
-        "Unable to update user",
+        e.toString() ?? "Unable to update user",
         400,
       );
     }

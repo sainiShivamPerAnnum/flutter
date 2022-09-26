@@ -42,7 +42,8 @@ class PaymentRepository extends BaseRepo {
           e.toString() ?? "Unable to fetch gold details", "Please try again");
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch quantity", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch quantity", 400);
     }
   }
 

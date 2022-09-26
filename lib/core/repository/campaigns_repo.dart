@@ -45,7 +45,8 @@ class CampaignRepo extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch campaings", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch campaigns", 400);
     }
   }
 }

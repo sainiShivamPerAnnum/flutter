@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
@@ -25,7 +26,7 @@ class ReferralDetailsView extends StatelessWidget {
   var _selectedTextStyle =
       TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
 
-  var _unselectedTextStyle = TextStyles.sourceSansSB.body1
+  var _unselectedTextStyle = TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
   List<Shadow> shadowDrawerList = [
@@ -287,9 +288,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   vertical: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  SpinKitWave(
-                                    color: UiConstants.primaryColor,
-                                  ),
+                                  FullScreenLoader(size: SizeConfig.padding40),
                                   SizedBox(height: SizeConfig.padding20),
                                   Text(
                                     "Fetching your referals. Please wait!",

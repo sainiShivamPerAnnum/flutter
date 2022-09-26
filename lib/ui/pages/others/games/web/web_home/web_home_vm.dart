@@ -6,7 +6,6 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/repository/flc_actions_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -44,7 +43,6 @@ class WebHomeViewModel extends BaseViewModel {
   final _lbService = locator<LeaderboardService>();
   final _analyticsService = locator<AnalyticsService>();
   final _prizeService = locator<PrizeService>();
-  final _fclActionRepo = locator<FlcActionsRepo>();
   final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
   final _coinService = locator<UserCoinService>();
@@ -348,8 +346,10 @@ class WebHomeViewModel extends BaseViewModel {
     final response = await _gamesRepo.getGameByCode(gameCode: game);
     if (response.isSuccess()) {
       currentGameModel = response.model;
+      isGameLoading = false;
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
     }
-    isGameLoading = false;
   }
 
   String sortPlayerNumbers(String number) {

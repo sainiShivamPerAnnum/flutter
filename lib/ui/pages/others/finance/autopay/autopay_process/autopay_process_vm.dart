@@ -389,9 +389,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
         });
         _analyticsService.track(
             eventName: AnalyticsEvents.autosaveSetupCompleted);
-      } else {
-        BaseUtil.showNegativeAlert(
-            "Amount update failed", "Please try again in sometime");
       }
     }
   }

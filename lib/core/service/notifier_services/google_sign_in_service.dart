@@ -54,8 +54,9 @@ class GoogleSignInService extends ChangeNotifier {
         _userService.isEmailVerified = true;
         AppState.backButtonDispatcher.didPopRoute();
         return userEmail;
-      }
-      BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");
+      } else
+        BaseUtil.showNegativeAlert(
+            res.errorMessage ?? "Something is wrong!", "Please try again");
       return null;
     } catch (e) {
       _logger.d(e.toString());

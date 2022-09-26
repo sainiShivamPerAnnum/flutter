@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -45,9 +46,7 @@ class GoldenTicketsView extends StatelessWidget {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return Center(
-                    child: SpinKitWave(
-                        color: UiConstants.primaryColor,
-                        size: SizeConfig.padding32),
+                    child: FullScreenLoader(size: SizeConfig.padding32),
                   );
                 default:
                   log("Items: " + snapshot.data.length.toString());

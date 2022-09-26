@@ -198,7 +198,6 @@ class WinViewModel extends BaseViewModel {
 
   init() {
     // setupAutoEventScroll();
-    // getOngoingEvents();
     _pageController = PageController(initialPage: 0);
 
     fetchReferralCode();
@@ -214,7 +213,7 @@ class WinViewModel extends BaseViewModel {
     _isShareAlreadyClicked = true;
     notifyListeners();
 
-    _getterrepo.getGoldenTickets(); //TR
+    // _getterrepo.getGoldenTickets(); //TR
 
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
@@ -715,18 +714,5 @@ class WinViewModel extends BaseViewModel {
     } else if (walletBalnce >= minWithdrawPrizeAmt) {
       return Assets.prizeClaimAssets[8];
     }
-  }
-
-  getOngoingEvents() async {
-    final response = await _campaignRepo.getOngoingEvents();
-    if (response.code == 200) {
-      ongoingEvents = response.model;
-      ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
-      ongoingEvents.forEach((element) {
-        print(element.toString());
-      });
-    } else
-      ongoingEvents = [];
-    setupAutoEventScroll();
   }
 }

@@ -34,7 +34,7 @@ class SubscriptionRepo extends BaseRepo {
       return ApiResponse(model: result, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to get txns", 400);
+      return ApiResponse.withError(e?.toString() ?? "Unable to get txns", 400);
     }
   }
 }

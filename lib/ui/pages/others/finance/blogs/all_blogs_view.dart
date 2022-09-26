@@ -82,8 +82,6 @@ class ViewAllBlogsView extends StatelessWidget {
                                                   right: SizeConfig.padding12,
                                                 ),
                                                 child: SaveBlogTile(
-                                                  blogSideFlagColor:
-                                                      model.getRandomColor(),
                                                   onTap: () {
                                                     model.navigateToBlogWebView(
                                                       model

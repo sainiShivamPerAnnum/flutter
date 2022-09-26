@@ -155,10 +155,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     bool response =
         await _paytmService.pauseSubscription(getResumeDate(pauseValue));
     isPausingInProgress = false;
-    if (!response) {
-      BaseUtil.showNegativeAlert(
-          "Failed to pause Autosave", "Please try again");
-    } else {
+    if (response) {
       trackPause(pauseValue);
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
@@ -363,9 +360,6 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
       // init();
       BaseUtil.showPositiveAlert("Autosave amount update successful",
           "Check Autosave section for more details");
-    } else {
-      BaseUtil.showNegativeAlert(
-          "Amount update failed", "Please try again in sometime");
     }
   }
 

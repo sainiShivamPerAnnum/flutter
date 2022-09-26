@@ -61,7 +61,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
       AppState.screenStack.removeLast();
       AppState.backButtonDispatcher.didPopRoute();
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert("Please try again", res.errorMessage);
+      BaseUtil.showNegativeAlert("", res.errorMessage);
     }
   }
 

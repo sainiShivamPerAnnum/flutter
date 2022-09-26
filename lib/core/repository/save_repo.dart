@@ -29,15 +29,15 @@ class SaveRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse> verifyVPAAddress(String uid) async {
-    try {
-      var response = await APIService.instance
-          .getData(ApiPath.kVerifyVPAAddress(uid), cBaseUrl: _baseUrl);
-      print(response);
-      return ApiResponse(code: 200, model: response['data']);
-    } catch (e) {
-      return ApiResponse(
-          code: 404, errorMessage: 'Couldn\'t verify VPA address', model: {});
-    }
-  }
+  // Future<ApiResponse> verifyVPAAddress(String uid) async {
+  //   try {
+  //     var response = await APIService.instance
+  //         .getData(ApiPath.kVerifyVPAAddress(uid), cBaseUrl: _baseUrl);
+  //     print(response);
+  //     return ApiResponse(code: 200, model: response['data']);
+  //   } catch (e) {
+  //     return ApiResponse(
+  //         code: 404, errorMessage: 'Couldn\'t verify VPA address', model: {});
+  //   }
+  // }
 }

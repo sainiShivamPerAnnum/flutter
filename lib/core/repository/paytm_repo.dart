@@ -130,7 +130,8 @@ class PaytmRepository extends BaseRepo {
           model: _responseModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to validate transaction", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to validate transaction", 400);
     }
   }
 
@@ -160,7 +161,8 @@ class PaytmRepository extends BaseRepo {
           model: _responseModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable create subscription", 400);
+      return ApiResponse.withError(
+          e.toString() ?? "Unable create subscription", 400);
     }
   }
 
@@ -187,31 +189,32 @@ class PaytmRepository extends BaseRepo {
           model: _responseModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to validate VPA", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to validate VPA", 400);
     }
   }
 
-  Future<ApiResponse> fetchTxnResultDetails(String orderId) async {
-    try {
-      final String _uid = userService.baseUser.uid;
-      final _token = await getBearerToken();
-      final _queryParams = {
-        "orderId": orderId,
-      };
-      final response = await APIService.instance.getData(
-        ApiPath.fecthLatestTxnDetails(_uid),
-        token: _token,
-        queryParams: _queryParams,
-        cBaseUrl: _baseUrl,
-      );
+  // Future<ApiResponse> fetchTxnResultDetails(String orderId) async {
+  //   try {
+  //     final String _uid = userService.baseUser.uid;
+  //     final _token = await getBearerToken();
+  //     final _queryParams = {
+  //       "orderId": orderId,
+  //     };
+  //     final response = await APIService.instance.getData(
+  //       ApiPath.fecthLatestTxnDetails(_uid),
+  //       token: _token,
+  //       queryParams: _queryParams,
+  //       cBaseUrl: _baseUrl,
+  //     );
 
-      final _responseModel = TxnResultModel.fromJson(response);
-      return ApiResponse<TxnResultModel>(model: _responseModel, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch txn result", 400);
-    }
-  }
+  //     final _responseModel = TxnResultModel.fromJson(response);
+  //     return ApiResponse<TxnResultModel>(model: _responseModel, code: 200);
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     return ApiResponse.withError("Unable to fetch txn result", 400);
+  //   }
+  // }
 
   Future<ApiResponse<bool>> updateDailyAmount(
       {@required double amount, @required String freq}) async {
@@ -241,7 +244,8 @@ class PaytmRepository extends BaseRepo {
         return ApiResponse(model: false, code: 400);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to update daily amount", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to update daily amount", 400);
     }
   }
 
@@ -268,7 +272,8 @@ class PaytmRepository extends BaseRepo {
         return ApiResponse(model: false, code: 400);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to pause subscription", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to pause subscription", 400);
     }
   }
 
@@ -294,7 +299,8 @@ class PaytmRepository extends BaseRepo {
         return ApiResponse(model: false, code: 400);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to resume subscription", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to resume subscription", 400);
     }
   }
 
@@ -343,7 +349,8 @@ class PaytmRepository extends BaseRepo {
           model: _responseModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to find active subscription", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to find active subscription", 400);
     }
   }
 
@@ -369,7 +376,8 @@ class PaytmRepository extends BaseRepo {
         return ApiResponse.withError("Unable to find active subscription", 400);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to find active subscription", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to find active subscription", 400);
     }
   }
 }

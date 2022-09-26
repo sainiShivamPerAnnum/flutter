@@ -243,7 +243,8 @@ class TopSaverViewModel extends BaseViewModel {
         if (element.type == eventType) event = element;
       });
     }
-
+    BaseUtil.showNegativeAlert(
+        response.errorMessage, "Please try again in sometime");
     _logger.d(event.toString());
     return event;
   }
@@ -255,7 +256,6 @@ class TopSaverViewModel extends BaseViewModel {
     );
     if (response.code == 200) {
       currentParticipants = LeaderboardModel.fromMap(response.model).scoreboard;
-
       getUserRankIfAny();
     } else
       currentParticipants = [];
@@ -264,9 +264,7 @@ class TopSaverViewModel extends BaseViewModel {
 
   fetchPastWinners() async {
     List<WinnersModel> winnerModels = await getPastWinners(
-      event.type == "FPL"
-          ? Constants.GAME_TYPE_FPL
-          : Constants.GAME_TYPE_HIGHEST_SAVER,
+      Constants.GAME_TYPE_HIGHEST_SAVER,
       saverFreq,
     );
     if (winnerModels != null && winnerModels.isNotEmpty) {
@@ -395,8 +393,10 @@ class TopSaverViewModel extends BaseViewModel {
     );
     if (response.code == 200) {
       return response.model;
-    } else
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
       return [];
+    }
   }
 }
 

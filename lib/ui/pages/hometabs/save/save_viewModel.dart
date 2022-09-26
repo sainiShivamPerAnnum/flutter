@@ -149,37 +149,6 @@ class SaveViewModel extends BaseViewModel {
     updateIsChallengesLoading(false);
   }
 
-  // fetchLockedGoldQnt() async {
-  //   await _userService.getUserFundWalletData();
-  //   ApiResponse<double> qunatityApiResponse =
-  //       await _paymentRepo.getWithdrawableAugGoldQuantity();
-  //   if (qunatityApiResponse.code == 200) {
-  //     setWithdrawableQnt = qunatityApiResponse.model;
-  //     if (_withdrawableQnt == null || _withdrawableQnt < 0) {
-  //       setWithdrawableQnt = 0.0;
-  //     }
-  //     if (userFundWallet == null ||
-  //         userFundWallet.augGoldQuantity == null ||
-  //         userFundWallet.augGoldQuantity <= 0.0) {
-  //       setNonWithdrawableQnt = 0.0;
-  //     } else {
-  //       setNonWithdrawableQnt = BaseUtil.digitPrecision(
-  //           math.max(0.0, userFundWallet.augGoldQuantity - _withdrawableQnt),
-  //           4,
-  //           false);
-  //     }
-  //   } else {
-  //     setNonWithdrawableQnt = 0.0;
-  //     setWithdrawableQnt = 0.0;
-  //   }
-  //   refresh();
-  // }
-
-  Color getRandomColor() {
-    math.Random random = math.Random();
-    return randomBlogCardCornerColors[random.nextInt(5)];
-  }
-
   getSaveViewBlogs() async {
     final response = await _saveRepo.getBlogs(5);
     if (response.isSuccess()) {

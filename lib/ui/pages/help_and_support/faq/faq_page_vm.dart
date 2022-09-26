@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
@@ -21,6 +22,8 @@ class FaqPageViewModel extends BaseViewModel {
     final res = await _gettersRepo.getFaqs(type: type);
     if (res.isSuccess()) {
       _list = res.model;
+    } else {
+      BaseUtil.showNegativeAlert("", res.errorMessage);
     }
 
     setState(ViewState.Idle);

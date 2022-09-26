@@ -220,6 +220,7 @@ class GoldSellViewModel extends BaseViewModel {
     } else {
       nonWithdrawableQnt = 0.0;
       withdrawableQnt = 0.0;
+      return BaseUtil.showNegativeAlert("", quantityApiResponse.errorMessage);
     }
     isQntFetching = false;
     refresh();

@@ -195,15 +195,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
-  Future<ApiResponse> validateTxnResult(String orderId) async {
-    try {
-      ApiResponse<TxnResultModel> txnResultReponse =
-          await _paytmRepo.fetchTxnResultDetails(orderId);
-      return txnResultReponse;
-    } catch (e) {
-      return ApiResponse.withError("Couldn't verify txn details", 400);
-    }
-  }
+  // Future<ApiResponse> validateTxnResult(String orderId) async {
+  //   try {
+  //     ApiResponse<TxnResultModel> txnResultReponse =
+  //         await _paytmRepo.fetchTxnResultDetails(orderId);
+  //     return txnResultReponse;
+  //   } catch (e) {
+  //     return ApiResponse.withError("Couldn't verify txn details", 400);
+  //   }
+  // }
   //TRANSACTION METHODS -- END
 
   //SUBSCRIPTION METHODS -- START
@@ -236,7 +236,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           "Subscription Message: ${paytmSubscriptionApiResponse.errorMessage}");
       return PaytmResponse(
           errorCode: ERR_INITIATE_SUBSCRIPTION_FAILED,
-          title: "Unable to create your Autosave account",
+          title: paytmSubscriptionApiResponse.errorMessage ??
+              "Unable to create your Autosave account",
           subtitle: "Please try again after sometime",
           status: false);
     }
@@ -252,7 +253,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       _logger.e(isVpaValidResponse.errorMessage);
       return PaytmResponse(
           errorCode: ERR_VALIDATE_VPA_FAILED,
-          title: "Unable to validate your UPI address",
+          title: isVpaValidResponse.errorMessage ??
+              "Unable to validate your UPI address",
           subtitle: "Please try again",
           status: false);
     }
@@ -326,8 +328,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
-    else
+    else {
+      BaseUtil.showNegativeAlert(response.errorMessage, "");
       return false;
+    }
   }
 
   Future<bool> pauseSubscription(String daysCode) async {
@@ -335,8 +339,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
-    else
+    else {
+      BaseUtil.showNegativeAlert(
+          response.errorMessage ?? "Unable to pause subscription", '');
       return false;
+    }
   }
 
   Future<bool> resumeSubscription() async {
@@ -344,8 +351,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
-    else
+    else {
+      BaseUtil.showNegativeAlert(response.errorMessage, '');
       return false;
+    }
   }
 
   Future<void> getNextDebitDate() async {
@@ -408,6 +417,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
       _logger.d("Transaction Url: $url");
       return url;
+    } else {
+      BaseUtil.showNegativeAlert(
+          processTransactionApiResponse.errorMessage, "");
     }
     return null;
   }

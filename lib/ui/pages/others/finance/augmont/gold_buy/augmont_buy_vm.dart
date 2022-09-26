@@ -84,8 +84,8 @@ class GoldBuyViewModel extends BaseViewModel {
   double _goldBuyAmount = 0;
   double _goldAmountInGrams = 0.0;
   get goldBuyAmount => this._goldBuyAmount;
-  set goldBuyAmount(value) {
-    this._goldBuyAmount = value as double;
+  set goldBuyAmount(double value) {
+    this._goldBuyAmount = value;
     notifyListeners();
   }
 
@@ -239,7 +239,7 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   resetBuyOptions() {
-    goldBuyAmount = chipAmountList[1];
+    goldBuyAmount = chipAmountList[1].toDouble();
     goldAmountController.text = chipAmountList[1].toInt().toString();
     appliedCoupon = null;
     lastTappedChipIndex = 1;
@@ -331,7 +331,7 @@ class GoldBuyViewModel extends BaseViewModel {
         Haptic.vibrate();
         lastTappedChipIndex = index;
         buyFieldNode.unfocus();
-        goldBuyAmount = amt;
+        goldBuyAmount = amt.toDouble();
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
         //checkIfCouponIsStillApplicable();
@@ -384,10 +384,7 @@ class GoldBuyViewModel extends BaseViewModel {
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
-      if (val.length > 2 && val[0] == '0' && val[1] != '.')
-        val = val.substring(1);
-      if (double.tryParse(val.trim()) != null &&
-          double.tryParse(val.trim()) > 50000) {
+      if (double.tryParse(val.trim()) > 50000.0) {
         goldBuyAmount = 50000;
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
@@ -395,6 +392,7 @@ class GoldBuyViewModel extends BaseViewModel {
         buyFieldNode.unfocus();
       } else {
         goldBuyAmount = double.tryParse(val);
+        if (goldBuyAmount < 10.0) showMinCapText = true;
         for (int i = 0; i < chipAmountList.length; i++) {
           if (goldBuyAmount == chipAmountList[i]) {
             lastTappedChipIndex = i;
@@ -569,7 +567,8 @@ class GoldBuyViewModel extends BaseViewModel {
             "Coupon cannot be applied", response?.model?.message);
       }
     } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert("Coupon not applied", response?.errorMessage);
+      BaseUtil.showNegativeAlert("Coupon not applied",
+          response?.errorMessage ?? "Please try another coupon");
     } else {
       BaseUtil.showNegativeAlert(
           "Coupon not applied", "Please try another coupon");

@@ -60,7 +60,7 @@ class ReferralRepo extends BaseRepo {
       );
     } catch (e) {
       logger.e('getUserIdByRefCode $e');
-      return ApiResponse.withError(e.toString(), 400);
+      return ApiResponse.withError(e.toString() ?? 'Failed to get user', 400);
     }
   }
 
