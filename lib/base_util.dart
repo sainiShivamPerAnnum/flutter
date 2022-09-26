@@ -34,7 +34,9 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -244,10 +246,32 @@ class BaseUtil extends ChangeNotifier {
     bool isSkipMl,
     @required InvestmentType investmentType,
   }) {
-    if (_userService.userJourneyStats.mlIndex == 1)
-      return BaseUtil.showNegativeAlert("Complete your profile",
-          "You can make deposits only after completing profile");
-    else
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_userService.userJourneyStats.mlIndex == 1)
+        return BaseUtil.showNegativeAlert("Complete your profile",
+            "You can make deposits only after completing profile");
+      final bool isAugDepositBanned = _userService
+          ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.isBanned;
+      final String augDepositBanNotice = _userService
+          ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.reason;
+      final bool islBoxlDepositBanned = _userService
+          ?.userBootUp?.data?.banMap?.investments?.deposit?.lendBox?.isBanned;
+      final String lBoxDepositBanNotice = _userService
+          ?.userBootUp?.data?.banMap?.investments?.deposit?.lendBox?.reason;
+      if (investmentType == InvestmentType.AUGGOLD99 &&
+          isAugDepositBanned != null &&
+          isAugDepositBanned) {
+        return BaseUtil.showNegativeAlert(
+            augDepositBanNotice ?? "Asset not available at the moment",
+            "Please try after some time");
+      }
+      if (investmentType == InvestmentType.LENDBOXP2P &&
+          islBoxlDepositBanned != null &&
+          islBoxlDepositBanned) {
+        return BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? "Asset not available at the moment",
+            "Please try after some time");
+      }
       return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -265,6 +289,48 @@ class BaseUtil extends ChangeNotifier {
                 skipMl: isSkipMl ?? false,
               ),
       );
+    });
+  }
+
+  openSellModalSheet({@required InvestmentType investmentType}) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_userService.userJourneyStats.mlIndex == 1)
+        return BaseUtil.showNegativeAlert("Complete your profile",
+            "You can make a sale only after completing profile");
+      final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
+          ?.investments?.withdrawal?.augmont?.isBanned;
+      final String augSellBanNotice = _userService
+          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
+      final bool islBoxSellBanned = _userService?.userBootUp?.data?.banMap
+          ?.investments?.withdrawal?.lendBox?.isBanned;
+      final String lBoxSellBanNotice = _userService
+          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
+      if (investmentType == InvestmentType.AUGGOLD99 &&
+          isAugSellLocked != null &&
+          isAugSellLocked) {
+        return BaseUtil.showNegativeAlert(
+            augSellBanNotice ?? "Asset not available at the moment",
+            "Please try after some time");
+      }
+      if (investmentType == InvestmentType.LENDBOXP2P &&
+          islBoxSellBanned != null &&
+          islBoxSellBanned) {
+        return BaseUtil.showNegativeAlert(
+            lBoxSellBanNotice ?? "Asset not available at the moment",
+            "Please try after some time");
+      }
+      return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissable: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: investmentType == InvestmentType.AUGGOLD99
+            ? GoldSellView()
+            : LendboxWithdrawalView(),
+      );
+    });
   }
 
   bool get checkKycMissing {

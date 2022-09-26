@@ -11,7 +11,7 @@ import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
-import 'package:felloapp/core/model/user_bootup_modae.dart';
+import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
@@ -520,14 +520,14 @@ class UserRepository extends BaseRepo {
 
   //Method to fetch the user-boot-up-ee
 
-  Future<UserBootUp> fetchUserBootUpRssponse(
+  Future<UserBootUpDetailsModel> fetchUserBootUpRssponse(
       {@required String userId,
       @required String deviceId,
       @required String platform,
       @required String appVersion,
       @required String lastOpened,
       @required int dayOpenCount}) async {
-    UserBootUp userBootUp;
+    UserBootUpDetailsModel userBootUp;
 
     try {
       Map<String, dynamic> queryParameters = {
@@ -548,7 +548,7 @@ class UserRepository extends BaseRepo {
           queryParams: queryParameters,
           cBaseUrl: _baseUrl);
 
-      userBootUp = UserBootUp.fromJson(respone);
+      userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
       return userBootUp;
     } catch (e) {

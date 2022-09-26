@@ -12,6 +12,10 @@ class Constants {
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER";
   static const String GAME_TYPE_FPL = "FPL";
 
+  //Assets Type
+  static const String ASSET_TYPE_AUGMONT = "AUGGOLD99";
+  static const String ASSET_TYPE_LENDBOX = "LENDBOXP2P";
+
   //HIGHEST SAVER
   static const String HS_DAILY_SAVER = "SAVER_DAILY";
   static const String HS_WEEKLY_SAVER = "SAVER_WEEKLY";

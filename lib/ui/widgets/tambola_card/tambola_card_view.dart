@@ -41,71 +41,75 @@ class TambolaCard extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Transform.translate(
-                offset: Offset(0, -SizeConfig.padding20),
-                child: Column(
-                  children: [
-                    Transform.scale(
-                      scale: 1.2,
-                      child: SvgPicture.asset(
-                        Assets.tambolaCardAsset,
-                        width: SizeConfig.screenWidth * 0.5,
+              Align(
+                alignment: Alignment.center,
+                child: Transform.translate(
+                  offset: Offset(0, -SizeConfig.padding20),
+                  child: Column(
+                    children: [
+                      Transform.scale(
+                        scale: 1.2,
+                        child: SvgPicture.asset(
+                          Assets.tambolaCardAsset,
+                          width: SizeConfig.screenWidth * 0.5,
+                        ),
                       ),
-                    ),
-                    Stack(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.padding2,
-                              top: SizeConfig.padding3),
-                          child: Text(
-                            "Tambola",
-                            style: TextStyles.rajdhaniEB.title50
-                                .colour(UiConstants.kBlogCardRandomColor2),
+                      Stack(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.padding2,
+                                top: SizeConfig.padding3),
+                            child: Text(
+                              "Tambola",
+                              style: TextStyles.rajdhaniEB.title50
+                                  .colour(UiConstants.kBlogCardRandomColor2),
+                            ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.padding1,
-                              top: SizeConfig.padding2),
-                          child: Text(
-                            "Tambola",
-                            style: TextStyles.rajdhaniEB.title50
-                                .colour(UiConstants.kTambolaMidTextColor),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.padding1,
+                                top: SizeConfig.padding2),
+                            child: Text(
+                              "Tambola",
+                              style: TextStyles.rajdhaniEB.title50
+                                  .colour(UiConstants.kTambolaMidTextColor),
+                            ),
                           ),
-                        ),
-                        Container(
-                          child: Text(
-                            "Tambola",
-                            style: TextStyles.rajdhaniEB.title50
-                                .colour(UiConstants.kWinnerPlayerPrimaryColor),
+                          Container(
+                            child: Text(
+                              "Tambola",
+                              style: TextStyles.rajdhaniEB.title50.colour(
+                                  UiConstants.kWinnerPlayerPrimaryColor),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      "Play and Win rewards",
-                      style: TextStyles.sourceSans.body3.bold
-                          .colour(UiConstants.kBlogCardRandomColor2),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                    CurrentPicks(
-                      dailyPicksCount: model.dailyPicksCount,
-                      todaysPicks: model.todaysPicks != null
-                          ? model.todaysPicks
-                          : List.generate(
-                              model.dailyPicksCount ?? 0, (index) => 0),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding8),
-                      child: Text(
-                        "Next draw at 6 PM",
-                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                        ],
                       ),
-                    ),
-                  ],
+                      Text(
+                        "Play and Win rewards",
+                        style: TextStyles.sourceSans.body3.bold
+                            .colour(UiConstants.kBlogCardRandomColor2),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding12,
+                      ),
+                      CurrentPicks(
+                        dailyPicksCount: model.dailyPicksCount,
+                        todaysPicks: model.todaysPicks != null
+                            ? model.todaysPicks
+                            : List.generate(
+                                model.dailyPicksCount ?? 0, (index) => 0),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: SizeConfig.padding8),
+                        child: Text(
+                          "Next draw at 6 PM",
+                          style:
+                              TextStyles.sourceSans.body3.colour(Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Align(

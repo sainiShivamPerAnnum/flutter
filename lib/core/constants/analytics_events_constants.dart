@@ -20,6 +20,7 @@ class AnalyticsEvents {
   static const saveSell = "Selling Gold";
   static const sellGold = "Selling Gold Succcessful";
   static const sellGoldReason = "Selling gold reason";
+  static const selllendboxReason = "Selling felloflo reason";
 
   // play section
   static const playSection = "Play section";

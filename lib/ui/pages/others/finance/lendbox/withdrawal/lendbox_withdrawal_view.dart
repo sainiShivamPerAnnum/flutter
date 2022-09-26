@@ -16,12 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxWithdrawalView extends StatefulWidget {
-  final int amount;
-  final bool skipMl;
-
-  const LendboxWithdrawalView({Key key, this.amount = 250, this.skipMl = false})
-      : super(key: key);
-
   @override
   State<LendboxWithdrawalView> createState() => _LendboxWithdrawalViewState();
 }
@@ -97,9 +91,9 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
                 },
                 child: BaseView<LendboxWithdrawalViewModel>(
                   onModelReady: (model) => model.init(
-                    widget.amount,
-                    widget.skipMl,
-                  ),
+                      // widget.amount,
+                      // widget.skipMl,
+                      ),
                   builder: (ctx, model, child) {
                     return _getView(
                       txnService,
@@ -123,7 +117,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
 
     if (txnService.currentTransactionState == TransactionState.idle) {
       return LendboxWithdrawalInputView(
-        amount: widget.amount,
+        // amount: widget.amount,
         model: model,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {

@@ -60,21 +60,14 @@ class SellingReasonBottomSheet extends StatelessWidget {
                       onChanged: (value) {
                         selectedReasonForSelling = x;
                         _analyticsService.track(
-                            eventName: AnalyticsEvents.sellGoldReason,
+                            eventName:
+                                investmentType == InvestmentType.AUGGOLD99
+                                    ? AnalyticsEvents.sellGoldReason
+                                    : AnalyticsEvents.selllendboxReason,
                             properties: {'reason': selectedReasonForSelling});
                         AppState.backButtonDispatcher.didPopRoute();
-                        BaseUtil.openModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness8),
-                          enableDrag: false,
-                          addToScreenStack: true,
-                          isBarrierDismissable: false,
-                          content: investmentType == InvestmentType.AUGGOLD99
-                              ? GoldSellView()
-                              : LendboxWithdrawalView(),
-                        );
+                        BaseUtil()
+                            .openSellModalSheet(investmentType: investmentType);
                       },
                       title: Text(
                         x,

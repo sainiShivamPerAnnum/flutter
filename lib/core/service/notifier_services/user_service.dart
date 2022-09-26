@@ -7,7 +7,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
-import 'package:felloapp/core/model/user_bootup_modae.dart';
+import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -24,6 +24,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -60,6 +61,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserFundWallet _userFundWallet;
   UserJourneyStatsModel _userJourneyStats;
   UserAugmontDetail _userAugmontDetails;
+  UserBootUpDetailsModel userBootUp;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
@@ -215,9 +217,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return false;
   }
 
-  Future<UserBootUp> userBootUpEE() async {
-    UserBootUp _userBootUp;
-
+  Future<void> userBootUpEE() async {
     if (FirebaseAuth.instance.currentUser != null) {
       setLastOpened();
       dayOPenCount();
@@ -237,9 +237,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion = packageInfo.buildNumber;
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      lastOpened = prefs.getString(Constants.LAST_OPENED) ?? "";
-      dayOpenCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+      lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED) ?? "";
+      dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
 
       final response_temp = await _userRepo.fetchUserBootUpRssponse(
           userId: userId,
@@ -249,13 +248,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           lastOpened: lastOpened,
           dayOpenCount: dayOpenCount);
 
-      _userBootUp = response_temp;
-      return _userBootUp;
+      userBootUp = response_temp;
     } else {
       //No user logged in
+      _logger.d("No user logged in, exiting user boot up details");
     }
-
-    return null;
   }
 
   void dayOPenCount() async {

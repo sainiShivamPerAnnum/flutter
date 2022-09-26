@@ -10,9 +10,12 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -32,6 +35,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -49,6 +53,8 @@ class RootViewModel extends BaseViewModel {
   final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final _tambolaService = locator<TambolaService>();
   int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
@@ -108,6 +114,7 @@ class RootViewModel extends BaseViewModel {
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
     initialize();
+    verifyUserBootupDetails();
   }
 
   onDispose() {
@@ -486,5 +493,106 @@ class RootViewModel extends BaseViewModel {
       _logger.e(e);
       return false;
     }
+  }
+
+  Future<void> verifyUserBootupDetails() async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_userService.baseUser != null && _userService.userBootUp != null) {
+        //1.check if the account is blocked
+        if (_userService.userBootUp.data != null &&
+            _userService.userBootUp.data.isBlocked != null &&
+            _userService.userBootUp.data.isBlocked == true) {
+          AppState.isUpdateScreen = true;
+          AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: BlockedUserPageConfig,
+          );
+          return;
+        }
+        // //2.Checking for forced App Update
+        if (_userService.userBootUp.data.isAppForcedUpdateRequired != null &&
+            _userService.userBootUp.data.isAppForcedUpdateRequired == true) {
+          AppState.isUpdateScreen = true;
+          AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.replaceAll, page: UpdateRequiredConfig);
+          return;
+        }
+
+        //3. Sign out the user automatically
+        if (_userService.userBootUp.data.signOutUser != null &&
+            _userService.userBootUp.data.signOutUser == true) {
+          Haptic.vibrate();
+
+          _userService.signOut(() async {
+            _analyticsService.track(eventName: AnalyticsEvents.signOut);
+            _analyticsService.signOut();
+            await _userRepo.removeUserFCM(_userService.baseUser.uid);
+          }).then((flag) async {
+            if (flag) {
+              //log.debug('Sign out process complete');
+              await BaseUtil().signOut();
+              // _journeyService.dump();
+              _tambolaService.signOut();
+              _analyticsService.signOut();
+              _paytmService.signout();
+              AppState.backButtonDispatcher.didPopRoute();
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.replaceAll, page: SplashPageConfig);
+              BaseUtil.showPositiveAlert(
+                'Signed out automatically.',
+                'Seems like some internal issues. Please sign in again.',
+              );
+            } else {
+              BaseUtil.showNegativeAlert(
+                'Sign out failed',
+                'Couldn\'t signout. Please try again',
+              );
+              //log.error('Sign out process failed');
+            }
+          });
+        }
+
+        //4. App update present (Not forced)
+        if (_userService.userBootUp.data.isAppUpdateRequired != null) {
+          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE,
+              _userService.userBootUp.data.isAppUpdateRequired);
+        } else {
+          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
+        }
+
+        //5. Clear all the caches
+        if (_userService.userBootUp.data.cache.keys != null) {
+          for (String id in _userService.userBootUp.data.cache.keys) {
+            CacheService().invalidateByKey(id);
+          }
+        }
+
+        //6. Notice
+        if (_userService.userBootUp.data.notice != null) {
+          if (_userService.userBootUp.data.notice.message != null &&
+              _userService.userBootUp.data.notice.message != "") {
+            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
+            PreferenceHelper.setString(Constants.MSG_NOTICE,
+                _userService.userBootUp.data.notice.message);
+          } else {
+            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
+          }
+
+          if (_userService.userBootUp.data.notice.url != null &&
+              _userService.userBootUp.data.notice.url != "") {
+            try {
+              if (Platform.isIOS)
+                BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
+              else if (Platform.isAndroid)
+                BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
+            } catch (e) {
+              _logger.d(e.toString());
+              BaseUtil.showNegativeAlert(
+                  "Something went wrong", "Please try again");
+            }
+          } else {}
+        }
+      }
+    });
   }
 }

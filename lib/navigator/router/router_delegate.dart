@@ -739,7 +739,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'augDetails':
-        pageConfiguration = AugmontGoldDetailsPageConfig;
+        pageConfiguration = SaveAssetsViewConfig;
         break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
@@ -747,43 +747,47 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'kycVerify':
         pageConfiguration = KycDetailsPageConfig;
         break;
+      case 'augBuy':
+        BaseUtil()
+            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        break;
       case 'augSell':
-        pageConfiguration = AugmontGoldSellPageConfig;
+        BaseUtil().openSellModalSheet(investmentType: InvestmentType.AUGGOLD99);
         break;
-
-      case 'transactions':
-        pageConfiguration = TransactionsHistoryPageConfig;
+      case 'lboxBuy':
+        BaseUtil()
+            .openRechargeModalSheet(investmentType: InvestmentType.LENDBOXP2P);
         break;
-      case 'txns':
-        pageConfiguration = TransactionsHistoryPageConfig;
+      case 'lboxSell':
+        BaseUtil()
+            .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);
         break;
-      case 'trans':
-        pageConfiguration = TransactionsHistoryPageConfig;
+      case 'augTxns':
+        openTransactions(InvestmentType.AUGGOLD99);
         break;
-      case 'referral':
+      case 'lboxTxns':
+        openTransactions(InvestmentType.LENDBOXP2P);
+        break;
+      case 'referrals':
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
         pageConfiguration = THomePageConfig;
         break;
-      case 'tambolaGame':
-        _baseUtil.openTambolaGame();
-        break;
+
       case 'myWinnings':
         pageConfiguration = MyWinnigsPageConfig;
         break;
-      case 'faq':
-        pageConfiguration = FaqPageConfig;
+
+      case 'bankDetails':
+        pageConfiguration = BankDetailsPageConfig;
         break;
-      case 'editAugBankDetails':
-        pageConfiguration = EditAugBankDetailsPageConfig;
-        break;
-      case 'chatSupport':
-        pageConfiguration = ChatSupportPageConfig;
-        break;
-      case 'claimUsername':
-        pageConfiguration = ClaimUsernamePageConfig;
-        break;
+      // case 'chatSupport':
+      //   pageConfiguration = ChatSupportPageConfig;
+      //   break;
+      // case 'claimUsername':
+      //   pageConfiguration = ClaimUsernamePageConfig;
+      //   break;
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
@@ -820,22 +824,22 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'poolHome':
         openWebGame(Constants.GAME_TYPE_POOLCLUB);
         break;
-      case 'milestones':
-        pageConfiguration = GoldenMilestonesViewPageConfig;
-        break;
+      // case 'milestones':
+      //   pageConfiguration = GoldenMilestonesViewPageConfig;
+      //   break;
 
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
         break;
-      case 'goldDetails':
-        pageConfiguration = SaveAssetsViewConfig;
-        break;
+      // case 'goldDetails':
+      //   pageConfiguration = SaveAssetsViewConfig;
+      //   break;
       case 'autosaveDetails':
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
-      case 'autosaveProcess':
-        pageConfiguration = AutosaveProcessViewPageConfig;
-        break;
+      // case 'autosaveProcess':
+      //   pageConfiguration = AutosaveProcessViewPageConfig;
+      //   break;
       case 'UserAutosaveDetails':
         pageConfiguration = UserAutosaveDetailsViewPageConfig;
         break;
@@ -845,29 +849,29 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'AppWalkthrough':
         openAppWalkthrough();
         break;
-      case 'AutosaveWalkthrough':
-        pageConfiguration = AutosaveWalkThroughConfig;
-        break;
-      case 'completeProfile':
-        pageConfiguration = CompleteProfileViewPageConfig;
-        break;
-      case 'upiDetails':
-        pageConfiguration = UserUpiDetailsViewPageConfig;
-        break;
-      case 'goldBuyModal':
-        BaseUtil()
-            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
-        break;
-      case 'floBuyModal':
-        BaseUtil()
-            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
-        break;
-      case 'goldDetailsView':
-        pageConfiguration = SaveAssetsViewConfig;
-        break;
-      case 'floDetailsView':
-        pageConfiguration = LendboxDetailsPageConfig;
-        break;
+      // case 'AutosaveWalkthrough':
+      //   pageConfiguration = AutosaveWalkThroughConfig;
+      //   break;
+      // case 'completeProfile':
+      //   pageConfiguration = CompleteProfileViewPageConfig;
+      //   break;
+      // case 'upiDetails':
+      //   pageConfiguration = UserUpiDetailsViewPageConfig;
+      //   break;
+      // case 'goldBuyModal':
+      //   BaseUtil()
+      //       .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+      //   break;
+      // case 'floBuyModal':
+      //   BaseUtil()
+      //       .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+      //   break;
+      // case 'goldDetailsView':
+      //   pageConfiguration = SaveAssetsViewConfig;
+      //   break;
+      // case 'floDetailsView':
+      //   pageConfiguration = LendboxDetailsPageConfig;
+      //   break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -896,6 +900,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       state: PageState.addWidget,
       widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
       page: OnBoardingViewPageConfig,
+    );
+  }
+
+  openTransactions(InvestmentType investmentType) {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      widget: TransactionsHistory(investmentType: investmentType),
+      page: TransactionsHistoryPageConfig,
     );
   }
 

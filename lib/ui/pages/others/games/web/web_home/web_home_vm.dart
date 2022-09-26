@@ -192,8 +192,11 @@ class WebHomeViewModel extends BaseViewModel {
   // }
 
   Future<bool> setupGame() async {
-    await getBearerToken();
-    return _setupCurrentGame();
+    if (checkIfUserIsBannedFromThisGame()) {
+      await getBearerToken();
+      return _setupCurrentGame();
+    }
+    return false;
   }
 
   Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
@@ -203,6 +206,44 @@ class WebHomeViewModel extends BaseViewModel {
   fetchUsersCurrentCoins() {
     _currentCoinValue = _coinService.flcBalance;
     notifyListeners();
+  }
+
+  bool checkIfUserIsBannedFromThisGame() {
+    bool isUserBannedForThisGame;
+    String userBannedNotice;
+    switch (currentGame) {
+      case Constants.GAME_TYPE_CRICKET:
+        isUserBannedForThisGame =
+            _userService.userBootUp.data.banMap.games.cricketMap.isBanned;
+        userBannedNotice =
+            _userService.userBootUp.data.banMap.games.cricketMap.reason;
+        break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        isUserBannedForThisGame =
+            _userService.userBootUp.data.banMap.games.candyFiestaMap.isBanned;
+        userBannedNotice =
+            _userService.userBootUp.data.banMap.games.candyFiestaMap.reason;
+        break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        isUserBannedForThisGame =
+            _userService.userBootUp.data.banMap.games.footballMap.isBanned;
+        userBannedNotice =
+            _userService.userBootUp.data.banMap.games.footballMap.reason;
+        break;
+      case Constants.GAME_TYPE_POOLCLUB:
+        isUserBannedForThisGame =
+            _userService.userBootUp.data.banMap.games.poolClubMap.isBanned;
+        userBannedNotice =
+            _userService.userBootUp.data.banMap.games.poolClubMap.reason;
+        break;
+    }
+    if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
+      BaseUtil.showNegativeAlert(
+          userBannedNotice ?? "Game locked for security reasons",
+          "Please contact us for more details");
+      return false;
+    }
+    return true;
   }
 
   launchGame() {

@@ -7,7 +7,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/user_bootup_modae.dart';
+import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -54,8 +54,6 @@ class LauncherViewModel extends BaseViewModel {
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
   final navigator = AppState.delegate.appState;
-
-  UserBootUp _userBootUp;
 
   AnimationController loopOutlottieAnimationController;
   int loopLottieDuration = 2500;
@@ -106,7 +104,7 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   fetchUserBootUpDetails() async {
-    _userBootUp = await _userService.userBootUpEE();
+    await _userService.userBootUpEE();
   }
 
   exit() {
@@ -122,7 +120,7 @@ class LauncherViewModel extends BaseViewModel {
     try {
       await CacheService.initialize();
       await userService.init();
-      await fetchUserBootUpDetails();
+      fetchUserBootUpDetails();
 
       await BaseRemoteConfig.init();
 
@@ -209,107 +207,6 @@ class LauncherViewModel extends BaseViewModel {
       );
     }
 
-    if (FirebaseAuth.instance.currentUser != null && _userBootUp != null) {
-      //1.check if the account is blocked
-      if (_userBootUp.data != null &&
-          _userBootUp.data.isBlocked != null &&
-          _userBootUp.data.isBlocked == true) {
-        AppState.isUpdateScreen = true;
-        navigator.currentAction = PageAction(
-          state: PageState.replaceAll,
-          page: BlockedUserPageConfig,
-        );
-        return;
-      }
-      // //2.Checking for forced App Update
-      if (_userBootUp.data.isAppForcedUpdateRequired != null &&
-          _userBootUp.data.isAppForcedUpdateRequired == true) {
-        AppState.isUpdateScreen = true;
-        navigator.currentAction =
-            PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-        return;
-      }
-
-      //3. Sign out the user automatically
-      if (_userBootUp.data.signOutUser != null &&
-          _userBootUp.data.signOutUser == true) {
-        Haptic.vibrate();
-
-        _userService.signOut(() async {
-          _analyticsService.track(eventName: AnalyticsEvents.signOut);
-          _analyticsService.signOut();
-          await _userRepo.removeUserFCM(_userService.baseUser.uid);
-        }).then((flag) async {
-          if (flag) {
-            //log.debug('Sign out process complete');
-            await _baseUtil.signOut();
-            _journeyService.dump();
-            _tambolaService.signOut();
-            _analyticsService.signOut();
-            _paytmService.signout();
-            AppState.backButtonDispatcher.didPopRoute();
-            AppState.delegate.appState.currentAction =
-                PageAction(state: PageState.replaceAll, page: SplashPageConfig);
-            BaseUtil.showPositiveAlert(
-              'Signed out automatically.',
-              'Seems like some internal issues. Please sign in again.',
-            );
-          } else {
-            BaseUtil.showNegativeAlert(
-              'Sign out failed',
-              'Couldn\'t signout. Please try again',
-            );
-            //log.error('Sign out process failed');
-          }
-        });
-      }
-
-      //4. App update present (Not forced)
-      if (_userBootUp.data.isAppUpdateRequired != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool(Constants.IS_APP_UPDATE_AVILABLE,
-            _userBootUp.data.isAppUpdateRequired);
-      } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
-      }
-
-      //5. Clear all the caches
-      if (_userBootUp.data.cache.keys != null) {
-        for (String id in _userBootUp.data.cache.keys) {
-          CacheService().invalidateByKey(id);
-        }
-      }
-
-      //6. Notice
-      if (_userBootUp.data.notice != null) {
-        if (_userBootUp.data.notice.message != null &&
-            _userBootUp.data.notice.message != "") {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
-          prefs.setString(
-              Constants.MSG_NOTICE, _userBootUp.data.notice.message);
-        } else {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
-        }
-
-        if (_userBootUp.data.notice.url != null &&
-            _userBootUp.data.notice.url != "") {
-          try {
-            if (Platform.isIOS)
-              BaseUtil.launchUrl(_userBootUp.data.notice.url);
-            else if (Platform.isAndroid)
-              BaseUtil.launchUrl(_userBootUp.data.notice.url);
-          } catch (e) {
-            Log(e.toString());
-            BaseUtil.showNegativeAlert(
-                "Something went wrong", "Please try again");
-          }
-        } else {}
-      }
-    }
-
     ///check for breaking update (TESTING)
     // if (await checkBreakingUpdateTest()) {
     //   AppState.isUpdateScreen = true;
@@ -339,7 +236,7 @@ class LauncherViewModel extends BaseViewModel {
       // });
     }
 
-    ///Ceck if app needs to be open securely
+    ///Check if app needs to be open securely
     ///NOTE: CHECK APP LOCK
     bool _unlocked = false;
     // if (userService.baseUser.userPreferences != null &&

@@ -224,9 +224,9 @@ class SaveViewModel extends BaseViewModel {
   navigateToCompleteKYC() {
     Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: KycDetailsPageConfig,
-        widget: KYCDetailsView());
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
   }
 
   navigateToVerifyVPA() {

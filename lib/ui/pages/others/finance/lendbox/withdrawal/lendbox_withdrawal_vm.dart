@@ -23,12 +23,12 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final _paymentRepo = locator<PaymentRepository>();
   final _userService = locator<UserService>();
 
-  double incomingAmount;
+  // double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication upiApplication;
   String selectedUpiApplicationName;
   int lastTappedChipIndex = 1;
-  bool _skipMl = false;
+  // bool _skipMl = false;
   final double minAmount = 1;
 
   FocusNode fieldNode = FocusNode();
@@ -40,20 +40,20 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   TextEditingController amountController;
   TextEditingController vpaController;
 
-  bool get skipMl => this._skipMl;
+  // bool get skipMl => this._skipMl;
 
-  set skipMl(bool value) {
-    this._skipMl = value;
-  }
+  // set skipMl(bool value) {
+  //   this._skipMl = value;
+  // }
 
   double get processingQty =>
       _userService.userFundWallet?.wLbProcessingQty ?? 0;
   double get withdrawableQty => _userService.userFundWallet?.wLbBalance ?? 0;
 
-  init(int amount, bool isSkipMilestone) async {
+  init() async {
     setState(ViewState.Busy);
-    skipMl = isSkipMilestone;
-    incomingAmount = amount?.toDouble() ?? 0;
+    // skipMl = isSkipMilestone;
+    // incomingAmount = amount?.toDouble() ?? 0;
     amountController = TextEditingController(
       text: "5",
     );

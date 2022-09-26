@@ -90,6 +90,12 @@ class JourneyAppBar extends StatelessWidget {
                                 },
                               ),
                             ),
+                            // IconButton(
+                            //     onPressed: () {
+                            //       AppState.delegate
+                            //           .parseRoute(Uri.parse('/augSell'));
+                            //     },
+                            //     icon: Icon(Icons.navigation)),
                             FelloCoinBar(),
                             NotificationButton()
                           ],
