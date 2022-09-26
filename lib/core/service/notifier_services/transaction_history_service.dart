@@ -177,9 +177,9 @@ class TransactionHistoryService
 
   String getFormattedTxnAmount(double amount) {
     if (amount > 0)
-      return "₹ ${amount.abs().toStringAsFixed(2)}";
+      return "₹${amount == amount.toInt() ? amount.toInt() : amount.abs().toStringAsFixed(2)}";
     else
-      return "- ₹ ${amount.abs().toStringAsFixed(2)}";
+      return "- ₹${amount == amount.toInt() ? amount.toInt() : amount.abs().toStringAsFixed(2)}";
   }
 
   String getFormattedTime(Timestamp tTime) {

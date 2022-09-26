@@ -139,7 +139,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   double _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight * 0.9;
+      return SizeConfig.screenHeight * 0.8;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return SizeConfig.screenHeight * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.success) {

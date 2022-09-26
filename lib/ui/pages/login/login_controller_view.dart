@@ -5,7 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -150,7 +150,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                 size: SizeConfig.padding20,
                               ))
                           : Text(
-                              model.currentPage == LoginUserNameView.index
+                              model.currentPage == LoginNameInputView.index
                                   ? 'FINISH'
                                   : 'NEXT',
                               style: TextStyles.rajdhaniB.body1
@@ -221,7 +221,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     //       child: model.state == ViewState.Idle
                     //           ? Text(
                     //               model.currentPage ==
-                    //                       LoginUserNameView.index
+                    //                       LoginNameInputView.index
                     //                   ? 'FINISH'
                     //                   : 'NEXT',
                     //               style: TextStyles.rajdhaniB.title5,

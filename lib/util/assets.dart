@@ -101,9 +101,8 @@ class Assets {
   static final String repeat = "assets/vectors/icons/repeat.svg";
 
   // REFERRAL
-  static final String referNearn = "images/share-card.png";
-  static final String google = "assets/svg/icon/google.svg";
-  static final String whatsapp = "assets/svg/icon/whatsapp.svg";
+  static final String google = "assets/vectors/icons/google.svg";
+  static final String whatsapp = "assets/vectors/icons/whatsapp.svg";
   static final String paperClip = "assets/vectors/icons/paperclip.svg";
 
   //DIALOGS
@@ -174,6 +173,12 @@ class Assets {
 
   static final String iPadPNG = "images/ipad.png";
 
+  //How to play aseets (Tambola Screen)
+  static const String howToPlayAsset1Tambola = "assets/svg/tambola_inst_1.svg";
+  static const String howToPlayAsset2Tambola = "assets/svg/tambola_inst_2.svg";
+
+  static const String howToPlayAsset3Tambola = "assets/svg/tambola_inst_3.svg";
+
   //Notificatiion alert screen
   static final String goldenTicketAsset =
       "assets/vectors/icons/golden_ticket.svg";
@@ -193,6 +198,11 @@ class Assets {
   static final String gt_cashback = "assets/svg/gt_cashback.svg";
   static final String gt_token_cashback = "assets/svg/gt_cashback_token.svg";
   static final String gt_none = "assets/svg/gt_none.svg";
+
+  static final String tambolaCardAsset = "assets/svg/tambola_card_asset.svg";
+  static final String noReferalAsset = "assets/svg/no_referal_asset.svg";
+  static final String noTransactionAsset = "assets/svg/no_transactions.svg";
+  static final String noWinnersAsset = "assets/svg/no_winners_asset.svg";
 
   //Prize claim assets
   static final List<String> prizeClaimAssets = [

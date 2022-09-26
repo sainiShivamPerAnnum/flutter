@@ -112,7 +112,7 @@ class GoldSellSuccessView extends StatelessWidget {
                         children: [
                           Text("Sold", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${AugmontTransactionService.currentTxnGms} gms",
+                          Text("${augTxnservice.currentTxnGms} gms",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],

@@ -103,6 +103,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                       validator: (val) {
                         return null;
                       },
+                      maxLength: widget.maxAmount.toString().length,
                       keyboardType: TextInputType.numberWithOptions(
                         signed: true,
                         decimal: true,
@@ -111,15 +112,6 @@ class _AmountInputViewState extends State<AmountInputView> {
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       onChanged: (String val) {
-                        final amt = int.tryParse(val) ?? 0;
-                        if (amt > widget.maxAmount) {
-                          widget.amountController.text =
-                              widget.maxAmount.toString();
-                          widget.amountController.selection =
-                              TextSelection.collapsed(
-                                  offset: widget.amountController.text.length);
-                        }
-
                         setState(() {
                           this.updateFieldWidth();
                         });
@@ -131,6 +123,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                         // isCollapsed: true,
                         disabledBorder: InputBorder.none,
                         isDense: true,
+                        counter: Offstage(),
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyles.rajdhaniB.title68.colour(

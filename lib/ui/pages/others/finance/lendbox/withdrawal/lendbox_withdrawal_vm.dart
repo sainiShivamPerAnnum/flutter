@@ -29,6 +29,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   String selectedUpiApplicationName;
   int lastTappedChipIndex = 1;
   bool _skipMl = false;
+  final double minAmount = 1;
 
   FocusNode fieldNode = FocusNode();
   String buyNotice;
@@ -54,7 +55,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
     amountController = TextEditingController(
-      text: "1",
+      text: "5",
     );
     setState(ViewState.Idle);
   }
@@ -109,6 +110,22 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
 
     if (amount == 0) {
       BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
+      return 0;
+    }
+
+    if (amount < minAmount) {
+      BaseUtil.showNegativeAlert(
+        'Min amount is ${this.minAmount}',
+        'Please enter an amount grater than ${this.minAmount}',
+      );
+      return 0;
+    }
+
+    if (amount > withdrawableQty) {
+      BaseUtil.showNegativeAlert(
+        'Max amount is ${this.withdrawableQty}',
+        'Please enter an amount lower than ${this.withdrawableQty}',
+      );
       return 0;
     }
 

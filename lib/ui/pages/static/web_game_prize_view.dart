@@ -39,6 +39,7 @@ class PrizesView extends StatelessWidget {
         return true;
       },
       child: ListView.builder(
+        shrinkWrap: true,
         itemCount: model.prizesA.length + 1,
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
@@ -51,50 +52,48 @@ class PrizesView extends StatelessWidget {
                   ),
               ],
             );
-          else {
-            i--;
-            return Container(
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.all(SizeConfig.padding12),
-              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                color: UiConstants.primaryLight.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: SizeConfig.padding24,
-                      backgroundColor:
-                          UiConstants.primaryColor.withOpacity(0.3),
-                      child: leading[i]),
-                  SizedBox(width: SizeConfig.padding12),
-                  Expanded(
-                    child: Text(
-                      model.prizesA[i].displayName ?? "Prize ${i + 1}",
-                      style: TextStyles.body3.bold,
+
+          i--;
+          return Container(
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.all(SizeConfig.padding12),
+            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+            decoration: BoxDecoration(
+              color: UiConstants.primaryLight.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                    radius: SizeConfig.padding24,
+                    backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
+                    child: leading[i]),
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  child: Text(
+                    model.prizesA[i].displayName ?? "Prize ${i + 1}",
+                    style: TextStyles.body3.bold,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PrizeChip(
+                      color: UiConstants.tertiarySolid,
+                      svg: Assets.token,
+                      text: "${model.prizesA[i].flc}",
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      PrizeChip(
-                        color: UiConstants.tertiarySolid,
-                        svg: Assets.token,
-                        text: "${model.prizesA[i].flc}",
-                      ),
-                      SizedBox(width: SizeConfig.padding16),
-                      PrizeChip(
-                        color: UiConstants.primaryColor,
-                        png: Assets.moneyIcon,
-                        text: "₹ ${model.prizesA[i].amt}",
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }
+                    SizedBox(width: SizeConfig.padding16),
+                    PrizeChip(
+                      color: UiConstants.primaryColor,
+                      png: Assets.moneyIcon,
+                      text: "₹ ${model.prizesA[i].amt}",
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
         },
       ),
     );

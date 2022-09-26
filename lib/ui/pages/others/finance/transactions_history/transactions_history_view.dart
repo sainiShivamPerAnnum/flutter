@@ -5,7 +5,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
+import 'package:felloapp/ui/modals_sheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -151,7 +151,19 @@ class SingleTransactionView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: (model.filteredList.length == 0
-                          ? NoTransactionsContent()
+                          ? Column(
+                              children: [
+                                SizedBox(height: SizeConfig.padding54),
+                                SvgPicture.asset(Assets.noTransactionAsset),
+                                SizedBox(height: SizeConfig.padding16),
+                                Text(
+                                  "No transactions yet",
+                                  style: TextStyles.sourceSans.body2
+                                      .colour(Colors.white),
+                                ),
+                                SizedBox(height: SizeConfig.padding32),
+                              ],
+                            )
                           : ListView(
                               physics: BouncingScrollPhysics(),
                               padding: EdgeInsets.symmetric(
@@ -160,7 +172,6 @@ class SingleTransactionView extends StatelessWidget {
                               children: List.generate(
                                 model.filteredList.length,
                                 (index) => TransactionTile(
-                                  model: model,
                                   txn: model.filteredList[index],
                                 ),
                               ),
@@ -211,7 +222,19 @@ class SIPTransactionHistoryView extends StatelessWidget {
             children: [
               Expanded(
                   child: (model.filteredSIPList.length == 0)
-                      ? Center(child: NoTransactionsContent())
+                      ? Column(
+                          children: [
+                            SizedBox(height: SizeConfig.padding54),
+                            SvgPicture.asset(Assets.noTransactionAsset),
+                            SizedBox(height: SizeConfig.padding16),
+                            Text(
+                              "No transactions yet",
+                              style: TextStyles.sourceSans.body2
+                                  .colour(Colors.white),
+                            ),
+                            SizedBox(height: SizeConfig.padding32),
+                          ],
+                        )
                       : ListView(
                           physics: BouncingScrollPhysics(),
                           padding: EdgeInsets.symmetric(
@@ -280,43 +303,77 @@ class NoTransactionsContent extends StatelessWidget {
 }
 
 class TransactionTile extends StatelessWidget {
-  final TransactionsHistoryViewModel model;
+  // final TransactionsHistoryViewModel model;
   final UserTransaction txn;
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final txnHistoryservice = locator<TransactionHistoryService>();
   TransactionTile({
-    @required this.model,
+    // @required this.model,
     this.txn,
   });
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding26),
       onTap: () {
         Haptic.vibrate();
         BaseUtil.openModalBottomSheet(
-            isScrollControlled: true,
-            enableDrag: true,
-            addToScreenStack: true,
-            isBarrierDismissable: true,
-            backgroundColor: Colors.transparent,
-            content: TransactionDetailsBottomSheet(
-              transaction: txn,
-            ));
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          content: TransactionDetailsBottomSheet(
+            transaction: txn,
+          ),
+        );
       },
       dense: true,
       title: Text(
-          _txnHistoryService.getTileSubtitle(
+          txnHistoryservice.getTileSubtitle(
             txn.type.toString(),
           ),
-          style: TextStyles.sourceSans.body3),
+          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
       subtitle: Text(
-        _txnHistoryService.getFormattedDate(txn.timestamp),
+        txnHistoryservice.getFormattedDate(txn.timestamp),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
-      trailing: Text(
-        _txnHistoryService.getFormattedTxnAmount(txn.amount),
-        style: TextStyles.sourceSansM.body3,
+      trailing: Wrap(
+        children: [
+          TransactionStatusChip(
+            color: txnHistoryservice.getTileColor(txn.tranStatus),
+            status: txn.tranStatus,
+          ),
+          Text(txnHistoryservice.getFormattedTxnAmount(txn.amount),
+              style: TextStyles.sourceSansSB.body2),
+        ],
       ),
     );
+  }
+}
+
+class TransactionStatusChip extends StatelessWidget {
+  final Color color;
+  final String status;
+
+  TransactionStatusChip({this.color = Colors.white, this.status = "NA"});
+
+  @override
+  Widget build(BuildContext context) {
+    return status != UserTransaction.TRAN_STATUS_COMPLETE
+        ? Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: color.withOpacity(0.2)),
+            child: Text(
+              status,
+              style: TextStyles.sourceSans.body5.colour(color),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
+              vertical: SizeConfig.padding6,
+            ),
+            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+          )
+        : SizedBox();
   }
 }
 

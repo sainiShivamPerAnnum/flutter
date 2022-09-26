@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.da
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -42,24 +43,7 @@ class Play extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    BaseUtil().openTambolaGame();
-                  },
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth * 0.5,
-                    decoration: BoxDecoration(
-                      color: UiConstants.darkPrimaryColor,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    alignment: Alignment.center,
-                    child:
-                        Text("TAMBOLA", style: TextStyles.rajdhaniEB.title50),
-                  ),
-                ),
+                TambolaCard(),
                 TrendingGamesSection(model: model),
                 GOWCard(
                   model: model,
@@ -68,6 +52,7 @@ class Play extends StatelessWidget {
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
+                  height: SizeConfig.screenWidth * 0.3,
                 ),
                 MoreGamesSection(model: model),
                 SafetyWidget(),

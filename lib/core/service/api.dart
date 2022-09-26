@@ -1,7 +1,9 @@
 import 'dart:developer' as dev;
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/user_bootup_modae.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';

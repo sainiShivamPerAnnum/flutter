@@ -100,8 +100,8 @@ class TambolaBoard {
         tambolaBoard.isEmpty ||
         calledDigits == null ||
         calledDigits.isEmpty) return 5;
-    int digitsLeftToBeAnnounced =
-        _tambolaService.dailyPicksCount * 7 - calledDigits.length;
+    // int digitsLeftToBeAnnounced =
+    //     _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     int rowCalledCount = 0;
     for (int i = 0; i < boardLength; i++) {
       if (tambolaBoard[rowIndex][i] != 0 &&
@@ -155,8 +155,8 @@ class TambolaBoard {
         calledDigits == null ||
         calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
-    int digitsLeftToBeAnnounced =
-        _tambolaService.dailyPicksCount * 7 - calledDigits.length;
+    // int digitsLeftToBeAnnounced =
+    //     _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         if (tambolaBoard[i][j] != 0) {

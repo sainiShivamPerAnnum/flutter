@@ -61,7 +61,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           isEnabled: !model.inProgress,
           maxAmount: model.withdrawableQty,
           maxAmountMsg: "You can't withdraw more than available balance",
-          minAmount: 0,
+          minAmount: model.minAmount,
           minAmountMsg: "how are you gonna withdraw less than 1?",
           notice: model.buyNotice,
           onAmountChange: (int amount) {},

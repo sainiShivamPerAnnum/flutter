@@ -60,8 +60,8 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
@@ -93,6 +93,7 @@ import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
+import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
@@ -180,7 +181,7 @@ void setupLocator() {
   // VIEW MODELS
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
-  locator.registerFactory(() => UsernameInputScreenViewModel());
+  locator.registerFactory(() => LoginNameInputViewModel());
   locator.registerFactory(() => LoginOtpViewModel());
   locator.registerFactory(() => LoginMobileViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
@@ -217,4 +218,5 @@ void setupLocator() {
   locator.registerFactory(() => FAQCardViewModel());
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
+  locator.registerFactory(() => TambolaCardModel());
 }

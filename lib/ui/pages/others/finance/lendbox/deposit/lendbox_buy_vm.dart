@@ -6,7 +6,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -18,7 +17,6 @@ import 'package:upi_pay/upi_pay.dart';
 class LendboxBuyViewModel extends BaseViewModel {
   final _txnService = locator<LendboxTransactionService>();
   final _analyticsService = locator<AnalyticsService>();
-  final _userService = locator<UserService>();
 
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -35,7 +33,9 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   TextEditingController amountController;
   TextEditingController vpaController;
-  List<int> chipAmountList = [101, 201, 501, 1001];
+  final List<int> chipAmountList = [101, 201, 501, 1001];
+  final double minAmount = 10;
+  final double maxAmount = 50000;
 
   bool get skipMl => this._skipMl;
 
@@ -62,8 +62,14 @@ class LendboxBuyViewModel extends BaseViewModel {
   //BUY FLOW
   //1
   initiateBuy() async {
+    _isBuyInProgress = true;
+    notifyListeners();
     final amount = await initChecks();
-    if (amount == 0) return;
+    if (amount == 0) {
+      _isBuyInProgress = false;
+      notifyListeners();
+      return;
+    }
 
     log(amount.toString());
     _isBuyInProgress = true;
@@ -83,13 +89,21 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    // if (_baseUtil.augmontDetail.isDepLocked) {
-    //   BaseUtil.showNegativeAlert(
-    //     'Purchase Failed',
-    //     "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-    //   );
-    //   return false;
-    // }
+    if (buyAmount < minAmount) {
+      BaseUtil.showNegativeAlert(
+        'Min amount is ${this.minAmount}',
+        'Please enter an amount grater than ${this.minAmount}',
+      );
+      return 0;
+    }
+
+    if (buyAmount > maxAmount) {
+      BaseUtil.showNegativeAlert(
+        'Max amount is ${this.maxAmount}',
+        'Please enter an amount lower than ${this.maxAmount}',
+      );
+      return 0;
+    }
 
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     return buyAmount;

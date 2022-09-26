@@ -69,7 +69,8 @@ class PaytmRepository extends BaseRepo {
           model: _responseModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable create transaction", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to create transaction", 400);
     }
   }
 
@@ -105,7 +106,8 @@ class PaytmRepository extends BaseRepo {
           model: _responseModel, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable create transaction", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable create transaction", 400);
     }
   }
 

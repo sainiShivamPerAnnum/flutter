@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/username_response_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -29,6 +31,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
@@ -41,14 +44,18 @@ import '../../../../../core/repository/user_repo.dart';
 class UserProfileVM extends BaseViewModel {
   RegExp emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final usernameRegex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
+  UsernameResponse response;
+
   Log log = new Log('User Profile');
   bool _inEditMode = false;
   bool _isgmailFieldEnabled = true;
-
   bool _isNewUser = false;
   bool _isEmailEnabled = false;
   bool _isContinuedWithGoogle = false;
   bool _isSigningInWithGoogle = false;
+  bool isUsernameLoading = false;
+  bool isValid = false;
 
   final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
@@ -63,6 +70,7 @@ class UserProfileVM extends BaseViewModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _journeyService = locator<JourneyService>();
   final _googleSignInService = locator<GoogleSignInService>();
+  final dbProvider = locator<DBModel>();
 
   double picSize;
   XFile selectedProfilePicture;
@@ -75,6 +83,8 @@ class UserProfileVM extends BaseViewModel {
   String gender;
   DateTime selectedDate;
   String _dateInputError = "";
+  String username = "";
+  double _errorPadding = 0;
 
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -86,7 +96,8 @@ class UserProfileVM extends BaseViewModel {
       mobileController,
       dateFieldController,
       monthFieldController,
-      yearFieldController;
+      yearFieldController,
+      usernameController;
 
   FocusNode nameFocusNode = FocusNode();
   FocusNode emailOptionsFocusNode = FocusNode();
@@ -123,6 +134,7 @@ class UserProfileVM extends BaseViewModel {
   bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
   get isNewUser => this._isNewUser;
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
+  get errorPadding => this._errorPadding;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -186,6 +198,11 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
+  set errorPadding(value) {
+    this._errorPadding = value;
+    notifyListeners();
+  }
+
   init(bool inu) {
     isNewUser = inu;
     if (isNewUser) enableEdit();
@@ -197,6 +214,7 @@ class UserProfileVM extends BaseViewModel {
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
     if (_userService.isEmailVerified) isgmailFieldEnabled = false;
+    if (isNewUser) usernameController = TextEditingController();
   }
 
   setGender() {
@@ -282,7 +300,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   updateDetails() async {
-    if (formKey.currentState.validate() && isValidDate()) {
+    if (formKey.currentState.validate() && isValidDate() && usernameIsValid()) {
       if (_checkForChanges() && checkForNullData()) {
         if (DateHelper.isAdult(selectedDate)) {
           isUpdaingUserDetails = true;
@@ -292,7 +310,8 @@ class UserProfileVM extends BaseViewModel {
           _userService.baseUser.gender = getGender();
           _userService.baseUser.isEmailVerified = _userService.isEmailVerified;
           _userService.baseUser.email = emailController.text.trim();
-
+          _userService.baseUser.username =
+              isNewUser ? username : _userService.baseUser.username;
           await _userRepo.updateUser(
             uid: _userService.baseUser.uid,
             dMap: {
@@ -303,6 +322,7 @@ class UserProfileVM extends BaseViewModel {
                   _userService.baseUser.isEmailVerified,
               BaseUser.fldEmail: _userService.baseUser.email,
               BaseUser.fldAvatarId: "AV1",
+              BaseUser.fldUsername: _userService.baseUser.username
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
@@ -341,6 +361,15 @@ class UserProfileVM extends BaseViewModel {
     } else
       BaseUtil.showNegativeAlert(
           "Invalid details", "please check the fields again");
+  }
+
+  bool usernameIsValid() {
+    if (!isNewUser) return true;
+    return (username != null &&
+        username.isNotEmpty &&
+        isValid != null &&
+        isValid &&
+        isUsernameLoading == false);
   }
 
   bool _checkForChanges() {
@@ -699,5 +728,106 @@ class UserProfileVM extends BaseViewModel {
       // isGoogleVerified = true;
     }
     isSigningInWithGoogle = false;
+  }
+
+  Widget showResult() {
+    print("Response " + response.toString());
+    if (isValid == null) {
+      return SizedBox();
+    }
+    if (isUsernameLoading) {
+      return Container(
+        height: SizeConfig.padding16,
+        width: SizeConfig.padding16,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+        ),
+      );
+    } else if (response == UsernameResponse.EMPTY)
+      return Text(
+        "username cannot be empty",
+        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+      );
+    else if (response == UsernameResponse.UNAVAILABLE)
+      return Text(
+        "@${usernameController.text.trim()} is not available",
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    else if (response == UsernameResponse.AVAILABLE) {
+      return Text(
+        "@${usernameController.text.trim()} is available",
+        style: TextStyle(
+          color: UiConstants.primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    } else if (response == UsernameResponse.INVALID) {
+      if (usernameController.text.trim().length < 4)
+        return Text(
+          "please enter a username with more than 3 characters.",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+      else if (usernameController.text.trim().length > 20)
+        return Text(
+          "please enter a username with less than 20 characters.",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+      else
+        return Text(
+          "@${usernameController.text.trim()} is invalid",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+    }
+
+    return SizedBox(
+      height: SizeConfig.padding16,
+    );
+  }
+
+  Future<bool> validateUsername() async {
+    // if (isUsernameLoading) return false;
+    isUsernameLoading = true;
+    notifyListeners();
+    username = usernameController.text.trim();
+    if (username == null || username == "") {
+      errorPadding = 0;
+      isValid = null;
+      response = UsernameResponse.EMPTY;
+    } else {
+      errorPadding = SizeConfig.padding8;
+
+      if (usernameRegex.hasMatch(username)) {
+        bool res = await dbProvider
+            .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
+
+        isValid = res;
+        if (res)
+          response = UsernameResponse.AVAILABLE;
+        else
+          response = UsernameResponse.UNAVAILABLE;
+      } else {
+        isValid = false;
+        response = UsernameResponse.INVALID;
+      }
+    }
+
+    isUsernameLoading = false;
+    notifyListeners();
+    return isValid;
   }
 }
