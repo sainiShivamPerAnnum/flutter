@@ -49,7 +49,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
@@ -122,7 +122,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppFlyerAnalytics());
 
   locator.registerLazySingleton(() => InternalOpsService());
-  locator.registerLazySingleton(() => SellService());
+  locator.registerLazySingleton(() => BankAndPanService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());

@@ -44,7 +44,7 @@ class TransactionHistoryRepository extends BaseRepo {
       final _token = await getBearerToken();
       final _queryParams = {
         "type": type,
-        "subtype": subtype,
+        "subType": subtype,
         "start": start,
         "status": status
       };

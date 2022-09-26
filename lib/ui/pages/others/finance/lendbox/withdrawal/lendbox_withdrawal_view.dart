@@ -7,6 +7,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_loading_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_success_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_input_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_success_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -128,9 +129,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return LendboxLoadingView(transactionType: type);
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return LendboxSuccessView(
-        transactionType: type,
-      );
+      return LendboxWithdrawalSuccessView();
     }
 
     return LendboxLoadingView(transactionType: type);

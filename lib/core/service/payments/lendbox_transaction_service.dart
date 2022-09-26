@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -40,9 +41,8 @@ class LendboxTransactionService extends BaseTransactionService {
   bool skipMl = false;
 
   Future<void> initiateWithdrawal(double txnAmount, String txnId) async {
-    this.currentTxnOrderId = txnId;
-    this.currentTransactionState = TransactionState.ongoing;
-    this.initiatePolling();
+    this.currentTransactionState = TransactionState.success;
+    await _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
   }
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
@@ -67,8 +67,7 @@ class LendboxTransactionService extends BaseTransactionService {
 
   Future<void> processPaytmTransaction() async {
     AppState.blockNavigation();
-    final createdPaytmTransactionData =
-        await this.createPaytmTransaction(this.skipMl);
+    final createdPaytmTransactionData = await this.createPaytmTransaction();
 
     if (createdPaytmTransactionData != null) {
       bool _status = await _paytmService.initiatePaytmPGTransaction(
@@ -99,13 +98,13 @@ class LendboxTransactionService extends BaseTransactionService {
     } else {
       AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
-          'Failed to create transaction', 'Please try after sometime');
+        'Failed to create transaction',
+        'Please try after sometime',
+      );
     }
   }
 
-  Future<CreatePaytmTransactionModel> createPaytmTransaction(
-    bool skipMl,
-  ) async {
+  Future<CreatePaytmTransactionModel> createPaytmTransaction() async {
     if (this.currentTxnAmount == null) return null;
 
     final ApiResponse<CreatePaytmTransactionModel>
@@ -114,7 +113,7 @@ class LendboxTransactionService extends BaseTransactionService {
       null,
       {},
       null,
-      skipMl ?? false,
+      this.skipMl ?? false,
       InvestmentType.LENDBOXP2P,
     );
 
@@ -225,7 +224,40 @@ class LendboxTransactionService extends BaseTransactionService {
   }
 
   @override
-  Future<void> processUpiTransaction() {
-    throw UnimplementedError();
+  Future<void> processUpiTransaction() async {
+    AppState.blockNavigation();
+    CreatePaytmTransactionModel createdPaytmTransactionData =
+        await this.createPaytmTransaction();
+
+    if (createdPaytmTransactionData != null) {
+      final deepUri = await _paytmService.generateUpiTransactionDeepUri(
+        selectedUpiApplicationName,
+        createdPaytmTransactionData,
+      );
+
+      if (deepUri != null && deepUri.isNotEmpty) {
+        final res = await _paytmService.initiateUpiTransaction(
+          amount: this.currentTxnAmount,
+          orderId: createdPaytmTransactionData.data.orderId,
+          upiApplication: upiApplication,
+          url: deepUri,
+          investmentType: InvestmentType.AUGGOLD99,
+        );
+
+        if (res && Platform.isAndroid) initiatePolling();
+        AppState.unblockNavigation();
+      } else {
+        AppState.unblockNavigation();
+
+        BaseUtil.showNegativeAlert(
+            'Failed to connect to upi app', 'Please try after sometime');
+      }
+    } else {
+      AppState.unblockNavigation();
+      return BaseUtil.showNegativeAlert(
+        'Failed to create transaction',
+        'Please try after sometime',
+      );
+    }
   }
 }

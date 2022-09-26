@@ -11,7 +11,7 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -30,7 +30,7 @@ class SaveViewModel extends BaseViewModel {
   final _saveRepo = locator<SaveRepo>();
   final _userService = locator<UserService>();
   BaseUtil baseProvider;
-  final SellService _sellService = locator<SellService>();
+  final BankAndPanService _sellService = locator<BankAndPanService>();
   final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
   final _paymentRepo = locator<PaymentRepository>();
   final _baseUtil = locator<BaseUtil>();

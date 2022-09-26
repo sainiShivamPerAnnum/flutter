@@ -11,8 +11,10 @@ class AmountInputView extends StatefulWidget {
   final List<int> chipAmounts;
   final String notice;
   final bool isEnabled;
-  final int maxAmount;
-  final int minAmount;
+  final double maxAmount;
+  final double minAmount;
+  final String maxAmountMsg;
+  final String minAmountMsg;
   final Function(int val) onAmountChange;
 
   const AmountInputView({
@@ -23,6 +25,8 @@ class AmountInputView extends StatefulWidget {
     @required this.isEnabled,
     @required this.maxAmount,
     @required this.minAmount,
+    @required this.maxAmountMsg,
+    @required this.minAmountMsg,
     this.notice,
   }) : super(key: key);
 
@@ -133,16 +137,16 @@ class _AmountInputViewState extends State<AmountInputView> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
-                    "Upto ₹ ${widget.maxAmount} can be invested at one go.",
+                    widget.maxAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
-                        .colour(UiConstants.primaryColor),
+                        .colour(Colors.red[400]),
                   ),
                 ),
               if (currentAmt < widget.minAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
-                    "Minimum purchase amount is ₹ ${widget.minAmount}",
+                    widget.minAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
                         .colour(Colors.red[400]),
                   ),

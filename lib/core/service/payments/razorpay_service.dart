@@ -107,31 +107,39 @@ class RazorpayService extends ChangeNotifier {
       investmentType,
     );
 
-    final txnModel = txnResponse.model;
-    print(txnResponse.model.data.orderId);
+    if (txnResponse.isSuccess()) {
+      final txnModel = txnResponse.model;
+      print(txnResponse.model.data.orderId);
 
-    _txnService.currentTxnOrderId = txnResponse.model.data.txnId;
-    _txnService.currentTxnAmount = amount;
-    String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
-    final options = {
-      'key': _keyId,
-      'amount': amount.toInt() * 100,
-      'name': 'Digital Gold Purchase',
-      'order_id': txnModel.data.orderId,
-      'description': 'GOLD',
-      'timeout': 120, // in seconds
-      'image': Assets.logoBase64,
-      'remember_customer': false,
-      'readonly': {'contact': true, 'email': true, 'name': true},
-      'theme': {
-        'hide_topbar': false,
-        'color': '#2EB19F',
-        'backdrop_color': '#F1F1F1'
-      },
-      'prefill': {'contact': mobile, 'email': email}
-    };
+      _txnService.currentTxnOrderId = txnResponse.model.data.txnId;
+      _txnService.currentTxnAmount = amount;
+      String _keyId =
+          RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
+      final options = {
+        'key': _keyId,
+        'amount': amount.toInt() * 100,
+        'name': 'Digital Gold Purchase',
+        'order_id': txnModel.data.orderId,
+        'description': 'GOLD',
+        'timeout': 120, // in seconds
+        'image': Assets.logoBase64,
+        'remember_customer': false,
+        'readonly': {'contact': true, 'email': true, 'name': true},
+        'theme': {
+          'hide_topbar': false,
+          'color': '#2EB19F',
+          'backdrop_color': '#F1F1F1'
+        },
+        'prefill': {'contact': mobile, 'email': email}
+      };
 
-    _razorpay.open(options);
+      _razorpay.open(options);
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Failed to create transaction',
+        'Please try after sometime',
+      );
+    }
     return _currentTxn;
   }
 

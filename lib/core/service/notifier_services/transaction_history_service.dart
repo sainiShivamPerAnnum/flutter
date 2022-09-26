@@ -59,9 +59,12 @@ class TransactionHistoryService
       status: status,
       start: getLastTxnDocType(status: status, type: type),
     );
+
     if (!response.isSuccess()) {
       return BaseUtil.showNegativeAlert(
-          "Unable to fetch txns", "Please try again");
+        "Unable to fetch txns",
+        "Please try again",
+      );
     }
     // if transaction list is empty
     if (_txnList == null || _txnList.length == 0) {

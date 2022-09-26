@@ -239,7 +239,6 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-
   openRechargeModalSheet({
     int amt,
     bool isSkipMl,
@@ -461,17 +460,19 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+
     return showModalBottomSheet(
-        enableDrag: enableDrag,
-        constraints: boxContraints,
-        shape: RoundedRectangleBorder(
-            borderRadius: borderRadius ?? BorderRadius.zero),
-        isScrollControlled: isScrollControlled ?? false,
-        backgroundColor:
-            backgroundColor != null ? backgroundColor : Colors.white,
-        isDismissible: isBarrierDismissable,
-        context: AppState.delegate.navigatorKey.currentContext,
-        builder: (ctx) => content);
+      enableDrag: enableDrag,
+      constraints: boxContraints,
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+      ),
+      isScrollControlled: isScrollControlled ?? false,
+      backgroundColor: backgroundColor != null ? backgroundColor : Colors.white,
+      isDismissible: isBarrierDismissable,
+      context: AppState.delegate.navigatorKey.currentContext,
+      builder: (ctx) => content,
+    );
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {

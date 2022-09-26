@@ -3,9 +3,13 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +18,7 @@ import 'package:upi_pay/upi_pay.dart';
 class LendboxBuyViewModel extends BaseViewModel {
   final _txnService = locator<LendboxTransactionService>();
   final _analyticsService = locator<AnalyticsService>();
+  final _userService = locator<UserService>();
 
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -26,7 +31,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   String buyNotice;
 
   bool _isBuyInProgress = false;
-  get isBuyInProgress => this._isBuyInProgress;
+  bool get isBuyInProgress => this._isBuyInProgress;
 
   TextEditingController amountController;
   TextEditingController vpaController;
@@ -88,6 +93,13 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     return buyAmount;
+  }
+
+  void navigateToKycScreen() {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
   }
 
   int getAmount(int amount) {

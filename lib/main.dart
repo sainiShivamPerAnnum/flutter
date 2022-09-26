@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/enums/sell_service_enum.dart';
+import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
@@ -22,7 +22,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -156,9 +156,9 @@ class _MyAppState extends State<MyApp> {
                       child: PropertyChangeProvider<PaytmService,
                           PaytmServiceProperties>(
                         value: locator<PaytmService>(),
-                        child: PropertyChangeProvider<SellService,
-                            SellServiceProperties>(
-                          value: locator<SellService>(),
+                        child: PropertyChangeProvider<BankAndPanService,
+                            BankAndPanServiceProperties>(
+                          value: locator<BankAndPanService>(),
                           child: PropertyChangeProvider<
                               LendboxTransactionService,
                               TransactionServiceProperties>(

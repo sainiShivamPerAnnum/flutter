@@ -19,7 +19,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -44,7 +44,7 @@ class GoldSellViewModel extends BaseViewModel {
   UserCoinService _userCoinService = locator<UserCoinService>();
   AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  SellService _sellService = locator<SellService>();
+  BankAndPanService _sellService = locator<BankAndPanService>();
   final _analyticsService = locator<AnalyticsService>();
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _paymentRepo = locator<PaymentRepository>();

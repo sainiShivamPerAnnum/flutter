@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -20,6 +21,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _lendboxRepo = locator<LendboxRepo>();
   final _paymentRepo = locator<PaymentRepository>();
+  final _userService = locator<UserService>();
 
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -42,6 +44,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   set skipMl(bool value) {
     this._skipMl = value;
   }
+
+  double get processingQty =>
+      _userService.userFundWallet?.wLbProcessingQty ?? 0;
+  double get withdrawableQty => _userService.userFundWallet?.wLbBalance ?? 0;
 
   init(int amount, bool isSkipMilestone) async {
     setState(ViewState.Busy);
@@ -99,9 +105,9 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
 
   //2 Basic Checks
   Future<int> initChecks() async {
-    final buyAmount = int.tryParse(this.amountController.text) ?? 0;
+    final amount = int.tryParse(this.amountController.text) ?? 0;
 
-    if (buyAmount == 0) {
+    if (amount == 0) {
       BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
       return 0;
     }
@@ -115,7 +121,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     // }
 
     _analyticsService.track(eventName: AnalyticsEvents.buyGold);
-    return buyAmount;
+    return amount;
   }
 
   int getAmount(int amount) {

@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/sell_service_enum.dart';
-import 'package:felloapp/core/service/payments/sell_service.dart';
+import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modals_sheets/gold_sell_reason_modal_sheet.dart';
@@ -21,13 +21,14 @@ class SellCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<SellService, SellServiceProperties>(
+    return PropertyChangeConsumer<BankAndPanService,
+        BankAndPanServiceProperties>(
       properties: [
-        SellServiceProperties.reachedLockIn,
-        SellServiceProperties.augmontSellDisabled,
-        SellServiceProperties.bankDetailsVerified,
-        SellServiceProperties.kycVerified,
-        SellServiceProperties.ongoing,
+        BankAndPanServiceProperties.reachedLockIn,
+        BankAndPanServiceProperties.augmontSellDisabled,
+        BankAndPanServiceProperties.bankDetailsVerified,
+        BankAndPanServiceProperties.kycVerified,
+        BankAndPanServiceProperties.ongoing,
       ],
       builder: (ctx, sellService, child) => Container(
         width: SizeConfig.screenWidth,

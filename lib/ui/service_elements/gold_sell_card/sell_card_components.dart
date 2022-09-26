@@ -41,6 +41,7 @@ class SellText extends StatelessWidget {
 class SellButton extends StatelessWidget {
   final Function onTap;
   final bool isActive;
+
   SellButton({Key key, @required this.onTap, @required this.isActive})
       : super(key: key);
 
@@ -55,16 +56,17 @@ class SellButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           border: Border.all(
-              color: isActive
-                  ? Colors.white
-                  : UiConstants.kSecondaryBackgroundColor,
-              width: 1),
+            color:
+                isActive ? Colors.white : UiConstants.kSecondaryBackgroundColor,
+            width: 1,
+          ),
         ),
         child: Center(
           child: Text(
             'SELL',
             style: TextStyles.rajdhaniSB.body0.colour(
-                isActive ? UiConstants.kTextColor : UiConstants.kTextColor2),
+              isActive ? UiConstants.kTextColor : UiConstants.kTextColor2,
+            ),
           ),
         ),
       ),
@@ -102,10 +104,16 @@ class GoldLockedInCard extends StatelessWidget {
 class SellActionButton extends StatelessWidget {
   final String title;
   final String iconData;
+  final bool isCenter;
   final Function() onTap;
 
-  const SellActionButton({Key key, this.title, this.iconData, this.onTap})
-      : super(key: key);
+  const SellActionButton({
+    Key key,
+    this.title,
+    this.iconData,
+    this.onTap,
+    this.isCenter = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -120,12 +128,15 @@ class SellActionButton extends StatelessWidget {
           height: SizeConfig.screenWidth * 0.16,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-              color: UiConstants.kSecondaryBackgroundColor),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+            color: UiConstants.kSecondaryBackgroundColor,
+          ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: this.isCenter
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   title,

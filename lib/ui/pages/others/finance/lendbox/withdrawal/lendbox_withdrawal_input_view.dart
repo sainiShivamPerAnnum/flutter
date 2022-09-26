@@ -34,32 +34,35 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           isEnabled: !model.inProgress,
         ),
         SizedBox(height: SizeConfig.padding32),
-        SellCardInfoStrips(
-          leadingIcon: Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: UiConstants.kTextColor,
-              ),
-              SizedBox(
-                width: 16,
-              ),
-              LendboxProcessingValue(
-                style: TextStyles.sourceSans.body4.colour(
-                  UiConstants.kTextColor2,
+        if (model.processingQty > 0)
+          SellCardInfoStrips(
+            leadingIcon: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: UiConstants.kTextColor,
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: 16,
+                ),
+                LendboxProcessingValue(
+                  style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.kTextColor2,
+                  ),
+                ),
+              ],
+            ),
+            content: '  amount is processing',
           ),
-          content: '  amount is processing',
-        ),
         SizedBox(height: SizeConfig.padding32),
         AmountInputView(
           amountController: model.amountController,
           chipAmounts: [],
           isEnabled: !model.inProgress,
-          maxAmount: 50000,
+          maxAmount: model.withdrawableQty,
+          maxAmountMsg: "You can't withdraw more than available balance",
           minAmount: 0,
+          minAmountMsg: "how are you gonna withdraw less than 1?",
           notice: model.buyNotice,
           onAmountChange: (int amount) {},
         ),
