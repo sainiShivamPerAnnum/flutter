@@ -174,9 +174,14 @@ class PicksCardView extends StatelessWidget {
                               : List.generate(
                                   model.dailyPicksCount ?? 3, (index) => 0),
                         ))
-                  : WeeklyPicks(
-                      weeklyDraws: model.weeklyDigits,
-                    ),
+                  : model.weeklyDigits == null
+                      ? SpinKitWave(
+                          color: Colors.white,
+                          size: SizeConfig.padding16,
+                        )
+                      : WeeklyPicks(
+                          weeklyDraws: model.weeklyDigits,
+                        ),
             ),
           ),
         ],
