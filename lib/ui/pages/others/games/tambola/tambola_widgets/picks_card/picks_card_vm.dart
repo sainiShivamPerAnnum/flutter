@@ -8,13 +8,16 @@ import 'package:flutter/material.dart';
 class PicksCardViewModel extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
   int get dailyPicksCount => _tambolaService.dailyPicksCount;
-  List<int> get todaysPicks => _tambolaService.todaysPicks;
-  DailyPick get weeklyDigits => _tambolaService.weeklyDigits;
+
   bool _isShowingAllPicks;
   double _topCardHeight;
   double _expandedTopCardHeight;
   double _normalTopCardHeight;
   double _titleOpacity;
+  List<int> _todaysPicks = [];
+  DailyPick _weeklyDigits;
+  List<int> get todaysPicks => _todaysPicks;
+  DailyPick get weeklyDigits => _weeklyDigits;
 
   get normalTopCardHeight => this._normalTopCardHeight;
 
@@ -46,7 +49,7 @@ class PicksCardViewModel extends BaseViewModel {
     this._normalTopCardHeight = value;
   }
 
-  init() {
+  init() async {
     _normalTopCardHeight = SizeConfig.screenWidth * 0.5;
     _expandedTopCardHeight =
         (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
@@ -55,7 +58,15 @@ class PicksCardViewModel extends BaseViewModel {
     isShowingAllPicks = false;
     titleOpacity = 1.0;
     topCardHeight = normalTopCardHeight;
-    _tambolaService.fetchWeeklyPicks();
+    await _tambolaService.fetchWeeklyPicks();
+
+    fetchTodaysPicks();
+  }
+
+  fetchTodaysPicks() {
+    _todaysPicks = _tambolaService.todaysPicks;
+    _weeklyDigits = _tambolaService.weeklyDigits;
+    notifyListeners();
   }
 
   void onTap(ValueChanged<bool> showBuyTicketModal) {

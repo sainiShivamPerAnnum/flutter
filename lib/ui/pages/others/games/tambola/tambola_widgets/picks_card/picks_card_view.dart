@@ -8,6 +8,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // class PicksCardView extends StatelessWidget {
 //   final ValueChanged<bool> showBuyTicketModal;
@@ -167,8 +168,11 @@ class PicksCardView extends StatelessWidget {
                               (index) => Random().nextInt(90)),
                         )
                       : CurrentPicks(
-                          dailyPicksCount: model.dailyPicksCount,
-                          todaysPicks: model.todaysPicks,
+                          dailyPicksCount: model.dailyPicksCount ?? 3,
+                          todaysPicks: model.todaysPicks != null
+                              ? model.todaysPicks
+                              : List.generate(
+                                  model.dailyPicksCount ?? 3, (index) => 0),
                         ))
                   : WeeklyPicks(
                       weeklyDraws: model.weeklyDigits,

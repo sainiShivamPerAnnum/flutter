@@ -13,6 +13,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class TambolaCard extends StatelessWidget {
   const TambolaCard({Key key}) : super(key: key);
@@ -46,6 +47,7 @@ class TambolaCard extends StatelessWidget {
                 child: Transform.translate(
                   offset: Offset(0, -SizeConfig.padding20),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Transform.scale(
                         scale: 1.2,
@@ -93,12 +95,15 @@ class TambolaCard extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding12,
                       ),
-                      CurrentPicks(
-                        dailyPicksCount: model.dailyPicksCount,
-                        todaysPicks: model.todaysPicks != null
-                            ? model.todaysPicks
-                            : List.generate(
-                                model.dailyPicksCount ?? 0, (index) => 0),
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.2,
+                        child: CurrentPicks(
+                          dailyPicksCount: model.dailyPicksCount ?? 3,
+                          todaysPicks: model.todaysPicks != null
+                              ? model.todaysPicks
+                              : List.generate(
+                                  model.dailyPicksCount ?? 3, (index) => 0),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: SizeConfig.padding8),
@@ -146,5 +151,158 @@ class TambolaCard extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class TodayPicksBallsAnimation extends StatelessWidget {
+  const TodayPicksBallsAnimation({
+    Key key,
+    @required this.picksList,
+  }) : super(key: key);
+  final List<int> picksList;
+
+  @override
+  Widget build(BuildContext context) {
+    List<int> animationDurations = [2500, 4000, 5000, 3500, 4500];
+
+    return Consumer<AppState>(
+      builder: (context, m, child) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          picksList.length,
+          (index) => Container(
+            margin: EdgeInsets.only(
+                right:
+                    index == picksList.length - 1 ? 0 : SizeConfig.padding26),
+            child: AnimatedPicksDisplay(
+              number: picksList[index],
+              tabIndex: AppState.delegate.appState.getCurrentTabIndex,
+              animationDurationMilliseconds: animationDurations[index],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//Widget to render single ball with animation
+class AnimatedPicksDisplay extends StatefulWidget {
+  const AnimatedPicksDisplay(
+      {Key key,
+      @required this.number,
+      @required this.tabIndex,
+      @required this.animationDurationMilliseconds})
+      : super(key: key);
+
+  final int number;
+  final int tabIndex;
+  final int animationDurationMilliseconds;
+
+  @override
+  State<AnimatedPicksDisplay> createState() => _AnimatedPicksDisplayState();
+}
+
+class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
+  Random random = new Random();
+
+  List<int> randomList = [];
+  bool isAnimationDone = false;
+
+  final ScrollController _controller = ScrollController();
+
+  void _scrollDown() {
+    _controller.animateTo(
+      _controller.position.maxScrollExtent,
+      duration: Duration(milliseconds: widget.animationDurationMilliseconds),
+      curve: Curves.fastOutSlowIn,
+    );
+    isAnimationDone = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //GEnerating random numbers
+    for (int i = 0; i < 8; i++) {
+      randomList.add(random.nextInt(99));
+    }
+
+    if (widget.tabIndex == 1 && isAnimationDone == false) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _scrollDown();
+      });
+    }
+
+    return Container(
+      width: SizeConfig.screenWidth * 0.14,
+      height: SizeConfig.screenWidth * 0.14,
+      decoration: BoxDecoration(
+        color: UiConstants.kArowButtonBackgroundColor,
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: _controller,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              isAnimationDone
+                  ? SizedBox.shrink()
+                  : ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: randomList.length,
+                      itemBuilder: (context, index) {
+                        return _buildBalls(
+                            randomList[index], index == 0 ? true : false);
+                      },
+                    ),
+              _buildBalls(widget.number, false),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _buildBalls(int nToShow, bool showEmpty) {
+    return Container(
+      width: SizeConfig.screenWidth * 0.14,
+      height: SizeConfig.screenWidth * 0.14,
+      padding: EdgeInsets.all(SizeConfig.padding4),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+      ),
+      child: Container(
+        padding: EdgeInsets.all(SizeConfig.padding8),
+        width: SizeConfig.screenWidth * 0.14,
+        height: SizeConfig.screenWidth * 0.14,
+        decoration: BoxDecoration(
+          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+          shape: BoxShape.circle,
+        ),
+        child: Container(
+          padding: EdgeInsets.all(SizeConfig.padding2),
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 0.7)),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                showEmpty ? "" : nToShow.toString(),
+                style: TextStyles.rajdhaniB.body2.colour(Colors.black),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
