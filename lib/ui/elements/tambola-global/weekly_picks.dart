@@ -48,7 +48,7 @@ class WeeklyPicks extends StatelessWidget {
             _getDrawBall(element.toString(), colCount == day ? true : false));
       });
     } else {
-      for (int i = 0; i < TambolaService().dailyPicksCount; i++) {
+      for (int i = 0; i < 3; i++) {
         balls.add(_getDrawBall('-', colCount == day ? true : false));
       }
     }
@@ -84,6 +84,14 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("TEsting mon: ${weeklyDraws.mon}");
+    print("TEsting tue: ${weeklyDraws.tue}");
+    print("TEsting wed: ${weeklyDraws.wed}");
+    print("TEsting thu: ${weeklyDraws.thu}");
+    print("TEsting fri: ${weeklyDraws.fri}");
+    print("TEsting sat: ${weeklyDraws.sat}");
+    print("TEsting sun: ${weeklyDraws.sun}");
+    print("TEsting wekkcode: ${weeklyDraws.weekCode}");
     if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
       return Container(
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
