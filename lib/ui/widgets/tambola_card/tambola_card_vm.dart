@@ -14,6 +14,9 @@ class TambolaCardModel extends BaseViewModel {
   GameModel _game;
   bool _isGameModelLoading = true;
 
+  int _dailyPicksCount;
+  List<int> _todaysPicks;
+
   //GETTER SETTER
 
   GameModel get game => _game;
@@ -26,11 +29,20 @@ class TambolaCardModel extends BaseViewModel {
     this._isGameModelLoading = _isGameModelLoading;
   }
 
-  int get dailyPicksCount => _tambolaService.dailyPicksCount ?? 0;
-  List<int> get todaysPicks => _tambolaService.todaysPicks;
+  int get dailyPicksCount => _dailyPicksCount;
+  List<int> get todaysPicks => _todaysPicks;
 
   init() async {
     await getGameDetails();
+    _tambolaService.fetchWeeklyPicks();
+    fetchPickCounts();
+  }
+
+  fetchPickCounts() {
+    _dailyPicksCount = _tambolaService.dailyPicksCount;
+    _todaysPicks = _tambolaService.todaysPicks;
+
+    notifyListeners();
   }
 
   getGameDetails() async {

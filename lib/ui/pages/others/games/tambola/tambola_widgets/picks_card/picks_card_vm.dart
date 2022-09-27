@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 
 class PicksCardViewModel extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
-  int get dailyPicksCount => _tambolaService.dailyPicksCount;
+  int get dailyPicksCount => _tambolaService.dailyPicksCount ?? 3;
 
   bool _isShowingAllPicks;
   double _topCardHeight;
   double _expandedTopCardHeight;
   double _normalTopCardHeight;
   double _titleOpacity;
-  List<int> _todaysPicks = [];
+  List<int> _todaysPicks;
   DailyPick _weeklyDigits;
   List<int> get todaysPicks => _todaysPicks;
   DailyPick get weeklyDigits => _weeklyDigits;

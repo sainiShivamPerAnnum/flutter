@@ -45,22 +45,26 @@ class TodayPicksBallsAnimation extends StatelessWidget {
     List<int> animationDurations = [2500, 4000, 5000, 3500, 4500];
 
     return Consumer<AppState>(
-      builder: (context, m, child) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          picksList.length,
-          (index) => Container(
-            margin: EdgeInsets.only(
-                right:
-                    index == picksList.length - 1 ? 0 : SizeConfig.padding26),
-            child: AnimatedPicksDisplay(
-              number: picksList[index],
-              tabIndex: AppState.delegate.appState.getCurrentTabIndex,
-              animationDurationMilliseconds: animationDurations[index],
+      builder: (context, m, child) {
+        print("I am generated 2 ${picksList.length}");
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            picksList.length,
+            (index) => Container(
+              margin: EdgeInsets.only(
+                  right:
+                      index == picksList.length - 1 ? 0 : SizeConfig.padding26),
+              child: AnimatedPicksDisplay(
+                number: picksList[index],
+                tabIndex: m.getCurrentTabIndex ?? 0,
+                animationDurationMilliseconds: animationDurations[index],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -106,6 +110,8 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
       randomList.add(random.nextInt(99));
     }
 
+    print("generated ${widget.tabIndex}");
+
     if (widget.tabIndex == 1 && isAnimationDone == false) {
       Future.delayed(const Duration(milliseconds: 500), () {
         _scrollDown();
@@ -127,7 +133,7 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               isAnimationDone
-                  ? SizedBox.shrink()
+                  ? _buildBalls(widget.number, false)
                   : ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,

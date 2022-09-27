@@ -169,11 +169,11 @@ class PicksCardView extends StatelessWidget {
                                 (index) => Random().nextInt(90)),
                           )
                         : CurrentPicks(
-                            dailyPicksCount: model.dailyPicksCount ?? 3,
+                            dailyPicksCount: model.dailyPicksCount,
                             todaysPicks: model.todaysPicks != null
                                 ? model.todaysPicks
                                 : List.generate(
-                                    model.dailyPicksCount ?? 3, (index) => 0),
+                                    model.dailyPicksCount, (index) => 0),
                           ))
                     : model.weeklyDigits == null
                         ? SpinKitWave(
