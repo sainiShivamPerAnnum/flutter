@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -8,11 +10,13 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
   final _augTxnService = locator<AugmontTransactionService>();
+  final _gtService = locator<GoldenTicketService>();
 
   GoldBuySuccessView({Key key}) : super(key: key);
 
@@ -31,6 +35,13 @@ class GoldBuySuccessView extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     AppState.backButtonDispatcher.didPopRoute();
+                    Future.delayed(Duration(milliseconds: 500), () {
+                      _gtService.showInstantGoldenTicketView(
+                          amount: _augTxnService.currentTxnAmount,
+                          title:
+                              "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
+                          source: GTSOURCE.deposit);
+                    });
                   },
                   icon: Icon(
                     Icons.close,
@@ -43,6 +54,7 @@ class GoldBuySuccessView extends StatelessWidget {
           Expanded(
             child: Lottie.asset(
               Assets.goldDepostSuccessLottie,
+              fit: BoxFit.cover,
             ),
           ),
           Text(
@@ -56,43 +68,15 @@ class GoldBuySuccessView extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(
-              top: SizeConfig.padding24,
-              bottom: SizeConfig.padding12,
-              left: SizeConfig.pageHorizontalMargins * 2,
-              right: SizeConfig.pageHorizontalMargins * 2,
-            ),
+                left: SizeConfig.pageHorizontalMargins,
+                right: SizeConfig.pageHorizontalMargins,
+                top: SizeConfig.pageHorizontalMargins),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.darkPrimaryColor2,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-              vertical: SizeConfig.padding12,
-            ),
-            child: Row(children: [
-              Text("Tokens Won", style: TextStyles.rajdhani.body1),
-              Spacer(),
-              SvgPicture.asset(
-                Assets.token,
-                width: SizeConfig.padding26,
-                height: SizeConfig.padding26,
-              ),
-              SizedBox(
-                width: SizeConfig.padding6,
-              ),
-              Text((_augTxnService.currentTxnAmount.toInt()).toString(),
-                  style: TextStyles.rajdhaniB.title3),
-            ]),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins * 2),
-            decoration: BoxDecoration(
+              border: Border.all(width: 0.5, color: UiConstants.kTextColor2),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(SizeConfig.roundness12),
                 topLeft: Radius.circular(SizeConfig.roundness12),
               ),
-              color: UiConstants.darkPrimaryColor2,
             ),
             child: IntrinsicHeight(
               child: Row(
@@ -100,14 +84,16 @@ class GoldBuySuccessView extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.padding16,
+                          left: SizeConfig.pageHorizontalMargins,
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding16,
                           right: SizeConfig.padding8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Invested", style: TextStyles.sourceSans.body2),
+                          Text("Invested",
+                              style: TextStyles.sourceSans.body2
+                                  .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
                               "₹ ${BaseUtil.getIntOrDouble(_augTxnService.currentTxnAmount)}",
@@ -117,18 +103,24 @@ class GoldBuySuccessView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  VerticalDivider(width: 3),
+                  VerticalDivider(
+                    width: 3,
+                    thickness: 0.5,
+                    color: UiConstants.kTextColor2,
+                  ),
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.padding8,
+                          left: SizeConfig.pageHorizontalMargins,
                           top: SizeConfig.padding16,
                           bottom: SizeConfig.padding16,
                           right: SizeConfig.padding16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Bought", style: TextStyles.sourceSans.body2),
+                          Text("Bought",
+                              style: TextStyles.sourceSans.body2
+                                  .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
                           Text("${_augTxnService.currentTxnGms} gms",
                               style: TextStyles.rajdhaniB.title4),
@@ -142,36 +134,74 @@ class GoldBuySuccessView extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(
-              left: SizeConfig.pageHorizontalMargins * 2,
-              right: SizeConfig.pageHorizontalMargins * 2,
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(SizeConfig.roundness12),
                 bottomRight: Radius.circular(SizeConfig.roundness12),
               ),
-              color: UiConstants.kModalSheetSecondaryBackgroundColor,
+              // color: UiConstants.kModalSheetSecondaryBackgroundColor,
+              border: Border.all(width: 0.5, color: UiConstants.kTextColor2),
             ),
             padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins,
               vertical: SizeConfig.padding12,
             ),
             child: Row(children: [
-              Text("Gold Balance",
-                  style: TextStyles.rajdhani.body3
-                      .colour(UiConstants.kBackgroundColor)),
+              Text(
+                "Balance",
+                style:
+                    TextStyles.rajdhani.body3.colour(UiConstants.kTextColor3),
+              ),
               Spacer(),
               UserFundQuantitySE(
-                style: TextStyles.sourceSans.body2,
+                style:
+                    TextStyles.sourceSans.body2.colour(UiConstants.kTextColor),
               )
             ]),
           ),
-          SizedBox(height: SizeConfig.padding24),
+          Container(
+            padding: EdgeInsets.only(
+                top: SizeConfig.padding20,
+                bottom: SizeConfig.padding20,
+                right: SizeConfig.pageHorizontalMargins,
+                left: SizeConfig.pageHorizontalMargins),
+            child: Row(
+              children: [
+                WinningChips(
+                    title: 'Fello Tokens',
+                    asset: Assets.token,
+                    qty: _augTxnService.currentTxnAmount.toInt()),
+                if (_augTxnService.currentTxnAmount.toInt() > 100)
+                  SizedBox(width: SizeConfig.padding12),
+                if (_augTxnService.currentTxnAmount.toInt() > 100)
+                  WinningChips(
+                      title: 'Golden Ticket',
+                      asset: Assets.unredemmedGoldenTicketBG,
+                      qty: 1),
+                if (_augTxnService.currentTxnAmount.toInt() > 500)
+                  SizedBox(width: SizeConfig.padding12),
+                if (_augTxnService.currentTxnAmount.toInt() > 100)
+                  WinningChips(
+                      title: 'Tambola Ticket',
+                      asset: Assets.singleTmbolaTicket,
+                      qty: _augTxnService.currentTxnAmount.toInt())
+              ],
+            ),
+          ),
           TextButton(
             onPressed: () {
               AppState.backButtonDispatcher.didPopRoute();
               AppState.delegate.appState.setCurrentTabIndex = 1;
+              Future.delayed(Duration(milliseconds: 500), () {
+                _gtService.showInstantGoldenTicketView(
+                    amount: _augTxnService.currentTxnAmount,
+                    title:
+                        "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
+                    source: GTSOURCE.deposit);
+              });
             },
             child: Text(
               "START PLAYING",
@@ -180,6 +210,102 @@ class GoldBuySuccessView extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class WinningChips extends StatelessWidget {
+  final String title;
+  final String asset;
+  final int qty;
+  final EdgeInsets margin;
+
+  const WinningChips(
+      {Key key,
+      @required this.title,
+      @required this.asset,
+      @required this.qty,
+      this.margin})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: LayoutBuilder(
+        builder: ((context, constraints) => Container(
+              // height: SizeConfig.padding80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                color: UiConstants.darkPrimaryColor2,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+                vertical: SizeConfig.padding12,
+              ),
+              margin: margin ?? EdgeInsets.zero,
+              child: constraints.maxWidth < SizeConfig.screenWidth / 3
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: TextStyles.sourceSans.body4),
+                        SizedBox(height: SizeConfig.padding6),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              asset,
+                              width: SizeConfig.padding20,
+                              height: SizeConfig.padding20,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding6,
+                            ),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxWidth: SizeConfig.screenWidth * 0.08),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(qty.toString(),
+                                    style: TextStyles.rajdhaniB.title3),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                          Expanded(
+                            child:
+                                Text(title, style: TextStyles.sourceSans.body4),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: SizeConfig.padding12,
+                              ),
+                              SvgPicture.asset(
+                                asset,
+                                width: SizeConfig.padding20,
+                                height: SizeConfig.padding20,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding6,
+                              ),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    maxWidth: SizeConfig.screenWidth * 0.09),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(qty.toString(),
+                                      style: TextStyles.rajdhaniB.title3),
+                                ),
+                              ),
+                            ],
+                          )
+                        ]),
+            )),
       ),
     );
   }

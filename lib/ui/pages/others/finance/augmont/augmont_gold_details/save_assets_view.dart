@@ -16,6 +16,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SaveAssetView extends StatelessWidget {
   const SaveAssetView({Key key}) : super(key: key);
@@ -82,131 +83,73 @@ class GoldAssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        BaseView<SaveViewModel>(
-          builder: (ctx, model, child) => Padding(
-            padding: EdgeInsets.only(
-              top: SizeConfig.padding54,
-              left: SizeConfig.padding24,
-              right: SizeConfig.padding24,
-            ),
-            child: Container(
-              height: SizeConfig.screenWidth * 0.88,
-              width: SizeConfig.screenWidth * 0.87,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness32),
-                  color: UiConstants.kSaveDigitalGoldCardBg),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Padding(
-                  padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.25),
-                  child: Column(
-                    children: [
-                      Text('Digital Gold', style: TextStyles.rajdhaniB.title2),
-                      Text('Safer way to invest',
-                          style: TextStyles.sourceSans.body4),
-                      SizedBox(
-                        height: SizeConfig.padding40,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  '\u20b9 2000',
-                                  style: TextStyles.sourceSans.body0
-                                      .colour(Colors.white),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding2,
-                                ),
-                                Text(
-                                  'Invested',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      UiConstants.kTextColor.withOpacity(0.8)),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                UserFundQuantitySE(
-                                  style: TextStyles.sourceSans.body0
-                                      .colour(Colors.white),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding2,
-                                ),
-                                Text(
-                                  'Total Gold',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      UiConstants.kTextColor.withOpacity(0.8)),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '\u20b9 4390.8',
-                                  style: TextStyles.sourceSans.body0
-                                      .colour(Colors.white),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding2,
-                                ),
-                                Text(
-                                  'Current',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      UiConstants.kTextColor.withOpacity(0.8)),
-                                ),
-                              ],
-                            )
-                          ],
+    return Container(
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        color: UiConstants.kSaveDigitalGoldCardBg,
+      ),
+      padding: EdgeInsets.fromLTRB(
+          SizeConfig.pageHorizontalMargins / 2,
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins),
+      child: Stack(
+        children: [
+          Image.asset(
+            Assets.digitalGoldBar,
+            height: SizeConfig.screenWidth * 0.32,
+            width: SizeConfig.screenWidth * 0.32,
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: SizeConfig.screenWidth * 0.32),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Digital Gold',
+                            style: TextStyles.rajdhaniB.title2),
+                        Text('Safer way to invest',
+                            style: TextStyles.sourceSans.body4),
+                        SizedBox(
+                          height: SizeConfig.padding20,
                         ),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding26,
-                      ),
-                      CustomSaveButton(
-                        onTap: () {
-                          return BaseUtil().openRechargeModalSheet(
-                              investmentType: InvestmentType.AUGGOLD99);
-                        },
-                        title: 'Save',
-                        isFullScreen: true,
-                        width: SizeConfig.screenWidth * 0.2,
-                      ),
-                    ],
-                  ),
+                        UserFundQuantitySE(
+                          style: TextStyles.rajdhaniSB.title4,
+                        ),
+                        Text(
+                          'Invested',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: SizeConfig.pageHorizontalMargins / 2),
+                child: CustomSaveButton(
+                  onTap: () {
+                    return BaseUtil().openRechargeModalSheet(
+                        investmentType: InvestmentType.AUGGOLD99);
+                  },
+                  title: 'Save',
+                  width: SizeConfig.screenWidth,
                 ),
               ),
-            ),
+            ],
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-          child: Container(
-            height: SizeConfig.screenWidth - 50,
-            width: SizeConfig.screenWidth * 0.87,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.rotationY(math.pi),
-                child: Image.asset(
-                  Assets.digitalGoldBar,
-                  height: SizeConfig.screenWidth * 0.4,
-                  width: SizeConfig.screenWidth * 0.4,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

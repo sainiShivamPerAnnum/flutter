@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AutosaveCard extends StatefulWidget {
   AutosaveCard({Key key}) : super(key: key);
@@ -128,11 +129,22 @@ class InitAutosaveCard extends StatelessWidget {
                               style: TextStyles.sourceSans.bold.body1),
                         ),
                         SizedBox(
-                          height: SizeConfig.padding10,
+                          height: SizeConfig.padding20,
                         ),
                         Row(
                           children: [
-                            Text('START', style: TextStyles.rajdhaniSB.body3),
+                            Shimmer(
+                                gradient: new LinearGradient(
+                                  colors: [
+                                    UiConstants.kTextColor2,
+                                    Colors.white,
+                                    UiConstants.kTextColor2
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                child: Text('START',
+                                    style: TextStyles.rajdhaniSB.body3)),
                             SizedBox(
                               height: SizeConfig.padding4,
                             ),
@@ -140,7 +152,7 @@ class InitAutosaveCard extends StatelessWidget {
                               Assets.chevRonRightArrow,
                             )
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ],

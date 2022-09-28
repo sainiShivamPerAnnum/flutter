@@ -172,6 +172,7 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
             SaveCustomCard(
               title: 'Digital Gold',
+              subtitle: "You own",
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,
@@ -187,6 +188,7 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
             SaveCustomCard(
               title: 'Fello Flo',
+              subtitle: "Current Value",
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,

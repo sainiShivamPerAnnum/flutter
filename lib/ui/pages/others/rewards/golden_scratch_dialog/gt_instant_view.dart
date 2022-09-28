@@ -103,78 +103,7 @@ class _GTInstantViewState extends State<GTInstantView>
                     ),
                   ),
                 ),
-                // if (model.showMainContent)
-                //   Align(
-                //     alignment: Alignment.center,
-                //     child: Lottie.asset(Assets.glitter, repeat: false),
-                //   ),
-                // AnimatedOpacity(
-                //   duration: Duration(milliseconds: 300),
-                //   opacity: model.isInvestmentAnimationInProgress ? 1 : 0,
-                //   curve: Curves.decelerate,
-                //   child: Align(
-                //     alignment: Alignment.center,
-                //     child: Column(
-                //       mainAxisSize: MainAxisSize.min,
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         Lottie.asset(Assets.txnFinish,
-                //             repeat: false,
-                //             height: SizeConfig.screenWidth * 0.8),
-                //         Container(
-                //           width: SizeConfig.screenWidth,
-                //           margin: EdgeInsets.symmetric(
-                //               horizontal: SizeConfig.pageHorizontalMargins),
-                //           child: FittedBox(
-                //             fit: BoxFit.scaleDown,
-                //             child: Text(
-                //               widget.title ?? "Hurray!",
-                //               style:
-                //                   TextStyles.title3.bold.colour(Colors.white),
-                //               textAlign: TextAlign.center,
-                //             ),
-                //           ),
-                //         ),
-                //         //SizedBox(height: SizeConfig.screenWidth / 4)
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // AnimatedOpacity(
-                //   opacity: model.isCoinAnimationInProgress ? 1 : 0,
-                //   duration: Duration(milliseconds: 100),
-                //   curve: Curves.decelerate,
-                //   child: Align(
-                //     alignment: Alignment.center,
-                //     child: Column(
-                //       mainAxisSize: MainAxisSize.min,
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         SizedBox(height: SizeConfig.padding32),
-                //         Lottie.asset(Assets.coinStack,
-                //             controller: model.lottieAnimationController,
-                //             onLoaded: (composition) {
-                //           model.lottieAnimationController
-                //             ..duration = composition.duration;
-                //         },
-                //             height: SizeConfig.screenWidth,
-                //             width: SizeConfig.screenWidth * 0.6),
-                //         SizedBox(height: SizeConfig.padding64),
-                //         Container(
-                //           width: SizeConfig.screenWidth,
-                //           margin: EdgeInsets.symmetric(
-                //               horizontal: SizeConfig.pageHorizontalMargins),
-                //           child: Text(
-                //             "${widget.amount.toInt()} Fello Tokens have been credited to your wallet!",
-                //             style: TextStyles.title3.bold.colour(Colors.white),
-                //             textAlign: TextAlign.center,
-                //           ),
-                //         ),
-                //         SizedBox(height: SizeConfig.screenWidth / 4)
-                //       ],
-                //     ),
-                //   ),
-                // ),
+
                 Column(
                   children: [
                     SafeArea(
@@ -406,29 +335,29 @@ class _GTInstantViewState extends State<GTInstantView>
 
   Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {
     Function onPressed;
-    // if (source == GTSOURCE.cricket ||
-    //     source == GTSOURCE.panVerify ||
-    //     source == GTSOURCE.poolClub ||
-    //     source == GTSOURCE.footBall ||
-    //     source == GTSOURCE.candyFiesta ||
-    //     source == GTSOURCE.game) {
-    onPressed = () {
-      if (!model.isCardScratched) return;
-      AppState.backButtonDispatcher.didPopRoute();
-    };
-    // } else {
-    //   onPressed = () {
-    //     if (!model.isCardScratched) return;
-    //     while (AppState.screenStack.length > 1) {
-    //       AppState.backButtonDispatcher.didPopRoute();
-    //     }
-    //     if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
-    //       AppState.delegate.appState.setCurrentTabIndex = 0;
-    //       model.showAutosavePrompt();
-    //     } else
-    //       AppState.delegate.appState.setCurrentTabIndex = 1;
-    //   };
-    // }
+    if (source == GTSOURCE.cricket ||
+        source == GTSOURCE.panVerify ||
+        source == GTSOURCE.poolClub ||
+        source == GTSOURCE.footBall ||
+        source == GTSOURCE.candyFiesta ||
+        source == GTSOURCE.game) {
+      onPressed = () {
+        if (!model.isCardScratched) return;
+        AppState.backButtonDispatcher.didPopRoute();
+      };
+    } else {
+      onPressed = () {
+        if (!model.isCardScratched) return;
+        while (AppState.screenStack.length > 1) {
+          AppState.backButtonDispatcher.didPopRoute();
+        }
+        if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
+          AppState.delegate.appState.setCurrentTabIndex = 0;
+          model.showAutosavePrompt();
+        } else
+          AppState.delegate.appState.setCurrentTabIndex = 1;
+      };
+    }
     return onPressed;
   }
 

@@ -34,11 +34,11 @@ class SafetyWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Your money is in safe hands",
+                    "Games are played with Fello tokens",
                     style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
                   ),
                   Text(
-                    "Fello games do not use  any money from your savings or investments",
+                    "Fello games do not use any money from your savings or investments",
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   )

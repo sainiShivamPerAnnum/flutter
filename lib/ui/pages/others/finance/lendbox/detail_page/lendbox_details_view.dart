@@ -51,7 +51,7 @@ class LendboxDetailsView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AssetCard(),
+                      LBoxAssetCard(),
                       SizedBox(
                         height: SizeConfig.padding24,
                       ),
@@ -71,6 +71,116 @@ class LendboxDetailsView extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class LBoxAssetCard extends StatelessWidget {
+  const LBoxAssetCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        color: UiConstants.kSaveStableFelloCardBg,
+      ),
+      padding: EdgeInsets.fromLTRB(
+          SizeConfig.pageHorizontalMargins / 2,
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins),
+      child: Stack(
+        children: [
+          Image.asset(
+            Assets.felloFlo,
+            height: SizeConfig.screenWidth * 0.32,
+            width: SizeConfig.screenWidth * 0.32,
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: SizeConfig.screenWidth * 0.3),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
+                        Text('Safer way to invest',
+                            style: TextStyles.sourceSans.body4),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    LendboxPrincipleValue(
+                                      prefix: "\u20b9",
+                                      style: TextStyles.rajdhaniSB.title4,
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding2,
+                                    ),
+                                    Text(
+                                      'Invested',
+                                      style: TextStyles.sourceSans.body3.colour(
+                                        UiConstants.kTextColor.withOpacity(0.8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: SizeConfig.padding16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UserFundQuantitySE(
+                                      style: TextStyles.rajdhaniSB.title4,
+                                      investmentType: InvestmentType.LENDBOXP2P,
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding2,
+                                    ),
+                                    Text(
+                                      'Current',
+                                      style: TextStyles.sourceSans.body3.colour(
+                                          UiConstants.kTextColor
+                                              .withOpacity(0.8)),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: SizeConfig.pageHorizontalMargins / 2),
+                child: CustomSaveButton(
+                  onTap: () {
+                    return BaseUtil().openRechargeModalSheet(
+                        investmentType: InvestmentType.LENDBOXP2P);
+                  },
+                  title: 'Save',
+                  width: SizeConfig.screenWidth,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -165,7 +275,6 @@ class AssetCard extends StatelessWidget {
                           );
                         },
                         title: 'Save',
-                        isFullScreen: true,
                         width: SizeConfig.screenWidth * 0.2,
                       ),
                     ],

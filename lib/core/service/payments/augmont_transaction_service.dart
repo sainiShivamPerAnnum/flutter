@@ -273,13 +273,7 @@ class AugmontTransactionService extends BaseTransactionService {
       currentTransactionState = TransactionState.success;
       Haptic.vibrate();
       GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-      if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-        _gtService.showInstantGoldenTicketView(
-            amount: depositFcmResponseModel.amount,
-            title:
-                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-            source: GTSOURCE.prize);
-      }
+      _gtService.fetchAndVerifyGoldenTicketByID();
     }
     _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     // } catch (e) {
@@ -318,14 +312,8 @@ class AugmontTransactionService extends BaseTransactionService {
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
-
         GoldenTicketService.goldenTicketId = gtId;
-        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-          _gtService.showInstantGoldenTicketView(
-              amount: amount,
-              title: "You have successfully saved ₹${getAmount(amount)}",
-              source: GTSOURCE.prize);
-        }
+        _gtService.fetchAndVerifyGoldenTicketByID();
       }
 
       _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
