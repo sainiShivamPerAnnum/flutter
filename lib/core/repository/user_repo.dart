@@ -496,7 +496,7 @@ class UserRepository extends BaseRepo {
 
   //Method to fetch the user-boot-up-ee
 
-  Future<UserBootUpDetailsModel> fetchUserBootUpRssponse(
+  Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse(
       {@required String userId,
       @required String deviceId,
       @required String platform,
@@ -526,10 +526,11 @@ class UserRepository extends BaseRepo {
 
       userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
-      return userBootUp;
+      return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
     } catch (e) {
       logger.d("Unable to fetch user boot up ee ${e.toString()}");
-      return userBootUp;
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to get user bootup details", 400);
     }
   }
 

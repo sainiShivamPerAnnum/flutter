@@ -163,36 +163,36 @@ class GTInstantViewModel extends BaseViewModel {
     return token;
   }
 
-  initDepositSuccessAnimation(double amount) async {
-    coinsCount = _coinService.flcBalance - amount.toInt();
-    isInvestmentAnimationInProgress = true;
-    notifyListeners();
-    Future.delayed(Duration(milliseconds: 2500), () {
-      isInvestmentAnimationInProgress = false;
-      notifyListeners();
-      initCoinAnimation(amount);
-    });
-  }
+  // initDepositSuccessAnimation(double amount) async {
+  //   coinsCount = _coinService.flcBalance - amount.toInt();
+  //   isInvestmentAnimationInProgress = true;
+  //   notifyListeners();
+  //   Future.delayed(Duration(milliseconds: 2500), () {
+  //     isInvestmentAnimationInProgress = false;
+  //     notifyListeners();
+  //     initCoinAnimation(amount);
+  //   });
+  // }
 
-  initCoinAnimation(double amount) async {
-    await Future.delayed(Duration(milliseconds: 100), () {
-      isCoinAnimationInProgress = true;
-      lottieAnimationController.forward();
-      coinsCount = _coinService.flcBalance;
-      notifyListeners();
-    });
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   coinContentOpacity = 0;
-    //   notifyListeners();
-    // });
-    await Future.delayed(Duration(milliseconds: 2500), () {
-      isCoinAnimationInProgress = false;
-      notifyListeners();
-    });
-    await Future.delayed(Duration(milliseconds: 100), () {
-      initNormalFlow();
-    });
-  }
+  // initCoinAnimation(double amount) async {
+  //   await Future.delayed(Duration(milliseconds: 100), () {
+  //     isCoinAnimationInProgress = true;
+  //     lottieAnimationController.forward();
+  //     coinsCount = _coinService.flcBalance;
+  //     notifyListeners();
+  //   });
+  //   // await Future.delayed(Duration(seconds: 2), () {
+  //   //   coinContentOpacity = 0;
+  //   //   notifyListeners();
+  //   // });
+  //   await Future.delayed(Duration(milliseconds: 2500), () {
+  //     isCoinAnimationInProgress = false;
+  //     notifyListeners();
+  //   });
+  //   await Future.delayed(Duration(milliseconds: 100), () {
+  //     initNormalFlow();
+  //   });
+  // }
 
   initNormalFlow() {
     Future.delayed(Duration(milliseconds: 500), () {

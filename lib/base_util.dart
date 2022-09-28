@@ -347,7 +347,7 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  static showPositiveAlert(String title, String message, {int seconds = 3}) {
+  static showPositiveAlert(String title, String message, {int seconds = 2}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     bool isKeyboardOpen =
         MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
@@ -418,7 +418,7 @@ class BaseUtil extends ChangeNotifier {
         message: (message == null || message.isEmpty)
             ? "Something went wrong"
             : message,
-        duration: Duration(seconds: seconds ?? 3),
+        duration: Duration(seconds: seconds ?? 2),
         backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(

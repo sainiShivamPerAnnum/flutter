@@ -240,15 +240,17 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED) ?? "";
       dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
 
-      final response_temp = await _userRepo.fetchUserBootUpRssponse(
-          userId: userId,
-          deviceId: deviceId,
-          platform: platform,
-          appVersion: appVersion,
-          lastOpened: lastOpened,
-          dayOpenCount: dayOpenCount);
-
-      userBootUp = response_temp;
+      final ApiResponse<UserBootUpDetailsModel> res =
+          await _userRepo.fetchUserBootUpRssponse(
+              userId: userId,
+              deviceId: deviceId,
+              platform: platform,
+              appVersion: appVersion,
+              lastOpened: lastOpened,
+              dayOpenCount: dayOpenCount);
+      if (res.isSuccess()) {
+        userBootUp = res.model;
+      }
     } else {
       //No user logged in
       _logger.d("No user logged in, exiting user boot up details");

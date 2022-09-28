@@ -171,9 +171,10 @@ class LoginControllerViewModel extends BaseViewModel {
                   .then((res) {
                 _onSignInSuccess(LoginSource.FIREBASE);
               }).catchError((e) {
-                logger.e(e);
-                BaseUtil.showNegativeAlert("Authentication failed",
-                    "Please enter your mobile number to authenticate.");
+                print(e.toString());
+
+                BaseUtil.showNegativeAlert(
+                    "Authentication failed", "Please try again after sometime");
               });
             } else {
               _otpScreenKey.currentState.model.pinEditingController.text = "";

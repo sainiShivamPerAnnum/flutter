@@ -79,10 +79,10 @@ class _GTInstantViewState extends State<GTInstantView>
         model.lottieAnimationController = AnimationController(vsync: this);
         model.init();
 
-        if (widget.source == GTSOURCE.deposit)
-          model.initDepositSuccessAnimation(widget.amount);
-        else
-          model.initNormalFlow();
+        // if (widget.source == GTSOURCE.deposit)
+        //   model.initDepositSuccessAnimation(widget.amount);
+        // else
+        model.initNormalFlow();
       },
       builder: (ctx, model, child) {
         return Scaffold(

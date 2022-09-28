@@ -209,32 +209,40 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   bool checkIfUserIsBannedFromThisGame() {
-    bool isUserBannedForThisGame;
-    String userBannedNotice;
+    bool isUserBannedForThisGame = false;
+    String userBannedNotice = '';
     switch (currentGame) {
       case Constants.GAME_TYPE_CRICKET:
-        isUserBannedForThisGame =
-            _userService.userBootUp.data.banMap.games.cricketMap.isBanned;
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.cricketMap?.isBanned ??
+            false;
         userBannedNotice =
-            _userService.userBootUp.data.banMap.games.cricketMap.reason;
+            _userService.userBootUp?.data?.banMap?.games?.cricketMap?.reason ??
+                '';
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
-        isUserBannedForThisGame =
-            _userService.userBootUp.data.banMap.games.candyFiestaMap.isBanned;
-        userBannedNotice =
-            _userService.userBootUp.data.banMap.games.candyFiestaMap.reason;
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.candyFiestaMap?.isBanned ??
+            false;
+        userBannedNotice = _userService
+                .userBootUp?.data?.banMap?.games?.candyFiestaMap?.reason ??
+            '';
         break;
       case Constants.GAME_TYPE_FOOTBALL:
-        isUserBannedForThisGame =
-            _userService.userBootUp.data.banMap.games.footballMap.isBanned;
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.footballMap?.isBanned ??
+            false;
         userBannedNotice =
-            _userService.userBootUp.data.banMap.games.footballMap.reason;
+            _userService.userBootUp?.data?.banMap?.games?.footballMap?.reason ??
+                '';
         break;
       case Constants.GAME_TYPE_POOLCLUB:
-        isUserBannedForThisGame =
-            _userService.userBootUp.data.banMap.games.poolClubMap.isBanned;
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.poolClubMap?.isBanned ??
+            false;
         userBannedNotice =
-            _userService.userBootUp.data.banMap.games.poolClubMap.reason;
+            _userService.userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
+                '';
         break;
     }
     if (isUserBannedForThisGame != null && isUserBannedForThisGame) {

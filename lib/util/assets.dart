@@ -47,6 +47,7 @@ class Assets {
 // ONBOARDING
   static final String bankLottie = "assets/lotties/bank.json";
   static final String truecaller = "assets/images/truecaller.png";
+  static final String journeyOnbLottie = "assets/lotties/journey_onb.json";
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static final String wmtShare = "assets/vectors/icons/wmt_share.svg";

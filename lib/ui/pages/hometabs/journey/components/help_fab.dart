@@ -1,3 +1,5 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/dialogs/journey_onboarding_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -19,6 +21,11 @@ class _HelpFabState extends State<HelpFab> {
       isOpen = true;
       width = SizeConfig.padding80;
     });
+    BaseUtil.openDialog(
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: JourneyOnboardingDialog(),
+        isBarrierDismissable: false);
     Future.delayed(Duration(seconds: 5), () {
       collapseFab();
     });

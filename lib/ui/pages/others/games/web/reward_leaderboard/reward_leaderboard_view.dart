@@ -94,16 +94,16 @@ class RewardLeaderboardView extends StatelessWidget {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: SizeConfig.padding16),
+                      SizedBox(height: SizeConfig.padding32),
                       SvgPicture.asset(
                         Assets.noWinnersAsset,
                       ),
-                      SizedBox(height: SizeConfig.padding16),
+                      SizedBox(height: SizeConfig.padding10),
                       Text(
-                        "No winners yet",
-                        style: TextStyles.sourceSans.body2.colour(Colors.white),
+                        "No rewards yet",
+                        style: TextStyles.rajdhaniB.body2.colour(Colors.white),
                       ),
-                      SizedBox(height: SizeConfig.padding16),
+                      SizedBox(height: SizeConfig.padding32),
                     ],
                   )
                 : RewardView(model: model.prizes),
