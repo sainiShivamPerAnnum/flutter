@@ -110,52 +110,52 @@ class _SupportPageState extends State<SupportPage> {
                               state: PageState.addPage, page: FaqPageConfig);
                         },
                       ),
-                      FelloBriefTile(
-                        leadingAsset: Assets.hsFdbk,
-                        title: "Feedback",
-                        onTap: () {
-                          AppState.screenStack.add(ScreenItem.dialog);
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => WillPopScope(
-                              onWillPop: () {
-                                AppState.backButtonDispatcher.didPopRoute();
-                                return Future.value(true);
-                              },
-                              child: FeedbackDialog(
-                                title: "Tell us what you think",
-                                description: "We'd love to hear from you",
-                                buttonText: "Submit",
-                                dialogAction: (String fdbk) {
-                                  if (fdbk != null && fdbk.isNotEmpty) {
-                                    //feedback submission allowed even if user not signed in
-                                    dbProvider
-                                        .submitFeedback(
-                                            (_userService.firebaseUser ==
-                                                        null ||
-                                                    _userService
-                                                            .firebaseUser.uid ==
-                                                        null)
-                                                ? 'UNKNOWN'
-                                                : baseProvider.firebaseUser.uid,
-                                            fdbk)
-                                        .then((flag) {
-                                      AppState.backButtonDispatcher
-                                          .didPopRoute();
-                                      if (flag) {
-                                        BaseUtil.showPositiveAlert(
-                                          'Thank You',
-                                          'We appreciate your feedback!',
-                                        );
-                                      }
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      // FelloBriefTile(
+                      //   leadingAsset: Assets.hsFdbk,
+                      //   title: "Feedback",
+                      //   onTap: () {
+                      //     AppState.screenStack.add(ScreenItem.dialog);
+                      //     showDialog(
+                      //       context: context,
+                      //       builder: (BuildContext context) => WillPopScope(
+                      //         onWillPop: () {
+                      //           AppState.backButtonDispatcher.didPopRoute();
+                      //           return Future.value(true);
+                      //         },
+                      //         child: FeedbackDialog(
+                      //           title: "Tell us what you think",
+                      //           description: "We'd love to hear from you",
+                      //           buttonText: "Submit",
+                      //           dialogAction: (String fdbk) {
+                      //             if (fdbk != null && fdbk.isNotEmpty) {
+                      //               //feedback submission allowed even if user not signed in
+                      //               dbProvider
+                      //                   .submitFeedback(
+                      //                       (_userService.firebaseUser ==
+                      //                                   null ||
+                      //                               _userService
+                      //                                       .firebaseUser.uid ==
+                      //                                   null)
+                      //                           ? 'UNKNOWN'
+                      //                           : baseProvider.firebaseUser.uid,
+                      //                       fdbk)
+                      //                   .then((flag) {
+                      //                 AppState.backButtonDispatcher
+                      //                     .didPopRoute();
+                      //                 if (flag) {
+                      //                   BaseUtil.showPositiveAlert(
+                      //                     'Thank You',
+                      //                     'We appreciate your feedback!',
+                      //                   );
+                      //                 }
+                      //               });
+                      //             }
+                      //           },
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                     ],
                   ),
                 ),

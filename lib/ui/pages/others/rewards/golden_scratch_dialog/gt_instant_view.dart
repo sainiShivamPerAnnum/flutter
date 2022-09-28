@@ -16,7 +16,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:shimmer/shimmer.dart';
 
 enum GTSOURCE {
   newuser,
@@ -259,26 +259,18 @@ class _GTInstantViewState extends State<GTInstantView>
                                           height: SizeConfig.screenWidth * 0.6,
                                           width: SizeConfig.screenWidth * 0.6,
                                         ),
-                                        child: Shimmer(
-                                          color: UiConstants.tertiarySolid,
-                                          enabled:
-                                              false, //model.isShimmerEnabled,
-                                          child: model.state == ViewState.Busy
-                                              ? Container(
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.6,
-                                                  height:
-                                                      SizeConfig.screenWidth *
-                                                          0.5,
-                                                )
-                                              : RedeemedGoldenScratchCard(
-                                                  ticket: model.goldenTicket,
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.6,
-                                                ),
-                                        ),
+                                        child: model.state == ViewState.Busy
+                                            ? Container(
+                                                width: SizeConfig.screenWidth *
+                                                    0.6,
+                                                height: SizeConfig.screenWidth *
+                                                    0.5,
+                                              )
+                                            : RedeemedGoldenScratchCard(
+                                                ticket: model.goldenTicket,
+                                                width: SizeConfig.screenWidth *
+                                                    0.6,
+                                              ),
                                       ),
                                     ),
                                   ),

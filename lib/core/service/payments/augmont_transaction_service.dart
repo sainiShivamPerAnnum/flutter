@@ -160,7 +160,6 @@ class AugmontTransactionService extends BaseTransactionService {
     );
 
     isGoldBuyInProgress = false;
-    AppState.unblockNavigation();
   }
 
   // PAYTM METHODS
@@ -229,69 +228,65 @@ class AugmontTransactionService extends BaseTransactionService {
     this.pollingPeriodicTimer?.cancel();
     _logger.d("timer cancelled");
 
-    try {
-      final DepositFcmResponseModel depositFcmResponseModel =
-          DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
+    // try {
+    final DepositFcmResponseModel depositFcmResponseModel =
+        DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
-      //Handle failed condition here.
-      if (!depositFcmResponseModel.status) {
-        // AppState.delegate.appState.isTxnLoaderInView = false;
-        BaseUtil.showNegativeAlert("Transaction failed",
-            "Your gold purchase did not complete successfully");
-        return;
-      }
-      //handle multiple fcm command for same transaction
-      if (depositFcmResponseModel.gtId != null) {
-        print(
-            "Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
-        if (GoldenTicketService.lastGoldenTicketId != null) {
-          if (GoldenTicketService.lastGoldenTicketId ==
-              depositFcmResponseModel.gtId) {
-            return;
-          } else {
-            GoldenTicketService.lastGoldenTicketId =
-                depositFcmResponseModel.gtId;
-          }
+    //Handle failed condition here.
+    if (!depositFcmResponseModel.status) {
+      // AppState.delegate.appState.isTxnLoaderInView = false;
+      BaseUtil.showNegativeAlert("Transaction failed",
+          "Your gold purchase did not complete successfully");
+      return;
+    }
+    //handle multiple fcm command for same transaction
+    if (depositFcmResponseModel.gtId != null) {
+      print("Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
+      if (GoldenTicketService.lastGoldenTicketId != null) {
+        if (GoldenTicketService.lastGoldenTicketId ==
+            depositFcmResponseModel.gtId) {
+          return;
         } else {
           GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
         }
+      } else {
+        GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
       }
-
-      double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
-      if (newAugPrinciple != null && newAugPrinciple > 0) {
-        _userService.augGoldPrinciple = newAugPrinciple;
-      }
-      double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
-      if (newAugQuantity != null && newAugQuantity > 0) {
-        _userService.augGoldQuantity = newAugQuantity;
-      }
-      //add this to augmontBuyVM
-      int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(newFlcBalance);
-      }
-      _userService.getUserFundWalletData();
-      if (currentTransactionState == TransactionState.ongoing) {
-        if (AppState.screenStack.last == ScreenItem.loader) {
-          AppState.screenStack.remove(AppState.screenStack.last);
-        }
-        currentTransactionState = TransactionState.success;
-        Haptic.vibrate();
-        GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-          _gtService.showInstantGoldenTicketView(
-              amount: depositFcmResponseModel.amount,
-              title:
-                  "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
-              source: GTSOURCE.prize);
-        }
-      }
-      _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
-    } catch (e) {
-      _logger.e(e);
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.DepositPayloadError, e);
     }
+
+    double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
+    if (newAugPrinciple != null && newAugPrinciple > 0) {
+      _userService.augGoldPrinciple = newAugPrinciple;
+    }
+    double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
+    if (newAugQuantity != null && newAugQuantity > 0) {
+      _userService.augGoldQuantity = newAugQuantity;
+    }
+    //add this to augmontBuyVM
+    int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
+    if (newFlcBalance > 0) {
+      _userCoinService.setFlcBalance(newFlcBalance);
+    }
+    _userService.getUserFundWalletData();
+    if (currentTransactionState == TransactionState.ongoing) {
+      AppState.unblockNavigation();
+      currentTransactionState = TransactionState.success;
+      Haptic.vibrate();
+      GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+      if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
+        _gtService.showInstantGoldenTicketView(
+            amount: depositFcmResponseModel.amount,
+            title:
+                "You have successfully saved ₹${getAmount(depositFcmResponseModel.amount)}",
+            source: GTSOURCE.prize);
+      }
+    }
+    _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+    // } catch (e) {
+    //   _logger.e(e);
+    //   _internalOpsService.logFailure(
+    //       _userService.baseUser.uid, FailType.DepositPayloadError, e);
+    // }
   }
 
   transactionResponseUpdate({String gtId, double amount}) async {
@@ -320,9 +315,7 @@ class AugmontTransactionService extends BaseTransactionService {
       _userService.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
-        if (AppState.screenStack.last == ScreenItem.loader) {
-          AppState.screenStack.remove(AppState.screenStack.last);
-        }
+        AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
 
@@ -361,6 +354,9 @@ class AugmontTransactionService extends BaseTransactionService {
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
           timer.cancel();
+          AppState.unblockNavigation();
+          isGoldBuyInProgress = false;
+          currentTransactionState = TransactionState.idle;
           BaseUtil.showNegativeAlert(
             'Transaction failed',
             'Your transaction was unsuccessful. Please try again',

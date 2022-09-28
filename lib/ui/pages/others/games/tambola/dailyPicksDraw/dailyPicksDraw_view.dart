@@ -13,7 +13,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 //Pub Imports
-import 'package:rive/rive.dart' as rive;
+// import 'package:rive/rive.dart' as rive;
 
 import 'dailyPicksDraw_viewModel.dart';
 
@@ -90,17 +90,17 @@ class PicksDraw extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 180,
-                                width: 180,
-                                child: rive.RiveAnimation.asset(
-                                  "images/Tambola/openbox.riv",
-                                  // controllers: [model.boxController],
-                                ),
-                              ),
-                            ),
+                            // Align(
+                            //   alignment: Alignment.bottomCenter,
+                            //   child: Container(
+                            //     height: 180,
+                            //     width: 180,
+                            //     child: rive.RiveAnimation.asset(
+                            //       "images/Tambola/openbox.riv",
+                            //       // controllers: [model.boxController],
+                            //     ),
+                            //   ),
+                            // ),
                             Positioned(
                               bottom: 28,
                               left: SizeConfig.screenWidth / 2,

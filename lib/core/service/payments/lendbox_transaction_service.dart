@@ -136,8 +136,6 @@ class LendboxTransactionService extends BaseTransactionService {
       skipMl: this.skipMl,
       investmentType: InvestmentType.LENDBOXP2P,
     );
-
-    AppState.unblockNavigation();
   }
 
   Future<void> processPolling(Timer timer) async {
@@ -159,6 +157,7 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
           timer.cancel();
           currentTransactionState = TransactionState.idle;
+          AppState.unblockNavigation();
           BaseUtil.showNegativeAlert(
             'Transaction failed',
             'Your transaction was unsuccessful. Please try again',
@@ -194,9 +193,7 @@ class LendboxTransactionService extends BaseTransactionService {
       _userService.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
-        if (AppState.screenStack.last == ScreenItem.loader) {
-          AppState.screenStack.remove(AppState.screenStack.last);
-        }
+        AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
 

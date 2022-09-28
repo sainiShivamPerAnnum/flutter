@@ -1,4 +1,5 @@
-import 'package:app_install_date/utils.dart';
+import 'dart:io';
+
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
@@ -22,7 +23,7 @@ class SourceAdaptiveAssetViewModel extends BaseViewModel {
   init(String value) {
     assetUrl = value;
     assetName = assetUrl.split('/').last.split('.').first;
-    if (!PlatformUtils.isWeb) completeNViewDownloadSaveLViewAsset();
+    completeNViewDownloadSaveLViewAsset();
   }
 
   dump() {}

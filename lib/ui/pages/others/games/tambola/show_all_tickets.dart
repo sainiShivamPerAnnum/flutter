@@ -1,8 +1,9 @@
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ShowAllTickets extends StatelessWidget {
   final List<Ticket> tambolaBoardView;
@@ -11,19 +12,11 @@ class ShowAllTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: UiConstants.primaryColor,
-        elevation: 2,
-        shadowColor: Color(0xff086972).withOpacity(0.5),
-        title: Text(
-          "All Tickets",
-          style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
+      appBar: FAppBar(
+        title: "All Tickets",
+        showAvatar: false,
+        showCoinBar: false,
+        showHelpButton: false,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

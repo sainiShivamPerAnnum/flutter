@@ -49,7 +49,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+// import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class WinViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
@@ -163,7 +163,7 @@ class WinViewModel extends BaseViewModel {
 
   List<EventModel> _ongoingEvents;
 
-  static PanelController _panelController = PanelController();
+  // static PanelController _panelController = PanelController();
 
   List<EventModel> get ongoingEvents => this._ongoingEvents;
 
@@ -172,12 +172,12 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  PanelController get panelController => _panelController;
+  // PanelController get panelController => _panelController;
 
-  set panelController(val) {
-    _panelController = val;
-    notifyListeners();
-  }
+  // set panelController(val) {
+  //   _panelController = val;
+  //   notifyListeners();
+  // }
 
   set setCurrentPage(int currentPage) {
     this._currentPage = currentPage;

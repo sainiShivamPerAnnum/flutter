@@ -31,84 +31,105 @@ class SellCardView extends StatelessWidget {
         BankAndPanServiceProperties.ongoing,
       ],
       builder: (ctx, sellService, child) => Container(
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.white.withOpacity(0.3),
+              Colors.black.withOpacity(0),
+              Colors.white.withOpacity(0.3),
+            ],
+          ),
+        ),
         width: SizeConfig.screenWidth,
-        child: Column(
-          children: [
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SellText(
-                    investmentType: investmentType,
-                  ),
-                  SellButton(
-                    onTap: () {
-                      BaseUtil.openModalBottomSheet(
-                        backgroundColor: UiConstants.kModalSheetBackgroundColor,
-                        isBarrierDismissable: true,
-                        addToScreenStack: true,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        content: SellingReasonBottomSheet(
-                          investmentType: investmentType,
-                        ),
-                      );
-                    },
-                    isActive: sellService.getButtonAvailibility(),
-                  ),
-                ],
+        child: Container(
+          margin: EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+            color: UiConstants.kSecondaryBackgroundColor,
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding24,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: SizeConfig.padding24),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child:
-                    sellService.isKYCVerified && sellService.isBankDetailsAdded
-                        ? SizedBox()
-                        : Text(
-                            'To enable selling gold,\ncomplete the following:',
-                            style: TextStyles.sourceSans.body4.colour(
-                              Colors.grey.withOpacity(0.7),
-                            ),
-                            textAlign: TextAlign.end,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SellText(
+                      investmentType: investmentType,
+                    ),
+                    SellButton(
+                      onTap: () {
+                        BaseUtil.openModalBottomSheet(
+                          backgroundColor:
+                              UiConstants.kModalSheetBackgroundColor,
+                          isBarrierDismissable: true,
+                          addToScreenStack: true,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness32),
+                            topRight: Radius.circular(SizeConfig.roundness32),
                           ),
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding12),
-            if (!sellService.isKYCVerified || sellService.userPan == null)
-              SellActionButton(
-                title: 'Complete KYC',
-                onTap: navigateToKycScreen,
-              ),
-            if (!sellService.isBankDetailsAdded ||
-                sellService.activeBankAccountDetails == null)
-              SellActionButton(
-                title: 'Add Bank Details',
-                onTap: navigateToBankDetailsScreen,
-              ),
-            SizedBox(height: SizeConfig.padding12),
-            if (sellService.sellNotice != null)
-              SellCardInfoStrips(
-                leadingIcon: Icon(
-                  Icons.warning_amber_rounded,
-                  color: UiConstants.tertiarySolid.withOpacity(0.5),
+                          content: SellingReasonBottomSheet(
+                            investmentType: investmentType,
+                          ),
+                        );
+                      },
+                      isActive: sellService.getButtonAvailibility(),
+                    ),
+                  ],
                 ),
-                content: "sellService.sellNotice",
-                textColor: Colors.amber,
-                backgroundColor: Colors.amber.withOpacity(0.16),
               ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.only(right: SizeConfig.padding24),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: sellService.isKYCVerified &&
+                          sellService.isBankDetailsAdded
+                      ? SizedBox()
+                      : Text(
+                          'To enable selling gold,\ncomplete the following:',
+                          style: TextStyles.sourceSans.body4.colour(
+                            Colors.grey.withOpacity(0.7),
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                ),
+              ),
+              SizedBox(height: SizeConfig.padding12),
+              if (!sellService.isKYCVerified || sellService.userPan == null)
+                SellActionButton(
+                  title: 'Complete KYC',
+                  onTap: navigateToKycScreen,
+                ),
+              if (!sellService.isBankDetailsAdded ||
+                  sellService.activeBankAccountDetails == null)
+                SellActionButton(
+                  title: 'Add Bank Details',
+                  onTap: navigateToBankDetailsScreen,
+                ),
+              SizedBox(height: SizeConfig.padding12),
+              if (sellService.sellNotice != null)
+                SellCardInfoStrips(
+                  leadingIcon: Icon(
+                    Icons.warning_amber_rounded,
+                    color: UiConstants.tertiarySolid.withOpacity(0.5),
+                  ),
+                  content: "sellService.sellNotice",
+                  textColor: Colors.amber,
+                  backgroundColor: Colors.amber.withOpacity(0.16),
+                ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+            ],
+          ),
         ),
       ),
     );

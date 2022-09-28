@@ -459,30 +459,6 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> updateUserWalkthroughCompletion() async {
-    bool isGtRewarded = false;
-    try {
-      final String _bearer = await getBearerToken();
-      final res = await APIService.instance.postData(
-          ApiPath.kWalkthrough(userService.baseUser.uid),
-          cBaseUrl: _baseUrl,
-          token: _bearer);
-      logger.d(res);
-      final responseData = res['data'];
-      logger.d(responseData);
-      if (responseData["isGtRewarded"] != null && responseData["isGtRewarded"])
-        isGtRewarded = true;
-      if (responseData["gtId"] != null &&
-          responseData["gtId"].toString().isNotEmpty)
-        GoldenTicketService.goldenTicketId = responseData["gtId"];
-      return ApiResponse(code: 200, model: isGtRewarded);
-    } catch (e) {
-      logger.d(e);
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to create user account", 400);
-    }
-  }
-
   Future<bool> logOut() async {
     try {
       final token = await getBearerToken();

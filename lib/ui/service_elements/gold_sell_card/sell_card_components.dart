@@ -129,7 +129,7 @@ class SellActionButton extends StatelessWidget {
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            color: UiConstants.kSecondaryBackgroundColor,
+            color: UiConstants.kDarkBackgroundColor,
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),

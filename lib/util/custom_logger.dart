@@ -1,19 +1,10 @@
-import 'dart:math';
-
-import 'package:encrypt/encrypt.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:logger/logger.dart';
 
 class CustomLogger {
   static Level level = Level.verbose;
 
   ///Encryption Utils
-  Encrypter aesEncrypter;
-  Random _rnd = Random();
-  String randomIv, randomAesKey;
-  IV iv;
-  Key aesKey;
-  static const String _chars = 'abcdef1234567890';
+
   static bool isEnc = // FlavorConfig.isProduction() ??
       false;
 
@@ -69,47 +60,10 @@ class CustomLogger {
     log(Level.wtf, _processMessage(message), error, StackTrace.current);
   }
 
-  bool _initializeAESEncryptor() {
-    try {
-      randomAesKey = _getRandomString(32);
-      aesKey = Key.fromUtf8(randomAesKey);
-      randomIv = _getRandomString(16);
-      iv = IV.fromUtf8(randomIv);
-
-      aesEncrypter =
-          Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
-      return true;
-    } catch (e) {
-      print('$e');
-      return false;
-    }
-  }
-
-  String _aesEncyptStr(String plainText) {
-    final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
-    return encryptedData.base16;
-  }
-
-  String _getRandomString(int length) => String.fromCharCodes(
-        Iterable.generate(
-          length,
-          (_) => _chars.codeUnitAt(
-            _rnd.nextInt(_chars.length),
-          ),
-        ),
-      );
-
   dynamic _processMessage(dynamic message) {
     try {
       if (isEnc) {
         return "";
-        // if (aesEncrypter == null) return 'REDACTED OBJ';
-        //
-        // String _msg = _castString<String>(message);
-        // if (_msg == null)
-        //   return 'REDACTED OBJ';
-        // else
-        //   return _aesEncyptStr(_msg);
       } else {
         return message;
       }

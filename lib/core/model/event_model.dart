@@ -8,7 +8,7 @@ class EventModel {
   String thumbnail;
   String type;
   int position;
-  String color;
+  String textColor;
   String image;
   List<dynamic> instructions;
   int minVersion;
@@ -23,7 +23,7 @@ class EventModel {
     @required this.thumbnail,
     @required this.type,
     @required this.position,
-    @required this.color,
+    @required this.textColor,
     @required this.image,
     @required this.minVersion,
     @required this.url,
@@ -51,7 +51,7 @@ class EventModel {
       thumbnail: thumbnail ?? this.thumbnail,
       type: type ?? this.type,
       position: position ?? this.position,
-      color: color ?? this.color,
+      textColor: color ?? this.textColor,
       image: image ?? this.image,
       minVersion: minVersion ?? this.minVersion,
       instructions: instructions ?? this.instructions,
@@ -69,7 +69,7 @@ class EventModel {
       'thumbnail': thumbnail,
       'type': type,
       'position': position,
-      'color': color,
+      'color': textColor,
       'image': image,
       'minVersion': minVersion,
       'url': url,
@@ -87,7 +87,7 @@ class EventModel {
       thumbnail: map['thumbnail'] ?? '',
       type: map['type'] ?? '',
       position: map['position'] ?? 1,
-      color: map['color'] ?? "#ffffff",
+      textColor: map['textColor'] ?? "#ffffff",
       image: map['image'] ?? '',
       url: map['url'] ?? '',
       formUrl: map['formUrl'] ?? '',
@@ -105,6 +105,6 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $color image: $image  todayMatch : $todayMatch  minVersion: $minVersion url: $url formUrl: $formUrl winners: $winners)';
+    return 'EventModel(title: $title, subtitle: $subtitle, thumbnail: $thumbnail, type: $type, position: $position color: $textColor image: $image  todayMatch : $todayMatch  minVersion: $minVersion url: $url formUrl: $formUrl winners: $winners)';
   }
 }

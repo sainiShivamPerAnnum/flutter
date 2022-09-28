@@ -6,7 +6,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class WeeklyPicks extends StatelessWidget {
   final DailyPick weeklyDraws;
@@ -127,15 +126,10 @@ class WeeklyPicks extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              getDayName(i + 1).toUpperCase(),
-              style: GoogleFonts.montserrat(
-                color: i + 1 == colCount
+            Text(getDayName(i + 1).toUpperCase(),
+                style: TextStyles.sourceSans.body3.colour(i + 1 == colCount
                     ? UiConstants.kSnackBarPositiveContentColor
-                    : Colors.white,
-                fontSize: SizeConfig.smallTextSize,
-              ),
-            ),
+                    : Colors.white)),
             SizedBox(
               width: SizeConfig.padding12,
             ),

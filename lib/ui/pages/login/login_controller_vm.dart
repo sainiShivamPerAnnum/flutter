@@ -398,9 +398,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
     bool res =
         PreferenceHelper.exists(PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
-    if (res != null && res == true) {
-      await _userRepo.updateUserWalkthroughCompletion();
-    }
     setState(ViewState.Idle);
 
     ///check if the account is blocked

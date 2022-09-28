@@ -343,7 +343,7 @@ class CampaignCard extends StatelessWidget {
                       style: TextStyles.sourceSansEB.title50
                           .letterSpace(0.6)
                           .colour(
-                            event.color.toColor(),
+                            event.textColor.toColor(),
                           )
                           .setHeight(1),
                     ),

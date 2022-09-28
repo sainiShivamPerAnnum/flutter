@@ -153,7 +153,8 @@ class SingleTransactionView extends StatelessWidget {
                       child: (model.filteredList.length == 0
                           ? Column(
                               children: [
-                                SizedBox(height: SizeConfig.padding54),
+                                SizedBox(
+                                    height: SizeConfig.screenHeight * 0.16),
                                 SvgPicture.asset(Assets.noTransactionAsset),
                                 SizedBox(height: SizeConfig.padding16),
                                 Text(
@@ -166,8 +167,6 @@ class SingleTransactionView extends StatelessWidget {
                             )
                           : ListView(
                               physics: BouncingScrollPhysics(),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding28),
                               controller: model.tranListController,
                               children: List.generate(
                                 model.filteredList.length,
@@ -236,8 +235,6 @@ class SIPTransactionHistoryView extends StatelessWidget {
                         )
                       : ListView(
                           physics: BouncingScrollPhysics(),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding28),
                           controller: model.tranListController,
                           children: List.generate(
                             model.filteredSIPList.length,

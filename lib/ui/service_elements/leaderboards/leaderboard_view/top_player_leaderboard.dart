@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+// import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class TopPlayerLeaderboardView extends StatelessWidget {
   const TopPlayerLeaderboardView({Key key}) : super(key: key);
@@ -51,7 +51,7 @@ class TopPlayer extends StatelessWidget {
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
-  final PanelController panelController = PanelController();
+  // final PanelController panelController = PanelController();
 
   @override
   Widget build(BuildContext context) {
@@ -105,19 +105,10 @@ class TopPlayer extends StatelessWidget {
           ),
           // SizedBox(height: SizeConfig.padding20),
           Expanded(
-            child: SlidingUpPanel(
-              body: WinnerWidgets(
-                scoreboard: model.scoreboard,
-                userProfilePicUrl: userProfilePicUrl,
-                isSpotLightVisible: false,
-              ),
-              panel: _buildAllPlayerList(),
-              controller: panelController,
-              defaultPanelState: PanelState.CLOSED,
-              isDraggable: false,
-              color: Colors.transparent,
-              minHeight: SizeConfig.screenHeight * 0.6,
-              maxHeight: SizeConfig.screenHeight * 0.9,
+            child: WinnerWidgets(
+              scoreboard: model.scoreboard,
+              userProfilePicUrl: userProfilePicUrl,
+              isSpotLightVisible: false,
             ),
           ),
         ],
@@ -151,31 +142,18 @@ class TopPlayer extends StatelessWidget {
               currentUserRank: currentUserRank,
             ),
           Expanded(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification value) {
-                log(value.metrics.pixels.toString());
-                if (value.metrics.pixels >= 60 &&
-                    panelController.isPanelClosed) {
-                  panelController.open();
-                }
-                if (value.metrics.pixels == 0 && panelController.isPanelOpen) {
-                  panelController.close();
-                }
-                return true;
-              },
-              child: Scrollbar(
-                radius: Radius.circular(SizeConfig.roundness24),
+            child: Scrollbar(
+              radius: Radius.circular(SizeConfig.roundness24),
+              controller: _scrollController,
+              child: ListView.builder(
                 controller: _scrollController,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  itemCount: model.scoreboard.length - 3,
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    int countedIndex = index + 3;
-                    return _buildLeaderboardTile(countedIndex);
-                  },
-                ),
+                shrinkWrap: true,
+                itemCount: model.scoreboard.length - 3,
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  int countedIndex = index + 3;
+                  return _buildLeaderboardTile(countedIndex);
+                },
               ),
             ),
           ),

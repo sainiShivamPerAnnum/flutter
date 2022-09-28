@@ -92,8 +92,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                 width: SizeConfig.screenWidth,
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                    onPressed: () =>
-                        AppState.backButtonDispatcher.didPopRoute(),
+                    onPressed: skippingInProgress
+                        ? () {}
+                        : () => AppState.backButtonDispatcher.didPopRoute(),
                     icon: Icon(
                       Icons.close,
                       color: Colors.white,

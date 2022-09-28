@@ -4,13 +4,13 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:rive/rive.dart';
+// import 'package:rive/rive.dart';
 
 class DailyPicksDrawViewModel extends BaseViewModel {
   TambolaService _tambolaService = locator<TambolaService>();
   final Log log = new Log("DailyPicksDraw-ViewModel");
   bool isInitCompleted = false;
-  RiveAnimationController boxController = SimpleAnimation('idle');
+  // RiveAnimationController boxController = SimpleAnimation('idle');
   double radius = 0;
   double rowWidth = 0;
   double opacity = 0;

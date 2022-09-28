@@ -176,7 +176,7 @@ class BaseUtil extends ChangeNotifier {
     firstAugmontTransaction = null;
   }
 
-  Future init() async {
+  void init() {
     try {
       logger.i('inside init base util');
       _setRuntimeDefaults();

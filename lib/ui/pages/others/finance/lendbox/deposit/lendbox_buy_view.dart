@@ -65,10 +65,10 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         TransactionServiceProperties.transactionState,
         TransactionServiceProperties.transactionStatus
       ],
-      builder: (transactionContext, txnService, transactionProperty) {
+      builder: (transactionContext, lboxTxnService, transactionProperty) {
         return AnimatedContainer(
           width: double.infinity,
-          height: _getHeight(txnService),
+          height: _getHeight(lboxTxnService),
           decoration: BoxDecoration(
             color: UiConstants.kSecondaryBackgroundColor,
             borderRadius: BorderRadius.only(
@@ -79,7 +79,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(txnService),
+              _getBackground(lboxTxnService),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
@@ -101,7 +101,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                   ),
                   builder: (ctx, model, child) {
                     return _getView(
-                      txnService,
+                      lboxTxnService,
                       model,
                     );
                   },
@@ -115,20 +115,22 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   }
 
   Widget _getView(
-    LendboxTransactionService txnService,
+    LendboxTransactionService lboxTxnService,
     LendboxBuyViewModel model,
   ) {
     final type = TransactionType.DEPOSIT;
 
-    if (txnService.currentTransactionState == TransactionState.idle) {
+    if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return LendboxBuyInputView(
         amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
       );
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
+    } else if (lboxTxnService.currentTransactionState ==
+        TransactionState.ongoing) {
       return LendboxLoadingView(transactionType: type);
-    } else if (txnService.currentTransactionState == TransactionState.success) {
+    } else if (lboxTxnService.currentTransactionState ==
+        TransactionState.success) {
       return LendboxSuccessView(
         transactionType: type,
       );
@@ -137,19 +139,21 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     return LendboxLoadingView(transactionType: type);
   }
 
-  double _getHeight(txnService) {
-    if (txnService.currentTransactionState == TransactionState.idle) {
+  double _getHeight(lboxTxnService) {
+    if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return SizeConfig.screenHeight * 0.8;
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
+    } else if (lboxTxnService.currentTransactionState ==
+        TransactionState.ongoing) {
       return SizeConfig.screenHeight * 0.95;
-    } else if (txnService.currentTransactionState == TransactionState.success) {
+    } else if (lboxTxnService.currentTransactionState ==
+        TransactionState.success) {
       return SizeConfig.screenHeight;
     }
     return 0;
   }
 
-  _getBackground(LendboxTransactionService txnService) {
-    if (txnService.currentTransactionState == TransactionState.idle) {
+  _getBackground(LendboxTransactionService lboxTxnService) {
+    if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(
           color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -161,7 +165,8 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         width: double.infinity,
         height: double.infinity,
       );
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
+    } else if (lboxTxnService.currentTransactionState ==
+        TransactionState.ongoing) {
       return Container(
         decoration: BoxDecoration(
           color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -173,7 +178,8 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         width: double.infinity,
         height: double.infinity,
       );
-    } else if (txnService.currentTransactionState == TransactionState.success) {
+    } else if (lboxTxnService.currentTransactionState ==
+        TransactionState.success) {
       return Container(
         color: UiConstants.kBackgroundColor2,
       );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/core/model/user_bootup_model.dart';
@@ -49,6 +50,7 @@ class APIService implements API {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     await metric.start();
+    int startTime = DateTime.now().millisecondsSinceEpoch;
 
     var responseJson;
     // token = Preference.getString('token');
@@ -69,7 +71,7 @@ class APIService implements API {
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.firebaseUser?.uid,
       });
-
+      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       logger.d("response from $finalPath");
       logger.d("Full url: $finalPath");
       logger.d("Get Response: ${response.statusCode}");
@@ -100,6 +102,7 @@ class APIService implements API {
     await metric.start();
     var responseJson;
     String queryString = '';
+    int startTime = DateTime.now().millisecondsSinceEpoch;
 
     try {
       Map<String, String> _headers = {
@@ -129,6 +132,8 @@ class APIService implements API {
         headers: _headers,
         body: jsonEncode(body ?? {}),
       );
+      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException(

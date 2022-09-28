@@ -75,21 +75,6 @@ class OnboardingViewModel extends BaseViewModel {
   registerWalkthroughCompletion(String comingFrom) async {
     PreferenceHelper.setBool(
         PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
-    if (_userService.firebaseUser != null) {
-      isWalkthroughRegistrationInProgress = true;
-      if (_journeyService.avatarRemoteMlIndex == 1) {
-        final ApiResponse<bool> res =
-            await _userRepository.updateUserWalkthroughCompletion();
-        if (res.isSuccess()) {
-          BaseUtil.showPositiveAlert(
-              "Walkthrough completed!", "You cleared milestone 1");
-        } else {
-          BaseUtil.showNegativeAlert(
-              "Unable to registed walkthrough completion!", "Please try again");
-        }
-      }
-      isWalkthroughRegistrationInProgress = false;
-    }
     onBoardingCompleted(comingFrom);
   }
 

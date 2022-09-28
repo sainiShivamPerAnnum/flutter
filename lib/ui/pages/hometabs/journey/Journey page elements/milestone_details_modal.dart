@@ -199,19 +199,13 @@ class _JourneyMilestoneDetailsModalSheetState
                                         .colour(Colors.white),
                                   ),
                                   onPressed: () {
-                                    AppState.screenStack
-                                        .add(ScreenItem.modalsheet);
-                                    log("Current Screen Stack: ${AppState.screenStack}");
-                                    return showModalBottomSheet(
+                                    BaseUtil.openModalBottomSheet(
+                                      addToScreenStack: true,
                                       backgroundColor: Colors.transparent,
-                                      isDismissible: true,
+                                      isBarrierDismissable: true,
                                       enableDrag: false,
-                                      useRootNavigator: true,
-                                      context: context,
-                                      builder: (ctx) {
-                                        return SkipMilestoneModalSheet(
-                                            milestone: widget.milestone);
-                                      },
+                                      content: SkipMilestoneModalSheet(
+                                          milestone: widget.milestone),
                                     );
                                   },
                                 ),

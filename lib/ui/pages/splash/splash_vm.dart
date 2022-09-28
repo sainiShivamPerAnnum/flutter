@@ -90,7 +90,9 @@ class LauncherViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  int startTime = DateTime.now().millisecondsSinceEpoch;
   init() {
+    log("Splash init: ${DateTime.now().millisecondsSinceEpoch - startTime}");
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
@@ -118,15 +120,28 @@ class LauncherViewModel extends BaseViewModel {
     // trace.putAttribute('Spalsh', 'userservice init started');
     // trace.putAttribute('Spalsh', 'userservice init ended');
     try {
+      startTime = DateTime.now().millisecondsSinceEpoch;
       await CacheService.initialize();
-      await userService.init();
-      fetchUserBootUpDetails();
+      log("Splash init cache: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
+      startTime = DateTime.now().millisecondsSinceEpoch;
+      await userService.init();
+      log("Splash init userService: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+      startTime = DateTime.now().millisecondsSinceEpoch;
+
+      fetchUserBootUpDetails();
+      log("Splash init bootup: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+      startTime = DateTime.now().millisecondsSinceEpoch;
       await BaseRemoteConfig.init();
+      log("Splash init remoteConfig: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
       if (userService.isUserOnborded) {
+        startTime = DateTime.now().millisecondsSinceEpoch;
         await _journeyRepo.init();
+        log("Splash init journeyRepo: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+        startTime = DateTime.now().millisecondsSinceEpoch;
         await _journeyService.init();
+        log("Splash init journeyService: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
 
       // check if cache invalidation required
@@ -135,20 +150,21 @@ class LauncherViewModel extends BaseViewModel {
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
       if (now <= BaseRemoteConfig.invalidationBefore) {
+        startTime = DateTime.now().millisecondsSinceEpoch;
+
         await new CacheService().invalidateAll();
+        log("Splash init cache: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
       // test
       // await new CacheService().invalidateAll();
-      if (userService.isUserOnborded) await _userCoinService.init();
-      // if (userService.isUserOnborded)
-      await Future.wait(
-        [
-          // Note: BaseUtil Alredy in Sync
-          _baseUtil.init(),
-        ],
-      );
+      if (userService.isUserOnborded) _userCoinService.init();
+      log("Splash usercoinservice: ${DateTime.now().millisecondsSinceEpoch}");
+
+      _baseUtil.init();
+      log("Splash init baseUtil: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
       _fcmListener.setupFcm();
+      log("Splash init fcm: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
       if (userService.isUserOnborded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -157,10 +173,12 @@ class LauncherViewModel extends BaseViewModel {
             );
       if (userService.baseUser != null) {
         if (userService.isUserOnborded)
-          await _analyticsService.login(
-            isOnBoarded: userService?.isUserOnborded,
-            baseUser: userService?.baseUser,
-          );
+          startTime = DateTime.now().millisecondsSinceEpoch;
+        await _analyticsService.login(
+          isOnBoarded: userService?.isUserOnborded,
+          baseUser: userService?.baseUser,
+        );
+        log("Splash init analytics: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");
@@ -173,6 +191,7 @@ class LauncherViewModel extends BaseViewModel {
     _httpModel.init();
     if (userService.isUserOnborded) _tambolaService.init();
     _timer3.cancel();
+    log("Splash init http: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
     // await trace.stop();
 

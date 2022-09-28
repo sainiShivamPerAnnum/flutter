@@ -9,6 +9,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 
 class MiniTransactionCardViewModel extends BaseViewModel {
@@ -36,6 +37,7 @@ class MiniTransactionCardViewModel extends BaseViewModel {
   }
 
   viewAllTransaction(InvestmentType investmentType) async {
+    Haptic.vibrate();
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: TransactionsHistoryPageConfig,

@@ -1,4 +1,4 @@
-import 'package:confetti/confetti.dart';
+// import 'package:confetti/confetti.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/winnerbox.dart';
@@ -21,20 +21,20 @@ class PrizeWin extends StatefulWidget {
 }
 
 class _PrizeWinState extends State<PrizeWin> {
-  ConfettiController _confettiController;
+  // ConfettiController _confettiController;
   FcmListener _fcmListener;
   bool addedSubscription = false;
 
   @override
   void initState() {
-    _confettiController = new ConfettiController(
-      duration: new Duration(seconds: 2),
-    );
+    // _confettiController = new ConfettiController(
+    //   duration: new Duration(seconds: 2),
+    // );
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _confettiController.play();
-    });
-    super.initState();
+    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    //   _confettiController.play();
+    // });
+    // super.initState();
   }
 
   @override
@@ -107,25 +107,25 @@ class _PrizeWinState extends State<PrizeWin> {
               ],
             ),
           ),
-          Container(
-            height: 100,
-            width: 100,
-            child: ConfettiWidget(
-              blastDirectionality: BlastDirectionality.explosive,
-              confettiController: _confettiController,
-              particleDrag: 0.05,
-              emissionFrequency: 0.05,
-              numberOfParticles: 25,
-              gravity: 0.05,
-              shouldLoop: false,
-              colors: [
-                Color(0xff10AB8F),
-                Color(0xfff7ff00),
-                Color(0xffFC5C7D),
-                Color(0xff2B32B2),
-              ],
-            ),
-          ),
+          // Container(
+          //   height: 100,
+          //   width: 100,
+          //   child: ConfettiWidget(
+          //     blastDirectionality: BlastDirectionality.explosive,
+          //     confettiController: _confettiController,
+          //     particleDrag: 0.05,
+          //     emissionFrequency: 0.05,
+          //     numberOfParticles: 25,
+          //     gravity: 0.05,
+          //     shouldLoop: false,
+          //     colors: [
+          //       Color(0xff10AB8F),
+          //       Color(0xfff7ff00),
+          //       Color(0xffFC5C7D),
+          //       Color(0xff2B32B2),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

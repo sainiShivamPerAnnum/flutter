@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app_install_date/utils.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -428,7 +427,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
 
     //ANDROID Handling
-    if (PlatformUtils.isAndroid) {
+    if (Platform.isAndroid) {
       UpiTransactionResponse response;
       AppState.backButtonDispatcher.didPopRoute();
       try {
@@ -456,7 +455,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return false;
     }
     //iOS Handling
-    else if (PlatformUtils.isIOS) {
+    else if (Platform.isIOS) {
       if (upiApplication.appName == "Google Pay") {
         url = "tez:" + url.split(":").last;
       } else if (upiApplication.appName == "PhonePe") {

@@ -20,7 +20,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -375,14 +374,13 @@ class VerifyEmailState extends State<VerifyEmail> {
                                       autoFocus: true,
                                       pinLength: 6,
                                       decoration: BoxLooseDecoration(
-                                        enteredColor: UiConstants.primaryColor,
-                                        solidColor: UiConstants.primaryColor
-                                            .withOpacity(0.04),
-                                        strokeColor: UiConstants.primaryColor,
-                                        strokeWidth: 1,
-                                        textStyle: GoogleFonts.montserrat(
-                                            fontSize: 20, color: Colors.black),
-                                      ),
+                                          enteredColor:
+                                              UiConstants.primaryColor,
+                                          solidColor: UiConstants.primaryColor
+                                              .withOpacity(0.04),
+                                          strokeColor: UiConstants.primaryColor,
+                                          strokeWidth: 1,
+                                          textStyle: TextStyles.body0),
                                       controller: otp,
                                       onChanged: (value) {
                                         print(value);
