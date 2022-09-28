@@ -13,6 +13,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class TambolaCard extends StatelessWidget {
   const TambolaCard({Key key}) : super(key: key);
@@ -46,6 +47,7 @@ class TambolaCard extends StatelessWidget {
                 child: Transform.translate(
                   offset: Offset(0, -SizeConfig.padding20),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Transform.scale(
                         scale: 1.2,
@@ -93,12 +95,15 @@ class TambolaCard extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding12,
                       ),
-                      CurrentPicks(
-                        dailyPicksCount: model.dailyPicksCount,
-                        todaysPicks: model.todaysPicks != null
-                            ? model.todaysPicks
-                            : List.generate(
-                                model.dailyPicksCount ?? 0, (index) => 0),
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.2,
+                        child: CurrentPicks(
+                          dailyPicksCount: model.dailyPicksCount ?? 3,
+                          todaysPicks: model.todaysPicks != null
+                              ? model.todaysPicks
+                              : List.generate(
+                                  model.dailyPicksCount ?? 3, (index) => 0),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: SizeConfig.padding8),

@@ -8,6 +8,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // class PicksCardView extends StatelessWidget {
 //   final ValueChanged<bool> showBuyTicketModal;
@@ -99,84 +100,94 @@ class PicksCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<PicksCardViewModel>(
       onModelReady: (model) => model.init(),
-      builder: (ctx, model, child) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal:
-                      SizeConfig.pageHorizontalMargins + SizeConfig.padding2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Picks",
-                        style: TextStyles.rajdhaniSB.body0,
-                      ),
-                      Text(
-                        model.isShowingAllPicks
-                            ? "Next draw at 6 pm"
-                            : "Drawn at 6 PM",
-                        style: TextStyles.sourceSans.body4
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      model.onTap(showBuyTicketModal);
-                    },
-                    child: Text(
-                      model.isShowingAllPicks ? "Weekly" : "Today",
-                      style: TextStyles.sourceSansSB.body2
-                          .colour(UiConstants.kTabBorderColor),
+      builder: (ctx, model, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal:
+                        SizeConfig.pageHorizontalMargins + SizeConfig.padding2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Picks",
+                          style: TextStyles.rajdhaniSB.body0,
+                        ),
+                        Text(
+                          model.isShowingAllPicks
+                              ? "Next draw at 6 pm"
+                              : "Drawn at 6 PM",
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                      ],
                     ),
-                  )
-                ],
+                    TextButton(
+                      onPressed: () {
+                        model.onTap(showBuyTicketModal);
+                      },
+                      child: Text(
+                        model.isShowingAllPicks ? "Weekly" : "Today",
+                        style: TextStyles.sourceSansSB.body2
+                            .colour(UiConstants.kTabBorderColor),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenWidth * 0.5,
-            decoration: BoxDecoration(
-              color: UiConstants.kSnackBarPositiveContentColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
+            SizedBox(
+              height: SizeConfig.padding12,
             ),
-            margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
+            Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenWidth * 0.5,
+              decoration: BoxDecoration(
+                color: UiConstants.kSnackBarPositiveContentColor,
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
+              ),
+              margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              child: AnimatedSwitcher(
+                switchInCurve: Curves.easeIn,
+                switchOutCurve: Curves.easeIn,
+                duration: const Duration(milliseconds: 500),
+                child: !model.isShowingAllPicks
+                    ? (isForDemo
+                        ? CurrentPicks(
+                            dailyPicksCount: model.dailyPicksCount,
+                            todaysPicks: List.generate(model.dailyPicksCount,
+                                (index) => Random().nextInt(90)),
+                          )
+                        : CurrentPicks(
+                            dailyPicksCount: model.dailyPicksCount,
+                            todaysPicks: model.todaysPicks != null
+                                ? model.todaysPicks
+                                : List.generate(
+                                    model.dailyPicksCount, (index) => 0),
+                          ))
+                    : model.weeklyDigits == null
+                        ? SpinKitWave(
+                            color: Colors.white,
+                            size: SizeConfig.padding16,
+                          )
+                        : WeeklyPicks(
+                            weeklyDraws: model.weeklyDigits,
+                          ),
+              ),
             ),
-            child: AnimatedSwitcher(
-              switchInCurve: Curves.easeIn,
-              switchOutCurve: Curves.easeIn,
-              duration: const Duration(milliseconds: 500),
-              child: !model.isShowingAllPicks
-                  ? (isForDemo
-                      ? CurrentPicks(
-                          dailyPicksCount: model.dailyPicksCount,
-                          todaysPicks: List.generate(model.dailyPicksCount,
-                              (index) => Random().nextInt(90)),
-                        )
-                      : CurrentPicks(
-                          dailyPicksCount: model.dailyPicksCount,
-                          todaysPicks: model.todaysPicks,
-                        ))
-                  : WeeklyPicks(
-                      weeklyDraws: model.weeklyDigits,
-                    ),
-            ),
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 }

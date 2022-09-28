@@ -235,6 +235,7 @@ class LauncherViewModel extends BaseViewModel {
     // }
 
     ///check if user is onboarded
+
     if (!userService.isUserOnborded) {
       _logger.d("New user. Moving to Onboarding..");
       bool showOnboarding = PreferenceHelper.getBool(
