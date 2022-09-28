@@ -65,7 +65,9 @@ class NotficationsPage extends StatelessWidget {
                                 onTap: () {
                                   model.updateHighlightStatus(index);
                                   if (model.notifications[index].actionUri !=
-                                      null) {
+                                          null &&
+                                      model.notifications[index].actionUri
+                                          .isNotEmpty) {
                                     print(model.notifications[index].actionUri
                                         .toString());
                                     AppState.delegate.parseRoute(Uri.parse(
