@@ -3,6 +3,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 
 class PrizeProcessing extends StatelessWidget {
@@ -22,33 +23,23 @@ class PrizeProcessing extends StatelessWidget {
             Spacer(
               flex: 1,
             ),
+            SpinKitWave(
+              color: UiConstants.primaryColor,
+              size: SizeConfig.screenWidth * 0.15,
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
             Text(
               locale.tProcessingTitle,
-              style: TextStyles.title1.bold,
+              style: TextStyles.rajdhaniB.bold.title1.colour(Colors.white),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Text(
                 locale.tProcessingSubtitle,
                 textAlign: TextAlign.center,
-                style: TextStyles.body3,
-              ),
-            ),
-            LottieBuilder.asset(
-              "images/Tambola/process.json",
-              width: SizeConfig.screenWidth * 0.5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Text(
-                "PROCESSING...",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: UiConstants.primaryColor,
-                    fontSize: SizeConfig.largeTextSize,
-                    height: 1.5,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 2),
+                style: TextStyles.body3.colour(Colors.white),
               ),
             ),
             Spacer(

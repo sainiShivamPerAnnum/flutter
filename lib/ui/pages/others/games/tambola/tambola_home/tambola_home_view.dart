@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -102,7 +103,23 @@ class TambolaHomeView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                //TODO
+                Padding(
+                  padding: EdgeInsets.all(40),
+                  child: ElevatedButton(
+                    child: Text("Results"),
+                    onPressed: () =>
+                        AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      page: TWeeklyResultPageConfig,
+                      widget: WeeklyResult(
+                        winningsmap: {}, // {"12324": 1},
+                        isEligible: false,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

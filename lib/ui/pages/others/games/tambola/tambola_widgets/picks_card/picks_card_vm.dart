@@ -66,6 +66,7 @@ class PicksCardViewModel extends BaseViewModel {
   fetchTodaysPicks() {
     _todaysPicks = _tambolaService.todaysPicks;
     _weeklyDigits = _tambolaService.weeklyDigits;
+
     notifyListeners();
   }
 

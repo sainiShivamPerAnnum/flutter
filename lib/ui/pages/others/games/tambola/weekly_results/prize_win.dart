@@ -2,7 +2,9 @@
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/winnerbox.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -45,88 +47,83 @@ class _PrizeWinState extends State<PrizeWin> {
       _fcmListener.addSubscription(FcmTopic.WINNERWINNER);
       addedSubscription = true;
     }
-    return SafeArea(
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            child: Opacity(
-              opacity: 0.4,
-              child: SvgPicture.asset(
-                "images/Tambola/gifts.svg",
-                width: SizeConfig.screenWidth,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Column(
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
               children: [
-                Spacer(
-                  flex: 1,
-                ),
-                FittedBox(
-                  child: Text(
-                    locale.tWinTitle,
-                    style: TextStyles.title1.bold,
-                  ),
-                ),
-                WinnerBox(
-                  winningsmap: widget.winningsMap,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(locale.tWinSubtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body2.bold
-                          .colour(UiConstants.primaryColor)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(locale.tWinSubtitle2,
-                      textAlign: TextAlign.center, style: TextStyles.body3),
-                ),
-                SizedBox(height: SizeConfig.padding12),
                 Container(
-                  width: SizeConfig.screenWidth,
-                  child: FelloButtonLg(
-                    onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
-                    },
-                    child: Text(
-                      "DONE",
-                      style: TextStyles.body3.bold.colour(Colors.white),
+                  width: SizeConfig.screenWidth * 0.7,
+                  height: SizeConfig.screenWidth * 0.7,
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                    color: UiConstants.kSliverAppBarBackgroundColor
+                        .withOpacity(0.4),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Container(
+                    width: SizeConfig.screenWidth * 0.7,
+                    height: SizeConfig.screenWidth * 0.7,
+                    decoration: BoxDecoration(
+                      color: UiConstants.kSliverAppBarBackgroundColor,
+                      shape: BoxShape.circle,
                     ),
                   ),
                 ),
-                Spacer(
-                  flex: 2,
+                SvgPicture.asset(
+                  Assets.tambolaCardAsset,
+                  width: SizeConfig.screenWidth * 0.75,
                 )
               ],
             ),
-          ),
-          // Container(
-          //   height: 100,
-          //   width: 100,
-          //   child: ConfettiWidget(
-          //     blastDirectionality: BlastDirectionality.explosive,
-          //     confettiController: _confettiController,
-          //     particleDrag: 0.05,
-          //     emissionFrequency: 0.05,
-          //     numberOfParticles: 25,
-          //     gravity: 0.05,
-          //     shouldLoop: false,
-          //     colors: [
-          //       Color(0xff10AB8F),
-          //       Color(0xfff7ff00),
-          //       Color(0xffFC5C7D),
-          //       Color(0xff2B32B2),
-          //     ],
-          //   ),
-          // ),
-        ],
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+            Text(
+              "Congratulations!",
+              style: TextStyles.rajdhaniEB.title2.colour(Colors.white),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding10,
+              ),
+              child: Text("Your tickets won.",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kFAQsAnswerColor)),
+            ),
+            WinnerBox(
+              winningsmap: widget.winningsMap,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding20,
+              ),
+              child: Text(
+                  "Your prizes will be credited tomorrow. Be sure to check out the leaderboard ",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body4
+                      .colour(UiConstants.kFAQsAnswerColor)),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                  bottom: SizeConfig.pageHorizontalMargins +
+                      SizeConfig.pageHorizontalMargins),
+              width: SizeConfig.screenWidth,
+              child: AppPositiveBtn(
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+                btnText: "SAVE MORE",
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
