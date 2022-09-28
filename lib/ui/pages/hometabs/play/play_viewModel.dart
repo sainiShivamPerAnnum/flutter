@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -16,9 +17,11 @@ import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
   final _getterRepo = locator<GetterRepository>();
+  final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
   final GameRepo gamesRepo = locator<GameRepo>();
   final _baseUtil = locator<BaseUtil>();
+  bool _showSecurityMessageAtTop = true;
 
   String _message;
   String _sessionId;
@@ -72,6 +75,13 @@ class PlayViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  get showSecurityMessageAtTop => this._showSecurityMessageAtTop;
+
+  set showSecurityMessageAtTop(value) {
+    this._showSecurityMessageAtTop = value;
+    notifyListeners();
+  }
+
   openProfile() {
     _baseUtil.openProfileDetailsScreen();
   }
@@ -79,6 +89,8 @@ class PlayViewModel extends BaseViewModel {
   init() async {
     isGamesListDataLoading = true;
     final response = await gamesRepo.getGames();
+    showSecurityMessageAtTop =
+        _userService.userJourneyStats.mlIndex > 6 ? false : true;
     if (response.isSuccess()) {
       gamesListData = response.model;
       isGamesListDataLoading = false;

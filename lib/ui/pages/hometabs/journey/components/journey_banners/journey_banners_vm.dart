@@ -24,18 +24,18 @@ class JourneyBannersViewModel extends BaseViewModel {
 
   List<PromoCardModel> get offerList => _offerList;
 
-  // loadOfferList() async {
-  //   isOfferListLoading = true;
-  //   final response = await _getterRepo.getPromoCards();
-  //   if (response.code == 200) {
-  //     _offerList = response.model;
-  //   } else {
-  //     _offerList = [];
-  //   }
-  //   print(_offerList);
-  //   if (_offerList != null && offerList.length > 1) initiateAutoScroll();
-  //   isOfferListLoading = false;
-  // }
+  loadOfferList() async {
+    isOfferListLoading = true;
+    final response = await _getterRepo.getPromoCards();
+    if (response.code == 200) {
+      _offerList = response.model;
+    } else {
+      _offerList = [];
+    }
+    print(_offerList);
+    if (_offerList != null && offerList.length > 1) initiateAutoScroll();
+    isOfferListLoading = false;
+  }
 
   initiateAutoScroll() {
     _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
@@ -55,5 +55,6 @@ class JourneyBannersViewModel extends BaseViewModel {
 
   void clear() {
     _timer?.cancel();
+    promoPageController.dispose();
   }
 }

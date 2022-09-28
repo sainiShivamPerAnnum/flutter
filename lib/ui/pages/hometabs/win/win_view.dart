@@ -118,23 +118,15 @@ class Win extends StatelessWidget {
                                             },
                                             width:
                                                 SizeConfig.screenWidth * 0.32)
-
-                                        // : m.userFundWallet
-                                        //             .processingRedemptionBalance >
-                                        //         0
-                                        //     ? Text(
-                                        //         "We're processing your rewards.",
-                                        //         style: TextStyles
-                                        //             .sourceSans.body3
-                                        //             .colour(UiConstants
-                                        //                 .kTextColor2),
-                                        //       )
-                                        : Text(
-                                            'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(
-                                                    UiConstants.kTextColor2),
-                                          ),
+                                        : currentWinning > 0
+                                            ? Text(
+                                                'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
+                                                style: TextStyles
+                                                    .sourceSans.body3
+                                                    .colour(UiConstants
+                                                        .kTextColor2),
+                                              )
+                                            : SizedBox(),
                                   ],
                                 ),
                                 if (m.userFundWallet != null)
@@ -180,11 +172,26 @@ class Win extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      Text(
-                                        'See All',
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white),
-                                      ),
+                                      model.unscratchedGTCount != 0
+                                          ? Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 0.5),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    SizeConfig.padding12,
+                                                vertical: SizeConfig.padding10,
+                                              ),
+                                              child: Text(
+                                                  "${model.unscratchedGTCount} New"),
+                                            )
+                                          : Text(
+                                              'See All',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(Colors.white),
+                                            ),
                                       SizedBox(
                                         width: SizeConfig.padding10,
                                       ),

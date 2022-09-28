@@ -94,9 +94,9 @@ class SellCardView extends StatelessWidget {
                           sellService.isBankDetailsAdded
                       ? SizedBox()
                       : Text(
-                          'To enable selling gold,\ncomplete the following:',
+                          'To enable sell,\ncomplete the following:',
                           style: TextStyles.sourceSans.body4.colour(
-                            Colors.grey.withOpacity(0.7),
+                            UiConstants.primaryColor,
                           ),
                           textAlign: TextAlign.end,
                         ),

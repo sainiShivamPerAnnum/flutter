@@ -38,90 +38,71 @@ class ViewAllBlogsView extends StatelessWidget {
                         )
                       : Expanded(
                           child: ListView.builder(
-                            itemCount: model.blogPostsByCategory.length + 1,
+                            itemCount: model.blogPostsByCategory.length,
                             itemBuilder: (context, index) {
-                              return model.blogPostsByCategory.length == index
-                                  ? Padding(
-                                      padding: EdgeInsets.only(
-                                        top: SizeConfig.screenWidth * 0.3,
-                                        bottom: SizeConfig.padding54,
-                                      ),
-                                      child: SaveAssetsFooter(),
-                                    )
-                                  : Padding(
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: SizeConfig.padding16,
+                                  left: SizeConfig.padding24,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
                                       padding: EdgeInsets.only(
                                         bottom: SizeConfig.padding16,
-                                        left: SizeConfig.padding24,
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom: SizeConfig.padding16,
-                                            ),
-                                            child: Text(
-                                              '${model.blogPostsByCategory[index].category}',
-                                              style: TextStyles.rajdhaniM.body2,
-                                            ),
-                                          ),
-                                          Container(
-                                            height:
-                                                SizeConfig.screenWidth * 0.4,
-                                            child: ListView.builder(
-                                              itemCount: model
-                                                  .blogPostsByCategory[index]
-                                                  .blogs
-                                                  .length,
-                                              scrollDirection: Axis.horizontal,
-                                              padding: EdgeInsets.zero,
-                                              itemBuilder: (context, j) =>
-                                                  Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: SizeConfig.padding12,
-                                                ),
-                                                child: SaveBlogTile(
-                                                  onTap: () {
-                                                    model.navigateToBlogWebView(
-                                                      model
-                                                          .blogPostsByCategory[
-                                                              index]
-                                                          .blogs[j]
-                                                          .slug,
-                                                      model
-                                                          .blogPostsByCategory[
-                                                              index]
-                                                          .category,
-                                                    );
-                                                  },
-                                                  title: model
-                                                      .blogPostsByCategory[
-                                                          index]
-                                                      .blogs[j]
-                                                      .acf
-                                                      .categories,
-                                                  description: model
-                                                      .blogPostsByCategory[
-                                                          index]
-                                                      .blogs[j]
-                                                      .title
-                                                      .rendered,
-                                                  imageUrl: model
-                                                      .blogPostsByCategory[
-                                                          index]
-                                                      .blogs[j]
-                                                      .yoastHeadJson,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: SizeConfig.padding16,
-                                          )
-                                        ],
+                                      child: Text(
+                                        '${model.blogPostsByCategory[index].category}',
+                                        style: TextStyles.rajdhaniM.body2,
                                       ),
-                                    );
+                                    ),
+                                    Container(
+                                      height: SizeConfig.screenWidth * 0.4,
+                                      child: ListView.builder(
+                                        itemCount: model
+                                            .blogPostsByCategory[index]
+                                            .blogs
+                                            .length,
+                                        scrollDirection: Axis.horizontal,
+                                        padding: EdgeInsets.zero,
+                                        itemBuilder: (context, j) => Padding(
+                                          padding: EdgeInsets.only(
+                                            right: SizeConfig.padding12,
+                                          ),
+                                          child: SaveBlogTile(
+                                            onTap: () {
+                                              model.navigateToBlogWebView(
+                                                model.blogPostsByCategory[index]
+                                                    .blogs[j].slug,
+                                                model.blogPostsByCategory[index]
+                                                    .category,
+                                              );
+                                            },
+                                            title: model
+                                                .blogPostsByCategory[index]
+                                                .blogs[j]
+                                                .acf
+                                                .categories,
+                                            description: model
+                                                .blogPostsByCategory[index]
+                                                .blogs[j]
+                                                .title
+                                                .rendered,
+                                            imageUrl: model
+                                                .blogPostsByCategory[index]
+                                                .blogs[j]
+                                                .yoastHeadJson,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding16,
+                                    )
+                                  ],
+                                ),
+                              );
                             },
                           ),
                         ),

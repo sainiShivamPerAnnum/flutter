@@ -32,6 +32,10 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _txnService.currentTxnGms = 0.0;
+      _txnService.currentTxnAmount = 0.0;
+      _txnService.currentTxnOrderId = '';
+      _txnService.currentTxnTambolaTicketsCount = 0;
       _txnService.currentTransactionState = TransactionState.idle;
     });
     WidgetsBinding.instance.addObserver(this);

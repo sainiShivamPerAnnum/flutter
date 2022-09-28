@@ -57,9 +57,14 @@ class LendboxBuyInputView extends StatelessWidget {
           builder: (ctx, service, child) {
             if (!service.isKYCVerified) return _kycWidget(model);
             return model.isBuyInProgress
-                ? SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: 20,
+                ? Container(
+                    height: SizeConfig.screenWidth * 0.1556,
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth * 0.7,
+                    child: LinearProgressIndicator(
+                      color: UiConstants.primaryColor,
+                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    ),
                   )
                 : AppPositiveBtn(
                     btnText: 'Invest',

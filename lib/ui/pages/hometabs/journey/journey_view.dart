@@ -15,7 +15,9 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/foc
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
@@ -57,6 +59,7 @@ class _JourneyViewState extends State<JourneyView>
 
         return Scaffold(
           backgroundColor: Colors.black,
+          floatingActionButton: HelpFab(),
           // floatingActionButton: Container(
           //   margin: EdgeInsets.only(bottom: 60),
           //   child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
@@ -157,7 +160,7 @@ class _JourneyViewState extends State<JourneyView>
                     ),
 
                     JourneyAppBar(),
-                    // JourneyBannersView(),
+                    JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
                     // NewUserNavBar(model: model),
 
@@ -204,86 +207,6 @@ class JRefreshIndicator extends StatelessWidget {
           color: UiConstants.tertiarySolid,
         ),
       ),
-    );
-  }
-}
-
-class NewUserNavBar extends StatelessWidget {
-  final JourneyPageViewModel model;
-
-  const NewUserNavBar({Key key, @required this.model}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
-      builder: (context, m, properties) {
-        return
-            //  m.avatarRemoteMlIndex > 2
-            //     ? SizedBox()
-            //     :
-            Positioned(
-          bottom: 0,
-          child: SafeArea(
-            child: GestureDetector(
-                onTap: () {
-                  model.showMilestoneDetailsModalSheet(
-                      model.currentMilestoneList.firstWhere((milestone) =>
-                          milestone.index == m.avatarRemoteMlIndex),
-                      context);
-                },
-                child: Container(
-                  width: SizeConfig.screenWidth -
-                      SizeConfig.pageHorizontalMargins * 2,
-                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  decoration: BoxDecoration(
-                    color: UiConstants.gameCardColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding4,
-                        vertical: SizeConfig.pageHorizontalMargins),
-                    leading: GestureDetector(
-                      onDoubleTap: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                          page: UserProfileDetailsConfig,
-                          state: PageState.addWidget,
-                          widget: UserProfileDetails(isNewUser: true),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: SizeConfig.avatarRadius * 2,
-                        child: SvgPicture.asset(Assets.token,
-                            height: SizeConfig.padding32),
-                      ),
-                    ),
-                    title: FittedBox(
-                      child: Text(
-                        "Welcome to Fello",
-                        style: TextStyles.rajdhaniB.title3.colour(Colors.white),
-                      ),
-                    ),
-                    subtitle: Text(
-                      "Lets get started with the journey",
-                      style: TextStyles.sourceSans.body3.colour(Colors.white60),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.navigate_next_rounded,
-                          color: Colors.white),
-                      onPressed: () {
-                        model.showMilestoneDetailsModalSheet(
-                            model.currentMilestoneList.firstWhere((milestone) =>
-                                milestone.index == m.avatarRemoteMlIndex),
-                            context);
-                      },
-                    ),
-                  ),
-                )),
-          ),
-        );
-      },
     );
   }
 }

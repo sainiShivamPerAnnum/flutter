@@ -56,8 +56,7 @@ class SellButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           border: Border.all(
-            color:
-                isActive ? Colors.white : UiConstants.kSecondaryBackgroundColor,
+            color: isActive ? Colors.white : UiConstants.kTextColor2,
             width: 1,
           ),
         ),

@@ -39,7 +39,9 @@ class MiniTransactionCard extends StatelessWidget {
           builder: (ctx, m, child) {
             return Column(
               children: [
-                Container(
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 600),
+                  curve: Curves.easeInOutCubic,
                   child: model.state == ViewState.Busy || m.txnList == null
                       ? SizedBox()
                       // Container(

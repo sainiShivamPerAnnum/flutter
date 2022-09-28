@@ -167,9 +167,14 @@ class GoldBuyInputView extends StatelessWidget {
           ),
         if (!model.augOnbRegInProgress && !model.augRegFailed)
           augTxnService.isGoldBuyInProgress
-              ? SpinKitThreeBounce(
-                  color: Colors.white,
-                  size: 20,
+              ? Container(
+                  height: SizeConfig.screenWidth * 0.1556,
+                  alignment: Alignment.center,
+                  width: SizeConfig.screenWidth * 0.7,
+                  child: LinearProgressIndicator(
+                    color: UiConstants.primaryColor,
+                    backgroundColor: UiConstants.kDarkBackgroundColor,
+                  ),
                 )
               : AppPositiveBtn(
                   btnText: model.status == 2

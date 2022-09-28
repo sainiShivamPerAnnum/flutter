@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -68,6 +69,7 @@ class RazorpayService extends ChangeNotifier {
     //   AppState.delegate.appState.isTxnLoaderInView = false;
     // }
     _txnService.currentTransactionState = TransactionState.idle;
+    AppState.unblockNavigation();
     BaseUtil.showNegativeAlert(
       'Transaction failed',
       'Your transaction was unsuccessful. Please try again',

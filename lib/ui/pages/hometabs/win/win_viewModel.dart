@@ -16,6 +16,7 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -23,6 +24,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -67,6 +69,8 @@ class WinViewModel extends BaseViewModel {
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _getterrepo = locator<GetterRepository>(); //TR
+  final _gtRepo = locator<GoldenTicketRepository>();
+  int _unscratchedGTCount = 0;
 
   Timer _timer;
   bool _showOldView = false;
@@ -193,6 +197,14 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  get unscratchedGTCount => this._unscratchedGTCount;
+
+  set unscratchedGTCount(count) {
+    this._unscratchedGTCount = count;
+    notifyListeners();
+    print("Unscratched gt count: $_unscratchedGTCount");
+  }
+
   double get getUnclaimedPrizeBalance =>
       _userService.userFundWallet.unclaimedBalance;
 
@@ -202,6 +214,7 @@ class WinViewModel extends BaseViewModel {
 
     fetchReferralCode();
     fectchBasicConstantValues();
+    getUnscratchedGTCounts();
     // _baseUtil.fetchUserAugmontDetail();
 
     _lbService.fetchReferralLeaderBoard();
@@ -272,6 +285,13 @@ class WinViewModel extends BaseViewModel {
         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
+  }
+
+  getUnscratchedGTCounts() async {
+    final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
+    if (res.isSuccess()) {
+      unscratchedGTCount = res?.model.length ?? 0;
+    }
   }
 
   cleanJourneyAssetsFiles() {

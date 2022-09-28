@@ -15,6 +15,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showAvatar;
   final bool showHelpButton;
   final Color backgroundColor;
+  final Widget action;
 
   const FAppBar({
     Key key,
@@ -24,6 +25,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.showAvatar = true,
     this.showHelpButton = true,
     this.backgroundColor,
+    this.action,
   }) : super(key: key);
 
   @override
@@ -49,6 +51,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
           children: [
             if (showCoinBar) FelloCoinBar(svgAsset: Assets.token),
             if (type != null) FaqButtonRounded(type: type),
+            if (action != null) action,
             SizedBox(width: SizeConfig.padding20)
           ],
         )

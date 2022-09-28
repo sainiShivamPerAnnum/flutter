@@ -145,6 +145,7 @@ class LendboxTransactionService extends BaseTransactionService {
       switch (txnStatus.data.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data.isUpdating) {
+            currentTxnTambolaTicketsCount = res.model.data.tickets;
             timer.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,

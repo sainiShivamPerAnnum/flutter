@@ -118,32 +118,32 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  // Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
-  //   try {
-  //     final token = await getBearerToken();
-  //     final response = await APIService.instance.getData(
-  //       ApiPath.kPromos,
-  //       cBaseUrl: _baseUrl,
-  //       queryParams: {
-  //         "uid": userService.baseUser.uid,
-  //       },
-  //       token: token,
-  //     );
+  Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.kPromos,
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          "uid": userService.baseUser.uid,
+        },
+        token: token,
+      );
 
-  //     final responseData = response["data"];
+      final responseData = response["data"];
 
-  //     print("Test123 ${response.toString()}");
+      print("Test123 ${response.toString()}");
 
-  //     logger.d(responseData);
-  //     final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
+      logger.d(responseData);
+      final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
 
-  //     return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     print("Test123 ${e.toString()}");
-  //     return ApiResponse.withError("Unable to fetch promos", 400);
-  //   }
-  // }
+      return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      print("Test123 ${e.toString()}");
+      return ApiResponse.withError("Unable to fetch promos", 400);
+    }
+  }
 
   Future<ApiResponse<List<FAQDataModel>>> getFaqs({
     FaqsType type,

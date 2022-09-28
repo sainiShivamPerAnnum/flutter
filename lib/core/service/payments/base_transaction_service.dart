@@ -27,6 +27,7 @@ abstract class BaseTransactionService
   Timer pollingPeriodicTimer;
   double currentTxnAmount = 0;
   String currentTxnOrderId;
+  int currentTxnTambolaTicketsCount = 0;
   bool isIOSTxnInProgress = false;
 
   Future<void> initiatePolling() async {

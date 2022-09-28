@@ -1,6 +1,7 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,10 +22,9 @@ class GOWCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GameTitleWithSubTitle(
+        TitleSubtitleContainer(
           title: "Game of the week",
-
-          subtitle: "Win upto ${model.gow?.prizeAmount ?? 25000}",
+          subTitle: "Win upto ${model.gow?.prizeAmount ?? 25000}",
         ),
         (model.isGamesListDataLoading)
             ? GameCardShimmer()

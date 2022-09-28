@@ -21,31 +21,34 @@ parseTimeStamp(dynamic data) {
 
 parseTransactionStatusSummary(List<dynamic> summary) {
   List<TransactionStatusMapItemModel> txnSummary = [];
-  summary.forEach((s) {
-    final response = s.entries.first.value;
-    TimestampModel timeStamp;
-    String result;
-    // print("Summary Timestamp : $s");
-    // print("Summary Timestamp : ${s.entries.first.value.runtimeType}");
+  if (summary != null) {
+    summary.forEach((s) {
+      if (s.runtimeType == String || s.runtimeType == bool) return;
+      final response = s.entries.first.value;
+      TimestampModel timeStamp;
+      String result;
+      // print("Summary Timestamp : $s");
+      // print("Summary Timestamp : ${s.entries.first.value.runtimeType}");
 
-    // Map<String, dynamic> res;
-    // res.entries.first.value
-    if (response.runtimeType == String) {
-      print("Summary Timestamp : $response");
-      result = response.toString();
-    } else
-      timeStamp = TimestampModel.fromMap(response as Map<String, dynamic>);
+      // Map<String, dynamic> res;
+      // res.entries.first.value
+      if (response.runtimeType == String) {
+        print("Summary Timestamp : $response");
+        result = response.toString();
+      } else
+        timeStamp = TimestampModel.fromMap(response as Map<String, dynamic>);
 
-    if (timeStamp != null) {
-      txnSummary.add(TransactionStatusMapItemModel(
-          title: s.entries.first.key, timestamp: timeStamp));
-    } else if (result != null)
-      txnSummary.add(TransactionStatusMapItemModel(
-          title: s.entries.first.key, value: result));
-    else
-      txnSummary.add(TransactionStatusMapItemModel(
-          title: s.entries.first.key, value: "NA"));
-  });
+      if (timeStamp != null) {
+        txnSummary.add(TransactionStatusMapItemModel(
+            title: s.entries.first.key, timestamp: timeStamp));
+      } else if (result != null)
+        txnSummary.add(TransactionStatusMapItemModel(
+            title: s.entries.first.key, value: result));
+      else
+        txnSummary.add(TransactionStatusMapItemModel(
+            title: s.entries.first.key, value: "NA"));
+    });
+  }
 
   return txnSummary;
 }

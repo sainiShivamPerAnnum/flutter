@@ -4,6 +4,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -13,7 +14,8 @@ class JourneyBannersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<JourneyBannersViewModel>(
-      onModelReady: (model) {}, //=> model.loadOfferList(),
+      onModelReady: (model) => model.loadOfferList(),
+      onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
         return Positioned(
           bottom: SizeConfig.navBarHeight,
@@ -28,9 +30,7 @@ class JourneyBannersView extends StatelessWidget {
                       itemBuilder: (cntx, i) {
                         return Container(
                           padding: EdgeInsets.only(left: SizeConfig.padding16),
-                          color: Color((math.Random().nextDouble() * 0xFFFFFF)
-                                  .toInt())
-                              .withOpacity(1.0),
+                          color: UiConstants.kBackgroundColor,
                           height: kBottomNavigationBarHeight,
                           width: SizeConfig.screenWidth,
                           child: Row(

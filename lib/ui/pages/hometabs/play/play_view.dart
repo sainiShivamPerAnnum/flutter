@@ -36,6 +36,7 @@ class Play extends StatelessWidget {
           backgroundColor: Colors.transparent,
           appBar: FAppBar(
             type: FaqsType.play,
+            backgroundColor: Colors.transparent,
           ),
           body: SingleChildScrollView(
             controller: _controller,
@@ -45,6 +46,7 @@ class Play extends StatelessWidget {
               children: [
                 TambolaCard(),
                 TrendingGamesSection(model: model),
+                if (model.showSecurityMessageAtTop) SafetyWidget(),
                 GOWCard(
                   model: model,
                 ),
@@ -55,7 +57,7 @@ class Play extends StatelessWidget {
                   height: SizeConfig.screenWidth * 0.3,
                 ),
                 MoreGamesSection(model: model),
-                SafetyWidget(),
+                if (!model.showSecurityMessageAtTop) SafetyWidget(),
                 SizedBox(
                   height: SizeConfig.padding80,
                 ),

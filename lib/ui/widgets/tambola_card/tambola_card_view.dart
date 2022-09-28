@@ -32,7 +32,11 @@ class TambolaCard extends StatelessWidget {
         },
         child: Container(
           height: SizeConfig.screenWidth * 0.9,
-          margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+          margin: EdgeInsets.only(
+              right: SizeConfig.pageHorizontalMargins,
+              top: SizeConfig.pageHorizontalMargins / 2,
+              bottom: SizeConfig.pageHorizontalMargins,
+              left: SizeConfig.pageHorizontalMargins),
           width: SizeConfig.screenWidth,
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
           decoration: BoxDecoration(
@@ -45,7 +49,7 @@ class TambolaCard extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Transform.translate(
-                  offset: Offset(0, -SizeConfig.padding20),
+                  offset: Offset(0, -SizeConfig.padding10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

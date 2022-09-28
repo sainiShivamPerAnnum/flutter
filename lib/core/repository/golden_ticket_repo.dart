@@ -12,6 +12,10 @@ class GoldenTicketRepository extends BaseRepo {
       ? 'https://unzrx9x548.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://jad0ai2t6k.execute-api.ap-south-1.amazonaws.com/prod';
 
+  final _baseUrl2 = FlavorConfig.isDevelopment()
+      ? "https://3yoxli7gxc.execute-api.ap-south-1.amazonaws.com/dev"
+      : "";
+
   Future<ApiResponse<GoldenTicket>> getGoldenTicketById({
     String goldenTicketId,
   }) async {
@@ -121,6 +125,31 @@ class GoldenTicketRepository extends BaseRepo {
 
       final goldenTicket = GoldenTicket.fromJson(prizeResponse["data"], "");
       return ApiResponse<GoldenTicket>(model: goldenTicket, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<List<GoldenTicket>>> getGTByPrizeType(String type) async {
+    List<GoldenTicket> tickets = [];
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.goldenTickets(userService.baseUser.uid),
+        cBaseUrl: _baseUrl2,
+        queryParams: {
+          'type': type,
+        },
+        token: token,
+      );
+      List ticketsData = prizeResponse["data"]['gts'];
+      ticketsData.forEach((ticket) {
+        tickets.add(GoldenTicket.fromJson(ticket, ""));
+      });
+
+      return ApiResponse<List<GoldenTicket>>(model: tickets, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(

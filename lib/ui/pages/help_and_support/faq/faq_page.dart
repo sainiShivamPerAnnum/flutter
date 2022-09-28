@@ -1,12 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +29,40 @@ class FAQPage extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.transparent,
       appBar: FAppBar(
-        title: 'FAQs',
-        showAvatar: false,
-        showCoinBar: false,
-        showHelpButton: false,
-      ),
+          title: 'FAQs',
+          showAvatar: false,
+          showCoinBar: false,
+          showHelpButton: false,
+          action: Container(
+            height: SizeConfig.avatarRadius * 2,
+            width: SizeConfig.avatarRadius * 2,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white,
+                ),
+                color: Colors.black),
+            child: IconButton(
+              icon: Icon(
+                Icons.live_help_rounded,
+                color: Colors.white,
+                size: SizeConfig.avatarRadius,
+              ),
+              onPressed: () {
+                Haptic.vibrate();
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: FreshDeskHelpPageConfig,
+                );
+              },
+            ),
+          )),
       body: BaseView<FaqPageViewModel>(
         onModelReady: (model) => model.init(type),
         builder: (ctx, model, child) {
           return model.state == ViewState.Busy
               ? Center(
-                  child: FullScreenLoader(),
+                  child: FullScreenLoader(bottomPadding: true),
                 )
               : Padding(
                   padding: EdgeInsets.only(top: SizeConfig.padding8),

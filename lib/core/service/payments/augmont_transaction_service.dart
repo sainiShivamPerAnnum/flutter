@@ -269,11 +269,11 @@ class AugmontTransactionService extends BaseTransactionService {
     }
     _userService.getUserFundWalletData();
     if (currentTransactionState == TransactionState.ongoing) {
+      await _gtService.fetchAndVerifyGoldenTicketByID();
       AppState.unblockNavigation();
       currentTransactionState = TransactionState.success;
       Haptic.vibrate();
       GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-      _gtService.fetchAndVerifyGoldenTicketByID();
     }
     _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     // } catch (e) {
@@ -309,11 +309,11 @@ class AugmontTransactionService extends BaseTransactionService {
       _userService.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
+        await _gtService.fetchAndVerifyGoldenTicketByID();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
         GoldenTicketService.goldenTicketId = gtId;
-        _gtService.fetchAndVerifyGoldenTicketByID();
       }
 
       _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
@@ -331,6 +331,7 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data.isUpdating) {
+            currentTxnTambolaTicketsCount = res.model.data.tickets;
             timer.cancel();
             return transactionResponseUpdate(
               amount: currentTxnAmount,
@@ -387,9 +388,12 @@ class AugmontTransactionService extends BaseTransactionService {
       InvestmentType.AUGGOLD99,
     );
 
-    if (!paytmSubscriptionApiResponse.isSuccess())
+    if (!paytmSubscriptionApiResponse.isSuccess()) {
+      AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
           paytmSubscriptionApiResponse.errorMessage, "");
+    }
+
     this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
     this.currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;

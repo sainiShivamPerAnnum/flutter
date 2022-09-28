@@ -77,7 +77,7 @@ class Save extends StatelessWidget {
                   ),
                   CampaignCardSection(saveVm: model),
                   // -- Break --
-                  SizedBox(height: SizeConfig.padding54),
+                  SizedBox(height: SizeConfig.padding24),
                   GestureDetector(
                     onTap: () {
                       model.navigateToViewAllBlogs();
@@ -117,14 +117,11 @@ class Save extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: SizeConfig.padding8,
-                  ),
+
                   SaveBlogSection(),
                   //Extended the EOS to avoid overshadowing by navbar
                   SizedBox(
-                    height: SizeConfig.screenWidth * 0.6,
-                  ),
+                      height: SizeConfig.navBarHeight + SizeConfig.padding24),
                 ],
               ),
             ));

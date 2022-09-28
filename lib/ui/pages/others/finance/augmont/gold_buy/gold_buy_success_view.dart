@@ -174,16 +174,16 @@ class GoldBuySuccessView extends StatelessWidget {
                     title: 'Fello Tokens',
                     asset: Assets.token,
                     qty: _augTxnService.currentTxnAmount.toInt()),
-                if (_augTxnService.currentTxnAmount.toInt() > 100)
+                if (GoldenTicketService.currentGT != null)
                   SizedBox(width: SizeConfig.padding12),
-                if (_augTxnService.currentTxnAmount.toInt() > 100)
+                if (GoldenTicketService.currentGT != null)
                   WinningChips(
                       title: 'Golden Ticket',
                       asset: Assets.unredemmedGoldenTicketBG,
                       qty: 1),
-                if (_augTxnService.currentTxnAmount.toInt() > 500)
+                if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
-                if (_augTxnService.currentTxnAmount.toInt() > 100)
+                if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
                       title: 'Tambola Ticket',
                       asset: Assets.singleTmbolaTicket,

@@ -61,25 +61,29 @@ class TransactionResponseModel {
 class Data {
   String status;
   bool isUpdating;
+  int tickets;
   Data({
     @required this.status,
     @required this.isUpdating,
+    @required this.tickets,
   });
 
   Data copyWith({
     bool status,
     bool isUpdating,
+    int tickets,
   }) {
     return Data(
-      status: status ?? this.status,
-      isUpdating: isUpdating ?? this.isUpdating,
-    );
+        status: status ?? this.status,
+        isUpdating: isUpdating ?? this.isUpdating,
+        tickets: tickets ?? this.tickets);
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
       'isUpdating': isUpdating,
+      'tickets': tickets
     };
   }
 
@@ -87,6 +91,7 @@ class Data {
     return Data(
       status: map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
       isUpdating: map['isUpdating'] as bool ?? true,
+      tickets: map['tickets'] as int ?? 0,
     );
   }
 
@@ -96,7 +101,8 @@ class Data {
       Data.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Data(status: $status, isUpdating: $isUpdating)';
+  String toString() =>
+      'Data(status: $status, isUpdating: $isUpdating, tickets: $tickets)';
 
   @override
   bool operator ==(covariant Data other) {
