@@ -104,22 +104,6 @@ class TambolaHomeView extends StatelessWidget {
                     ],
                   ),
                 ),
-                //TODO
-                Padding(
-                  padding: EdgeInsets.all(40),
-                  child: ElevatedButton(
-                    child: Text("Results"),
-                    onPressed: () =>
-                        AppState.delegate.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: TWeeklyResultPageConfig,
-                      widget: WeeklyResult(
-                        winningsmap: {}, // {"12324": 1},
-                        isEligible: false,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

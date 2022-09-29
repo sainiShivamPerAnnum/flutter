@@ -1,6 +1,9 @@
 import 'dart:math';
 
+import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -9,27 +12,41 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class WinnerBox extends StatelessWidget {
   final Map<String, int> winningsmap;
+  final PrizesModel tPrize;
 
-  const WinnerBox({Key key, this.winningsmap}) : super(key: key);
+  WinnerBox({Key key, this.winningsmap, @required this.tPrize})
+      : super(key: key);
   getValue(int val) {
     switch (val) {
       case 0:
         return "Corners";
         break;
       case 1:
-        return "Top Row";
+        return "First Row";
         break;
       case 2:
-        return "Middle Row";
+        return "Second Row";
         break;
       case 3:
-        return "Bottom Row";
+        return "Third Row";
         break;
       case 4:
         return "Full House";
         break;
     }
   }
+
+  getTokenWonAmount(String title) {
+    int flcAmount = 0;
+    for (PrizesA e in tPrize.prizesA) {
+      if (e.displayName == title) {
+        flcAmount = e.flc;
+      }
+    }
+    return flcAmount;
+  }
+
+  int totalFlcAmount = 0;
 
   getWinningTicketTiles() {
     List<Color> colorList = [
@@ -38,103 +55,27 @@ class WinnerBox extends StatelessWidget {
       Color(0xff11192B)
     ];
     List<Widget> ticketTiles = [];
+
     winningsmap.forEach((key, value) {
+      totalFlcAmount = totalFlcAmount + getTokenWonAmount(getValue(value));
       ticketTiles.add(Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              border:
-                  Border.all(color: UiConstants.kFAQsAnswerColor, width: 0.5),
-              borderRadius:
-                  BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
-            ),
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding14,
-                horizontal: SizeConfig.padding24),
-            margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Category",
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kFAQsAnswerColor),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding10,
-                    ),
-                    Text(
-                      getValue(value),
-                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                    )
-                  ],
-                ),
-                Container(
-                  width: 0.5,
-                  height: SizeConfig.screenWidth * 0.15,
-                  color: UiConstants.kFAQsAnswerColor,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "CashPrize",
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kFAQsAnswerColor),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding10,
-                    ),
-                    Text(
-                      "₹ 25,000", //TODO
-                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                    )
-                  ],
-                )
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                getValue(value),
+                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+              ),
+              Text(
+                "#$key",
+                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+              )
+            ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding20,
-                horizontal: SizeConfig.padding24),
-            decoration: BoxDecoration(
-              color: UiConstants.gameCardColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Tokens Won",
-                  style: TextStyles.sourceSans.body4
-                      .colour(UiConstants.kFAQsAnswerColor),
-                ),
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      Assets.token,
-                      width: SizeConfig.padding16,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding6,
-                    ),
-                    Text(
-                      "100", //TODO
-                      style: TextStyles.sourceSansSB.body3.colour(Colors.white),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding20,
+          Divider(
+            color: UiConstants.kFAQsAnswerColor,
+            thickness: 0.1,
           ),
         ],
       ));
@@ -144,9 +85,84 @@ class WinnerBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: getWinningTicketTiles());
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: UiConstants.kFAQsAnswerColor, width: 0.5),
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
+          ),
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding14, horizontal: SizeConfig.padding24),
+          margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Category",
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kFAQsAnswerColor),
+                  ),
+                  Text(
+                    "Ticket No.",
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kFAQsAnswerColor),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+              ListView(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: getWinningTicketTiles()),
+            ],
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding20, horizontal: SizeConfig.padding24),
+          decoration: BoxDecoration(
+            color: UiConstants.gameCardColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Tokens Won",
+                style: TextStyles.sourceSans.body4
+                    .colour(UiConstants.kFAQsAnswerColor),
+              ),
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    Assets.token,
+                    width: SizeConfig.padding16,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding6,
+                  ),
+                  Text(
+                    totalFlcAmount.toString(),
+                    style: TextStyles.sourceSansSB.body3.colour(Colors.white),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+      ],
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_loss.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/prize_partial_win.dart';
@@ -6,6 +8,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/processing
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +26,17 @@ class WeeklyResult extends StatefulWidget {
 class _WeeklyResultState extends State<WeeklyResult> {
   PageController _pageController;
   bool showBack = false;
+
+  final _prizeService = locator<PrizeService>();
+
+  PrizesModel tPrizes;
+
   @override
   void initState() {
     print(widget.isEligible);
     print(widget.winningsmap);
     _pageController = PageController();
+    tPrizes = _prizeService.tambolaPrizes;
     super.initState();
   }
 
@@ -78,8 +87,10 @@ class _WeeklyResultState extends State<WeeklyResult> {
               children: [
                 const PrizeProcessing(),
                 const Loser(),
-                PrizeWin(winningsMap: widget.winningsmap),
-                PrizePWin(winningsMap: widget.winningsmap)
+                PrizeWin(
+                  winningsMap: widget.winningsmap,
+                  tPrizes: tPrizes,
+                ),
               ],
             ),
           ),
