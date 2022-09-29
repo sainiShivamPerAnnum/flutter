@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -87,6 +88,9 @@ class SubscriptionCardViewModel extends BaseViewModel {
 
   getActiveButtonAction() async {
     Haptic.vibrate();
+    if (_userService.userJourneyStats.mlIndex < 2)
+      return BaseUtil.showNegativeAlert(
+          "Autosave locked", "Complete your profile to unlock autosave");
     await _paytmService.getActiveSubscriptionDetails();
     if (_paytmService.activeSubscription == null ||
         (_paytmService.activeSubscription.status ==

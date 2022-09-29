@@ -117,7 +117,9 @@ class UserProfileForm extends StatelessWidget {
                     },
                   )
                 : AppTextField(
-                    isEnabled: model.inEditMode && model.isgmailFieldEnabled,
+                    isEnabled: model.inEditMode &&
+                        model.isgmailFieldEnabled &&
+                        !model.isEmailVerified,
                     validator: (va) {
                       return null;
                     },

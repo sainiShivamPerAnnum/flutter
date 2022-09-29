@@ -92,7 +92,7 @@ class TrendingGames extends StatelessWidget {
               ),
             ),
             Text(
-              game.gameName,
+              game.gameName.split(' ').first,
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body1.colour(Colors.white),
             ),

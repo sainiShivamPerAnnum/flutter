@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -23,9 +24,9 @@ class FelloInfoDialog extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return FelloDialog(
-      defaultPadding: defaultPadding,
-      isAddedToScreenStack: isAddedToScreenStack,
+    return BaseDialog(
+      // defaultPadding: defaultPadding,
+      // isAddedToScreenStack: isAddedToScreenStack,
       content: customContent != null
           ? customContent
           : Container(
@@ -60,7 +61,6 @@ class FelloInfoDialog extends StatelessWidget {
                 ],
               ),
             ),
-      showCrossIcon: showCrossIcon ?? false,
     );
   }
 }

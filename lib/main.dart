@@ -119,6 +119,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<AugmontService>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
+          ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
           ChangeNotifierProvider(
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),

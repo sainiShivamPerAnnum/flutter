@@ -9,12 +9,8 @@ import 'package:felloapp/util/flavor_config.dart';
 
 class GoldenTicketRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? 'https://unzrx9x548.execute-api.ap-south-1.amazonaws.com/dev'
+      ? 'https://3yoxli7gxc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://jad0ai2t6k.execute-api.ap-south-1.amazonaws.com/prod';
-
-  final _baseUrl2 = FlavorConfig.isDevelopment()
-      ? "https://3yoxli7gxc.execute-api.ap-south-1.amazonaws.com/dev"
-      : "";
 
   Future<ApiResponse<GoldenTicket>> getGoldenTicketById({
     String goldenTicketId,
@@ -138,7 +134,7 @@ class GoldenTicketRepository extends BaseRepo {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
         ApiPath.goldenTickets(userService.baseUser.uid),
-        cBaseUrl: _baseUrl2,
+        cBaseUrl: _baseUrl,
         queryParams: {
           'type': type,
         },

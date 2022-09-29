@@ -50,42 +50,40 @@ class WebHomeView extends StatelessWidget {
                   controller: _controller,
                   physics: BouncingScrollPhysics(),
                   slivers: [
-                    SliverLayoutBuilder(builder: (context, constraints) {
-                      final scrolled = constraints.scrollOffset > 0;
-                      return SliverAppBar(
-                        title: scrolled
-                            ? Text(
-                                model.currentGameModel.gameName,
-                                style: TextStyles.rajdhaniB.title5
-                                    .colour(Colors.white),
-                              )
-                            : SizedBox.shrink(),
-                        pinned: true,
-                        centerTitle: false,
-                        backgroundColor:
-                            UiConstants.kSliverAppBarBackgroundColor,
-                        leading: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  AppState.backButtonDispatcher.didPopRoute();
-                                },
-                                icon: Icon(Icons.arrow_back_ios)),
-                          ],
-                        ),
-                        actions: [
-                          Padding(
-                            padding:
-                                EdgeInsets.only(right: SizeConfig.padding4),
-                            child: Row(
-                              children: [
-                                FelloCoinBar(svgAsset: Assets.token),
-                              ],
+                    SliverLayoutBuilder(
+                      builder: (context, constraints) {
+                        final scrolled = constraints.scrollOffset > 0;
+                        print(constraints.scrollOffset);
+                        return SliverAppBar(
+                          title: AnimatedOpacity(
+                            duration: Duration(milliseconds: 100),
+                            curve: Curves.easeIn,
+                            opacity: constraints.scrollOffset >
+                                    (SizeConfig.screenWidth * 0.35)
+                                ? 1
+                                : 0, //constraints.scrollOffset.clamp(0, 1),
+                            child: Text(
+                              model.currentGameModel.gameName,
+                              style: TextStyles.rajdhaniB.title5
+                                  .colour(Colors.white),
                             ),
                           ),
-                        ],
-                        expandedHeight: SizeConfig.screenWidth * 0.456,
-                        flexibleSpace: FlexibleSpaceBar(
+                          pinned: true,
+                          centerTitle: false,
+                          backgroundColor: model.currentGameModel.shadowColor,
+                          actions: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding4),
+                              child: Row(
+                                children: [
+                                  FelloCoinBar(svgAsset: Assets.token),
+                                ],
+                              ),
+                            ),
+                          ],
+                          expandedHeight: SizeConfig.screenWidth * 0.45,
+                          flexibleSpace: FlexibleSpaceBar(
                             background: model.isLoading
                                 ? Shimmer.fromColors(
                                     baseColor:
@@ -96,16 +94,103 @@ class WebHomeView extends StatelessWidget {
                                       color: Colors.grey,
                                     ),
                                   )
-                                : Hero(
-                                    tag: model.currentGameModel.code,
-                                    child: SvgPicture.network(
-                                      model.currentGameModel.thumbnailUri,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
+                                : Container(
+                                    color: model.currentGameModel.shadowColor,
+                                    padding: EdgeInsets.only(
+                                        top: SizeConfig.viewInsets.top +
+                                            SizeConfig.padding12,
+                                        left: SizeConfig.pageHorizontalMargins *
+                                            2),
+                                    child:
+                                        // Stack(
+                                        //   children: [
+                                        //     SvgPicture.network(
+                                        //       model.currentGameModel.thumbnailUri,
+                                        //       width: SizeConfig.screenWidth,
+                                        //       fit: BoxFit.cover,
+                                        //     ),
+                                        //     Positioned(
+                                        //       left:
+                                        //           SizeConfig.pageHorizontalMargins *
+                                        //               2,
+                                        //       child: Container(
+                                        //         margin: EdgeInsets.only(
+                                        //           top: SizeConfig.viewInsets.top +
+                                        //               SizeConfig.padding12,
+                                        //         ),
+                                        //         width: SizeConfig.screenWidth,
+                                        //         child:
+                                        Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                  model
+                                                      .currentGameModel.gameName
+                                                      .split(' ')
+                                                      .first,
+                                                  style: TextStyles
+                                                      .rajdhaniB.title1),
+                                              Text(
+                                                  model
+                                                      .currentGameModel.gameName
+                                                      .split(' ')
+                                                      .last,
+                                                  style: TextStyles
+                                                      .rajdhaniSB.title3),
+                                              SizedBox(
+                                                  height: SizeConfig.padding16),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    Assets.token,
+                                                    height:
+                                                        SizeConfig.padding20,
+                                                    width: SizeConfig.padding20,
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          SizeConfig.padding4),
+                                                  Text(
+                                                      model.currentGameModel
+                                                          .playCost
+                                                          .toString(),
+                                                      style: TextStyles
+                                                          .sourceSans.body1),
+                                                ],
+                                              ),
+                                            ]),
+                                        Spacer(),
+                                        SvgPicture.network(
+                                            model.currentGameModel.icon,
+                                            fit: BoxFit.cover,
+                                            height:
+                                                SizeConfig.screenWidth * 0.5,
+                                            width:
+                                                SizeConfig.screenWidth * 0.5),
+                                        SizedBox(
+                                          width:
+                                              SizeConfig.pageHorizontalMargins,
+                                        )
+                                      ],
                                     ),
-                                  )),
-                      );
-                    }),
+                                  ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                          ),
+                        );
+                      },
+                    ),
                     SliverList(
                       delegate: SliverChildListDelegate(
                         [

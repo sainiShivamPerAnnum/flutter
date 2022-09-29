@@ -172,12 +172,14 @@ class LoginControllerViewModel extends BaseViewModel {
                 _onSignInSuccess(LoginSource.FIREBASE);
               }).catchError((e) {
                 print(e.toString());
-
+                _otpScreenKey.currentState.model.otpFieldEnabled = true;
                 BaseUtil.showNegativeAlert(
                     "Authentication failed", "Please try again after sometime");
               });
             } else {
               _otpScreenKey.currentState.model.pinEditingController.text = "";
+              _otpScreenKey.currentState.model.otpFieldEnabled = true;
+
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
 
@@ -185,6 +187,8 @@ class LoginControllerViewModel extends BaseViewModel {
               setState(ViewState.Idle);
             }
           } else {
+            _otpScreenKey.currentState.model.otpFieldEnabled = true;
+
             BaseUtil.showNegativeAlert(
                 'Enter OTP', 'Please enter a valid one time password');
           }

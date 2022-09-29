@@ -356,8 +356,11 @@ class GoldBuyViewModel extends BaseViewModel {
       else
         goldAmountInGrams = 0.0;
     }
-    fieldWidth =
-        (SizeConfig.padding40 * goldAmountController.text.length.toDouble());
+    fieldWidth = (SizeConfig.padding40 *
+        ((goldAmountController.text != null &&
+                goldAmountController.text.isNotEmpty)
+            ? goldAmountController.text.length.toDouble()
+            : 0.5));
     refresh();
   }
 
@@ -387,7 +390,8 @@ class GoldBuyViewModel extends BaseViewModel {
         goldAmountController.text = goldBuyAmount.toInt().toString();
         updateGoldAmount();
         showMaxCapText = true;
-        buyFieldNode.unfocus();
+        goldAmountController.selection = TextSelection.fromPosition(
+            TextPosition(offset: goldAmountController.text.length));
       } else {
         goldBuyAmount = double.tryParse(val);
         if (goldBuyAmount < 10.0) showMinCapText = true;
@@ -402,8 +406,7 @@ class GoldBuyViewModel extends BaseViewModel {
       }
     } else {
       goldBuyAmount = 0;
-      goldAmountController.text = '0';
-      buyFieldNode.unfocus();
+
       updateGoldAmount();
     }
     appliedCoupon = null;

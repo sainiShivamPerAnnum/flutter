@@ -29,6 +29,11 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     notifyListeners();
   }
 
+  set otpFieldEnabled(bool val) {
+    this._otpFieldEnabled = val;
+    notifyListeners();
+  }
+
   init(BuildContext context) {
     listenForCode();
     Future.delayed(Duration(seconds: 30), () {

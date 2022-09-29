@@ -52,9 +52,56 @@ class GoldBuySuccessView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Lottie.asset(
-              Assets.goldDepostSuccessLottie,
-              fit: BoxFit.cover,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Lottie.asset(
+                    Assets.goldDepostSuccessLottie,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                if (_augTxnService.currentTxnAmount > 0)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.padding12,
+                          bottom: SizeConfig.padding24),
+                      child: Lottie.asset(
+                        Assets.floatingTokenIslandLottie,
+                        width: SizeConfig.screenWidth * 0.3,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                if (GoldenTicketService.currentGT != null)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        right: SizeConfig.padding12,
+                        top: SizeConfig.padding24,
+                      ),
+                      child: Lottie.asset(
+                        Assets.floatingGoldenTicketIslandLottie,
+                        width: SizeConfig.screenWidth * 0.3,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                if (_augTxnService.currentTxnTambolaTicketsCount > 0)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      child: Lottie.asset(
+                        Assets.floatingTambolaTicketIslandLottie,
+                        width: SizeConfig.screenWidth * 0.3,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
           Text(
@@ -198,6 +245,7 @@ class GoldBuySuccessView extends StatelessWidget {
               Future.delayed(Duration(milliseconds: 500), () {
                 _gtService.showInstantGoldenTicketView(
                     amount: _augTxnService.currentTxnAmount,
+                    showAutoSavePrompt: true,
                     title:
                         "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
                     source: GTSOURCE.deposit);

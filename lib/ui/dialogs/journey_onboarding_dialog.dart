@@ -1,3 +1,5 @@
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -19,6 +21,14 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
   PageController _pageController;
   int _currentPage = 0;
 
+  get currentPage => this._currentPage;
+
+  set currentPage(value) {
+    setState(() {
+      this._currentPage = value;
+    });
+  }
+
   double dragStartPosition, dragUpdatePosition;
 
   final onboardingData = [
@@ -38,7 +48,7 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
   @override
   void initState() {
     _pageController = PageController();
-    _currentPage = 0;
+    currentPage = 0;
     controller =
         AnimationController(vsync: this, duration: Duration(seconds: 6));
     Future.delayed(
@@ -57,22 +67,20 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: UiConstants.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      ),
+      backgroundColor: UiConstants.darkPrimaryColor,
       child: GestureDetector(
         onHorizontalDragEnd: (details) {
           bool leftSwipe = dragStartPosition > dragUpdatePosition;
           double swipeCount = (dragStartPosition - dragUpdatePosition).abs();
           if (swipeCount >= 40) {
             if (leftSwipe) {
-              if (_currentPage == 2) {
-                // model.registerWalkthroughCompletion(comingFrom);
-                return;
-              } else {
-                _pageController.nextPage(
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
-                );
-              }
+              _pageController.nextPage(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeIn,
+              );
             } else {
               _pageController.previousPage(
                 duration: Duration(milliseconds: 500),
@@ -92,15 +100,16 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
           children: [
             Lottie.asset(Assets.journeyOnbLottie,
                 controller: controller, width: SizeConfig.screenWidth),
+            SizedBox(height: SizeConfig.padding16),
             Container(
-              margin: EdgeInsets.only(bottom: SizeConfig.padding32),
-              height: SizeConfig.screenWidth * 0.28,
+              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+              height: SizeConfig.screenWidth * 0.24,
               width: SizeConfig.screenWidth * 0.8,
               child: PageView.builder(
                 controller: _pageController,
                 // physics: NeverScrollableScrollPhysics(),
                 onPageChanged: (val) {
-                  if (val > _currentPage) {
+                  if (val > currentPage) {
                     if (val == 2)
                       controller.animateTo(1);
                     else
@@ -114,7 +123,7 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
                     else
                       controller.animateBack(0);
                   }
-                  _currentPage = val;
+                  currentPage = val;
                 },
                 itemCount: 3,
                 itemBuilder: (context, index) {
@@ -147,7 +156,7 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
                     height: SizeConfig.padding8,
                     margin: EdgeInsets.symmetric(horizontal: 3),
                     decoration: BoxDecoration(
-                      color: _currentPage == index
+                      color: currentPage == index
                           ? Colors.white
                           : Colors.transparent,
                       border: Border.all(color: Colors.white),
@@ -157,6 +166,20 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
                 },
               ),
             ),
+            SizedBox(height: SizeConfig.padding16),
+            AppPositiveBtn(
+                btnText: currentPage == 2 ? 'Done' : 'Next',
+                width: SizeConfig.screenWidth * 0.5,
+                onPressed: () {
+                  if (currentPage == 2)
+                    AppState.backButtonDispatcher.didPopRoute();
+                  else {
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeIn,
+                    );
+                  }
+                }),
             SizedBox(height: SizeConfig.padding40)
           ],
         ),

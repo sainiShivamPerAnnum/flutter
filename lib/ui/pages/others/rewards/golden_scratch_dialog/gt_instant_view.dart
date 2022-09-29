@@ -86,7 +86,7 @@ class _GTInstantViewState extends State<GTInstantView>
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          backgroundColor: Colors.black.withOpacity(0.9),
+          backgroundColor: Colors.black.withOpacity(0.7),
           body: Container(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,

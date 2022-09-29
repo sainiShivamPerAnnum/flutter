@@ -300,67 +300,75 @@ class UserProfileVM extends BaseViewModel {
   }
 
   updateDetails() async {
-    if (formKey.currentState.validate() && isValidDate() && usernameIsValid()) {
-      if (_checkForChanges() && checkForNullData()) {
-        if (DateHelper.isAdult(selectedDate)) {
-          isUpdaingUserDetails = true;
-          _userService.baseUser.name = nameController.text.trim();
-          _userService.baseUser.dob =
-              "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
-          _userService.baseUser.gender = getGender();
-          _userService.baseUser.isEmailVerified = _userService.isEmailVerified;
-          _userService.baseUser.email = emailController.text.trim();
-          _userService.baseUser.username =
-              isNewUser ? username : _userService.baseUser.username;
-          await _userRepo.updateUser(
-            uid: _userService.baseUser.uid,
-            dMap: {
-              BaseUser.fldName: _userService.baseUser.name,
-              BaseUser.fldDob: _userService.baseUser.dob,
-              BaseUser.fldGender: _userService.baseUser.gender,
-              BaseUser.fldIsEmailVerified:
-                  _userService.baseUser.isEmailVerified,
-              BaseUser.fldEmail: _userService.baseUser.email,
-              BaseUser.fldAvatarId: "AV1",
-              BaseUser.fldUsername: _userService.baseUser.username
-            },
-          ).then((ApiResponse<bool> res) async {
-            if (res.isSuccess()) {
-              await _userRepo.getUserById(id: _userService.baseUser.uid);
-              _userService.setMyUserName(_userService?.baseUser?.kycName ??
-                  _userService.baseUser.name);
-              _userService.setEmail(_userService.baseUser.email);
-              _userService.setDateOfBirth(_userService.baseUser.dob);
-              _userService.setGender(_userService.baseUser.gender);
-              genderController.text = setGender();
-              dobController.text = _userService.baseUser.dob;
-              isUpdaingUserDetails = false;
-              inEditMode = false;
-              if (isNewUser) AppState.backButtonDispatcher.didPopRoute();
-              isNewUser = false;
-              isEmailEnabled = false;
-              BaseUtil.showPositiveAlert(
-                "Updated Successfully",
-                "Profile updated successfully",
-              );
-            } else {
-              isUpdaingUserDetails = false;
-              BaseUtil.showNegativeAlert(
-                "Profile Update failed",
-                "Please try again in some time",
-              );
-            }
-          });
-        } else {
-          BaseUtil.showNegativeAlert(
-            'Ineligible',
-            'You need to be above 18 to join',
-          );
+    if (isNewUser && await validateUsername()) {
+      if (formKey.currentState.validate() &&
+          isValidDate() &&
+          usernameIsValid()) {
+        if (_checkForChanges() && checkForNullData()) {
+          if (DateHelper.isAdult(selectedDate)) {
+            isUpdaingUserDetails = true;
+            _userService.baseUser.name = nameController.text.trim();
+            _userService.baseUser.dob =
+                "${yearFieldController.text}-${monthFieldController.text}-${dateFieldController.text}";
+            _userService.baseUser.gender = getGender();
+            _userService.baseUser.isEmailVerified =
+                _userService.isEmailVerified;
+            _userService.baseUser.email = emailController.text.trim();
+            _userService.baseUser.username =
+                isNewUser ? username : _userService.baseUser.username;
+            await _userRepo.updateUser(
+              uid: _userService.baseUser.uid,
+              dMap: {
+                BaseUser.fldName: _userService.baseUser.name,
+                BaseUser.fldDob: _userService.baseUser.dob,
+                BaseUser.fldGender: _userService.baseUser.gender,
+                BaseUser.fldIsEmailVerified:
+                    _userService.baseUser.isEmailVerified,
+                BaseUser.fldEmail: _userService.baseUser.email,
+                BaseUser.fldAvatarId: "AV1",
+                BaseUser.fldUsername: _userService.baseUser.username
+              },
+            ).then((ApiResponse<bool> res) async {
+              if (res.isSuccess()) {
+                await _userRepo.getUserById(id: _userService.baseUser.uid);
+                _userService.setMyUserName(_userService?.baseUser?.kycName ??
+                    _userService.baseUser.name);
+                _userService.setEmail(_userService.baseUser.email);
+                _userService.setDateOfBirth(_userService.baseUser.dob);
+                _userService.setGender(_userService.baseUser.gender);
+                genderController.text = setGender();
+                dobController.text = _userService.baseUser.dob;
+                isUpdaingUserDetails = false;
+                inEditMode = false;
+                if (isNewUser) AppState.backButtonDispatcher.didPopRoute();
+                isNewUser = false;
+                isEmailEnabled = false;
+                BaseUtil.showPositiveAlert(
+                  "Updated Successfully",
+                  "Profile updated successfully",
+                );
+              } else {
+                isUpdaingUserDetails = false;
+                BaseUtil.showNegativeAlert(
+                  "Profile Update failed",
+                  "Please try again in some time",
+                );
+              }
+            });
+          } else {
+            BaseUtil.showNegativeAlert(
+              'Ineligible',
+              'You need to be above 18 to join',
+            );
+          }
         }
-      }
-    } else
+      } else
+        BaseUtil.showNegativeAlert(
+            "Invalid details", "please check the fields again");
+    } else {
       BaseUtil.showNegativeAlert(
-          "Invalid details", "please check the fields again");
+          "Username invalid", "please try another username");
+    }
   }
 
   bool usernameIsValid() {

@@ -28,7 +28,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 
-const String AVATAR_CURRENT_LEVEL = "avatarcurrentLevel";
+const String AVATAR_CURRENT_MILESTONE_LEVEL = "avatarcurrentMilestoneLevel";
+const String AVATAR_CURRENT_JOURNEY_LEVEL = "avatarcurrentJourneyLevel";
 
 class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Dependency Injection
@@ -64,6 +65,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int fcmRemoteAvatarLevel;
   // UserJourneyStatsModel _userJourneyStats;
   bool _journeyBuildFailure = false;
+  bool _showLevelUpAnimation = false;
+
+  AnimationController levelUpLottieController;
 
   //Getters and Setters
 
@@ -156,6 +160,13 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set mainController(ScrollController value) => this._mainController = value;
 
+  get showLevelUpAnimation => this._showLevelUpAnimation;
+
+  set showLevelUpAnimation(value) {
+    this._showLevelUpAnimation = value;
+    notifyListeners();
+  }
+
   // INIT MAIN
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
@@ -170,10 +181,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _userService.userJourneyStats = null;
     controller?.dispose();
     mainController?.dispose();
+    levelUpLottieController?.dispose();
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
     resetJourneyData();
-    PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
+    PreferenceHelper.remove(AVATAR_CURRENT_MILESTONE_LEVEL);
     levels.clear();
     vsync = null;
     pages.clear();
@@ -295,7 +307,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   //Check if user has completed the Journey Level
-  int checkForGameLevelChange() {
+  int getUserCurrentJourneyLevel() {
     for (int i = 0; i < levels.length; i++) {
       log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
       if (avatarRemoteMlIndex < levels[i].end &&
@@ -304,21 +316,39 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     return 0;
   }
 
+  bool checkIfUserHasCompletedJourneyLevel() {
+    int existingLevel = 1;
+    int updatedLevel = 1;
+    levels.forEach((l) {
+      if (avatarCachedMlIndex < l.end && avatarCachedMlIndex >= l.start)
+        existingLevel = l.level;
+    });
+    levels.forEach((l) {
+      if (avatarRemoteMlIndex < l.end && avatarRemoteMlIndex >= l.start)
+        updatedLevel = l.level;
+    });
+
+    return (existingLevel != updatedLevel);
+  }
+
   //Returns if there is any cached mlIndex
   //else sets mlIndex to 1 and cache it to shared prefs
   getAvatarCachedMilestoneIndex() {
-    if (PreferenceHelper.exists(AVATAR_CURRENT_LEVEL))
-      avatarCachedMlIndex = PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL);
+    if (PreferenceHelper.exists(AVATAR_CURRENT_MILESTONE_LEVEL))
+      avatarCachedMlIndex =
+          PreferenceHelper.getInt(AVATAR_CURRENT_MILESTONE_LEVEL);
     else {
       avatarCachedMlIndex = 1;
-      PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, avatarCachedMlIndex);
+      PreferenceHelper.setInt(
+          AVATAR_CURRENT_MILESTONE_LEVEL, avatarCachedMlIndex);
     }
   }
 
   //Updates cached mlIndex to remote mlIndex
   updateAvatarLocalLevel() {
     avatarCachedMlIndex = avatarRemoteMlIndex;
-    PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, avatarCachedMlIndex);
+    PreferenceHelper.setInt(
+        AVATAR_CURRENT_MILESTONE_LEVEL, avatarCachedMlIndex);
   }
 
   //fetches the current mlIndex from remote and
@@ -334,7 +364,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex += 1;
     final currentMilestone = currentMilestoneList
         .firstWhere((milestone) => milestone.index == avatarRemoteMlIndex);
-    int jLevel = checkForGameLevelChange();
+    int jLevel = getUserCurrentJourneyLevel();
     _userService.userJourneyStats = UserJourneyStatsModel(
         page: currentMilestone.page,
         level: jLevel,
@@ -558,7 +588,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         seconds: duration,
       ),
     );
-
+    levelUpLottieController = AnimationController(vsync: vsync);
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeInOutCirc),
     )..addListener(() {
@@ -574,6 +604,13 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   animateAvatar() async {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
+    if (checkIfUserHasCompletedJourneyLevel()) {
+      showLevelUpAnimation = true;
+      await levelUpLottieController.forward().then((value) {
+        showLevelUpAnimation = false;
+      });
+      Future.delayed(Duration(milliseconds: 800), () {});
+    }
     controller.reset();
     await scrollPageToAvatarPosition();
     controller.forward().whenComplete(() {

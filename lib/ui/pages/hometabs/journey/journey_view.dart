@@ -31,6 +31,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 final avatarKey = GlobalKey();
 
@@ -60,34 +61,6 @@ class _JourneyViewState extends State<JourneyView>
         return Scaffold(
           backgroundColor: Colors.black,
           floatingActionButton: HelpFab(),
-          // floatingActionButton: Container(
-          //   margin: EdgeInsets.only(bottom: 60),
-          //   child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
-          //           PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
-          //       ? FloatingActionButton(
-          //           child: const Icon(
-          //             Icons.replay,
-          //             color: Colors.white,
-          //           ),
-          //           backgroundColor: Colors.black,
-          //           onPressed: () {
-          //             PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
-          //           },
-          //         )
-          //       : SizedBox(),
-          // ),
-          // floatingActionButton: Container(
-          //   margin: EdgeInsets.only(bottom: 80, left: 50),
-          //   child: FloatingActionButton(
-          //       child: Icon(Icons.stop),
-          //       onPressed: //model.controller.stop
-          //           () {
-          //         _animationController.reset();
-          //         _animationController.forward().then((value) {
-          //           showButton = true;
-          //         });
-          //       }),
-          // ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,
@@ -164,11 +137,31 @@ class _JourneyViewState extends State<JourneyView>
                     if (model.isRefreshing) JRefreshIndicator(model: model),
                     // NewUserNavBar(model: model),
 
-                    JPageLoader(model: model)
+                    JPageLoader(model: model),
+                    LevelUpAnimation(),
                   ],
                 ),
         );
       },
+    );
+  }
+}
+
+class LevelUpAnimation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<JourneyService>(
+      builder: (ctx, journeyService, child) =>
+          journeyService.showLevelUpAnimation
+              ? Lottie.asset(
+                  Assets.levelUpLottie,
+                  controller: journeyService.levelUpLottieController,
+                  onLoaded: (composition) {
+                    journeyService.levelUpLottieController
+                      ..duration = composition.duration;
+                  },
+                )
+              : SizedBox(),
     );
   }
 }

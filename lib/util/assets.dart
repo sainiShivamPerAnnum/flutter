@@ -414,10 +414,20 @@ class Assets {
   static const String felloSplashZoomOutLogo =
       'assets/lotties/fello_splash_out.json';
   static const String goldDepostLoadingLottie =
-      "assets/lotties/deposit_progress.json";
+      "assets/lotties/gold_deposit_progress.json";
   static const String goldDepostSuccessLottie =
-      "assets/lotties/deposit_complete.json";
+      "assets/lotties/gold_deposit_complete.json";
   static const String goldSellCompleteLottie =
-      "assets/lotties/sell_complete.json";
+      "assets/lotties/gold_sell_complete.json";
   static const String fullScreenLoaderLottie = "assets/lotties/loader.json";
+
+  static const String floatingTokenIslandLottie =
+      "assets/lotties/floating_token.json";
+  static const String floatingTambolaTicketIslandLottie =
+      "assets/lotties/floating_tambola_ticket.json";
+  static const String floatingGoldenTicketIslandLottie =
+      "assets/lotties/floating_golden_ticket.json";
+
+  static const String levelUpLottie = "assets/lotties/levelup.json";
+  static const String wohooLottie = "assets/lotties/woohoo.json";
 }
