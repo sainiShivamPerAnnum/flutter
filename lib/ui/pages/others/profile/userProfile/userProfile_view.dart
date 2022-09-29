@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
@@ -469,8 +470,18 @@ class UserProfileForm extends StatelessWidget {
                     width: SizeConfig.screenWidth,
                     btnText: "Complete",
                     onPressed: model.updateDetails),
+            SizedBox(height: SizeConfig.padding40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Version ${BaseUtil.packageInfo.version} (${BaseUtil.packageInfo.buildNumber})',
+                  style: TextStyles.body3.colour(UiConstants.kTextColor2),
+                ),
+              ],
+            ),
 
-            SizedBox(height: SizeConfig.padding64),
+            SizedBox(height: SizeConfig.padding4),
           ],
         ),
       ),

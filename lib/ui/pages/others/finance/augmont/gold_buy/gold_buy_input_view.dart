@@ -178,7 +178,7 @@ class GoldBuyInputView extends StatelessWidget {
                 )
               : AppPositiveBtn(
                   btnText: model.status == 2
-                      ? 'Invest'
+                      ? 'Save'
                       : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
                   onPressed: () async {
                     if (!augTxnService.isGoldBuyInProgress) {

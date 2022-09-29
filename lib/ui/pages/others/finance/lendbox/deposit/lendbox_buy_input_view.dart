@@ -55,27 +55,28 @@ class LendboxBuyInputView extends StatelessWidget {
             BankAndPanServiceProperties.kycVerified,
           ],
           builder: (ctx, service, child) {
-            if (!service.isKYCVerified) return _kycWidget(model);
-            return model.isBuyInProgress
-                ? Container(
-                    height: SizeConfig.screenWidth * 0.1556,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth * 0.7,
-                    child: LinearProgressIndicator(
-                      color: UiConstants.primaryColor,
-                      backgroundColor: UiConstants.kDarkBackgroundColor,
-                    ),
-                  )
-                : AppPositiveBtn(
-                    btnText: 'Invest',
-                    onPressed: () async {
-                      if (!model.isBuyInProgress) {
-                        FocusScope.of(context).unfocus();
-                        model.initiateBuy();
-                      }
-                    },
-                    width: SizeConfig.screenWidth * 0.813,
-                  );
+            return (!service.isKYCVerified)
+                ? _kycWidget(model)
+                : model.isBuyInProgress
+                    ? Container(
+                        height: SizeConfig.screenWidth * 0.1556,
+                        alignment: Alignment.center,
+                        width: SizeConfig.screenWidth * 0.7,
+                        child: LinearProgressIndicator(
+                          color: UiConstants.primaryColor,
+                          backgroundColor: UiConstants.kDarkBackgroundColor,
+                        ),
+                      )
+                    : AppPositiveBtn(
+                        btnText: 'Save',
+                        onPressed: () async {
+                          if (!model.isBuyInProgress) {
+                            FocusScope.of(context).unfocus();
+                            model.initiateBuy();
+                          }
+                        },
+                        width: SizeConfig.screenWidth * 0.813,
+                      );
           },
         ),
         SizedBox(

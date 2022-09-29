@@ -119,7 +119,7 @@ class BankAndPanService
   }
 
   verifyKYCStatus() {
-    isKYCVerified = _userService.baseUser.isSimpleKycVerified;
+    isKYCVerified = _userService.baseUser?.isSimpleKycVerified ?? false;
     print(_isKYCVerified);
     _logger.d('kyc verified! $isKYCVerified');
   }
