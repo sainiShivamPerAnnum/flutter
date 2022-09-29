@@ -75,9 +75,8 @@ class TodayPicksBallsAnimation extends StatelessWidget {
   }
 }
 
-//Widget to render single ball with animation
-class AnimatedPicksDisplay extends StatefulWidget {
-  const AnimatedPicksDisplay({
+class AnimatedPicksDisplay extends StatelessWidget {
+  AnimatedPicksDisplay({
     Key key,
     @required this.number,
     @required this.tabIndex,
@@ -90,11 +89,6 @@ class AnimatedPicksDisplay extends StatefulWidget {
   final int animationDurationMilliseconds;
   final Color ballColor;
 
-  @override
-  State<AnimatedPicksDisplay> createState() => _AnimatedPicksDisplayState();
-}
-
-class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
   Random random = new Random();
 
   List<int> randomList = [];
@@ -105,62 +99,10 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
   void _scrollDown() {
     _controller.animateTo(
       _controller.position.maxScrollExtent,
-      duration: Duration(milliseconds: widget.animationDurationMilliseconds),
+      duration: Duration(milliseconds: animationDurationMilliseconds),
       curve: Curves.fastOutSlowIn,
     );
     isAnimationDone = true;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //GEnerating random numbers
-    for (int i = 0; i < 8; i++) {
-      randomList.add(random.nextInt(99));
-    }
-
-    print("generated ${widget.tabIndex}");
-
-    if (widget.tabIndex == 1 && isAnimationDone == false) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _scrollDown();
-      });
-    }
-
-    return Container(
-      width: SizeConfig.screenWidth * 0.14,
-      height: SizeConfig.screenWidth * 0.14,
-      decoration: BoxDecoration(
-        color: UiConstants.kArowButtonBackgroundColor,
-        shape: BoxShape.circle,
-      ),
-      child: ClipOval(
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _controller,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              isAnimationDone
-                  ? _buildBalls(widget.number, false, widget.ballColor)
-                  : ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: randomList.length,
-                      itemBuilder: (context, index) {
-                        return _buildBalls(
-                            randomList[index],
-                            index == 0 ? true : false,
-                            Colors.primaries[
-                                Random().nextInt(Colors.primaries.length)]);
-                      },
-                    ),
-              _buildBalls(widget.number, false, widget.ballColor),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Container _buildBalls(int nToShow, bool showEmpty, Color ballColor) {
@@ -200,5 +142,55 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //GEnerating random numbers
+    for (int i = 0; i < 8; i++) {
+      randomList.add(random.nextInt(99));
+    }
+
+    if (tabIndex == 1 && isAnimationDone == false) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _scrollDown();
+      });
+    }
+    return Container(
+      width: SizeConfig.screenWidth * 0.14,
+      height: SizeConfig.screenWidth * 0.14,
+      decoration: BoxDecoration(
+        color: UiConstants.kArowButtonBackgroundColor,
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: _controller,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              isAnimationDone
+                  ? _buildBalls(number, false, ballColor)
+                  : ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: randomList.length,
+                      itemBuilder: (context, index) {
+                        return _buildBalls(
+                            randomList[index],
+                            index == 0 ? true : false,
+                            Colors.primaries[
+                                Random().nextInt(Colors.primaries.length)]);
+                      },
+                    ),
+              _buildBalls(number, false, ballColor),
+            ],
+          ),
+        ),
+      ),
+    );
+    ;
   }
 }
