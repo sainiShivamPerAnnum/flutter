@@ -1,5 +1,7 @@
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -20,67 +22,41 @@ class Loser extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            Spacer(),
+            SvgPicture.asset(
+              Assets.noWinnersAsset,
+              width: SizeConfig.screenWidth * 0.4,
+            ),
+            SizedBox(
+              height: SizeConfig.padding54,
+            ),
             Text(
-              locale.tLossTitle,
-              style: TextStyles.title1.bold,
+              "Better luck next time!",
+              style: TextStyles.rajdhaniB.title3.colour(Colors.white),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Text(
-                locale.tLossSubtitle,
-                textAlign: TextAlign.center,
-                style: TextStyles.title2.bold.colour(UiConstants.tertiarySolid),
-              ),
-            ),
-            Spacer(),
-            Image.asset(
-              "assets/vectors/gold_bar.webp",
-              width: SizeConfig.screenWidth * 0.8,
-            ),
-            Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: 20.0,
-                  horizontal: SizeConfig.blockSizeHorizontal * 5),
-              child: Text(locale.tLossSubtitle2,
-                  textAlign: TextAlign.center, style: TextStyles.body3),
+                vertical: SizeConfig.padding20,
+              ),
+              child: Text(
+                  "None of your tickets matched this time.\nSave & get Tambola tickets for the coming week!",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kFAQsAnswerColor)),
             ),
-            Column(
-              children: [
-                Container(
-                  width: SizeConfig.screenWidth,
-                  child: FelloButtonLg(
-                    child: Text(
-                      "Buy Tickets",
-                      style: TextStyles.body3.bold.colour(Colors.white),
-                    ),
-                    onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
-                    },
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding12),
-                Container(
-                  width: SizeConfig.navBarWidth,
-                  child: FelloButtonLg(
-                      color: UiConstants.tertiarySolid,
-                      child: Text(
-                        "Save More Money",
-                        style: TextStyles.body3.bold.colour(Colors.white),
-                      ),
-                      onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
-                        AppState.backButtonDispatcher.didPopRoute();
-                        AppState.backButtonDispatcher.didPopRoute();
-                        AppState.delegate.appState.setCurrentTabIndex = 0;
-                      }),
-                ),
-              ],
+            Spacer(),
+            Container(
+              margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins),
+              width: SizeConfig.navBarWidth,
+              child: AppPositiveBtn(
+                  btnText: "SAVE MORE",
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.delegate.appState.setCurrentTabIndex = 0;
+                  }),
             ),
-            Spacer(
-              flex: 2,
-            )
           ],
         ),
       ),

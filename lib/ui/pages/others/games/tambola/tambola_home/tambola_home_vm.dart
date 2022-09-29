@@ -81,6 +81,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   int buyTicketCount = 3;
   bool _ticketsBeingGenerated = false;
   bool ticketsLoaded = false;
+  int _ticketSavedAmount = 0;
 
   //Constant values
   Map<String, IconData> tambolaOdds = {
@@ -132,6 +133,8 @@ class TambolaHomeViewModel extends BaseViewModel {
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
   List<Winners> get winners => _winners;
   get showBuyModal => _showBuyModal;
+
+  get ticketSavedAmount => _ticketSavedAmount;
 
   set showBuyModal(value) {
     _showBuyModal = value;
@@ -196,6 +199,11 @@ class TambolaHomeViewModel extends BaseViewModel {
     refresh();
   }
 
+  updateTicketSavedAmount(int count) {
+    _ticketSavedAmount = 500 * count;
+    notifyListeners();
+  }
+
   init() async {
     setState(ViewState.Busy);
     await getGameDetails();
@@ -207,6 +215,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     //Tambola services
     ticketCountController =
         new TextEditingController(text: buyTicketCount.toString());
+    updateTicketSavedAmount(buyTicketCount);
 
     // Ticket wallet check
     await tambolaService.getTicketCount();
@@ -331,6 +340,8 @@ class TambolaHomeViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert("Maximum tickets exceeded",
           "You can purchase upto 30 tambola tickets at once");
     ticketCountController.text = buyTicketCount.toString();
+    updateTicketSavedAmount(buyTicketCount);
+
     notifyListeners();
   }
 
@@ -340,6 +351,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     else
       BaseUtil.showNegativeAlert("Failed", "Negative counts not supported");
     ticketCountController.text = buyTicketCount.toString();
+    updateTicketSavedAmount(buyTicketCount);
     notifyListeners();
   }
 
