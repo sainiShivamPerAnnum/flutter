@@ -123,11 +123,10 @@ class GTInstantViewModel extends BaseViewModel {
     Haptic.vibrate();
     buttonOpacity = 1.0;
     isCardScratched = true;
-    
+
     try {
       _getBearerToken().then(
-        (String token) => _gtRepo.redeemReward(goldenTicket.gtId)
-            .then(
+        (String token) => _gtRepo.redeemReward(goldenTicket.gtId).then(
           (_) {
             _userService.getUserFundWalletData();
             _userCoinService.getUserCoinBalance().then(

@@ -36,7 +36,10 @@ class HttpModel extends ChangeNotifier {
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<bool> postUserReferral(
-      String userId, String referee, String userName) async {
+    String userId,
+    String referee,
+    String userName,
+  ) async {
     try {
       String _stage = FlavorConfig.getStage();
       Map<String, dynamic> _params = {
@@ -150,6 +153,4 @@ class HttpModel extends ChangeNotifier {
       return false;
     }
   }
-
-
 }

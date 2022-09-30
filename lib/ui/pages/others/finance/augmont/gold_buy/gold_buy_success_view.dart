@@ -10,7 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
@@ -37,10 +36,11 @@ class GoldBuySuccessView extends StatelessWidget {
                     AppState.backButtonDispatcher.didPopRoute();
                     Future.delayed(Duration(milliseconds: 500), () {
                       _gtService.showInstantGoldenTicketView(
-                          amount: _augTxnService.currentTxnAmount,
-                          title:
-                              "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
-                          source: GTSOURCE.deposit);
+                        amount: _augTxnService.currentTxnAmount,
+                        title:
+                            "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
+                        source: GTSOURCE.deposit,
+                      );
                     });
                   },
                   icon: Icon(
@@ -244,11 +244,12 @@ class GoldBuySuccessView extends StatelessWidget {
               AppState.delegate.appState.setCurrentTabIndex = 1;
               Future.delayed(Duration(milliseconds: 500), () {
                 _gtService.showInstantGoldenTicketView(
-                    amount: _augTxnService.currentTxnAmount,
-                    showAutoSavePrompt: true,
-                    title:
-                        "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
-                    source: GTSOURCE.deposit);
+                  amount: _augTxnService.currentTxnAmount,
+                  showAutoSavePrompt: true,
+                  title:
+                      "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
+                  source: GTSOURCE.deposit,
+                );
               });
             },
             child: Text(

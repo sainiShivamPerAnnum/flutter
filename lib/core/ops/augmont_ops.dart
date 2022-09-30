@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/deposit_response_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -78,25 +75,13 @@ class AugmontService extends ChangeNotifier {
       'Others'
     ];
     if (_dbModel == null) return false;
-    Map<String, String> cMap = await _dbModel.getActiveAwsAugmontApiKey();
-    if (cMap == null) return false;
 
-    _baseUri = (cMap['baseuri'] == null || cMap['baseuri'].isEmpty)
-        ? defaultBaseUri
-        : cMap['baseuri'];
-    _apiKey = cMap['key'];
+    _baseUri = defaultBaseUri;
     headers = {'x-api-key': _apiKey};
     return true;
   }
 
   bool isInit() => (_apiKey != null);
-
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
-
-    return token;
-  }
 
   Future<AugmontRates> getRates() async {
     if (!isInit()) await _init();

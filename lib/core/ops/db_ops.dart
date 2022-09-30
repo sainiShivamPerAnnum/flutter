@@ -5,7 +5,6 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -49,76 +48,9 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  /// return obj:
-  /// {value: GHexqwio123==, enid:2}
-  Future<Map<String, dynamic>> getEncodedUserPan(String uid) async {
-    try {
-      logger.i("CALLING: getUserPrtdDocPan");
-      var doc = await _api.getUserPrtdDocPan(uid);
-      if (doc.exists && doc.data() != null) {
-        Map<String, dynamic> _snapshotData = doc.data();
-        String val = _snapshotData['value'];
-        int enid = _snapshotData['enid'];
-        if (val == null || val.isEmpty || enid == 0)
-          return null;
-        else
-          return {'value': val, 'enid': enid};
-      }
-      return null;
-    } catch (e) {
-      log.error(e.toString());
-      return null;
-    }
-  }
-
   ///////////////////////AUGMONT/////////////////////////////
 
-  Future<bool> updateAugmontBankDetails(
-      String userId, String accNo, String ifsc, String bankHolderName) async {
-    try {
-      Map<String, dynamic> updatePayload = {};
-      updatePayload[UserAugmontDetail.fldBankAccNo] = accNo;
-      updatePayload[UserAugmontDetail.fldBankHolderName] = bankHolderName;
-      updatePayload[UserAugmontDetail.fldIfsc] = ifsc;
-      updatePayload[UserAugmontDetail.fldUpdatedTime] = Timestamp.now();
-      logger.i("CALLING: updateUserAugmontDetailDocument");
-      await _api.updateUserAugmontDetailDocument(userId, updatePayload);
-      return true;
-    } catch (e) {
-      log.error("Failed to update user augmont detail object: " + e.toString());
-      return false;
-    }
-  }
-
   ///////////////////////////CREDENTIALS//////////////////////////////
-
-  Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
-    String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-    if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-    int keyIndex = 1;
-    try {
-      keyIndex = int.parse(_awsKeyIndex);
-    } catch (e) {
-      log.error('Aws Index key parsing failed: ' + e.toString());
-      keyIndex = 1;
-    }
-    logger.i("CALLING: getCredentialsByTypeAndStage");
-    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-augmont',
-        FlavorConfig.instance.values.awsAugmontStage.value(),
-        keyIndex);
-    if (querySnapshot != null && querySnapshot.docs.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.docs[0];
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
-        log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
-      }
-    }
-
-    return null;
-  }
 
   Future<String> showAugmontBuyNotice() async {
     try {
@@ -262,22 +194,6 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error('Failed to fetch dp url');
       return null;
-    }
-  }
-
-  Future<bool> submitFeedback(String userId, String fdbk) async {
-    try {
-      Map<String, dynamic> fdbkMap = {
-        'user_id': userId,
-        'timestamp': Timestamp.now(),
-        'fdbk': fdbk
-      };
-      logger.i("CALLING: addFeedbackDocument");
-      await _api.addFeedbackDocument(fdbkMap);
-      return true;
-    } catch (e) {
-      log.error(e.toString());
-      return false;
     }
   }
 

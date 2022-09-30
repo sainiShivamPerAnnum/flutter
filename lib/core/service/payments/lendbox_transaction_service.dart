@@ -194,18 +194,10 @@ class LendboxTransactionService extends BaseTransactionService {
       _userService.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
+        GoldenTicketService.goldenTicketId = gtId;
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
-
-        GoldenTicketService.goldenTicketId = gtId;
-        if (await _gtService.fetchAndVerifyGoldenTicketByID()) {
-          _gtService.showInstantGoldenTicketView(
-            amount: amount,
-            title: "You have successfully saved ₹${getAmount(amount)}",
-            source: GTSOURCE.prize,
-          );
-        }
       }
 
       _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);

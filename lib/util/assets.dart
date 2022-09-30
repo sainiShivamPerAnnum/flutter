@@ -421,7 +421,7 @@ class Assets {
       "assets/lotties/gold_sell_complete.json";
   static const String floDepostLoadingLottie =
       "assets/lotties/flo_deposit_progress.json";
-  static const String floDepostSuccessLottie =
+  static const String floDepositSuccessLottie =
       "assets/lotties/flo_deposit_complete.json";
   static const String floSellCompleteLottie =
       "assets/lotties/flo_sell_complete.json";

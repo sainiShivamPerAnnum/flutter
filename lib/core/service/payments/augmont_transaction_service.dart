@@ -210,14 +210,6 @@ class AugmontTransactionService extends BaseTransactionService {
           'Failed to create transaction', 'Please try after sometime');
     }
   }
-// helpers
-
-  getAmount(double amount) {
-    if (amount > amount.toInt())
-      return amount;
-    else
-      return amount.toInt();
-  }
 
   fcmTransactionResponseUpdate(fcmDataPayload) async {
     //Stop loader if loading.
