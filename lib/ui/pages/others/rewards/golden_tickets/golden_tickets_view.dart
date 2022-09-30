@@ -40,7 +40,7 @@ class GoldenTicketsView extends StatelessWidget {
                 AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
               if (snapshot.hasError)
                 return new NoRecordDisplayWidget(
-                  assetLottie: Assets.noData,
+                  assetSvg: Assets.noTransactionAsset,
                   text: "Unable to load your tickets at the moment",
                 );
               switch (snapshot.connectionState) {
@@ -59,7 +59,7 @@ class GoldenTicketsView extends StatelessWidget {
                           shrinkWrap: true,
                           children: [
                             NoRecordDisplayWidget(
-                              assetLottie: Assets.noData,
+                              assetSvg: Assets.noTransaction,
                               text: "No Golden Tickets won",
                             )
                           ],

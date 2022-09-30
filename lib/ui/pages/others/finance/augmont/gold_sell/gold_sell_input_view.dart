@@ -47,7 +47,8 @@ class GoldSellInputView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding54,
             ),
-            if (model.nonWithdrawableQnt != null && model.withdrawableQnt != 0)
+            if (model.nonWithdrawableQnt != null &&
+                model.nonWithdrawableQnt != 0)
               SellCardInfoStrips(content: model.withdrawableQtyMessage),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -119,10 +120,11 @@ class GoldSellInputView extends StatelessWidget {
                               textAlign: TextAlign.center,
                               cursorHeight: SizeConfig.padding35,
                               keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true, signed: true),
+                                  decimal: true),
                               style: TextStyles.rajdhaniB.title2,
                               onChanged: (val) => model.updateGoldAmount(val),
                               autofocus: true,
+                              onTap: model.sellFieldNode.requestFocus,
                               showCursor: true,
                               textInputAction: TextInputAction.done,
                               inputFormatters: [
@@ -259,6 +261,28 @@ class GoldSellInputView extends StatelessWidget {
                   ),
           ],
         ),
+        if (MediaQuery.of(context).viewInsets.bottom !=
+            SizeConfig.viewInsets.bottom)
+          Positioned(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              color: UiConstants.kArowButtonBackgroundColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () => model.sellFieldNode.unfocus(),
+                child: Text(
+                  'DONE',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.primaryColor),
+                ),
+              ),
+            ),
+          ),
         if (model.state == ViewState.Busy)
           Container(
             decoration: BoxDecoration(

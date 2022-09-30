@@ -66,6 +66,7 @@ class AppTextField extends StatelessWidget {
     this.margin,
     this.readOnly = false,
     this.autovalidateMode,
+    this.onSubmit,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -88,6 +89,7 @@ class AppTextField extends StatelessWidget {
   final int maxLines;
   final Function onChanged;
   final Function onTap;
+  final Function onSubmit;
   final TextAlign textAlign;
   final TextStyle textStyle;
   final Widget suffix;
@@ -123,6 +125,7 @@ class AppTextField extends StatelessWidget {
         scrollPadding: EdgeInsets.zero,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
+        onFieldSubmitted: onSubmit,
         inputFormatters: inputFormatters ??
             [
               FilteringTextInputFormatter.allow(

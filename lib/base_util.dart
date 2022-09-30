@@ -346,7 +346,7 @@ class BaseUtil extends ChangeNotifier {
           topLeft: Radius.circular(
             SizeConfig.roundness12,
           ),
-          topRight: Radius.circular(SizeConfig.roundness12),
+          topRight: Radius.circular(SizeConfig.roundness24),
         ),
         content: DepositOptionModalSheet());
   }

@@ -4,6 +4,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -176,9 +177,8 @@ class PicksCardView extends StatelessWidget {
                                     model.dailyPicksCount, (index) => 0),
                           ))
                     : model.weeklyDigits == null
-                        ? SpinKitWave(
-                            color: Colors.white,
-                            size: SizeConfig.padding16,
+                        ? FullScreenLoader(
+                            size: SizeConfig.padding64,
                           )
                         : WeeklyPicks(
                             weeklyDraws: model.weeklyDigits,

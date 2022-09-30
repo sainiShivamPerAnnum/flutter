@@ -109,6 +109,7 @@ class LoginControllerViewModel extends BaseViewModel {
     _pages = [
       LoginMobileView(
         key: _mobileScreenKey,
+        loginModel: this,
       ),
       LoginOtpView(
         key: _otpScreenKey,

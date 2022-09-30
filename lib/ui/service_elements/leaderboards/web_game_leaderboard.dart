@@ -26,7 +26,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
       builder: (context, m, properties) {
         return m.WebGameLeaderBoard == null
             ? NoRecordDisplayWidget(
-                asset: "images/leaderboard.png",
+                assetSvg: Assets.noWinnersAsset,
                 text: "Leaderboard will be updated soon",
               )
             : LeaderBoardView(

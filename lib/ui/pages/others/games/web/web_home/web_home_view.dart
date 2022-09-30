@@ -504,7 +504,7 @@ class RechargeBox extends StatelessWidget {
     return rechargeOption.isCustom
         ? InkWell(
             onTap: () {
-              return BaseUtil().openRechargeModalSheet();
+              return BaseUtil().openDepositOptionsModalSheet();
             },
             child: Container(
               padding: EdgeInsets.symmetric(

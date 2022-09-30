@@ -41,6 +41,7 @@ class UserProfileDetails extends StatelessWidget {
                 ? Center(child: FullScreenLoader())
                 : ListView(
                     shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
                     children: [
                       ProfileHeader(model: model),
                       UserProfileForm(locale: locale, model: model),

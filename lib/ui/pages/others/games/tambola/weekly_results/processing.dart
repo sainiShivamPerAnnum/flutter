@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -23,10 +24,7 @@ class PrizeProcessing extends StatelessWidget {
             Spacer(
               flex: 1,
             ),
-            SpinKitWave(
-              color: UiConstants.primaryColor,
-              size: SizeConfig.screenWidth * 0.15,
-            ),
+            FullScreenLoader(size: SizeConfig.padding64),
             SizedBox(
               height: SizeConfig.padding24,
             ),

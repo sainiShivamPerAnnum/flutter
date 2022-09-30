@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
+import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -13,7 +14,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
-  const LoginMobileView({Key key}) : super(key: key);
+  const LoginMobileView({Key key, @required this.loginModel}) : super(key: key);
+  final LoginControllerViewModel loginModel;
   @override
   State<LoginMobileView> createState() => LoginMobileViewState();
 }
@@ -56,6 +58,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
                 prefixText: "+91 ",
+                onSubmit: (val) => widget.loginModel.processScreenInput(0),
                 prefixTextStyle: TextStyles.sourceSans.body3,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom >

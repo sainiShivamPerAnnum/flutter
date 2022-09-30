@@ -714,7 +714,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                         child: Opacity(
                           opacity: 0.3,
                           child: NoRecordDisplayWidget(
-                            asset: "images/leaderboard.png",
+                            assetSvg: Assets.noWinnersAsset,
                             text: "Leaderboard will be updated soon",
                             topPadding: false,
                             bottomPadding: true,
@@ -906,7 +906,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                         child: Opacity(
                           opacity: 0.3,
                           child: NoRecordDisplayWidget(
-                            asset: "images/leaderboard.png",
+                            assetSvg: Assets.noWinnersAsset,
                             text: "Leaderboard will be updated soon",
                             topPadding: false,
                             bottomPadding: true,
