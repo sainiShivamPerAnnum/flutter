@@ -9,7 +9,10 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/service_elements/bank_details_card.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +26,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final _paymentRepo = locator<PaymentRepository>();
   final _userService = locator<UserService>();
 
-  // double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication upiApplication;
   String selectedUpiApplicationName;
   int lastTappedChipIndex = 1;
-  // bool _skipMl = false;
   final double minAmount = 1;
 
   FocusNode fieldNode = FocusNode();
@@ -40,38 +41,50 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   TextEditingController amountController;
   TextEditingController vpaController;
 
-  // bool get skipMl => this._skipMl;
-
-  // set skipMl(bool value) {
-  //   this._skipMl = value;
-  // }
-
   double get processingQty =>
-      _userService.userFundWallet?.wLbProcessingQty ?? 0;
+      _userService.userFundWallet?.wLbProcessingAmt ?? 0;
   double get withdrawableQty => _userService.userFundWallet?.wLbBalance ?? 0;
 
-  init() async {
+  Future<void> init() async {
     setState(ViewState.Busy);
-    // skipMl = isSkipMilestone;
-    // incomingAmount = amount?.toDouble() ?? 0;
     amountController = TextEditingController(
-      text: "5",
+      text: "1",
     );
     setState(ViewState.Idle);
   }
 
-  resetBuyOptions() {
+  void resetBuyOptions() {
     amountController.text = '1';
     lastTappedChipIndex = 1;
     notifyListeners();
   }
 
-  //BUY FLOW
-  //1
-  initiateWithdraw() async {
+  Future<void> initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
 
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      isBarrierDismissable: false,
+      content: ConfirmationDialog(
+        title: 'Are you sure you want\nto sell?',
+        asset: BankDetailsCard(),
+        description:
+            '₹${amount} will be credited to your linked bank account instantly',
+        buttonText: 'SELL',
+        confirmAction: () async {
+          AppState.backButtonDispatcher.didPopRoute();
+          await this.processWithdraw(amount);
+        },
+        cancelAction: () {
+          AppState.backButtonDispatcher.didPopRoute();
+        },
+      ),
+    );
+  }
+
+  Future<void> processWithdraw(int amount) async {
     log(amount.toString());
     _inProgress = true;
     notifyListeners();
@@ -104,7 +117,6 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  //2 Basic Checks
   Future<int> initChecks() async {
     final amount = int.tryParse(this.amountController.text) ?? 0;
 

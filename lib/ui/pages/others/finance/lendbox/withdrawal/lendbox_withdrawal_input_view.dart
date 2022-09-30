@@ -13,12 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LendboxWithdrawalInputView extends StatelessWidget {
-  // final int amount;
   final LendboxWithdrawalViewModel model;
 
   const LendboxWithdrawalInputView({
     Key key,
-    // this.amount,
     this.model,
   }) : super(key: key);
 
@@ -64,6 +62,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           minAmount: model.minAmount,
           minAmountMsg: "how are you gonna withdraw less than 1?",
           notice: model.buyNotice,
+          bestChipIndex: 1,
           onAmountChange: (int amount) {},
         ),
         Spacer(),

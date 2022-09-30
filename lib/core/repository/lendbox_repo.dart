@@ -1,5 +1,4 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';

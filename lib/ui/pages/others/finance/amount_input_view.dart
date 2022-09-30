@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 class AmountInputView extends StatefulWidget {
   final TextEditingController amountController;
   final List<int> chipAmounts;
+  final int bestChipIndex;
   final String notice;
   final bool isEnabled;
   final double maxAmount;
@@ -27,6 +28,7 @@ class AmountInputView extends StatefulWidget {
     @required this.minAmount,
     @required this.maxAmountMsg,
     @required this.minAmountMsg,
+    this.bestChipIndex = 1,
     this.notice,
   }) : super(key: key);
 
@@ -135,7 +137,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                   ),
                 ],
               ),
-              if (currentAmt >= widget.maxAmount)
+              if (currentAmt > widget.maxAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
@@ -144,7 +146,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                         .colour(Colors.red[400]),
                   ),
                 ),
-              if (currentAmt <= widget.minAmount)
+              if (currentAmt < widget.minAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
@@ -163,6 +165,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               .mapIndexed((item, i) => AmountChip(
                   isActive: _selectedIndex == i,
                   amt: item,
+                  isBest: widget.bestChipIndex == i,
                   onClick: (amt) {
                     setState(() {
                       _selectedIndex = i;

@@ -176,6 +176,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
     ///now register the augmont user
     baseProvider.augmontDetail = await augmontProvider.createSimpleUser(
         _userService.baseUser.mobile, stateChosenValue);
+        
     if (baseProvider.augmontDetail == null) {
       BaseUtil.showNegativeAlert('Registration Failed',
           'Failed to register at the moment. Please try again.');

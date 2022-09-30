@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_loading_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_success_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_success_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
@@ -91,8 +90,6 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
                 },
                 child: BaseView<LendboxWithdrawalViewModel>(
                   onModelReady: (model) => model.init(
-                      // widget.amount,
-                      // widget.skipMl,
                       ),
                   builder: (ctx, model, child) {
                     return _getView(
@@ -117,7 +114,6 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
 
     if (txnService.currentTransactionState == TransactionState.idle) {
       return LendboxWithdrawalInputView(
-        // amount: widget.amount,
         model: model,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {

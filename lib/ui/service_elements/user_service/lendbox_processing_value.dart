@@ -1,7 +1,6 @@
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -16,7 +15,7 @@ class LendboxProcessingValue extends StatelessWidget {
   });
 
   String getQuantity(UserFundWallet fund) {
-    final quantity = fund?.wLbProcessingQty;
+    final quantity = fund?.wLbProcessingAmt;
 
     if (quantity != null) {
       if (quantity == 0.0) {

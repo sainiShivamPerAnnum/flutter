@@ -163,7 +163,7 @@ class JourneyRepository extends BaseRepo {
           endPage,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
-                ApiPath().kJourney,
+                ApiPath.kJourney,
                 token: token,
                 cBaseUrl: FlavorConfig.isDevelopment()
                     ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"

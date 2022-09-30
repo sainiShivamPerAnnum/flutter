@@ -124,7 +124,6 @@ class AppState extends ChangeNotifier {
     _rootIndex = index;
     // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
-      _winnerService.fetchTopWinner();
       _lbService.fetchReferralLeaderBoard();
       isWinOpened = true;
     }

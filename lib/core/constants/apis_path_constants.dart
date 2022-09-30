@@ -5,32 +5,15 @@ class ApiPath {
 
   ApiPath();
 
-  //felloCoins Apis
-  get kSubstractFlcPreGameApi =>
-      "/felloCoins/$stage/api/felloCoin/updateWallet/preGame";
-
-  //userFinanceV2Ops Apis
-  get kCreateTranId => "/userFinanceV2Ops/$stage/api/transaction/id";
-  get kDepositComplete => "/userFinanceV2Ops/$stage/api/v2/deposit/complete";
-  get kDepositPending => "/userFinanceV2Ops/$stage/api/v2/deposit/pending";
-  get kDepositCancelled => "/userFinanceV2Ops/$stage/api/v2/deposit/cancelled";
-  get kWithdrawlComplete => "/userFinanceV2Ops/$stage/api/v2/withdraw/complete";
-  get kWithdrawlCancelled =>
-      "/userFinanceV2Ops/$stage/api/v2/withdraw/cancelled";
-
-  //prizingOps Apis
-  get kTopWinners => "/prizingOps/$stage/api/reward/current-top-winners";
-
   //Augmont Ops
   get kCreateSimpleUser => "/augmontOps/$stage/api/v2/create-simple-user";
-  get kGetGoldRates => "/augmontOps/$stage/api/rates";
+  get kGetGoldRates => "/gold/rates";
 
   //User Ops Apis
   get kAddNewUser => "/v2/new";
   get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
   get kAddBankAccount => "/bank";
   static String kGetBankAccountDetails(String uid) => '/$uid/bank';
-  // get kVerifyTransfer => "/verify/transfer";
   get kVerifyPan => "/verify/pan";
   static String kGetPan(String uid) => "/$uid/pan";
   static String kUpdateBankDetails(String uid) => '/user/$uid/bank';
@@ -48,7 +31,6 @@ class ApiPath {
   static String getCompleteOnboarding(uid) => "/walkthrough/$uid";
   static String getBlogs(noOfBlogs) =>
       "/blogs?per_page=$noOfBlogs&status=publish&_fields=id,title.rendered,slug,date,yoast_head_json.og_image,acf&orderby=date&order=desc";
-  static String kWalkthrough(uid) => "/walkthrough/$uid";
   static String kVerifyVPAAddress(uid) => '/vpa?uid=$uid';
   static String sendOtp = '/auth/otp';
   static String verifyOtp = '/auth/verify/otp';
@@ -74,7 +56,7 @@ class ApiPath {
   get kProcessSubscription => "/process";
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
-  get kOngoingCampaigns => "/$stage/campaigns";
+  static const kOngoingCampaigns = "/campaigns";
 
   //tambola game Apis
   static String tambolaTickets(String uid) => "/user/$uid/tickets";
@@ -85,34 +67,32 @@ class ApiPath {
   static String kSingleTransactions(String uid) => "/users/$uid/payments";
 
   // Golden Ticket rewards Apis
+  static const String prizes = '/prizes';
   static String getGoldenTicketById(String uid, String goldenTicketId) =>
       "/user/$uid/gt/$goldenTicketId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
-  static const String prizes = '/prizes';
   static prizeBySubtype(String uid) => '/user/$uid/gt';
 
   // Payment Apis
-  static String getWithdrawableGoldQuantity(String uid) =>
-      "/user/$uid/gold/instant/withdrawable";
   static String get validateVPA => "/vpa";
   static String get vpa => "/vpa";
   static String get withdrawal => "/withdrawal";
+  static String getWithdrawableGoldQuantity(String uid) =>
+      "/user/$uid/gold/instant/withdrawable";
 
   // Getter Apis
+  static const String amountChips = "/amount/chips/";
+  static const String faqs = "/faqs";
   static const String statistics = '/statistics';
   static String getWinners(String type, String freq) =>
       "/leaderboard/type/$type/freq/$freq";
-
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
-
-  static const String amountChips = "/amount/chips/";
-  static const String faqs = "/faqs";
 
   // Internal Ops
   static const String failureReport = '/fail/report';
 
-  /// Subcription Apis
+  /// Subscription Apis
   static String getTransaction(String uid) => "/user/$uid/transactions";
   static const String kPromos = "/promos";
 
@@ -129,11 +109,10 @@ class ApiPath {
   static String getReferralHistory(String uid) => "/referrals/$uid";
 
   //Journey
-  get kMilestones => '/milestones';
-  get kJourney => "/journey";
+  static const kJourney = "/journey";
+  static String kJourneyLevel = '/levels';
   static String getJourney(int page) => "/journey/$page";
   static String journeyStats(String uid) => "/user/$uid/journey/stats";
-  static String kJourneyLevel = '/levels';
   static String kSkipMilestone(String uid) => "/user/$uid/skip/milestone";
 
   // lendbox
