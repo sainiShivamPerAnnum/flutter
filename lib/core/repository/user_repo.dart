@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -8,8 +7,6 @@ import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
-import 'package:felloapp/core/model/fundbalance_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -25,8 +22,6 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:http/http.dart' as http;
 
 import 'base_repo.dart';
 

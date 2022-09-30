@@ -168,6 +168,11 @@ class RazorpayService extends ChangeNotifier {
         );
         return false;
       }
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Transaction failed',
+        txnResponse.errorMessage,
+      );
     }
   }
 
