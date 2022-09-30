@@ -37,37 +37,42 @@ class LendboxDetailsView extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: BaseView<SaveViewModel>(
-            onModelReady: (model) => model.init(),
-            builder: (context, model, child) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: UiConstants.kBackgroundColor,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LBoxAssetCard(),
-                      SizedBox(
-                        height: SizeConfig.padding24,
-                      ),
-                      MiniTransactionCard(
-                        investmentType: InvestmentType.LENDBOXP2P,
-                      ),
-                    ],
+        child: BaseView<SaveViewModel>(
+          onModelReady: (model) => model.init(),
+          builder: (context, model, child) => RefreshIndicator(
+            onRefresh: () async {
+              model.refreshTransactions(InvestmentType.LENDBOXP2P);
+            },
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: UiConstants.kBackgroundColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        LBoxAssetCard(),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        MiniTransactionCard(
+                          investmentType: InvestmentType.LENDBOXP2P,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SellCardView(
-                  investmentType: InvestmentType.LENDBOXP2P,
-                ),
-                SizedBox(
-                  height: SizeConfig.screenWidth * 0.2,
-                )
-              ],
+                  SellCardView(
+                    investmentType: InvestmentType.LENDBOXP2P,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.screenWidth * 0.2,
+                  )
+                ],
+              ),
             ),
           ),
         ),

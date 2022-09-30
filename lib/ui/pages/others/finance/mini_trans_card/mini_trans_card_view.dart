@@ -37,6 +37,11 @@ class MiniTransactionCard extends StatelessWidget {
             TransactionHistoryServiceProperties.TransactionHistoryList
           ],
           builder: (ctx, m, child) {
+            final txnList = m.txnList != null && m.txnList.isNotEmpty
+                ? m.txnList
+                    .where((e) => e.subType == investmentType.name)
+                    .toList()
+                : [];
             return Column(
               children: [
                 AnimatedContainer(
@@ -44,20 +49,8 @@ class MiniTransactionCard extends StatelessWidget {
                   curve: Curves.easeInOutCubic,
                   child: model.state == ViewState.Busy || m.txnList == null
                       ? SizedBox()
-                      // Container(
-                      //     height: SizeConfig.screenWidth * 0.5,
-                      //     alignment: Alignment.center,
-                      //     child: Center(child: FullScreenLoader()),
-                      //   )
                       : (m.txnList.length == 0
                           ? SizedBox()
-                          // Container(
-                          //     padding: EdgeInsets.symmetric(
-                          //         vertical: SizeConfig.padding24),
-                          //     alignment: Alignment.center,
-                          //     child: Transform.scale(
-                          //         scale: 0.8, child: NoTransactionsContent()),
-                          //   )
                           : Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: SizeConfig.padding10),
@@ -86,11 +79,9 @@ class MiniTransactionCard extends StatelessWidget {
                                   // ),
                                   Column(
                                     children: List.generate(
-                                      m.txnList.length < 4
-                                          ? m.txnList.length
-                                          : 3,
+                                      txnList.length < 4 ? txnList.length : 3,
                                       (i) => TransactionTile(
-                                        txn: m.txnList[i],
+                                        txn: txnList[i],
                                       ),
                                     ),
                                   ),

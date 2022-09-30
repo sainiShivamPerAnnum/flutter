@@ -187,7 +187,7 @@ void setupLocator() {
   locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
   locator.registerFactory(() => TambolaHomeViewModel());
-  locator.registerFactory(() => TambolaGameViewModel());
+  // locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
   locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(() => WebGameViewModel());

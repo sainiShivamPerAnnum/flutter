@@ -344,8 +344,8 @@ class _GTInstantViewState extends State<GTInstantView>
     onPressed = () {
       if (!model.isCardScratched) return;
       AppState.backButtonDispatcher.didPopRoute();
-      if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup)
-        model.showAutosavePrompt();
+      // if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup)
+      //   model.showAutosavePrompt();
     };
     // }
     return onPressed;

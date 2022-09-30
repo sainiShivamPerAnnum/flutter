@@ -79,11 +79,11 @@ class FcmHandler extends ChangeNotifier {
     if (data['command'] != null) {
       showSnackbar = false;
       switch (command) {
-        case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-          if (_augTxnService.currentTransactionState == TransactionState.idle)
-            showSnackbar = true;
-          _augTxnService.fcmTransactionResponseUpdate(data['payload']);
-          break;
+        // case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
+        //   if (_augTxnService.currentTransactionState == TransactionState.idle)
+        //     showSnackbar = true;
+        //   _augTxnService.fcmTransactionResponseUpdate(data['payload']);
+        //   break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
           _journeyService.fcmHandleJourneyUpdateStats(data);

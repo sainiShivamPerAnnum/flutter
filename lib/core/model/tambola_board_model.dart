@@ -33,9 +33,9 @@ class TambolaBoard {
 
   factory TambolaBoard.fromMap(Map<String, dynamic> map) {
     return TambolaBoard(
-      TimestampModel.fromMap(map['assigned_time']),
-      map['val'] ?? '',
-      map['id'] ?? 0,
+      TimestampModel.fromMap(map['createdOn']),
+      map['tval'] ?? '',
+      map['tid'] ?? 0,
       map['week_code'] ?? 0,
     );
   }

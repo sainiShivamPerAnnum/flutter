@@ -82,6 +82,18 @@ class TambolaHomeViewModel extends BaseViewModel {
   bool _ticketsBeingGenerated = false;
   bool ticketsLoaded = false;
   int _ticketSavedAmount = 0;
+  bool _showWinCard = false;
+  Map<String, int> ticketCodeWinIndex = {};
+  bool _isEligible = false;
+  get isEligible => this._isEligible;
+
+  set isEligible(value) => this._isEligible = value;
+  get showWinCard => this._showWinCard;
+
+  set showWinCard(value) {
+    this._showWinCard = value;
+    notifyListeners();
+  }
 
   //Constant values
   Map<String, IconData> tambolaOdds = {
@@ -134,7 +146,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   List<Winners> get winners => _winners;
   get showBuyModal => _showBuyModal;
 
-  get ticketSavedAmount => _ticketSavedAmount;
+  int get ticketSavedAmount => _ticketSavedAmount;
 
   set showBuyModal(value) {
     _showBuyModal = value;
@@ -355,60 +367,60 @@ class TambolaHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> buyTickets(BuildContext context) async {
-    if (ticketBuyInProgress) return;
-    if (ticketCountController.text.isEmpty)
-      return BaseUtil.showNegativeAlert(
-          "No ticket count entered", "Please enter a valid number of tickets");
+  // Future<void> buyTickets(BuildContext context) async {
+  //   if (ticketBuyInProgress) return;
+  //   if (ticketCountController.text.isEmpty)
+  //     return BaseUtil.showNegativeAlert(
+  //         "No ticket count entered", "Please enter a valid number of tickets");
 
-    int ticketCount = int.tryParse(ticketCountController.text);
-    if (ticketCount == 0) {
-      return BaseUtil.showNegativeAlert(
-          "No ticket count entered", "Please enter a valid number of tickets");
-    }
-    if (ticketCount > 30) {
-      return BaseUtil.showNegativeAlert("Maximum tickets exceeded",
-          "You can purchase upto 30 tambola tickets at once");
-    }
-    if (ticketPurchaseCost * ticketCount > _coinService.flcBalance) {
-      return earnMoreTokens();
-    }
+  //   int ticketCount = int.tryParse(ticketCountController.text);
+  //   if (ticketCount == 0) {
+  //     return BaseUtil.showNegativeAlert(
+  //         "No ticket count entered", "Please enter a valid number of tickets");
+  //   }
+  //   if (ticketCount > 30) {
+  //     return BaseUtil.showNegativeAlert("Maximum tickets exceeded",
+  //         "You can purchase upto 30 tambola tickets at once");
+  //   }
+  //   if (ticketPurchaseCost * ticketCount > _coinService.flcBalance) {
+  //     return earnMoreTokens();
+  //   }
 
-    ticketBuyInProgress = true;
-    tambolaService.ticketGenerateCount = ticketCount;
-    notifyListeners();
+  //   ticketBuyInProgress = true;
+  //   tambolaService.ticketGenerateCount = ticketCount;
+  //   notifyListeners();
 
-    _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
-    _analyticsService.track(
-      eventName: AnalyticsEvents.buyTambolaTickets,
-      properties: {'count': ticketCount},
-    );
+  //   _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
+  //   _analyticsService.track(
+  //     eventName: AnalyticsEvents.buyTambolaTickets,
+  //     properties: {'count': ticketCount},
+  //   );
 
-    ApiResponse<FlcModel> _flcResponse =
-        await _tambolaRepo.buyTambolaTickets(ticketCount);
-    if (_flcResponse.model != null && _flcResponse.code == 200) {
-      BaseUtil.showPositiveAlert(
-        "Tickets successfully generated 🥳",
-        "Your weekly odds are now way better!",
-      );
+  //   ApiResponse<FlcModel> _flcResponse =
+  //       await _tambolaRepo.buyTambolaTickets(ticketCount);
+  //   if (_flcResponse.model != null && _flcResponse.code == 200) {
+  //     BaseUtil.showPositiveAlert(
+  //       "Tickets successfully generated 🥳",
+  //       "Your weekly odds are now way better!",
+  //     );
 
-      if (_flcResponse.model.flcBalance > 0) {
-        _coinService.setFlcBalance(_flcResponse.model.flcBalance);
-      }
+  //     if (_flcResponse.model.flcBalance > 0) {
+  //       _coinService.setFlcBalance(_flcResponse.model.flcBalance);
+  //     }
 
-      //Need to refresh the userTicketWallet object after API completes
-      _refreshTambolaTickets();
-    } else {
-      return BaseUtil.showNegativeAlert(
-        "Operation Failed",
-        "Failed to buy tickets at the moment. Please try again later",
-      );
-    }
+  //     //Need to refresh the userTicketWallet object after API completes
+  //     _refreshTambolaTickets();
+  //   } else {
+  //     return BaseUtil.showNegativeAlert(
+  //       "Operation Failed",
+  //       "Failed to buy tickets at the moment. Please try again later",
+  //     );
+  //   }
 
-    ticketBuyInProgress = false;
-    tambolaService.ticketGenerateCount = 0;
-    notifyListeners();
-  }
+  //   ticketBuyInProgress = false;
+  //   tambolaService.ticketGenerateCount = 0;
+  //   notifyListeners();
+  // }
 
   void earnMoreTokens() {
     _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
@@ -504,7 +516,6 @@ class TambolaHomeViewModel extends BaseViewModel {
     );
     if (show == false) return;
 
-    Map<String, int> ticketCodeWinIndex = {};
     userWeeklyBoards.forEach((boardObj) {
       if (boardObj.getCornerOdds(
               weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
@@ -545,22 +556,23 @@ class TambolaHomeViewModel extends BaseViewModel {
 
     double totalInvestedPrinciple =
         _userService.userFundWallet.augGoldPrinciple;
-    bool _isEligible = (totalInvestedPrinciple >=
+    isEligible = (totalInvestedPrinciple >=
         BaseUtil.toInt(BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
 
     _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
-    if (!tambolaService.winnerDialogCalled)
-      AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: TWeeklyResultPageConfig,
-        widget: WeeklyResult(
-          winningsmap: ticketCodeWinIndex,
-          isEligible: _isEligible,
-        ),
-      );
-    tambolaService.winnerDialogCalled = true;
+    showWinCard = true;
+    // if (!tambolaService.winnerDialogCalled)
+    //   AppState.delegate.appState.currentAction = PageAction(
+    //     state: PageState.addWidget,
+    //     page: TWeeklyResultPageConfig,
+    //     widget: WeeklyResult(
+    //       winningsmap: ticketCodeWinIndex,
+    //       isEligible: _isEligible,
+    //     ),
+    //   );
+    // tambolaService.winnerDialogCalled = true;
 
     if (ticketCodeWinIndex.length > 0) {
       BaseUtil.showPositiveAlert(

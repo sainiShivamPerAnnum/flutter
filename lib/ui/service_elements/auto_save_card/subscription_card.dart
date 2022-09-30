@@ -270,27 +270,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                           ),
                                         )
                                       : SizedBox(),
-                                  model.activeSubscription != null &&
-                                          model.activeSubscription.status ==
-                                              Constants.SUBSCRIPTION_ACTIVE
-                                      ? Text(
-                                          subscriptionModel.getActivityStatus(
-                                              model.activeSubscription),
-                                          style: TextStyles.rajdhani.body3
-                                              .colour(UiConstants.kTextColor),
-                                          textAlign: TextAlign.left,
-                                        )
-                                      : SizedBox(),
-                                  // model.activeSubscription != null &&
-                                  //         model.activeSubscription.status ==
-                                  //             Constants.SUBSCRIPTION_ACTIVE
-                                  //     ? Container()
-                                  //     : Text(
-                                  //         subscriptionModel.getactiveSubtitle(
-                                  //             model.activeSubscription),
-                                  //         style: TextStyles.sourceSans.body4,
-                                  //       ),
-                                  Spacer(),
+                                  SizedBox(height: SizeConfig.padding12),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -312,26 +292,6 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        width: SizeConfig.padding24,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Invested',
-                                            style: TextStyles.sourceSans.body4
-                                                .colour(
-                                                    UiConstants.kTextColor2),
-                                          ),
-                                          Text(
-                                            '\u20b9 ${model.activeSubscription?.maxAmount ?? 0}',
-                                            style: TextStyles.sourceSansSB.body0
-                                                .colour(UiConstants.kTextColor),
-                                          ),
-                                        ],
-                                      )
                                     ],
                                   )
                                 ],

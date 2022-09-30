@@ -90,7 +90,7 @@ class WeeklyPicks extends StatelessWidget {
     print("TEsting fri: ${weeklyDraws.fri}");
     print("TEsting sat: ${weeklyDraws.sat}");
     print("TEsting sun: ${weeklyDraws.sun}");
-    print("TEsting wekkcode: ${weeklyDraws.weekCode}");
+    // print("TEsting wekkcode: ${weeklyDraws.weekCode}");
     if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
       return Container(
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),

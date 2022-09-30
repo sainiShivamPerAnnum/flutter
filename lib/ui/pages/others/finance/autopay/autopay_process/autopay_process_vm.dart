@@ -383,10 +383,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
         _paytmService.fraction = 0;
         _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
-        Future.delayed(Duration(milliseconds: 1000), () {
-          lottieAnimationController.forward();
-          _paytmService.currentSubscriptionId = null;
-        });
+        // Future.delayed(Duration(milliseconds: 1000), () {
+        //   lottieAnimationController.forward();
+        //   _paytmService.currentSubscriptionId = null;
+        // });
         _analyticsService.track(
             eventName: AnalyticsEvents.autosaveSetupCompleted);
       }

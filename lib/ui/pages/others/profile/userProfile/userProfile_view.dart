@@ -89,7 +89,11 @@ class UserProfileForm extends StatelessWidget {
                 ),
               ],
               suffixIcon: !model.isNameEnabled
-                  ? Icon(Icons.verified, color: UiConstants.primaryColor)
+                  ? Icon(
+                      Icons.verified,
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.iconSize1,
+                    )
                   : SizedBox(),
               validator: (value) {
                 if (value != null && value.isNotEmpty) {

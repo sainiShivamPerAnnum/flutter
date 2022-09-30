@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -31,7 +31,8 @@ import 'all_participants.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) =>
-      (this * pow(10, fractionalDigits)).truncate() / pow(10, fractionalDigits);
+      (this * math.pow(10, fractionalDigits)).truncate() /
+      math.pow(10, fractionalDigits);
 }
 
 class CampaignView extends StatelessWidget {
@@ -593,13 +594,19 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                 model.currentParticipants[index]
                                                     .userid),
                                             builder: (context, snapshot) {
-                                              if (!snapshot.hasData) {
-                                                return Image.asset(
-                                                  Assets.cvtar1,
-                                                  width: SizeConfig.iconSize5,
-                                                  height: SizeConfig.iconSize5,
-                                                );
-                                              }
+                                              int rand =
+                                                  1 + math.Random().nextInt(4);
+                                              final Widget defaultAvatar =
+                                                  SvgPicture.asset(
+                                                "assets/vectors/userAvatars/AV$rand.svg",
+                                                width: SizeConfig.iconSize5,
+                                                height: SizeConfig.iconSize5,
+                                              );
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting)
+                                                return defaultAvatar;
+                                              if (!snapshot.hasData)
+                                                return defaultAvatar;
 
                                               String imageUrl =
                                                   snapshot.data as String;
@@ -621,13 +628,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                     ),
                                                   ),
                                                   errorWidget: (a, b, c) {
-                                                    return Image.asset(
-                                                      Assets.cvtar2,
-                                                      width:
-                                                          SizeConfig.iconSize5,
-                                                      height:
-                                                          SizeConfig.iconSize5,
-                                                    );
+                                                    return defaultAvatar;
                                                   },
                                                 ),
                                               );
@@ -786,12 +787,20 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                 model
                                                     .pastWinners[index].userid),
                                             builder: (context, snapshot) {
+                                              int rand =
+                                                  1 + math.Random().nextInt(4);
+                                              final Widget defaultAvatar =
+                                                  SvgPicture.asset(
+                                                "assets/vectors/userAvatars/AV$rand.svg",
+                                                width: SizeConfig.iconSize5,
+                                                height: SizeConfig.iconSize5,
+                                              );
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return defaultAvatar;
+                                              }
                                               if (!snapshot.hasData) {
-                                                return Image.asset(
-                                                  Assets.cvtar3,
-                                                  width: SizeConfig.iconSize5,
-                                                  height: SizeConfig.iconSize5,
-                                                );
+                                                return defaultAvatar;
                                               }
 
                                               String imageUrl =
@@ -814,13 +823,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                     ),
                                                   ),
                                                   errorWidget: (a, b, c) {
-                                                    return Image.asset(
-                                                      Assets.cvtar4,
-                                                      width:
-                                                          SizeConfig.iconSize5,
-                                                      height:
-                                                          SizeConfig.iconSize5,
-                                                    );
+                                                    return defaultAvatar;
                                                   },
                                                 ),
                                               );

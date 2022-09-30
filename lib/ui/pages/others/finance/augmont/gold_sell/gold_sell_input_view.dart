@@ -45,7 +45,7 @@ class GoldSellInputView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding16),
             RechargeModalSheetAppBar(txnService: augTxnservice),
             SizedBox(
-              height: SizeConfig.padding54,
+              height: SizeConfig.padding24,
             ),
             if (model.nonWithdrawableQnt != null &&
                 model.nonWithdrawableQnt != 0)
@@ -62,17 +62,10 @@ class GoldSellInputView extends StatelessWidget {
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
-                  PropertyChangeConsumer<UserService, UserServiceProperties>(
-                    properties: [UserServiceProperties.myUserFund],
-                    builder: (ctx, umodel, child) => Text(
-                      locale.saveGoldBalanceValue(
-                        umodel.userFundWallet?.augGoldQuantity ??
-                            0.0 - model.nonWithdrawableQnt ??
-                            0,
-                      ),
-                      style: TextStyles.sourceSansSB.body0
-                          .colour(UiConstants.kTextColor),
-                    ),
+                  Text(
+                    model.withdrawableQnt.toString(),
+                    style: TextStyles.sourceSansSB.body0
+                        .colour(UiConstants.kTextColor),
                   ),
                 ],
               ),
@@ -95,60 +88,62 @@ class GoldSellInputView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: Container(
-                      height: SizeConfig.screenWidth * 0.5,
-                      // width: SizeConfig.screenWidth * 0.6,
-                      decoration: BoxDecoration(
-                        color: UiConstants.kFAQDividerColor.withOpacity(0.5),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness12),
-                          bottomLeft: Radius.circular(SizeConfig.roundness12),
+                    child: InkWell(
+                      onTap: model.sellFieldNode.requestFocus,
+                      child: Container(
+                        height: SizeConfig.screenWidth * 0.5,
+                        // width: SizeConfig.screenWidth * 0.6,
+                        decoration: BoxDecoration(
+                          color: UiConstants.kFAQDividerColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness12),
+                            bottomLeft: Radius.circular(SizeConfig.roundness12),
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: Duration(seconds: 0),
-                            curve: Curves.easeIn,
-                            width: model.fieldWidth,
-                            child: TextField(
-                              focusNode: model.sellFieldNode,
-                              enabled: !model.isGoldSellInProgress,
-                              controller: model.goldAmountController,
-                              // enableInteractiveSelection: false,
-                              textAlign: TextAlign.center,
-                              cursorHeight: SizeConfig.padding35,
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
-                              style: TextStyles.rajdhaniB.title2,
-                              onChanged: (val) => model.updateGoldAmount(val),
-                              autofocus: true,
-                              onTap: model.sellFieldNode.requestFocus,
-                              showCursor: true,
-                              textInputAction: TextInputAction.done,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9.]'),
-                                )
-                              ],
-                              decoration: InputDecoration(
-                                // contentPadding: EdgeInsets.symmetric(
-                                //     vertical: SizeConfig.padding24,
-                                //     horizontal: SizeConfig.padding28),
-                                fillColor: Colors.transparent,
-                                filled: true,
-                                contentPadding: EdgeInsets.zero,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AnimatedContainer(
+                              duration: Duration(seconds: 0),
+                              curve: Curves.easeIn,
+                              width: model.fieldWidth,
+                              child: TextField(
+                                focusNode: model.sellFieldNode,
+                                enabled: !model.isGoldSellInProgress,
+                                controller: model.goldAmountController,
+                                // enableInteractiveSelection: false,
+                                textAlign: TextAlign.center,
+                                cursorHeight: SizeConfig.padding35,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                style: TextStyles.rajdhaniB.title2,
+                                onChanged: (val) => model.updateGoldAmount(val),
+                                autofocus: true,
+                                showCursor: true,
+                                textInputAction: TextInputAction.done,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9.]'),
+                                  )
+                                ],
+                                decoration: InputDecoration(
+                                  // contentPadding: EdgeInsets.symmetric(
+                                  //     vertical: SizeConfig.padding24,
+                                  //     horizontal: SizeConfig.padding28),
+                                  fillColor: Colors.transparent,
+                                  filled: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
                               ),
                             ),
-                          ),
-                          Text("g",
-                              style: TextStyles.rajdhaniB.title2
-                                  .colour(UiConstants.kTextColor))
-                        ],
+                            Text("g",
+                                style: TextStyles.rajdhaniB.title2
+                                    .colour(UiConstants.kTextColor))
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -215,12 +210,13 @@ class GoldSellInputView extends StatelessWidget {
             Spacer(),
             model.isGoldSellInProgress
                 ? Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          bottom: SizeConfig.pageHorizontalMargins * 2),
-                      child: SpinKitThreeBounce(
-                        color: Colors.white,
-                        size: 20,
+                    child: Container(
+                      height: SizeConfig.screenWidth * 0.1556,
+                      alignment: Alignment.center,
+                      width: SizeConfig.screenWidth * 0.7,
+                      child: LinearProgressIndicator(
+                        color: UiConstants.primaryColor,
+                        backgroundColor: UiConstants.kDarkBackgroundColor,
                       ),
                     ),
                   )

@@ -143,9 +143,7 @@ class SingleTransactionView extends StatelessWidget {
         Expanded(
           child: model.state == ViewState.Busy
               ? Center(
-                  child: FullScreenLoader(
-                    size: SizeConfig.padding32,
-                  ),
+                  child: FullScreenLoader(),
                 )
               : Column(
                   children: [
@@ -212,9 +210,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return model.state == ViewState.Busy
         ? Center(
-            child: FullScreenLoader(
-              size: SizeConfig.padding32,
-            ),
+            child: FullScreenLoader(),
           )
         : Column(
             children: [

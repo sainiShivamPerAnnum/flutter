@@ -93,6 +93,11 @@ class AnimatedPicksDisplay extends StatelessWidget {
 
   List<int> randomList = [];
   bool isAnimationDone = false;
+  List<Color> ballColorCodes = [
+    Color(0xffC34B29),
+    Color(0xffFFD979),
+    Color(0xffAECCFF),
+  ];
 
   final ScrollController _controller = ScrollController();
 

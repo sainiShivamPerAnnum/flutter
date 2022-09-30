@@ -234,7 +234,7 @@ class GoldBuySuccessView extends StatelessWidget {
                   WinningChips(
                       title: 'Tambola Ticket',
                       asset: Assets.singleTmbolaTicket,
-                      qty: _augTxnService.currentTxnAmount.toInt())
+                      qty: _augTxnService.currentTxnTambolaTicketsCount)
               ],
             ),
           ),

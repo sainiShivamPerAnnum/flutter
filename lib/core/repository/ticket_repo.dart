@@ -32,7 +32,7 @@ class TambolaRepo extends BaseRepo {
                 token: token,
                 cBaseUrl: _baseUrl,
               ), (dynamic response) {
-        final responseData = response["data"];
+        final responseData = response["data"]['tickets'];
         logger.d('tambola repo $responseData');
         return ApiResponse<List<TambolaModel>>(
           model: TambolaModel.helper.fromMapArray(responseData),
@@ -46,34 +46,34 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<FlcModel>> buyTambolaTickets(int ticketCount) async {
-    try {
-      final uid = userService.baseUser.uid;
-      final String bearer = await getBearerToken();
+  // Future<ApiResponse<FlcModel>> buyTambolaTickets(int ticketCount) async {
+  //   try {
+  //     final uid = userService.baseUser.uid;
+  //     final String bearer = await getBearerToken();
 
-      final response = await APIService.instance.postData(
-        ApiPath.buyTambolaTicket(uid),
-        body: {
-          "ticketCount": ticketCount,
-        },
-        token: bearer,
-        cBaseUrl: _baseUrl,
-      );
+  //     final response = await APIService.instance.postData(
+  //       ApiPath.buyTambolaTicket(uid),
+  //       body: {
+  //         "ticketCount": ticketCount,
+  //       },
+  //       token: bearer,
+  //       cBaseUrl: _baseUrl,
+  //     );
 
-      final data = response['data'];
+  //     final data = response['data'];
 
-      logger.d('tambola repo $data');
+  //     logger.d('tambola repo $data');
 
-      // clear cache
-      await _cacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
+  //     // clear cache
+  //     await _cacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
 
-      FlcModel _flcModel = FlcModel.fromMap(data);
-      return ApiResponse(model: _flcModel, code: 200);
-    } catch (e) {
-      logger.e(e);
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
+  //     FlcModel _flcModel = FlcModel.fromMap(data);
+  //     return ApiResponse(model: _flcModel, code: 200);
+  //   } catch (e) {
+  //     logger.e(e);
+  //     return ApiResponse.withError(e.toString(), 400);
+  //   }
+  // }
 
   Future<ApiResponse<DailyPick>> getWeeklyPicks() async {
     try {

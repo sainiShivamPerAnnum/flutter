@@ -211,71 +211,71 @@ class AugmontTransactionService extends BaseTransactionService {
     }
   }
 
-  fcmTransactionResponseUpdate(fcmDataPayload) async {
-    //Stop loader if loading.
+  // fcmTransactionResponseUpdate(fcmDataPayload) async {
+  //   //Stop loader if loading.
 
-    _logger.i("Updating fcm response value. $fcmDataPayload");
-    // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
-    // AppState.delegate.appState.txnTimer?.cancel();
-    this.pollingPeriodicTimer?.cancel();
-    _logger.d("timer cancelled");
+  //   _logger.i("Updating fcm response value. $fcmDataPayload");
+  //   // AppState.delegate.appState.txnFunction.timeout(Duration(seconds: 1));
+  //   // AppState.delegate.appState.txnTimer?.cancel();
+  //   this.pollingPeriodicTimer?.cancel();
+  //   _logger.d("timer cancelled");
 
-    // try {
-    final DepositFcmResponseModel depositFcmResponseModel =
-        DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
+  //   // try {
+  //   final DepositFcmResponseModel depositFcmResponseModel =
+  //       DepositFcmResponseModel.fromJson(json.decode(fcmDataPayload));
 
-    //Handle failed condition here.
-    if (!depositFcmResponseModel.status) {
-      // AppState.delegate.appState.isTxnLoaderInView = false;
-      BaseUtil.showNegativeAlert("Transaction failed",
-          "Your gold purchase did not complete successfully");
-      return;
-    }
-    //handle multiple fcm command for same transaction
-    if (depositFcmResponseModel.gtId != null) {
-      print("Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
-      if (GoldenTicketService.lastGoldenTicketId != null) {
-        if (GoldenTicketService.lastGoldenTicketId ==
-            depositFcmResponseModel.gtId) {
-          return;
-        } else {
-          GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
-        }
-      } else {
-        GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
-      }
-    }
+  //   //Handle failed condition here.
+  //   if (!depositFcmResponseModel.status) {
+  //     // AppState.delegate.appState.isTxnLoaderInView = false;
+  //     BaseUtil.showNegativeAlert("Transaction failed",
+  //         "Your gold purchase did not complete successfully");
+  //     return;
+  //   }
+  //   //handle multiple fcm command for same transaction
+  //   if (depositFcmResponseModel.gtId != null) {
+  //     print("Hey a new fcm recived with gtId: ${depositFcmResponseModel.gtId}");
+  //     if (GoldenTicketService.lastGoldenTicketId != null) {
+  //       if (GoldenTicketService.lastGoldenTicketId ==
+  //           depositFcmResponseModel.gtId) {
+  //         return;
+  //       } else {
+  //         GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
+  //       }
+  //     } else {
+  //       GoldenTicketService.lastGoldenTicketId = depositFcmResponseModel.gtId;
+  //     }
+  //   }
 
-    double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
-    if (newAugPrinciple != null && newAugPrinciple > 0) {
-      _userService.augGoldPrinciple = newAugPrinciple;
-    }
-    double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
-    if (newAugQuantity != null && newAugQuantity > 0) {
-      _userService.augGoldQuantity = newAugQuantity;
-    }
-    //add this to augmontBuyVM
-    int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
-    if (newFlcBalance > 0) {
-      _userCoinService.setFlcBalance(newFlcBalance);
-    }
-    _userService.getUserFundWalletData();
-    if (currentTransactionState == TransactionState.ongoing) {
-      await _gtService.fetchAndVerifyGoldenTicketByID();
-      AppState.unblockNavigation();
-      currentTransactionState = TransactionState.success;
-      Haptic.vibrate();
-      GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
-    }
-    _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
-    // } catch (e) {
-    //   _logger.e(e);
-    //   _internalOpsService.logFailure(
-    //       _userService.baseUser.uid, FailType.DepositPayloadError, e);
-    // }
-  }
+  //   double newAugPrinciple = depositFcmResponseModel.augmontPrinciple;
+  //   if (newAugPrinciple != null && newAugPrinciple > 0) {
+  //     _userService.augGoldPrinciple = newAugPrinciple;
+  //   }
+  //   double newAugQuantity = depositFcmResponseModel.augmontGoldQty;
+  //   if (newAugQuantity != null && newAugQuantity > 0) {
+  //     _userService.augGoldQuantity = newAugQuantity;
+  //   }
+  //   //add this to augmontBuyVM
+  //   int newFlcBalance = depositFcmResponseModel?.flcBalance ?? 0;
+  //   if (newFlcBalance > 0) {
+  //     _userCoinService.setFlcBalance(newFlcBalance);
+  //   }
+  //   _userService.getUserFundWalletData();
+  //   if (currentTransactionState == TransactionState.ongoing) {
+  //     await _gtService.fetchAndVerifyGoldenTicketByID();
+  //     AppState.unblockNavigation();
+  //     currentTransactionState = TransactionState.success;
+  //     Haptic.vibrate();
+  //     GoldenTicketService.goldenTicketId = depositFcmResponseModel.gtId;
+  //   }
+  //   _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+  //   // } catch (e) {
+  //   //   _logger.e(e);
+  //   //   _internalOpsService.logFailure(
+  //   //       _userService.baseUser.uid, FailType.DepositPayloadError, e);
+  //   // }
+  // }
 
-  transactionResponseUpdate({String gtId, double amount}) async {
+  transactionResponseUpdate({String gtId}) async {
     _logger.d("Polling response processing");
     try {
       if (gtId != null) {
@@ -293,21 +293,15 @@ class AugmontTransactionService extends BaseTransactionService {
 
       //add this to augmontBuyVM
       _userCoinService.getUserCoinBalance();
-      double newFlcBalance = amount ?? 0;
-      if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(
-            (_userCoinService.flcBalance + newFlcBalance).toInt());
-      }
       _userService.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
+        GoldenTicketService.goldenTicketId = gtId;
         await _gtService.fetchAndVerifyGoldenTicketByID();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
-        GoldenTicketService.goldenTicketId = gtId;
       }
-
       _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     } catch (e) {
       _logger.e(e);
@@ -326,7 +320,6 @@ class AugmontTransactionService extends BaseTransactionService {
             currentTxnTambolaTicketsCount = res.model.data.tickets;
             timer.cancel();
             return transactionResponseUpdate(
-              amount: currentTxnAmount,
               gtId: currentTxnOrderId,
             );
           }

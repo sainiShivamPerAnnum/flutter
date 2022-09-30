@@ -383,10 +383,11 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         hapticVibrate: true,
-        backgroundColor: Colors.white,
+        backgroundColor:
+            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness32),
-          topRight: Radius.circular(SizeConfig.roundness32),
+          topLeft: Radius.circular(SizeConfig.roundness16),
+          topRight: Radius.circular(SizeConfig.roundness16),
         ),
         isBarrierDismissable: false,
         isScrollControlled: true,

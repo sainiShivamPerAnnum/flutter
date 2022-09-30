@@ -48,6 +48,12 @@ class _OnBoardingViewState extends State<OnBoardingView>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BaseView<OnboardingViewModel>(
       onModelReady: (model) {

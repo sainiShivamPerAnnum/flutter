@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class DepositOptionModalSheet extends StatelessWidget {
-  const DepositOptionModalSheet({Key key}) : super(key: key);
+  int amount;
+  DepositOptionModalSheet({this.amount});
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                     onTap: () {
                       AppState.backButtonDispatcher.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
+                          amt: amount,
                           investmentType: InvestmentType.AUGGOLD99);
                     }),
               ),

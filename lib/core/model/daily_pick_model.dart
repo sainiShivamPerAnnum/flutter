@@ -9,13 +9,22 @@ class DailyPick {
   List<int> fri;
   List<int> sat;
   List<int> sun;
-  int weekCode;
+  // int weekCode;
 
-  static final fldWeekDay = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-  static final fldWeekCode = 'weekCde';
+  static final fldWeekDay = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+  // static final fldWeekCode = 'weekCde';
 
   DailyPick(
-      {this.weekCode,
+      {
+      // this.weekCode,
       this.mon,
       this.tue,
       this.wed,
@@ -24,9 +33,10 @@ class DailyPick {
       this.sat,
       this.sun});
 
-  factory DailyPick.fromMap(Map<String, dynamic> data) {
+  factory DailyPick.fromMap(Map<String, dynamic> picksData) {
+    final data = picksData['picks'];
     return DailyPick(
-      weekCode: data[fldWeekCode],
+      // weekCode: data[fldWeekCode],
       mon:
           (data[fldWeekDay[0]] != null) ? List.from(data[fldWeekDay[0]]) : null,
       tue:

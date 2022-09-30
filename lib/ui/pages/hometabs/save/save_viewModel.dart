@@ -10,6 +10,7 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -33,6 +34,7 @@ class SaveViewModel extends BaseViewModel {
   final BankAndPanService _sellService = locator<BankAndPanService>();
   final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
   final _paymentRepo = locator<PaymentRepository>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
   final _baseUtil = locator<BaseUtil>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
@@ -169,6 +171,10 @@ class SaveViewModel extends BaseViewModel {
     print(blogPosts.length);
     updateIsLoading(false);
     notifyListeners();
+  }
+
+  refreshTransactions(InvestmentType investmentType) {
+    _txnHistoryService.updateTransactions(investmentType);
   }
 
   List<BlogPostModelByCategory> getAllBlogsByCategory() {

@@ -31,48 +31,57 @@ class SaveAssetView extends StatelessWidget {
         leading: FelloAppBarBackButton(),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: BaseView<SaveViewModel>(
-              onModelReady: (model) => model.init(),
-              builder: (context, model, child) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: UiConstants.kBackgroundColor,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GoldAssetCard(),
-                        SizedBox(
-                          height: SizeConfig.padding24,
-                        ),
-                        // -- Break --
-                        AutosaveCard(),
-                        MiniTransactionCard(
-                          investmentType: InvestmentType.AUGGOLD99,
-                        ),
-                      ],
+        child: RefreshIndicator(
+          onRefresh: () async {},
+          child: BaseView<SaveViewModel>(
+            onModelReady: (model) => model.init(),
+            builder: (context, model, child) => RefreshIndicator(
+              onRefresh: () async {
+                model.refreshTransactions(InvestmentType.AUGGOLD99);
+              },
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: UiConstants.kBackgroundColor,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GoldAssetCard(),
+                          SizedBox(
+                            height: SizeConfig.padding24,
+                          ),
+                          // -- Break --
+                          AutosaveCard(),
+                          MiniTransactionCard(
+                            investmentType: InvestmentType.AUGGOLD99,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SellCardView(
-                    investmentType: InvestmentType.AUGGOLD99,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-                    child: FAQCardView(
-                        category: 'digital_gold',
-                        bgColor: UiConstants.kDarkBackgroundColor),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.screenWidth * 0.2,
-                  )
-                ],
+                    SellCardView(
+                      investmentType: InvestmentType.AUGGOLD99,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding24),
+                      child: FAQCardView(
+                          category: 'digital_gold',
+                          bgColor: UiConstants.kDarkBackgroundColor),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenWidth * 0.2,
+                    )
+                  ],
+                ),
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }

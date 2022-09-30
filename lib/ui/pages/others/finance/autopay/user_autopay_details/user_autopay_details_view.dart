@@ -76,9 +76,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
               SingleChildScrollView(
                 child: model.state == ViewState.Busy
                     ? Center(
-                        child: FullScreenLoader(
-                          size: SizeConfig.padding32,
-                        ),
+                        child: FullScreenLoader(),
                       )
                     : model.activeSubscription == null
                         ? Center(
@@ -120,10 +118,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                     ))
                                   : model.filteredList?.length == 0
                                       ? Center(
-                                          child: NoTransactionsContent(
-                                            width: SizeConfig.screenWidth * 0.8,
-                                          ),
-                                        )
+                                          child: NoRecordDisplayWidget(
+                                          assetSvg: Assets.noTransactionAsset,
+                                          text: "No Transactions to show yet",
+                                        ))
                                       : Container(
                                           color: Color(0xFF595F5F)
                                               .withOpacity(0.14),
@@ -570,17 +568,10 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
         children: [
           Row(
             children: [
-              Text(
-                "Pause Autosave",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 24,
-                ),
-              ),
+              Text("Pause Autosave", style: TextStyles.rajdhaniB.title3),
               Spacer(),
               CircleAvatar(
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.transparent,
                 child: IconButton(
                   onPressed: () {
                     AppState.backButtonDispatcher.didPopRoute();
@@ -593,10 +584,6 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                 ),
               ),
             ],
-          ),
-          Divider(
-            height: SizeConfig.padding24,
-            thickness: 2,
           ),
           SizedBox(height: SizeConfig.padding16),
           pauseOptionTile(
@@ -616,7 +603,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             radioValue: 4,
           ),
           Container(height: SizeConfig.padding16),
-          FelloButtonLg(
+          AppPositiveCustomChildBtn(
             child: isPausing
                 ? SpinKitThreeBounce(
                     color: Colors.white,
@@ -624,7 +611,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                   )
                 : Text(
                     "PAUSE",
-                    style: TextStyles.body2.bold.colour(Colors.white),
+                    style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
                   ),
             onPressed: () async {
               if (pauseValue == 4) {
@@ -690,17 +677,20 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               width: pauseValue == radioValue ? 0.5 : 0,
               color: pauseValue == radioValue
                   ? UiConstants.primaryColor
-                  : Colors.black26,
+                  : UiConstants.kTextColor2,
             ),
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
             color: pauseValue == radioValue
-                ? UiConstants.primaryLight.withOpacity(0.5)
+                ? UiConstants.kTealTextColor.withOpacity(0.1)
                 : Colors.transparent),
         padding: EdgeInsets.symmetric(
           vertical: SizeConfig.padding4,
         ),
         child: ListTile(
-          title: Text(text),
+          title: Text(
+            text,
+            style: TextStyles.sourceSans.body2,
+          ),
           trailing: Radio(
             value: radioValue,
             groupValue: pauseValue,

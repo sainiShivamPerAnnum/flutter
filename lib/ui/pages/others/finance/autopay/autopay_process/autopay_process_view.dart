@@ -539,7 +539,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           width: SizeConfig.screenWidth,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: model.isDaily
                 ? List.generate(
                     model.dailyChips.length,

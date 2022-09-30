@@ -54,10 +54,10 @@ class ApiPath {
   static const kOngoingCampaigns = "/campaigns";
 
   //tambola game Apis
-  static String tambolaTickets(String uid) => "/user/$uid/tickets";
+  static String tambolaTickets(String uid) => "/$uid/tickets";
   static String buyTambolaTicket(String uid) => "/user/$uid/tickets";
   static String ticketCount(String uid) => "/user/$uid/tickets/count";
-  static const String dailyPicks = '/picks';
+  static const String dailyPicks = '/daily/picks';
 
   static String kSingleTransactions(String uid) => "/users/$uid/payments";
 

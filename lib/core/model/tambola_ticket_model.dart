@@ -50,10 +50,10 @@ class TambolaModel {
 
   factory TambolaModel.fromMap(Map<String, dynamic> map) {
     return TambolaModel(
-      id: map['id'] ?? 0,
-      val: map['val'] ?? '',
+      id: map['tid'] ?? 0,
+      val: map['tval'] ?? '',
       weekCode: map['week_code'] ?? 0,
-      assignedTime: TimestampModel.fromMap(map['assigned_time']),
+      assignedTime: TimestampModel.fromMap(map['createdOn']),
       board: TambolaBoard.fromMap(map),
     );
   }

@@ -270,7 +270,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     try {
       _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
       processText = "Connecting to your bank";
-      ApiResponse<bool> postResponse = await APIService.instance
+      bool postResponse = await APIService.instance
           .paytmSubscriptionPostRequest(
               mid: mid,
               orderId: paytmSubscriptionModel.data.orderId,
@@ -278,7 +278,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
               postPrefix: postPrefix,
               txnToken: paytmSubscriptionModel.data.temptoken,
               subId: paytmSubscriptionModel.data.subscriptionId);
-      if (postResponse.model) {
+      if (postResponse) {
         processText = "Sending payment request";
         bool processResponse = await processSubscription();
         if (processResponse) {

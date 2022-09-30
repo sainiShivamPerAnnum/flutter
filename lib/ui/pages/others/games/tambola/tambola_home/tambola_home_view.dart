@@ -70,7 +70,8 @@ class TambolaHomeView extends StatelessWidget {
                       TodayWeeklyPicksCard(
                         model: model,
                       ),
-
+                      //Win Announcement card
+                      if (model.showWinCard) TambolaResultCard(),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
                           ? buildCards(model)
@@ -402,6 +403,64 @@ class TambolaHomeView extends StatelessWidget {
       );
     }
     return _widget;
+  }
+}
+
+class TambolaResultCard extends StatelessWidget {
+  final TambolaHomeViewModel model;
+
+  TambolaResultCard({this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: TWeeklyResultPageConfig,
+        widget: WeeklyResult(
+          winningsmap: model.ticketCodeWinIndex,
+          isEligible: model.isEligible,
+        ),
+      ),
+      child: Container(
+        margin: EdgeInsets.only(
+            top: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomLeft,
+            colors: [
+              UiConstants.primaryLight.withOpacity(0.3),
+              UiConstants.primaryColor.withOpacity(0),
+              UiConstants.primaryLight.withOpacity(0.3),
+            ],
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+            color: UiConstants.primaryColor.withOpacity(0.2),
+          ),
+          margin: EdgeInsets.all(1),
+          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+          child: ListTile(
+            title: Text(
+              "Results are Out",
+              style: TextStyles.rajdhaniB.title3,
+            ),
+            subtitle: Text(
+              "Tap to check if you are lucky",
+              style: TextStyles.sourceSans.body2,
+            ),
+            trailing:
+                Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -783,7 +842,8 @@ class ButTicketsComponent extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         // await model.buyTickets(context);
-                        BaseUtil().openDepositOptionsModalSheet();
+                        BaseUtil().openDepositOptionsModalSheet(
+                            amount: model.ticketSavedAmount);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(

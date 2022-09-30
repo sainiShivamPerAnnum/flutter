@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -33,9 +34,11 @@ class TambolaCardModel extends BaseViewModel {
   List<int> get todaysPicks => _todaysPicks;
 
   init() async {
+    setState(ViewState.Busy);
     await getGameDetails();
-    _tambolaService.fetchWeeklyPicks();
+    await _tambolaService.fetchWeeklyPicks();
     fetchPickCounts();
+    setState(ViewState.Idle);
   }
 
   fetchPickCounts() {

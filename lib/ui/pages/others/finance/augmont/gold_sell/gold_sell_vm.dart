@@ -372,10 +372,10 @@ class GoldSellViewModel extends BaseViewModel {
           _augTxnService.currentTransactionState = TransactionState.idle;
           AppState.backButtonDispatcher.didPopRoute();
           BaseUtil.showNegativeAlert(
-              'Sell did not complete',
-              response["message"] ??
-                  'Your gold sell could not be completed at the moment',
-              seconds: 5);
+            'Sell did not complete',
+            response["message"] ??
+                'Your gold sell could not be completed at the moment',
+          );
         }
       }
       return;
@@ -387,10 +387,10 @@ class GoldSellViewModel extends BaseViewModel {
             response["message"], "Check transactions for more details");
       } else {
         BaseUtil.showNegativeAlert(
-            'Sell did not complete',
-            response["message"] ??
-                'Your gold sell could not be completed at the moment',
-            seconds: 5);
+          'Sell did not complete',
+          response["message"] ??
+              'Your gold sell could not be completed at the moment',
+        );
       }
     }
   }

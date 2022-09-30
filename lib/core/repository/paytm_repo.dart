@@ -24,6 +24,10 @@ class PaytmRepository extends BaseRepo {
       ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
 
+  String _baseUrl2 = FlavorConfig.isProduction()
+      ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
+      : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
+
   Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(
     double amount,
     Map<String, dynamic> augMap,
@@ -152,7 +156,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kCreateSubscription,
         body: _body,
         token: _token,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
 
       CreateSubscriptionResponseModel _responseModel =
@@ -182,7 +186,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kValidateVpa,
         token: _token,
         queryParams: _queryParams,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
 
       final _responseModel = ValidateVpaResponseModel.fromJson(response);
@@ -194,28 +198,6 @@ class PaytmRepository extends BaseRepo {
           e?.toString() ?? "Unable to validate VPA", 400);
     }
   }
-
-  // Future<ApiResponse> fetchTxnResultDetails(String orderId) async {
-  //   try {
-  //     final String _uid = userService.baseUser.uid;
-  //     final _token = await getBearerToken();
-  //     final _queryParams = {
-  //       "orderId": orderId,
-  //     };
-  //     final response = await APIService.instance.getData(
-  //       ApiPath.fecthLatestTxnDetails(_uid),
-  //       token: _token,
-  //       queryParams: _queryParams,
-  //       cBaseUrl: _baseUrl,
-  //     );
-
-  //     final _responseModel = TxnResultModel.fromJson(response);
-  //     return ApiResponse<TxnResultModel>(model: _responseModel, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     return ApiResponse.withError("Unable to fetch txn result", 400);
-  //   }
-  // }
 
   Future<ApiResponse<bool>> updateDailyAmount(
       {@required double amount, @required String freq}) async {
@@ -231,7 +213,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kCreateSubscription,
         body: _body,
         token: _token,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
       if (response != null) {
         final Map responseData = response["data"];
@@ -263,7 +245,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kPauseSubscription,
         body: _body,
         token: _token,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
       final Map responseData = response["data"];
 
@@ -289,7 +271,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kResumeSubscription,
         body: _body,
         token: _token,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
 
       final Map responseData = response["data"];
@@ -317,7 +299,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kProcessSubscription,
         body: _body,
         token: _token,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
       final Map<String, dynamic> responseData = response['data'];
       if (responseData['status'])
@@ -340,7 +322,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kActiveSubscription,
         token: _token,
         queryParams: _queryParams,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
       logger.d(response);
       final _responseData = response["data"];
@@ -365,7 +347,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kNextDebitDate,
         token: _token,
         queryParams: _queryParams,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _baseUrl2,
       );
 
       final _responseStatus = response["data"];

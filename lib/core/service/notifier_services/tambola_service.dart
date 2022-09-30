@@ -96,6 +96,7 @@ class TambolaService extends ChangeNotifier {
 
   set winnerDialogCalled(value) {
     _winnerDialogCalled = value;
+    notifyListeners();
   }
 
   set atomicTicketGenerationLeftCount(value) {
