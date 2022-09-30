@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -102,7 +103,7 @@ class TambolaHomeView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -726,117 +727,116 @@ class ButTicketsComponent extends StatelessWidget {
               Radius.circular(SizeConfig.roundness12),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Get a Tambola ticket",
-                    style: TextStyles.rajdhaniSB.body1,
-                  ),
-                  Text(
-                    "Get 1 Ticket for every Rs.500 saved.",
-                    style: TextStyles.sourceSans.body5
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                ],
+              Text(
+                "Get a Tambola ticket",
+                style: TextStyles.rajdhaniSB.body1,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: UiConstants.kArowButtonBackgroundColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(SizeConfig.roundness8),
-                  ),
-                ),
-                height: SizeConfig.screenWidth * 0.14,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.remove),
-                      iconSize: SizeConfig.padding20,
-                      color: Colors.white,
-                      onPressed: model.decreaseTicketCount,
-                    ),
-                    Container(
-                      width: SizeConfig.screenHeight * 0.03,
-                      child: TextField(
-                        style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                        controller: model.ticketCountController,
-                        enableInteractiveSelection: false,
-                        enabled: false,
-                        keyboardType:
-                            TextInputType.numberWithOptions(signed: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: (String text) {
-                          model.updateTicketCount();
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                        ),
+              Text(
+                "Get 1 Ticket for every Rs.500 saved.",
+                style:
+                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: UiConstants.kArowButtonBackgroundColor,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness8),
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      iconSize: SizeConfig.padding20,
-                      color: Colors.white,
-                      onPressed: model.increaseTicketCount,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          child: AppPositiveCustomChildBtn(
-            //color: UiConstants.tertiarySolid,
-
-            child: model.ticketBuyInProgress
-                ? SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: SizeConfig.body2,
-                  )
-                : RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextSpan(
-                            text: 'BUY TICKETS     (',
-                            style: TextStyles.sourceSansB.body2
-                                .colour(Colors.white)),
-                        WidgetSpan(
-                            child: Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding4),
-                          height: 16,
-                          width: 16,
-                          child: SvgPicture.asset(
-                            Assets.token,
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          iconSize: SizeConfig.padding16,
+                          color: Colors.white,
+                          onPressed: model.decreaseTicketCount,
+                        ),
+                        Container(
+                          width: SizeConfig.screenHeight * 0.02,
+                          child: TextField(
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                            controller: model.ticketCountController,
+                            enableInteractiveSelection: false,
+                            enabled: false,
+                            keyboardType:
+                                TextInputType.numberWithOptions(signed: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            onChanged: (String text) {
+                              model.updateTicketCount();
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              contentPadding: EdgeInsets.zero,
+                            ),
                           ),
-                        )),
-                        TextSpan(
-                            text: '${model.buyTicketCount * 10} )',
-                            style: TextStyles.sourceSansB.body2
-                                .colour(Colors.white)),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          iconSize: SizeConfig.padding16,
+                          color: Colors.white,
+                          onPressed: model.increaseTicketCount,
+                        ),
                       ],
                     ),
                   ),
-            onPressed: () async {
-              await model.buyTickets(context);
-            },
+                  SizedBox(
+                    width: SizeConfig.padding10,
+                  ),
+                  Text(
+                    "= ₹ ${model.ticketSavedAmount.toString()}",
+                    style: TextStyles.sourceSansB.body2.colour(Colors.white),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        await model.buyTickets(context);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16),
+                        decoration: BoxDecoration(
+                          color: UiConstants.kArowButtonBackgroundColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness8),
+                          ),
+                        ),
+                        child: Center(
+                          child: model.ticketBuyInProgress
+                              ? SpinKitThreeBounce(
+                                  color: Colors.white,
+                                  size: SizeConfig.body2,
+                                )
+                              : Text(
+                                  "SAVE",
+                                  style: TextStyles.rajdhaniB.body3
+                                      .colour(Colors.white),
+                                ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
         ),
         SizedBox(

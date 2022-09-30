@@ -164,7 +164,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set showLevelUpAnimation(value) {
     this._showLevelUpAnimation = value;
-    notifyListeners();
+    notifyListeners(JourneyServiceProperties.LevelCompletion);
   }
 
   // INIT MAIN
@@ -588,7 +588,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         seconds: duration,
       ),
     );
-    levelUpLottieController = AnimationController(vsync: vsync);
+
     avatarAnimation = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeInOutCirc),
     )..addListener(() {
@@ -605,8 +605,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
     if (checkIfUserHasCompletedJourneyLevel()) {
+      levelUpLottieController =
+          AnimationController(vsync: vsync, duration: Duration(seconds: 3));
       showLevelUpAnimation = true;
-      await levelUpLottieController.forward().then((value) {
+
+      levelUpLottieController.forward().then((value) {
         showLevelUpAnimation = false;
       });
       Future.delayed(Duration(milliseconds: 800), () {});

@@ -150,19 +150,23 @@ class _JourneyViewState extends State<JourneyView>
 class LevelUpAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<JourneyService>(
-      builder: (ctx, journeyService, child) =>
-          journeyService.showLevelUpAnimation
-              ? Lottie.asset(
-                  Assets.levelUpLottie,
-                  controller: journeyService.levelUpLottieController,
-                  onLoaded: (composition) {
-                    journeyService.levelUpLottieController
-                      ..duration = composition.duration;
-                  },
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.LevelCompletion],
+        builder: (context, jModel, properties) {
+          return jModel.showLevelUpAnimation
+              ? IgnorePointer(
+                  ignoring: true,
+                  child: Lottie.asset(
+                    Assets.levelUpLottie,
+                    controller: jModel.levelUpLottieController,
+                    onLoaded: (composition) {
+                      jModel.levelUpLottieController
+                        ..duration = composition.duration;
+                    },
+                  ),
                 )
-              : SizedBox(),
-    );
+              : SizedBox();
+        });
   }
 }
 

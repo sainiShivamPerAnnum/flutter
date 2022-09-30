@@ -31,13 +31,13 @@ class _FocusRingState extends State<FocusRing>
   void initState() {
     if (_userService.userJourneyStats.mlIndex != 1) return;
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     endingAnimation = CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0, 1.0, curve: Curves.decelerate));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(Duration(seconds: 2), () {
         _animationController.forward().then((value) => showButton = true);
       });
     });
