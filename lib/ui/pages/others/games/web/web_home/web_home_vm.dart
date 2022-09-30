@@ -302,6 +302,7 @@ class WebHomeViewModel extends BaseViewModel {
         _flcResponse.model.flcBalance >= _playCost)
       return true;
     else {
+      earnMoreTokens();
       return false;
     }
   }

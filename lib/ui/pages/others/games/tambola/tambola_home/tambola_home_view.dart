@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -590,7 +591,7 @@ class NoTicketWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset(
-          Assets.noTickets,
+          Assets.noWinnersAsset,
           width: SizeConfig.screenWidth * 0.2,
         ),
         SizedBox(
@@ -807,8 +808,9 @@ class ButTicketsComponent extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () async {
-                        await model.buyTickets(context);
+                      onTap: () {
+                        // await model.buyTickets(context);
+                        BaseUtil().openDepositOptionsModalSheet();
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -820,16 +822,18 @@ class ButTicketsComponent extends StatelessWidget {
                           ),
                         ),
                         child: Center(
-                          child: model.ticketBuyInProgress
-                              ? SpinKitThreeBounce(
-                                  color: Colors.white,
-                                  size: SizeConfig.body2,
-                                )
-                              : Text(
-                                  "SAVE",
-                                  style: TextStyles.rajdhaniB.body3
-                                      .colour(Colors.white),
-                                ),
+                          child:
+                              // model.ticketBuyInProgress
+                              //     ? SpinKitThreeBounce(
+                              //         color: Colors.white,
+                              //         size: SizeConfig.body2,
+                              //       )
+                              //     :
+                              Text(
+                            "SAVE",
+                            style:
+                                TextStyles.rajdhaniB.body3.colour(Colors.white),
+                          ),
                         ),
                       ),
                     ),

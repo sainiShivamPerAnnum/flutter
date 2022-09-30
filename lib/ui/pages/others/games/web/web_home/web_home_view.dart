@@ -364,11 +364,8 @@ class WebHomeView extends StatelessWidget {
                       btnText: 'Play',
                       onPressed: () async {
                         Haptic.vibrate();
-                        if (await model.setupGame()) {
-                          model.launchGame();
-                        } else {
-                          model.earnMoreTokens();
-                        }
+                        if (await model.setupGame()) model.launchGame();
+
                         // model.pageController.jumpToPage(1);
                       },
                     ),

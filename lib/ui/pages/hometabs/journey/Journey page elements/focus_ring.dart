@@ -37,7 +37,7 @@ class _FocusRingState extends State<FocusRing>
         curve: const Interval(0, 1.0, curve: Curves.decelerate));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 3), () {
         _animationController.forward().then((value) => showButton = true);
       });
     });

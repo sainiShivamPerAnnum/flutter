@@ -349,10 +349,11 @@ class CampaignCard extends StatelessWidget {
                     this.subText
                   ],
                 ),
-                SvgPicture.asset(
-                  asset,
-                  height: SizeConfig.screenWidth * 0.3,
-                  width: SizeConfig.screenWidth * 0.3,
+                Expanded(
+                  child: SvgPicture.asset(
+                    asset,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ],
             ),

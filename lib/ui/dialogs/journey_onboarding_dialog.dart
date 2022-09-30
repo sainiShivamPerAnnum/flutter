@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -33,16 +34,16 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
 
   final onboardingData = [
     [
-      'Save and Invest',
-      'In strong, low risk assets with steady growth',
+      "Welcome to Fello",
+      "Presenting a new way of saving and winning rewards",
     ],
     [
-      'Play games',
-      'Earn tambola tickets and Fello tokens for your savings and play weekly games'
+      "Complete Milestones",
+      "Finish milestones to progress in your journey and unlock new levels",
     ],
     [
-      'Win rewards',
-      'Win the daily and weekly games and get rewards and prizes!',
+      "Win Rewards",
+      "Earn tokens and cashbacks on completing each milestone",
     ],
   ];
   @override
@@ -65,12 +66,19 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
   }
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       ),
-      backgroundColor: UiConstants.darkPrimaryColor,
+      backgroundColor: UiConstants.primarySemiLight,
       child: GestureDetector(
         onHorizontalDragEnd: (details) {
           bool leftSwipe = dragStartPosition > dragUpdatePosition;
@@ -102,7 +110,9 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
                 controller: controller, width: SizeConfig.screenWidth),
             SizedBox(height: SizeConfig.padding16),
             Container(
-              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+              margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding4,
+                  horizontal: SizeConfig.pageHorizontalMargins),
               height: SizeConfig.screenWidth * 0.24,
               width: SizeConfig.screenWidth * 0.8,
               child: PageView.builder(
@@ -117,7 +127,7 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
                   } else {
                     if (val == 0) {
                       controller.reset();
-                      controller.animateTo(0.28);
+                      controller.animateTo(0.18);
                     } else if (val == 1)
                       controller.animateBack(0.53);
                     else
@@ -167,10 +177,10 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
               ),
             ),
             SizedBox(height: SizeConfig.padding16),
-            AppPositiveBtn(
-                btnText: currentPage == 2 ? 'Done' : 'Next',
+            CustomSaveButton(
+                title: currentPage == 2 ? 'Done' : 'Next',
                 width: SizeConfig.screenWidth * 0.5,
-                onPressed: () {
+                onTap: () {
                   if (currentPage == 2)
                     AppState.backButtonDispatcher.didPopRoute();
                   else {

@@ -33,6 +33,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
@@ -331,6 +332,23 @@ class BaseUtil extends ChangeNotifier {
             : LendboxWithdrawalView(),
       );
     });
+  }
+
+  openDepositOptionsModalSheet() {
+    return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        backgroundColor:
+            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+        isBarrierDismissable: true,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            SizeConfig.roundness12,
+          ),
+          topRight: Radius.circular(SizeConfig.roundness12),
+        ),
+        content: DepositOptionModalSheet());
   }
 
   bool get checkKycMissing {

@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/dialogs/journey_onboarding_dialog.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class HelpFab extends StatefulWidget {
 }
 
 class _HelpFabState extends State<HelpFab> {
+  final _userService = locator<UserService>();
   double width = SizeConfig.avatarRadius * 2.4;
   bool isOpen = false;
   expandFab() {
@@ -21,6 +24,15 @@ class _HelpFabState extends State<HelpFab> {
       isOpen = true;
       width = SizeConfig.padding80;
     });
+    if (_userService.userJourneyStats.mlIndex == 1)
+      Future.delayed(Duration(seconds: 4), () {
+        BaseUtil.openDialog(
+            hapticVibrate: true,
+            addToScreenStack: true,
+            content: JourneyOnboardingDialog(),
+            isBarrierDismissable: false);
+      });
+
     Future.delayed(Duration(seconds: 5), () {
       collapseFab();
     });

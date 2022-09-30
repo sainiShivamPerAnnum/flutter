@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -35,13 +37,15 @@ class UserProfileDetails extends StatelessWidget {
         body: Stack(
           children: [
             NewSquareBackground(),
-            ListView(
-              shrinkWrap: true,
-              children: [
-                ProfileHeader(model: model),
-                UserProfileForm(locale: locale, model: model),
-              ],
-            ),
+            model.state == ViewState.Busy
+                ? Center(child: FullScreenLoader())
+                : ListView(
+                    shrinkWrap: true,
+                    children: [
+                      ProfileHeader(model: model),
+                      UserProfileForm(locale: locale, model: model),
+                    ],
+                  ),
           ],
         ),
       ),
@@ -74,7 +78,7 @@ class UserProfileForm extends StatelessWidget {
             ),
             AppTextField(
               textEditingController: model.nameController,
-              isEnabled: model.inEditMode,
+              isEnabled: model.inEditMode && model.isNameEnabled,
               focusNode: model.nameFocusNode,
               textCapitalization: TextCapitalization.words,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -83,7 +87,9 @@ class UserProfileForm extends StatelessWidget {
                   RegExp(r'[a-zA-Z ]'),
                 ),
               ],
-              // suffix: SizedBox(),
+              suffixIcon: !model.isNameEnabled
+                  ? Icon(Icons.verified, color: UiConstants.primaryColor)
+                  : SizedBox(),
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
                   // model.hasInputError = false;
@@ -100,34 +106,46 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
-            model.inEditMode && model.isEmailEnabled
-                ? AppTextField(
-                    textEditingController: model.emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    autoFocus: true,
-                    isEnabled: true,
-                    focusNode: model.emailFocusNode,
-                    hintText: locale.obEmailHint,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      return (value != null &&
-                              value.isNotEmpty &&
-                              model.emailRegex.hasMatch(value))
-                          ? null
-                          : 'Please enter a valid email';
-                    },
-                  )
+            model.inEditMode && !model.isEmailVerified
+                ? (model.isEmailEnabled
+                    ? AppTextField(
+                        textEditingController: model.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        autoFocus: true,
+                        isEnabled: true,
+                        focusNode: model.emailFocusNode,
+                        hintText: locale.obEmailHint,
+                        // suffixIcon: UserEmailVerificationButton(),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          return (value != null &&
+                                  value.isNotEmpty &&
+                                  model.emailRegex.hasMatch(value))
+                              ? null
+                              : 'Please enter a valid email';
+                        },
+                      )
+                    : AppTextField(
+                        readOnly: true,
+                        isEnabled: true,
+                        validator: (va) {
+                          return null;
+                        },
+                        onTap: model.isContinuedWithGoogle
+                            ? () {}
+                            : model.showEmailOptions,
+                        focusNode: model.emailOptionsFocusNode,
+                        // suffixIcon: UserEmailVerificationButton(),
+                        textEditingController: model.emailController,
+                        hintText: model.inEditMode ? "Enter email" : "",
+                      ))
                 : AppTextField(
-                    isEnabled: model.inEditMode &&
-                        model.isgmailFieldEnabled &&
-                        !model.isEmailVerified,
+                    readOnly: true,
+                    isEnabled: model.isEmailVerified ? false : true,
                     validator: (va) {
                       return null;
                     },
                     focusNode: model.emailOptionsFocusNode,
-                    onTap: model.isContinuedWithGoogle
-                        ? () {}
-                        : model.showEmailOptions,
                     suffixIcon: UserEmailVerificationButton(),
                     textEditingController: model.emailController,
                     hintText: model.inEditMode ? "Enter email" : "",

@@ -39,7 +39,7 @@ class LendboxLoadingView extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
-          child: Lottie.asset(Assets.goldDepostLoadingLottie,
+          child: Lottie.asset(Assets.floDepostLoadingLottie,
               height: SizeConfig.screenHeight * 0.7),
         ),
         Column(

@@ -158,19 +158,19 @@ class TopSaverViewModel extends BaseViewModel {
     // _logger.d(CodeFromFreq.getPastMonthCode());
     _logger.d(event.type);
     _logger.d(isGameRedirected);
-    if (event.type == "FPL" && isGameRedirected)
-      BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        backgroundColor: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness32),
-          topRight: Radius.circular(SizeConfig.roundness32),
-        ),
-        isScrollControlled: true,
-        hapticVibrate: true,
-        isBarrierDismissable: false,
-        content: EventInstructionsModal(instructions: event.instructions),
-      );
+    // if (event.type == "FPL" && isGameRedirected)
+    //   BaseUtil.openModalBottomSheet(
+    //     addToScreenStack: true,
+    //     backgroundColor: Colors.white,
+    //     borderRadius: BorderRadius.only(
+    //       topLeft: Radius.circular(SizeConfig.roundness32),
+    //       topRight: Radius.circular(SizeConfig.roundness32),
+    //     ),
+    //     isScrollControlled: true,
+    //     hapticVibrate: true,
+    //     isBarrierDismissable: false,
+    //     content: EventInstructionsModal(instructions: event.instructions),
+    //   );
   }
 
   setAppbarTitle() {

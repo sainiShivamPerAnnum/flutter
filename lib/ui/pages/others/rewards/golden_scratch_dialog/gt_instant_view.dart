@@ -335,29 +335,19 @@ class _GTInstantViewState extends State<GTInstantView>
 
   Function getButtonAction(GTInstantViewModel model, GTSOURCE source) {
     Function onPressed;
-    if (source == GTSOURCE.cricket ||
-        source == GTSOURCE.panVerify ||
-        source == GTSOURCE.poolClub ||
-        source == GTSOURCE.footBall ||
-        source == GTSOURCE.candyFiesta ||
-        source == GTSOURCE.game) {
-      onPressed = () {
-        if (!model.isCardScratched) return;
-        AppState.backButtonDispatcher.didPopRoute();
-      };
-    } else {
-      onPressed = () {
-        if (!model.isCardScratched) return;
-        while (AppState.screenStack.length > 1) {
-          AppState.backButtonDispatcher.didPopRoute();
-        }
-        if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
-          AppState.delegate.appState.setCurrentTabIndex = 0;
-          model.showAutosavePrompt();
-        } else
-          AppState.delegate.appState.setCurrentTabIndex = 1;
-      };
-    }
+    // if (source == GTSOURCE.cricket ||
+    //     source == GTSOURCE.panVerify ||
+    //     source == GTSOURCE.poolClub ||
+    //     source == GTSOURCE.footBall ||
+    //     source == GTSOURCE.candyFiesta ||
+    //     source == GTSOURCE.game) {
+    onPressed = () {
+      if (!model.isCardScratched) return;
+      AppState.backButtonDispatcher.didPopRoute();
+      if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup)
+        model.showAutosavePrompt();
+    };
+    // }
     return onPressed;
   }
 

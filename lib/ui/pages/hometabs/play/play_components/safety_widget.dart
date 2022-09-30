@@ -33,9 +33,11 @@ class SafetyWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Games are played with Fello tokens",
-                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                  FittedBox(
+                    child: Text(
+                      "Games are played with Fello tokens",
+                      style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                    ),
                   ),
                   Text(
                     "Fello games do not use any money from your savings or investments",

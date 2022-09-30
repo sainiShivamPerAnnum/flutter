@@ -194,6 +194,12 @@ class TransactionHistoryService
     return DateFormat('MMMMd').format(now);
   }
 
+  getFormattedDateAndTime(Timestamp time) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    return DateFormat('d MMMM, yyyy - hh:mm a').format(now);
+  }
+
   String getFormattedSIPDate(DateTime time) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);

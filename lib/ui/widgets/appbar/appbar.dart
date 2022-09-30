@@ -43,7 +43,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
         ],
       ),
-      centerTitle: !showAvatar,
+      centerTitle: false,
       elevation: 0,
       backgroundColor: backgroundColor ?? Colors.transparent,
       actions: [

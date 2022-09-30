@@ -282,6 +282,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //if any Golden Ticket is present at the moment, pops up after animation
   checkAndAnimateAvatar() {
     // Future.delayed(Duration(seconds: 2), () {
+    if (avatarCachedMlIndex == avatarRemoteMlIndex) {
+      placeAvatarAtTheCurrentMileStone();
+    }
     _logger.d("Checking if there is any animation left to happen");
     if (isThereAnyMilestoneLevelChange() &&
         userIsAtJourneyScreen() &&
@@ -299,6 +302,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //On startup, if cached and remote mlIndex is same, then just place the avatar at the requried milestone and turn on glow
   void placeAvatarAtTheCurrentMileStone() {
+    _logger.d("Placing avatar at current milestone");
     AvatarPathModel path = customPathDataList
         .lastWhere((path) => path.mlIndex == avatarCachedMlIndex ?? 0);
     avatarPosition = Offset(pageWidth * path.coords[0],

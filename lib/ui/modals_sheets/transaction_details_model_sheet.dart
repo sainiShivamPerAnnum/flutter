@@ -223,18 +223,6 @@ class _TransactionDetailsBottomSheetState
                       )
                     ],
                   ),
-                Row(
-                  children: [
-                    referralTile(
-                        "Date",
-                        "${_getFormattedDate(widget.transaction.timestamp)}",
-                        Colors.black),
-                    referralTile(
-                        "Time",
-                        "${_getFormattedTime(widget.transaction.timestamp)}",
-                        Colors.black),
-                  ],
-                ),
                 if (widget.transaction.miscMap != null)
                   Container(
                     width: SizeConfig.screenWidth,
@@ -293,14 +281,12 @@ class _TransactionDetailsBottomSheetState
                                 if (generatedPdfFilePath != null) {
                                   OpenFilex.open(generatedPdfFilePath);
                                 } else {
-                                  setState(() {});
                                   BaseUtil.showNegativeAlert(
                                       'Invoice could not be loaded',
-                                      'Please try again in some time');
+                                      'Please try in some time');
                                 }
                               });
                             } else {
-                              setState(() {});
                               BaseUtil.showNegativeAlert(
                                   'Invoice could not be loaded',
                                   'Please try again in some time');
@@ -489,7 +475,7 @@ class TransactionSummary extends StatelessWidget {
                 subtitle: Text(
                   subtitle ??
                       (summary[index].timestamp != null
-                          ? "${_txnHistoryService.getFormattedDate(summary[index].timestamp)} ${_txnHistoryService.getFormattedTime(summary[index].timestamp)}"
+                          ? "${_txnHistoryService.getFormattedDateAndTime(summary[index].timestamp)}"
                           : summary[index].value),
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kTextColor2),

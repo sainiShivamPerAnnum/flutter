@@ -14,6 +14,7 @@ class UiConstants {
   static final Color playButtonColor = const Color(0xff5A5A5D);
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color(0XFF02484D);
+  static final Color primarySemiLight = Color(0xff4B9A8E);
   static final Color darkPrimaryColor2 = const Color(0XFF1B262C);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);

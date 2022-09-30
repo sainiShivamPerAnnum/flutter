@@ -64,6 +64,7 @@ class AppTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.suffixIconConstraints,
     this.margin,
+    this.readOnly = false,
     this.autovalidateMode,
   }) : super(key: key);
 
@@ -99,6 +100,7 @@ class AppTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final BoxConstraints suffixIconConstraints;
   final EdgeInsets margin;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +144,7 @@ class AppTextField extends StatelessWidget {
         onChanged: onChanged,
         obscureText: obscure,
         onTap: onTap ?? () {},
+        readOnly: readOnly,
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(

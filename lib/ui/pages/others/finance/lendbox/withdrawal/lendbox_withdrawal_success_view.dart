@@ -33,7 +33,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
           ),
           Expanded(
             child: Lottie.asset(
-              Assets.goldDepostSuccessLottie,
+              Assets.floSellCompleteLottie,
             ),
           ),
           Text(

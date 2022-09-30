@@ -46,7 +46,7 @@ class LendboxSuccessView extends StatelessWidget {
           ),
           Expanded(
             child: Lottie.asset(
-              Assets.goldDepostSuccessLottie,
+              Assets.floDepostSuccessLottie,
             ),
           ),
           Text(

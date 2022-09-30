@@ -114,7 +114,8 @@ class CampaignView extends StatelessWidget {
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                      padding: EdgeInsets.all(SizeConfig.padding34),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
                       child: Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,12 +164,13 @@ class CampaignView extends StatelessWidget {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Text(
-                                        '${model.userAmount.toString()} gms',
-                                        style: TextStyles.body1.bold
-                                            .colour(Colors.white),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                      FittedBox(
+                                        child: Text(
+                                          '${model.userAmount.toString()} gms',
+                                          style: TextStyles.body1.bold
+                                              .colour(Colors.white),
+                                          maxLines: 1,
+                                        ),
                                       )
                                     ],
                                   ),
@@ -296,12 +298,13 @@ class CampaignView extends StatelessWidget {
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                      padding: EdgeInsets.all(SizeConfig.padding38),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins * 1.2),
                       decoration: BoxDecoration(
                         gradient: UiConstants.kCampaignBannerBackgrondGradient,
                       ),
                       height: SizeConfig.bannerHeight,
-                      width: double.infinity,
+                      width: SizeConfig.screenWidth,
                       child: Row(
                         children: [
                           Expanded(
@@ -337,10 +340,10 @@ class CampaignView extends StatelessWidget {
                             decoration: BoxDecoration(),
                             child: Stack(
                               children: [
-                                Align(
-                                  alignment: Alignment.bottomCenter,
+                                Positioned(
+                                  bottom: SizeConfig.bannerHeight * 0.15,
                                   child: Container(
-                                    width: double.infinity,
+                                    width: SizeConfig.screenWidth * 0.3,
                                     height: (SizeConfig.bannerHeight) / 3.9,
                                     decoration: BoxDecoration(
                                         gradient: UiConstants.kTrophyBackground,

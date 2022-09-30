@@ -127,7 +127,7 @@ class SizeConfig {
   static double get boxWidthLarge => screenWidth * 0.371;
   static double get profileDPSize => screenWidth * 0.05;
   static double get boxDividerMargins => screenWidth * 0.016;
-  static double get bannerHeight => screenWidth * 0.61;
+  static double get bannerHeight => screenWidth * 0.5;
 
   //Navbar
   static double get navBarWidth =>

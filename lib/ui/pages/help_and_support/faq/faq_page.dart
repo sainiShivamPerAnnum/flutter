@@ -35,18 +35,17 @@ class FAQPage extends StatelessWidget {
           showHelpButton: false,
           action: Container(
             height: SizeConfig.avatarRadius * 2,
-            width: SizeConfig.avatarRadius * 2,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
             decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(100),
                 border: Border.all(
                   color: Colors.white,
                 ),
                 color: Colors.black),
-            child: IconButton(
-              icon: Icon(
-                Icons.live_help_rounded,
-                color: Colors.white,
-                size: SizeConfig.avatarRadius,
+            child: TextButton(
+              child: Text(
+                "Chat with us",
+                style: TextStyles.sourceSans.body3,
               ),
               onPressed: () {
                 Haptic.vibrate();
