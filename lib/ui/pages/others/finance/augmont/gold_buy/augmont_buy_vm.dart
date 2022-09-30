@@ -17,7 +17,6 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -31,7 +30,6 @@ import 'package:upi_pay/upi_pay.dart';
 
 class GoldBuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
-  static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
 
   final _logger = locator<CustomLogger>();
@@ -75,8 +73,6 @@ class GoldBuyViewModel extends BaseViewModel {
   AugmontRates goldRates;
   String userAugmontState;
   FocusNode buyFieldNode = FocusNode();
-  bool _augOnbRegInProgress = false;
-  bool _augRegFailed = false;
   String buyNotice;
 
   double _goldBuyAmount = 0;
@@ -120,20 +116,6 @@ class GoldBuyViewModel extends BaseViewModel {
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
-    notifyListeners();
-  }
-
-  get augOnbRegInProgress => this._augOnbRegInProgress;
-
-  set augOnbRegInProgress(value) {
-    this._augOnbRegInProgress = value;
-    notifyListeners();
-  }
-
-  get augRegFailed => this._augRegFailed;
-
-  set augRegFailed(value) {
-    this._augRegFailed = value;
     notifyListeners();
   }
 
@@ -208,7 +190,6 @@ class GoldBuyViewModel extends BaseViewModel {
     _paytmService.getActiveSubscriptionDetails();
     getAvailableCoupons();
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    _onboardUserAutomatically(userAugmontState);
     await _userService.fetchUserAugmontDetail();
     delayedAugmontCall();
     checkIfDepositIsLocked();
@@ -266,11 +247,7 @@ class GoldBuyViewModel extends BaseViewModel {
   //2 Basic Checks
   Future<bool> initChecks() async {
     if (status == STATUS_UNAVAILABLE) return false;
-    if (status == STATUS_REGISTER) {
-      _onboardUserManually();
-      return true;
-    }
-
+  
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
           'Gold Rates Unavailable', 'Please try again in sometime');
@@ -440,67 +417,8 @@ class GoldBuyViewModel extends BaseViewModel {
 
     if (!_isAllowed)
       return STATUS_UNAVAILABLE;
-    else if (_userService.baseUser.isAugmontOnboarded == null ||
-        _userService.baseUser.isAugmontOnboarded == false)
-      return STATUS_REGISTER;
     else
       return STATUS_OPEN;
-  }
-
-  Future _onboardUserAutomatically(String state) async {
-    if (status == STATUS_REGISTER && userAugmontState != null) {
-      augOnbRegInProgress = true;
-      _logger.d("Augmont Onboarding started automagically");
-      _userService.setUserAugmontDetails(await _augmontModel.createSimpleUser(
-          _userService.baseUser.mobile, userAugmontState));
-      if (_userService.userAugmontDetails == null) {
-        augOnbRegInProgress = false;
-        augRegFailed = true;
-        return;
-      } else {
-        augOnbRegInProgress = false;
-        status = checkAugmontStatus();
-        augRegFailed = false;
-      }
-      _logger.d("Augmont Onboarding Completed");
-      isGoldBuyInProgress = false;
-      setState(ViewState.Idle);
-      return true;
-    }
-  }
-
-  Future _onboardUserManually() async {
-    return Future.delayed(Duration.zero, () {
-      BaseUtil.openModalBottomSheet(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.roundness24),
-            topRight: Radius.circular(SizeConfig.roundness24),
-          ),
-          addToScreenStack: true,
-          content: AugmontRegisterModalSheet(
-            onAugRegInit: (val) {
-              augOnbRegInProgress = val;
-            },
-            onSuccessfulAugReg: (val) {
-              if (val) {
-                augOnbRegInProgress = false;
-                status = checkAugmontStatus();
-                isGoldBuyInProgress = false;
-                augRegFailed = false;
-                setState(ViewState.Idle);
-              }
-            },
-          ),
-          isBarrierDismissable: false);
-    });
-  }
-
-  onboardUser() async {
-    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    if (userAugmontState != null)
-      _onboardUserAutomatically(userAugmontState);
-    else
-      _onboardUserManually();
   }
 
   void showOfferModal(GoldBuyViewModel model) {

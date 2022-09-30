@@ -89,8 +89,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
                   );
                 },
                 child: BaseView<LendboxWithdrawalViewModel>(
-                  onModelReady: (model) => model.init(
-                      ),
+                  onModelReady: (model) => model.init(),
                   builder: (ctx, model, child) {
                     return _getView(
                       txnService,

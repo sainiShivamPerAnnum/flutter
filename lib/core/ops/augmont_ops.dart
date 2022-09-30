@@ -98,55 +98,6 @@ class AugmontService extends ChangeNotifier {
     return token;
   }
 
-  // String _constructUid(String pan) {
-  //   var rnd = new Random();
-  //   int u = rnd.nextInt(100);
-  //   return 'fello${u.toString()}$pan';
-  // }
-
-  String _constructUid(String mobile) {
-    var rnd = new Random();
-    int u = rnd.nextInt(100);
-    return 'fello${u.toString()}$mobile';
-  }
-
-  Future<UserAugmontDetail> createSimpleUser(
-      String mobile, String stateId) async {
-    if (!isInit()) await _init();
-
-    String uid = _userService.baseUser.uid;
-    var data = {
-      CreateUser.fldMobile: mobile,
-      CreateUser.fldID: uid,
-      CreateUser.fldStateId: stateId,
-    };
-    Map<String, dynamic> _body = {"data": data};
-    _logger.d(_body);
-
-    try {
-      final String _bearer = await _getBearerToken();
-      final res = await APIService.instance
-          .postData(_apiPaths.kCreateSimpleUser, body: _body, token: _bearer);
-      _logger.d("Create Simple User Api response: ${res.toString()})");
-      if (res["flag"]) {
-        final _uid = res['aUid'];
-        final _uname = res['aUname'];
-        _baseProvider.augmontDetail =
-            UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
-
-        _baseProvider.updateAugmontOnboarded(true);
-      } else {
-        _logger.e('Create Simple user failed.');
-        return null;
-      }
-    } catch (e) {
-      _logger.e('Query Failed $e');
-      return null;
-    }
-
-    return _baseProvider.augmontDetail;
-  }
-
   Future<AugmontRates> getRates() async {
     if (!isInit()) await _init();
 

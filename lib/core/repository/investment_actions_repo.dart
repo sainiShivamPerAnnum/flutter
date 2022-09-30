@@ -27,14 +27,14 @@ class InvestmentActionsRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      return ApiResponse(model: response, code: 200);
+      return ApiResponse(model: response['data'], code: 200);
     } catch (e) {
       _logger.e(e);
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch rates", 400);
     }
   }
-  
+
   Future<ApiResponse<bool>> withdrawlComplete({
     String tranDocId,
     double amount,

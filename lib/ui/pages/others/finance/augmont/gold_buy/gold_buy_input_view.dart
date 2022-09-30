@@ -115,79 +115,26 @@ class GoldBuyInputView extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding32,
         ),
-        if (model.augOnbRegInProgress)
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.primaryLight.withOpacity(0.5),
-            ),
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-                vertical: SizeConfig.padding12),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                "Registration in progress..",
-                style: TextStyles.body2.bold.colour(UiConstants.primaryColor),
-              ),
-            ),
-          ),
-        if (model.augRegFailed &&
-            !model.augOnbRegInProgress &&
-            model.augmontObjectSecondFetchDone)
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: Colors.red.withOpacity(0.1),
-            ),
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-                vertical: SizeConfig.padding12),
-            child: FittedBox(
-              child: RichText(
-                text: new TextSpan(
-                  children: [
-                    new TextSpan(
-                        text: 'Augmont Onboarding failed, please ',
-                        style: TextStyles.body4
-                            .colour(Colors.red.withOpacity(0.6))),
-                    new TextSpan(
-                      text: 'try again',
-                      style: TextStyles.body4.colour(Colors.red).underline,
-                      recognizer: new TapGestureRecognizer()
-                        ..onTap = () {
-                          Haptic.vibrate();
-                          model.onboardUser();
-                        },
-                    ),
-                  ],
+        augTxnService.isGoldBuyInProgress
+            ? Container(
+                height: SizeConfig.screenWidth * 0.1556,
+                alignment: Alignment.center,
+                width: SizeConfig.screenWidth * 0.7,
+                child: LinearProgressIndicator(
+                  color: UiConstants.primaryColor,
+                  backgroundColor: UiConstants.kDarkBackgroundColor,
                 ),
+              )
+            : AppPositiveBtn(
+                btnText: model.status == 2 ? 'Save' : "UNAVAILABLE",
+                onPressed: () async {
+                  if (!augTxnService.isGoldBuyInProgress) {
+                    FocusScope.of(context).unfocus();
+                    model.initiateBuy();
+                  }
+                },
+                width: SizeConfig.screenWidth * 0.813,
               ),
-            ),
-          ),
-        if (!model.augOnbRegInProgress && !model.augRegFailed)
-          augTxnService.isGoldBuyInProgress
-              ? Container(
-                  height: SizeConfig.screenWidth * 0.1556,
-                  alignment: Alignment.center,
-                  width: SizeConfig.screenWidth * 0.7,
-                  child: LinearProgressIndicator(
-                    color: UiConstants.primaryColor,
-                    backgroundColor: UiConstants.kDarkBackgroundColor,
-                  ),
-                )
-              : AppPositiveBtn(
-                  btnText: model.status == 2
-                      ? 'Save'
-                      : (model.status == 0 ? "UNAVAILABLE" : "REGISTER"),
-                  onPressed: () async {
-                    if (!augTxnService.isGoldBuyInProgress) {
-                      FocusScope.of(context).unfocus();
-                      model.initiateBuy();
-                    }
-                  },
-                  width: SizeConfig.screenWidth * 0.813,
-                ),
         SizedBox(
           height: SizeConfig.padding24,
         ),
