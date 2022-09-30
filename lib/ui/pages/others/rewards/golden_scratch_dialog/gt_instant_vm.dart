@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -26,6 +27,7 @@ class GTInstantViewModel extends BaseViewModel {
 
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
+  final _gtRepo = locator<GoldenTicketRepository>();
   AnimationController lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
@@ -121,21 +123,10 @@ class GTInstantViewModel extends BaseViewModel {
     Haptic.vibrate();
     buttonOpacity = 1.0;
     isCardScratched = true;
-    Map<String, dynamic> _body = {
-      "uid": _userService.baseUser.uid,
-      "gtId": goldenTicket.gtId
-    };
-    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    if (await _rsaEncryption.init()) {
-      _body = _rsaEncryption.encryptRequestBody(_body);
-      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    } else {
-      _logger.e("Encrypter initialization failed!! exiting method");
-    }
+    
     try {
       _getBearerToken().then(
-        (String token) => APIService.instance
-            .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
+        (String token) => _gtRepo.redeemReward(goldenTicket.gtId)
             .then(
           (_) {
             _userService.getUserFundWalletData();

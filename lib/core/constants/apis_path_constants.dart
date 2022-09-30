@@ -1,8 +1,4 @@
-import 'package:felloapp/util/flavor_config.dart';
-
 class ApiPath {
-  final String stage = FlavorConfig.getStage();
-
   ApiPath();
 
   //Augmont Ops
@@ -39,7 +35,7 @@ class ApiPath {
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
 
   //GT Rewards
-  get kRedeemGtReward => "/gtRewardsOps/$stage/v2/api/redeemGtReward";
+  static const kRedeemGtReward = "/gt/redeem";
 
   //Fello Coupons
   static const kFelloCoupons = "/eligible";

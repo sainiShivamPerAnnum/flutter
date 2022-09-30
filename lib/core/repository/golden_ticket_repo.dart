@@ -1,7 +1,6 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/model/user_milestone_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -34,27 +33,6 @@ class GoldenTicketRepository extends BaseRepo {
       return ApiResponse.withError("Unable to fetch ticket", 400);
     }
   }
-
-  // Future<ApiResponse<List<UserMilestone>>> fetchMilestones() async {
-  //   try {
-  //     final token = await getBearerToken();
-  //     final milestoneRespone = await APIService.instance.getData(
-  //       ApiPath.getMilestone(
-  //         this.userService.baseUser.uid,
-  //       ),
-  //       cBaseUrl: _baseUrl,
-  //       token: token,
-  //     );
-
-  //     // final miletones = UserMilestoneModel.fromJson(milestoneRespone).data;
-  //     final miletones =
-  //         UserMilestone.helper.fromMapArray(milestoneRespone["data"]);
-  //     return ApiResponse<List<UserMilestone>>(model: miletones, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     return ApiResponse.withError("Unable to fetch ticket", 400);
-  //   }
-  // }
 
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
@@ -150,6 +128,31 @@ class GoldenTicketRepository extends BaseRepo {
       logger.e(e.toString());
       return ApiResponse.withError(
           e.toString() ?? "Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> redeemReward(
+    String gtId,
+  ) async {
+    try {
+      final uid = userService.baseUser.uid;
+      final String bearer = await getBearerToken();
+
+      Map<String, dynamic> body = {"uid": uid, "gtId": gtId};
+
+      final response = await APIService.instance.postData(
+        ApiPath.kRedeemGtReward,
+        body: body,
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      final data = response['data'];
+      this.logger.d(data.toString());
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

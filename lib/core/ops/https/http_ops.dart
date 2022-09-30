@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:felloapp/util/custom_logger.dart';
 
 class HttpModel extends ChangeNotifier {
   final _userService = locator<UserService>();
@@ -75,62 +73,6 @@ class HttpModel extends ChangeNotifier {
     } catch (e) {
       logger.e('Http post failed: ' + e.toString());
       return false;
-    }
-  }
-
-  //amount must be integer
-  //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
-  Future<Map<String, dynamic>> generateRzpOrderId(double amount, String userId,
-      String txnId, String notes, String noteDetails) async {
-    String amx = (amount * 100).round().toString();
-    String _stage = FlavorConfig.instance.values.razorpayStage.value();
-    Map<String, dynamic> queryMap = {'amount': amx};
-    if (userId != null && userId.isNotEmpty)
-      queryMap['uid'] = Uri.encodeComponent(userId);
-    if (txnId != null && txnId.isNotEmpty)
-      queryMap['txnid'] = Uri.encodeComponent(txnId);
-    if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
-    if (noteDetails != null)
-      queryMap['notes_detail'] = Uri.encodeComponent(noteDetails);
-
-    final Uri _uri =
-        Uri.https(US_BASE_URI, '/razorpayops/$_stage/api/orderid', queryMap);
-    logger.d('URL: $_uri');
-
-    String _bearer = await getBearerToken();
-    try {
-      http.Response response = await http.get(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
-      logger.d(response.body);
-      Map<String, dynamic> parsed = jsonDecode(response.body);
-      //logger.d(parsed);
-      return parsed;
-    } catch (e) {
-      logger.e('Http post failed: ' + e.toString());
-      return null;
-    }
-  }
-
-  Future<Map<String, dynamic>> generateRzpSignature(
-      String orderId, String paymentId) async {
-    String _stage = FlavorConfig.instance.values.razorpayStage.value();
-    final Uri _uri = Uri.https(
-        US_BASE_URI,
-        '/razorpayops/$_stage/api/signature',
-        {'orderid': orderId, 'payid': paymentId});
-    logger.d('URL: $_uri');
-
-    String _bearer = await getBearerToken();
-    try {
-      http.Response response = await http.get(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
-      logger.d(response.body);
-      Map<String, dynamic> parsed = jsonDecode(response.body);
-      //logger.d(parsed);
-      return parsed;
-    } catch (e) {
-      logger.e('Http post failed: ' + e.toString());
-      return null;
     }
   }
 
@@ -209,172 +151,5 @@ class HttpModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> isPanRegistered(String pan) async {
-    //build request
-    final Uri _uri =
-        Uri.https(ASIA_BASE_URI, '/userSearch/$_stage/api/ispanregd');
-    String _bearer = await getBearerToken();
-    var headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
-    };
-    var request = http.Request('POST', _uri);
-    request.bodyFields = {'pan': pan};
-    request.headers.addAll(headers);
-    try {
-      http.StreamedResponse _response = await request.send();
-      if (_response.statusCode == 200) {
-        try {
-          Map<String, dynamic> parsed =
-              jsonDecode(await _response.stream.bytesToString());
-          return (parsed != null && parsed['flag'] != null && parsed['flag']);
-        } catch (err) {
-          logger.e('Failed to parse pan regd booleand field');
-          return false;
-        }
-      } else {
-        logger.e("Response code: ${_response.statusCode}");
-        return false;
-      }
-    } catch (e) {
-      logger.e('Http post failed: ' + e.toString());
-      return false;
-    }
-  }
 
-  ///encrypt text - used for pan
-  Future<String> encryptText(String encText, int encVersion) async {
-    //build request
-    final Uri _uri =
-        Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/encrypt');
-    String _bearer = await getBearerToken();
-    var headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
-    };
-    var request = http.Request('POST', _uri);
-    request.bodyFields = {'etext': encText, 'eversion': encVersion.toString()};
-    request.headers.addAll(headers);
-
-    try {
-      http.StreamedResponse _response = await request.send();
-      if (_response.statusCode == 200) {
-        try {
-          Map<String, dynamic> parsed =
-              jsonDecode(await _response.stream.bytesToString());
-          String resText = (parsed != null) ? parsed['value'] : '';
-          return (resText != null) ? resText : '';
-        } catch (err) {
-          logger.e('Failed to encryption $err');
-          return '';
-        }
-      } else {
-        return '';
-      }
-    } catch (e) {
-      logger.e('Http GET failed: ' + e.toString());
-      return '';
-    }
-  }
-
-  ///decrypt text - used for pan
-  Future<String> decryptText(String decText, int decVersion) async {
-    //build request
-    final Uri _uri =
-        Uri.https(ASIA_BASE_URI, '/encoderops/$_stage/api/decrypt');
-    String _bearer = await getBearerToken();
-    var headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      HttpHeaders.authorizationHeader: 'Bearer $_bearer'
-    };
-    var request = http.Request('POST', _uri);
-    request.bodyFields = {'dtext': decText, 'dversion': decVersion.toString()};
-    request.headers.addAll(headers);
-
-    try {
-      http.StreamedResponse _response = await request.send();
-      if (_response.statusCode == 200) {
-        try {
-          Map<String, dynamic> parsed =
-              jsonDecode(await _response.stream.bytesToString());
-          String resText = (parsed != null) ? parsed['value'] : '';
-          return (resText != null) ? resText : '';
-        } catch (err) {
-          logger.e('Failed to decryption $err');
-          return '';
-        }
-      } else {
-        return '';
-      }
-    } catch (e) {
-      logger.e('Http GET failed: ' + e.toString());
-      return '';
-    }
-  }
-
-  ///Returns:
-  ///{flag: B,
-  ///count: X,
-  ///fail_msg: Y}
-  Future<Map<String, dynamic>> postGoldenTicketRedemption(
-      String userId, String goldenTicketId) async {
-    try {
-      Uri _uri = Uri.https(
-          ASIA_BASE_URI,
-          '/goldenTicketOps/$_stage/api/redeemGoldenTicket',
-          {'userId': userId, 'gtId': goldenTicketId});
-      //post request
-      String _bearer = await getBearerToken();
-      http.Response _response = await http.post(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $_bearer'});
-      logger.d(_response.body);
-      if (_response.statusCode == 200) {
-        //redemption successful
-        try {
-          Map<String, dynamic> parsed = jsonDecode(_response.body);
-          if (parsed != null &&
-              parsed['gflc_count'] != null &&
-              parsed['gamt_win'] != null) {
-            try {
-              logger.d(parsed['gflc_count'].toString());
-              logger.d(parsed['gamt_win'].toString());
-              int goldenTckRewardCount = BaseUtil.toInt(parsed['gflc_count']);
-              int goldenTckRewardAmt = BaseUtil.toInt(parsed['gamt_win']);
-              return {
-                'flag': true,
-                'count': goldenTckRewardCount,
-                'amt': goldenTckRewardAmt
-              };
-            } catch (ee) {
-              logger.e('$ee');
-            }
-          }
-        } catch (err) {
-          logger.e('Failed to parse ticket update count');
-          logger.e('$err');
-        }
-      } else {
-        try {
-          Map<String, dynamic> parsed = jsonDecode(_response.body);
-          if (parsed != null && parsed['msg'] != null) {
-            try {
-              logger.d(parsed['msg'].toString());
-              return {'flag': false, 'fail_msg': parsed['msg']};
-            } catch (ee) {
-              return {
-                'flag': false,
-                'fail_msg': 'Your ticket could not be redeemed'
-              };
-            }
-          }
-        } catch (err) {
-          logger.e('Failed to parse ticket update count');
-          logger.e('$err');
-        }
-      }
-    } catch (e) {
-      logger.e('Http post failed: ' + e.toString());
-    }
-    return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
-  }
 }

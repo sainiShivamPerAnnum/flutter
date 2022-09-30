@@ -4,6 +4,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -24,13 +25,14 @@ class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
   bool _isShareLoading = false;
-  GoldenTicketService _gtService = new GoldenTicketService();
   final _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
 
   final _rsaEncryption = new RSAEncryption();
+  final _gtRepo = locator<GoldenTicketRepository>();
+
   // bool _isTicketRedeemedSuccessfully = true;
 
   // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
@@ -91,22 +93,8 @@ class GTDetailedViewModel extends BaseViewModel {
   }
 
   Future<bool> redeemTicket(GoldenTicket ticket) async {
-    Map<String, dynamic> _body = {
-      "uid": _userService.baseUser.uid,
-      "gtId": ticket.gtId
-    };
-    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    if (await _rsaEncryption.init()) {
-      _body = _rsaEncryption.encryptRequestBody(_body);
-      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    } else {
-      _logger.e("Encrypter initialization failed!! exiting method");
-    }
     try {
-      final String _bearer = await _getBearerToken();
-      final _apiResponse = await APIService.instance
-          .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
-      _logger.d(_apiResponse.toString());
+      await _gtRepo.redeemReward(ticket.gtId);
       _userService.getUserFundWalletData();
       _userCoinService.getUserCoinBalance();
       return true;
