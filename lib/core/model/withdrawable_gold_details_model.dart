@@ -89,9 +89,9 @@ class WithdrawableGoldDetails {
 
   factory WithdrawableGoldDetails.fromMap(Map<String, dynamic> map) {
     return WithdrawableGoldDetails(
-      quantity: map['quantity'] as double,
-      lockedQuantity: map['lockedQuantity'] as double,
-      balance: map['balance'] as double,
+      quantity: map['quantity'].toDouble(),
+      lockedQuantity: map['lockedQuantity'].toDouble(),
+      balance: map['balance'].toDouble(),
     );
   }
 

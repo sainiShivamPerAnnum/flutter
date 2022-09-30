@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_car
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
@@ -117,31 +118,7 @@ class TambolaHomeView extends StatelessWidget {
   Widget buildCards(TambolaHomeViewModel model) {
     Widget _widget;
     if (!model.weeklyTicksFetched || !model.weeklyDrawFetched) {
-      _widget = Padding(
-        //Loader
-        padding: EdgeInsets.all(10),
-        child: Container(
-          width: double.infinity,
-          height: SizeConfig.screenWidth * 0.73,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SpinKitWave(
-                  color: UiConstants.primaryColor,
-                ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-                Text(
-                  "Please wait while we fetch your best tickets!",
-                  style: TextStyles.sourceSans.body3.colour(Colors.white),
-                )
-              ],
-            ),
-          ),
-        ),
-      );
+      _widget = SizedBox();
     } else if (model.userWeeklyBoards == null ||
         model.activeTambolaCardCount == 0) {
       _widget = Padding(
@@ -149,50 +126,46 @@ class TambolaHomeView extends StatelessWidget {
         child: Container(
           width: double.infinity,
           child: Center(
-            child: (model.ticketsBeingGenerated)
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth * 0.8,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryColor.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: FractionallySizedBox(
-                          heightFactor: 1,
-                          widthFactor: model
-                                      .tambolaService.ticketGenerateCount ==
-                                  model.tambolaService
-                                      .atomicTicketGenerationLeftCount
-                              ? 0.1
-                              : (model.tambolaService.ticketGenerateCount -
-                                      model.tambolaService
-                                          .atomicTicketGenerationLeftCount) /
-                                  model.tambolaService.ticketGenerateCount,
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: UiConstants.primaryColor,
-                              borderRadius: BorderRadius.circular(100),
+              child: (model.ticketsBeingGenerated)
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.8,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: UiConstants.primaryColor.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: FractionallySizedBox(
+                            heightFactor: 1,
+                            widthFactor: model
+                                        .tambolaService.ticketGenerateCount ==
+                                    model.tambolaService
+                                        .atomicTicketGenerationLeftCount
+                                ? 0.1
+                                : (model.tambolaService.ticketGenerateCount -
+                                        model.tambolaService
+                                            .atomicTicketGenerationLeftCount) /
+                                    model.tambolaService.ticketGenerateCount,
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: UiConstants.primaryColor,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                        style: TextStyles.rajdhani.body2.colour(Colors.white),
-                      ),
-                    ],
-                  )
-                : NoRecordDisplayWidget(
-                    assetSvg: Assets.noTickets,
-                    text: "You do not have any Tambola tickets",
-                  ),
-          ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
+                          style: TextStyles.rajdhani.body2.colour(Colors.white),
+                        ),
+                      ],
+                    )
+                  : SizedBox()),
         ),
       );
 
@@ -928,9 +901,7 @@ class ListLoader extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: SizeConfig.screenHeight * 0.1),
-        SpinKitWave(
-          color: UiConstants.primaryColor,
-        ),
+        FullScreenLoader(size: SizeConfig.padding80),
         if (bottomPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
       ],
     );
@@ -1030,9 +1001,7 @@ class TambolaLeaderBoard extends StatelessWidget {
               ? Center(
                   child: Column(
                     children: [
-                      SpinKitWave(
-                        color: UiConstants.primaryColor,
-                      ),
+                      FullScreenLoader(size: SizeConfig.padding80),
                       SizedBox(
                         height: SizeConfig.padding16,
                       ),
@@ -1052,7 +1021,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                       width: SizeConfig.screenWidth,
                       child: NoRecordDisplayWidget(
                         topPadding: false,
-                        asset: "images/leaderboard.png",
+                        assetSvg: Assets.noWinnersAsset,
                         text: "Leaderboard will be updated soon",
                       ),
                     )
@@ -1257,8 +1226,8 @@ class TambolaPrize extends StatelessWidget {
                     ? Center(
                         child: Column(
                           children: [
-                            SpinKitWave(
-                              color: UiConstants.primaryColor,
+                            FullScreenLoader(
+                              size: SizeConfig.padding80,
                             ),
                             SizedBox(
                               height: SizeConfig.padding16,

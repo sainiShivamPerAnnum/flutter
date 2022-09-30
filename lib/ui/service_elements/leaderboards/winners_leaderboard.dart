@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -152,10 +153,9 @@ class WinnerboardView extends StatelessWidget {
                                 color: Colors.transparent,
                                 alignment: Alignment.center,
                                 width: SizeConfig.screenWidth,
-                                child: SpinKitWave(
-                                  color: UiConstants.primaryColor,
-                                ),
-                              )
+                                child: FullScreenLoader(
+                                  size: SizeConfig.padding80,
+                                ))
                             : (model.winners.isEmpty
                                 ? Container(
                                     margin: EdgeInsets.symmetric(
@@ -165,7 +165,7 @@ class WinnerboardView extends StatelessWidget {
                                     width: SizeConfig.screenWidth,
                                     child: NoRecordDisplayWidget(
                                       topPadding: false,
-                                      asset: "images/leaderboard.png",
+                                      asset: Assets.noWinnersAsset,
                                       text: "Leaderboard will be updated soon",
                                     ),
                                   )

@@ -31,7 +31,7 @@ class TambolaCard extends StatelessWidget {
           );
         },
         child: Container(
-          height: SizeConfig.screenWidth * 0.9,
+          height: SizeConfig.screenWidth * 0.94,
           margin: EdgeInsets.only(
               right: SizeConfig.pageHorizontalMargins,
               top: SizeConfig.pageHorizontalMargins / 2,
@@ -48,77 +48,70 @@ class TambolaCard extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: Transform.translate(
-                  offset: Offset(0, -SizeConfig.padding10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Transform.scale(
-                        scale: 1.2,
-                        child: SvgPicture.asset(
-                          Assets.tambolaCardAsset,
-                          width: SizeConfig.screenWidth * 0.5,
-                        ),
-                      ),
-                      Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.padding2,
-                                top: SizeConfig.padding3),
-                            child: Text(
-                              "Tambola",
-                              style: TextStyles.rajdhaniEB.title50
-                                  .colour(UiConstants.kBlogCardRandomColor2),
-                            ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.tambolaCardAsset,
+                      width: SizeConfig.screenWidth * 0.5,
+                    ),
+                    Stack(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: SizeConfig.padding2,
+                              top: SizeConfig.padding3),
+                          child: Text(
+                            "Tambola",
+                            style: TextStyles.rajdhaniEB.title50
+                                .colour(UiConstants.kBlogCardRandomColor2),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.padding1,
-                                top: SizeConfig.padding2),
-                            child: Text(
-                              "Tambola",
-                              style: TextStyles.rajdhaniEB.title50
-                                  .colour(UiConstants.kTambolaMidTextColor),
-                            ),
-                          ),
-                          Container(
-                            child: Text(
-                              "Tambola",
-                              style: TextStyles.rajdhaniEB.title50.colour(
-                                  UiConstants.kWinnerPlayerPrimaryColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "Play and Win rewards",
-                        style: TextStyles.sourceSans.body3.bold
-                            .colour(UiConstants.kBlogCardRandomColor2),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding12,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.screenWidth * 0.2,
-                        child: CurrentPicks(
-                          dailyPicksCount: model.dailyPicksCount ?? 3,
-                          todaysPicks: model.todaysPicks != null
-                              ? model.todaysPicks
-                              : List.generate(
-                                  model.dailyPicksCount ?? 3, (index) => 0),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: SizeConfig.padding8),
-                        child: Text(
-                          "Next draw at 6 PM",
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: SizeConfig.padding1,
+                              top: SizeConfig.padding2),
+                          child: Text(
+                            "Tambola",
+                            style: TextStyles.rajdhaniEB.title50
+                                .colour(UiConstants.kTambolaMidTextColor),
+                          ),
                         ),
+                        Container(
+                          child: Text(
+                            "Tambola",
+                            style: TextStyles.rajdhaniEB.title50
+                                .colour(UiConstants.kWinnerPlayerPrimaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "Play and Win rewards",
+                      style: TextStyles.sourceSans.body3.bold
+                          .colour(UiConstants.kBlogCardRandomColor2),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenWidth * 0.2,
+                      child: CurrentPicks(
+                        dailyPicksCount: model.dailyPicksCount ?? 3,
+                        todaysPicks: model.todaysPicks != null
+                            ? model.todaysPicks
+                            : List.generate(
+                                model.dailyPicksCount ?? 3, (index) => 0),
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: SizeConfig.padding8),
+                      child: Text(
+                        "Next draw at 6 PM",
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Align(

@@ -22,90 +22,117 @@ class LendboxWithdrawalInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
+    return Stack(
       children: [
-        SizedBox(height: SizeConfig.padding16),
-        LendboxAppBar(
-          isEnabled: !model.inProgress,
-        ),
-        SizedBox(height: SizeConfig.padding32),
-        if (model.processingQty > 0)
-          SellCardInfoStrips(
-            leadingIcon: Row(
-              children: [
-                Icon(
-                  Icons.warning_amber_rounded,
-                  color: UiConstants.kTextColor,
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                LendboxProcessingValue(
-                  style: TextStyles.sourceSans.body4.colour(
-                    UiConstants.kTextColor2,
-                  ),
-                ),
-              ],
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(height: SizeConfig.padding16),
+            LendboxAppBar(
+              isEnabled: !model.inProgress,
             ),
-            content: '  amount is processing',
-          ),
-        SizedBox(height: SizeConfig.padding32),
-        AmountInputView(
-          amountController: model.amountController,
-          chipAmounts: [],
-          isEnabled: !model.inProgress,
-          maxAmount: model.withdrawableQty,
-          maxAmountMsg: "You can't withdraw more than available balance",
-          minAmount: model.minAmount,
-          minAmountMsg: "how are you gonna withdraw less than 1?",
-          notice: model.buyNotice,
-          bestChipIndex: 1,
-          onAmountChange: (int amount) {},
-        ),
-        Spacer(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Withdrawable Balance',
-                style:
-                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
-              ),
-              UserFundQuantitySE(
-                style: TextStyles.sourceSansSB.body0.colour(
-                  UiConstants.kTextColor,
+            SizedBox(height: SizeConfig.padding32),
+            if (model.processingQty > 0)
+              SellCardInfoStrips(
+                leadingIcon: Row(
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: UiConstants.kTextColor,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    LendboxProcessingValue(
+                      style: TextStyles.sourceSans.body4.colour(
+                        UiConstants.kTextColor2,
+                      ),
+                    ),
+                  ],
                 ),
-                investmentType: InvestmentType.LENDBOXP2P,
+                content: '  amount is processing',
               ),
-            ],
+            SizedBox(height: SizeConfig.padding32),
+            AmountInputView(
+              amountController: model.amountController,
+              focusNode: model.fieldNode,
+              chipAmounts: [],
+              isEnabled: !model.inProgress,
+              maxAmount: model.withdrawableQty,
+              maxAmountMsg: "You can't withdraw more than available balance",
+              minAmount: model.minAmount,
+              minAmountMsg: "how are you gonna withdraw less than 1?",
+              notice: model.buyNotice,
+              bestChipIndex: 1,
+              onAmountChange: (int amount) {},
+            ),
+            Spacer(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Withdrawable Balance',
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                  UserFundQuantitySE(
+                    style: TextStyles.sourceSansSB.body0.colour(
+                      UiConstants.kTextColor,
+                    ),
+                    investmentType: InvestmentType.LENDBOXP2P,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            model.inProgress
+                ? SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 20,
+                  )
+                : AppPositiveBtn(
+                    btnText: 'WITHDRAW',
+                    onPressed: () async {
+                      if (!model.inProgress) {
+                        FocusScope.of(context).unfocus();
+                        model.initiateWithdraw();
+                      }
+                    },
+                    width: SizeConfig.screenWidth * 0.813,
+                  ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+          ],
+        ),
+        if (MediaQuery.of(context).viewInsets.bottom !=
+            SizeConfig.viewInsets.bottom)
+          Positioned(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              color: UiConstants.kArowButtonBackgroundColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () => model.fieldNode.unfocus(),
+                child: Text(
+                  'DONE',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.primaryColor),
+                ),
+              ),
+            ),
           ),
-        ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        model.inProgress
-            ? SpinKitThreeBounce(
-                color: Colors.white,
-                size: 20,
-              )
-            : AppPositiveBtn(
-                btnText: 'WITHDRAW',
-                onPressed: () async {
-                  if (!model.inProgress) {
-                    FocusScope.of(context).unfocus();
-                    model.initiateWithdraw();
-                  }
-                },
-                width: SizeConfig.screenWidth * 0.813,
-              ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
       ],
     );
   }

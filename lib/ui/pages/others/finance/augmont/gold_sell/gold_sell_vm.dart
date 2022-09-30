@@ -129,7 +129,7 @@ class GoldSellViewModel extends BaseViewModel {
     setUpNoticeIfAny();
     fetchGoldRates();
     await fetchLockedGoldQnt();
-    FocusScope.of(AppState.delegate.navigatorKey.currentContext).requestFocus();
+    // FocusScope.of(AppState.delegate.navigatorKey.currentContext).requestFocus();
     setState(ViewState.Idle);
   }
 
@@ -219,7 +219,7 @@ class GoldSellViewModel extends BaseViewModel {
       nonWithdrawableQnt = quantityApiResponse.model.data.lockedQuantity;
     } else {
       nonWithdrawableQnt = 0.0;
-      withdrawableQnt = 0.0;
+      withdrawableQnt = _userService.userFundWallet.augGoldQuantity;
       // return BaseUtil.showNegativeAlert("", quantityApiResponse.errorMessage);
     }
     isQntFetching = false;
@@ -265,6 +265,12 @@ class GoldSellViewModel extends BaseViewModel {
     if (sellGramAmount < 0.0001) {
       BaseUtil.showNegativeAlert(
           "Amount too low", "Please enter a greater amount");
+      return false;
+    }
+
+    if (sellGramAmount > withdrawableQnt) {
+      BaseUtil.showNegativeAlert(
+          "Please try a low amount", "Some of your gold is locked for now");
       return false;
     }
     if (goldAmountFromGrams > 50000) {

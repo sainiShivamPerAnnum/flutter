@@ -25,63 +25,91 @@ class LendboxBuyInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
+    return Stack(
       children: [
-        SizedBox(height: SizeConfig.padding16),
-        LendboxAppBar(
-          isEnabled: !model.isBuyInProgress,
-        ),
-        SizedBox(height: SizeConfig.padding32),
-        AmountInputView(
-          amountController: model.amountController,
-          chipAmounts: model.chipAmountList,
-          isEnabled: !model.isBuyInProgress,
-          maxAmount: model.maxAmount,
-          maxAmountMsg: "Up to ₹50,000 can be invested at one go.",
-          minAmount: model.minAmount,
-          minAmountMsg: "Minimum purchase amount is ₹10",
-          notice: model.buyNotice,
-          onAmountChange: (int amount) {},
-        ),
-        Spacer(),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        PropertyChangeConsumer<BankAndPanService, BankAndPanServiceProperties>(
-          properties: [
-            BankAndPanServiceProperties.kycVerified,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(height: SizeConfig.padding16),
+            LendboxAppBar(
+              isEnabled: !model.isBuyInProgress,
+            ),
+            SizedBox(height: SizeConfig.padding32),
+            AmountInputView(
+              amountController: model.amountController,
+              focusNode: model.buyFieldNode,
+              chipAmounts: model.chipAmountList,
+              isEnabled: !model.isBuyInProgress,
+              maxAmount: model.maxAmount,
+              maxAmountMsg: "Up to ₹50,000 can be invested at one go.",
+              minAmount: model.minAmount,
+              minAmountMsg: "Minimum purchase amount is ₹10",
+              notice: model.buyNotice,
+              onAmountChange: (int amount) {},
+            ),
+            Spacer(),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            PropertyChangeConsumer<BankAndPanService,
+                BankAndPanServiceProperties>(
+              properties: [
+                BankAndPanServiceProperties.kycVerified,
+              ],
+              builder: (ctx, service, child) {
+                return (!service.isKYCVerified)
+                    ? _kycWidget(model)
+                    : model.isBuyInProgress
+                        ? Container(
+                            height: SizeConfig.screenWidth * 0.1556,
+                            alignment: Alignment.center,
+                            width: SizeConfig.screenWidth * 0.7,
+                            child: LinearProgressIndicator(
+                              color: UiConstants.primaryColor,
+                              backgroundColor: UiConstants.kDarkBackgroundColor,
+                            ),
+                          )
+                        : AppPositiveBtn(
+                            btnText: 'Save',
+                            onPressed: () async {
+                              if (!model.isBuyInProgress) {
+                                FocusScope.of(context).unfocus();
+                                model.initiateBuy();
+                              }
+                            },
+                            width: SizeConfig.screenWidth * 0.813,
+                          );
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
           ],
-          builder: (ctx, service, child) {
-            return (!service.isKYCVerified)
-                ? _kycWidget(model)
-                : model.isBuyInProgress
-                    ? Container(
-                        height: SizeConfig.screenWidth * 0.1556,
-                        alignment: Alignment.center,
-                        width: SizeConfig.screenWidth * 0.7,
-                        child: LinearProgressIndicator(
-                          color: UiConstants.primaryColor,
-                          backgroundColor: UiConstants.kDarkBackgroundColor,
-                        ),
-                      )
-                    : AppPositiveBtn(
-                        btnText: 'Save',
-                        onPressed: () async {
-                          if (!model.isBuyInProgress) {
-                            FocusScope.of(context).unfocus();
-                            model.initiateBuy();
-                          }
-                        },
-                        width: SizeConfig.screenWidth * 0.813,
-                      );
-          },
         ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
+        if (MediaQuery.of(context).viewInsets.bottom !=
+            SizeConfig.viewInsets.bottom)
+          Positioned(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              color: UiConstants.kArowButtonBackgroundColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () => model.buyFieldNode.unfocus(),
+                child: Text(
+                  'DONE',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.primaryColor),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

@@ -16,6 +16,7 @@ class AmountInputView extends StatefulWidget {
   final double minAmount;
   final String maxAmountMsg;
   final String minAmountMsg;
+  final FocusNode focusNode;
   final Function(int val) onAmountChange;
 
   const AmountInputView({
@@ -28,6 +29,7 @@ class AmountInputView extends StatefulWidget {
     @required this.minAmount,
     @required this.maxAmountMsg,
     @required this.minAmountMsg,
+    @required this.focusNode,
     this.bestChipIndex = 1,
     this.notice,
   }) : super(key: key);
@@ -101,6 +103,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     width: _fieldWidth,
                     child: TextFormField(
                       controller: widget.amountController,
+                      focusNode: widget.focusNode,
                       enabled: widget.isEnabled,
                       validator: (val) {
                         return null;

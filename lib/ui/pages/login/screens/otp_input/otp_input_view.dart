@@ -53,13 +53,17 @@ class LoginOtpViewState extends State<LoginOtpView> {
         model.init(context);
       },
       builder: (ctx, model, child) {
-        return Column(
+        return ListView(
+          shrinkWrap: true,
           children: [
             SizedBox(height: SizeConfig.padding80),
             SignupHeroAsset(asset: Assets.flatIsland),
-            Text(
-              'Verify OTP',
-              style: TextStyles.rajdhaniB.title2,
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Verify OTP',
+                style: TextStyles.rajdhaniB.title2,
+              ),
             ),
             SizedBox(height: SizeConfig.padding32),
             //input

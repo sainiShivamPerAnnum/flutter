@@ -59,35 +59,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               NewSquareBackground(
                   backgroundColor: UiConstants
                       .kRechargeModalSheetAmountSectionBackgroundColor),
-              // if (model.currentPage == 1 || model.currentPage == 0)
-              // Positioned(
-              //   top: 0,
-              //   child: Container(
-              //     height: SizeConfig.screenHeight * 0.5,
-              //     width: SizeConfig.screenWidth,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //         begin: Alignment.topCenter,
-              //         end: Alignment.bottomCenter,
-              //         colors: [
-              //           Color(0xFF135756),
-              //           UiConstants.kBackgroundColor,
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // if (model.currentPage == 2)
-              //   Positioned(
-              //     top: 0,
-              //     child: CustomPaint(
-              //       painter: HeaderPainter(),
-              //       size: Size(
-              //         SizeConfig.screenWidth,
-              //         SizeConfig.screenWidth * 0.74,
-              //       ),
-              //     ),
-              //   ),
+
               SingleChildScrollView(
                 reverse: true,
                 child: Column(

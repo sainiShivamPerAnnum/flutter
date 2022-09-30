@@ -247,7 +247,7 @@ class GoldBuyViewModel extends BaseViewModel {
   //2 Basic Checks
   Future<bool> initChecks() async {
     if (status == STATUS_UNAVAILABLE) return false;
-  
+
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
           'Gold Rates Unavailable', 'Please try again in sometime');

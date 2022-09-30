@@ -143,7 +143,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                         vertical: SizeConfig.padding24),
                                     child: NoRecordDisplayWidget(
                                       topPadding: false,
-                                      asset: "images/leaderboard.png",
+                                      assetSvg: Assets.noReferalAsset,
                                       text:
                                           "Referral Leaderboard will be updated soon",
                                     ),

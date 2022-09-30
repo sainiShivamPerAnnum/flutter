@@ -32,112 +32,140 @@ class GoldBuyInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
+    return Stack(
       children: [
-        SizedBox(height: SizeConfig.padding16),
-        RechargeModalSheetAppBar(txnService: augTxnService),
-        SizedBox(height: SizeConfig.padding32),
-        EnterAmountView(
-          model: model,
-          txnService: augTxnService,
-        ),
-        Spacer(),
-        if (model.showCoupons)
-          model.couponApplyInProgress
-              ? SpinKitThreeBounce(
-                  size: SizeConfig.body2,
-                  color: UiConstants.kTabBorderColor,
-                )
-              : model.appliedCoupon != null
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          Assets.ticketTilted,
-                          width: SizeConfig.iconSize0,
-                          height: SizeConfig.iconSize0,
-                          color: UiConstants.kpurpleTicketColor,
-                        ),
-                        SizedBox(width: SizeConfig.padding10),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding8),
-                          child: Text(
-                            model.appliedCoupon.code,
-                            style: TextStyles.sourceSansSB.body2,
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig.padding4),
-                        Text(
-                          "applied",
-                          style: TextStyles.sourceSans.body3.setOpecity(0.6),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding8,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            if (augTxnService.isGoldBuyInProgress) return;
-                            model.appliedCoupon = null;
-                          },
-                          child: Icon(Icons.cancel,
-                              color: Colors.grey, size: SizeConfig.iconSize1),
-                        ),
-                      ],
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(height: SizeConfig.padding16),
+            RechargeModalSheetAppBar(txnService: augTxnService),
+            SizedBox(height: SizeConfig.padding32),
+            EnterAmountView(
+              model: model,
+              txnService: augTxnService,
+            ),
+            Spacer(),
+            if (model.showCoupons)
+              model.couponApplyInProgress
+                  ? SpinKitThreeBounce(
+                      size: SizeConfig.body2,
+                      color: UiConstants.kTabBorderColor,
                     )
-                  : augTxnService.isGoldBuyInProgress
-                      ? SizedBox()
-                      : GestureDetector(
-                          onTap: () => model.showOfferModal(model),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                Assets.ticketTilted,
-                                width: SizeConfig.iconSize0,
-                                height: SizeConfig.iconSize0,
+                  : model.appliedCoupon != null
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              Assets.ticketTilted,
+                              width: SizeConfig.iconSize0,
+                              height: SizeConfig.iconSize0,
+                              color: UiConstants.kpurpleTicketColor,
+                            ),
+                            SizedBox(width: SizeConfig.padding10),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding8),
+                              child: Text(
+                                model.appliedCoupon.code,
+                                style: TextStyles.sourceSansSB.body2,
                               ),
-                              SizedBox(
-                                width: SizeConfig.padding8,
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            Text(
+                              "applied",
+                              style:
+                                  TextStyles.sourceSans.body3.setOpecity(0.6),
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding8,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (augTxnService.isGoldBuyInProgress) return;
+                                model.appliedCoupon = null;
+                              },
+                              child: Icon(Icons.cancel,
+                                  color: Colors.grey,
+                                  size: SizeConfig.iconSize1),
+                            ),
+                          ],
+                        )
+                      : augTxnService.isGoldBuyInProgress
+                          ? SizedBox()
+                          : GestureDetector(
+                              onTap: () => model.showOfferModal(model),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    Assets.ticketTilted,
+                                    width: SizeConfig.iconSize0,
+                                    height: SizeConfig.iconSize0,
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding8,
+                                  ),
+                                  Text(
+                                    'Apply a coupon code',
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.kPrimaryColor),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                'Apply a coupon code',
-                                style: TextStyles.sourceSans.body2
-                                    .colour(UiConstants.kPrimaryColor),
-                              ),
-                            ],
-                          ),
-                        ),
-        SizedBox(
-          height: SizeConfig.padding32,
+                            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            augTxnService.isGoldBuyInProgress
+                ? Container(
+                    height: SizeConfig.screenWidth * 0.1556,
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth * 0.7,
+                    child: LinearProgressIndicator(
+                      color: UiConstants.primaryColor,
+                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    ),
+                  )
+                : AppPositiveBtn(
+                    btnText: model.status == 2 ? 'Save' : "UNAVAILABLE",
+                    onPressed: () async {
+                      if (!augTxnService.isGoldBuyInProgress) {
+                        FocusScope.of(context).unfocus();
+                        model.initiateBuy();
+                      }
+                    },
+                    width: SizeConfig.screenWidth * 0.813,
+                  ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+          ],
         ),
-        augTxnService.isGoldBuyInProgress
-            ? Container(
-                height: SizeConfig.screenWidth * 0.1556,
-                alignment: Alignment.center,
-                width: SizeConfig.screenWidth * 0.7,
-                child: LinearProgressIndicator(
-                  color: UiConstants.primaryColor,
-                  backgroundColor: UiConstants.kDarkBackgroundColor,
-                ),
-              )
-            : AppPositiveBtn(
-                btnText: model.status == 2 ? 'Save' : "UNAVAILABLE",
-                onPressed: () async {
-                  if (!augTxnService.isGoldBuyInProgress) {
-                    FocusScope.of(context).unfocus();
-                    model.initiateBuy();
-                  }
-                },
-                width: SizeConfig.screenWidth * 0.813,
+        if (MediaQuery.of(context).viewInsets.bottom !=
+            SizeConfig.viewInsets.bottom)
+          Positioned(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              color: UiConstants.kArowButtonBackgroundColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
               ),
-        SizedBox(
-          height: SizeConfig.padding24,
-        ),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () => model.buyFieldNode.unfocus(),
+                child: Text(
+                  'DONE',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.primaryColor),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

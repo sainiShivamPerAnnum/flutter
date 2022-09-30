@@ -83,7 +83,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                     : model.activeSubscription == null
                         ? Center(
                             child: NoRecordDisplayWidget(
-                              assetLottie: Assets.noData,
+                              assetSvg: Assets.noTransactionAsset,
                               text: "No Autosave Details available",
                             ),
                           )
@@ -115,11 +115,9 @@ class UserAutosaveDetailsView extends StatelessWidget {
                               ),
                               model.filteredList == null
                                   ? Center(
-                                      child: SpinKitWave(
-                                        color: UiConstants.primaryColor,
-                                        size: SizeConfig.padding32,
-                                      ),
-                                    )
+                                      child: FullScreenLoader(
+                                      size: SizeConfig.padding80,
+                                    ))
                                   : model.filteredList?.length == 0
                                       ? Center(
                                           child: NoTransactionsContent(
