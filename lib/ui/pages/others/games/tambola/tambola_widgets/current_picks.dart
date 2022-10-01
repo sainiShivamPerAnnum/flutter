@@ -156,7 +156,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
       randomList.add(random.nextInt(99));
     }
 
-    if (tabIndex == 1 && isAnimationDone == false) {
+    if (tabIndex == 2 && isAnimationDone == false) {
       Future.delayed(const Duration(milliseconds: 500), () {
         _scrollDown();
       });
