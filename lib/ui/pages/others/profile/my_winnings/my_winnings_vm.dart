@@ -74,7 +74,7 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   getWinningHistory() async {
-    isWinningHistoryLoading = true;
+    _isWinningHistoryLoading = true;
     ApiResponse<List<UserTransaction>> temp =
         await userRepo.getWinningHistory(_userService.baseUser.uid);
     temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));

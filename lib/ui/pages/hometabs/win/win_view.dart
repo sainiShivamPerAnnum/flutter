@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
+import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -159,7 +160,7 @@ class Win extends StatelessWidget {
                                     children: [
                                       SvgPicture.asset(
                                           Assets.unredemmedGoldenTicketBG,
-                                          height: SizeConfig.padding38),
+                                          height: SizeConfig.padding32),
                                       SizedBox(
                                         width: SizeConfig.padding8,
                                       ),
@@ -172,32 +173,14 @@ class Win extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      model.unscratchedGTCount != 0
-                                          ? Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.white,
-                                                    width: 0.5),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    SizeConfig.padding12,
-                                                vertical: SizeConfig.padding10,
-                                              ),
-                                              child: Text(
-                                                  "${model.unscratchedGTCount} New"),
-                                            )
-                                          : Text(
-                                              'See All',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(Colors.white),
-                                            ),
+                                      // UnscratchedGTCountChip(),
                                       SizedBox(
                                         width: SizeConfig.padding10,
                                       ),
                                       Icon(
                                         Icons.arrow_forward_ios,
                                         color: Colors.white,
+                                        size: SizeConfig.padding24,
                                       )
                                     ],
                                   )

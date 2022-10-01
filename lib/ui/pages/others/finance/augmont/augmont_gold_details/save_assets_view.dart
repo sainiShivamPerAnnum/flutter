@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -39,45 +40,64 @@ class SaveAssetView extends StatelessWidget {
               onRefresh: () async {
                 model.refreshTransactions(InvestmentType.AUGGOLD99);
               },
-              child: SingleChildScrollView(
-                physics: ClampingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: UiConstants.kBackgroundColor,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GoldAssetCard(),
-                          SizedBox(
-                            height: SizeConfig.padding24,
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    physics: ClampingScrollPhysics(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: UiConstants.kBackgroundColor,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GoldAssetCard(),
+                              SizedBox(
+                                height: SizeConfig.padding24,
+                              ),
+                              // -- Break --
+                              AutosaveCard(),
+                              MiniTransactionCard(
+                                investmentType: InvestmentType.AUGGOLD99,
+                              ),
+                            ],
                           ),
-                          // -- Break --
-                          AutosaveCard(),
-                          MiniTransactionCard(
-                            investmentType: InvestmentType.AUGGOLD99,
-                          ),
-                        ],
+                        ),
+                        SellCardView(
+                          investmentType: InvestmentType.AUGGOLD99,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding24),
+                          child: FAQCardView(
+                              category: 'digital_gold',
+                              bgColor: UiConstants.kDarkBackgroundColor),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenWidth * 0.4,
+                        )
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      color: UiConstants.kBackgroundColor,
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: AppPositiveBtn(
+                        btnText: "SAVE",
+                        width: SizeConfig.screenWidth -
+                            SizeConfig.pageHorizontalMargins * 2,
+                        onPressed: () => BaseUtil().openRechargeModalSheet(
+                            investmentType: InvestmentType.AUGGOLD99),
                       ),
                     ),
-                    SellCardView(
-                      investmentType: InvestmentType.AUGGOLD99,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding24),
-                      child: FAQCardView(
-                          category: 'digital_gold',
-                          bgColor: UiConstants.kDarkBackgroundColor),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.screenWidth * 0.2,
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),
@@ -96,7 +116,7 @@ class GoldAssetCard extends StatelessWidget {
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness32),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         color: UiConstants.kSaveDigitalGoldCardBg,
       ),
       padding: EdgeInsets.fromLTRB(
@@ -105,17 +125,22 @@ class GoldAssetCard extends StatelessWidget {
           SizeConfig.pageHorizontalMargins,
           SizeConfig.pageHorizontalMargins),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Image.asset(
-            Assets.digitalGoldBar,
-            height: SizeConfig.screenWidth * 0.32,
-            width: SizeConfig.screenWidth * 0.32,
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.rotationY(math.pi),
+            child: Image.asset(
+              Assets.digitalGoldBar,
+              height: SizeConfig.screenWidth * 0.32,
+              width: SizeConfig.screenWidth * 0.32,
+            ),
           ),
           Column(
             children: [
               Row(
                 children: [
-                  SizedBox(width: SizeConfig.screenWidth * 0.32),
+                  SizedBox(width: SizeConfig.screenWidth * 0.35),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,18 +168,18 @@ class GoldAssetCard extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.padding20,
               ),
-              Padding(
-                padding:
-                    EdgeInsets.only(left: SizeConfig.pageHorizontalMargins / 2),
-                child: CustomSaveButton(
-                  onTap: () {
-                    return BaseUtil().openRechargeModalSheet(
-                        investmentType: InvestmentType.AUGGOLD99);
-                  },
-                  title: 'Save',
-                  width: SizeConfig.screenWidth,
-                ),
-              ),
+              // Padding(
+              //   padding:
+              //       EdgeInsets.only(left: SizeConfig.pageHorizontalMargins / 2),
+              //   child: CustomSaveButton(
+              //     onTap: () {
+              //       return BaseUtil().openRechargeModalSheet(
+              //           investmentType: InvestmentType.AUGGOLD99);
+              //     },
+              //     title: 'Save',
+              //     width: SizeConfig.screenWidth,
+              //   ),
+              // ),
             ],
           ),
         ],

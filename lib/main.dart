@@ -1,6 +1,7 @@
 // import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -14,6 +15,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
@@ -164,6 +166,9 @@ class _MyAppState extends State<MyApp> {
                               LendboxTransactionService,
                               TransactionServiceProperties>(
                             value: locator<LendboxTransactionService>(),
+                            // child: PropertyChangeProvider<GoldenTicketService,
+                            //     GoldenTicketServiceProperties>(
+                            //   value: locator<GoldenTicketService>(),
                             child: MaterialApp.router(
                               // locale: DevicePreview.locale(context),
                               // builder: DevicePreview.appBuilder,
@@ -192,6 +197,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
+        // ),
       ),
     );
   }

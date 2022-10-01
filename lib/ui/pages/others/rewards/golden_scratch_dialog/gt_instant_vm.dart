@@ -128,6 +128,7 @@ class GTInstantViewModel extends BaseViewModel {
       _getBearerToken().then(
         (String token) => _gtRepo.redeemReward(goldenTicket.gtId).then(
           (_) {
+            _gtService.updateUnscratchedGTCount();
             _userService.getUserFundWalletData();
             _userCoinService.getUserCoinBalance().then(
               (_) {

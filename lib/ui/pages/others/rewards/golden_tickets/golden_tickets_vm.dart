@@ -49,12 +49,14 @@ class GoldenTicketsViewModel extends BaseViewModel {
 
 // Core Methods
   Future<void> init(bool openFirst) async {
-    _query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(_userService.baseUser.uid)
-        .collection(Constants.SUBCOLN_USER_REWARDS)
-        .orderBy('timestamp', descending: true);
-    await getGoldenTickets();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      _query = _db
+          .collection(Constants.COLN_USERS)
+          .doc(_userService.baseUser.uid)
+          .collection(Constants.SUBCOLN_USER_REWARDS)
+          .orderBy('timestamp', descending: true);
+      await getGoldenTickets();
+    });
   }
 
   void finish() {

@@ -74,7 +74,7 @@ class TambolaHomeView extends StatelessWidget {
                       if (model.showWinCard) TambolaResultCard(),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
-                          ? buildCards(model)
+                          ? TicketsView(model: model)
                           : SizedBox.shrink(),
                       SizedBox(height: SizeConfig.padding20),
                       (Platform.isIOS)
@@ -116,13 +116,20 @@ class TambolaHomeView extends StatelessWidget {
   }
 
   //Tambol tickets builder
-  Widget buildCards(TambolaHomeViewModel model) {
-    Widget _widget;
+
+}
+
+class TicketsView extends StatelessWidget {
+  final TambolaHomeViewModel model;
+
+  TicketsView({this.model});
+  @override
+  Widget build(BuildContext context) {
     if (!model.weeklyTicksFetched || !model.weeklyDrawFetched) {
-      _widget = SizedBox();
+      return SizedBox();
     } else if (model.userWeeklyBoards == null ||
         model.activeTambolaCardCount == 0) {
-      _widget = Padding(
+      return Padding(
         padding: EdgeInsets.all(10),
         child: Container(
           width: double.infinity,
@@ -169,8 +176,6 @@ class TambolaHomeView extends StatelessWidget {
                   : SizedBox()),
         ),
       );
-
-      return _widget;
     } else if (model.activeTambolaCardCount == 1) {
       //One tambola ticket
       model.tambolaBoardViews = [];
@@ -183,7 +188,7 @@ class TambolaHomeView extends StatelessWidget {
             : [],
       ));
 
-      _widget = Column(
+      return Column(
         children: [
           SizedBox(
             height: SizeConfig.padding34,
@@ -214,61 +219,6 @@ class TambolaHomeView extends StatelessWidget {
                   model: model,
                   showIndicatorForAll: false,
                 ),
-                // if (model.ticketsBeingGenerated &&
-                //     model.tambolaService.ticketGenerateCount > 0)
-                //   Align(
-                //     alignment: Alignment.center,
-                //     child: Container(
-                //       width: SizeConfig.screenWidth,
-                //       height: 140,
-                //       decoration: BoxDecoration(
-                //         color: Colors.white.withOpacity(0.7),
-                //       ),
-                //       padding: EdgeInsets.all(20),
-                //       child: Column(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         crossAxisAlignment: CrossAxisAlignment.center,
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           Container(
-                //             width: SizeConfig.screenWidth * 0.8,
-                //             height: 4,
-                //             decoration: BoxDecoration(
-                //               color: UiConstants.primaryColor.withOpacity(0.3),
-                //               borderRadius: BorderRadius.circular(100),
-                //             ),
-                //             child: FractionallySizedBox(
-                //               heightFactor: 1,
-                //               widthFactor: model
-                //                           .tambolaService.ticketGenerateCount ==
-                //                       model.tambolaService
-                //                           .atomicTicketGenerationLeftCount
-                //                   ? 0.1
-                //                   : (model.tambolaService.ticketGenerateCount -
-                //                           model.tambolaService
-                //                               .atomicTicketGenerationLeftCount) /
-                //                       model.tambolaService.ticketGenerateCount,
-                //               alignment: Alignment.centerLeft,
-                //               child: Container(
-                //                 decoration: BoxDecoration(
-                //                   color: UiConstants.primaryColor,
-                //                   borderRadius: BorderRadius.circular(100),
-                //                 ),
-                //               ),
-                //             ),
-                //           ),
-                //           SizedBox(height: 16),
-                //           Text(
-                //             'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                //             style: TextStyle(
-                //               fontWeight: FontWeight.w600,
-                //               fontSize: SizeConfig.mediumTextSize,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
               ],
             ),
           ),
@@ -295,7 +245,7 @@ class TambolaHomeView extends StatelessWidget {
         });
       }
 
-      _widget = Column(
+      return Column(
         children: [
           SizedBox(
             height: SizeConfig.padding34,
@@ -341,68 +291,12 @@ class TambolaHomeView extends StatelessWidget {
                   model: model,
                   showIndicatorForAll: true,
                 ),
-                // if (model.ticketsBeingGenerated &&
-                //     model.tambolaService.ticketGenerateCount > 0)
-                //   Align(
-                //     alignment: Alignment.center,
-                //     child: Container(
-                //       width: SizeConfig.screenWidth,
-                //       height: 140,
-                //       decoration: BoxDecoration(
-                //         color: Colors.white.withOpacity(0.7),
-                //       ),
-                //       padding: EdgeInsets.all(20),
-                //       child: Column(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         crossAxisAlignment: CrossAxisAlignment.center,
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           Container(
-                //             width: SizeConfig.screenWidth * 0.8,
-                //             height: 4,
-                //             decoration: BoxDecoration(
-                //               color: UiConstants.primaryColor.withOpacity(0.3),
-                //               borderRadius: BorderRadius.circular(100),
-                //             ),
-                //             child: FractionallySizedBox(
-                //               heightFactor: 1,
-                //               widthFactor: model
-                //                           .tambolaService.ticketGenerateCount ==
-                //                       model.tambolaService
-                //                           .atomicTicketGenerationLeftCount
-                //                   ? 0.1
-                //                   : (model.tambolaService.ticketGenerateCount -
-                //                           model.tambolaService
-                //                               .atomicTicketGenerationLeftCount) /
-                //                       model.tambolaService.ticketGenerateCount,
-                //               alignment: Alignment.centerLeft,
-                //               child: Container(
-                //                 decoration: BoxDecoration(
-                //                   color: UiConstants.primaryColor,
-                //                   borderRadius: BorderRadius.circular(100),
-                //                 ),
-                //               ),
-                //             ),
-                //           ),
-                //           SizedBox(height: 16),
-                //           Text(
-                //             'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
-                //             style: TextStyle(
-                //               fontWeight: FontWeight.w600,
-                //               fontSize: SizeConfig.mediumTextSize,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
               ],
             ),
           ),
         ],
       );
     }
-    return _widget;
   }
 }
 

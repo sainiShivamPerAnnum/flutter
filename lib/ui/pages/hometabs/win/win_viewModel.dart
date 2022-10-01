@@ -214,7 +214,6 @@ class WinViewModel extends BaseViewModel {
 
     fetchReferralCode();
     fectchBasicConstantValues();
-    getUnscratchedGTCounts();
     // _baseUtil.fetchUserAugmontDetail();
 
     _lbService.fetchReferralLeaderBoard();
@@ -285,13 +284,6 @@ class WinViewModel extends BaseViewModel {
         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
-  }
-
-  getUnscratchedGTCounts() async {
-    final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
-    if (res.isSuccess()) {
-      unscratchedGTCount = res?.model.length ?? 0;
-    }
   }
 
   cleanJourneyAssetsFiles() {

@@ -33,6 +33,7 @@ class MiniTransactionCardViewModel extends BaseViewModel {
     _logger.d("Getting mini transactions");
     setState(ViewState.Busy);
     await _txnHistoryService.updateTransactions(investmentType);
+
     setState(ViewState.Idle);
   }
 

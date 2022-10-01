@@ -223,7 +223,7 @@ class _TransactionDetailsBottomSheetState
                       )
                     ],
                   ),
-                if (widget.transaction.miscMap != null)
+                if (widget.transaction.transactionUpdatesMap != null)
                   Container(
                     width: SizeConfig.screenWidth,
                     margin: EdgeInsets.symmetric(
@@ -242,7 +242,8 @@ class _TransactionDetailsBottomSheetState
                             style: TextStyles.sourceSans.body2.underline.bold,
                           ),
                         ),
-                        TransactionSummary(summary: widget.transaction.miscMap)
+                        TransactionSummary(
+                            summary: widget.transaction.transactionUpdatesMap)
                       ],
                     ),
                   ),

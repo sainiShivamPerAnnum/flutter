@@ -178,7 +178,7 @@ class PicksCardView extends StatelessWidget {
                           ))
                     : model.weeklyDigits == null
                         ? FullScreenLoader(
-                            size: SizeConfig.padding64,
+                            size: SizeConfig.screenWidth * 0.3,
                           )
                         : WeeklyPicks(
                             weeklyDraws: model.weeklyDigits,

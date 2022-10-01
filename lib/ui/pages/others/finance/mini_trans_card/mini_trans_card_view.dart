@@ -31,52 +31,81 @@ class MiniTransactionCard extends StatelessWidget {
         model.getMiniTransactions(investmentType);
       },
       builder: (ctx, model, child) {
-        return PropertyChangeConsumer<TransactionHistoryService,
-            TransactionHistoryServiceProperties>(
-          properties: [
-            TransactionHistoryServiceProperties.TransactionHistoryList
-          ],
-          builder: (ctx, m, child) {
-            final txnList = m.txnList != null && m.txnList.isNotEmpty
-                ? m.txnList
-                    .where((e) => e.subType == investmentType.name)
-                    .toList()
-                : [];
-            return Column(
-              children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 1200),
-                  curve: Curves.easeInOutCubic,
-                  child: model.state == ViewState.Busy || m.txnList == null
-                      ? SizedBox()
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 2000),
+          curve: Curves.easeInOutCubic,
+          child: PropertyChangeConsumer<TransactionHistoryService,
+              TransactionHistoryServiceProperties>(
+            properties: [
+              TransactionHistoryServiceProperties.TransactionHistoryList
+            ],
+            builder: (ctx, m, child) {
+              final txnList = m.txnList != null && m.txnList.isNotEmpty
+                  ? m.txnList
+                      .where((e) => e.subType == investmentType.name)
+                      .toList()
+                  : [];
+              return Column(
+                children: [
+                  model.state == ViewState.Busy || m.txnList == null
+                      ? SizedBox(
+                          child: Row(children: [
+                            TitleSubtitleContainer(title: 'Transactions'),
+                            Spacer(),
+                            Container(
+                              width: SizeConfig.avatarRadius,
+                              height: SizeConfig.avatarRadius,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 0.5,
+                                color: UiConstants.primaryColor,
+                              ),
+                            ),
+                            SizedBox(
+                              width: SizeConfig.pageHorizontalMargins * 1.5,
+                            )
+                          ]),
+                        )
                       : (m.txnList.length == 0
-                          ? SizedBox()
+                          ? SizedBox(height: SizeConfig.padding12)
                           : Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: SizeConfig.padding10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Row(
-                                  //   mainAxisAlignment:
-                                  //       MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  TitleSubtitleContainer(title: 'Transactions'),
-                                  // model.isRefreshing
-                                  //     ? SpinKitCircle(
-                                  //         color: UiConstants.primaryColor,
-                                  //         size: SizeConfig.iconSize0)
-                                  //     : IconButton(
-                                  //         icon: Icon(
-                                  //           Icons.refresh,
-                                  //           color: UiConstants.kTextColor,
-                                  //           size: SizeConfig.iconSize0,
-                                  //         ),
-                                  //         onPressed:
-                                  //             model.refreshTransactions,
-                                  //       )
-                                  //   ],
-                                  // ),
+                                  Row(
+                                    children: [
+                                      TitleSubtitleContainer(
+                                          title: 'Transactions'),
+                                      Spacer(),
+                                      model.state == ViewState.Idle &&
+                                              m.txnList != null &&
+                                              m.txnList.isNotEmpty &&
+                                              m.txnList.length > 3
+                                          ? InkWell(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: SizeConfig.padding2,
+                                                ),
+                                                child: Text(
+                                                  'See All',
+                                                  style: TextStyles
+                                                      .rajdhaniSB.body2
+                                                      .colour(UiConstants
+                                                          .primaryColor),
+                                                ),
+                                              ),
+                                              onTap: () =>
+                                                  model.viewAllTransaction(
+                                                      investmentType),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        width: SizeConfig.pageHorizontalMargins,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: SizeConfig.padding8),
                                   Column(
                                     children: List.generate(
                                       txnList.length < 4 ? txnList.length : 3,
@@ -88,41 +117,11 @@ class MiniTransactionCard extends StatelessWidget {
                                 ],
                               ),
                             )),
-                ),
-                model.state == ViewState.Idle &&
-                        m.txnList != null &&
-                        m.txnList.isNotEmpty &&
-                        m.txnList.length > 3
-                    ? TextButton(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: SizeConfig.padding2,
-                              ),
-                              child: Text(
-                                'See All',
-                                style: TextStyles.rajdhaniSB.body2,
-                              ),
-                            ),
-                            SvgPicture.asset(
-                              Assets.chevRonRightArrow,
-                              height: SizeConfig.padding24,
-                              width: SizeConfig.padding24,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                        onPressed: () =>
-                            model.viewAllTransaction(investmentType),
-                      )
-                    : SizedBox(),
-                SizedBox(height: SizeConfig.padding12),
-              ],
-            );
-          },
+                  SizedBox(height: SizeConfig.padding12),
+                ],
+              );
+            },
+          ),
         );
       },
     );

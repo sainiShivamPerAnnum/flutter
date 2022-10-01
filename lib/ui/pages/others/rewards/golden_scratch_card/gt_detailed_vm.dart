@@ -27,6 +27,7 @@ class GTDetailedViewModel extends BaseViewModel {
   bool _isShareLoading = false;
   final _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
+  final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
 
@@ -95,6 +96,8 @@ class GTDetailedViewModel extends BaseViewModel {
   Future<bool> redeemTicket(GoldenTicket ticket) async {
     try {
       await _gtRepo.redeemReward(ticket.gtId);
+
+      _gtService.updateUnscratchedGTCount();
       _userService.getUserFundWalletData();
       _userCoinService.getUserCoinBalance();
       return true;

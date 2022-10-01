@@ -19,37 +19,27 @@ parseTimeStamp(dynamic data) {
     return null;
 }
 
-parseTransactionStatusSummary(List<dynamic> summary) {
+parseTransactionStatusSummary(Map summary) {
   List<TransactionStatusMapItemModel> txnSummary = [];
   if (summary != null) {
-    summary.forEach((s) {
-      if (s.runtimeType == String || s.runtimeType == bool) return;
-      final response = s.entries.first.value;
+    summary.forEach((key, value) {
       TimestampModel timeStamp;
       String result;
-      // print("Summary Timestamp : $s");
-      // print("Summary Timestamp : ${s.entries.first.value.runtimeType}");
-
-      // Map<String, dynamic> res;
-      // res.entries.first.value
-      if (response.runtimeType == String) {
-        print("Summary Timestamp : $response");
-        result = response.toString();
-      } else
-        timeStamp = TimestampModel.fromMap(response as Map<String, dynamic>);
+      if (value.runtimeType == String)
+        result = value;
+      else
+        timeStamp = TimestampModel.fromMap(value as Map<String, dynamic>);
 
       if (timeStamp != null) {
-        txnSummary.add(TransactionStatusMapItemModel(
-            title: s.entries.first.key, timestamp: timeStamp));
+        txnSummary.add(
+            TransactionStatusMapItemModel(title: key, timestamp: timeStamp));
       } else if (result != null)
-        txnSummary.add(TransactionStatusMapItemModel(
-            title: s.entries.first.key, value: result));
+        txnSummary
+            .add(TransactionStatusMapItemModel(title: key, value: result));
       else
-        txnSummary.add(TransactionStatusMapItemModel(
-            title: s.entries.first.key, value: "NA"));
+        txnSummary.add(TransactionStatusMapItemModel(title: key, value: "NA"));
     });
   }
-
   return txnSummary;
 }
 
@@ -71,7 +61,7 @@ class UserTransaction {
   Map<String, dynamic> _paytmMap;
   Timestamp _timestamp;
   Timestamp _updatedTime;
-  List<TransactionStatusMapItemModel> miscMap;
+  List<TransactionStatusMapItemModel> transactionUpdatesMap;
 
   static final String fldAmount = 'tAmount';
   static final String fldPaytmMap = 'paytmMap';
@@ -88,7 +78,7 @@ class UserTransaction {
   static final String fldUserId = 'tUserId';
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
-  static const String fldMiscMap = "miscMap";
+  static const String fldtransactionUpdatesMap = "transactionUpdatesMap";
 
   ///paytm submap feilds
   static final String subFldPaytmBankName = 'bankName';
@@ -172,7 +162,7 @@ class UserTransaction {
     this._timestamp,
     this._paytmMap,
     this._updatedTime,
-    this.miscMap,
+    this.transactionUpdatesMap,
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -193,7 +183,7 @@ class UserTransaction {
           parseTimeStamp(data[fldTimestamp]),
           data[fldPaytmMap],
           parseTimeStamp(data[fldUpdatedTime]),
-          parseTransactionStatusSummary(data[fldMiscMap]),
+          parseTransactionStatusSummary(data[fldtransactionUpdatesMap]),
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -214,7 +204,7 @@ class UserTransaction {
             null,
             data[fldPaytmMap],
             null,
-            data[fldMiscMap]);
+            data[fldtransactionUpdatesMap]);
   //TODO JSON response received as HashMap for Timestamps
 
   // //ICICI investment initiated by new investor

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -29,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:share_plus/share_plus.dart';
 
 final GlobalKey ticketImageKey = GlobalKey();
@@ -40,6 +42,13 @@ class GoldenTicketService extends ChangeNotifier {
   final _paytmService = locator<PaytmService>();
   final _internalOpsService = locator<InternalOpsService>();
   // static bool hasGoldenTicket = false;
+  int _unscratchedTicketsCount = 0;
+  int get unscratchedTicketsCount => this._unscratchedTicketsCount;
+
+  set unscratchedTicketsCount(int value) {
+    this._unscratchedTicketsCount = value;
+    // notifyListeners(GoldenTicketServiceProperties.UnscratchedCount);
+  }
 
   static String goldenTicketId;
   static String gameEndMsgText;
@@ -100,6 +109,14 @@ class GoldenTicketService extends ChangeNotifier {
         );
       });
     }
+  }
+
+  Future<void> updateUnscratchedGTCount() async {
+    final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
+    if (res.isSuccess())
+      unscratchedTicketsCount = res.model.length;
+    else
+      unscratchedTicketsCount = 0;
   }
 
   //HELPERS

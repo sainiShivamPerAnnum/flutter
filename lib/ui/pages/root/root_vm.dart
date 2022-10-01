@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -54,6 +55,7 @@ class RootViewModel extends BaseViewModel {
   final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository _userRepo = locator<UserRepository>();
   final _tambolaService = locator<TambolaService>();
+  final _gtService = locator<GoldenTicketService>();
   int _bottomNavBarIndex = 1;
 
   final winnerService = locator<WinnerService>();
@@ -99,6 +101,7 @@ class RootViewModel extends BaseViewModel {
     _paytmService.getActiveSubscriptionDetails();
     await _txnHistoryService.fetchTransactions();
     await _journeyService.checkForMilestoneLevelChange();
+    await _gtService.updateUnscratchedGTCount();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -214,8 +217,8 @@ class RootViewModel extends BaseViewModel {
                 BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
             } catch (e) {
               Log(e.toString());
-              BaseUtil.showNegativeAlert(
-                  "Something went wrong", "Please try again");
+              // BaseUtil.showNegativeAlert(
+              //     "Something went wrong", "Please try again");
             }
             AppState.backButtonDispatcher.didPopRoute();
           },
@@ -586,8 +589,8 @@ class RootViewModel extends BaseViewModel {
                 BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
             } catch (e) {
               _logger.d(e.toString());
-              BaseUtil.showNegativeAlert(
-                  "Something went wrong", "Please try again");
+              // BaseUtil.showNegativeAlert(
+              //     "Something went wrong", "Please try again");
             }
           } else {}
         }
