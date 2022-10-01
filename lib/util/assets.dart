@@ -218,6 +218,19 @@ class Assets {
     "assets/svg/prize_asset_8.svg",
   ];
 
+  static List<String> assetList1OnBoarding = [
+    "assets/svg/lendbox-icon.svg",
+    "assets/svg/augmont_ic.svg",
+    "assets/svg/paytm-icon.svg",
+    "assets/svg/razorpay-icon.svg",
+  ];
+
+  static List<String> assetList2OnBoarding = [
+    "assets/svg/small_asset_cricket.svg",
+    "assets/svg/small_asset_pool.svg",
+    "assets/svg/small_asset_football.svg",
+  ];
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',
