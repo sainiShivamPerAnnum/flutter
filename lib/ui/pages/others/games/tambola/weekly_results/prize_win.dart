@@ -63,8 +63,8 @@ class _PrizeWinState extends State<PrizeWin> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth * 0.7,
-                      height: SizeConfig.screenWidth * 0.7,
+                      width: SizeConfig.screenWidth * 0.6,
+                      height: SizeConfig.screenWidth * 0.6,
                       padding: EdgeInsets.all(SizeConfig.padding16),
                       decoration: BoxDecoration(
                         color: UiConstants.kSliverAppBarBackgroundColor
@@ -72,8 +72,8 @@ class _PrizeWinState extends State<PrizeWin> {
                         shape: BoxShape.circle,
                       ),
                       child: Container(
-                        width: SizeConfig.screenWidth * 0.7,
-                        height: SizeConfig.screenWidth * 0.7,
+                        width: SizeConfig.screenWidth * 0.6,
+                        height: SizeConfig.screenWidth * 0.6,
                         decoration: BoxDecoration(
                           color: UiConstants.kSliverAppBarBackgroundColor,
                           shape: BoxShape.circle,
@@ -82,7 +82,7 @@ class _PrizeWinState extends State<PrizeWin> {
                     ),
                     SvgPicture.asset(
                       Assets.tambolaCardAsset,
-                      width: SizeConfig.screenWidth * 0.75,
+                      width: SizeConfig.screenWidth * 0.7,
                     )
                   ],
                 ),

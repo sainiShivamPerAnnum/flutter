@@ -177,9 +177,9 @@ class TransactionHistoryService
 
   String getFormattedTxnAmount(double amount) {
     if (amount > 0)
-      return "₹${amount == amount.toInt() ? amount.toInt() : amount.abs().toStringAsFixed(2)}";
+      return "₹${amount == amount.toInt() ? amount.toInt() : amount.toStringAsFixed(2)}";
     else
-      return "- ₹${amount == amount.toInt() ? amount.toInt() : amount.abs().toStringAsFixed(2)}";
+      return "- ₹${amount == amount.toInt() ? amount.abs().toInt() : amount.abs().toStringAsFixed(2)}";
   }
 
   String getFormattedTime(Timestamp tTime) {
@@ -191,7 +191,7 @@ class TransactionHistoryService
   String getFormattedDate(Timestamp time) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
-    return DateFormat('MMMMd').format(now);
+    return DateFormat('MMMM dd').format(now);
   }
 
   getFormattedDateAndTime(Timestamp time) {

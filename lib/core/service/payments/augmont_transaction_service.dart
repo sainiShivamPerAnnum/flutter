@@ -50,11 +50,20 @@ class AugmontTransactionService extends BaseTransactionService {
   double currentTxnGms = 0.0;
   DepositFcmResponseModel depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
+  bool _isGoldSellInProgress = false;
+
   GoldPurchaseDetails currentGoldPurchaseDetails;
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
+    notifyListeners(TransactionServiceProperties.transactionStatus);
+  }
+
+  bool get isGoldSellInProgress => this._isGoldSellInProgress;
+
+  set isGoldSellInProgress(bool value) {
+    this._isGoldSellInProgress = value;
     notifyListeners(TransactionServiceProperties.transactionStatus);
   }
 

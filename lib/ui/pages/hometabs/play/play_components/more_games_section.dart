@@ -101,7 +101,7 @@ class MoreGames extends StatelessWidget {
                     children: [
                       Text(
                         game.gameName,
-                        style: TextStyles.sourceSans.bold.body1
+                        style: TextStyles.rajdhaniSB.bold.body1
                             .colour(Colors.white),
                       ),
                       SizedBox(

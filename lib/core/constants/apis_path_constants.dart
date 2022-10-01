@@ -53,6 +53,7 @@ class ApiPath {
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
   static const kOngoingCampaigns = "/campaigns";
+  static const kFelloFacts = "/fello/facts";
 
   //tambola game Apis
   static String tambolaTickets(String uid) => "/$uid/tickets";

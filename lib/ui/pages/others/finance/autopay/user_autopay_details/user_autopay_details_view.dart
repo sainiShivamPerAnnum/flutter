@@ -43,7 +43,6 @@ class UserAutosaveDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return BaseView<UserAutosaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -71,154 +70,131 @@ class UserAutosaveDetailsView extends StatelessWidget {
             ),
           ),
           backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: model.state == ViewState.Busy
-                    ? Center(
-                        child: FullScreenLoader(),
-                      )
-                    : model.activeSubscription == null
-                        ? Center(
-                            child: NoRecordDisplayWidget(
-                              assetSvg: Assets.noTransactionAsset,
-                              text: "No Autosave Details available",
+          body: model.state == ViewState.Busy
+              ? Center(
+                  child: FullScreenLoader(),
+                )
+              : Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: model.activeSubscription == null
+                          ? Center(
+                              child: NoRecordDisplayWidget(
+                                assetSvg: Assets.noTransactionAsset,
+                                text: "No Autosave Details available",
+                              ),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildAmountSavedCard(model),
+                                SizedBox(
+                                  height: SizeConfig.padding40,
+                                ),
+                                _buildPaymentMethod(model),
+                                SizedBox(
+                                  height: SizeConfig.padding32,
+                                ),
+                                Divider(
+                                  height: SizeConfig.border1,
+                                  color: Color(0xFF999999).withOpacity(0.4),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.padding20,
+                                    top: SizeConfig.padding20,
+                                    bottom: SizeConfig.padding20,
+                                  ),
+                                  child: Text(
+                                    "Recent Transaction",
+                                    style: TextStyles.rajdhaniSB.body1,
+                                  ),
+                                ),
+                                model.filteredList == null
+                                    ? Center(
+                                        child: FullScreenLoader(
+                                        size: SizeConfig.padding80,
+                                      ))
+                                    : model.filteredList?.length == 0
+                                        ? Center(
+                                            child: NoRecordDisplayWidget(
+                                            assetSvg: Assets.noTransactionAsset,
+                                            text: "No Transactions to show yet",
+                                          ))
+                                        : Container(
+                                            color: Color(0xFF595F5F)
+                                                .withOpacity(0.14),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.padding20,
+                                            ),
+                                            child: ListView.builder(
+                                              itemCount:
+                                                  model.filteredList?.length,
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                return TransationTile(
+                                                  isLast: index ==
+                                                      model.filteredList
+                                                              .length -
+                                                          1,
+                                                  txn:
+                                                      model.filteredList[index],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                SizedBox(
+                                  height: SizeConfig.padding80 * 2,
+                                ),
+                              ],
                             ),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildAmountSavedCard(model),
-                              SizedBox(
-                                height: SizeConfig.padding40,
-                              ),
-                              _buildPaymentMethod(model),
-                              SizedBox(
-                                height: SizeConfig.padding32,
-                              ),
-                              Divider(
-                                height: SizeConfig.border1,
-                                color: Color(0xFF999999).withOpacity(0.4),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: SizeConfig.padding20,
-                                  top: SizeConfig.padding20,
-                                  bottom: SizeConfig.padding20,
-                                ),
-                                child: Text(
-                                  "Recent Transaction",
-                                  style: TextStyles.rajdhaniSB.body1,
-                                ),
-                              ),
-                              model.filteredList == null
-                                  ? Center(
-                                      child: FullScreenLoader(
-                                      size: SizeConfig.padding80,
-                                    ))
-                                  : model.filteredList?.length == 0
-                                      ? Center(
-                                          child: NoRecordDisplayWidget(
-                                          assetSvg: Assets.noTransactionAsset,
-                                          text: "No Transactions to show yet",
-                                        ))
-                                      : Container(
-                                          color: Color(0xFF595F5F)
-                                              .withOpacity(0.14),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.padding20,
-                                          ),
-                                          child: ListView.builder(
-                                            itemCount:
-                                                model.filteredList?.length,
-                                            shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            itemBuilder: (context, index) {
-                                              return TransationTile(
-                                                isLast: index ==
-                                                    model.filteredList.length -
-                                                        1,
-                                                txn: model.filteredList[index],
-                                              );
-                                            },
-                                          ),
-                                        ),
-                              SizedBox(
-                                height: SizeConfig.padding80 * 2,
-                              ),
-                            ],
+                    ),
+                    if (model.state == ViewState.Idle &&
+                        model.activeSubscription != null &&
+                        !model.isInEditMode)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            // color: UiConstants.kSecondaryBackgroundColor,
+                            gradient: LinearGradient(
+                              colors: [
+                                UiConstants.kSecondaryBackgroundColor
+                                    .withOpacity(0.2),
+                                UiConstants.kSecondaryBackgroundColor
+                                    .withOpacity(0.9),
+                                UiConstants.kSecondaryBackgroundColor
+                                    .withOpacity(0.2),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [
+                                0.02,
+                                0.8,
+                                1.0,
+                              ],
+                            ),
                           ),
-              ),
-              // Positioned(
-              //   bottom: 0,
-              //   child: Container(
-              //     width: SizeConfig.screenWidth,
-              //     height: 120,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //           begin: Alignment.bottomCenter,
-              //           end: Alignment.topCenter,
-              //           colors: [
-              //             UiConstants.kSecondaryBackgroundColor
-              //                 .withOpacity(0.8),
-              //             UiConstants.kSecondaryBackgroundColor
-              //                 .withOpacity(0.2),
-              //           ],
-              //           stops: [
-              //             0.8,
-              //             1
-              //           ]),
-              //     ),
-              //     child: BackdropFilter(
-              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              //     ),
-              //   ),
-              // ),
-              if (model.state == ViewState.Idle &&
-                  model.activeSubscription != null &&
-                  !model.isInEditMode)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      // color: UiConstants.kSecondaryBackgroundColor,
-                      gradient: LinearGradient(
-                        colors: [
-                          UiConstants.kSecondaryBackgroundColor
-                              .withOpacity(0.2),
-                          UiConstants.kSecondaryBackgroundColor
-                              .withOpacity(0.9),
-                          UiConstants.kSecondaryBackgroundColor
-                              .withOpacity(0.2),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [
-                          0.02,
-                          0.8,
-                          1.0,
-                        ],
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding40,
+                            vertical: SizeConfig.padding10,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: (model.activeSubscription.status ==
+                                        Constants.SUBSCRIPTION_INACTIVE &&
+                                    model.activeSubscription.resumeDate.isEmpty)
+                                ? _buildRestartAutoPay()
+                                : _buildUpdateAutoPay(model),
+                          ),
+                        ),
                       ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding40,
-                      vertical: SizeConfig.padding10,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: (model.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_INACTIVE &&
-                              model.activeSubscription.resumeDate.isEmpty)
-                          ? _buildRestartAutoPay()
-                          : _buildUpdateAutoPay(model),
-                    ),
-                  ),
+                  ],
                 ),
-            ],
-          ),
         );
       },
     );

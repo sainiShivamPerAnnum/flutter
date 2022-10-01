@@ -702,3 +702,36 @@ class AppSwitch extends StatelessWidget {
     );
   }
 }
+
+class CustomKeyboardSubmitButton extends StatelessWidget {
+  final Function onSubmit;
+
+  CustomKeyboardSubmitButton({this.onSubmit});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: MediaQuery.of(context).viewInsets.bottom,
+      child: MediaQuery.of(context).viewInsets.bottom !=
+              SizeConfig.viewInsets.bottom
+          ? Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              color: UiConstants.kArowButtonBackgroundColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: onSubmit,
+                child: Text(
+                  'DONE',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.primaryColor),
+                ),
+              ),
+            )
+          : SizedBox(),
+    );
+  }
+}

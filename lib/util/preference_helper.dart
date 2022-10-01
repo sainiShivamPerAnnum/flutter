@@ -13,6 +13,7 @@ class PreferenceHelper {
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
   static const CACHE_ONBOARDING_COMPLETION = "onboardingCompletion";
   static const FCM_TOKEN = "fcm_token";
+  static const CACHE_SHOW_SECURITY_MODALSHEET = "showSecurityModalSheet";
 
   static SharedPreferences _prefs;
 

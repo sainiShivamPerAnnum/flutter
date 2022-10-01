@@ -154,15 +154,19 @@ class LevelUpAnimation extends StatelessWidget {
         properties: [JourneyServiceProperties.LevelCompletion],
         builder: (context, jModel, properties) {
           return jModel.showLevelUpAnimation
-              ? IgnorePointer(
-                  ignoring: true,
-                  child: Lottie.asset(
-                    Assets.levelUpLottie,
-                    controller: jModel.levelUpLottieController,
-                    onLoaded: (composition) {
-                      jModel.levelUpLottieController
-                        ..duration = composition.duration;
-                    },
+              ? Align(
+                  alignment: Alignment.center,
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: Lottie.asset(
+                      Assets.levelUpLottie,
+                      width: SizeConfig.screenWidth,
+                      controller: jModel.levelUpLottieController,
+                      onLoaded: (composition) {
+                        jModel.levelUpLottieController
+                          ..duration = composition.duration;
+                      },
+                    ),
                   ),
                 )
               : SizedBox();

@@ -1,13 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/helper_model.dart';
-import 'package:felloapp/core/model/journey_models/journey_background_model.dart';
-import 'package:felloapp/util/color_util.dart';
-import 'package:flutter/material.dart';
-
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:flutter/material.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 class GameModel {
   final String id;

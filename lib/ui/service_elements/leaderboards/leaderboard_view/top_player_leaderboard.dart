@@ -57,58 +57,45 @@ class TopPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
-      body: Stack(
-        children: [
-          NewSquareBackground(),
-          _buildTopPlayer(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopPlayer(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: SizeConfig.padding20,
-            ),
-            child: Row(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Column(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Padding(
-                    padding: EdgeInsets.only(right: SizeConfig.padding20),
-                    child: Icon(Icons.arrow_back_ios_rounded),
-                  ),
+                Text(
+                  "Leaderboard",
+                  style: TextStyles.rajdhaniSB.title3,
                 ),
                 if (model.lastupdated != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Leaderboard",
-                        style: TextStyles.rajdhaniSB.title4,
-                      ),
-                      Text(
-                        "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                    ],
+                  Text(
+                    "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())} ${model.scoreboard.length}",
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
                   ),
               ],
             ),
-          ),
-          // SizedBox(height: SizeConfig.padding20),
-          Expanded(
-            child: WinnerWidgets(
-              scoreboard: model.scoreboard,
-              userProfilePicUrl: userProfilePicUrl,
-              isSpotLightVisible: false,
+          ],
+        ),
+      ),
+      body: Stack(
+        children: [
+          NewSquareBackground(),
+          Container(
+            height: SizeConfig.screenHeight -
+                SizeConfig.viewInsets.top -
+                kToolbarHeight,
+            width: SizeConfig.screenWidth,
+            child: Column(
+              children: [
+                WinnerWidgets(
+                  scoreboard: model.scoreboard,
+                  userProfilePicUrl: userProfilePicUrl,
+                  isSpotLightVisible: false,
+                ),
+                Expanded(child: _buildAllPlayerList())
+              ],
             ),
           ),
         ],
@@ -133,7 +120,7 @@ class TopPlayer extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildLeaderBoardHeader(),
+          // _buildLeaderBoardHeader(),
           if (model.scoreboard.length >= 7 &&
               !isUserInTopThree &&
               currentUserRank != 0)

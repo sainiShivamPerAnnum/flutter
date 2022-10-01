@@ -109,7 +109,7 @@ class GoldSellInputView extends StatelessWidget {
                               width: model.fieldWidth,
                               child: TextField(
                                 focusNode: model.sellFieldNode,
-                                enabled: !model.isGoldSellInProgress,
+                                enabled: !augTxnservice.isGoldSellInProgress,
                                 controller: model.goldAmountController,
                                 // enableInteractiveSelection: false,
                                 textAlign: TextAlign.center,
@@ -164,7 +164,7 @@ class GoldSellInputView extends StatelessWidget {
                         FittedBox(
                           alignment: Alignment.center,
                           child: Text(
-                            "₹ ${model.goldAmountFromGrams.toStringAsFixed(1)}",
+                            "₹ ${model.goldAmountFromGrams.toStringAsFixed(2)}",
                             style: TextStyles.sourceSansSB.body1.colour(
                                 UiConstants
                                     .kModalSheetMutedTextBackgroundColor),
@@ -208,7 +208,7 @@ class GoldSellInputView extends StatelessWidget {
                 ),
               ),
             Spacer(),
-            model.isGoldSellInProgress
+            augTxnservice.isGoldSellInProgress
                 ? Center(
                     child: Container(
                       height: SizeConfig.screenWidth * 0.1556,
@@ -225,7 +225,7 @@ class GoldSellInputView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: 'SELL',
                       onPressed: () async {
-                        if (!model.isGoldSellInProgress &&
+                        if (!augTxnservice.isGoldSellInProgress &&
                             !model.isQntFetching) {
                           FocusScope.of(context).unfocus();
                           bool isDetailComplete =
@@ -257,28 +257,9 @@ class GoldSellInputView extends StatelessWidget {
                   ),
           ],
         ),
-        if (MediaQuery.of(context).viewInsets.bottom !=
-            SizeConfig.viewInsets.bottom)
-          Positioned(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.padding54,
-              color: UiConstants.kArowButtonBackgroundColor,
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins,
-              ),
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () => model.sellFieldNode.unfocus(),
-                child: Text(
-                  'DONE',
-                  style: TextStyles.rajdhaniB.body1
-                      .colour(UiConstants.primaryColor),
-                ),
-              ),
-            ),
-          ),
+        CustomKeyboardSubmitButton(
+          onSubmit: () => model.sellFieldNode.unfocus(),
+        ),
         if (model.state == ViewState.Busy)
           Container(
             decoration: BoxDecoration(

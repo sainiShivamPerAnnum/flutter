@@ -86,6 +86,9 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ],
                 ),
               ),
+              CustomKeyboardSubmitButton(onSubmit: () {
+                model.sipAmountNode.unfocus();
+              })
             ],
           ),
         );
@@ -99,7 +102,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.184,
+          height: SizeConfig.screenWidth * 0.12,
         ),
         Text(
           "SETUP AUTO PAY",
@@ -113,7 +116,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.32,
+          height: SizeConfig.screenWidth * 0.1,
         ),
         Padding(
           padding: EdgeInsets.symmetric(
@@ -174,9 +177,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           "assets/images/autosavebanks.png",
           width: SizeConfig.screenWidth * 0.7,
         ),
-        SizedBox(
-          height: SizeConfig.padding54,
-        ),
+        Spacer(),
         model.isSubscriptionInProgress
             ? SubProcessText()
             : AppPositiveBtn(
@@ -231,7 +232,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.184,
+          height: SizeConfig.screenWidth * 0.12,
         ),
         Text(
           "SETUP AUTO PAY",
@@ -245,7 +246,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.32,
+          height: SizeConfig.screenWidth * 0.1,
         ),
         Padding(
           padding: EdgeInsets.symmetric(
@@ -279,7 +280,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           ),
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.1947,
+          height: SizeConfig.padding32,
         ),
         Text(
           "Approve payment\nrequest on your UPI app",
@@ -379,7 +380,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.184,
+          height: SizeConfig.screenWidth * 0.05,
         ),
         Text(
           "SETUP AUTO PAY",
@@ -498,6 +499,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       child: AppTextField(
                         textEditingController: model.amountFieldController,
                         isEnabled: true,
+                        focusNode: model.sipAmountNode,
                         validator: (val) {
                           return null;
                         },
@@ -608,7 +610,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 width: SizeConfig.screenWidth * 0.8,
               ),
         SizedBox(
-          height: SizeConfig.padding64,
+          height: SizeConfig.pageHorizontalMargins,
         ),
       ],
     );

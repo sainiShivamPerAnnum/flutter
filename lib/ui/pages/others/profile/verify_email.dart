@@ -307,7 +307,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                           focusNode: focusNode,
                           textEditingController: email,
                           isEnabled: _isProcessing || _isOtpSent ? false : true,
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.emailAddress,
                           validator: (val) {
                             if (val == "")
                               return null;

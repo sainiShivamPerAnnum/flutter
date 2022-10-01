@@ -165,3 +165,15 @@ class UiConstants {
   static Color kBlogCardRandomColor4 = Color(0xFFFFD979);
   static Color kBlogCardRandomColor5 = Color(0xFFA5E4FF);
 }
+
+extension ColorExtension on String {
+  Color toColor() {
+    var hexColor = this.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+  }
+}

@@ -101,26 +101,7 @@ class WebHomeView extends StatelessWidget {
                                             SizeConfig.padding12,
                                         left: SizeConfig.pageHorizontalMargins *
                                             2),
-                                    child:
-                                        // Stack(
-                                        //   children: [
-                                        //     SvgPicture.network(
-                                        //       model.currentGameModel.thumbnailUri,
-                                        //       width: SizeConfig.screenWidth,
-                                        //       fit: BoxFit.cover,
-                                        //     ),
-                                        //     Positioned(
-                                        //       left:
-                                        //           SizeConfig.pageHorizontalMargins *
-                                        //               2,
-                                        //       child: Container(
-                                        //         margin: EdgeInsets.only(
-                                        //           top: SizeConfig.viewInsets.top +
-                                        //               SizeConfig.padding12,
-                                        //         ),
-                                        //         width: SizeConfig.screenWidth,
-                                        //         child:
-                                        Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
@@ -525,7 +506,7 @@ class RechargeBox extends StatelessWidget {
         : InkWell(
             onTap: () {
               return BaseUtil()
-                  .openRechargeModalSheet(amt: rechargeOption.amount);
+                  .openDepositOptionsModalSheet(amount: rechargeOption.amount);
             },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
