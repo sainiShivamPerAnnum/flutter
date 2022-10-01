@@ -70,13 +70,6 @@ class SaveAssetView extends StatelessWidget {
                         SellCardView(
                           investmentType: InvestmentType.AUGGOLD99,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding24),
-                          child: FAQCardView(
-                              category: 'digital_gold',
-                              bgColor: UiConstants.kDarkBackgroundColor),
-                        ),
                         SizedBox(
                           height: SizeConfig.screenWidth * 0.4,
                         )

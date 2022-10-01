@@ -67,115 +67,123 @@ class MoreGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
-                  color: game.shadowColor,
-                ),
-                height: SizeConfig.screenWidth * 0.38,
-                width: SizeConfig.screenWidth * 0.291,
-                child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
-                  child: SvgPicture.network(
-                    game.icon,
-                    fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Haptic.vibrate();
+        AppState.delegate.parseRoute(
+          Uri.parse(game.route),
+        );
+      },
+      child: Container(
+        margin:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness24)),
+                    color: game.shadowColor,
+                  ),
+                  height: SizeConfig.screenWidth * 0.38,
+                  width: SizeConfig.screenWidth * 0.291,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness24)),
+                    child: SvgPicture.network(
+                      game.icon,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: SizeConfig.padding16,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        game.gameName,
-                        style: TextStyles.sourceSans.bold.body1
-                            .colour(Colors.white),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding8,
-                      ),
-                      Text(
-                        "Win upto ₹${game.prizeAmount.toString()}",
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                Assets.token,
-                                height: SizeConfig.padding20,
-                              ),
-                              SizedBox(width: SizeConfig.padding6),
-                              Text(
-                                game.playCost.toString(),
-                                style: TextStyles.sourceSans.body2
-                                    .colour(Colors.white),
-                              )
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.parseRoute(
-                                Uri.parse(game.route),
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: UiConstants.playButtonColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(SizeConfig.roundness8),
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          game.gameName,
+                          style: TextStyles.sourceSans.bold.body1
+                              .colour(Colors.white),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          "Win upto ₹${game.prizeAmount.toString()}",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  Assets.token,
+                                  height: SizeConfig.padding20,
+                                ),
+                                SizedBox(width: SizeConfig.padding6),
+                                Text(
+                                  game.playCost.toString(),
+                                  style: TextStyles.sourceSans.body2
+                                      .colour(Colors.white),
+                                )
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Haptic.vibrate();
+                                AppState.delegate.parseRoute(
+                                  Uri.parse(game.route),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: UiConstants.playButtonColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(SizeConfig.roundness8),
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding28,
+                                    vertical: SizeConfig.padding12),
+                                child: Text(
+                                  "PLAY",
+                                  style: TextStyles.rajdhaniSB.body1
+                                      .colour(Colors.white),
                                 ),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding28,
-                                  vertical: SizeConfig.padding12),
-                              child: Text(
-                                "PLAY",
-                                style: TextStyles.rajdhaniSB.body1
-                                    .colour(Colors.white),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          if (showDivider)
-            Container(
-              width: double.infinity,
-              height: 0.4,
-              margin: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding16,
-                  horizontal: SizeConfig.padding34),
-              decoration:
-                  BoxDecoration(color: UiConstants.kLastUpdatedTextColor),
-            )
-        ],
+              ],
+            ),
+            if (showDivider)
+              Container(
+                width: double.infinity,
+                height: 0.4,
+                margin: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding16,
+                    horizontal: SizeConfig.padding34),
+                decoration:
+                    BoxDecoration(color: UiConstants.kLastUpdatedTextColor),
+              )
+          ],
+        ),
       ),
     );
   }
