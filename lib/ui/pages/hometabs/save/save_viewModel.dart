@@ -177,6 +177,30 @@ class SaveViewModel extends BaseViewModel {
     _txnHistoryService.updateTransactions(investmentType);
   }
 
+  double getQuantity(
+    UserFundWallet fund,
+    var investmentType,
+  ) {
+    final quantity = investmentType == InvestmentType.AUGGOLD99
+        ? fund?.augGoldQuantity
+        : fund?.wLbBalance;
+
+    if (quantity != null) {
+      return quantity;
+    } else {
+      return 0;
+    }
+  }
+
+  double getInvestedQuantity(UserFundWallet fund) {
+    final quantity = fund?.wLbPrinciple;
+
+    if (quantity != null) {
+      return quantity;
+    } else
+      return 0;
+  }
+
   List<BlogPostModelByCategory> getAllBlogsByCategory() {
     List<BlogPostModelByCategory> result = [];
 
