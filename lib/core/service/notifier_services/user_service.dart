@@ -506,47 +506,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   //   return response.model;
   // }
 
-  Future<bool> checkGalleryPermission() async {
-    if (await BaseUtil.showNoInternetAlert()) return false;
-    var _status = await Permission.photos.status;
-    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
-      BaseUtil.openDialog(
-        isBarrierDismissable: false,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-          title: "Request Permission",
-          description:
-              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-          buttonText: "Continue",
-          asset: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Image.asset(
-              "images/gallery.png",
-              height: SizeConfig.screenWidth * 0.24,
-            ),
-          ),
-          confirmAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return true;
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return false;
-          },
-        ),
-      );
-    } else if (_status.isGranted) {
-      return true;
-    } else {
-      BaseUtil.showNegativeAlert(
-        'Permission Unavailable',
-        'Please enable permission from settings to continue',
-      );
-      return false;
-    }
-    return false;
-  }
-
   Future<bool> updateProfilePicture(XFile selectedProfilePicture) async {
     Directory supportDir;
     UploadTask uploadTask;

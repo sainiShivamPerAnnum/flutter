@@ -372,7 +372,7 @@ class LoginControllerViewModel extends BaseViewModel {
           isOnBoarded: userService.isUserOnborded,
           baseUser: userService.baseUser);
 
-      await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+      BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       _analyticsService.track(
         eventName: AnalyticsEvents.signupComplete,
         properties: {'uid': userService.baseUser.uid},
@@ -387,13 +387,14 @@ class LoginControllerViewModel extends BaseViewModel {
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 
-    await BaseAnalytics.logUserProfile(userService.baseUser);
+    BaseAnalytics.logUserProfile(userService.baseUser);
     await userService.init();
-    await _userCoinService.init();
+    _userCoinService.init();
     await baseProvider.init();
+    userService.userBootUpEE();
     if (userService.isUserOnborded) await _journeyService.init();
     if (userService.isUserOnborded) await _journeyRepo.init();
-    await fcmListener.setupFcm();
+    fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
     await _analyticsService.login(
       isOnBoarded: userService.isUserOnborded,

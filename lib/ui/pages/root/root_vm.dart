@@ -106,7 +106,6 @@ class RootViewModel extends BaseViewModel {
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
     initialize();
-    verifyUserBootupDetails();
   }
 
   onDispose() {
@@ -252,7 +251,7 @@ class RootViewModel extends BaseViewModel {
       // await _baseUtil.getProfilePicture();
 
       _initAdhocNotifications();
-
+      await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await checkIfAppLockModalSheetIsRequired();
       await handleStartUpNotifictionData();
@@ -522,19 +521,12 @@ class RootViewModel extends BaseViewModel {
               _tambolaService.signOut();
               _analyticsService.signOut();
               _paytmService.signout();
-              AppState.backButtonDispatcher.didPopRoute();
               AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(
                 'Signed out automatically.',
                 'Seems like some internal issues. Please sign in again.',
               );
-            } else {
-              BaseUtil.showNegativeAlert(
-                'Sign out failed',
-                'Couldn\'t signout. Please try again',
-              );
-              //log.error('Sign out process failed');
             }
           });
         }
