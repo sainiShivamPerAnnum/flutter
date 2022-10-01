@@ -4,18 +4,14 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/sign_in_options.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -27,7 +23,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../util/styles/textStyles.dart';
-import '../../../widgets/buttons/fello_button/large_button.dart';
 
 class VerifyEmail extends StatefulWidget {
   static const int index = 3;
@@ -51,7 +46,6 @@ class VerifyEmailState extends State<VerifyEmail> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   String generatedOTP;
-  HttpModel httpProvider;
   bool _isContinueWithGoogle = false;
   //bool baseProvider.isGoogleSignInProgress = false;
   FocusNode focusNode;
@@ -119,8 +113,10 @@ class VerifyEmailState extends State<VerifyEmail> {
   }
 
   sendEmail() async {
-    if (!await httpProvider.isEmailNotRegistered(
-        _userService.baseUser.uid, email.text.trim())) {
+    final isEmailRegistered =
+        await _userRepo.isEmailRegistered(email.text.trim());
+
+    if (isEmailRegistered.model) {
       setState(() {
         _isProcessing = false;
       });
@@ -210,8 +206,10 @@ class VerifyEmailState extends State<VerifyEmail> {
     }
     final GoogleSignInAccount googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
-      if (await httpProvider.isEmailNotRegistered(
-          _userService.baseUser.uid, googleUser.email)) {
+      final isEmailRegistered =
+          await _userRepo.isEmailRegistered(googleUser.email);
+
+      if (!isEmailRegistered.model) {
         email.text = googleUser.email;
         _userService.baseUser.email = googleUser.email;
         baseProvider.setEmailVerified();
@@ -271,7 +269,6 @@ class VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    httpProvider = Provider.of<HttpModel>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: UiConstants.kBackgroundColor,

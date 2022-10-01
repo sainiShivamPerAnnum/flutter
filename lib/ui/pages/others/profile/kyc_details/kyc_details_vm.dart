@@ -1,31 +1,22 @@
-import 'dart:math';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/verify_pan_response_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 
 class KYCDetailsViewModel extends BaseViewModel {
   String stateChosenValue;
@@ -34,15 +25,11 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool isUpadtingKycDetails = false;
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
-  final _httpModel = locator<HttpModel>();
-  final _baseUtil = locator<BaseUtil>();
   final _analyticsService = locator<AnalyticsService>();
   final _bankingRepo = locator<BankingRepository>();
   final _gtService = locator<GoldenTicketService>();
-  final _internalOpsService = locator<InternalOpsService>();
   final _sellService = locator<BankAndPanService>();
   final _cacheService = new CacheService();
-  final _userRepo = locator<UserRepository>();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
@@ -50,15 +37,6 @@ class KYCDetailsViewModel extends BaseViewModel {
   TextInputType panTextInputType = TextInputType.name;
 
   final depositformKey3 = GlobalKey<FormState>();
-
-  // bool _isKycInProgress = false;
-
-  // get isKycInProgress => _isKycInProgress;
-
-  // set isKycInProgress(val) {
-  //   this._isKycInProgress = val;
-  //   notifyListeners();
-  // }
 
   init() {
     nameController = new TextEditingController();
@@ -206,69 +184,4 @@ class KYCDetailsViewModel extends BaseViewModel {
     }
   }
 
-  // Future<Map<String, dynamic>> _getVerifiedDetails(
-  //     String enteredPan, String enteredPanName) async {
-  //   if (enteredPan == null || enteredPan.isEmpty)
-  //     return {'flag': false, 'reason': 'Invalid Details'};
-  //   bool _flag = true;
-  //   int _failCode = 0;
-  //   String _reason = '';
-  //   String upstreamName = '';
-
-  //   try {
-  //     ApiResponse<VerifyPanResponseModel> _response =
-  //         await _bankingRepo.verifyPan(
-  //             uid: _userService.baseUser.uid,
-  //             panNumber: enteredPan,
-  //             panName: enteredPanName);
-
-  //     if (_response.isSuccess()) {
-  //       if (_response.model.gtId != null && _response.model.gtId.isNotEmpty)
-  //         GoldenTicketService.goldenTicketId = _response.model.gtId;
-  //       // clear cache
-  //       await _cacheService.invalidateByKey(CacheKeys.USER);
-  //       _flag = true;
-  //     } else {
-  //       _flag = false;
-  //       _reason = _response.errorMessage;
-  //     }
-
-  //     if (!_flag) {
-  //       _reason =
-  //           'The name on your PAN card does not match with the entered name. Please try again.';
-  //     } else {
-  //       upstreamName = _response.model.upstreamName;
-  //     }
-  //   } catch (e) {
-  //     _flag = false;
-  //     _logger.e(e.toString());
-  //     _reason =
-  //         'The name on your PAN card does not match with the entered name. Please try again.';
-  //   }
-  //   // }
-  //   // if (!_flag) {
-  //   //   _analyticsService.track(
-  //   //     eventName: AnalyticsEvents.kycVerificationFailed,
-  //   //     properties: {'userId': _userService.baseUser.uid},
-  //   //   );
-
-  //   //   print('returning false flag');
-  //   //   Map<String, dynamic> _data = {
-  //   //     'flag': _flag,
-  //   //     'fail_code': _failCode,
-  //   //     'reason': _reason,
-  //   //     'user_pan_name': enteredPanName,
-  //   //     'user_pan_number': enteredPan,
-  //   //     'upstream_name': upstreamName,
-  //   //   };
-  //   //   _internalOpsService.logFailure(
-  //   //       _userService.baseUser.uid, FailType.UserKYCFlagFetchFailed, _data);
-  //   //   return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
-  //   // }
-
-  //   return {
-  //     'upstreamName': upstreamName,
-  //     'flag': true,
-  //   };
-  // }
 }

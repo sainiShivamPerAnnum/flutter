@@ -12,19 +12,15 @@ import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -35,7 +31,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -57,7 +52,6 @@ class WinViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
-  final _campaignRepo = locator<CampaignRepo>();
   final _journeyRepo = locator<JourneyRepository>();
   final _baseUtil = locator<BaseUtil>();
   final _refRepo = locator<ReferralRepo>();
@@ -65,11 +59,9 @@ class WinViewModel extends BaseViewModel {
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
   final userRepo = locator<UserRepository>();
-  final _httpModel = locator<HttpModel>();
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _internalOpsService = locator<InternalOpsService>();
-  final _getterrepo = locator<GetterRepository>(); //TR
-  final _gtRepo = locator<GoldenTicketRepository>();
+  final _prizingRepo = locator<PrizingRepo>();
   int _unscratchedGTCount = 0;
 
   Timer _timer;
@@ -519,12 +511,12 @@ class WinViewModel extends BaseViewModel {
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-        _userService.baseUser.uid,
-        _userService.baseUser.username,
-        _userService.userFundWallet.unclaimedBalance,
-        choice);
-    if (response['status'] != null && response['status']) {
+    final response = await _prizingRepo.claimPrize(
+      _userService.userFundWallet.unclaimedBalance,
+      choice,
+    );
+
+    if (response.isSuccess()) {
       _userService.getUserFundWalletData();
       _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
@@ -532,8 +524,10 @@ class WinViewModel extends BaseViewModel {
 
       return true;
     } else {
-      BaseUtil.showNegativeAlert('Withdrawal Failed',
-          response['message'] ?? "Please try again after sometime");
+      BaseUtil.showNegativeAlert(
+        'Withdrawal Failed',
+        response.errorMessage ?? "Please try again after sometime",
+      );
       return false;
     }
   }

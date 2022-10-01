@@ -8,13 +8,12 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -37,12 +36,12 @@ import 'package:share_plus/share_plus.dart';
 class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final _logger = locator<CustomLogger>();
-  final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _localDBModel = locator<LocalDBModel>();
   final _analyticsService = locator<AnalyticsService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _prizingRepo = locator<PrizingRepo>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -267,14 +266,12 @@ class MyWinningsViewModel extends BaseViewModel {
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-      _userService.baseUser.uid,
-      _userService.baseUser.username,
+    final response = await _prizingRepo.claimPrize(
       _userService.userFundWallet.unclaimedBalance,
       choice,
     );
 
-    if (response['status'] != null && response['status']) {
+    if (response.isSuccess()) {
       _userService.getUserFundWalletData();
       _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
@@ -282,8 +279,10 @@ class MyWinningsViewModel extends BaseViewModel {
 
       return true;
     } else {
-      BaseUtil.showNegativeAlert('Withdrawal Failed',
-          response['message'] ?? "Please try again after sometime");
+      BaseUtil.showNegativeAlert(
+        'Withdrawal Failed',
+        response.errorMessage ?? "Please try again after sometime",
+      );
       return false;
     }
   }

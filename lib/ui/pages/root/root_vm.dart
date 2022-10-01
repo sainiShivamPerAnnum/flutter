@@ -1,13 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -26,7 +21,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -36,21 +30,16 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
-  final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final LocalDBModel _lModel = locator<LocalDBModel>();
-  final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository _userRepo = locator<UserRepository>();
@@ -350,10 +339,9 @@ class RootViewModel extends BaseViewModel {
         def: false,
       )) return;
 
-      await _httpModel.postUserReferral(
+      await _refRepo.createReferral(
         _userService.baseUser.uid,
         BaseUtil.referrerUserId,
-        _userService.myUserName,
       );
 
       _logger.d('referral processed from link');
@@ -372,10 +360,9 @@ class RootViewModel extends BaseViewModel {
         .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
 
     if (referrerId.code == 200) {
-      await _httpModel.postUserReferral(
+      await _refRepo.createReferral(
         _userService.baseUser.uid,
         referrerId.model,
-        _userService.myUserName,
       );
     } else {
       BaseUtil.showNegativeAlert(referrerId.errorMessage, '');
@@ -481,11 +468,9 @@ class RootViewModel extends BaseViewModel {
         String referee = deepLink.replaceAll(prefix, '');
         _logger.d(referee);
         if (prefix.length > 0 && prefix != userId) {
-          return _httpModel
-              .postUserReferral(userId, referee, userName)
-              .then((flag) {
+          return _refRepo.createReferral(userId, referee).then((res) {
             // _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return flag;
+            return res.model;
           });
         } else
           return false;

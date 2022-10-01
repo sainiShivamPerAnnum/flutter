@@ -33,6 +33,7 @@ class ApiPath {
   static String logOut(String uid) => "/user/$uid/logout";
   static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
+  static String isEmailRegistered(uid) => '/user/$uid/email/registered';
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";
@@ -99,6 +100,7 @@ class ApiPath {
   static String getGameByCode(String gameCode) => "/game/$gameCode";
 
   // referral
+  static const String createReferral = "/referral";
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
   static String getReferralHistory(String uid) => "/referrals/$uid";
@@ -112,4 +114,7 @@ class ApiPath {
 
   // lendbox
   static String lendboxWithdrawal(String uid) => "/user/$uid/withdrawal";
+
+  // prizes
+  static const String claimPrize = '/prize/claim';
 }

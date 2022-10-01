@@ -71,7 +71,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
         title: 'Are you sure you want\nto sell?',
         asset: BankDetailsCard(),
         description:
-            '₹${amount} will be credited to your linked bank account instantly',
+            '₹$amount will be credited to your linked bank account',
         buttonText: 'SELL',
         confirmAction: () async {
           AppState.backButtonDispatcher.didPopRoute();

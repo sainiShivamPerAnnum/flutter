@@ -1,47 +1,33 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/model/user_bootup_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../core/repository/user_repo.dart';
 
@@ -61,7 +47,6 @@ class LauncherViewModel extends BaseViewModel {
   final _baseUtil = locator<BaseUtil>();
   final _fcmListener = locator<FcmListener>();
   final userService = locator<UserService>();
-  final _httpModel = locator<HttpModel>();
   final _logger = locator<CustomLogger>();
   final _tambolaService = locator<TambolaService>();
   final _analyticsService = locator<AnalyticsService>();
@@ -188,7 +173,6 @@ class LauncherViewModel extends BaseViewModel {
         {'error': "Splash Screen init : $e"},
       );
     }
-    _httpModel.init();
     if (userService.isUserOnborded) _tambolaService.init();
     _timer3.cancel();
     log("Splash init http: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
@@ -336,29 +320,4 @@ class LauncherViewModel extends BaseViewModel {
     }
   }
 
-  // Future<bool> checkBreakingUpdateTest() async {
-  // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  // String currentBuild = packageInfo.buildNumber;
-  // _logger.i('Current Build $currentBuild');
-  // String minBuild = BaseRemoteConfig.remoteConfig.getString(Platform.isAndroid
-  //     ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID_2
-  //     : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS_2);
-  // _logger.v('Min Build Required $minBuild');
-  //minBuild = "50";
-  // try {
-  // if (int.parse(currentBuild) < int.parse(minBuild)) {
-  // if (userService != null && userService.baseUser != null) {
-  //   _logger.i("User mobile no: ${userService.baseUser.mobile}");
-  //   if (userService.baseUser.mobile.startsWith('99999000') ||
-  //       userService.baseUser.mobile.startsWith('88888000')) return true;
-  //   return false;
-  // }
-  // return false;
-  // }
-  // return false;
-  // } catch (e) {
-  //   _logger.e(e.toString());
-  //   return false;
-  // }
-  // }
 }
