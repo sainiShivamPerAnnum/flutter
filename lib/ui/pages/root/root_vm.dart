@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -26,7 +22,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -36,27 +31,22 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
-  final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final LocalDBModel _lModel = locator<LocalDBModel>();
-  final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository _userRepo = locator<UserRepository>();
   final _tambolaService = locator<TambolaService>();
   final _gtService = locator<GoldenTicketService>();
   int _bottomNavBarIndex = 1;
+  static bool canExecuteStartupNotification = true;
 
   final winnerService = locator<WinnerService>();
 
@@ -116,7 +106,6 @@ class RootViewModel extends BaseViewModel {
     _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
     _verifyReferral(AppState.delegate.navigatorKey.currentContext);
     initialize();
-    verifyUserBootupDetails();
   }
 
   onDispose() {
@@ -192,13 +181,13 @@ class RootViewModel extends BaseViewModel {
   }
 
   checkForBootUpAlerts() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     bool updateAvilable =
-        prefs.getBool(Constants.IS_APP_UPDATE_AVILABLE) ?? false;
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVILABLE, def: false);
     bool isMsgNoticeAvilable =
-        prefs.getBool(Constants.IS_MSG_NOTICE_AVILABLE) ?? false;
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVILABLE, def: false);
 
     if (updateAvilable) {
+      canExecuteStartupNotification = false;
       BaseUtil.openDialog(
         isBarrierDismissable: false,
         hapticVibrate: true,
@@ -229,7 +218,8 @@ class RootViewModel extends BaseViewModel {
         ),
       );
     } else if (isMsgNoticeAvilable) {
-      String msg = prefs.getString(Constants.MSG_NOTICE) ?? " ";
+      canExecuteStartupNotification = false;
+      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE) ?? " ";
       BaseUtil.openDialog(
         isBarrierDismissable: false,
         hapticVibrate: true,
@@ -253,15 +243,7 @@ class RootViewModel extends BaseViewModel {
   }
 
   initialize() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      bool canExecuteStartupNotification = true;
-
-      // bool showSecurityPrompt = false;
-      // if (_userService.showSecurityPrompt == null) {
-      //   showSecurityPrompt = await _lModel.showSecurityPrompt();
-      //   _userService.showSecurityPrompt = showSecurityPrompt;
-      // }
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.checkForUnscratchedGTStatus();
@@ -269,34 +251,10 @@ class RootViewModel extends BaseViewModel {
       // await _baseUtil.getProfilePicture();
 
       _initAdhocNotifications();
-
-      // show security modal
-      // if (showSecurityPrompt &&
-      //     _userService.baseUser.isAugmontOnboarded &&
-      //     _userService.userFundWallet.augGoldQuantity > 0 &&
-      //     _userService.baseUser.userPreferences
-      //             .getPreference(Preferences.APPLOCK) ==
-      //         0) {
-      //   canExecuteStartupNotification = false;
-      //   WidgetsBinding.instance?.addPostFrameCallback((_) {
-      //     _showSecurityBottomSheet();
-      //     _localDBModel.updateSecurityPrompt(false);
-      //   });
-      // }
-
-      if (canExecuteStartupNotification &&
-          AppState.startupNotifMessage != null) {
-        canExecuteStartupNotification = false;
-        _logger.d(
-          "terminated startup message: ${AppState.startupNotifMessage}",
-        );
-        _fcmListener.handleMessage(
-          AppState.startupNotifMessage,
-          MsgSource.Terminated,
-        );
-      }
-
-      checkForBootUpAlerts();
+      await verifyUserBootupDetails();
+      await checkForBootUpAlerts();
+      await checkIfAppLockModalSheetIsRequired();
+      await handleStartUpNotifictionData();
 
       // if (canExecuteStartupNotification &&
       //     _userService.isAnyUnscratchedGTAvailable) {
@@ -313,16 +271,12 @@ class RootViewModel extends BaseViewModel {
       //       hapticVibrate: true,
       //       isBarrierDismissable: false,
       //       content: FelloInfoDialog(
-      //         showCrossIcon: true,
-      //         asset: Assets.goldenTicket,
+      //         asset: Assets.tickets,
       //         title: "Your Golden Tickets are waiting",
       //         subtitle:
       //             "You have unopened Golden Tickets available in your rewards wallet",
-      //         action: FelloButtonLg(
-      //           child: Text(
-      //             "Open Rewards",
-      //             style: TextStyles.body2.bold.colour(Colors.white),
-      //           ),
+      //         action: AppPositiveBtn(
+      //           btnText: "Open Rewards",
       //           onPressed: () {
       //             AppState.backButtonDispatcher.didPopRoute();
       //             AppState.delegate.appState.currentAction = PageAction(
@@ -342,6 +296,40 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
+  handleStartUpNotifictionData() {
+    if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
+      canExecuteStartupNotification = false;
+      _logger.d(
+        "terminated startup message: ${AppState.startupNotifMessage}",
+      );
+      _fcmListener.handleMessage(
+        AppState.startupNotifMessage,
+        MsgSource.Terminated,
+      );
+    }
+  }
+
+  checkIfAppLockModalSheetIsRequired() async {
+    // show security modal
+
+    bool showSecurityPrompt = PreferenceHelper.getBool(
+        PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
+        def: true);
+    if (showSecurityPrompt &&
+        _userService.baseUser.isAugmontOnboarded &&
+        _userService.userFundWallet.augGoldQuantity > 0 &&
+        _userService.baseUser.userPreferences
+                .getPreference(Preferences.APPLOCK) ==
+            0) {
+      canExecuteStartupNotification = false;
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        _showSecurityBottomSheet();
+        PreferenceHelper.setBool(
+            PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET, false);
+      });
+    }
+  }
+
   Future<dynamic> _verifyReferral(BuildContext context) async {
     if (BaseUtil.referrerUserId != null) {
       // when referrer id is fetched from one-link
@@ -350,10 +338,9 @@ class RootViewModel extends BaseViewModel {
         def: false,
       )) return;
 
-      await _httpModel.postUserReferral(
+      await _refRepo.createReferral(
         _userService.baseUser.uid,
         BaseUtil.referrerUserId,
-        _userService.myUserName,
       );
 
       _logger.d('referral processed from link');
@@ -372,10 +359,9 @@ class RootViewModel extends BaseViewModel {
         .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
 
     if (referrerId.code == 200) {
-      await _httpModel.postUserReferral(
+      await _refRepo.createReferral(
         _userService.baseUser.uid,
         referrerId.model,
-        _userService.myUserName,
       );
     } else {
       BaseUtil.showNegativeAlert(referrerId.errorMessage, '');
@@ -481,11 +467,9 @@ class RootViewModel extends BaseViewModel {
         String referee = deepLink.replaceAll(prefix, '');
         _logger.d(referee);
         if (prefix.length > 0 && prefix != userId) {
-          return _httpModel
-              .postUserReferral(userId, referee, userName)
-              .then((flag) {
+          return _refRepo.createReferral(userId, referee).then((res) {
             // _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return flag;
+            return res.model;
           });
         } else
           return false;
@@ -537,19 +521,12 @@ class RootViewModel extends BaseViewModel {
               _tambolaService.signOut();
               _analyticsService.signOut();
               _paytmService.signout();
-              AppState.backButtonDispatcher.didPopRoute();
               AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(
                 'Signed out automatically.',
                 'Seems like some internal issues. Please sign in again.',
               );
-            } else {
-              BaseUtil.showNegativeAlert(
-                'Sign out failed',
-                'Couldn\'t signout. Please try again',
-              );
-              //log.error('Sign out process failed');
             }
           });
         }

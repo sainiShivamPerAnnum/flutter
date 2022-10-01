@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 class JourneyBackgroundModel {
   List<Color> colors;
@@ -72,16 +73,4 @@ class JourneyBackgroundModel {
 
   @override
   int get hashCode => colors.hashCode ^ stops.hashCode ^ asset.hashCode;
-}
-
-extension ColorExtension on String {
-  Color toColor() {
-    var hexColor = this.replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
-    }
-    if (hexColor.length == 8) {
-      return Color(int.parse("0x$hexColor"));
-    }
-  }
 }

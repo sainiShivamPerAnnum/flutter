@@ -1,10 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Ticket extends StatelessWidget {
   Ticket({
@@ -82,7 +84,7 @@ class Ticket extends StatelessWidget {
     if (ticketNumbers.isEmpty) generateNumberList();
     print(calledDigits);
     return Container(
-      width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+      width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -94,18 +96,30 @@ class Ticket extends StatelessWidget {
         children: [
           Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(SizeConfig.padding16),
+            padding: EdgeInsets.all(SizeConfig.padding8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      // 'Full House (2/5)',
-                      "",
-                      style: TextStyles.sourceSans.body3.colour(Colors.white),
-                    ),
+                    if (board.assigned_time.toDate().day == DateTime.now().day)
+                      Shimmer(
+                        gradient: LinearGradient(
+                          colors: [
+                            UiConstants.primaryLight,
+                            UiConstants.primaryColor,
+                            UiConstants.primaryLight
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        child: Text(
+                          "NEW",
+                          style: TextStyles.rajdhaniB.body3,
+                        ),
+                      ),
                     Row(
                       children: [
                         Text(
@@ -186,21 +200,16 @@ class Ticket extends StatelessWidget {
           // child: Odds(dailyPicks, board, bestBoards, showBestOdds),
           //   ),
           // ),
-          // Padding(
-          //   padding: EdgeInsets.all(SizeConfig.padding12),
-          //   child: InkWell(
-          //     onTap: () {
-          //       print(board.getTicketNumber());
-          //     },
-          //     child: Text(
-          //       "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
-          //       style: TextStyle(
-          //         color: Colors.grey,
-          //         fontSize: SizeConfig.smallTextSize,
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Padding(
+            padding: EdgeInsets.all(SizeConfig.padding6),
+            child: Text(
+              "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: SizeConfig.smallTextSize,
+              ),
+            ),
+          ),
         ],
       ),
     );

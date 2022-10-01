@@ -24,7 +24,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
   LoginMobileViewModel model;
   @override
   Widget build(BuildContext context) {
-    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
+        SizeConfig.viewInsets.bottom;
     return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;

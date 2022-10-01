@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -43,6 +44,32 @@ class CampaignRepo extends BaseRepo {
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
       );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch campaigns", 400);
+    }
+  }
+
+  Future<ApiResponse<List<FelloFactsModel>>> getFelloFacts() async {
+    List<FelloFactsModel> facts = [];
+    try {
+      final _token = await getBearerToken();
+
+      final response = await APIService.instance.getData(
+        ApiPath.kFelloFacts,
+        token: _token,
+        cBaseUrl: _baseUrl,
+      );
+
+      final responseData = response["data"];
+      logger.d(responseData);
+      if (responseData != null) {
+        responseData.forEach((e) {
+          facts.add(FelloFactsModel.fromMap(e));
+        });
+      }
+      return ApiResponse<List<FelloFactsModel>>(model: facts, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(

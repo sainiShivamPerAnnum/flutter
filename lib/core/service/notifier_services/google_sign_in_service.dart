@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -13,7 +10,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInService extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn();
-  final _httpProvider = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
@@ -35,8 +31,10 @@ class GoogleSignInService extends ChangeNotifier {
         return null;
       }
 
-      if (!(await _httpProvider.isEmailNotRegistered(
-          _userService.baseUser.uid, googleUser.email))) {
+      final isEmailRegistered =
+          await _userRepo.isEmailRegistered(googleUser.email);
+
+      if (isEmailRegistered.model) {
         BaseUtil.showNegativeAlert(
           "Email already registered",
           "Please try with another email",

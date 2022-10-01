@@ -1,4 +1,5 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/lendbox_withdrawable_quantity.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -19,7 +20,7 @@ class LendboxRepo extends BaseRepo {
       final String bearer = await getBearerToken();
 
       final response = await APIService.instance.postData(
-        ApiPath.lendboxWithdrawal(uid),
+        ApiPath.createLbWithdrawal(uid),
         body: {
           "amount": amount,
           "payoutSourceId": payoutSourceId,
@@ -30,6 +31,27 @@ class LendboxRepo extends BaseRepo {
 
       final data = response['data'];
       return ApiResponse(model: data['txnId'], code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<LendboxWithdrawableQuantity>>
+      getWithdrawableQuantity() async {
+    try {
+      final uid = userService.baseUser.uid;
+      final String bearer = await getBearerToken();
+
+      final response = await APIService.instance.getData(
+        ApiPath.lbWithdrawableQuantity(uid),
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      final data = response['data'];
+      return ApiResponse(
+          model: LendboxWithdrawableQuantity.fromMap(data), code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

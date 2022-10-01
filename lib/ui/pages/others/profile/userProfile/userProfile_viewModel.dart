@@ -40,6 +40,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 //Pub Imports
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../../core/repository/user_repo.dart';
 
@@ -542,12 +543,50 @@ class UserProfileVM extends BaseViewModel {
     }
   }
 
+  Future<bool> checkGalleryPermission() async {
+    if (await BaseUtil.showNoInternetAlert()) return false;
+    var _status = await Permission.photos.status;
+    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "Request Permission",
+          description:
+              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+          buttonText: "Continue",
+          asset: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Image.asset(
+              "images/gallery.png",
+              height: SizeConfig.screenWidth * 0.24,
+            ),
+          ),
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            _chooseprofilePicture();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+        ),
+      );
+    } else if (_status.isGranted) {
+      _chooseprofilePicture();
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Permission Unavailable',
+        'Please enable permission from settings to continue',
+      );
+      return false;
+    }
+    return false;
+  }
+
   handleDPOperation() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     AppState.backButtonDispatcher.didPopRoute();
-    if (await _userService.checkGalleryPermission()) {
-      _chooseprofilePicture();
-    }
+    checkGalleryPermission();
 
     // var _status = await Permission.photos.status;
     // if (_status.isRestricted || _status.isLimited || _status.isDenied) {

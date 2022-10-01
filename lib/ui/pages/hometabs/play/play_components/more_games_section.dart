@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -98,39 +94,61 @@ class MoreGames extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: SizeConfig.padding16,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          game.gameName,
-                          style: TextStyles.sourceSans.bold.body1
-                              .colour(Colors.white),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding8,
-                        ),
-                        Text(
-                          "Win upto ₹${game.prizeAmount.toString()}",
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(
-                                  Assets.token,
-                                  height: SizeConfig.padding20,
+              ),
+              SizedBox(
+                width: SizeConfig.padding16,
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        game.gameName,
+                        style: TextStyles.rajdhaniSB.bold.body1
+                            .colour(Colors.white),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding8,
+                      ),
+                      Text(
+                        "Win upto ₹${game.prizeAmount.toString()}",
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor2),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                Assets.token,
+                                height: SizeConfig.padding20,
+                              ),
+                              SizedBox(width: SizeConfig.padding6),
+                              Text(
+                                game.playCost.toString(),
+                                style: TextStyles.sourceSans.body2
+                                    .colour(Colors.white),
+                              )
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate.parseRoute(
+                                Uri.parse(game.route),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: UiConstants.playButtonColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(SizeConfig.roundness8),
                                 ),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(

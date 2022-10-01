@@ -1,19 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/game_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -25,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
@@ -106,26 +99,7 @@ class WebHomeView extends StatelessWidget {
                                             SizeConfig.padding12,
                                         left: SizeConfig.pageHorizontalMargins *
                                             2),
-                                    child:
-                                        // Stack(
-                                        //   children: [
-                                        //     SvgPicture.network(
-                                        //       model.currentGameModel.thumbnailUri,
-                                        //       width: SizeConfig.screenWidth,
-                                        //       fit: BoxFit.cover,
-                                        //     ),
-                                        //     Positioned(
-                                        //       left:
-                                        //           SizeConfig.pageHorizontalMargins *
-                                        //               2,
-                                        //       child: Container(
-                                        //         margin: EdgeInsets.only(
-                                        //           top: SizeConfig.viewInsets.top +
-                                        //               SizeConfig.padding12,
-                                        //         ),
-                                        //         width: SizeConfig.screenWidth,
-                                        //         child:
-                                        Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
@@ -550,7 +524,7 @@ class RechargeBox extends StatelessWidget {
         : InkWell(
             onTap: () {
               return BaseUtil()
-                  .openRechargeModalSheet(amt: rechargeOption.amount);
+                  .openDepositOptionsModalSheet(amount: rechargeOption.amount);
             },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),

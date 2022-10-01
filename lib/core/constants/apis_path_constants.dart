@@ -33,6 +33,7 @@ class ApiPath {
   static String logOut(String uid) => "/user/$uid/logout";
   static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
+  static String isEmailRegistered(uid) => '/user/$uid/email/registered';
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";
@@ -52,6 +53,7 @@ class ApiPath {
   get kActiveSubscription => "/subscription";
   get kNextDebitDate => "/debit";
   static const kOngoingCampaigns = "/campaigns";
+  static const kFelloFacts = "/fello/facts";
 
   //tambola game Apis
   static String tambolaTickets(String uid) => "/$uid/tickets";
@@ -99,6 +101,7 @@ class ApiPath {
   static String getGameByCode(String gameCode) => "/game/$gameCode";
 
   // referral
+  static const String createReferral = "/referral";
   static String getUserIdByRefCode(String code) => "/referral/$code";
   static String getReferralCode(String uid) => "/user/referral/$uid";
   static String getReferralHistory(String uid) => "/referrals/$uid";
@@ -111,5 +114,10 @@ class ApiPath {
   static String kSkipMilestone(String uid) => "/user/$uid/skip/milestone";
 
   // lendbox
-  static String lendboxWithdrawal(String uid) => "/user/$uid/withdrawal";
+  static String createLbWithdrawal(String uid) => "/user/$uid/withdrawal";
+  static String lbWithdrawableQuantity(String uid) =>
+      "/user/$uid/lb/withdrawable";
+
+  // prizes
+  static const String claimPrize = '/prize/claim';
 }

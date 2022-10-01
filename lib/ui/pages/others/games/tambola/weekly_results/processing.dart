@@ -24,7 +24,7 @@ class PrizeProcessing extends StatelessWidget {
             Spacer(
               flex: 1,
             ),
-            FullScreenLoader(size: SizeConfig.padding64),
+            FullScreenLoader(),
             SizedBox(
               height: SizeConfig.padding24,
             ),

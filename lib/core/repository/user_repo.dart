@@ -173,8 +173,11 @@ class UserRepository extends BaseRepo {
         'otp': otp,
       };
 
-      final res = await APIService.instance
-          .getData(ApiPath.verifyOtp, queryParams: query, cBaseUrl: _baseUrl);
+      final res = await APIService.instance.getData(
+        ApiPath.verifyOtp,
+        queryParams: query,
+        cBaseUrl: _baseUrl,
+      );
 
       return ApiResponse(code: 200, model: res['data']['token']);
     } catch (e) {
@@ -512,12 +515,13 @@ class UserRepository extends BaseRepo {
       final token = await getBearerToken();
 
       final respone = await APIService.instance.getData(
-          ApiPath.userBootUp(
-            userService.baseUser.uid,
-          ),
-          token: token,
-          queryParams: queryParameters,
-          cBaseUrl: _baseUrl);
+        ApiPath.userBootUp(
+          userService.baseUser.uid,
+        ),
+        token: token,
+        queryParams: queryParameters,
+        cBaseUrl: _baseUrl,
+      );
 
       userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
@@ -542,6 +546,26 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> isEmailRegistered(String email) async {
+    try {
+      final query = {
+        'email': email,
+      };
+
+      final uid = userService?.baseUser?.uid;
+      final res = await APIService.instance.getData(
+        ApiPath.isEmailRegistered(uid),
+        queryParams: query,
+        cBaseUrl: _baseUrl,
+      );
+
+      return ApiResponse(code: 200, model: res['data']['isEmailRegistered']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError("send OTP failed", 400);
     }
   }
 }

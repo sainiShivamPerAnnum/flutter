@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
@@ -94,7 +91,7 @@ class TrendingGames extends StatelessWidget {
             Text(
               game.gameName.split(' ').first,
               textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body1.colour(Colors.white),
+              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding12),
             Column(

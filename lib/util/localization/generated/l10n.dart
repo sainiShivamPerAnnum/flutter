@@ -1091,7 +1091,7 @@ class S {
   /// `Tambola Results`
   String get tLossTitle {
     return Intl.message(
-      'Better luck next time!',
+      'Tambola Results',
       name: 'tLossTitle',
       desc: '',
       args: [],
@@ -1101,8 +1101,18 @@ class S {
   /// `None of your tickets matched this week`
   String get tLossSubtitle {
     return Intl.message(
-      'None of your tickets matched this time. Save & get Tambola tickets for the coming week!',
+      'None of your tickets matched this week',
       name: 'tLossSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get ready for next week tambola from now on.`
+  String get tLossSubtitle2 {
+    return Intl.message(
+      'Get ready for next week tambola from now on.',
+      name: 'tLossSubtitle2',
       desc: '',
       args: [],
     );

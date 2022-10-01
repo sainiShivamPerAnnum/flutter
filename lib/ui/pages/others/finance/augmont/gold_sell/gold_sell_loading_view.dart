@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -19,13 +21,12 @@ import 'package:lottie/lottie.dart';
 
 class GoldSellLoadingView extends StatelessWidget {
   final GoldSellViewModel model;
-  final AugmontTransactionService augTxnservice;
+
   final _augTxnService = locator<AugmontTransactionService>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView(
-      {Key key, @required this.model, @required this.augTxnservice})
-      : super(key: key);
+  GoldSellLoadingView({Key key, @required this.model}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -80,13 +81,13 @@ class GoldSellLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _augTxnService
-                    .processPolling(_augTxnService.pollingPeriodicTimer);
-                if (_augTxnService.currentTransactionState !=
-                    TransactionState.ongoing) return;
+                // await _augTxnService
+                //     .processPolling(_augTxnService.pollingPeriodicTimer);
+                // if (_augTxnService.currentTransactionState !=
+                //     TransactionState.ongoing) return;
 
-                _augTxnService.pollingPeriodicTimer?.cancel();
-
+                // _augTxnService.pollingPeriodicTimer?.cancel();
+                _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
                 _augTxnService.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {

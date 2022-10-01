@@ -34,7 +34,6 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
       isBarrierDismissable: true,
       hapticVibrate: false,
       content: FelloInfoDialog(
-        showCrossIcon: false,
         title: title,
         subtitle: body,
         action: Container(

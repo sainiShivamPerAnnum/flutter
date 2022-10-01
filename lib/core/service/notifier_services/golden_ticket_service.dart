@@ -16,6 +16,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -271,83 +272,17 @@ class GoldenTicketService extends ChangeNotifier {
       isBarrierDismissable: false,
       hapticVibrate: true,
       content: FelloInfoDialog(
-        defaultPadding: false,
-        isAddedToScreenStack: true,
-        customContent: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness40),
-          ),
-          child: Column(children: [
-            Container(
-              width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
-                // color: UiConstants.primaryLight,
-                gradient: LinearGradient(
-                  colors: [
-                    UiConstants.primaryColor.withOpacity(0.6),
-                    UiConstants.primaryLight
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.roundness40),
-                  topRight: Radius.circular(SizeConfig.roundness40),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.pageHorizontalMargins,
-                  left: SizeConfig.pageHorizontalMargins,
-                  right: SizeConfig.pageHorizontalMargins,
-                ),
-                child: Image.asset(
-                  Assets.preAutosave,
-                  height: SizeConfig.screenHeight * 0.2,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.04,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              child: Column(
-                children: [
-                  Text(
-                    "Put your savings on autopilot",
-                    style: TextStyles.title3.bold,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Text(
-                    "Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!",
-                    textAlign: TextAlign.center,
-                    style: TextStyles.body2.colour(Colors.grey),
-                  ),
-                  SizedBox(height: SizeConfig.screenHeight * 0.02),
-                  FelloButtonLg(
-                    color: UiConstants.primaryColor,
-                    child: Text(
-                      "Setup Autosave",
-                      style: TextStyles.body2.bold.colour(Colors.white),
-                    ),
-                    onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
-                      openAutosave();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.pageHorizontalMargins,
-            )
-          ]),
+        title: "Put your savings on autopilot",
+        subtitle:
+            "Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!",
+        png: Assets.preAutosave,
+        action: AppPositiveBtn(
+          btnText: "Setup Autosave",
+          onPressed: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            openAutosave();
+          },
         ),
-        showCrossIcon: true,
       ),
     );
   }

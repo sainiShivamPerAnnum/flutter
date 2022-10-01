@@ -505,16 +505,15 @@ class TambolaHomeViewModel extends BaseViewModel {
         userWeeklyBoards.isEmpty ||
         weeklyDigits == null ||
         weeklyDigits.toList().length != 7 * dailyPicksCount) {
-      PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, true);
       _logger.i('Testing is not ready yet');
       return;
     }
 
-    final show = PreferenceHelper.getBool(
-      PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
-      def: true,
-    );
-    if (show == false) return;
+    // final show = PreferenceHelper.getBool(
+    //   PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
+    //   def: true,
+    // );
+    // if (show == false) return;
 
     userWeeklyBoards.forEach((boardObj) {
       if (boardObj.getCornerOdds(

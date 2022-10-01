@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -83,6 +81,31 @@ class ReferralRepo extends BaseRepo {
       );
     } catch (e) {
       logger.e('Referral History fetch error $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> createReferral(
+    String userId,
+    String referee,
+  ) async {
+    try {
+      final String bearer = await getBearerToken();
+
+      final response = await APIService.instance.postData(
+        ApiPath.createReferral,
+        body: {
+          'uid': userId,
+          'rid': referee,
+        },
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      this.logger.d(response);
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

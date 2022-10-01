@@ -110,7 +110,6 @@ class _AmountInputViewState extends State<AmountInputView> {
                       },
                       maxLength: widget.maxAmount.toString().length,
                       keyboardType: TextInputType.numberWithOptions(
-                        signed: true,
                         decimal: true,
                       ),
                       inputFormatters: [

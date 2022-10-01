@@ -17,19 +17,16 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
@@ -202,7 +199,7 @@ class TicketsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Your Best tickets",
+                  "Your Best ticket",
                   style: TextStyles.rajdhaniSB.body0,
                 ),
               ],
@@ -225,7 +222,7 @@ class TicketsView extends StatelessWidget {
         ],
       );
     } else {
-      //Multuple tickets
+      //Multiple tickets
       if (!model.ticketsLoaded) {
         model.ticketsLoaded = true;
         model.tambolaBoardViews = [];
@@ -437,7 +434,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
               height: SizeConfig.padding16,
             ),
             Container(
-              height: SizeConfig.screenWidth * 0.51,
+              height: SizeConfig.screenWidth * 0.56,
               child: TabBarView(
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
@@ -615,12 +612,12 @@ class Odds extends StatelessWidget {
             board: _bestBoard,
             showBestOdds: false,
             calledDigits: _digits),
-        SizedBox(
-          height: SizeConfig.padding8,
-        ),
-        SizedBox(
-          height: SizeConfig.padding6,
-        ),
+        // SizedBox(
+        //   height: SizeConfig.padding8,
+        // ),
+        // SizedBox(
+        //   height: SizeConfig.padding6,
+        // ),
       ],
     );
   }
@@ -826,7 +823,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
     return Column(
       children: [
         Container(
-          height: SizeConfig.screenWidth * 0.45,
+          height: SizeConfig.screenWidth * 0.48,
           child: PageView(
             physics: BouncingScrollPhysics(),
             controller: widget.model.ticketPageController,
