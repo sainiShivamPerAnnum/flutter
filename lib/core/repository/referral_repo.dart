@@ -97,7 +97,7 @@ class ReferralRepo extends BaseRepo {
         body: {
           'uid': userId,
           'rid': referee,
-        },  
+        },
         token: bearer,
         cBaseUrl: _baseUrl,
       );

@@ -183,5 +183,4 @@ class KYCDetailsViewModel extends BaseViewModel {
       _logger.e(e.toString());
     }
   }
-
 }

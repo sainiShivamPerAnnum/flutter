@@ -150,7 +150,7 @@ class LendboxSuccessView extends StatelessWidget {
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                            "₹ ${BaseUtil.getIntOrDouble(_txnService.currentTxnAmount)}",
+                            "₹ ${_txnService.currentTxnAmount.toStringAsFixed(2)}",
                             style: TextStyles.rajdhaniB.title3,
                           ),
                           SizedBox(

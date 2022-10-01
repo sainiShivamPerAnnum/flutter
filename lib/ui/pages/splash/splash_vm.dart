@@ -319,5 +319,4 @@ class LauncherViewModel extends BaseViewModel {
       return false;
     }
   }
-
 }

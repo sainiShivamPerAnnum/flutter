@@ -1,11 +1,9 @@
-import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
-import 'package:felloapp/ui/service_elements/user_service/lendbox_processing_value.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -34,25 +32,13 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               isEnabled: !model.inProgress,
             ),
             SizedBox(height: SizeConfig.padding32),
-            if (model.processingQty > 0)
-              SellCardInfoStrips(
-                leadingIcon: Row(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: UiConstants.kTextColor,
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    LendboxProcessingValue(
-                      style: TextStyles.sourceSans.body4.colour(
-                        UiConstants.kTextColor2,
-                      ),
-                    ),
-                  ],
+            if (model.state == ViewState.Idle &&
+                model.withdrawableQuantity.lockedAmount > 0)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                child: SellCardInfoStrips(
+                  content: model.withdrawableQuantity.lockedMessage,
                 ),
-                content: '  amount is processing',
               ),
             SizedBox(height: SizeConfig.padding32),
             AmountInputView(
@@ -60,7 +46,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               focusNode: model.fieldNode,
               chipAmounts: [],
               isEnabled: !model.inProgress,
-              maxAmount: model.withdrawableQty,
+              maxAmount: model.withdrawableQuantity?.amount ?? 2,
               maxAmountMsg: "You can't withdraw more than available balance",
               minAmount: model.minAmount,
               minAmountMsg: "how are you gonna withdraw less than 1?",
@@ -70,7 +56,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             ),
             Spacer(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding38),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -79,11 +65,11 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
-                  UserFundQuantitySE(
+                  Text(
+                    '₹ ${model.withdrawableQuantity?.amount ?? 0}',
                     style: TextStyles.sourceSansSB.body0.colour(
                       UiConstants.kTextColor,
                     ),
-                    investmentType: InvestmentType.LENDBOXP2P,
                   ),
                 ],
               ),
@@ -91,7 +77,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding32,
             ),
-            model.inProgress
+            model.state == ViewState.Busy || model.inProgress
                 ? SpinKitThreeBounce(
                     color: Colors.white,
                     size: 20,

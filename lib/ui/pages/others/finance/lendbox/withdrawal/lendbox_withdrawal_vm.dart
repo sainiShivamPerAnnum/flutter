@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/lendbox_withdrawable_quantity.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -41,15 +42,19 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   TextEditingController amountController;
   TextEditingController vpaController;
 
-  double get processingQty =>
-      _userService.userFundWallet?.wLbProcessingAmt ?? 0;
-  double get withdrawableQty => _userService.userFundWallet?.wLbBalance ?? 0;
+  LendboxWithdrawableQuantity withdrawableQuantity;
 
   Future<void> init() async {
     setState(ViewState.Busy);
     amountController = TextEditingController(
       text: "1",
     );
+
+    final response = await _lendboxRepo.getWithdrawableQuantity();
+    if (response.isSuccess()) {
+      withdrawableQuantity = response.model;
+    }
+
     setState(ViewState.Idle);
   }
 
@@ -70,8 +75,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       content: ConfirmationDialog(
         title: 'Are you sure you want\nto sell?',
         asset: BankDetailsCard(),
-        description:
-            '₹$amount will be credited to your linked bank account',
+        description: '₹$amount will be credited to your linked bank account',
         buttonText: 'SELL',
         confirmAction: () async {
           AppState.backButtonDispatcher.didPopRoute();
@@ -133,10 +137,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       return 0;
     }
 
-    if (amount > withdrawableQty) {
+    if (amount > withdrawableQuantity.amount) {
       BaseUtil.showNegativeAlert(
-        'Max amount is ${this.withdrawableQty}',
-        'Please enter an amount lower than ${this.withdrawableQty}',
+        'Max amount is ${this.withdrawableQuantity.amount}',
+        'Please enter an amount lower than ${this.withdrawableQuantity.amount}',
       );
       return 0;
     }

@@ -113,7 +113,9 @@ class ApiPath {
   static String kSkipMilestone(String uid) => "/user/$uid/skip/milestone";
 
   // lendbox
-  static String lendboxWithdrawal(String uid) => "/user/$uid/withdrawal";
+  static String createLbWithdrawal(String uid) => "/user/$uid/withdrawal";
+  static String lbWithdrawableQuantity(String uid) =>
+      "/user/$uid/lb/withdrawable";
 
   // prizes
   static const String claimPrize = '/prize/claim';
