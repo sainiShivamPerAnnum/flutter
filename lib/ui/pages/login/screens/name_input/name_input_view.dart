@@ -32,8 +32,6 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
   LoginNameInputViewModel model;
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-
     return BaseView<LoginNameInputViewModel>(
       onModelReady: (model) {
         this.model = model;

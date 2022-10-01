@@ -97,28 +97,9 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             ),
           ],
         ),
-        if (MediaQuery.of(context).viewInsets.bottom !=
-            SizeConfig.viewInsets.bottom)
-          Positioned(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.padding54,
-              color: UiConstants.kArowButtonBackgroundColor,
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins,
-              ),
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () => model.fieldNode.unfocus(),
-                child: Text(
-                  'DONE',
-                  style: TextStyles.rajdhaniB.body1
-                      .colour(UiConstants.primaryColor),
-                ),
-              ),
-            ),
-          ),
+        CustomKeyboardSubmitButton(
+          onSubmit: () => model.fieldNode.unfocus(),
+        )
       ],
     );
   }

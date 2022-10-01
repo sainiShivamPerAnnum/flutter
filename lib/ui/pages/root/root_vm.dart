@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -32,7 +33,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
@@ -46,6 +46,7 @@ class RootViewModel extends BaseViewModel {
   final _tambolaService = locator<TambolaService>();
   final _gtService = locator<GoldenTicketService>();
   int _bottomNavBarIndex = 1;
+  static bool canExecuteStartupNotification = true;
 
   final winnerService = locator<WinnerService>();
 
@@ -181,13 +182,13 @@ class RootViewModel extends BaseViewModel {
   }
 
   checkForBootUpAlerts() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     bool updateAvilable =
-        prefs.getBool(Constants.IS_APP_UPDATE_AVILABLE) ?? false;
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVILABLE, def: false);
     bool isMsgNoticeAvilable =
-        prefs.getBool(Constants.IS_MSG_NOTICE_AVILABLE) ?? false;
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVILABLE, def: false);
 
     if (updateAvilable) {
+      canExecuteStartupNotification = false;
       BaseUtil.openDialog(
         isBarrierDismissable: false,
         hapticVibrate: true,
@@ -218,7 +219,8 @@ class RootViewModel extends BaseViewModel {
         ),
       );
     } else if (isMsgNoticeAvilable) {
-      String msg = prefs.getString(Constants.MSG_NOTICE) ?? " ";
+      canExecuteStartupNotification = false;
+      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE) ?? " ";
       BaseUtil.openDialog(
         isBarrierDismissable: false,
         hapticVibrate: true,
@@ -242,15 +244,7 @@ class RootViewModel extends BaseViewModel {
   }
 
   initialize() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      bool canExecuteStartupNotification = true;
-
-      // bool showSecurityPrompt = false;
-      // if (_userService.showSecurityPrompt == null) {
-      //   showSecurityPrompt = await _lModel.showSecurityPrompt();
-      //   _userService.showSecurityPrompt = showSecurityPrompt;
-      // }
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.checkForUnscratchedGTStatus();
@@ -259,33 +253,9 @@ class RootViewModel extends BaseViewModel {
 
       _initAdhocNotifications();
 
-      // show security modal
-      // if (showSecurityPrompt &&
-      //     _userService.baseUser.isAugmontOnboarded &&
-      //     _userService.userFundWallet.augGoldQuantity > 0 &&
-      //     _userService.baseUser.userPreferences
-      //             .getPreference(Preferences.APPLOCK) ==
-      //         0) {
-      //   canExecuteStartupNotification = false;
-      //   WidgetsBinding.instance?.addPostFrameCallback((_) {
-      //     _showSecurityBottomSheet();
-      //     _localDBModel.updateSecurityPrompt(false);
-      //   });
-      // }
-
-      if (canExecuteStartupNotification &&
-          AppState.startupNotifMessage != null) {
-        canExecuteStartupNotification = false;
-        _logger.d(
-          "terminated startup message: ${AppState.startupNotifMessage}",
-        );
-        _fcmListener.handleMessage(
-          AppState.startupNotifMessage,
-          MsgSource.Terminated,
-        );
-      }
-
-      checkForBootUpAlerts();
+      await checkForBootUpAlerts();
+      await checkIfAppLockModalSheetIsRequired();
+      await handleStartUpNotifictionData();
 
       // if (canExecuteStartupNotification &&
       //     _userService.isAnyUnscratchedGTAvailable) {
@@ -302,16 +272,12 @@ class RootViewModel extends BaseViewModel {
       //       hapticVibrate: true,
       //       isBarrierDismissable: false,
       //       content: FelloInfoDialog(
-      //         showCrossIcon: true,
-      //         asset: Assets.goldenTicket,
+      //         asset: Assets.tickets,
       //         title: "Your Golden Tickets are waiting",
       //         subtitle:
       //             "You have unopened Golden Tickets available in your rewards wallet",
-      //         action: FelloButtonLg(
-      //           child: Text(
-      //             "Open Rewards",
-      //             style: TextStyles.body2.bold.colour(Colors.white),
-      //           ),
+      //         action: AppPositiveBtn(
+      //           btnText: "Open Rewards",
       //           onPressed: () {
       //             AppState.backButtonDispatcher.didPopRoute();
       //             AppState.delegate.appState.currentAction = PageAction(
@@ -329,6 +295,40 @@ class RootViewModel extends BaseViewModel {
       //       type: CacheType.int);
       // }
     });
+  }
+
+  handleStartUpNotifictionData() {
+    if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
+      canExecuteStartupNotification = false;
+      _logger.d(
+        "terminated startup message: ${AppState.startupNotifMessage}",
+      );
+      _fcmListener.handleMessage(
+        AppState.startupNotifMessage,
+        MsgSource.Terminated,
+      );
+    }
+  }
+
+  checkIfAppLockModalSheetIsRequired() async {
+    // show security modal
+
+    bool showSecurityPrompt = PreferenceHelper.getBool(
+        PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
+        def: true);
+    if (showSecurityPrompt &&
+        _userService.baseUser.isAugmontOnboarded &&
+        _userService.userFundWallet.augGoldQuantity > 0 &&
+        _userService.baseUser.userPreferences
+                .getPreference(Preferences.APPLOCK) ==
+            0) {
+      canExecuteStartupNotification = false;
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        _showSecurityBottomSheet();
+        PreferenceHelper.setBool(
+            PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET, false);
+      });
+    }
   }
 
   Future<dynamic> _verifyReferral(BuildContext context) async {

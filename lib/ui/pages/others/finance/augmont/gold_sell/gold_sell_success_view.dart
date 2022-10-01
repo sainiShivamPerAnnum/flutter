@@ -133,7 +133,7 @@ class GoldSellSuccessView extends StatelessWidget {
                           Text("Received", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(augTxnservice.currentTxnAmount)}",
+                              "₹ ${BaseUtil.digitPrecision(augTxnservice.currentTxnAmount, 2)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -176,7 +176,7 @@ class GoldSellSuccessView extends StatelessWidget {
               AppState.backButtonDispatcher.didPopRoute();
             },
             child: Text(
-              "Done",
+              "DONE",
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

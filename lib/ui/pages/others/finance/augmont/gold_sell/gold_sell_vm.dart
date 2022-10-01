@@ -83,7 +83,6 @@ class GoldSellViewModel extends BaseViewModel {
   }
 
   AugmontRates goldRates;
-  bool _isGoldSellInProgress = false;
   FocusNode sellFieldNode = FocusNode();
   String _sellNotice;
 
@@ -106,13 +105,6 @@ class GoldSellViewModel extends BaseViewModel {
   double get goldSellPrice => goldRates != null ? goldRates.goldSellPrice : 0.0;
 
   UserFundWallet get userFundWallet => _userService.userFundWallet;
-
-  get isGoldSellInProgress => this._isGoldSellInProgress;
-
-  set isGoldSellInProgress(value) {
-    this._isGoldSellInProgress = value;
-    notifyListeners();
-  }
 
   get goldAmountFromGrams => this._goldAmountFromGrams;
 
@@ -337,11 +329,11 @@ class GoldSellViewModel extends BaseViewModel {
     double sellGramAmount = double.tryParse(goldAmountController.text.trim());
     _augTxnService.currentTxnAmount = goldAmountFromGrams;
     _augTxnService.currentTxnGms = sellGramAmount;
-    isGoldSellInProgress = true;
+    _augTxnService.isGoldSellInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);
     final res =
         await _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
-    isGoldSellInProgress = false;
+    _augTxnService.isGoldSellInProgress = false;
 
     if (res)
       _augTxnService.currentTransactionState = TransactionState.ongoing;

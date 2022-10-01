@@ -46,7 +46,7 @@ class GoldenTicketsView extends StatelessWidget {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return Center(
-                    child: FullScreenLoader(size: SizeConfig.padding32),
+                    child: FullScreenLoader(),
                   );
                 default:
                   log("Items: " + snapshot.data.length.toString());

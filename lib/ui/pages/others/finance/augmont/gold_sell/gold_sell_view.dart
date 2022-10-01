@@ -75,7 +75,7 @@ class GoldSellView extends StatelessWidget {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return GoldSellInputView(model: model, augTxnservice: txnService);
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return GoldSellLoadingView(model: model, augTxnservice: txnService);
+      return GoldSellLoadingView(model: model);
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return GoldSellSuccessView(model: model, augTxnservice: txnService);
     }

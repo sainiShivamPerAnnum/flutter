@@ -10,9 +10,11 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -62,6 +64,7 @@ class WinViewModel extends BaseViewModel {
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _prizingRepo = locator<PrizingRepo>();
+  final _campaignRepo = locator<CampaignRepo>();
   int _unscratchedGTCount = 0;
 
   Timer _timer;
@@ -94,6 +97,16 @@ class WinViewModel extends BaseViewModel {
   List<UserTransaction> get winningHistory => this._winningHistory;
   set winningHistory(List<UserTransaction> value) {
     this._winningHistory = value;
+    notifyListeners();
+  }
+
+  List<FelloFactsModel> fellofacts = [];
+
+  bool _isFelloFactsLoading = false;
+  get isFelloFactsLoading => this._isFelloFactsLoading;
+
+  set isFelloFactsLoading(value) {
+    this._isFelloFactsLoading = value;
     notifyListeners();
   }
 
@@ -207,7 +220,7 @@ class WinViewModel extends BaseViewModel {
     fetchReferralCode();
     fectchBasicConstantValues();
     // _baseUtil.fetchUserAugmontDetail();
-
+    getFelloFacts();
     _lbService.fetchReferralLeaderBoard();
 
     _winnerService.fetchWinners();
@@ -698,6 +711,19 @@ class WinViewModel extends BaseViewModel {
     double heightToFill = (fillPercent / 100) * containerHeight;
 
     return heightToFill;
+  }
+
+  getFelloFacts() async {
+    isFelloFactsLoading = true;
+    final res = await _campaignRepo.getFelloFacts();
+    if (res.isSuccess()) {
+      fellofacts = res.model;
+      _logger.d("Fello Facts Fetched Length: ${fellofacts.length}");
+    } else {
+      fellofacts = [];
+    }
+    _logger.d("Fello Facts Length: ${fellofacts.length}");
+    isFelloFactsLoading = false;
   }
 
   getRedeemAsset(double walletBalnce) {

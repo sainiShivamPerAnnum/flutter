@@ -94,7 +94,7 @@ class TrendingGames extends StatelessWidget {
             Text(
               game.gameName.split(' ').first,
               textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body1.colour(Colors.white),
+              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding12),
             Column(

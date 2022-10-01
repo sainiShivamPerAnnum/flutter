@@ -88,7 +88,7 @@ class _TransactionDetailsBottomSheetState
                     children: [
                       Text(
                         'Transaction Details',
-                        style: TextStyles.sourceSans.body2,
+                        style: TextStyles.rajdhaniB.title3,
                       ),
                       GestureDetector(
                         onTap: () {
@@ -223,7 +223,8 @@ class _TransactionDetailsBottomSheetState
                       )
                     ],
                   ),
-                if (widget.transaction.transactionUpdatesMap != null)
+                if (widget.transaction.transactionUpdatesMap != null &&
+                    widget.transaction.transactionUpdatesMap.isNotEmpty)
                   Container(
                     width: SizeConfig.screenWidth,
                     margin: EdgeInsets.symmetric(
@@ -374,6 +375,9 @@ class TransactionSummary extends StatelessWidget {
   int naPoint = 0;
   @override
   Widget build(BuildContext context) {
+    summary.forEach((sum) {
+      print("${sum.toString()}");
+    });
     naPoint = summary.length;
     for (int i = 0; i < summary.length; i++) {
       if (summary[i].value != null && summary[i].value == 'NA') {

@@ -21,7 +21,7 @@ class UserEmailVerificationButton extends StatelessWidget {
           ? Icon(
               Icons.verified,
               color: UiConstants.primaryColor,
-              size: SizeConfig.iconSize3,
+              size: SizeConfig.iconSize1,
             )
           : model.email == null || model.email.isEmpty
               ? SizedBox()

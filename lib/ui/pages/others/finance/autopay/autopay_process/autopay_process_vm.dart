@@ -29,7 +29,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
   final GoldenTicketService _gtService = GoldenTicketService();
-
+  FocusNode sipAmountNode = FocusNode();
   bool _showSetAmountView = false;
   bool _isDaily = true;
   bool _showProgressIndicator = false;

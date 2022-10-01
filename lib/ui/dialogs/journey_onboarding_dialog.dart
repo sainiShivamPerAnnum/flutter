@@ -75,6 +75,7 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       ),
@@ -106,8 +107,12 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset(Assets.journeyOnbLottie,
-                controller: controller, width: SizeConfig.screenWidth),
+            Lottie.asset(
+              Assets.journeyOnbLottie,
+              controller: controller,
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight * 0.5,
+            ),
             SizedBox(height: SizeConfig.padding16),
             Container(
               margin: EdgeInsets.symmetric(
@@ -139,9 +144,12 @@ class _JourneyOnboardingDialogState extends State<JourneyOnboardingDialog>
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
-                      Text(
-                        onboardingData[index][0],
-                        style: TextStyles.rajdhaniB.title2,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          onboardingData[index][0],
+                          style: TextStyles.rajdhaniB.title2,
+                        ),
                       ),
                       SizedBox(
                         width: SizeConfig.padding16,

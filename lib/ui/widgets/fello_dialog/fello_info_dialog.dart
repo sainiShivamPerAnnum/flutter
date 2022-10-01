@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FelloInfoDialog extends StatelessWidget {
-  final String title, subtitle, asset;
+  final String title, subtitle, asset, png;
   final Widget action;
-  final bool showCrossIcon;
+
   final Widget customContent;
   final bool isAddedToScreenStack;
   final bool defaultPadding;
@@ -18,7 +18,7 @@ class FelloInfoDialog extends StatelessWidget {
     this.subtitle,
     this.customContent,
     this.action,
-    this.showCrossIcon,
+    this.png,
     this.defaultPadding = true,
     this.isAddedToScreenStack = false,
   });
@@ -42,6 +42,17 @@ class FelloInfoDialog extends StatelessWidget {
                       height: SizeConfig.screenHeight * 0.16,
                     ),
                   if (asset != null)
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.04,
+                    ),
+                  if (png != null)
+                    SizedBox(height: SizeConfig.screenHeight * 0.04),
+                  if (asset != null)
+                    Image.asset(
+                      png,
+                      height: SizeConfig.screenHeight * 0.16,
+                    ),
+                  if (png != null)
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.04,
                     ),

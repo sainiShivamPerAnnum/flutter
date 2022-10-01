@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -283,12 +285,14 @@ class ReferralDetailsView extends StatelessWidget {
                         ),
                       ),
                       model.referalList == null
-                          ? Padding(
+                          ? Container(
+                              width: SizeConfig.screenWidth,
                               padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.pageHorizontalMargins),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  FullScreenLoader(size: SizeConfig.padding40),
+                                  FullScreenLoader(),
                                   SizedBox(height: SizeConfig.padding20),
                                   Text(
                                     "Fetching your referals. Please wait!",
@@ -455,12 +459,19 @@ class BonusLockedReferals extends StatelessWidget {
                                     future: model.getProfileDpWithUid(
                                         model.referalList[i].uid),
                                     builder: (context, snapshot) {
+                                      int rand = 1 + math.Random().nextInt(4);
+                                      final Widget defaultAvatar =
+                                          SvgPicture.asset(
+                                        "assets/vectors/userAvatars/AV$rand.svg",
+                                        width: SizeConfig.iconSize5,
+                                        height: SizeConfig.iconSize5,
+                                      );
+
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting)
+                                        return defaultAvatar;
                                       if (!snapshot.hasData) {
-                                        return Image.asset(
-                                          Assets.cvtar1,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
-                                        );
+                                        return defaultAvatar;
                                       }
 
                                       String imageUrl = snapshot.data as String;
@@ -469,23 +480,19 @@ class BonusLockedReferals extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: imageUrl,
                                           fit: BoxFit.cover,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
+                                          width: SizeConfig.iconSize5,
+                                          height: SizeConfig.iconSize5,
                                           placeholder: (context, url) =>
                                               Container(
-                                            width: SizeConfig.iconSize5_5,
-                                            height: SizeConfig.iconSize5_5,
+                                            width: SizeConfig.iconSize5,
+                                            height: SizeConfig.iconSize5,
                                             decoration: BoxDecoration(
                                               color: Colors.grey,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
                                           errorWidget: (a, b, c) {
-                                            return Image.asset(
-                                              Assets.cvtar2,
-                                              width: SizeConfig.iconSize5,
-                                              height: SizeConfig.iconSize5,
-                                            );
+                                            return defaultAvatar;
                                           },
                                         ),
                                       );
@@ -628,12 +635,19 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     future: model.getProfileDpWithUid(
                                         model.referalList[i].uid),
                                     builder: (context, snapshot) {
+                                      int rand = 1 + math.Random().nextInt(4);
+                                      final Widget defaultAvatar =
+                                          SvgPicture.asset(
+                                        "assets/vectors/userAvatars/AV$rand.svg",
+                                        width: SizeConfig.iconSize5,
+                                        height: SizeConfig.iconSize5,
+                                      );
+
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting)
+                                        return defaultAvatar;
                                       if (!snapshot.hasData) {
-                                        return Image.asset(
-                                          Assets.cvtar3,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
-                                        );
+                                        return defaultAvatar;
                                       }
 
                                       String imageUrl = snapshot.data as String;
@@ -642,23 +656,19 @@ class BonusUnlockedReferals extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: imageUrl,
                                           fit: BoxFit.cover,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
+                                          width: SizeConfig.iconSize5,
+                                          height: SizeConfig.iconSize5,
                                           placeholder: (context, url) =>
                                               Container(
-                                            width: SizeConfig.iconSize5_5,
-                                            height: SizeConfig.iconSize5_5,
+                                            width: SizeConfig.iconSize5,
+                                            height: SizeConfig.iconSize5,
                                             decoration: BoxDecoration(
                                               color: Colors.grey,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
                                           errorWidget: (a, b, c) {
-                                            return Image.asset(
-                                              Assets.cvtar4,
-                                              width: SizeConfig.iconSize5,
-                                              height: SizeConfig.iconSize5,
-                                            );
+                                            return defaultAvatar;
                                           },
                                         ),
                                       );

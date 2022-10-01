@@ -20,6 +20,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:shimmer/shimmer.dart';
 
 //Following is a dummy list to populate the Fello News section for now
 List<Map<String, dynamic>> dummyFelloNews = [
@@ -199,7 +201,7 @@ class Win extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.fromLTRB(
                                   SizeConfig.padding24,
-                                  SizeConfig.padding44,
+                                  SizeConfig.padding24,
                                   SizeConfig.padding24,
                                   (SizeConfig.screenWidth * 0.15) / 2),
                               width: double.infinity,
@@ -348,7 +350,9 @@ class Win extends StatelessWidget {
                         height: SizeConfig.padding24,
                       ),
                       //Fello News
-                      FelloNewsComponent(),
+                      FelloNewsComponent(
+                        model: model,
+                      ),
 
                       SizedBox(
                         height: SizeConfig.padding44,
@@ -384,14 +388,13 @@ class Win extends StatelessWidget {
 }
 
 class FelloNewsComponent extends StatelessWidget {
-  const FelloNewsComponent({
-    Key key,
-  }) : super(key: key);
+  final WinViewModel model;
+  const FelloNewsComponent({Key key, @required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: SizeConfig.screenWidth,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,75 +410,106 @@ class FelloNewsComponent extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding24),
           Container(
-            width: double.infinity,
+            width: SizeConfig.screenWidth,
             height: SizeConfig.screenWidth * 0.4026,
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: dummyFelloNews.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: EdgeInsets.only(
-                      left: index == 0 ? 0.0 : SizeConfig.padding20,
-                      right: SizeConfig.padding20),
-                  height: double.maxFinite,
-                  width: SizeConfig.screenWidth * 0.8,
-                  margin: EdgeInsets.only(
-                      left: SizeConfig.padding24,
-                      right: index == dummyFelloNews.length - 1
-                          ? SizeConfig.padding24
-                          : 0.0),
-                  decoration: BoxDecoration(
-                    color: Color(dummyFelloNews[index]['color']),
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.roundness12)),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: index == 0
-                        ? CrossAxisAlignment.start
-                        : CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        dummyFelloNews[index]['asset'],
-                        width: index == 0
-                            ? SizeConfig.screenWidth * 0.25
-                            : SizeConfig.screenWidth * 0.2,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding16,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                dummyFelloNews[index]['title'],
-                                style: TextStyles.rajdhaniSB.body1
-                                    .colour(UiConstants.kBackgroundColor),
+            child: model.isFelloFactsLoading
+                ? ListView.builder(
+                    itemCount: 3,
+                    itemBuilder: ((context, index) => ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness12),
+                          child: Shimmer(
+                            gradient: LinearGradient(
+                                colors: [
+                                  Colors.black,
+                                  Colors.grey,
+                                  Colors.black
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  left: index == 0 ? 0.0 : SizeConfig.padding20,
+                                  right: SizeConfig.padding20),
+                              height: double.maxFinite,
+                              width: SizeConfig.screenWidth * 0.8,
+                              margin: EdgeInsets.only(
+                                  left: SizeConfig.padding24,
+                                  right: index == dummyFelloNews.length - 1
+                                      ? SizeConfig.padding24
+                                      : 0.0),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(SizeConfig.roundness12)),
                               ),
+                            ),
+                          ),
+                        )),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: model.fellofacts.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: EdgeInsets.only(
+                            left: index == 0 ? 0.0 : SizeConfig.padding20,
+                            right: SizeConfig.padding20),
+                        height: double.maxFinite,
+                        width: SizeConfig.screenWidth * 0.8,
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.padding24,
+                            right: index == dummyFelloNews.length - 1
+                                ? SizeConfig.padding24
+                                : 0.0),
+                        decoration: BoxDecoration(
+                          color: model.fellofacts[index].bgColor.toColor(),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness12)),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.network(
+                              model.fellofacts[index].asset,
+                              width: SizeConfig.screenWidth * 0.25,
+                              fit: BoxFit.cover,
                             ),
                             SizedBox(
-                              height: SizeConfig.padding16,
+                              width: SizeConfig.padding16,
                             ),
-                            Flexible(
-                              child: Text(
-                                dummyFelloNews[index]['subTitle'],
-                                style: TextStyles.sourceSans.body4
-                                    .colour(UiConstants.kBackgroundColor),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      model.fellofacts[index].title,
+                                      style: TextStyles.rajdhaniSB.body1
+                                          .colour(UiConstants.kBackgroundColor),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding16,
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      model.fellofacts[index].subTitle,
+                                      style: TextStyles.sourceSans.body4
+                                          .colour(UiConstants.kBackgroundColor),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         ),
-                      )
-                    ],
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           )
         ],
       ),
