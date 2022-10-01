@@ -70,7 +70,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 suffixIcon: model.showTickCheck
                     ? Container(
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: UiConstants.primaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: Center(

@@ -48,6 +48,7 @@ class LoginMobileViewModel extends BaseViewModel {
       if (completePhoneNumber != null) {
         _mobileController.text =
             completePhoneNumber.substring(completePhoneNumber.length - 10);
+        upDateCheckTick();
         // notifyListeners();
       }
       Future.delayed(Duration(milliseconds: 500), () {

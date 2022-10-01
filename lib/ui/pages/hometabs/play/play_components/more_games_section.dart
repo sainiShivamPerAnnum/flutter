@@ -94,61 +94,39 @@ class MoreGames extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: SizeConfig.padding16,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        game.gameName,
-                        style: TextStyles.rajdhaniSB.bold.body1
-                            .colour(Colors.white),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding8,
-                      ),
-                      Text(
-                        "Win upto ₹${game.prizeAmount.toString()}",
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                Assets.token,
-                                height: SizeConfig.padding20,
-                              ),
-                              SizedBox(width: SizeConfig.padding6),
-                              Text(
-                                game.playCost.toString(),
-                                style: TextStyles.sourceSans.body2
-                                    .colour(Colors.white),
-                              )
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.parseRoute(
-                                Uri.parse(game.route),
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: UiConstants.playButtonColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(SizeConfig.roundness8),
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          game.gameName,
+                          style: TextStyles.rajdhaniSB.bold.body1
+                              .colour(Colors.white),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          "Win upto ₹${game.prizeAmount.toString()}",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  Assets.token,
+                                  height: SizeConfig.padding20,
                                 ),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(
