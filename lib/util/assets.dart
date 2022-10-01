@@ -88,6 +88,8 @@ class Assets {
   static final String weeklySaver = 'assets/svg/saver_of_week_card.svg';
   static final String monthlySaver = 'assets/svg/saver_of_month_card.svg';
   static final String flatIsland = 'assets/svg/flag_svg.svg';
+  static final String flatFullFlagIsland = 'assets/svg/flatFullFlagIsland.svg';
+
   // WIN
 
   static final String amazonClaim = "assets/images/amazon_claim.png";
