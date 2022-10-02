@@ -69,9 +69,35 @@ class TambolaHomeView extends StatelessWidget {
                       ),
                       //Win Announcement card
                       if (model.showWinCard) TambolaResultCard(),
+                      //How to play
+                      InfoComponent2(
+                          heading: model.boxHeading,
+                          assetList: model.boxAssets,
+                          titleList: model.boxTitlles,
+                          height: SizeConfig.screenWidth * 0.35),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
-                          ? TicketsView(model: model)
+                          ? model.userWeeklyBoards != null
+                              ? TicketsView(model: model)
+                              : Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          SizeConfig.pageHorizontalMargins),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      FullScreenLoader(),
+                                      SizedBox(height: SizeConfig.padding20),
+                                      Text(
+                                        "Fetching your referals. Please wait!",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                )
                           : SizedBox.shrink(),
                       SizedBox(height: SizeConfig.padding20),
                       (Platform.isIOS)
@@ -87,12 +113,7 @@ class TambolaHomeView extends StatelessWidget {
                       ButTicketsComponent(
                         model: model,
                       ),
-                      //How to play
-                      InfoComponent2(
-                          heading: model.boxHeading,
-                          assetList: model.boxAssets,
-                          titleList: model.boxTitlles,
-                          height: SizeConfig.screenWidth * 0.35),
+
                       //Tambola Prizes
                       TambolaPrize(
                         model: model,
