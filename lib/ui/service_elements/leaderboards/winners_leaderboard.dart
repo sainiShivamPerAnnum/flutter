@@ -165,7 +165,7 @@ class WinnerboardView extends StatelessWidget {
                                     width: SizeConfig.screenWidth,
                                     child: NoRecordDisplayWidget(
                                       topPadding: false,
-                                      asset: Assets.noWinnersAsset,
+                                      assetSvg: Assets.noWinnersAsset,
                                       text: "Leaderboard will be updated soon",
                                     ),
                                   )

@@ -139,7 +139,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                showEmpty ? "" : nToShow.toString(),
+                nToShow.toString(),
                 style: TextStyles.rajdhaniB.body2.colour(Colors.black),
               ),
             ),
