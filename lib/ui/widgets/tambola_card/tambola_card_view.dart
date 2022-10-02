@@ -87,7 +87,7 @@ class TambolaCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "Play and Win rewards",
+                      "Win Grand prize of ₹1 Crore!",
                       style: TextStyles.sourceSans.body3.bold
                           .colour(UiConstants.kBlogCardRandomColor2),
                     ),
@@ -107,7 +107,7 @@ class TambolaCard extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: SizeConfig.padding8),
                       child: Text(
-                        "Next draw at 6 PM",
+                        "Next draws at 6 PM",
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
                     ),

@@ -35,16 +35,18 @@ class PlayViewModel extends BaseViewModel {
   List<GameModel> moreGamesListData;
 
   //Related to the info box/////////////////
-  String boxHeading = "What to do on Play?";
+  String boxHeading = "How fello games work?";
   List<String> boxAssets = [
+    Assets.ludoGameAsset,
     Assets.ludoGameAsset,
     Assets.leaderboardGameAsset,
     Assets.giftGameAsset,
   ];
   List<String> boxTitlles = [
-    'Play Games with the\ntokens won',
-    'Get listed on the game\nleaderboard',
-    'Win coupons and cashbacks\nas rewards',
+    'Earn tokens by completing milestones',
+    'Use tokens to play games. Each game requires certain tokens to play',
+    'Score high scores and get listed on the game leaderboard',
+    'Win rewards every sunday midnight',
   ];
   ////////////////////////////////////////////
 

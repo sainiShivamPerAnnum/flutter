@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,29 @@ class CarousalWidget extends StatefulWidget {
 class _CarousalWidgetState extends State<CarousalWidget> {
   int _currentPos = 0;
 
+  PageController controller = PageController();
+
+  void nextPage() {
+    Timer(Duration(seconds: 10), () {
+      if (_currentPos == widget.widgets.length - 1) {
+        controller.animateToPage(0,
+            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      } else {
+        controller.nextPage(
+            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      }
+      nextPage();
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    nextPage();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,6 +50,7 @@ class _CarousalWidgetState extends State<CarousalWidget> {
           height: widget.height,
           width: widget.width,
           child: PageView.builder(
+            controller: controller,
             itemBuilder: ((context, index) => widget.widgets[index]),
             itemCount: widget.widgets.length,
             onPageChanged: (val) {

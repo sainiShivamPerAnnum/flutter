@@ -302,77 +302,98 @@ class ReferralDetailsView extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : Container(
-                              margin: EdgeInsets.only(
-                                top: SizeConfig.padding34,
-                                bottom: SizeConfig.padding12,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          : model.referalList.isEmpty
+                              ? Center(
+                                  child: Column(
                                     children: [
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: () => model.switchTab(0),
-                                          child: Text(
-                                            'Successful',
-                                            style: model.tabNo == 0
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                          ),
-                                        ),
+                                      SizedBox(height: SizeConfig.padding34),
+                                      SvgPicture.asset(Assets.noReferalAsset),
+                                      SizedBox(height: SizeConfig.padding34),
+                                      Text(
+                                        "No referals yet",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
                                       ),
-                                      SizedBox(
-                                        width: SizeConfig.padding16,
-                                      ),
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: () => model.switchTab(1),
-                                          child: Text(
-                                            'Have not saved',
-                                            style: model.tabNo == 1
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                          ),
-                                        ),
-                                      )
+                                      SizedBox(height: SizeConfig.padding34),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 5,
-                                        width: model.tabPosWidthFactor,
-                                      ),
-                                      Container(
-                                        color: UiConstants.kTabBorderColor,
-                                        height: 5,
-                                        width: SizeConfig.screenWidth * 0.38,
-                                      )
-                                    ],
+                                )
+                              : Container(
+                                  margin: EdgeInsets.only(
+                                    top: SizeConfig.padding34,
+                                    bottom: SizeConfig.padding12,
                                   ),
-                                  HeightAdaptivePageView(
-                                    controller: model.pageController,
-                                    onPageChanged: (int page) {
-                                      model.switchTab(page);
-                                    },
+                                  child: Column(
                                     children: [
-                                      //Current particiapnts
-                                      BonusUnlockedReferals(
-                                        model: model,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () =>
+                                                  model.switchTab(0),
+                                              child: Text(
+                                                'Successful',
+                                                style: model.tabNo == 0
+                                                    ? _selectedTextStyle
+                                                    : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding16,
+                                          ),
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () =>
+                                                  model.switchTab(1),
+                                              child: Text(
+                                                'Have not saved',
+                                                style: model.tabNo == 1
+                                                    ? _selectedTextStyle
+                                                    : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
+                                      Row(
+                                        children: [
+                                          AnimatedContainer(
+                                            duration:
+                                                Duration(milliseconds: 500),
+                                            height: 5,
+                                            width: model.tabPosWidthFactor,
+                                          ),
+                                          Container(
+                                            color: UiConstants.kTabBorderColor,
+                                            height: 5,
+                                            width:
+                                                SizeConfig.screenWidth * 0.38,
+                                          )
+                                        ],
+                                      ),
+                                      HeightAdaptivePageView(
+                                        controller: model.pageController,
+                                        onPageChanged: (int page) {
+                                          model.switchTab(page);
+                                        },
+                                        children: [
+                                          //Current particiapnts
+                                          BonusUnlockedReferals(
+                                            model: model,
+                                          ),
 
-                                      //Current particiapnts
-                                      BonusLockedReferals(
-                                        model: model,
+                                          //Current particiapnts
+                                          BonusLockedReferals(
+                                            model: model,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),

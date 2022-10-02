@@ -273,7 +273,7 @@ class _InfoComponent2State extends State<InfoComponent2> {
                             child: Text(
                               widget.titleList[index],
                               textAlign: TextAlign.center,
-                              style: TextStyles.sourceSans.body4
+                              style: TextStyles.sourceSans.body5
                                   .colour(UiConstants.kTextColor2),
                             ),
                           )

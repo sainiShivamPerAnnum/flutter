@@ -30,7 +30,8 @@ class GOWCard extends StatelessWidget {
                 children: [
                   TitleSubtitleContainer(
                     title: "Game of the week",
-                    subTitle: "Win upto ${model.gow?.prizeAmount ?? 25000}",
+                    subTitle:
+                        "Don't miss out on playing this week's featured game",
                   ),
                   GestureDetector(
                     onTap: () {
