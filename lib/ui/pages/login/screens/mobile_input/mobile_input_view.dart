@@ -125,10 +125,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
                               text: 'Join over  ',
                               style: TextStyles.sourceSans.body3
                                   .colour(UiConstants.kTextColor2),
-                              recognizer: new TapGestureRecognizer()
-                                ..onTap = () {
-                                  model.onTermsAndConditionsClicked();
-                                },
                             ),
                             new TextSpan(
                               text: '5 lakh',
@@ -139,10 +135,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
                               text: '  users in making finance fun!',
                               style: TextStyles.sourceSans.body3
                                   .colour(UiConstants.kTextColor2),
-                              recognizer: new TapGestureRecognizer()
-                                ..onTap = () {
-                                  model.onTermsAndConditionsClicked();
-                                },
                             ),
                           ],
                         ),

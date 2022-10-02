@@ -24,9 +24,8 @@ class MoreGamesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-            title: "Explore Arcade Games",
-            subTitle:
-                "Play using fello tokens. Money from savings will not be deducted"),
+            title: "Explore More Games",
+            subTitle: "New games are added regularly. Keep checking out!"),
         Container(
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),

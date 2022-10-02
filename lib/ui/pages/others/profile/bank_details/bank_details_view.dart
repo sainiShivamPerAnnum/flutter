@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BankDetailsView extends StatelessWidget {
   @override
@@ -142,6 +143,52 @@ class BankDetailsView extends StatelessWidget {
                             )
                           ],
                         ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: SizeConfig.pageHorizontalMargins),
+                      padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding16,
+                          horizontal: SizeConfig.padding20),
+                      decoration: BoxDecoration(
+                        color: UiConstants.kBackgroundColor3,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness12)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/dual_star.svg",
+                            width: SizeConfig.padding20,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding14,
+                          ),
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                  text: 'Join over  ',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                                new TextSpan(
+                                  text: '5 lakh',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor),
+                                ),
+                                new TextSpan(
+                                  text: '  users in making finance fun!',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SafeArea(
