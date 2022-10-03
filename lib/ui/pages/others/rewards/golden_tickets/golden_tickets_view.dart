@@ -62,7 +62,7 @@ class GoldenTicketsView extends StatelessWidget {
                           shrinkWrap: true,
                           children: [
                             NoRecordDisplayWidget(
-                              assetSvg: Assets.noTransaction,
+                              assetSvg: Assets.noTickets,
                               text: "No Golden Tickets won",
                             )
                           ],

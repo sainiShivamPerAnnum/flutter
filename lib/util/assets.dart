@@ -12,6 +12,7 @@ class Assets {
       'images/onboard_collage-small.png';
 
   static final String noTransaction = "assets/vectors/no-transactions.png";
+
   static final String augmontShare = "images/augmont-share.png";
   static final String preAutosave = "assets/images/preautosave.png";
   static final String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';
@@ -110,7 +111,7 @@ class Assets {
 
   //DIALOGS
 
-  static final String noTickets = "assets/vectors/no_tickets.svg";
+  static final String noTickets = "assets/svg/no_tickets_asset.svg";
   static final String noData = "assets/lotties/no_data.json";
 
   //PROFILE PICTURES
