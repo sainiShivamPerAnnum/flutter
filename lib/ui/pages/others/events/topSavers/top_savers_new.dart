@@ -101,7 +101,7 @@ class CampaignView extends StatelessWidget {
                               event: model.event,
                               subText: Padding(
                                 padding: EdgeInsets.only(
-                                  top: SizeConfig.padding24,
+                                  top: SizeConfig.padding10,
                                 ),
                                 child: _realtimeView(model),
                               ),
@@ -461,7 +461,7 @@ class CampaignView extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.padding34),
                   child: ReactivePositiveAppButton(
-                    btnText: 'Get Started',
+                    btnText: 'Start Saving',
                     onPressed: () {
                       AppState.delegate.appState.currentAction = PageAction(
                           widget: SaveAssetView(),

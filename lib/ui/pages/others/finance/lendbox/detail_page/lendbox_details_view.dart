@@ -69,9 +69,15 @@ class LendboxDetailsView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SellCardView(
-                        investmentType: InvestmentType.LENDBOXP2P,
-                      ),
+                      model.getQuantity(model.userFundWallet,
+                                      InvestmentType.LENDBOXP2P) ==
+                                  0 &&
+                              model.getInvestedQuantity(model.userFundWallet) ==
+                                  0
+                          ? SizedBox.shrink()
+                          : SellCardView(
+                              investmentType: InvestmentType.LENDBOXP2P,
+                            ),
                       SizedBox(
                         height: SizeConfig.screenWidth * 0.4,
                       )

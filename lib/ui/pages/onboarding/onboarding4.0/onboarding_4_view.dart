@@ -55,6 +55,10 @@ class _OnBoardingViewState extends State<OnBoardingView>
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(milliseconds: 1000), () {
+      controller.animateTo(0.53);
+    });
+
     return BaseView<OnboardingViewModel>(
       onModelReady: (model) {
         model.init();
@@ -190,9 +194,9 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: SizeConfig.padding32),
-                          height: SizeConfig.screenWidth * 0.28,
+                          height: SizeConfig.screenWidth * 0.45,
                           width: SizeConfig.screenWidth * 0.8,
+                          margin: EdgeInsets.only(bottom: SizeConfig.padding32),
                           child: PageView.builder(
                             controller: model.pageController,
                             // physics: NeverScrollableScrollPhysics(),
@@ -222,13 +226,17 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                     style: TextStyles.rajdhaniB.title2,
                                   ),
                                   SizedBox(
-                                    width: SizeConfig.padding16,
+                                    height: SizeConfig.padding16,
                                   ),
                                   Text(
                                     model.onboardingData[index][1],
                                     textAlign: TextAlign.center,
                                     style: TextStyles.sourceSans.body2,
                                   ),
+                                  SizedBox(
+                                    height: SizeConfig.padding16,
+                                  ),
+                                  model.assetWidgets[index],
                                 ],
                               );
                             },

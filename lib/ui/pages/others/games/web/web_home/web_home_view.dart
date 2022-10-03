@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -9,6 +13,7 @@ import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -279,7 +284,7 @@ class WebHomeView extends StatelessWidget {
                                       horizontal: SizeConfig.padding16),
                                   child: Text(
                                     'Swing your wicket, throw fast pitches, and win upto ? Rs. 25,000 in one of our many free, online games!',
-                                    style: TextStyles.sourceSans.body2
+                                    style: TextStyles.sourceSans.body3
                                         .colour(Colors.grey.shade600),
                                     maxLines: 2,
                                     textAlign: TextAlign.center,
@@ -361,7 +366,9 @@ class WebHomeView extends StatelessWidget {
 }
 
 class PlayButtonOverlapper extends StatelessWidget {
-  const PlayButtonOverlapper({
+  final _analytics = locator<AnalyticsService>();
+
+  PlayButtonOverlapper({
     Key key,
   }) : super(key: key);
 
@@ -371,14 +378,32 @@ class PlayButtonOverlapper extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Stack(
         children: [
-          Container(
-            height: SizeConfig.navBarHeight + SizeConfig.padding64,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: UiConstants.kBackgroundColor.withOpacity(0.5),
+          GestureDetector(
+            onTap: () {
+              if (JourneyService.isAvatarAnimationInProgress) return;
+              _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+              BaseUtil.openModalBottomSheet(
+                addToScreenStack: true,
+                backgroundColor: UiConstants.gameCardColor,
+                content: WantMoreTicketsModalSheet(),
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness24),
-                    topRight: Radius.circular(SizeConfig.roundness24))),
+                  topLeft: Radius.circular(SizeConfig.roundness24),
+                  topRight: Radius.circular(SizeConfig.roundness24),
+                ),
+                hapticVibrate: true,
+                isScrollControlled: true,
+                isBarrierDismissable: true,
+              );
+            },
+            child: Container(
+              height: SizeConfig.navBarHeight + SizeConfig.padding64,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: UiConstants.kBackgroundColor.withOpacity(0.5),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness24),
+                      topRight: Radius.circular(SizeConfig.roundness24))),
+            ),
           ),
           Container(
             padding: EdgeInsets.all(SizeConfig.padding12),

@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
-final pages = [JourneyView(), Play(), Save(), Win()];
+final pages = [JourneyView(), Save(), Play(), Win()];
 
 class Root extends StatelessWidget {
   @override

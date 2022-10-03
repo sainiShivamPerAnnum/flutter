@@ -37,7 +37,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: Assets.flatIsland),
+            SignupHeroAsset(asset: Assets.flatFullFlagIsland),
             Text(
               'Login/Signup',
               style: TextStyles.rajdhaniB.title2,
@@ -68,14 +68,29 @@ class LoginMobileViewState extends State<LoginMobileView> {
                         ? SizeConfig.screenHeight * 0.1
                         : 0),
                 textStyle: TextStyles.sourceSans.body3,
+                suffixIcon: model.showTickCheck
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: UiConstants.primaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.done,
+                            color: Colors.white,
+                            size: SizeConfig.padding16,
+                          ),
+                        ))
+                    : SizedBox.shrink(),
                 textEditingController: model.mobileController,
+                onChanged: (value) => model.upDateCheckTick(),
                 onTap: model.showAvailablePhoneNumbers,
                 validator: (value) => model.validateMobile(),
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins * 2),
               ),
             ),
-            Spacer(),
+ Spacer(),
             if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
               Column(
                 children: [
@@ -84,46 +99,66 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     style:
                         TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
                   ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      BankingLogo(
-                        asset: 'assets/images/augmont_logo.png',
+                      SvgPicture.asset(
+                        "assets/svg/dual_star.svg",
+                        width: SizeConfig.padding20,
                       ),
-                      BankingLogo(
-                        asset: 'assets/images/icici_logo.png',
+                      SizedBox(
+                        width: SizeConfig.padding14,
                       ),
-                      BankingLogo(
-                        asset: 'assets/images/cbi_logo.png',
+                      RichText(
+                        text: new TextSpan(
+                          children: [
+                            new TextSpan(
+                              text: 'Join over  ',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            new TextSpan(
+                              text: '5 lakh',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor),
+                            ),
+                            new TextSpan(
+                              text: '  users in making finance fun!',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 16, 10, 0),
-                    child: RichText(
-                      text: new TextSpan(
-                        children: [
-                          new TextSpan(
-                            text: 'By continuing, you agree to our ',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor2),
-                          ),
-                          new TextSpan(
-                            text: 'Terms of Service',
-                            style: TextStyles.sourceSans.body3.underline
-                                .colour(UiConstants.kTextColor),
-                            recognizer: new TapGestureRecognizer()
-                              ..onTap = () {
-                                model.onTermsAndConditionsClicked();
-                              },
-                          ),
-                        ],
-                      ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                      SizeConfig.padding16, SizeConfig.padding10, 0),
+                  child: RichText(
+                    text: new TextSpan(
+                      children: [
+                        new TextSpan(
+                          text: 'By continuing, you agree to our ',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        new TextSpan(
+                          text: 'Terms of Service',
+                          style: TextStyles.sourceSans.body3.underline
+                              .colour(UiConstants.kTextColor),
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () {
+                              model.onTermsAndConditionsClicked();
+                            },
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
             SizedBox(
               height: SizeConfig.screenWidth * 0.1 +

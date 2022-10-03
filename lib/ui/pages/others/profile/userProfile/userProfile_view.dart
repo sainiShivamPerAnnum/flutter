@@ -1,7 +1,10 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
@@ -9,6 +12,7 @@ import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewMod
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -428,7 +432,33 @@ class UserProfileForm extends StatelessWidget {
                   ),
                 ],
               ),
-            SizedBox(height: SizeConfig.padding40),
+            SizedBox(
+              height: SizeConfig.padding28,
+            ),
+
+            GestureDetector(
+              onTap: () {
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: BankDetailsPageConfig,
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+                width: SizeConfig.screenWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  color: UiConstants.kDarkBackgroundColor,
+                ),
+                child: Center(
+                  child: Text(
+                    "Add Bank Details",
+                    style: TextStyles.rajdhaniM.body1,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: SizeConfig.padding28),
             !model.isNewUser
                 ? Column(
                     children: [
@@ -447,29 +477,6 @@ class UserProfileForm extends StatelessWidget {
                                   model.onAppLockPreferenceChanged(val),
                               value: model.applock,
                               isLoading: model.isApplockLoading,
-                              height: SizeConfig.screenWidth * 0.059,
-                              width: SizeConfig.screenWidth * 0.087,
-                              toggleSize: SizeConfig.screenWidth * 0.032,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding16),
-                      Container(
-                        height: SizeConfig.padding40,
-                        child: Row(
-                          children: [
-                            Text(
-                              "Tambola Notifications",
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                            Spacer(),
-                            AppSwitch(
-                              onToggle: (val) => model
-                                  .onTambolaNotificationPreferenceChanged(val),
-                              value: model.tambolaNotification,
-                              isLoading: model.isTambolaNotificationLoading,
                               height: SizeConfig.screenWidth * 0.059,
                               width: SizeConfig.screenWidth * 0.087,
                               toggleSize: SizeConfig.screenWidth * 0.032,
@@ -504,7 +511,7 @@ class UserProfileForm extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: SizeConfig.padding4),
+            SizedBox(height: SizeConfig.padding28),
           ],
         ),
       ),
