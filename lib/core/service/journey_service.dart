@@ -498,7 +498,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   createPathForAvatarAnimation(int start, int end) {
     if (end - start > 4) {
-      start = end - 4;
+      start = end - 2;
     }
     baseGlow = 0;
     List<AvatarPathModel> requiredPathItems = [];

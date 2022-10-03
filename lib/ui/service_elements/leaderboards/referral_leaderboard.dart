@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -225,14 +226,11 @@ class ReferralLeaderboard extends StatelessWidget {
                                                         builder: (context,
                                                             snapshot) {
                                                           if (!snapshot
-                                                              .hasData) {
-                                                            return Image.asset(
-                                                              Assets.cvtar1,
-                                                              width: SizeConfig
-                                                                  .iconSize5,
-                                                              height: SizeConfig
-                                                                  .iconSize5,
-                                                            );
+                                                                  .hasData ||
+                                                              snapshot.connectionState ==
+                                                                  ConnectionState
+                                                                      .waiting) {
+                                                            return DefaultAvatar();
                                                           }
 
                                                           String imageUrl =
@@ -267,14 +265,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                               ),
                                                               errorWidget:
                                                                   (a, b, c) {
-                                                                return Image
-                                                                    .asset(
-                                                                  Assets.cvtar2,
-                                                                  width: SizeConfig
-                                                                      .iconSize5,
-                                                                  height: SizeConfig
-                                                                      .iconSize5,
-                                                                );
+                                                                return DefaultAvatar();
                                                               },
                                                             ),
                                                           );

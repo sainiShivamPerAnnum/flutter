@@ -741,6 +741,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'augDetails':
         pageConfiguration = SaveAssetsViewConfig;
         break;
+      case 'lboxDetails':
+        pageConfiguration = LendboxDetailsPageConfig;
+        break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
         break;
@@ -840,11 +843,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       // case 'autosaveProcess':
       //   pageConfiguration = AutosaveProcessViewPageConfig;
       //   break;
-      case 'UserAutosaveDetails':
+      case 'userAutosaveDetails':
         pageConfiguration = UserAutosaveDetailsViewPageConfig;
         break;
-      case 'AutosaveTxns':
-        pageConfiguration = AutosaveTransactionsViewPageConfig;
+      case 'autosaveTxns':
+        openTransactions(InvestmentType.AUGGOLD99);
         break;
       case 'AppWalkthrough':
         openAppWalkthrough();

@@ -11,10 +11,12 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -23,6 +25,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -65,7 +68,9 @@ class WinViewModel extends BaseViewModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _prizingRepo = locator<PrizingRepo>();
   final _campaignRepo = locator<CampaignRepo>();
+  final _gtRepo = locator<GoldenTicketRepository>();
   int _unscratchedGTCount = 0;
+  bool _showUnscratchedCount = true;
 
   Timer _timer;
   bool _showOldView = false;
@@ -204,10 +209,17 @@ class WinViewModel extends BaseViewModel {
 
   get unscratchedGTCount => this._unscratchedGTCount;
 
-  set unscratchedGTCount(count) {
+  set unscratchedGTCount(int count) {
     this._unscratchedGTCount = count;
     notifyListeners();
     print("Unscratched gt count: $_unscratchedGTCount");
+  }
+
+  bool get showUnscratchedCount => this._showUnscratchedCount;
+
+  set showUnscratchedCount(bool value) {
+    this._showUnscratchedCount = value;
+    notifyListeners();
   }
 
   double get getUnclaimedPrizeBalance =>
@@ -218,7 +230,8 @@ class WinViewModel extends BaseViewModel {
     _pageController = PageController(initialPage: 0);
 
     fetchReferralCode();
-    fectchBasicConstantValues();
+    fetchBasicConstantValues();
+    getUnscratchedGTCount();
     // _baseUtil.fetchUserAugmontDetail();
     getFelloFacts();
     _lbService.fetchReferralLeaderBoard();
@@ -282,7 +295,7 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  fectchBasicConstantValues() {
+  fetchBasicConstantValues() {
     _minWithdrawPrize = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
     _refUnlock = BaseRemoteConfig.remoteConfig
@@ -429,6 +442,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   void navigateToMyWinnings() {
+    showUnscratchedCount = false;
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
   }
@@ -462,6 +476,14 @@ class WinViewModel extends BaseViewModel {
         cancelAction: AppState.backButtonDispatcher.didPopRoute,
       ),
     );
+  }
+
+  getUnscratchedGTCount() async {
+    final ApiResponse<List<GoldenTicket>> res =
+        await _gtRepo.getUnscratchedGoldenTickets();
+    if (res.isSuccess()) {
+      unscratchedGTCount = res.model.length;
+    }
   }
 
   getWinningHistory() async {
