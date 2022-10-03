@@ -27,7 +27,7 @@ class DepositOptionModalSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Choose an asset to invest",
-                  style: TextStyles.rajdhaniSB.title3),
+                  style: TextStyles.rajdhaniSB.title5),
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding4),
                 child: Text(

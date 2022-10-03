@@ -36,6 +36,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -441,10 +443,12 @@ class WinViewModel extends BaseViewModel {
     return await _localDBModel.getPrizeClaimChoice();
   }
 
-  void navigateToMyWinnings() {
+  void navigateToMyWinnings(WinViewModel model) {
     showUnscratchedCount = false;
-    AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: MyWinnigsPageConfig,
+        widget: MyWinningsView(winModel: model));
   }
 
   void navigateToRefer() {

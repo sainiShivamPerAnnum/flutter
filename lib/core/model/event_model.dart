@@ -10,6 +10,7 @@ class EventModel {
   int position;
   String textColor;
   String image;
+  int maxWin;
   List<dynamic> instructions;
   int minVersion;
   String url; //only for new fello
@@ -25,6 +26,7 @@ class EventModel {
     @required this.position,
     @required this.textColor,
     @required this.image,
+    @required this.maxWin,
     @required this.minVersion,
     @required this.url,
     @required this.formUrl,
@@ -39,6 +41,7 @@ class EventModel {
     String thumbnail,
     String type,
     int position,
+    int maxWin,
     String color,
     int minVersion,
     String image,
@@ -52,6 +55,7 @@ class EventModel {
       type: type ?? this.type,
       position: position ?? this.position,
       textColor: color ?? this.textColor,
+      maxWin: maxWin ?? this.maxWin,
       image: image ?? this.image,
       minVersion: minVersion ?? this.minVersion,
       instructions: instructions ?? this.instructions,
@@ -71,6 +75,7 @@ class EventModel {
       'position': position,
       'color': textColor,
       'image': image,
+      'maxWin': maxWin,
       'minVersion': minVersion,
       'url': url,
       'instructions': instructions,
@@ -89,6 +94,7 @@ class EventModel {
       position: map['position'] ?? 1,
       textColor: map['textColor'] ?? "#ffffff",
       image: map['image'] ?? '',
+      maxWin: map['maxWin'] ?? 250,
       url: map['url'] ?? '',
       formUrl: map['formUrl'] ?? '',
       minVersion: map["minVersion"] ?? 0,

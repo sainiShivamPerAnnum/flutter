@@ -15,7 +15,7 @@ import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/help_and_support/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stores_view.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';

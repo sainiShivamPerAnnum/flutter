@@ -209,9 +209,6 @@ class TicketsView extends StatelessWidget {
 
       return Column(
         children: [
-          SizedBox(
-            height: SizeConfig.padding34,
-          ),
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:
@@ -232,13 +229,9 @@ class TicketsView extends StatelessWidget {
           ),
           Container(
             width: SizeConfig.screenWidth,
-            child: Stack(
-              children: [
-                TabViewGenerator(
-                  model: model,
-                  showIndicatorForAll: false,
-                ),
-              ],
+            child: TabViewGenerator(
+              model: model,
+              showIndicatorForAll: false,
             ),
           ),
         ],
@@ -266,9 +259,6 @@ class TicketsView extends StatelessWidget {
 
       return Column(
         children: [
-          SizedBox(
-            height: SizeConfig.padding34,
-          ),
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:

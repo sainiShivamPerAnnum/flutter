@@ -436,32 +436,41 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding28,
             ),
 
-            GestureDetector(
-              onTap: () {
-                AppState.delegate.appState.currentAction = PageAction(
-                  state: PageState.addPage,
-                  page: BankDetailsPageConfig,
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  color: UiConstants.kDarkBackgroundColor,
-                ),
-                child: Center(
-                  child: Text(
-                    "Add Bank Details",
-                    style: TextStyles.rajdhaniM.body1,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding28),
             !model.isNewUser
                 ? Column(
                     children: [
+                      Divider(
+                        color: UiConstants.kTextColor2,
+                        thickness: 0.5,
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        onTap: model.navigateToKycScreen,
+                        title: Text(
+                          "KYC Details",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios_rounded,
+                            size: SizeConfig.iconSize2,
+                            color: UiConstants.kTextColor2),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        onTap: model.navigateToBankDetailsScreen,
+                        title: Text(
+                          "Bank Account Details",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios_rounded,
+                            size: SizeConfig.iconSize2,
+                            color: UiConstants.kTextColor2),
+                      ),
+                      Divider(
+                        color: UiConstants.kTextColor2,
+                        thickness: 0.5,
+                      ),
                       Container(
                         height: SizeConfig.padding40,
                         child: Row(
@@ -483,6 +492,10 @@ class UserProfileForm extends StatelessWidget {
                             ),
                           ],
                         ),
+                      ),
+                      Divider(
+                        color: UiConstants.kTextColor2,
+                        thickness: 0.5,
                       ),
                       SizedBox(height: SizeConfig.padding54),
                       Center(

@@ -46,16 +46,16 @@ class Play extends StatelessWidget {
               children: [
                 TambolaCard(),
                 TrendingGamesSection(model: model),
-                if (model.showSecurityMessageAtTop) SafetyWidget(),
-                GOWCard(
-                  model: model,
-                ),
                 InfoComponent2(
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
                   height: SizeConfig.screenWidth * 0.3,
                 ),
+                GOWCard(
+                  model: model,
+                ),
+                if (model.showSecurityMessageAtTop) SafetyWidget(),
                 MoreGamesSection(model: model),
                 if (!model.showSecurityMessageAtTop) SafetyWidget(),
                 SizedBox(

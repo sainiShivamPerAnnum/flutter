@@ -4,13 +4,11 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/journey_onboarding_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stores_view.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -81,14 +79,14 @@ class _HelpFabState extends State<HelpFab> {
       //   );
       // },
 
-      //  () {
-      //           expandFab();
-      //           BaseUtil.openDialog(
-      //               hapticVibrate: true,
-      //               addToScreenStack: true,
-      //               content: JourneyOnboardingDialog(),
-      //               isBarrierDismissable: false);
-      //         },
+      //     () {
+      //   expandFab();
+      //   BaseUtil.openDialog(
+      //       hapticVibrate: true,
+      //       addToScreenStack: true,
+      //       content: JourneyOnboardingDialog(),
+      //       isBarrierDismissable: false);
+      // },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,
           duration: Duration(milliseconds: 600),

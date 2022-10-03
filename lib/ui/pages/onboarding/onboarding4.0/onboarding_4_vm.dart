@@ -40,15 +40,9 @@ class OnboardingViewModel extends BaseViewModel {
   int get currentPage => _currentPage;
 
   List<Widget> assetWidgets = [
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(Assets.assetList1OnBoarding.length, (index) {
-        return SvgPicture.asset(
-          Assets.assetList1OnBoarding[index],
-          color: Colors.white,
-          width: SizeConfig.screenWidth * 0.12,
-        );
-      }),
+    SvgPicture.asset(
+      "assets/svg/partner_assets_frame.svg",
+      width: SizeConfig.screenWidth * 0.7,
     ),
     Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -56,7 +50,9 @@ class OnboardingViewModel extends BaseViewModel {
       children: List.generate(Assets.assetList2OnBoarding.length, (index) {
         return SvgPicture.asset(
           Assets.assetList2OnBoarding[index],
-          width: SizeConfig.screenWidth * 0.12,
+          height: SizeConfig.screenWidth * 0.1,
+          width: SizeConfig.screenWidth * 0.1,
+          fit: BoxFit.cover,
         );
       }),
     ),

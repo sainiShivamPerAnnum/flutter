@@ -12,6 +12,7 @@ class Assets {
       'images/onboard_collage-small.png';
 
   static final String noTransaction = "assets/vectors/no-transactions.png";
+
   static final String augmontShare = "images/augmont-share.png";
   static final String preAutosave = "assets/images/preautosave.png";
   static final String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';
@@ -110,7 +111,7 @@ class Assets {
 
   //DIALOGS
 
-  static final String noTickets = "assets/vectors/no_tickets.svg";
+  static final String noTickets = "assets/svg/no_tickets_asset.svg";
   static final String noData = "assets/lotties/no_data.json";
 
   //PROFILE PICTURES
@@ -222,13 +223,6 @@ class Assets {
     "assets/svg/prize_asset_6.svg",
     "assets/svg/prize_asset_7.svg",
     "assets/svg/prize_asset_8.svg",
-  ];
-
-  static List<String> assetList1OnBoarding = [
-    "assets/svg/lendbox-icon.svg",
-    "assets/svg/augmont_ic.svg",
-    "assets/svg/paytm-icon.svg",
-    "assets/svg/razorpay-icon.svg",
   ];
 
   static List<String> assetList2OnBoarding = [
