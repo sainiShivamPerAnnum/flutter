@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -64,6 +65,14 @@ class SaveAssetView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               GoldAssetCard(),
+                              InfoComponent3(
+                                mainTitle: "What is Digital Gold?",
+                                subTitle:
+                                    "Fello Flo is a P2P lending product powered by Lendbox. Start saving and investing in Fello Flo and earn 10% stable returns!",
+                                secondaryTitle: "Why to invest?",
+                                boxAssets: model.boxAssets,
+                                boxTitlles: model.boxTitlles,
+                              ),
                               SizedBox(
                                 height: SizeConfig.padding24,
                               ),

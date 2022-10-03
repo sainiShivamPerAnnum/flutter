@@ -5,18 +5,23 @@ import 'package:flutter/material.dart';
 class TitlesGames extends StatelessWidget {
   final Widget icon, richText;
   final bool isLast;
+  final bool startPaddingAvilable;
   TitlesGames({
     this.icon,
     this.richText,
     this.isLast = false,
+    this.startPaddingAvilable = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(width: SizeConfig.screenWidth * 0.16),
+        startPaddingAvilable
+            ? SizedBox(width: SizeConfig.screenWidth * 0.16)
+            : SizedBox.shrink(),
         Column(
           children: [
             SizedBox(width: SizeConfig.screenWidth * 0),
@@ -27,7 +32,7 @@ class TitlesGames extends StatelessWidget {
         SizedBox(
           width: SizeConfig.padding20,
         ),
-        richText,
+        Flexible(child: richText),
       ],
     );
   }

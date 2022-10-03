@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/sa
 import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -65,6 +66,17 @@ class SaveViewModel extends BaseViewModel {
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
+
+  List<String> boxAssets = [
+    "assets/svg/single_gold_bar_asset.svg",
+    Assets.singleCoinAsset,
+    Assets.singleTmbolaTicket,
+  ];
+  List<String> boxTitlles = [
+    'Assured 100% rewards',
+    'Fello’s own product',
+    'Play games with tokens earned',
+  ];
 
   List<EventModel> get ongoingEvents => this._ongoingEvents;
   List<BlogPostModel> get blogPosts => this._blogPosts;
