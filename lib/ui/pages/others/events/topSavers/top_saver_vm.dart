@@ -242,9 +242,9 @@ class TopSaverViewModel extends BaseViewModel {
       ongoingEvents.forEach((element) {
         if (element.type == eventType) event = element;
       });
-    }
-    BaseUtil.showNegativeAlert(
-        response.errorMessage, "Please try again in sometime");
+    } else
+      BaseUtil.showNegativeAlert(
+          response.errorMessage, "Please try again in sometime");
     _logger.d(event.toString());
     return event;
   }

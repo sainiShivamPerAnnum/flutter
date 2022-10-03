@@ -58,27 +58,28 @@ class _HelpFabState extends State<HelpFab> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          isBarrierDismissable: false,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.0),
-              topRight: Radius.circular(SizeConfig.roundness12)),
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          content: SecurityModalSheet(),
-        );
-      },
+      onTap:
+          //  () {
+          //   BaseUtil.openModalBottomSheet(
+          //     addToScreenStack: true,
+          //     isBarrierDismissable: false,
+          //     borderRadius: BorderRadius.only(
+          //         topLeft: Radius.circular(30.0),
+          //         topRight: Radius.circular(SizeConfig.roundness12)),
+          //     backgroundColor:
+          //         UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          //     content: SecurityModalSheet(),
+          //   );
+          // },
 
-      //  () {
-      //           expandFab();
-      //           BaseUtil.openDialog(
-      //               hapticVibrate: true,
-      //               addToScreenStack: true,
-      //               content: JourneyOnboardingDialog(),
-      //               isBarrierDismissable: false);
-      //         },
+          () {
+        expandFab();
+        BaseUtil.openDialog(
+            hapticVibrate: true,
+            addToScreenStack: true,
+            content: JourneyOnboardingDialog(),
+            isBarrierDismissable: false);
+      },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,
           duration: Duration(milliseconds: 600),

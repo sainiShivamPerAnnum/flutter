@@ -85,7 +85,6 @@ class RootViewModel extends BaseViewModel {
   //int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
-    if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
@@ -184,7 +183,6 @@ class RootViewModel extends BaseViewModel {
   }
 
   checkForBootUpAlerts() async {
-    if (!canExecuteStartupNotification) return;
     bool updateAvilable =
         PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVILABLE, def: false);
     bool isMsgNoticeAvilable =
@@ -258,52 +256,11 @@ class RootViewModel extends BaseViewModel {
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await handleStartUpNotifictionData();
-      Future.delayed(Duration(seconds: 3), () async {
-        await checkIfAppLockModalSheetIsRequired();
-      });
-
-      // if (canExecuteStartupNotification &&
-      //     _userService.isAnyUnscratchedGTAvailable) {
-      //   int lastWeekday;
-      //   if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
-      //     lastWeekday = await CacheManager.readCache(
-      //         key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
-      //   // _logger.d("Unscratched Golden Ticket Show Count: $count");
-      //   if (lastWeekday == null ||
-      //       lastWeekday == 7 ||
-      //       lastWeekday < DateTime.now().weekday)
-      //     BaseUtil.openDialog(
-      //       addToScreenStack: true,
-      //       hapticVibrate: true,
-      //       isBarrierDismissable: false,
-      //       content: FelloInfoDialog(
-      //         asset: Assets.tickets,
-      //         title: "Your Golden Tickets are waiting",
-      //         subtitle:
-      //             "You have unopened Golden Tickets available in your rewards wallet",
-      //         action: AppPositiveBtn(
-      //           btnText: "Open Rewards",
-      //           onPressed: () {
-      //             AppState.backButtonDispatcher.didPopRoute();
-      //             AppState.delegate.appState.currentAction = PageAction(
-      //               widget: MyWinningsView(openFirst: true),
-      //               page: MyWinnigsPageConfig,
-      //               state: PageState.addWidget,
-      //             );
-      //           },
-      //         ),
-      //       ),
-      //     );
-      //   CacheManager.writeCache(
-      //       key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-      //       value: DateTime.now().weekday,
-      //       type: CacheType.int);
-      // }
+      await checkIfAppLockModalSheetIsRequired();
     });
   }
 
   handleStartUpNotifictionData() {
-    if (!canExecuteStartupNotification) return;
     if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
       canExecuteStartupNotification = false;
       _logger.d(
@@ -319,6 +276,7 @@ class RootViewModel extends BaseViewModel {
   checkIfAppLockModalSheetIsRequired() async {
     // show security modal
     if (!canExecuteStartupNotification) return;
+
     bool showSecurityPrompt = PreferenceHelper.getBool(
         PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
         def: true);
@@ -329,7 +287,7 @@ class RootViewModel extends BaseViewModel {
                 .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Future.delayed(Duration(seconds: 2), () {
         _showSecurityBottomSheet();
         PreferenceHelper.setBool(
             PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET, false);
@@ -492,10 +450,10 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.baseUser != null && _userService.userBootUp != null) {
         //1.check if the account is blocked
-        canExecuteStartupNotification = false;
         if (_userService.userBootUp.data != null &&
             _userService.userBootUp.data.isBlocked != null &&
             _userService.userBootUp.data.isBlocked == true) {
+          canExecuteStartupNotification = false;
           AppState.isUpdateScreen = true;
           AppState.delegate.appState.currentAction = PageAction(
             state: PageState.replaceAll,
@@ -506,8 +464,8 @@ class RootViewModel extends BaseViewModel {
         // //2.Checking for forced App Update
         if (_userService.userBootUp.data.isAppForcedUpdateRequired != null &&
             _userService.userBootUp.data.isAppForcedUpdateRequired == true) {
-          canExecuteStartupNotification = false;
           AppState.isUpdateScreen = true;
+          canExecuteStartupNotification = false;
           AppState.delegate.appState.currentAction = PageAction(
               state: PageState.replaceAll, page: UpdateRequiredConfig);
           return;
@@ -516,9 +474,8 @@ class RootViewModel extends BaseViewModel {
         //3. Sign out the user automatically
         if (_userService.userBootUp.data.signOutUser != null &&
             _userService.userBootUp.data.signOutUser == true) {
-          canExecuteStartupNotification = false;
           Haptic.vibrate();
-
+          canExecuteStartupNotification = false;
           _userService.signOut(() async {
             _analyticsService.track(eventName: AnalyticsEvents.signOut);
             _analyticsService.signOut();

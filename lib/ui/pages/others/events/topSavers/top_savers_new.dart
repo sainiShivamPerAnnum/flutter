@@ -322,7 +322,7 @@ class CampaignView extends StatelessWidget {
                                         .colour(Colors.white),
                                   ),
                                   Text(
-                                    "₹ 250",
+                                    "₹ ${model?.event?.maxWin ?? 250}",
                                     style: TextStyles.rajdhaniB.title0.bold
                                         .colour(UiConstants
                                             .kWinnerPlayerPrimaryColor),
