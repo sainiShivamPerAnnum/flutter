@@ -98,6 +98,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                         pin.toString() +
                         "\n  No action taken.",
                   );
+                  widget.loginModel.processScreenInput(1);
                 },
               ),
             ),

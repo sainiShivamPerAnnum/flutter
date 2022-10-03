@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
@@ -89,24 +90,14 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     horizontal: SizeConfig.pageHorizontalMargins * 2),
               ),
             ),
-            isKeyboardOpen
-                ? SizedBox(
-                    height: SizeConfig.padding16,
-                  )
-                : Spacer(),
-            Column(
-              children: [
-                SizedBox(height: SizeConfig.padding16),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
-                      horizontal: SizeConfig.padding20),
-                  margin:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-                  decoration: BoxDecoration(
-                    color: UiConstants.kBackgroundColor3,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.roundness12)),
+ Spacer(),
+            if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
+              Column(
+                children: [
+                  Text(
+                    '100% Safe & Secure',
+                    style:
+                        TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

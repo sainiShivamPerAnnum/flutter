@@ -30,6 +30,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -174,9 +175,11 @@ class RootViewModel extends BaseViewModel {
       addToScreenStack: true,
       isBarrierDismissable: false,
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-      backgroundColor: UiConstants.bottomNavBarColor,
-      content: const SecurityModalSheet(),
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(SizeConfig.roundness12)),
+      backgroundColor:
+          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+      content: SecurityModalSheet(),
     );
   }
 
@@ -244,7 +247,7 @@ class RootViewModel extends BaseViewModel {
 
   initialize() async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      _userService.getUserFundWalletData();
+      await _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.checkForUnscratchedGTStatus();
       _baseUtil.getProfilePicture();

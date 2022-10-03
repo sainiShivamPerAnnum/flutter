@@ -69,6 +69,7 @@ class ApiPath {
       "/user/$uid/gt/$goldenTicketId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static prizeBySubtype(String uid) => '/user/$uid/gt';
+  static getGoldenTicket(String uid) => '/user/$uid/golden_tickets';
 
   // Payment Apis
   static String get validateVPA => "/vpa";

@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -254,18 +255,11 @@ class WinnerboardView extends StatelessWidget {
                                                         builder: (context,
                                                             snapshot) {
                                                           if (!snapshot
-                                                              .hasData) {
-                                                            int rand = 1 +
-                                                                math.Random()
-                                                                    .nextInt(4);
-                                                            return SvgPicture
-                                                                .asset(
-                                                              "assets/vectors/userAvatars/AV$rand.svg",
-                                                              width: SizeConfig
-                                                                  .iconSize5,
-                                                              height: SizeConfig
-                                                                  .iconSize5,
-                                                            );
+                                                                  .hasData ||
+                                                              snapshot.connectionState ==
+                                                                  ConnectionState
+                                                                      .waiting) {
+                                                            return DefaultAvatar();
                                                           }
 
                                                           String imageUrl =
@@ -300,18 +294,7 @@ class WinnerboardView extends StatelessWidget {
                                                               ),
                                                               errorWidget:
                                                                   (a, b, c) {
-                                                                int rand = 1 +
-                                                                    math.Random()
-                                                                        .nextInt(
-                                                                            4);
-                                                                return SvgPicture
-                                                                    .asset(
-                                                                  "assets/vectors/userAvatars/AV$rand.svg",
-                                                                  width: SizeConfig
-                                                                      .iconSize5,
-                                                                  height: SizeConfig
-                                                                      .iconSize5,
-                                                                );
+                                                                return DefaultAvatar();
                                                               },
                                                             ),
                                                           );

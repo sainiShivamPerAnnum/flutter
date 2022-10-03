@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -1060,14 +1061,10 @@ class TambolaLeaderBoard extends StatelessWidget {
                                           future: model.getProfileDpWithUid(
                                               model.winners[i].userid),
                                           builder: (context, snapshot) {
-                                            if (!snapshot.hasData) {
-                                              int rand =
-                                                  1 + math.Random().nextInt(4);
-                                              return SvgPicture.asset(
-                                                "assets/svg/userAvatars/AV$rand.svg",
-                                                width: SizeConfig.iconSize5,
-                                                height: SizeConfig.iconSize5,
-                                              );
+                                            if (snapshot.connectionState ==
+                                                    ConnectionState.waiting ||
+                                                !snapshot.hasData) {
+                                              return DefaultAvatar();
                                             }
 
                                             String imageUrl =
@@ -1089,14 +1086,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                                                   ),
                                                 ),
                                                 errorWidget: (a, b, c) {
-                                                  int rand = 1 +
-                                                      math.Random().nextInt(4);
-                                                  return SvgPicture.asset(
-                                                    "assets/svg/userAvatars/AV$rand.svg",
-                                                    width: SizeConfig.iconSize5,
-                                                    height:
-                                                        SizeConfig.iconSize5,
-                                                  );
+                                                  return DefaultAvatar();
                                                 },
                                               ),
                                             );

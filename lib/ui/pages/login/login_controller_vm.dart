@@ -119,7 +119,7 @@ class LoginControllerViewModel extends BaseViewModel {
         mobileNo: this.userMobile,
         loginModel: loginModelInstance,
       ),
-      LoginNameInputView(key: _nameKey),
+      LoginNameInputView(key: _nameKey, loginModel: this),
     ];
   }
 
@@ -178,9 +178,9 @@ class LoginControllerViewModel extends BaseViewModel {
                     "Authentication failed", "Please try again after sometime");
               });
             } else {
-              _otpScreenKey.currentState.model.pinEditingController.text = "";
+              _otpScreenKey.currentState.model.pinEditingController.clear();
               _otpScreenKey.currentState.model.otpFieldEnabled = true;
-
+              _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
               BaseUtil.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp');
 
@@ -473,6 +473,8 @@ class LoginControllerViewModel extends BaseViewModel {
         'Sending OTP failed',
         exceptionMessage,
       );
+      _otpScreenKey.currentState.model.otpFieldEnabled = true;
+
       setState(ViewState.Idle);
     }
   }

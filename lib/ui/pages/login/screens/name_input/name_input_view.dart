@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -23,7 +24,9 @@ class LowerCaseTextFormatter extends TextInputFormatter {
 
 class LoginNameInputView extends StatefulWidget {
   static const int index = 2;
-  const LoginNameInputView({Key key}) : super(key: key);
+  final LoginControllerViewModel loginModel;
+  const LoginNameInputView({Key key, @required this.loginModel})
+      : super(key: key);
   @override
   State<LoginNameInputView> createState() => LoginUserNameViewState();
 }
@@ -73,6 +76,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     RegExp(r'[a-zA-Z ]'),
                   ),
                 ],
+                onSubmit: widget.loginModel.processScreenInput(2),
                 // suffix: SizedBox(),
                 validator: (value) {
                   if (value != null && value.isNotEmpty) {

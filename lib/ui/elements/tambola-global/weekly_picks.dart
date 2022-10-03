@@ -91,41 +91,41 @@ class WeeklyPicks extends StatelessWidget {
     print("TEsting sat: ${weeklyDraws.sat}");
     print("TEsting sun: ${weeklyDraws.sun}");
     // print("TEsting wekkcode: ${weeklyDraws.weekCode}");
-    if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
-      return Container(
-        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        height: SizeConfig.screenWidth * 0.5,
-        decoration: BoxDecoration(
-          color: UiConstants.kArowButtonBackgroundColor,
-          border: Border.all(
-            color: Colors.white.withOpacity(0.5),
-            width: 0.5,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(SizeConfig.roundness16),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              Assets.noTickets,
-              width: SizeConfig.screenWidth * 0.2,
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'This week\'s numbers have not been drawn yet.',
-                textAlign: TextAlign.center,
-                style: TextStyles.sourceSans.body3.colour(
-                  Colors.white.withOpacity(0.5),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    // if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
+    //   return Container(
+    //     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+    //     height: SizeConfig.screenWidth * 0.5,
+    //     decoration: BoxDecoration(
+    //       color: UiConstants.kArowButtonBackgroundColor,
+    //       border: Border.all(
+    //         color: Colors.white.withOpacity(0.5),
+    //         width: 0.5,
+    //       ),
+    //       borderRadius: BorderRadius.all(
+    //         Radius.circular(SizeConfig.roundness16),
+    //       ),
+    //     ),
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         SvgPicture.asset(
+    //           Assets.noTickets,
+    //           width: SizeConfig.screenWidth * 0.2,
+    //         ),
+    //         Padding(
+    //           padding: EdgeInsets.all(10),
+    //           child: Text(
+    //             'This week\'s numbers have not been drawn yet.',
+    //             textAlign: TextAlign.center,
+    //             style: TextStyles.sourceSans.body3.colour(
+    //               Colors.white.withOpacity(0.5),
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
     DateTime today = DateTime.now();
     List<Widget> colElems = [];
     int colCount = today.weekday;
