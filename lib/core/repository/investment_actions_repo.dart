@@ -14,7 +14,7 @@ class InvestmentActionsRepository extends BaseRepo {
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
-      : "";
+      : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<Map<String, dynamic>>> getGoldRates() async {
     _logger.d("GET_GOLD_RATES::API_CALLED");

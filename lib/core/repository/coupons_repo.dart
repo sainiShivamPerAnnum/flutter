@@ -13,7 +13,6 @@ import 'package:felloapp/util/rsa_encryption.dart';
 
 class CouponRepository extends BaseRepo {
   final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
   final _rsaEncryption = new RSAEncryption();
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"

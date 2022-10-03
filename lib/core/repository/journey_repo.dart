@@ -26,6 +26,14 @@ class JourneyRepository extends BaseRepo {
   static const String LOCAL_ASSET_DATABASE = "localAssetDatabase";
   String _filePathDirectory;
 
+  final _baseUrlJourney = FlavorConfig.isDevelopment()
+      ? 'https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev'
+      : 'https://rs0wiakaw7.execute-api.ap-south-1.amazonaws.com/prod';
+
+  final _baseUrlStats = FlavorConfig.isDevelopment()
+      ? '"https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev"'
+      : 'https://08wplse7he.execute-api.ap-south-1.amazonaws.com/prod';
+
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
     if (_filePathDirectory == null) {
@@ -165,9 +173,7 @@ class JourneyRepository extends BaseRepo {
           () => APIService.instance.getData(
                 ApiPath.kJourney,
                 token: token,
-                cBaseUrl: FlavorConfig.isDevelopment()
-                    ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
-                    : "not yet found",
+                cBaseUrl: _baseUrlJourney,
                 queryParams: queryParams,
               ), (dynamic responseData) {
         // parser
@@ -198,7 +204,7 @@ class JourneyRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.journeyStats(_uid),
         token: _token,
-        cBaseUrl: "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev",
+        cBaseUrl: _baseUrlStats,
       );
 
       final responseData = response["data"];
@@ -241,7 +247,7 @@ class JourneyRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.kJourneyLevel,
         token: _token,
-        cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
+        cBaseUrl: _baseUrlJourney,
       );
 
       final responseData = response["data"];

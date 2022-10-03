@@ -16,7 +16,7 @@ class BankingRepository extends BaseRepo {
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
-      : "";
+      : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
       {String uid, String panName, String panNumber}) async {
