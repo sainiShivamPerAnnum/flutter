@@ -104,22 +104,23 @@ class Ticket extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (board.assigned_time.toDate().day == DateTime.now().day)
-                      Shimmer(
-                        gradient: LinearGradient(
-                          colors: [
-                            UiConstants.primaryLight,
-                            UiConstants.primaryColor,
-                            UiConstants.primaryLight
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        child: Text(
-                          "NEW",
-                          style: TextStyles.rajdhaniB.body3,
-                        ),
-                      ),
+                    (board.assigned_time.toDate().day == DateTime.now().day)
+                        ? Shimmer(
+                            gradient: LinearGradient(
+                              colors: [
+                                UiConstants.primaryLight,
+                                UiConstants.primaryColor,
+                                UiConstants.primaryLight
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            child: Text(
+                              "NEW",
+                              style: TextStyles.rajdhaniB.body3,
+                            ),
+                          )
+                        : SizedBox(),
                     Row(
                       children: [
                         Text(

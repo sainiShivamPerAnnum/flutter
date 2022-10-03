@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -100,7 +101,7 @@ class CampaignView extends StatelessWidget {
                               event: model.event,
                               subText: Padding(
                                 padding: EdgeInsets.only(
-                                  top: SizeConfig.padding24,
+                                  top: SizeConfig.padding10,
                                 ),
                                 child: _realtimeView(model),
                               ),
@@ -460,7 +461,7 @@ class CampaignView extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.padding34),
                   child: ReactivePositiveAppButton(
-                    btnText: 'Get Started',
+                    btnText: 'Start Saving',
                     onPressed: () {
                       AppState.delegate.appState.currentAction = PageAction(
                           widget: SaveAssetView(),
@@ -594,19 +595,11 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                 model.currentParticipants[index]
                                                     .userid),
                                             builder: (context, snapshot) {
-                                              int rand =
-                                                  1 + math.Random().nextInt(4);
-                                              final Widget defaultAvatar =
-                                                  SvgPicture.asset(
-                                                "assets/vectors/userAvatars/AV$rand.svg",
-                                                width: SizeConfig.iconSize5,
-                                                height: SizeConfig.iconSize5,
-                                              );
                                               if (snapshot.connectionState ==
                                                   ConnectionState.waiting)
-                                                return defaultAvatar;
+                                                return DefaultAvatar();
                                               if (!snapshot.hasData)
-                                                return defaultAvatar;
+                                                return DefaultAvatar();
 
                                               String imageUrl =
                                                   snapshot.data as String;
@@ -628,7 +621,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                                     ),
                                                   ),
                                                   errorWidget: (a, b, c) {
-                                                    return defaultAvatar;
+                                                    return DefaultAvatar();
                                                   },
                                                 ),
                                               );
@@ -787,20 +780,10 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                 model
                                                     .pastWinners[index].userid),
                                             builder: (context, snapshot) {
-                                              int rand =
-                                                  1 + math.Random().nextInt(4);
-                                              final Widget defaultAvatar =
-                                                  SvgPicture.asset(
-                                                "assets/vectors/userAvatars/AV$rand.svg",
-                                                width: SizeConfig.iconSize5,
-                                                height: SizeConfig.iconSize5,
-                                              );
                                               if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return defaultAvatar;
-                                              }
-                                              if (!snapshot.hasData) {
-                                                return defaultAvatar;
+                                                      ConnectionState.waiting ||
+                                                  !snapshot.hasData) {
+                                                return DefaultAvatar();
                                               }
 
                                               String imageUrl =
@@ -823,7 +806,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                                     ),
                                                   ),
                                                   errorWidget: (a, b, c) {
-                                                    return defaultAvatar;
+                                                    return DefaultAvatar();
                                                   },
                                                 ),
                                               );

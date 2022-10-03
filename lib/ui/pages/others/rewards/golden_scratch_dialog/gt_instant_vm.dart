@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/constants.dart';
@@ -145,6 +146,10 @@ class GTInstantViewModel extends BaseViewModel {
           "An error occured while redeeming your golden ticket",
           "Please try again in your winnings section");
     }
+
+    Future.delayed(Duration(seconds: 3), () {
+      AppState.backButtonDispatcher.didPopRoute();
+    });
   }
 
   Future<String> _getBearerToken() async {

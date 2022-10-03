@@ -86,9 +86,7 @@ class LendboxLoadingView extends StatelessWidget {
 
                 _txnService.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
-                if (AppState.screenStack.last == ScreenItem.loader) {
-                  AppState.screenStack.remove(AppState.screenStack.last);
-                }
+                AppState.unblockNavigation();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
                 AppState.backButtonDispatcher.didPopRoute();

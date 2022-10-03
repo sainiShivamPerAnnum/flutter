@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -69,9 +70,35 @@ class TambolaHomeView extends StatelessWidget {
                       ),
                       //Win Announcement card
                       if (model.showWinCard) TambolaResultCard(),
+                      //How to play
+                      InfoComponent2(
+                          heading: model.boxHeading,
+                          assetList: model.boxAssets,
+                          titleList: model.boxTitlles,
+                          height: SizeConfig.screenWidth * 0.35),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
-                          ? TicketsView(model: model)
+                          ? model.userWeeklyBoards != null
+                              ? TicketsView(model: model)
+                              : Container(
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          SizeConfig.pageHorizontalMargins),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      FullScreenLoader(),
+                                      SizedBox(height: SizeConfig.padding20),
+                                      Text(
+                                        "Fetching your referals. Please wait!",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                )
                           : SizedBox.shrink(),
                       SizedBox(height: SizeConfig.padding20),
                       (Platform.isIOS)
@@ -87,12 +114,7 @@ class TambolaHomeView extends StatelessWidget {
                       ButTicketsComponent(
                         model: model,
                       ),
-                      //How to play
-                      InfoComponent2(
-                          heading: model.boxHeading,
-                          assetList: model.boxAssets,
-                          titleList: model.boxTitlles,
-                          height: SizeConfig.screenWidth * 0.35),
+
                       //Tambola Prizes
                       TambolaPrize(
                         model: model,
@@ -1039,14 +1061,10 @@ class TambolaLeaderBoard extends StatelessWidget {
                                           future: model.getProfileDpWithUid(
                                               model.winners[i].userid),
                                           builder: (context, snapshot) {
-                                            if (!snapshot.hasData) {
-                                              int rand =
-                                                  1 + math.Random().nextInt(4);
-                                              return SvgPicture.asset(
-                                                "assets/svg/userAvatars/AV$rand.svg",
-                                                width: SizeConfig.iconSize5,
-                                                height: SizeConfig.iconSize5,
-                                              );
+                                            if (snapshot.connectionState ==
+                                                    ConnectionState.waiting ||
+                                                !snapshot.hasData) {
+                                              return DefaultAvatar();
                                             }
 
                                             String imageUrl =
@@ -1068,14 +1086,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                                                   ),
                                                 ),
                                                 errorWidget: (a, b, c) {
-                                                  int rand = 1 +
-                                                      math.Random().nextInt(4);
-                                                  return SvgPicture.asset(
-                                                    "assets/svg/userAvatars/AV$rand.svg",
-                                                    width: SizeConfig.iconSize5,
-                                                    height:
-                                                        SizeConfig.iconSize5,
-                                                  );
+                                                  return DefaultAvatar();
                                                 },
                                               ),
                                             );

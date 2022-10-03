@@ -5,13 +5,16 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
@@ -36,6 +39,30 @@ class OnboardingViewModel extends BaseViewModel {
 
   int get currentPage => _currentPage;
 
+  List<Widget> assetWidgets = [
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(Assets.assetList1OnBoarding.length, (index) {
+        return SvgPicture.asset(
+          Assets.assetList1OnBoarding[index],
+          color: Colors.white,
+          width: SizeConfig.screenWidth * 0.12,
+        );
+      }),
+    ),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: List.generate(Assets.assetList2OnBoarding.length, (index) {
+        return SvgPicture.asset(
+          Assets.assetList2OnBoarding[index],
+          width: SizeConfig.screenWidth * 0.12,
+        );
+      }),
+    ),
+    SizedBox.shrink(),
+  ];
+
   List<List<String>> get onboardingData => _onboardingData;
 
   set pageController(PageController val) {
@@ -59,7 +86,7 @@ class OnboardingViewModel extends BaseViewModel {
     onboardingData = [
       [
         'Save and Invest',
-        'In strong, low risk assets with steady growth',
+        'In strong, low risk assets with steady growth secured by our partners',
       ],
       [
         'Play games',
@@ -67,7 +94,7 @@ class OnboardingViewModel extends BaseViewModel {
       ],
       [
         'Win rewards',
-        'Win the daily and weekly games and get rewards and prizes!',
+        'Win the daily and weekly games and and earn rewards of upto 1 Crore!',
       ],
     ];
   }

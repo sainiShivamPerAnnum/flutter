@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/components
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -36,7 +37,8 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         return m.isLeaderboardLoading
             ? LeaderboardShimmer()
             : (m.WebGameLeaderBoard != null &&
-                    m.WebGameLeaderBoard.scoreboard != null
+                    m.WebGameLeaderBoard.scoreboard != null &&
+                    m.WebGameLeaderBoard.scoreboard.isNotEmpty)
                 // &&
                 // (m.userProfilePicUrl.length >=
                 //     m.WebGameLeaderBoard.scoreboard.length)
@@ -49,18 +51,17 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: SizeConfig.padding16),
+                      SizedBox(height: SizeConfig.padding32),
                       SvgPicture.asset(
                         Assets.noWinnersAsset,
                       ),
-                      SizedBox(height: SizeConfig.padding16),
                       Text(
-                        "No winners yet",
+                        "Start playing to see yourself on the leaderboard",
                         style: TextStyles.sourceSans.body2.colour(Colors.white),
                       ),
                       SizedBox(height: SizeConfig.padding16),
                     ],
-                  ));
+                  );
       },
     );
   }
@@ -201,6 +202,8 @@ class RemainingRank extends StatelessWidget {
                         : ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: userProfilePicUrl[countedIndex],
+                              errorWidget: (a, b, c) => DefaultAvatar(),
+                              placeholder: (ctx, a) => DefaultAvatar(),
                               width: SizeConfig.iconSize5,
                               height: SizeConfig.iconSize5,
                               fit: BoxFit.cover,

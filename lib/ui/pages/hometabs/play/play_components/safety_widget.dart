@@ -36,7 +36,7 @@ class SafetyWidget extends StatelessWidget {
                   FittedBox(
                     child: Text(
                       "Games are played with Fello tokens",
-                      style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                      style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
                     ),
                   ),
                   Text(

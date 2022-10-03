@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
+import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
@@ -30,6 +32,12 @@ class SaveAssetView extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0,
         leading: FelloAppBarBackButton(),
+        actions: [
+          FaqButtonRounded(type: FaqsType.savings),
+          SizedBox(
+            width: SizeConfig.padding24,
+          )
+        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -67,16 +75,13 @@ class SaveAssetView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SellCardView(
-                          investmentType: InvestmentType.AUGGOLD99,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding24),
-                          child: FAQCardView(
-                              category: 'digital_gold',
-                              bgColor: UiConstants.kDarkBackgroundColor),
-                        ),
+                        model.getQuantity(model.userFundWallet,
+                                    InvestmentType.AUGGOLD99) ==
+                                0
+                            ? SizedBox.shrink()
+                            : SellCardView(
+                                investmentType: InvestmentType.AUGGOLD99,
+                              ),
                         SizedBox(
                           height: SizeConfig.screenWidth * 0.4,
                         )

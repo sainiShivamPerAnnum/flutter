@@ -88,6 +88,8 @@ class Assets {
   static final String weeklySaver = 'assets/svg/saver_of_week_card.svg';
   static final String monthlySaver = 'assets/svg/saver_of_month_card.svg';
   static final String flatIsland = 'assets/svg/flag_svg.svg';
+  static final String flatFullFlagIsland = 'assets/svg/flatFullFlagIsland.svg';
+
   // WIN
 
   static final String amazonClaim = "assets/images/amazon_claim.png";
@@ -216,6 +218,19 @@ class Assets {
     "assets/svg/prize_asset_6.svg",
     "assets/svg/prize_asset_7.svg",
     "assets/svg/prize_asset_8.svg",
+  ];
+
+  static List<String> assetList1OnBoarding = [
+    "assets/svg/lendbox-icon.svg",
+    "assets/svg/augmont_ic.svg",
+    "assets/svg/paytm-icon.svg",
+    "assets/svg/razorpay-icon.svg",
+  ];
+
+  static List<String> assetList2OnBoarding = [
+    "assets/svg/small_asset_cricket.svg",
+    "assets/svg/small_asset_pool.svg",
+    "assets/svg/small_asset_football.svg",
   ];
 
   static final List<String> onboardingHeader = [

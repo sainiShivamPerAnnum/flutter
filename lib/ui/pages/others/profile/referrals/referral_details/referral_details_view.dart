@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -302,77 +303,98 @@ class ReferralDetailsView extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : Container(
-                              margin: EdgeInsets.only(
-                                top: SizeConfig.padding34,
-                                bottom: SizeConfig.padding12,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          : model.referalList.isEmpty
+                              ? Center(
+                                  child: Column(
                                     children: [
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: () => model.switchTab(0),
-                                          child: Text(
-                                            'Successful',
-                                            style: model.tabNo == 0
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                          ),
-                                        ),
+                                      SizedBox(height: SizeConfig.padding34),
+                                      SvgPicture.asset(Assets.noReferalAsset),
+                                      SizedBox(height: SizeConfig.padding34),
+                                      Text(
+                                        "No referals yet",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
                                       ),
-                                      SizedBox(
-                                        width: SizeConfig.padding16,
-                                      ),
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: () => model.switchTab(1),
-                                          child: Text(
-                                            'Have not saved',
-                                            style: model.tabNo == 1
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                          ),
-                                        ),
-                                      )
+                                      SizedBox(height: SizeConfig.padding34),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 5,
-                                        width: model.tabPosWidthFactor,
-                                      ),
-                                      Container(
-                                        color: UiConstants.kTabBorderColor,
-                                        height: 5,
-                                        width: SizeConfig.screenWidth * 0.38,
-                                      )
-                                    ],
+                                )
+                              : Container(
+                                  margin: EdgeInsets.only(
+                                    top: SizeConfig.padding34,
+                                    bottom: SizeConfig.padding12,
                                   ),
-                                  HeightAdaptivePageView(
-                                    controller: model.pageController,
-                                    onPageChanged: (int page) {
-                                      model.switchTab(page);
-                                    },
+                                  child: Column(
                                     children: [
-                                      //Current particiapnts
-                                      BonusUnlockedReferals(
-                                        model: model,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () =>
+                                                  model.switchTab(0),
+                                              child: Text(
+                                                'Successful',
+                                                style: model.tabNo == 0
+                                                    ? _selectedTextStyle
+                                                    : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding16,
+                                          ),
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () =>
+                                                  model.switchTab(1),
+                                              child: Text(
+                                                'Have not saved',
+                                                style: model.tabNo == 1
+                                                    ? _selectedTextStyle
+                                                    : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
+                                      Row(
+                                        children: [
+                                          AnimatedContainer(
+                                            duration:
+                                                Duration(milliseconds: 500),
+                                            height: 5,
+                                            width: model.tabPosWidthFactor,
+                                          ),
+                                          Container(
+                                            color: UiConstants.kTabBorderColor,
+                                            height: 5,
+                                            width:
+                                                SizeConfig.screenWidth * 0.38,
+                                          )
+                                        ],
+                                      ),
+                                      HeightAdaptivePageView(
+                                        controller: model.pageController,
+                                        onPageChanged: (int page) {
+                                          model.switchTab(page);
+                                        },
+                                        children: [
+                                          //Current particiapnts
+                                          BonusUnlockedReferals(
+                                            model: model,
+                                          ),
 
-                                      //Current particiapnts
-                                      BonusLockedReferals(
-                                        model: model,
+                                          //Current particiapnts
+                                          BonusLockedReferals(
+                                            model: model,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
@@ -459,19 +481,10 @@ class BonusLockedReferals extends StatelessWidget {
                                     future: model.getProfileDpWithUid(
                                         model.referalList[i].uid),
                                     builder: (context, snapshot) {
-                                      int rand = 1 + math.Random().nextInt(4);
-                                      final Widget defaultAvatar =
-                                          SvgPicture.asset(
-                                        "assets/vectors/userAvatars/AV$rand.svg",
-                                        width: SizeConfig.iconSize5,
-                                        height: SizeConfig.iconSize5,
-                                      );
-
                                       if (snapshot.connectionState ==
-                                          ConnectionState.waiting)
-                                        return defaultAvatar;
-                                      if (!snapshot.hasData) {
-                                        return defaultAvatar;
+                                              ConnectionState.waiting ||
+                                          !snapshot.hasData) {
+                                        return DefaultAvatar();
                                       }
 
                                       String imageUrl = snapshot.data as String;
@@ -492,7 +505,7 @@ class BonusLockedReferals extends StatelessWidget {
                                             ),
                                           ),
                                           errorWidget: (a, b, c) {
-                                            return defaultAvatar;
+                                            return DefaultAvatar();
                                           },
                                         ),
                                       );
@@ -635,20 +648,10 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     future: model.getProfileDpWithUid(
                                         model.referalList[i].uid),
                                     builder: (context, snapshot) {
-                                      int rand = 1 + math.Random().nextInt(4);
-                                      final Widget defaultAvatar =
-                                          SvgPicture.asset(
-                                        "assets/vectors/userAvatars/AV$rand.svg",
-                                        width: SizeConfig.iconSize5,
-                                        height: SizeConfig.iconSize5,
-                                      );
-
                                       if (snapshot.connectionState ==
-                                          ConnectionState.waiting)
-                                        return defaultAvatar;
-                                      if (!snapshot.hasData) {
-                                        return defaultAvatar;
-                                      }
+                                              ConnectionState.waiting ||
+                                          !snapshot.hasData)
+                                        return DefaultAvatar();
 
                                       String imageUrl = snapshot.data as String;
 
@@ -668,7 +671,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                             ),
                                           ),
                                           errorWidget: (a, b, c) {
-                                            return defaultAvatar;
+                                            return DefaultAvatar();
                                           },
                                         ),
                                       );

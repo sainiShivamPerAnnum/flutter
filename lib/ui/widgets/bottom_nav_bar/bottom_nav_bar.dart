@@ -19,8 +19,8 @@ class BottomNavBar extends StatelessWidget {
 
   final List<NavBarItemModel> navbarItems = [
     NavBarItemModel('Journey', Assets.navJourneyLottie),
-    NavBarItemModel('Play', Assets.navPlayLottie),
     NavBarItemModel('Save', Assets.navSaveLottie),
+    NavBarItemModel('Play', Assets.navPlayLottie),
     NavBarItemModel('Win', Assets.navWinLottie)
   ];
 

@@ -97,7 +97,6 @@ class InitAutosaveCard extends StatelessWidget {
                 subTitle:
                     'Invest safely in Gold with our Auto SIP to win tokens',
               ),
-              Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
               SizedBox(
                 height: SizeConfig.padding32,
               ),

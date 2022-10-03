@@ -19,6 +19,7 @@ class LoginMobileViewModel extends BaseViewModel {
   final logger = locator<CustomLogger>();
   final FocusNode mobileFocusNode = FocusNode();
   bool _validate = true;
+  bool _showTickCheck = false;
   bool showAvailableMobileNos = true;
   Log log = new Log("MobileInputScreen");
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
@@ -26,6 +27,7 @@ class LoginMobileViewModel extends BaseViewModel {
   String code = "+91";
   // bool hasReferralCode = false;
   get formKey => _formKey;
+  get showTickCheck => _showTickCheck;
   get validate => _validate;
   get phoneFieldKey => _phoneFieldKey;
   TextEditingController get mobileController => _mobileController;
@@ -46,6 +48,7 @@ class LoginMobileViewModel extends BaseViewModel {
       if (completePhoneNumber != null) {
         _mobileController.text =
             completePhoneNumber.substring(completePhoneNumber.length - 10);
+        upDateCheckTick();
         // notifyListeners();
       }
       Future.delayed(Duration(milliseconds: 500), () {
@@ -64,8 +67,24 @@ class LoginMobileViewModel extends BaseViewModel {
     if (!regex.hasMatch(_mobileController.text) ||
         _mobileController.text.length != 10)
       return "Enter a valid mobile number";
+
+    if (!(_mobileController.text.startsWith("6") ||
+        _mobileController.text.startsWith("7") ||
+        _mobileController.text.startsWith("8") ||
+        _mobileController.text.startsWith("9")))
+      return "Enter a valid mobile number";
     else
       return null;
+  }
+
+  void upDateCheckTick() {
+    if (_mobileController.text.length == 10) {
+      _showTickCheck = true;
+    } else {
+      _showTickCheck = false;
+    }
+
+    notifyListeners();
   }
 
   void onTermsAndConditionsClicked() {

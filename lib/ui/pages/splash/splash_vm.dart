@@ -6,6 +6,7 @@ import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -242,13 +243,13 @@ class LauncherViewModel extends BaseViewModel {
 
     ///Check if app needs to be open securely
     ///NOTE: CHECK APP LOCK
-    bool _unlocked = false;
+    bool _unlocked = true;
     // if (userService.baseUser.userPreferences != null &&
     //     userService.baseUser.userPreferences
     //             .getPreference(Preferences.APPLOCK) ==
     //         1 &&
     //     deviceUnlock != null) {
-    _unlocked = await authenticateDevice();
+    //   _unlocked = await authenticateDevice();
     // }
 
     if (_unlocked) {

@@ -87,7 +87,7 @@ class Win extends StatelessWidget {
                           ),
                         ),
                         padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
-                            SizeConfig.padding44, SizeConfig.padding24, 0.0),
+                            SizeConfig.padding34, SizeConfig.padding24, 0.0),
                         child: Column(
                           children: [
                             Row(
@@ -141,7 +141,7 @@ class Win extends StatelessWidget {
                               ],
                             ),
                             SizedBox(
-                              height: SizeConfig.padding54,
+                              height: SizeConfig.padding28,
                             ),
                             Divider(
                               color: Colors.white,
@@ -175,7 +175,7 @@ class Win extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      // UnscratchedGTCountChip(),
+                                      UnscratchedGTCountChip(model: model),
                                       SizedBox(
                                         width: SizeConfig.padding10,
                                       ),

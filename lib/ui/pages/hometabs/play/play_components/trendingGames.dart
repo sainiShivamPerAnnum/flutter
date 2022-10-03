@@ -26,8 +26,7 @@ class TrendingGamesSection extends StatelessWidget {
       children: [
         TitleSubtitleContainer(
             title: "Your favorites",
-            subTitle:
-                "Play using fello tokens. Money from savings will not be deducted"),
+            subTitle: "The games you love and play most often"),
         Container(
           height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth,
