@@ -142,7 +142,7 @@ class RootViewModel extends BaseViewModel {
     AppState.delegate.appState.setCurrentTabIndex = index;
     Haptic.vibrate();
     if (AppState.delegate.appState.getCurrentTabIndex == 0)
-      _journeyService.checkAndAnimateAvatar();
+      _journeyService.checkForMilestoneLevelChange();
   }
 
   _initAdhocNotifications() {

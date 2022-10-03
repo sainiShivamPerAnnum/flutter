@@ -907,4 +907,20 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
     return isValid;
   }
+
+  navigateToKycScreen() {
+    Haptic.vibrate();
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
+  }
+
+  navigateToBankDetailsScreen() {
+    Haptic.vibrate();
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: BankDetailsPageConfig,
+    );
+  }
 }

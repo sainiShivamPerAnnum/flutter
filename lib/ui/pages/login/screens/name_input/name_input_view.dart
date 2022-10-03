@@ -76,7 +76,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     RegExp(r'[a-zA-Z ]'),
                   ),
                 ],
-                onSubmit: widget.loginModel.processScreenInput(2),
+                onSubmit: (_) => widget.loginModel.processScreenInput(2),
                 // suffix: SizedBox(),
                 validator: (value) {
                   if (value != null && value.isNotEmpty) {
@@ -106,6 +106,8 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     textAlign: TextAlign.center,
                     //   hintStyle: TextStyles.body3.colour(Colors.grey),
                     // ),
+                    onSubmit: (_) => widget.loginModel.processScreenInput(2),
+
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
                         RegExp(r'[a-zA-Z0-9]'),
