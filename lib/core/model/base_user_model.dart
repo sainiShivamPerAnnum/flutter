@@ -52,6 +52,8 @@ class BaseUser {
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
   static final String fldUserPrefs = "mUserPrefs";
+  static final String fldUserPrefsAl = "mUserPrefsAl";
+  static final String fldUserPrefsTn = "mUserPrefsTn";
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
   static final String fldStateId = "stateId";

@@ -248,7 +248,7 @@ class BaseUtil extends ChangeNotifier {
     @required InvestmentType investmentType,
   }) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (_userService.userJourneyStats.mlIndex == 1)
+      if (_userService.userJourneyStats?.mlIndex == 1)
         return BaseUtil.showNegativeAlert("Complete your profile",
             "You can make deposits only after completing profile");
       final bool isAugDepositBanned = _userService
@@ -266,13 +266,16 @@ class BaseUtil extends ChangeNotifier {
             augDepositBanNotice ?? "Asset not available at the moment",
             "Please try after some time");
       }
+
       if (investmentType == InvestmentType.LENDBOXP2P &&
           islBoxlDepositBanned != null &&
           islBoxlDepositBanned) {
         return BaseUtil.showNegativeAlert(
-            lBoxDepositBanNotice ?? "Asset not available at the moment",
-            "Please try after some time");
+          lBoxDepositBanNotice ?? "Asset not available at the moment",
+          "Please try after some time",
+        );
       }
+
       return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,

@@ -58,24 +58,6 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              // if (AppState.delegate.appState.getCurrentTabIndex == 3)
-              //   FelloAppBar(
-              //     showAppBar: false,
-              //     leading: InkWell(
-              //       onTap: model.showDrawer,
-              //       child: Container(
-              //         width: SizeConfig.padding38,
-              //         height: SizeConfig.padding38,
-              //         // color: Colors.red,
-              //       ),
-              //     ),
-              //   ),
-              // Consumer<AppState>(
-              //   builder: (ctx, m, child) =>
-              //       AppState.delegate.appState.isTxnLoaderInView
-              //           ? TransactionLoader()
-              //           : SizedBox(),
-              // ),
               BottomNavBar(
                 parentModel: model,
               ),

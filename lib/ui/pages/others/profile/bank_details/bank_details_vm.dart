@@ -115,7 +115,7 @@ class BankDetailsViewModel extends BaseViewModel {
       bankIfscController.text == activeBankDetails.ifsc);
 
   setUpDataValues() {
-    bankHoldername = bankHolderNameController.text.trim();
+    bankHoldername = bankHolderNameController.text.trim().toUpperCase();
     bankAccNo = bankAccNoController.text.trim();
     cnfBankAccNo = bankAccNoConfirmController.text.trim();
     ifscCode = bankIfscController.text.trim();

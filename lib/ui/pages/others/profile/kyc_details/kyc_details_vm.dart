@@ -135,7 +135,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           await _bankingRepo.verifyPan(
               uid: _userService.baseUser.uid,
               panNumber: panController.text.trim(),
-              panName: nameController.text.trim());
+              panName: nameController.text.trim().toUpperCase());
 
       if (response.code == 200) {
         if (response.model.flag) {
