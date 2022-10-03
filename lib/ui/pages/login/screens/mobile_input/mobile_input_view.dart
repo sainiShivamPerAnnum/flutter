@@ -1,6 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -90,7 +89,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     horizontal: SizeConfig.pageHorizontalMargins * 2),
               ),
             ),
- Spacer(),
+            Spacer(),
             if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
               Column(
                 children: [
@@ -99,7 +98,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     style:
                         TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
                   ),
-                  child: Row(
+                  Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SvgPicture.asset(
@@ -132,33 +131,32 @@ class LoginMobileViewState extends State<LoginMobileView> {
                       ),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                      SizeConfig.padding16, SizeConfig.padding10, 0),
-                  child: RichText(
-                    text: new TextSpan(
-                      children: [
-                        new TextSpan(
-                          text: 'By continuing, you agree to our ',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        new TextSpan(
-                          text: 'Terms of Service',
-                          style: TextStyles.sourceSans.body3.underline
-                              .colour(UiConstants.kTextColor),
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () {
-                              model.onTermsAndConditionsClicked();
-                            },
-                        ),
-                      ],
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                        SizeConfig.padding16, SizeConfig.padding10, 0),
+                    child: RichText(
+                      text: new TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: 'By continuing, you agree to our ',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2),
+                          ),
+                          new TextSpan(
+                            text: 'Terms of Service',
+                            style: TextStyles.sourceSans.body3.underline
+                                .colour(UiConstants.kTextColor),
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () {
+                                model.onTermsAndConditionsClicked();
+                              },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
             SizedBox(
               height: SizeConfig.screenWidth * 0.1 +
