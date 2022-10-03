@@ -57,9 +57,10 @@ class KYCDetailsView extends StatelessWidget {
                     AppTextField(
                       focusNode: model.kycNameFocusNode,
                       inputFormatters: [
-                        UpperCaseTextFormatter(),
+                        // UpperCaseTextFormatter(),
                         FilteringTextInputFormatter.allow(RegExp(r'[A-Z ]'))
                       ],
+                      textCapitalization: TextCapitalization.characters,
                       isEnabled: model.inEditMode,
                       textEditingController: model.nameController,
                       validator: (String value) {
@@ -74,7 +75,7 @@ class KYCDetailsView extends StatelessWidget {
                     AppTextField(
                       focusNode: model.panFocusNode,
                       inputFormatters: [
-                        UpperCaseTextFormatter(),
+                        // UpperCaseTextFormatter(),
                         FilteringTextInputFormatter.deny(RegExp(r'^0+(?!$)')),
                         LengthLimitingTextInputFormatter(10)
                       ],

@@ -1,10 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/dialogs/journey_onboarding_dialog.dart';
+import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -56,16 +58,27 @@ class _HelpFabState extends State<HelpFab> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: isOpen
-          ? () {}
-          : () {
-              expandFab();
-              BaseUtil.openDialog(
-                  hapticVibrate: true,
-                  addToScreenStack: true,
-                  content: JourneyOnboardingDialog(),
-                  isBarrierDismissable: false);
-            },
+      onTap: () {
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          isBarrierDismissable: false,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(SizeConfig.roundness12)),
+          backgroundColor:
+              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          content: SecurityModalSheet(),
+        );
+      },
+
+      //  () {
+      //           expandFab();
+      //           BaseUtil.openDialog(
+      //               hapticVibrate: true,
+      //               addToScreenStack: true,
+      //               content: JourneyOnboardingDialog(),
+      //               isBarrierDismissable: false);
+      //         },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,
           duration: Duration(milliseconds: 600),

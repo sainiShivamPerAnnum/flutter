@@ -25,19 +25,19 @@ class SecurityModalSheet extends StatelessWidget {
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: SvgPicture.asset(
-              Assets.sprout,
-              fit: BoxFit.contain,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: SvgPicture.asset(
+                "assets/svg/safety_asset.svg",
+                width: SizeConfig.screenWidth * 0.15,
+              ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Secure Fello', style: TextStyles.rajdhaniB.title3),
-            ],
-          ),
+          Text('Secure Fello', style: TextStyles.rajdhaniB.title3),
           SizedBox(
             height: SizeConfig.padding8,
           ),
@@ -52,12 +52,13 @@ class SecurityModalSheet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppPositiveBtn(
+                ReactivePositiveAppButton(
                   btnText: 'Enable',
-                  onPressed: () {
+                  onPressed: () async {
                     // baseProvider.flipSecurityValue(true);
-                    userRepo.updateUser(dMap: {
-                      BaseUser.fldUserPrefs: {"tn": 1, "al": 1},
+                    await userRepo.updateUser(dMap: {
+                      BaseUser.fldUserPrefsTn: true,
+                      BaseUser.fldUserPrefsAl: true,
                     }).then((value) => userService.setBaseUser());
 
                     AppState.backButtonDispatcher.didPopRoute();

@@ -730,6 +730,7 @@ class UserProfileVM extends BaseViewModel {
             1,
       },
     ).then((value) {
+      _userService.setBaseUser();
       Log("Preferences updated");
     });
     isApplockLoading = false;

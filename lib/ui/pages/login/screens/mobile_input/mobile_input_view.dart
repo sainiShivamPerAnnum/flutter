@@ -56,6 +56,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
                 keyboardType: TextInputType.phone,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
                 prefixText: "+91 ",
@@ -93,11 +94,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
             if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
               Column(
                 children: [
-                  Text(
-                    '100% Safe & Secure',
-                    style:
-                        TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-                  ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
