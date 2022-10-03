@@ -29,6 +29,9 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 class KYCDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
+        SizeConfig.viewInsets.bottom;
+
     S locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
@@ -91,7 +94,11 @@ class KYCDetailsView extends StatelessWidget {
                         return '';
                       },
                     ),
-                    Spacer(),
+                    !isKeyboardOpen
+                        ? Spacer()
+                        : SizedBox(
+                            height: SizeConfig.padding32,
+                          ),
                     Container(
                       margin: EdgeInsets.symmetric(
                           vertical: SizeConfig.pageHorizontalMargins),

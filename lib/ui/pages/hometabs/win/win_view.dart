@@ -141,7 +141,7 @@ class Win extends StatelessWidget {
                               ],
                             ),
                             SizedBox(
-                              height: SizeConfig.padding28,
+                              height: SizeConfig.padding24,
                             ),
                             Divider(
                               color: Colors.white,
@@ -152,7 +152,7 @@ class Win extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                model.navigateToMyWinnings();
+                                model.navigateToMyWinnings(model);
                               },
                               child: Row(
                                 mainAxisAlignment:
