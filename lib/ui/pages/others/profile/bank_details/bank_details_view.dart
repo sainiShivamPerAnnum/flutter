@@ -49,7 +49,7 @@ class BankDetailsView extends StatelessWidget {
                               isEnabled: model.inEditMode,
                               keyboardType: TextInputType.name,
                               inputFormatters: [
-                                UpperCaseTextFormatter(),
+                                // UpperCaseTextFormatter(),
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'[A-Z ]'))
                               ],

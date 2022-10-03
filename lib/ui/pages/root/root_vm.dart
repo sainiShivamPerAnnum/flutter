@@ -184,6 +184,7 @@ class RootViewModel extends BaseViewModel {
   }
 
   checkForBootUpAlerts() async {
+    if (!canExecuteStartupNotification) return;
     bool updateAvilable =
         PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVILABLE, def: false);
     bool isMsgNoticeAvilable =
@@ -256,8 +257,10 @@ class RootViewModel extends BaseViewModel {
       _initAdhocNotifications();
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
-      await checkIfAppLockModalSheetIsRequired();
       await handleStartUpNotifictionData();
+      Future.delayed(Duration(seconds: 3), () async {
+        await checkIfAppLockModalSheetIsRequired();
+      });
 
       // if (canExecuteStartupNotification &&
       //     _userService.isAnyUnscratchedGTAvailable) {
@@ -300,6 +303,7 @@ class RootViewModel extends BaseViewModel {
   }
 
   handleStartUpNotifictionData() {
+    if (!canExecuteStartupNotification) return;
     if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
       canExecuteStartupNotification = false;
       _logger.d(
@@ -314,7 +318,7 @@ class RootViewModel extends BaseViewModel {
 
   checkIfAppLockModalSheetIsRequired() async {
     // show security modal
-
+    if (!canExecuteStartupNotification) return;
     bool showSecurityPrompt = PreferenceHelper.getBool(
         PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
         def: true);
@@ -488,6 +492,7 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.baseUser != null && _userService.userBootUp != null) {
         //1.check if the account is blocked
+        canExecuteStartupNotification = false;
         if (_userService.userBootUp.data != null &&
             _userService.userBootUp.data.isBlocked != null &&
             _userService.userBootUp.data.isBlocked == true) {
@@ -501,6 +506,7 @@ class RootViewModel extends BaseViewModel {
         // //2.Checking for forced App Update
         if (_userService.userBootUp.data.isAppForcedUpdateRequired != null &&
             _userService.userBootUp.data.isAppForcedUpdateRequired == true) {
+          canExecuteStartupNotification = false;
           AppState.isUpdateScreen = true;
           AppState.delegate.appState.currentAction = PageAction(
               state: PageState.replaceAll, page: UpdateRequiredConfig);
@@ -510,6 +516,7 @@ class RootViewModel extends BaseViewModel {
         //3. Sign out the user automatically
         if (_userService.userBootUp.data.signOutUser != null &&
             _userService.userBootUp.data.signOutUser == true) {
+          canExecuteStartupNotification = false;
           Haptic.vibrate();
 
           _userService.signOut(() async {
@@ -562,6 +569,7 @@ class RootViewModel extends BaseViewModel {
 
           if (_userService.userBootUp.data.notice.url != null &&
               _userService.userBootUp.data.notice.url != "") {
+            canExecuteStartupNotification = false;
             try {
               if (Platform.isIOS)
                 BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);

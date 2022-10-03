@@ -65,9 +65,6 @@ class RazorpayService extends ChangeNotifier {
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    // if (AppState.delegate.appState.isTxnLoaderInView == true) {
-    //   AppState.delegate.appState.isTxnLoaderInView = false;
-    // }
     _txnService.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
     BaseUtil.showNegativeAlert(

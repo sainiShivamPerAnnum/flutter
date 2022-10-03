@@ -726,10 +726,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'journey':
         appState.setCurrentTabIndex = 0;
         break;
-      case 'play':
+      case 'save':
         appState.setCurrentTabIndex = 1;
         break;
-      case 'save':
+      case 'play':
         appState.setCurrentTabIndex = 2;
         break;
       case 'win':

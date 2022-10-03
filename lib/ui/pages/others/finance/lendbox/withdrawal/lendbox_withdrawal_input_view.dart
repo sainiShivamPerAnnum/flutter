@@ -8,7 +8,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LendboxWithdrawalInputView extends StatelessWidget {
   final LendboxWithdrawalViewModel model;
@@ -78,9 +77,14 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               height: SizeConfig.padding32,
             ),
             model.state == ViewState.Busy || model.inProgress
-                ? SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: 20,
+                ? Container(
+                    height: SizeConfig.screenWidth * 0.1556,
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth * 0.7,
+                    child: LinearProgressIndicator(
+                      color: UiConstants.primaryColor,
+                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    ),
                   )
                 : AppPositiveBtn(
                     btnText: 'WITHDRAW',

@@ -31,7 +31,7 @@ class JourneyRepository extends BaseRepo {
       : 'https://rs0wiakaw7.execute-api.ap-south-1.amazonaws.com/prod';
 
   final _baseUrlStats = FlavorConfig.isDevelopment()
-      ? '"https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev"'
+      ? "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev"
       : 'https://08wplse7he.execute-api.ap-south-1.amazonaws.com/prod';
 
   //Initiating instance for local directory of Android || iOS
