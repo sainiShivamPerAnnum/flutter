@@ -9,6 +9,7 @@ class GoldenTicket {
   String eventType;
   String gtType;
   bool isRewarding;
+  bool isLevelChange;
   String note;
   String prizeSubtype;
   TimestampModel redeemedTimestamp;
@@ -22,6 +23,7 @@ class GoldenTicket {
     this.userId,
     this.timestamp,
     this.eventType,
+    this.isLevelChange,
     this.prizeSubtype,
     this.note,
     this.gtType,
@@ -38,6 +40,7 @@ class GoldenTicket {
     timestamp = TimestampModel.fromMap(json['timestamp']);
     eventType = json['eventType'];
     gtType = json['gtType'];
+    isLevelChange = json['isLevelChange'];
     prizeSubtype = json['prizeSubtype'];
     note = json['note'];
     canTransfer = json['canTransfer'];

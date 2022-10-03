@@ -195,6 +195,8 @@ class Assets {
       "assets/vectors/icons/chevron_right_arrow.svg";
   //Golden Tickeets screen
   static final String unredemmedGoldenTicketBG = "assets/svg/unredeemed_gt.svg";
+  static final String levelUpUnRedeemedGoldenTicketBG =
+      "assets/svg/levelupTicket.svg";
   static final String unredemmedGoldenTicketBG_png =
       "assets/images/gt_unredeemed.png"; //for scractcher
   static final String gt_token = "assets/svg/gt_token.svg";

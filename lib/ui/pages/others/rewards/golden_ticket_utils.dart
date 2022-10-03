@@ -73,7 +73,9 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
       height: width,
       width: width,
       child: SvgPicture.asset(
-        Assets.unredemmedGoldenTicketBG,
+        ticket.isLevelChange
+            ? Assets.levelUpUnRedeemedGoldenTicketBG
+            : Assets.unredemmedGoldenTicketBG,
         width: double.maxFinite,
         height: double.maxFinite,
         fit: BoxFit.contain,
