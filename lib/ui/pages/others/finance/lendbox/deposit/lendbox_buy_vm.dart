@@ -46,7 +46,6 @@ class LendboxBuyViewModel extends BaseViewModel {
   init(int amount, bool isSkipMilestone) async {
     setState(ViewState.Busy);
     skipMl = isSkipMilestone;
-    incomingAmount = amount?.toDouble() ?? 0;
     amountController = TextEditingController(
       text: amount.toString() ?? chipAmountList[1].toInt().toString(),
     );

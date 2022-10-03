@@ -1,16 +1,14 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class DepositOptionModalSheet extends StatelessWidget {
-  int amount;
+  final int amount;
   DepositOptionModalSheet({this.amount});
 
   @override
@@ -59,8 +57,9 @@ class DepositOptionModalSheet extends StatelessWidget {
                     onTap: () {
                       AppState.backButtonDispatcher.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
-                          amt: amount,
-                          investmentType: InvestmentType.AUGGOLD99);
+                        amt: amount,
+                        investmentType: InvestmentType.AUGGOLD99,
+                      );
                     }),
               ),
               SizedBox(
@@ -85,7 +84,9 @@ class DepositOptionModalSheet extends StatelessWidget {
                     onTap: () {
                       AppState.backButtonDispatcher.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
-                          investmentType: InvestmentType.LENDBOXP2P);
+                        amt: amount,
+                        investmentType: InvestmentType.LENDBOXP2P,
+                      );
                     }),
               )
             ]),
