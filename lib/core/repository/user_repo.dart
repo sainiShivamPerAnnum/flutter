@@ -444,7 +444,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.postData(
         ApiPath.getCompleteOnboarding(userService.baseUser.uid),
         cBaseUrl: _baseUrl,
-        token: "Bearer $token",
+        token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);

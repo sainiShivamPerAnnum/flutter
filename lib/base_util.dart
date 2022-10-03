@@ -372,6 +372,8 @@ class BaseUtil extends ChangeNotifier {
 
   static showPositiveAlert(String title, String message, {int seconds = 2}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    if ((title != null && title.length > 200) ||
+        (message != null && message.length > 200)) return;
     bool isKeyboardOpen =
         MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
                 .viewInsets
@@ -413,6 +415,8 @@ class BaseUtil extends ChangeNotifier {
 
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    if ((title != null && title.length > 200) ||
+        (message != null && message.length > 200)) return;
     bool isKeyboardOpen =
         MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
                 .viewInsets

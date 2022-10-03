@@ -1,3 +1,4 @@
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:logger/logger.dart';
 
 class CustomLogger {
@@ -5,7 +6,8 @@ class CustomLogger {
 
   ///Encryption Utils
 
-  static bool isEnc = // FlavorConfig.isProduction() ??
+  static bool isEnc =
+      //FlavorConfig.isProduction() ??
       false;
 
   final LogFilter _filter;
