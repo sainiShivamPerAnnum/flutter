@@ -242,24 +242,24 @@ class _GTInstantViewState extends State<GTInstantView>
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeInCirc,
-                                    opacity: model.buttonOpacity,
-                                    child: AppPositiveBtn(
-                                      width: SizeConfig.screenWidth / 2,
-                                      btnText:
-                                          getButtonText(model, widget.source) ??
-                                              "Continue",
-                                      onPressed: getButtonAction(
-                                              model, widget.source) ??
-                                          () {
-                                            if (!model.isCardScratched) return;
-                                            AppState.backButtonDispatcher
-                                                .didPopRoute();
-                                          },
-                                    ),
-                                  ),
+                                  // AnimatedOpacity(
+                                  //   duration: Duration(milliseconds: 300),
+                                  //   curve: Curves.easeInCirc,
+                                  //   opacity: model.buttonOpacity,
+                                  //   child: AppPositiveBtn(
+                                  //     width: SizeConfig.screenWidth / 2,
+                                  //     btnText:
+                                  //         getButtonText(model, widget.source) ??
+                                  //             "Continue",
+                                  //     onPressed: getButtonAction(
+                                  //             model, widget.source) ??
+                                  //         () {
+                                  //           if (!model.isCardScratched) return;
+                                  //           AppState.backButtonDispatcher
+                                  //               .didPopRoute();
+                                  //         },
+                                  //   ),
+                                  // ),
                                   SizedBox(height: 12),
                                   TextButton(
                                     onPressed: () {

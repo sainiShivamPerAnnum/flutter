@@ -284,7 +284,7 @@ class WebHomeView extends StatelessWidget {
                                       horizontal: SizeConfig.padding16),
                                   child: Text(
                                     'Swing your wicket, throw fast pitches, and win upto ? Rs. 25,000 in one of our many free, online games!',
-                                    style: TextStyles.sourceSans.body2
+                                    style: TextStyles.sourceSans.body3
                                         .colour(Colors.grey.shade600),
                                     maxLines: 2,
                                     textAlign: TextAlign.center,
