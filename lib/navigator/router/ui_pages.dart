@@ -73,6 +73,7 @@ const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
 const String SharePriceScreenPath = "/SharePriceScreenPath";
 const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
 const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
+const String InfoStoriesViewPath = "/inforStoriesViewPath";
 
 enum Pages {
   Splash,
@@ -143,6 +144,7 @@ enum Pages {
   SharePriceScreenView,
   AllTambolaTicketsView,
   UserUpiDetailsView,
+  InfoStoriesView
 }
 
 class PageConfiguration {
@@ -634,3 +636,9 @@ PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
     path: UserUPIDetailsViewPath,
     uiPage: Pages.UserUpiDetailsView,
     name: "User Upi details Screen");
+
+PageConfiguration InfoStoriesViewPageConfig = PageConfiguration(
+    key: 'InfoStoresView',
+    path: InfoStoriesViewPath,
+    uiPage: Pages.InfoStoriesView,
+    name: "Info Stories details Screen");

@@ -1,7 +1,11 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/journey_onboarding_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stores_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -59,17 +63,23 @@ class _HelpFabState extends State<HelpFab> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          isBarrierDismissable: false,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.0),
-              topRight: Radius.circular(SizeConfig.roundness12)),
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          content: SecurityModalSheet(),
-        );
+        AppState.delegate.appState.currentAction = PageAction(
+            page: InfoStoriesViewPageConfig,
+            widget: InfoStories(topic: 'sdfdsf'),
+            state: PageState.addWidget);
       },
+      //  () {
+      //   BaseUtil.openModalBottomSheet(
+      //     addToScreenStack: true,
+      //     isBarrierDismissable: false,
+      //     borderRadius: BorderRadius.only(
+      //         topLeft: Radius.circular(30.0),
+      //         topRight: Radius.circular(SizeConfig.roundness12)),
+      //     backgroundColor:
+      //         UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+      //     content: SecurityModalSheet(),
+      //   );
+      // },
 
       //  () {
       //           expandFab();
