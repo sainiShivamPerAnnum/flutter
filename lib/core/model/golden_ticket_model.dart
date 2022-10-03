@@ -40,11 +40,11 @@ class GoldenTicket {
     timestamp = TimestampModel.fromMap(json['timestamp']);
     eventType = json['eventType'];
     gtType = json['gtType'];
-    isLevelChange = json['isLevelChange'];
+    isLevelChange = json['isLevelChange'] ?? false;
     prizeSubtype = json['prizeSubtype'];
-    note = json['note'];
-    canTransfer = json['canTransfer'];
-    isRewarding = json['isRewarding'];
+    note = json['note'] ?? '';
+    canTransfer = json['canTransfer'] ?? false;
+    isRewarding = json['isRewarding'] ?? false;
     redeemedTimestamp = TimestampModel.fromMap(json['redeemedTimestamp']);
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];

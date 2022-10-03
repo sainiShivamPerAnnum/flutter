@@ -56,7 +56,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
                 keyboardType: TextInputType.phone,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
                 prefixText: "+91 ",

@@ -183,7 +183,11 @@ class _GTInstantViewState extends State<GTInstantView>
                                           model.redeemTicket();
                                         },
                                         image: Image.asset(
-                                          Assets.unredemmedGoldenTicketBG_png,
+                                          model.goldenTicket.isLevelChange
+                                              ? Assets
+                                                  .levelUpUnredemmedGoldenTicketBGPNG
+                                              : Assets
+                                                  .unredemmedGoldenTicketBG_png,
                                           fit: BoxFit.contain,
                                           height: SizeConfig.screenWidth * 0.6,
                                           width: SizeConfig.screenWidth * 0.6,

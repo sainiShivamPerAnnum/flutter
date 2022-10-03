@@ -199,6 +199,8 @@ class Assets {
       "assets/svg/levelupTicket.svg";
   static final String unredemmedGoldenTicketBG_png =
       "assets/images/gt_unredeemed.png"; //for scractcher
+  static final String levelUpUnredemmedGoldenTicketBGPNG =
+      "assets/images/levelupTicketpng.png";
   static final String gt_token = "assets/svg/gt_token.svg";
   static final String gt_cashback = "assets/svg/gt_cashback.svg";
   static final String gt_token_cashback = "assets/svg/gt_cashback_token.svg";
