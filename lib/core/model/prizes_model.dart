@@ -53,14 +53,17 @@ class PrizesA {
   int amt;
   int flc;
   String displayName;
+  String displayAmount;
 
-  PrizesA({this.rank, this.amt, this.flc, this.displayName});
+  PrizesA(
+      {this.rank, this.amt, this.flc, this.displayName, this.displayAmount});
 
   PrizesA.fromJson(Map<String, dynamic> json) {
     rank = json['rank'];
     amt = json['amt'];
     flc = json['flc'];
     displayName = json['display_name'];
+    displayAmount = json['display_amt'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -69,6 +72,7 @@ class PrizesA {
     data['amt'] = this.amt;
     data['flc'] = this.flc;
     data['display_name'] = this.displayName;
+    data['display_amt'] = this.displayAmount;
     return data;
   }
 
@@ -78,6 +82,7 @@ class PrizesA {
       'amt': amt,
       'flc': flc,
       'display_name': displayName,
+      'display_amt': displayAmount,
     };
   }
 
@@ -87,6 +92,7 @@ class PrizesA {
       amt: map['amt'],
       flc: map['flc'],
       displayName: map['display_name'],
+      displayAmount: map['display_amount'],
     );
   }
 

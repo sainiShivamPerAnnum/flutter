@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -27,22 +29,7 @@ class _FocusRingState extends State<FocusRing>
 
   Animation<double> endingAnimation;
   final _userService = locator<UserService>();
-  @override
-  void initState() {
-    if (_userService.userJourneyStats.mlIndex != 1) return;
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    endingAnimation = CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0, 1.0, curve: Curves.decelerate));
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(seconds: 3), () {
-        _animationController.forward().then((value) => showButton = true);
-      });
-    });
-    super.initState();
-  }
+  final _journeyService = locator<JourneyService>();
 
   bool _showButton = false;
 
@@ -55,6 +42,30 @@ class _FocusRingState extends State<FocusRing>
   }
 
   @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    endingAnimation = CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0, 1.0, curve: Curves.decelerate));
+
+    super.initState();
+  }
+
+  animateRing() {
+    if (isAnimationComplete) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(Duration(seconds: 2), () {
+        _animationController.forward().then((value) => showButton = true);
+      });
+    });
+    isAnimationComplete = true;
+  }
+
+  bool isAnimationComplete = false;
+
+  @override
   void dispose() {
     _animationController?.dispose();
     super.dispose();
@@ -63,11 +74,16 @@ class _FocusRingState extends State<FocusRing>
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+        properties: [
+          JourneyServiceProperties.Onboarding,
+          JourneyServiceProperties.AvatarRemoteMilestoneIndex
+        ],
         builder: (context, m, properties) {
-          return m.avatarRemoteMlIndex != 1
-              ? SizedBox()
-              : Positioned(
+          log("Focus Ring build called");
+          if (m.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded)
+            animateRing();
+          return m.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded
+              ? Positioned(
                   bottom: m.pageHeight * 0.22,
                   left: SizeConfig.screenWidth * 0.4,
                   child: Container(
@@ -162,7 +178,8 @@ class _FocusRingState extends State<FocusRing>
                       ],
                     ),
                   ),
-                );
+                )
+              : SizedBox();
         });
   }
 }

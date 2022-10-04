@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -413,6 +414,21 @@ class ReferralDetailsView extends StatelessWidget {
                     ],
                   ),
                 ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: UiConstants.kBackgroundColor,
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: AppPositiveBtn(
+                      btnText: "SHARE",
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                      onPressed: () {
+                        if (!model.isShareAlreadyClicked) model.shareLink();
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
           );

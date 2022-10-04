@@ -56,7 +56,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
               'Autopay Details',
               style: TextStyles.rajdhaniSB.title4,
             ),
-            centerTitle: true,
+            centerTitle: false,
             backgroundColor: UiConstants.kBackgroundColor,
             elevation: 0.0,
             leading: IconButton(

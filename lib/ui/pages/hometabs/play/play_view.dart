@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -58,6 +59,7 @@ class Play extends StatelessWidget {
                 if (model.showSecurityMessageAtTop) SafetyWidget(),
                 MoreGamesSection(model: model),
                 if (!model.showSecurityMessageAtTop) SafetyWidget(),
+                AppFooter(),
                 SizedBox(
                   height: SizeConfig.padding80,
                 ),

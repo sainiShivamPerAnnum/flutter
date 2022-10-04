@@ -7,5 +7,6 @@ enum JourneyServiceProperties {
   Pages,
   JourneyPath,
   JourneyBuildFailure,
-  LevelCompletion
+  LevelCompletion,
+  Onboarding,
 }

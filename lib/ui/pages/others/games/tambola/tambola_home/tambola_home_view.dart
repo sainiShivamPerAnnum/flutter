@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -48,6 +49,8 @@ class TambolaHomeView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return RefreshIndicator(
+          color: UiConstants.primaryColor,
+          backgroundColor: Colors.black,
           onRefresh: model.getLeaderboard,
           child: Scaffold(
             appBar: FAppBar(
@@ -110,10 +113,6 @@ class TambolaHomeView extends StatelessWidget {
                                   color: Colors.white),
                             )
                           : Container(),
-                      //Buy tickets
-                      ButTicketsComponent(
-                        model: model,
-                      ),
 
                       //Tambola Prizes
                       TambolaPrize(
@@ -123,9 +122,18 @@ class TambolaHomeView extends StatelessWidget {
                       TambolaLeaderBoard(
                         model: model,
                       ),
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.35,
+                      )
                     ],
                   ),
                 ),
+                Positioned(
+                  bottom: 0,
+                  child: ButTicketsComponent(
+                    model: model,
+                  ),
+                )
               ],
             ),
           ),
@@ -645,144 +653,106 @@ class ButTicketsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: SizeConfig.padding12,
+    return Container(
+      width: SizeConfig.screenWidth,
+      padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        color: UiConstants.kSecondaryBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness16),
+          topRight: Radius.circular(SizeConfig.roundness16),
         ),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding16, vertical: SizeConfig.padding12),
-          margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-              vertical: SizeConfig.padding16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
-            borderRadius: BorderRadius.all(
-              Radius.circular(SizeConfig.roundness12),
-            ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Get a Tambola ticket",
+            style: TextStyles.rajdhaniSB.body1,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Text(
+            "Get 1 Ticket for every Rs.500 saved.",
+            style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Row(
             children: [
-              Text(
-                "Get a Tambola ticket",
-                style: TextStyles.rajdhaniSB.body1,
-              ),
-              Text(
-                "Get 1 Ticket for every Rs.500 saved.",
-                style:
-                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+              Container(
+                decoration: BoxDecoration(
+                  color: UiConstants.kArowButtonBackgroundColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(SizeConfig.roundness8),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.remove),
+                      iconSize: SizeConfig.padding16,
+                      color: Colors.white,
+                      onPressed: model.decreaseTicketCount,
+                    ),
+                    Container(
+                      width: SizeConfig.screenHeight * 0.03,
+                      height: SizeConfig.padding54,
+                      child: TextField(
+                        style: TextStyles.sourceSans.body2.setHeight(2),
+                        textAlign: TextAlign.center,
+                        controller: model.ticketCountController,
+                        enableInteractiveSelection: false,
+                        enabled: false,
+                        keyboardType:
+                            TextInputType.numberWithOptions(signed: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (String text) {
+                          model.updateTicketCount();
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      iconSize: SizeConfig.padding16,
+                      color: Colors.white,
+                      onPressed: model.increaseTicketCount,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
-                height: SizeConfig.padding16,
+                width: SizeConfig.padding10,
               ),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: UiConstants.kArowButtonBackgroundColor,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.roundness8),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.remove),
-                          iconSize: SizeConfig.padding16,
-                          color: Colors.white,
-                          onPressed: model.decreaseTicketCount,
-                        ),
-                        Container(
-                          width: SizeConfig.screenHeight * 0.02,
-                          child: TextField(
-                            style: TextStyle(color: Colors.white),
-                            textAlign: TextAlign.center,
-                            controller: model.ticketCountController,
-                            enableInteractiveSelection: false,
-                            enabled: false,
-                            keyboardType:
-                                TextInputType.numberWithOptions(signed: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            onChanged: (String text) {
-                              model.updateTicketCount();
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          iconSize: SizeConfig.padding16,
-                          color: Colors.white,
-                          onPressed: model.increaseTicketCount,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding10,
-                  ),
-                  Text(
-                    "= ₹ ${model.ticketSavedAmount.toString()}",
-                    style: TextStyles.sourceSansB.body2.colour(Colors.white),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding20,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        // await model.buyTickets(context);
-                        BaseUtil().openDepositOptionsModalSheet(
-                            amount: model.ticketSavedAmount);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kArowButtonBackgroundColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(SizeConfig.roundness8),
-                          ),
-                        ),
-                        child: Center(
-                          child:
-                              // model.ticketBuyInProgress
-                              //     ? SpinKitThreeBounce(
-                              //         color: Colors.white,
-                              //         size: SizeConfig.body2,
-                              //       )
-                              //     :
-                              Text(
-                            "SAVE",
-                            style:
-                                TextStyles.rajdhaniB.body3.colour(Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+              Text(
+                "= ₹ ${model.ticketSavedAmount.toString()}",
+                style: TextStyles.sourceSansB.body2.colour(Colors.white),
               ),
+              Spacer(),
+              AppPositiveBtn(
+                  height: SizeConfig.padding54,
+                  width: SizeConfig.screenWidth * 0.34,
+                  onPressed: () {
+                    BaseUtil().openDepositOptionsModalSheet(
+                        amount: model.ticketSavedAmount);
+                  },
+                  btnText: 'SAVE')
             ],
           ),
-        ),
-        SizedBox(
-          height: SizeConfig.padding16,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -1204,10 +1174,11 @@ class TambolaPrize extends StatelessWidget {
                                 vertical: SizeConfig.padding16),
                             child: Row(
                               children: [
-                                Icon(
-                                  model.leadingIconList[index],
+                                SvgPicture.asset(
+                                  Assets.tambolaPrizeAssets[index],
                                   color: Colors.grey,
-                                  size: SizeConfig.padding44,
+                                  height: SizeConfig.padding44,
+                                  width: SizeConfig.padding44,
                                 ),
                                 SizedBox(
                                   width: SizeConfig.padding10,
@@ -1235,7 +1206,9 @@ class TambolaPrize extends StatelessWidget {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "Rs. ${model.tPrizes.prizesA[index].amt}",
+                                          model.tPrizes.prizesA[index]
+                                                  .displayAmount ??
+                                              "",
                                           style: TextStyles.sourceSans.body3
                                               .colour(Colors.white),
                                         ),

@@ -231,6 +231,13 @@ class Assets {
     "assets/svg/small_asset_football.svg",
   ];
 
+  static List<String> tambolaPrizeAssets = [
+    "assets/vectors/icons/full_house.svg",
+    "assets/vectors/icons/two_rows.svg",
+    "assets/vectors/icons/one_row.svg",
+    "assets/vectors/icons/corners.svg",
+  ];
+
   static final List<String> onboardingHeader = [
     'Save',
     'Grow',

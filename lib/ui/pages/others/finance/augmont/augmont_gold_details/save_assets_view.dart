@@ -40,70 +40,69 @@ class SaveAssetView extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {},
-          child: BaseView<SaveViewModel>(
-            onModelReady: (model) => model.init(),
-            builder: (context, model, child) => RefreshIndicator(
-              onRefresh: () async {
-                model.refreshTransactions(InvestmentType.AUGGOLD99);
-              },
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    physics: ClampingScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: UiConstants.kBackgroundColor,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GoldAssetCard(),
-                              SizedBox(
-                                height: SizeConfig.padding24,
-                              ),
-                              // -- Break --
-                              AutosaveCard(),
-                              MiniTransactionCard(
-                                investmentType: InvestmentType.AUGGOLD99,
-                              ),
-                            ],
-                          ),
+        child: BaseView<SaveViewModel>(
+          onModelReady: (model) => model.init(),
+          builder: (context, model, child) => RefreshIndicator(
+            color: UiConstants.primaryColor,
+            backgroundColor: Colors.black,
+            onRefresh: () async {
+              model.refreshTransactions(InvestmentType.AUGGOLD99);
+            },
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: UiConstants.kBackgroundColor,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GoldAssetCard(),
+                            SizedBox(
+                              height: SizeConfig.padding24,
+                            ),
+                            // -- Break --
+                            AutosaveCard(),
+                            MiniTransactionCard(
+                              investmentType: InvestmentType.AUGGOLD99,
+                            ),
+                          ],
                         ),
-                        model.getQuantity(model.userFundWallet,
-                                    InvestmentType.AUGGOLD99) ==
-                                0
-                            ? SizedBox.shrink()
-                            : SellCardView(
-                                investmentType: InvestmentType.AUGGOLD99,
-                              ),
-                        SizedBox(
-                          height: SizeConfig.screenWidth * 0.4,
-                        )
-                      ],
+                      ),
+                      model.getQuantity(model.userFundWallet,
+                                  InvestmentType.AUGGOLD99) ==
+                              0
+                          ? SizedBox.shrink()
+                          : SellCardView(
+                              investmentType: InvestmentType.AUGGOLD99,
+                            ),
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.4,
+                      )
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: UiConstants.kBackgroundColor,
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: AppPositiveBtn(
+                      btnText: "SAVE",
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                      onPressed: () => BaseUtil().openRechargeModalSheet(
+                          investmentType: InvestmentType.AUGGOLD99),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      color: UiConstants.kBackgroundColor,
-                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      child: AppPositiveBtn(
-                        btnText: "SAVE",
-                        width: SizeConfig.screenWidth -
-                            SizeConfig.pageHorizontalMargins * 2,
-                        onPressed: () => BaseUtil().openRechargeModalSheet(
-                            investmentType: InvestmentType.AUGGOLD99),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),

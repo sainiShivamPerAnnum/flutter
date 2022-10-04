@@ -42,6 +42,8 @@ class WebHomeView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return RefreshIndicator(
+          color: UiConstants.primaryColor,
+          backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
             body: Stack(
@@ -128,27 +130,6 @@ class WebHomeView extends StatelessWidget {
                                                       .rajdhaniSB.title3),
                                               SizedBox(
                                                   height: SizeConfig.padding16),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    Assets.token,
-                                                    height:
-                                                        SizeConfig.padding20,
-                                                    width: SizeConfig.padding20,
-                                                  ),
-                                                  SizedBox(
-                                                      width:
-                                                          SizeConfig.padding4),
-                                                  Text(
-                                                      model.currentGameModel
-                                                          .playCost
-                                                          .toString(),
-                                                      style: TextStyles
-                                                          .sourceSans.body1),
-                                                ],
-                                              ),
                                             ]),
                                         Spacer(),
                                         SvgPicture.network(
@@ -177,7 +158,6 @@ class WebHomeView extends StatelessWidget {
                       delegate: SliverChildListDelegate(
                         [
                           SizedBox(height: SizeConfig.padding40),
-
                           model.isLoading
                               ? Row(
                                   mainAxisAlignment:
@@ -290,48 +270,18 @@ class WebHomeView extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
+                          if (model.currentCoinValue <
+                              model.currentGameModel.playCost)
+                            RechargeOptions(model: model),
                           SizedBox(
                             height: SizeConfig.padding32,
                           ),
-                          //   ],
-                          // ),
                           RewardLeaderboardView(game: game),
-                          SizedBox(height: SizeConfig.padding40),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16),
-                                child: Text(
-                                  'Recharge Options',
-                                  style: TextStyles.sourceSansSB.title5,
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.padding24,
-                                ),
-                                height: SizeConfig.screenWidth * 0.125,
-                                width: SizeConfig.screenWidth,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: model.rechargeOptions.length,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding12),
-                                  itemBuilder: (ctx, i) {
-                                    return RechargeBox(
-                                      rechargeOption: model.rechargeOptions[i],
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding80 * 2,
-                              ),
-                            ],
+                          if (model.currentCoinValue >=
+                              model.currentGameModel.playCost)
+                            RechargeOptions(model: model),
+                          SizedBox(
+                            height: SizeConfig.padding80 * 2,
                           ),
                         ],
                       ),
@@ -361,6 +311,47 @@ class WebHomeView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class RechargeOptions extends StatelessWidget {
+  final WebHomeViewModel model;
+  const RechargeOptions({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: SizeConfig.padding32),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          child: Text(
+            'Recharge Options',
+            style: TextStyles.sourceSansSB.title5,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(
+            top: SizeConfig.padding24,
+          ),
+          height: SizeConfig.screenWidth * 0.125,
+          width: SizeConfig.screenWidth,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            itemCount: model.rechargeOptions.length,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+            itemBuilder: (ctx, i) {
+              return RechargeBox(
+                rechargeOption: model.rechargeOptions[i],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

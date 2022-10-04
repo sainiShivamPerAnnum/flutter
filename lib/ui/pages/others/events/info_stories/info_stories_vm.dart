@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view/story_view.dart';
@@ -6,28 +7,44 @@ import 'package:story_view/story_view.dart';
 // import 'story';
 class InfoStoriesViewModel extends BaseViewModel {
   final controller = StoryController();
-
+  BoxDecoration backgroundDecoration = BoxDecoration(
+    gradient: LinearGradient(
+        colors: [Color(0xFF009D91), Color(0xFF032A2E)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter),
+  );
+  TextStyle captionTextStyle = TextStyles.sourceSans.body2;
   List<StoryItem> storyItems;
 
   init(String topic) {
     storyItems = [
       StoryItem.text(
-        title: "Hello World",
+        title: "This is a story view",
         backgroundColor: Colors.black,
         textStyle: TextStyles.rajdhaniB.title3,
       ),
       StoryItem.pageImage(
           controller: controller,
+          decoration: backgroundDecoration,
+          textStyle: captionTextStyle,
+          caption:
+              "Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives",
           url:
-              "https://images.unsplash.com/photo-1508995476428-43d70c3d0042?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8aGFsbG93ZWVufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"),
+              'https://lottie.host/b5b4bc6b-7006-4c02-a29e-2758fa469c23/cF6rCFX8iD.json'),
       StoryItem.pageImage(
           controller: controller,
-          url:
-              "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"),
-      StoryItem.pageVideo(
-        "https://www.youtube.com/watch?v=pgvBPAsDf2A",
-        controller: controller,
-      )
+          decoration: backgroundDecoration,
+          textStyle: captionTextStyle,
+          caption:
+              "We Manish & Shourya are two finance folks who started Fello with the vision of helping people save money in a better way",
+          url: "https://assets6.lottiefiles.com/packages/lf20_tuzu65Bu6N.json"),
+      StoryItem.pageImage(
+          controller: controller,
+          decoration: backgroundDecoration,
+          textStyle: captionTextStyle,
+          caption:
+              "We are an AMFI registered mutual fund distributor and all your money is invested directly into a relevant mutual fund.",
+          url: "https://assets6.lottiefiles.com/packages/lf20_mGXMLaVUoX.json"),
     ];
   }
 
