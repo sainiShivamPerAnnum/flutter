@@ -14,6 +14,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
+import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/carousal_widget.dart';
@@ -164,6 +165,24 @@ class SaveNetWorthSection extends StatelessWidget {
         ),
         child: Column(
           children: [
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Your Networth',
+                    style: TextStyles.rajdhaniSB.title5,
+                  ),
+                  NetWorthValue(
+                    style: TextStyles.rajdhaniSB.title5,
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               height: SizeConfig.padding10,
             ),
