@@ -72,6 +72,12 @@ class SaveAssetView extends StatelessWidget {
                                 secondaryTitle: "Why to invest?",
                                 boxAssets: model.boxAssets,
                                 boxTitlles: model.boxTitlles,
+                                isBoxOpen: model.getQuantity(
+                                            model.userFundWallet,
+                                            InvestmentType.AUGGOLD99) ==
+                                        0
+                                    ? true
+                                    : false,
                               ),
                               SizedBox(
                                 height: SizeConfig.padding24,

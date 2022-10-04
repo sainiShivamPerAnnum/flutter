@@ -27,7 +27,7 @@ class FAQPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: UiConstants.kBackgroundColor,
       appBar: FAppBar(
           title: 'FAQs',
           showAvatar: false,
@@ -41,7 +41,7 @@ class FAQPage extends StatelessWidget {
                 border: Border.all(
                   color: Colors.white,
                 ),
-                color: Colors.black),
+                color: UiConstants.kBackgroundColor),
             child: TextButton(
               child: Text(
                 "Chat with us",
@@ -71,9 +71,18 @@ class FAQPage extends StatelessWidget {
                       bottom: SizeConfig.padding12,
                     ),
                     itemBuilder: (context, index) => ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
                       title: Text(
                         model.list[index].title,
                         style: TextStyles.sourceSans.body3,
+                      ),
+                      trailing: Container(
+                        margin: EdgeInsets.only(left: SizeConfig.padding44),
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: UiConstants.kFAQArrowColor,
+                        ),
                       ),
                       minVerticalPadding: SizeConfig.padding8,
                       style: ListTileStyle.list,
@@ -82,8 +91,8 @@ class FAQPage extends StatelessWidget {
                       },
                     ),
                     separatorBuilder: (context, index) => Divider(
-                      color: UiConstants.kBackgroundColor,
-                      thickness: 2,
+                      color: UiConstants.kLastUpdatedTextColor,
+                      thickness: 1,
                       endIndent: SizeConfig.padding20,
                       indent: SizeConfig.padding20,
                       height: SizeConfig.padding28,

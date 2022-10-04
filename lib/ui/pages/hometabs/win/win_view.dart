@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
@@ -23,29 +24,10 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:shimmer/shimmer.dart';
 
-//Following is a dummy list to populate the Fello News section for now
-List<Map<String, dynamic>> dummyFelloNews = [
-  {
-    'title': 'Parul won an iPad',
-    'subTitle':
-        'She referred 112 of his friends to Fello and was the referrer of the month',
-    'color': 0xffF79780,
-    'asset': Assets.winScreenWinnerAsset,
-  },
-  {
-    'title': 'Fello Autosave is on fire',
-    'subTitle':
-        'Mre than 40,000 users are now automating their savings using Fello Autosave',
-    'color': 0xffEFAF4E,
-    'asset': Assets.winScreenAllGamesAsset,
-  },
-  {
-    'title': 'Aaryan is on a hot streak',
-    'subTitle':
-        'He has been saving daily and consistently for 70 days straight!',
-    'color': 0xff93B5FE,
-    'asset': Assets.winScreenReferalAsset,
-  },
+List<Color> randomColors = [
+  Color(0xffF79780),
+  Color(0xffEFAF4E),
+  Color(0xff93B5FE),
 ];
 
 class Win extends StatelessWidget {
@@ -413,39 +395,8 @@ class FelloNewsComponent extends StatelessWidget {
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenWidth * 0.4026,
             child: model.isFelloFactsLoading
-                ? ListView.builder(
-                    itemCount: 3,
-                    itemBuilder: ((context, index) => ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness12),
-                          child: Shimmer(
-                            gradient: LinearGradient(
-                                colors: [
-                                  Colors.black,
-                                  Colors.grey,
-                                  Colors.black
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight),
-                            child: Container(
-                              padding: EdgeInsets.only(
-                                  left: index == 0 ? 0.0 : SizeConfig.padding20,
-                                  right: SizeConfig.padding20),
-                              height: double.maxFinite,
-                              width: SizeConfig.screenWidth * 0.8,
-                              margin: EdgeInsets.only(
-                                  left: SizeConfig.padding24,
-                                  right: index == dummyFelloNews.length - 1
-                                      ? SizeConfig.padding24
-                                      : 0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(SizeConfig.roundness12)),
-                              ),
-                            ),
-                          ),
-                        )),
+                ? FullScreenLoader(
+                    size: SizeConfig.screenWidth * 0.4,
                   )
                 : ListView.builder(
                     shrinkWrap: true,
@@ -461,11 +412,14 @@ class FelloNewsComponent extends StatelessWidget {
                         width: SizeConfig.screenWidth * 0.8,
                         margin: EdgeInsets.only(
                             left: SizeConfig.padding24,
-                            right: index == dummyFelloNews.length - 1
+                            right: index == model.fellofacts.length - 1
                                 ? SizeConfig.padding24
                                 : 0.0),
                         decoration: BoxDecoration(
-                          color: model.fellofacts[index].bgColor.toColor(),
+                          color: model.fellofacts[index].bgColor == null
+                              ? randomColors[
+                                  math.Random().nextInt(randomColors.length)]
+                              : model.fellofacts[index].bgColor.toColor(),
                           borderRadius: BorderRadius.all(
                               Radius.circular(SizeConfig.roundness12)),
                         ),

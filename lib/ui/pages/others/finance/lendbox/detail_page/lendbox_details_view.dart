@@ -70,6 +70,14 @@ class LendboxDetailsView extends StatelessWidget {
                               secondaryTitle: "Why to invest?",
                               boxAssets: model.boxAssets,
                               boxTitlles: model.boxTitlles,
+                              isBoxOpen: model.getQuantity(model.userFundWallet,
+                                              InvestmentType.LENDBOXP2P) ==
+                                          0 &&
+                                      model.getInvestedQuantity(
+                                              model.userFundWallet) ==
+                                          0
+                                  ? true
+                                  : false,
                             ),
                             SizedBox(
                               height: SizeConfig.padding24,

@@ -290,27 +290,36 @@ class _InfoComponent2State extends State<InfoComponent2> {
 }
 
 class InfoComponent3 extends StatefulWidget {
-  const InfoComponent3({
-    Key key,
-    @required this.mainTitle,
-    @required this.subTitle,
-    @required this.secondaryTitle,
-    @required this.boxAssets,
-    @required this.boxTitlles,
-  }) : super(key: key);
+  const InfoComponent3(
+      {Key key,
+      @required this.mainTitle,
+      @required this.subTitle,
+      @required this.secondaryTitle,
+      @required this.boxAssets,
+      @required this.boxTitlles,
+      @required this.isBoxOpen})
+      : super(key: key);
 
   final String mainTitle;
   final String subTitle;
   final String secondaryTitle;
   final List<String> boxAssets;
   final List<String> boxTitlles;
+  final bool isBoxOpen;
 
   @override
   State<InfoComponent3> createState() => _InfoComponent3State();
 }
 
 class _InfoComponent3State extends State<InfoComponent3> {
-  bool isBoxOpen = true;
+  bool isBoxOpen;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    isBoxOpen = widget.isBoxOpen;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
