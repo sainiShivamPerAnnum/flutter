@@ -41,6 +41,8 @@ class LendboxDetailsView extends StatelessWidget {
         child: BaseView<SaveViewModel>(
           onModelReady: (model) => model.init(),
           builder: (context, model, child) => RefreshIndicator(
+            color: UiConstants.primaryColor,
+            backgroundColor: Colors.black,
             onRefresh: () async {
               model.refreshTransactions(InvestmentType.LENDBOXP2P);
             },

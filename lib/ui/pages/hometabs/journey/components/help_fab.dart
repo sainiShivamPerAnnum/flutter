@@ -51,42 +51,44 @@ class _HelpFabState extends State<HelpFab> {
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 5), () {
-      expandFab();
-    });
+    // Future.delayed(Duration(seconds: 5), () {
+    //   expandFab();
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        AppState.delegate.appState.currentAction = PageAction(
-            page: InfoStoriesViewPageConfig,
-            widget: InfoStories(topic: 'sdfdsf'),
-            state: PageState.addWidget);
-      },
-      //  () {
-      //   BaseUtil.openModalBottomSheet(
-      //     addToScreenStack: true,
-      //     isBarrierDismissable: false,
-      //     borderRadius: BorderRadius.only(
-      //         topLeft: Radius.circular(30.0),
-      //         topRight: Radius.circular(SizeConfig.roundness12)),
-      //     backgroundColor:
-      //         UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-      //     content: SecurityModalSheet(),
-      //   );
-      // },
+      onTap:
 
-      //     () {
-      //   expandFab();
-      //   BaseUtil.openDialog(
-      //       hapticVibrate: true,
-      //       addToScreenStack: true,
-      //       content: JourneyOnboardingDialog(),
-      //       isBarrierDismissable: false);
-      // },
+          // () {
+          //   AppState.delegate.appState.currentAction = PageAction(
+          //       page: InfoStoriesViewPageConfig,
+          //       widget: InfoStories(topic: 'sdfdsf'),
+          //       state: PageState.addWidget);
+          // },
+          //  () {
+          //   BaseUtil.openModalBottomSheet(
+          //     addToScreenStack: true,
+          //     isBarrierDismissable: false,
+          //     borderRadius: BorderRadius.only(
+          //         topLeft: Radius.circular(30.0),
+          //         topRight: Radius.circular(SizeConfig.roundness12)),
+          //     backgroundColor:
+          //         UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          //     content: SecurityModalSheet(),
+          //   );
+          // },
+
+          () {
+        isOpen ? collapseFab() : expandFab();
+        BaseUtil.openDialog(
+            hapticVibrate: true,
+            addToScreenStack: true,
+            content: JourneyOnboardingDialog(),
+            isBarrierDismissable: false);
+      },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,
           duration: Duration(milliseconds: 600),

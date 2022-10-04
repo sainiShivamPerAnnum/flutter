@@ -12,6 +12,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
@@ -55,8 +56,9 @@ class Save extends StatelessWidget {
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              physics: ClampingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SaveNetWorthSection(
@@ -120,12 +122,67 @@ class Save extends StatelessWidget {
 
                   SaveBlogSection(),
                   //Extended the EOS to avoid overshadowing by navbar
+                  AppFooter(),
                   SizedBox(
                       height: SizeConfig.navBarHeight + SizeConfig.padding24),
                 ],
               ),
             ));
       },
+    );
+  }
+}
+
+class AppFooter extends StatelessWidget {
+  const AppFooter({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth,
+      alignment: Alignment.center,
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding40),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Image.asset(
+          "images/fello-short-logo.png",
+          color: UiConstants.kTextColor2,
+          height: SizeConfig.padding26,
+          width: SizeConfig.padding26,
+          fit: BoxFit.contain,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Version ${BaseUtil.packageInfo.version} (${BaseUtil.packageInfo.buildNumber})',
+              style: TextStyles.body3.colour(UiConstants.kTextColor2),
+            ),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Made with love ',
+                    style: TextStyles.body4.colour(UiConstants.kTextColor2),
+                  ),
+                  WidgetSpan(
+                      child: Icon(
+                    Icons.heart_broken,
+                    color: Colors.red,
+                    size: SizeConfig.iconSize2,
+                  )),
+                  TextSpan(
+                    text: ' in India',
+                    style: TextStyles.body4.colour(UiConstants.kTextColor2),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+      ]),
     );
   }
 }

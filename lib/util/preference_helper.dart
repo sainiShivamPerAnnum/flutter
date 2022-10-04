@@ -14,7 +14,7 @@ class PreferenceHelper {
   static const CACHE_ONBOARDING_COMPLETION = "onboardingCompletion";
   static const FCM_TOKEN = "fcm_token";
   static const CACHE_SHOW_SECURITY_MODALSHEET = "showSecurityModalSheet";
-
+  static const CACHE_IS_USER_JOURNEY_ONBOARDED = "isUserJourneyOnboarded";
   static SharedPreferences _prefs;
 
   static Future<SharedPreferences> initiate() async {

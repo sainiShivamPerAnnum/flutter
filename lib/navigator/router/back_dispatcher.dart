@@ -55,6 +55,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    if (_journeyService.isJourneyOnboardingInView) {
+      _journeyService.isJourneyOnboardingInView = false;
+      _journeyService.isUserJourneyOnboarded = true;
+    }
+
     log("Back Request called: current Stack : ${AppState.screenStack}");
     if (JourneyService.isAvatarAnimationInProgress) return null;
     if (AppState.screenStack.last == ScreenItem.loader) return null;

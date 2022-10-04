@@ -360,8 +360,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               .d("Current FCM token from baseUser : ${_baseUser?.client_token}")
           : _logger.d("No FCM token in firestored");
 
-      isEmailVerified = baseUser.isEmailVerified ?? false;
-      isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
+      isEmailVerified = baseUser?.isEmailVerified ?? false;
+      isSimpleKycVerified = baseUser?.isSimpleKycVerified ?? false;
       setEmail(baseUser.email);
       setMyAvatarId(baseUser.avatarId);
       setMyUserName(baseUser?.kycName ?? baseUser.name);

@@ -86,9 +86,10 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ],
                 ),
               ),
-              CustomKeyboardSubmitButton(onSubmit: () {
-                model.sipAmountNode.unfocus();
-              })
+              if (model.pageController.page == 2)
+                CustomKeyboardSubmitButton(onSubmit: () {
+                  model.sipAmountNode.unfocus();
+                })
             ],
           ),
         );
@@ -717,6 +718,19 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ],
                 ),
               ),
+              Spacer(),
+              Container(
+                color: UiConstants.kBackgroundColor,
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                child: AppPositiveBtn(
+                  btnText: "SHARE",
+                  width: SizeConfig.screenWidth -
+                      SizeConfig.pageHorizontalMargins * 2,
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
+                ),
+              )
             ],
           ),
         ),

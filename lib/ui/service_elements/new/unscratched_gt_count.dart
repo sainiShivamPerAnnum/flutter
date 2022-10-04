@@ -11,11 +11,11 @@ class UnscratchedGTCountChip extends StatelessWidget {
     return model.showUnscratchedCount && model.unscratchedGTCount != 0
         ? Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 0.5),
-            ),
+                border: Border.all(color: Colors.white, width: 0.5),
+                borderRadius: BorderRadius.circular(100)),
             padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding12,
-              vertical: SizeConfig.padding10,
+              horizontal: SizeConfig.padding8,
+              vertical: SizeConfig.padding6,
             ),
             child: Text("${model.unscratchedGTCount} New"),
           )

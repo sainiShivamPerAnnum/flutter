@@ -23,6 +23,8 @@ class KYCDetailsViewModel extends BaseViewModel {
   TextEditingController nameController, panController;
   bool inEditMode = true;
   bool isUpadtingKycDetails = false;
+  bool _hasDetails = true;
+
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
@@ -37,6 +39,13 @@ class KYCDetailsViewModel extends BaseViewModel {
   TextInputType panTextInputType = TextInputType.name;
 
   final depositformKey3 = GlobalKey<FormState>();
+
+  get hasDetails => this._hasDetails;
+
+  set hasDetails(value) {
+    this._hasDetails = value;
+    notifyListeners();
+  }
 
   init() {
     nameController = new TextEditingController();
@@ -87,6 +96,7 @@ class KYCDetailsViewModel extends BaseViewModel {
         _sellService.userPan != null &&
         _sellService.userPan.isNotEmpty) {
       if (_userService.baseUser.isSimpleKycVerified) {
+        hasDetails = true;
         panController.text = _sellService.userPan;
         nameController.text = _userService.baseUser.kycName;
         inEditMode = false;

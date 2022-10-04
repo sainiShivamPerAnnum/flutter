@@ -83,7 +83,7 @@ class FAQPage extends StatelessWidget {
                     ),
                     separatorBuilder: (context, index) => Divider(
                       color: UiConstants.kBackgroundColor,
-                      thickness: 2,
+                      thickness: 1,
                       endIndent: SizeConfig.padding20,
                       indent: SizeConfig.padding20,
                       height: SizeConfig.padding28,
