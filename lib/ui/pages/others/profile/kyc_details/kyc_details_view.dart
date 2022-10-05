@@ -114,33 +114,20 @@ class KYCDetailsView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SvgPicture.asset(
-                            "assets/svg/dual_star.svg",
+                            "assets/svg/safety_asset.svg",
                             width: SizeConfig.padding20,
                           ),
                           SizedBox(
                             width: SizeConfig.padding14,
                           ),
-                          RichText(
-                            overflow: TextOverflow.ellipsis,
-                            text: new TextSpan(
-                              children: [
-                                new TextSpan(
-                                  text: 'Join over  ',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                                new TextSpan(
-                                  text: '5 lakh',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor),
-                                ),
-                                new TextSpan(
-                                  text: '  users in making finance fun!',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                              ],
-                            ),
+                          Wrap(
+                            children: [
+                              Text(
+                                'This is required to securly verify your identity.',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.kTextColor2),
+                              ),
+                            ],
                           ),
                         ],
                       ),

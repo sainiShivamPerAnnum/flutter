@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -140,9 +141,14 @@ class ReferralDetailsView extends StatelessWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                        text: 'Earn upto Rs.50 and',
+                                        text: 'Earn upto ₹' +
+                                            BaseRemoteConfig.remoteConfig
+                                                .getString(BaseRemoteConfig
+                                                    .REFERRAL_BONUS) +
+                                            ' and ',
                                         style: TextStyles.sourceSans.body3
-                                            .colour(UiConstants.kTextColor3)),
+                                            .colour(Color.fromARGB(
+                                                255, 71, 71, 168))),
                                     WidgetSpan(
                                         child: Container(
                                       margin: EdgeInsets.symmetric(
@@ -154,8 +160,10 @@ class ReferralDetailsView extends StatelessWidget {
                                       ),
                                     )),
                                     TextSpan(
-                                        text:
-                                            '200 from every Golden Ticket. Win an iPad every month.',
+                                        text: BaseRemoteConfig.remoteConfig
+                                                .getString(BaseRemoteConfig
+                                                    .REFERRAL_FLC_BONUS) +
+                                            ' from every Golden Ticket. Win an iPad every month!',
                                         style: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor3)),
                                   ],
@@ -219,7 +227,7 @@ class ReferralDetailsView extends StatelessWidget {
                           left: SizeConfig.pageHorizontalMargins,
                         ),
                         child: Text(
-                          "My Referals",
+                          "My Referrals",
                           style: TextStyles.sourceSans.semiBold
                               .colour(Colors.white)
                               .title3,
@@ -310,7 +318,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       SvgPicture.asset(Assets.noReferalAsset),
                                       SizedBox(height: SizeConfig.padding34),
                                       Text(
-                                        "No referals yet",
+                                        "No referrals yet",
                                         style: TextStyles.sourceSans.body2
                                             .colour(Colors.white),
                                       ),
@@ -451,7 +459,7 @@ class BonusLockedReferals extends StatelessWidget {
               SvgPicture.asset(Assets.noReferalAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
-                "No referals yet",
+                "No referrals yet",
                 style: TextStyles.sourceSans.body2.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -592,7 +600,7 @@ class BonusLockedReferals extends StatelessWidget {
                   SvgPicture.asset(Assets.noReferalAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                    "No referals yet",
+                    "No referrals yet",
                     style: TextStyles.sourceSans.body2.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding16),
@@ -618,7 +626,7 @@ class BonusUnlockedReferals extends StatelessWidget {
               SvgPicture.asset(Assets.noReferalAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
-                "No referals yet",
+                "No referrals yet",
                 style: TextStyles.sourceSans.body2.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -758,7 +766,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                   SvgPicture.asset(Assets.noReferalAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                    "No referals yet",
+                    "No referrals yet",
                     style: TextStyles.sourceSans.body2.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding16),

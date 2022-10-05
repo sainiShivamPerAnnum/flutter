@@ -447,7 +447,7 @@ class UserProfileForm extends StatelessWidget {
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         onTap: model.navigateToKycScreen,
                         title: Text(
-                          "KYC Details",
+                          "Your KYC Details",
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -459,7 +459,7 @@ class UserProfileForm extends StatelessWidget {
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         onTap: model.navigateToBankDetailsScreen,
                         title: Text(
-                          "Bank Account Details",
+                          "Your Bank Account Details",
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),

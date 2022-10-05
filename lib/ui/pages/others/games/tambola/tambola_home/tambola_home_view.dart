@@ -95,7 +95,7 @@ class TambolaHomeView extends StatelessWidget {
                                       FullScreenLoader(),
                                       SizedBox(height: SizeConfig.padding20),
                                       Text(
-                                        "Fetching your referals. Please wait!",
+                                        "Fetching your tambola tickets..",
                                         style: TextStyles.sourceSans.body2
                                             .colour(Colors.white),
                                       ),
