@@ -113,13 +113,6 @@ class TambolaHomeViewModel extends BaseViewModel {
     "Full House",
   ];
 
-  List<IconData> leadingIconList = [
-    Icons.apps,
-    Icons.border_top,
-    Icons.border_horizontal,
-    Icons.border_bottom,
-    Icons.border_outer
-  ];
   String boxHeading = "How to Play";
 
   List<String> boxTitlles = [

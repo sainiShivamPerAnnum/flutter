@@ -94,6 +94,16 @@ class BankAndPanService
     checkIfSellIsLocked();
   }
 
+  dump() {
+    _isBankDetailsAdded = false;
+    _isKYCVerified = false;
+    _isLockInReached = false;
+    _isSellButtonVisible = false;
+    _isSellLocked = false;
+    userPan = null;
+    activeBankAccountDetails = null;
+  }
+
   checkForUserBankAccountDetails() async {
     if (activeBankAccountDetails != null) return;
     final res = await _paymentRepo.getActiveBankAccountDetails();

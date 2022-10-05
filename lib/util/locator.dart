@@ -62,6 +62,8 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
@@ -207,6 +209,7 @@ void setupLocator() {
   locator.registerFactory(() => FaqPageViewModel());
   locator.registerFactory(() => LendboxBuyViewModel());
   locator.registerFactory(() => LendboxWithdrawalViewModel());
+  locator.registerFactory(() => InfoStoriesViewModel());
 
   //WIDGETS
   locator.registerFactory(() => MiniTransactionCardViewModel());

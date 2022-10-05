@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -46,6 +47,7 @@ class RootViewModel extends BaseViewModel {
   final UserRepository _userRepo = locator<UserRepository>();
   final _tambolaService = locator<TambolaService>();
   final _gtService = locator<GoldenTicketService>();
+  final _bankAndKycService = locator<BankAndPanService>();
   int _bottomNavBarIndex = 1;
   static bool canExecuteStartupNotification = true;
 
@@ -488,6 +490,7 @@ class RootViewModel extends BaseViewModel {
               _tambolaService.signOut();
               _analyticsService.signOut();
               _paytmService.signout();
+              _bankAndKycService.dump();
               AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(

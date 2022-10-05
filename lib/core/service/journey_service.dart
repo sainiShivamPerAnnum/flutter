@@ -66,6 +66,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   // UserJourneyStatsModel _userJourneyStats;
   bool _journeyBuildFailure = false;
   bool _showLevelUpAnimation = false;
+  bool _isUserJourneyOnboarded = false;
+  get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
+
+  set isUserJourneyOnboarded(value) {
+    this._isUserJourneyOnboarded = value;
+    notifyListeners(JourneyServiceProperties.Onboarding);
+    _logger.d("User Journey Onboarded");
+  }
+
+  bool isJourneyOnboardingInView = false;
 
   AnimationController levelUpLottieController;
 
@@ -172,9 +182,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     await getJourneyLevels();
-    // NOTE: REQUIRED METHOD
     await updateUserJourneyStats();
     await fetchNetworkPages();
+    checkIfJourneyOnboardingRequried();
   }
 
   Future<void> dump() async {
@@ -216,6 +226,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           addMorePages(response.model);
       }
     }
+  }
+
+  checkIfJourneyOnboardingRequried() {
+    _isUserJourneyOnboarded = PreferenceHelper.getBool(
+        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED,
+        def: false);
   }
 
   //Fetching additional journeypages from Journey Repository

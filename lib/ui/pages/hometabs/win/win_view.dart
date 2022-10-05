@@ -54,7 +54,7 @@ class Win extends StatelessWidget {
                 ),
                 body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  physics: ClampingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

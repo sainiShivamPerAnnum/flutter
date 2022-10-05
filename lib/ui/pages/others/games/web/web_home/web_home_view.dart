@@ -50,6 +50,8 @@ class WebHomeView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return RefreshIndicator(
+          color: UiConstants.primaryColor,
+          backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
             body: Stack(
@@ -136,27 +138,6 @@ class WebHomeView extends StatelessWidget {
                                                       .rajdhaniSB.title3),
                                               SizedBox(
                                                   height: SizeConfig.padding16),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    Assets.token,
-                                                    height:
-                                                        SizeConfig.padding20,
-                                                    width: SizeConfig.padding20,
-                                                  ),
-                                                  SizedBox(
-                                                      width:
-                                                          SizeConfig.padding4),
-                                                  Text(
-                                                      model.currentGameModel
-                                                          .playCost
-                                                          .toString(),
-                                                      style: TextStyles
-                                                          .sourceSans.body1),
-                                                ],
-                                              ),
                                             ]),
                                         Spacer(),
                                         SvgPicture.network(
@@ -185,7 +166,6 @@ class WebHomeView extends StatelessWidget {
                       delegate: SliverChildListDelegate(
                         [
                           SizedBox(height: SizeConfig.padding40),
-
                           model.isLoading
                               ? Row(
                                   mainAxisAlignment:
@@ -298,61 +278,22 @@ class WebHomeView extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
+                          if (model.currentCoinValue <
+                              model.currentGameModel.playCost)
+                            RechargeOptions(model: model),
                           SizedBox(
                             height: SizeConfig.padding32,
                           ),
-                          //   ],
-                          // ),
                           RewardLeaderboardView(game: game),
-                          SizedBox(height: SizeConfig.padding40),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16),
-                                child: Text(
-                                  'Recharge Options',
-                                  style: TextStyles.sourceSansSB.title5,
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.padding24,
-                                ),
-                                height: SizeConfig.screenWidth * 0.125,
-                                width: SizeConfig.screenWidth,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: model.rechargeOptions.length,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding12),
-                                  itemBuilder: (ctx, i) {
-                                    return RechargeBox(
-                                      rechargeOption: model.rechargeOptions[i],
-                                    );
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: SizeConfig.padding14,
-                                    top: SizeConfig.padding44),
-                                child: Text(
-                                  'Past Week Winners',
-                                  style: TextStyles.sourceSansSB.title5,
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.pageHorizontalMargins,
-                              ),
-                              PastWeekWinners(count: 5, model: model),
-                              SizedBox(
-                                height: SizeConfig.padding80 * 2,
-                              ),
-                            ],
+                          if (model.currentCoinValue >=
+                              model.currentGameModel.playCost)
+                            RechargeOptions(model: model),
+                          SizedBox(
+                            height: SizeConfig.padding80 * 2,
+                          ),
+                          PastWeekWinners(count: 5, model: model),
+                          SizedBox(
+                            height: SizeConfig.padding80 * 2,
                           ),
                         ],
                       ),
@@ -382,6 +323,293 @@ class WebHomeView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class RechargeOptions extends StatelessWidget {
+  final WebHomeViewModel model;
+  const RechargeOptions({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: SizeConfig.padding32),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          child: Text(
+            'Recharge Options',
+            style: TextStyles.sourceSansSB.title5,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(
+            top: SizeConfig.padding24,
+          ),
+          height: SizeConfig.screenWidth * 0.125,
+          width: SizeConfig.screenWidth,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            itemCount: model.rechargeOptions.length,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+            itemBuilder: (ctx, i) {
+              return RechargeBox(
+                rechargeOption: model.rechargeOptions[i],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PlayButtonOverlapper extends StatelessWidget {
+  final _analytics = locator<AnalyticsService>();
+
+  PlayButtonOverlapper({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (JourneyService.isAvatarAnimationInProgress) return;
+              _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+              BaseUtil.openModalBottomSheet(
+                addToScreenStack: true,
+                backgroundColor: UiConstants.gameCardColor,
+                content: WantMoreTicketsModalSheet(),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness24),
+                  topRight: Radius.circular(SizeConfig.roundness24),
+                ),
+                hapticVibrate: true,
+                isScrollControlled: true,
+                isBarrierDismissable: true,
+              );
+            },
+            child: Container(
+              height: SizeConfig.navBarHeight + SizeConfig.padding64,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: UiConstants.kBackgroundColor.withOpacity(0.5),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness24),
+                      topRight: Radius.circular(SizeConfig.roundness24))),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(SizeConfig.padding12),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: UiConstants.kBackgroundColor,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness24),
+                    topRight: Radius.circular(SizeConfig.roundness24))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: SizeConfig.padding12),
+                  width: SizeConfig.padding10,
+                  height: SizeConfig.padding10,
+                  decoration: BoxDecoration(
+                    color: UiConstants.kSnackBarNegativeContentColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Text(
+                  "You don’t have enough tokens to play",
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTextColor2),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StreamView extends StatelessWidget {
+  StreamView({Key key, @required this.model, @required this.game})
+      : super(key: key);
+
+  final WebHomeViewModel model;
+  String game;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      initialData: null,
+      stream: model.getRealTimePlayingStream(game),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return GameInfoBlock(
+            coin: "-",
+            coinText: 'Playing',
+            assetHeight: SizeConfig.padding16,
+            isDot: true,
+          );
+        }
+
+        if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
+          Map<Object, Object> fetchedData = Map<dynamic, dynamic>.from(
+              (snapshot.data as DatabaseEvent).snapshot.value
+                  as Map<dynamic, dynamic>);
+          String fieldToFetch = fetchedData['field'] as String;
+
+          Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch];
+
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+            child: GameInfoBlock(
+              coin:
+                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+              coinText: 'Playing',
+              assetHeight: SizeConfig.padding16,
+              isDot: true,
+              key: ValueKey<String>(requiredTimeData['value'].toString()),
+            ),
+          );
+        } else {
+          return GameInfoBlock(
+            coin: "50+",
+            coinText: 'Playing',
+            assetHeight: SizeConfig.padding16,
+            isDot: true,
+          );
+        }
+      },
+    );
+  }
+}
+
+class RechargeBox extends StatelessWidget {
+  final RechargeOption rechargeOption;
+
+  const RechargeBox({Key key, this.rechargeOption}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return rechargeOption.isCustom
+        ? InkWell(
+            onTap: () {
+              return BaseUtil().openDepositOptionsModalSheet();
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                  vertical: SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: Colors.white, width: 0.4),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              ),
+              child: Icon(
+                Icons.add,
+                size: SizeConfig.screenWidth * 0.08,
+                color: Colors.white,
+              ),
+            ),
+          )
+        : InkWell(
+            onTap: () {
+              return BaseUtil()
+                  .openDepositOptionsModalSheet(amount: rechargeOption.amount);
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: SizeConfig.padding12),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                  vertical: SizeConfig.padding8),
+              decoration: BoxDecoration(
+                color: UiConstants.gameCardColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "+  ",
+                    style: TextStyles.sourceSansSB.body1.bold,
+                  ),
+                  SvgPicture.asset(
+                    Assets.token,
+                    height: SizeConfig.padding24,
+                  ),
+                  SizedBox(width: SizeConfig.padding4),
+                  Text(
+                    rechargeOption.amount.toString(),
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                ],
+              ),
+            ),
+          );
+  }
+}
+
+class GameInfoBlock extends StatelessWidget {
+  final String coin, coinText, assetUrl;
+  final double assetHeight;
+  final bool isDot;
+
+  const GameInfoBlock({
+    Key key,
+    this.coin,
+    this.coinText,
+    this.assetHeight,
+    this.isDot = false,
+    this.assetUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // width: SizeConfig.screenWidth * 0.155,
+      // height: SizeConfig.screenWidth * 0.120,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              isDot
+                  ? CircleAvatar(
+                      backgroundColor: UiConstants.primaryColor,
+                      radius: SizeConfig.padding4)
+                  : SvgPicture.asset(
+                      assetUrl,
+                      height: assetHeight,
+                    ),
+              SizedBox(width: SizeConfig.padding8),
+              Text(
+                coin,
+                style:
+                    TextStyles.sourceSans.title5.bold.colour(Color(0xffBDBDBE)),
+              ),
+            ],
+          ),
+          Text(
+            coinText,
+            style: TextStyles.sourceSans.body3,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -705,252 +933,6 @@ class PastWeekWinners extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class PlayButtonOverlapper extends StatelessWidget {
-  final _analytics = locator<AnalyticsService>();
-
-  PlayButtonOverlapper({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () {
-              if (JourneyService.isAvatarAnimationInProgress) return;
-              _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
-              BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                backgroundColor: UiConstants.gameCardColor,
-                content: WantMoreTicketsModalSheet(),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.roundness24),
-                  topRight: Radius.circular(SizeConfig.roundness24),
-                ),
-                hapticVibrate: true,
-                isScrollControlled: true,
-                isBarrierDismissable: true,
-              );
-            },
-            child: Container(
-              height: SizeConfig.navBarHeight + SizeConfig.padding64,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: UiConstants.kBackgroundColor.withOpacity(0.5),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness24),
-                      topRight: Radius.circular(SizeConfig.roundness24))),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: UiConstants.kBackgroundColor,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness24),
-                    topRight: Radius.circular(SizeConfig.roundness24))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: SizeConfig.padding12),
-                  width: SizeConfig.padding10,
-                  height: SizeConfig.padding10,
-                  decoration: BoxDecoration(
-                    color: UiConstants.kSnackBarNegativeContentColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Text(
-                  "You don’t have enough tokens to play",
-                  style: TextStyles.sourceSans.body3
-                      .colour(UiConstants.kTextColor2),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class StreamView extends StatelessWidget {
-  StreamView({Key key, @required this.model, @required this.game})
-      : super(key: key);
-
-  final WebHomeViewModel model;
-  String game;
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      initialData: null,
-      stream: model.getRealTimePlayingStream(game),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return GameInfoBlock(
-            coin: "-",
-            coinText: 'Playing',
-            assetHeight: SizeConfig.padding16,
-            isDot: true,
-          );
-        }
-
-        if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
-          Map<Object, Object> fetchedData = Map<dynamic, dynamic>.from(
-              (snapshot.data as DatabaseEvent).snapshot.value
-                  as Map<dynamic, dynamic>);
-          String fieldToFetch = fetchedData['field'] as String;
-
-          Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch];
-
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(scale: animation, child: child);
-            },
-            child: GameInfoBlock(
-              coin:
-                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-              coinText: 'Playing',
-              assetHeight: SizeConfig.padding16,
-              isDot: true,
-              key: ValueKey<String>(requiredTimeData['value'].toString()),
-            ),
-          );
-        } else {
-          return GameInfoBlock(
-            coin: "50+",
-            coinText: 'Playing',
-            assetHeight: SizeConfig.padding16,
-            isDot: true,
-          );
-        }
-      },
-    );
-  }
-}
-
-class RechargeBox extends StatelessWidget {
-  final RechargeOption rechargeOption;
-
-  const RechargeBox({Key key, this.rechargeOption}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return rechargeOption.isCustom
-        ? InkWell(
-            onTap: () {
-              return BaseUtil().openDepositOptionsModalSheet();
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
-                  vertical: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.white, width: 0.4),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-              ),
-              child: Icon(
-                Icons.add,
-                size: SizeConfig.screenWidth * 0.08,
-                color: Colors.white,
-              ),
-            ),
-          )
-        : InkWell(
-            onTap: () {
-              return BaseUtil()
-                  .openDepositOptionsModalSheet(amount: rechargeOption.amount);
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: SizeConfig.padding12),
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
-                  vertical: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                color: UiConstants.gameCardColor,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "+  ",
-                    style: TextStyles.sourceSansSB.body1.bold,
-                  ),
-                  SvgPicture.asset(
-                    Assets.token,
-                    height: SizeConfig.padding24,
-                  ),
-                  SizedBox(width: SizeConfig.padding4),
-                  Text(
-                    rechargeOption.amount.toString(),
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                ],
-              ),
-            ),
-          );
-  }
-}
-
-class GameInfoBlock extends StatelessWidget {
-  final String coin, coinText, assetUrl;
-  final double assetHeight;
-  final bool isDot;
-
-  const GameInfoBlock({
-    Key key,
-    this.coin,
-    this.coinText,
-    this.assetHeight,
-    this.isDot = false,
-    this.assetUrl,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // width: SizeConfig.screenWidth * 0.155,
-      // height: SizeConfig.screenWidth * 0.120,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              isDot
-                  ? CircleAvatar(
-                      backgroundColor: UiConstants.primaryColor,
-                      radius: SizeConfig.padding4)
-                  : SvgPicture.asset(
-                      assetUrl,
-                      height: assetHeight,
-                    ),
-              SizedBox(width: SizeConfig.padding8),
-              Text(
-                coin,
-                style:
-                    TextStyles.sourceSans.title5.bold.colour(Color(0xffBDBDBE)),
-              ),
-            ],
-          ),
-          Text(
-            coinText,
-            style: TextStyles.sourceSans.body3,
-          ),
-        ],
-      ),
     );
   }
 }

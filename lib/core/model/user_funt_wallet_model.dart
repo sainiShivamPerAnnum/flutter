@@ -15,6 +15,8 @@ class UserFundWallet {
   double wLbPrinciple;
   double wLbProcessingAmt;
 
+  double netWorth;
+
   //icici
   double _iciciPrinciple;
   double _iciciBalance;
@@ -49,9 +51,10 @@ class UserFundWallet {
       this._processingRedemptionBalance,
       this.wLbBalance,
       this.wLbPrinciple,
-      this.wLbProcessingAmt);
+      this.wLbProcessingAmt,
+      this.netWorth);
 
-  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
@@ -67,6 +70,7 @@ class UserFundWallet {
           BaseUtil.toDouble(data['wLbBalance']),
           BaseUtil.toDouble(data['wLbPrinciple']),
           BaseUtil.toDouble(data['wLbProcessingAmt']),
+          BaseUtil.toDouble(data['netWorth']),
         );
 
   Map<String, dynamic> cloneMap() => {
@@ -85,10 +89,12 @@ class UserFundWallet {
       };
 
   double getEstTotalWealth() {
-    return BaseUtil.digitPrecision(BaseUtil.toDouble(_iciciBalance) +
-        BaseUtil.toDouble(_augGoldBalance) +
-        BaseUtil.toDouble(_prizeBalance) +
-        BaseUtil.toDouble(_lockedPrizeBalance));
+    return BaseUtil.digitPrecision(
+      BaseUtil.toDouble(_iciciBalance) +
+          BaseUtil.toDouble(_augGoldBalance) +
+          BaseUtil.toDouble(_prizeBalance) +
+          BaseUtil.toDouble(_lockedPrizeBalance),
+    );
   }
 
   double get prizeLifetimeWin => _prizeLifetimeWin;

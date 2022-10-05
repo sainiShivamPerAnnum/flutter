@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_vm.dart';
 import 'package:flutter/material.dart';
@@ -19,19 +20,22 @@ class InfoStories extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return Scaffold(
-            body: StoryView(
-                storyItems: model.storyItems,
-                controller: model.controller, // pass controller here too
-                repeat: true, // should the stories be slid forever
-                onStoryShow: (s) {},
-                onComplete: () {},
-                onVerticalSwipeComplete: (direction) {
-                  if (direction == Direction.down) {
-                    Navigator.pop(context);
-                  }
-                } // To disable vertical swipe gestures, ignore this parameter.
-                // Preferrably for inline story view.
-                ));
+            body: Container(
+          child: StoryView(
+              inline: false,
+              storyItems: model.storyItems,
+              controller: model.controller,
+              repeat: false,
+              onStoryShow: (s) {},
+              onComplete: () {
+                AppState.backButtonDispatcher.didPopRoute();
+              },
+              onVerticalSwipeComplete: (direction) {
+                if (direction == Direction.down) {
+                  AppState.backButtonDispatcher.didPopRoute();
+                }
+              }),
+        ));
       },
     );
   }

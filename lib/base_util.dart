@@ -234,12 +234,12 @@ class BaseUtil extends ChangeNotifier {
 
   openProfileDetailsScreen() {
     if (JourneyService.isAvatarAnimationInProgress) return;
-    if (_userService.userJourneyStats.mlIndex > 1) {
-      AppState.delegate.parseRoute(Uri.parse("profile"));
-    } else {
-      BaseUtil.showNegativeAlert(
-          "Proflie locked", "Complete milestone 2 to unlock profile");
-    }
+    // if (_userService.userJourneyStats.mlIndex > 1) {
+    AppState.delegate.parseRoute(Uri.parse("profile"));
+    // } else {
+    //   BaseUtil.showNegativeAlert(
+    //       "Proflie locked", "Complete milestone 1 to unlock profile");
+    // }
   }
 
   openRechargeModalSheet({
@@ -497,31 +497,6 @@ class BaseUtil extends ChangeNotifier {
         DateTime.now().hour < 24) return true;
 
     return false;
-  }
-
-  showRefreshIndicator(BuildContext context) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.TOP,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.refresh,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: "Pull to Refresh",
-      duration: Duration(seconds: 2),
-      message: "Refresh to see the updated balance",
-      backgroundColor: UiConstants.negativeAlertColor,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.negativeAlertColor.withOpacity(0.5),
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
   }
 
   static Future<void> openDialog({

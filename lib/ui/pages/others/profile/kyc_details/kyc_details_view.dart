@@ -145,19 +145,21 @@ class KYCDetailsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    model.inEditMode
-                        ? ReactivePositiveAppButton(
-                            onPressed: () async {
-                              model.panFocusNode.unfocus();
-                              await model.onSubmit(context);
-                            },
-                            btnText: locale.btnSumbit,
-                            width: SizeConfig.screenWidth,
-                          )
-                        : AppPositiveBtn(
-                            btnText: 'Update',
-                            onPressed: () => model.inEditMode = true,
-                          ),
+                    model.hasDetails
+                        ? SizedBox()
+                        : model.inEditMode
+                            ? ReactivePositiveAppButton(
+                                onPressed: () async {
+                                  model.panFocusNode.unfocus();
+                                  await model.onSubmit(context);
+                                },
+                                btnText: locale.btnSumbit,
+                                width: SizeConfig.screenWidth,
+                              )
+                            : AppPositiveBtn(
+                                btnText: 'Update',
+                                onPressed: () => model.inEditMode = true,
+                              ),
                     SizedBox(height: SizeConfig.padding10),
                   ],
                 ),

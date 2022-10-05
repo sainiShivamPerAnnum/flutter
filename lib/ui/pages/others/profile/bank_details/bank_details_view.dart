@@ -18,7 +18,6 @@ class BankDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<BankDetailsViewModel>(
       onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.dispose(),
       builder: (ctx, model, chlid) => Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: UiConstants.kBackgroundColor,

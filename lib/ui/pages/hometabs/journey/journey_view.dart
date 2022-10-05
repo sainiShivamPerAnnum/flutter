@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/jou
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -84,9 +85,19 @@ class _JourneyViewState extends State<JourneyView>
                           height: SizeConfig.screenWidth / 2),
                       SizedBox(height: 20),
                       Text(
-                        'Loading',
+                        'Snap!',
                         style: TextStyles.rajdhaniEB.title2,
-                      )
+                      ),
+                      SizedBox(height: 20),
+                      AppNegativeBtn(
+                          btnText: 'Snap!',
+                          onPressed: () {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                              state: PageState.replaceAll,
+                              page: SplashPageConfig,
+                            );
+                          })
                     ],
                   ),
                 )
