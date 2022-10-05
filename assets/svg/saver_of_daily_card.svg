@@ -1,13 +1,20 @@
-<svg width="116" height="114" viewBox="0 0 116 114" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="42.5664" height="93.1124" transform="matrix(0.866025 0.5 -2.20305e-08 1 38.9824 42.3354)" fill="#495DB2"/>
-<rect width="42.7836" height="46.0295" transform="matrix(0.866025 0.5 -0.866025 0.5 78.8452 19.3218)" fill="#93B5FE"/>
-<rect width="42.9987" height="54.5933" transform="matrix(0.866025 0.5 -2.20305e-08 1 0.734375 105.368)" fill="#495DB2"/>
-<rect width="45.6067" height="55.3148" transform="matrix(-0.866025 0.5 2.20305e-08 1 77.3926 103.496)" fill="#495DB2"/>
-<rect width="46.0296" height="108.911" transform="matrix(-0.866025 0.5 2.20305e-08 1 115.708 40.8188)" fill="#1F2C65"/>
-<rect width="42.7899" height="44.5965" transform="matrix(0.866025 0.5 -0.866025 0.5 38.9795 82.8521)" fill="#93B5FE"/>
-<ellipse rx="19.3349" ry="8.40647" transform="matrix(-1 0 0 1 77.4425 40.6374)" fill="#21333F"/>
-<circle r="21.8568" transform="matrix(-1 0 0 1 70.3375 22.7123)" fill="white"/>
+<svg width="136" height="166" viewBox="0 0 136 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2012_4858)">
+<rect width="42.5664" height="93.1124" transform="matrix(0.866025 0.5 -2.20305e-08 1 45.4824 67.7129)" fill="#495DB2"/>
+<rect width="42.7836" height="46.0295" transform="matrix(0.866025 0.5 -0.866025 0.5 85.3457 44.6992)" fill="#93B5FE"/>
+<rect width="42.9987" height="54.5933" transform="matrix(0.866025 0.5 -2.20305e-08 1 7.23438 130.745)" fill="#495DB2"/>
+<rect width="45.6067" height="55.3148" transform="matrix(-0.866025 0.5 2.20305e-08 1 83.8926 128.873)" fill="#495DB2"/>
+<rect width="46.0296" height="108.911" transform="matrix(-0.866025 0.5 2.20305e-08 1 122.209 66.1963)" fill="#1F2C65"/>
+<rect width="42.7899" height="44.5965" transform="matrix(0.866025 0.5 -0.866025 0.5 45.4805 108.229)" fill="#93B5FE"/>
+<ellipse rx="19.3349" ry="8.40647" transform="matrix(-1 0 0 1 83.9425 66.0139)" fill="#21333F"/>
+<circle r="22.3568" transform="matrix(-1 0 0 1 76.8375 48.0892)" fill="white" stroke="black"/>
 <g style="mix-blend-mode:darken">
-<path d="M48.9844 27.0929C52.7315 30.1176 57.499 31.9286 62.6895 31.9286C74.7489 31.9286 84.525 22.1525 84.525 10.0931C84.525 8.71693 84.3977 7.3705 84.1543 6.06494C89.2357 10.0797 92.4968 16.2968 92.4968 23.2756C92.4968 35.3827 82.6821 45.1974 70.575 45.1974C59.77 45.1974 50.7907 37.3802 48.9844 27.0929Z" fill="#F79780"/>
+<path d="M54.75 50.7206C58.3642 53.6381 62.9626 55.3849 67.9691 55.3849C79.6008 55.3849 89.0302 45.9555 89.0302 34.3238C89.0302 32.9964 88.9074 31.6977 88.6726 30.4385C93.5738 34.3108 96.7192 40.3075 96.7192 47.0388C96.7192 58.7165 87.2526 68.1831 75.5749 68.1831C65.1531 68.1831 56.4923 60.6432 54.75 50.7206Z" fill="#F79780"/>
 </g>
+</g>
+<defs>
+<clipPath id="clip0_2012_4858">
+<rect width="135" height="165" fill="white" transform="translate(0.616211 0.410156)"/>
+</clipPath>
+</defs>
 </svg>

@@ -5,8 +5,12 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -47,6 +51,8 @@ class WebHomeViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
   final _coinService = locator<UserCoinService>();
   final GameRepo _gamesRepo = locator<GameRepo>();
+  final _getterRepo = locator<GetterRepository>();
+  final _dbModel = locator<DBModel>();
 
   //Local Variables
 
@@ -87,8 +93,10 @@ class WebHomeViewModel extends BaseViewModel {
   ];
   String gameToken;
   int _currentCoinValue;
+  List<ScoreBoard> _pastWeekParticipants;
 
   //Getters
+  List<ScoreBoard> get pastWeekParticipants => _pastWeekParticipants;
   String get currentGame => this._currentGame;
   PrizesModel get prizes => _prizes;
   bool get isPrizesLoading => this._isPrizesLoading;
@@ -140,6 +148,7 @@ class WebHomeViewModel extends BaseViewModel {
     // pageController = new PageController(initialPage: 0);
     // refreshPrizes();
     fetchUsersCurrentCoins();
+    fetchTopSaversPastWeek(game);
     isLoading = false;
   }
 
@@ -205,6 +214,24 @@ class WebHomeViewModel extends BaseViewModel {
 
   fetchUsersCurrentCoins() {
     _currentCoinValue = _coinService.flcBalance;
+    notifyListeners();
+  }
+
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid) ?? "";
+  }
+
+  fetchTopSaversPastWeek(String game) async {
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+      freq: "weekly",
+      type: game,
+      isForPast: true,
+    );
+    if (response.code == 200) {
+      _pastWeekParticipants =
+          LeaderboardModel.fromMap(response.model).scoreboard;
+    } else
+      _pastWeekParticipants = [];
     notifyListeners();
   }
 

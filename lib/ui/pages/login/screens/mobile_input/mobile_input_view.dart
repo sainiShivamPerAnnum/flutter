@@ -89,72 +89,70 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     horizontal: SizeConfig.pageHorizontalMargins * 2),
               ),
             ),
-            isKeyboardOpen
-                ? SizedBox(
-                    height: SizeConfig.padding34,
-                  )
-                : Spacer(),
-            Column(
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/dual_star.svg",
-                      width: SizeConfig.padding20,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding14,
-                    ),
-                    RichText(
+
+            Spacer(),
+            if (!isKeyboardOpen)
+              Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/dual_star.svg",
+                        width: SizeConfig.padding20,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding14,
+                      ),
+                      RichText(
+                        text: new TextSpan(
+                          children: [
+                            new TextSpan(
+                              text: 'Join over  ',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            new TextSpan(
+                              text: '5 lakh',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor),
+                            ),
+                            new TextSpan(
+                              text: '  users in making finance fun!',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                        SizeConfig.padding16, SizeConfig.padding10, 0),
+                    child: RichText(
                       text: new TextSpan(
                         children: [
                           new TextSpan(
-                            text: 'Join over  ',
+                            text: 'By continuing, you agree to our ',
                             style: TextStyles.sourceSans.body3
                                 .colour(UiConstants.kTextColor2),
                           ),
                           new TextSpan(
-                            text: '5 lakh',
-                            style: TextStyles.sourceSans.body3
+                            text: 'Terms of Service',
+                            style: TextStyles.sourceSans.body3.underline
                                 .colour(UiConstants.kTextColor),
-                          ),
-                          new TextSpan(
-                            text: '  users in making finance fun!',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor2),
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () {
+                                model.onTermsAndConditionsClicked();
+                              },
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                      SizeConfig.padding16, SizeConfig.padding10, 0),
-                  child: RichText(
-                    text: new TextSpan(
-                      children: [
-                        new TextSpan(
-                          text: 'By continuing, you agree to our ',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        new TextSpan(
-                          text: 'Terms of Service',
-                          style: TextStyles.sourceSans.body3.underline
-                              .colour(UiConstants.kTextColor),
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () {
-                              model.onTermsAndConditionsClicked();
-                            },
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
             SizedBox(
               height: SizeConfig.screenWidth * 0.1 +

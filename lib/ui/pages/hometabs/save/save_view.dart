@@ -428,7 +428,7 @@ class CampaignCard extends StatelessWidget {
                 Expanded(
                   child: SvgPicture.asset(
                     asset,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
               ],

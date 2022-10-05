@@ -102,8 +102,6 @@ class ReferralDetailsView extends StatelessWidget {
                                   alignment: Alignment.bottomCenter,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(
-                                          bottom: SizeConfig.padding1),
                                       child: SvgPicture.asset(
                                           Assets.refreAndEarnBackgroundAsset,
                                           width: SizeConfig.screenWidth * 0.5),

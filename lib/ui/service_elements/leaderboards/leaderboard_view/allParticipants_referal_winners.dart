@@ -12,12 +12,14 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
       {@required this.isForTopReferers,
       this.winners,
       this.referralLeaderBoard,
+      this.showPoints = false,
       Key key})
       : super(key: key);
 
   final bool isForTopReferers;
   final List<Winners> winners;
   final List<ScoreBoard> referralLeaderBoard;
+  final bool showPoints;
 
   getGameName(String gamename) {
     switch (gamename) {
@@ -96,10 +98,15 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          referralLeaderBoard[i]
-                                                  .refCount
-                                                  .toString() ??
-                                              "00",
+                                          showPoints
+                                              ? referralLeaderBoard[i]
+                                                      .score
+                                                      .toString() ??
+                                                  "00"
+                                              : referralLeaderBoard[i]
+                                                      .refCount
+                                                      .toString() ??
+                                                  "00",
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
                                         )

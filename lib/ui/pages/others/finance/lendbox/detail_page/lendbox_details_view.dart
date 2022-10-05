@@ -4,6 +4,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_components/titlesGames.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -18,6 +20,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LendboxDetailsView extends StatelessWidget {
   const LendboxDetailsView({Key key}) : super(key: key);
@@ -62,6 +65,22 @@ class LendboxDetailsView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             LBoxAssetCard(),
+                            InfoComponent3(
+                              mainTitle: "What is Felllo Flo?",
+                              subTitle:
+                                  "Fello Flo is a P2P lending product powered by Lendbox. Start saving and investing in Fello Flo and earn 10% stable returns!",
+                              secondaryTitle: "Why to invest?",
+                              boxAssets: model.boxAssets,
+                              boxTitlles: model.boxTitlles,
+                              isBoxOpen: model.getQuantity(model.userFundWallet,
+                                              InvestmentType.LENDBOXP2P) ==
+                                          0 &&
+                                      model.getInvestedQuantity(
+                                              model.userFundWallet) ==
+                                          0
+                                  ? true
+                                  : false,
+                            ),
                             SizedBox(
                               height: SizeConfig.padding24,
                             ),

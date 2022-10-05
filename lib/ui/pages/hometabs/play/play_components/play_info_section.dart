@@ -288,3 +288,156 @@ class _InfoComponent2State extends State<InfoComponent2> {
     );
   }
 }
+
+class InfoComponent3 extends StatefulWidget {
+  const InfoComponent3(
+      {Key key,
+      @required this.mainTitle,
+      @required this.subTitle,
+      @required this.secondaryTitle,
+      @required this.boxAssets,
+      @required this.boxTitlles,
+      @required this.isBoxOpen})
+      : super(key: key);
+
+  final String mainTitle;
+  final String subTitle;
+  final String secondaryTitle;
+  final List<String> boxAssets;
+  final List<String> boxTitlles;
+  final bool isBoxOpen;
+
+  @override
+  State<InfoComponent3> createState() => _InfoComponent3State();
+}
+
+class _InfoComponent3State extends State<InfoComponent3> {
+  bool isBoxOpen;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    isBoxOpen = widget.isBoxOpen;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: UiConstants.infoComponentGradient,
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(SizeConfig.roundness12),
+            bottomRight: Radius.circular(SizeConfig.roundness12)),
+      ),
+      margin: EdgeInsets.fromLTRB(
+        SizeConfig.pageHorizontalMargins,
+        0.0,
+        SizeConfig.pageHorizontalMargins,
+        SizeConfig.pageHorizontalMargins,
+      ),
+      padding: EdgeInsets.fromLTRB(
+        SizeConfig.pageHorizontalMargins,
+        SizeConfig.pageHorizontalMargins,
+        SizeConfig.pageHorizontalMargins,
+        SizeConfig.pageHorizontalMargins,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.mainTitle,
+                style: TextStyles.rajdhaniSB.title5,
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    isBoxOpen = !isBoxOpen;
+                  });
+                },
+                icon: Icon(isBoxOpen
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down),
+                color: Colors.white,
+              ),
+            ],
+          ),
+          isBoxOpen
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    ),
+                    Text(widget.subTitle,
+                        style: TextStyles.sourceSans.body4.colour(
+                          UiConstants.kTextColor2,
+                        )),
+                    SizedBox(
+                      height: SizeConfig.padding34,
+                    ),
+                    Text(
+                      widget.secondaryTitle,
+                      style: TextStyles.rajdhaniSB.title5,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding34,
+                    ),
+                    TitlesGames(
+                      startPaddingAvilable: false,
+                      richText: RichText(
+                        text: TextSpan(
+                          text: widget.boxTitlles[0],
+                          style: TextStyles.sourceSans.body3,
+                        ),
+                      ),
+                      icon: SvgPicture.asset(
+                        widget.boxAssets[0],
+                        height: SizeConfig.padding38,
+                        width: SizeConfig.padding38,
+                      ),
+                    ),
+                    TitlesGames(
+                      startPaddingAvilable: false,
+                      richText: RichText(
+                        text: TextSpan(
+                          text: widget.boxTitlles[1],
+                          style: TextStyles.sourceSans.body3,
+                        ),
+                      ),
+                      icon: SvgPicture.asset(
+                        widget.boxAssets[1],
+                        height: SizeConfig.padding54,
+                        width: SizeConfig.padding54,
+                      ),
+                    ),
+                    TitlesGames(
+                      startPaddingAvilable: false,
+                      richText: RichText(
+                        text: TextSpan(
+                          text: widget.boxTitlles[2],
+                          style: TextStyles.sourceSans.body3,
+                        ),
+                      ),
+                      icon: Padding(
+                        padding: EdgeInsets.only(top: SizeConfig.padding4),
+                        child: SvgPicture.asset(
+                          widget.boxAssets[2],
+                          height: SizeConfig.padding40,
+                          width: SizeConfig.padding40,
+                        ),
+                      ),
+                      isLast: true,
+                    ),
+                  ],
+                )
+              : SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+}

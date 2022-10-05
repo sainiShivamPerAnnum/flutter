@@ -57,6 +57,7 @@ class UiConstants {
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kBackgroundColor2 = const Color(0xFF151D22);
   static final Color kBackgroundColor3 = Color(0xff131315);
+  static final Color kFAQArrowColor = Color(0xffA2A2A2);
 
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
   static const Color kModalSheetBackgroundColor = const Color(0xFF1B262C);
@@ -152,6 +153,14 @@ class UiConstants {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     stops: [0, 0.8],
+    tileMode: TileMode.clamp,
+  );
+
+  static LinearGradient infoComponentGradient = LinearGradient(
+    colors: [kBackgroundColor, gameCardColor],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.2, 1.6],
     tileMode: TileMode.clamp,
   );
 

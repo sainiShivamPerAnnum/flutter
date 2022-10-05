@@ -24,10 +24,13 @@ class GetterRepository extends BaseRepo {
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String type,
     String freq,
+    bool isForPast = false,
   }) async {
     try {
       final token = await getBearerToken();
-      final String code = CodeFromFreq.getCodeFromFreq(freq);
+      final String code = isForPast
+          ? CodeFromFreq.getPastWeekCode()
+          : CodeFromFreq.getCodeFromFreq(freq);
       final statisticsResponse = await APIService.instance.getData(
         ApiPath.statistics,
         cBaseUrl: _baseUrl,

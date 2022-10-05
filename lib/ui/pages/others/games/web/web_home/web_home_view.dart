@@ -1,16 +1,24 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -280,6 +288,10 @@ class WebHomeView extends StatelessWidget {
                           if (model.currentCoinValue >=
                               model.currentGameModel.playCost)
                             RechargeOptions(model: model),
+                          SizedBox(
+                            height: SizeConfig.padding80 * 2,
+                          ),
+                          PastWeekWinners(count: 5, model: model),
                           SizedBox(
                             height: SizeConfig.padding80 * 2,
                           ),
@@ -598,6 +610,329 @@ class GameInfoBlock extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PastWeekWinners extends StatelessWidget {
+  const PastWeekWinners({Key key, @required this.count, @required this.model})
+      : super(key: key);
+  final int count;
+  final WebHomeViewModel model;
+
+  getLength(int listLength) {
+    if (count != null) {
+      if (listLength < count)
+        return listLength;
+      else
+        return count;
+    } else
+      return listLength;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        //1
+        Container(
+          margin: EdgeInsets.only(top: SizeConfig.padding32),
+          width: SizeConfig.screenWidth * 0.5,
+          height: SizeConfig.screenWidth * 0.5,
+          decoration: BoxDecoration(
+            color: UiConstants.kSecondaryBackgroundColor,
+            shape: BoxShape.circle,
+          ),
+        ),
+        //2
+        Container(
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding20,
+              horizontal: SizeConfig.pageHorizontalMargins),
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.padding14,
+              SizeConfig.screenWidth * 0.15 + SizeConfig.padding32,
+              SizeConfig.padding14,
+              0.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: UiConstants.kSecondaryBackgroundColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding32,
+              ),
+
+              //Old code to refactor starts here
+              Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      padding: EdgeInsets.only(top: SizeConfig.padding8),
+                      child: model.pastWeekParticipants == null
+                          ? Container(
+                              width: SizeConfig.screenWidth,
+                              color: Colors.transparent,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding24),
+                              alignment: Alignment.center,
+                              child: FullScreenLoader(
+                                size: SizeConfig.screenWidth * 0.5,
+                              ),
+                            )
+                          : (model.pastWeekParticipants.isEmpty
+                              ? Container(
+                                  width: SizeConfig.screenWidth,
+                                  color: Colors.transparent,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: SizeConfig.padding24),
+                                  child: NoRecordDisplayWidget(
+                                    topPadding: false,
+                                    assetSvg: Assets.noWinnersAsset,
+                                    text: " Leaderboard will be updated soon",
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "#",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor2),
+                                        ),
+                                        SizedBox(width: SizeConfig.padding12),
+                                        SizedBox(width: SizeConfig.padding12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text("Names",
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2)),
+                                              SizedBox(
+                                                  height: SizeConfig.padding4),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          "Points",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor2),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
+                                    Column(
+                                      children: List.generate(
+                                        getLength(
+                                            model.pastWeekParticipants.length),
+                                        (i) {
+                                          return Container(
+                                            width: SizeConfig.screenWidth,
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "${i + 1}",
+                                                      style: TextStyles
+                                                          .rajdhani.body3
+                                                          .colour(Colors.white),
+                                                    ),
+                                                    SizedBox(
+                                                        width: SizeConfig
+                                                            .padding12),
+                                                    FutureBuilder(
+                                                      future: model
+                                                          .getProfileDpWithUid(model
+                                                              .pastWeekParticipants[
+                                                                  i]
+                                                              .userid),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (!snapshot.hasData ||
+                                                            snapshot.connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                          return DefaultAvatar();
+                                                        }
+
+                                                        String imageUrl =
+                                                            snapshot.data
+                                                                as String;
+
+                                                        return ClipOval(
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl: imageUrl,
+                                                            fit: BoxFit.cover,
+                                                            width: SizeConfig
+                                                                .iconSize5,
+                                                            height: SizeConfig
+                                                                .iconSize5,
+                                                            placeholder:
+                                                                (context,
+                                                                        url) =>
+                                                                    Container(
+                                                              width: SizeConfig
+                                                                  .iconSize5,
+                                                              height: SizeConfig
+                                                                  .iconSize5,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    Colors.grey,
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                            ),
+                                                            errorWidget:
+                                                                (a, b, c) {
+                                                              return DefaultAvatar();
+                                                            },
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                    SizedBox(
+                                                        width: SizeConfig
+                                                            .padding12),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                              model
+                                                                      .pastWeekParticipants[
+                                                                          i]
+                                                                      .username
+                                                                      .replaceAll(
+                                                                          '@',
+                                                                          '.') ??
+                                                                  "username",
+                                                              style: TextStyles
+                                                                  .rajdhani
+                                                                  .body3
+                                                                  .colour(Colors
+                                                                      .white)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "${model.pastWeekParticipants[i].score.toInt().toString() ?? "00"} points",
+                                                      style: TextStyles
+                                                          .rajdhani.body3
+                                                          .colour(Colors.white),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: SizeConfig.padding10,
+                                                ),
+                                                if (i + 1 <
+                                                    getLength(model
+                                                        .pastWeekParticipants
+                                                        .length))
+                                                  Divider(
+                                                    color: Colors.white,
+                                                    thickness: 0.2,
+                                                  ),
+                                                SizedBox(
+                                                  height: SizeConfig.padding10,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding16,
+                                    ),
+                                    if (model.pastWeekParticipants.length >
+                                        getLength(
+                                            model.pastWeekParticipants.length))
+                                      GestureDetector(
+                                        onTap: () {
+                                          Haptic.vibrate();
+                                          AppState.delegate.appState
+                                              .currentAction = PageAction(
+                                            state: PageState.addWidget,
+                                            widget:
+                                                AllParticipantsWinnersTopReferers(
+                                              isForTopReferers: true,
+                                              showPoints: true,
+                                              referralLeaderBoard:
+                                                  model.pastWeekParticipants,
+                                            ),
+                                            page:
+                                                AllParticipantsWinnersTopReferersConfig,
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                top: SizeConfig.padding2,
+                                              ),
+                                              child: Text('See All',
+                                                  style: TextStyles
+                                                      .rajdhaniSB.body2),
+                                            ),
+                                            SvgPicture.asset(
+                                                Assets.chevRonRightArrow,
+                                                height: SizeConfig.padding24,
+                                                width: SizeConfig.padding24,
+                                                color: UiConstants.primaryColor)
+                                          ],
+                                        ),
+                                      )
+                                  ],
+                                )),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        //3
+        Container(
+          margin: EdgeInsets.only(right: SizeConfig.padding14),
+          child: SvgPicture.asset(
+            Assets.winScreenHighestScorers,
+            width: SizeConfig.screenWidth * 0.3,
+          ),
+        ),
+      ],
     );
   }
 }

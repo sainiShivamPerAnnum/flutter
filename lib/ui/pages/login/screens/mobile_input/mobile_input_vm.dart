@@ -89,7 +89,7 @@ class LoginMobileViewModel extends BaseViewModel {
 
   void onTermsAndConditionsClicked() {
     Haptic.vibrate();
-    BaseUtil.launchUrl('https://fello.in/policy/tnc');
+    BaseUtil.launchUrl('https://fello.in/policy/terms-of-use');
     _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
