@@ -26,12 +26,11 @@ class DepositOptionModalSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Choose an asset to invest",
-                  style: TextStyles.rajdhaniSB.title5),
+              Text("Choose your asset", style: TextStyles.rajdhaniSB.title5),
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding4),
                 child: Text(
-                  "Your investments are safe and secure",
+                  "Earn 1 Token for every ₹1 you invest",
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor2,
                   ),
@@ -50,7 +49,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                     title: Text("Digital Gold",
                         style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
-                      "Safest way to invest",
+                      "Buy 24K pure Digital Gold",
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -77,7 +76,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                     title:
                         Text("Fello Flo", style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
-                      "Safest way to invest",
+                      "Enjoy stable returns of 10%",
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextColor2),
                     ),

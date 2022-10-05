@@ -250,7 +250,7 @@ class BaseUtil extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.userJourneyStats?.mlIndex == 1)
         return BaseUtil.showNegativeAlert("Complete your profile",
-            "You can make deposits only after completing profile");
+            "You can start investing after completing your profile");
       final bool isAugDepositBanned = _userService
           ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.isBanned;
       final String augDepositBanNotice = _userService
@@ -300,7 +300,7 @@ class BaseUtil extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.userJourneyStats.mlIndex == 1)
         return BaseUtil.showNegativeAlert("Complete your profile",
-            "You can make a sale only after completing profile");
+            "You can make an investment after completing your profile");
       final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String augSellBanNotice = _userService

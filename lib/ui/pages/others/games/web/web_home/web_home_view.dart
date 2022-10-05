@@ -341,7 +341,7 @@ class RechargeOptions extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
           child: Text(
-            'Recharge Options',
+            'Get More Tokens',
             style: TextStyles.sourceSansSB.title5,
           ),
         ),
