@@ -18,35 +18,35 @@ class InfoStoriesViewModel extends BaseViewModel {
 
   init(String topic) {
     storyItems = [];
-    // storyItems = [
-    //   StoryItem.text(
-    //     title: "This is a story view",
-    //     backgroundColor: Colors.black,
-    //     textStyle: TextStyles.rajdhaniB.title3,
-    //   ),
-    //   StoryItem.pageImage(
-    //       controller: controller,
-    //       decoration: backgroundDecoration,
-    //       textStyle: captionTextStyle,
-    //       caption:
-    //           "Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives",
-    //       url:
-    //           'https://lottie.host/b5b4bc6b-7006-4c02-a29e-2758fa469c23/cF6rCFX8iD.json'),
-    //   StoryItem.pageImage(
-    //       controller: controller,
-    //       decoration: backgroundDecoration,
-    //       textStyle: captionTextStyle,
-    //       caption:
-    //           "We Manish & Shourya are two finance folks who started Fello with the vision of helping people save money in a better way",
-    //       url: "https://assets6.lottiefiles.com/packages/lf20_tuzu65Bu6N.json"),
-    //   StoryItem.pageImage(
-    //       controller: controller,
-    //       decoration: backgroundDecoration,
-    //       textStyle: captionTextStyle,
-    //       caption:
-    //           "We are an AMFI registered mutual fund distributor and all your money is invested directly into a relevant mutual fund.",
-    //       url: "https://assets6.lottiefiles.com/packages/lf20_mGXMLaVUoX.json"),
-    // ];
+    storyItems = [
+      StoryItem.text(
+        title: "This is a story view",
+        backgroundColor: Colors.black,
+        textStyle: TextStyles.rajdhaniB.title3,
+      ),
+      StoryItem.pageImage(
+          controller: controller,
+          decoration: backgroundDecoration,
+          textStyle: captionTextStyle,
+          caption:
+              "Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives",
+          url:
+              'https://lottie.host/b5b4bc6b-7006-4c02-a29e-2758fa469c23/cF6rCFX8iD.json'),
+      StoryItem.pageImage(
+          controller: controller,
+          decoration: backgroundDecoration,
+          textStyle: captionTextStyle,
+          caption:
+              "We Manish & Shourya are two finance folks who started Fello with the vision of helping people save money in a better way",
+          url: "https://assets6.lottiefiles.com/packages/lf20_tuzu65Bu6N.json"),
+      StoryItem.pageImage(
+          controller: controller,
+          decoration: backgroundDecoration,
+          textStyle: captionTextStyle,
+          caption:
+              "We are an AMFI registered mutual fund distributor and all your money is invested directly into a relevant mutual fund.",
+          url: "https://assets6.lottiefiles.com/packages/lf20_mGXMLaVUoX.json"),
+    ];
   }
 
   dump() {}

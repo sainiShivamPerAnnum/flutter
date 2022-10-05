@@ -3,6 +3,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/widgets/fello_rich_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,6 +23,64 @@ class LoginMobileView extends StatefulWidget {
 
 class LoginMobileViewState extends State<LoginMobileView> {
   LoginMobileViewModel model;
+
+  static TextSpan renderedWidget(String paragraph) {
+    if (paragraph.isEmpty ||
+        !paragraph.contains("*") ||
+        !paragraph.contains("_")) {
+      return const TextSpan();
+    }
+
+    String snip = '';
+    List<TextSpan> groups = [];
+    bool isBoldOn = false;
+    bool isItalicsOn = false;
+    paragraph.runes.forEach((element) {
+      var character = String.fromCharCode(element);
+      print('We\'re at: $character');
+      if (character == '*' || character == '_') {
+        if (snip == '') {
+          //this is the start of a text span
+          if (character == '*') isBoldOn = true;
+          if (character == '_') isItalicsOn = true;
+        } else {
+          //this is the end of either a bold text or an italics text
+          if (isBoldOn) {
+            print('Groupd added: bold');
+            isBoldOn = false;
+            groups.add(TextSpan(
+              text: snip,
+              style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor),
+            ));
+          } else if (isItalicsOn) {
+            print('Groupd added: italic');
+            isItalicsOn = false;
+            groups.add(TextSpan(
+              text: snip,
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor3),
+            ));
+          } else {
+            print('Groupd added: non bold non italic');
+            groups.add(TextSpan(
+              text: snip,
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+            ));
+            if (character == '*') isBoldOn = true;
+            if (character == '_') isItalicsOn = true;
+          }
+          snip = '';
+        }
+      } else {
+        snip = snip + character;
+      }
+    });
+
+    print('Children created: ' + groups.toString());
+    return new TextSpan(children: groups);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
@@ -104,27 +163,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
                       SizedBox(
                         width: SizeConfig.padding14,
                       ),
-                      RichText(
-                        text: new TextSpan(
-                          children: [
-                            new TextSpan(
-                              text: 'Join over  ',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                            new TextSpan(
-                              text: '5 lakh',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.kTextColor),
-                            ),
-                            new TextSpan(
-                              text: '  users in making finance fun!',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                          ],
-                        ),
-                      ),
+                      FelloRichText(
+                          paragraph:
+                              'Join over *5 Lakh* users in making _finance fun!_')
                     ],
                   ),
                   Padding(
