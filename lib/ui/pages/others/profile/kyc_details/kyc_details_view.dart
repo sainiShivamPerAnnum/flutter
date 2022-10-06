@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
@@ -40,6 +41,7 @@ class KYCDetailsView extends StatelessWidget {
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: FAppBar(
+          type: FaqsType.yourAccount,
           title: 'Add KYC Details',
           backgroundColor: UiConstants.kSecondaryBackgroundColor,
           showAvatar: false,

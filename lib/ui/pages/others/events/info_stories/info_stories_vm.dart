@@ -35,18 +35,18 @@ class InfoStoriesViewModel extends BaseViewModel {
             controller: controller,
             duration: Duration(seconds: 5),
             url: element.assetUri,
-            captionWidget: Wrap(
-              children: [
-                Container(
-                    width: SizeConfig.navBarWidth,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins,
-                      vertical: SizeConfig.screenHeight * 0.16,
-                    ),
-                    alignment: Alignment.center,
-                    child: FelloRichText(paragraph: element.richText)),
-              ],
-            ),
+            // captionWidget: Wrap(
+            //   children: [
+            //     Container(
+            //         width: SizeConfig.navBarWidth,
+            //         padding: EdgeInsets.symmetric(
+            //           horizontal: SizeConfig.pageHorizontalMargins,
+            //           vertical: SizeConfig.screenHeight * 0.16,
+            //         ),
+            //         alignment: Alignment.center,
+            //         child: FelloRichText(paragraph: element.richText)),
+            //   ],
+            // ),
             textStyle: captionTextStyle,
             decoration: backgroundDecoration));
       });

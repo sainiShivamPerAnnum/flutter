@@ -51,7 +51,7 @@ class Win extends StatelessWidget {
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: FAppBar(
-                  type: FaqsType.win,
+                  type: FaqsType.winnings,
                 ),
                 body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,

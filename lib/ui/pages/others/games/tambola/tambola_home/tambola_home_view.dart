@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
@@ -54,6 +55,7 @@ class TambolaHomeView extends StatelessWidget {
           onRefresh: model.getLeaderboard,
           child: Scaffold(
             appBar: FAppBar(
+              type: FaqsType.play,
               showAvatar: false,
               showCoinBar: false,
               showHelpButton: false,

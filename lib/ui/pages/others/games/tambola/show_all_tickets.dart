@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,6 +14,7 @@ class ShowAllTickets extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: FAppBar(
+        type: FaqsType.play,
         title: "All Tickets",
         showAvatar: false,
         showCoinBar: false,

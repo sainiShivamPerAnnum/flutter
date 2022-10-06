@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
@@ -22,6 +23,7 @@ class BankDetailsView extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: FAppBar(
+          type: FaqsType.yourAccount,
           title: 'Bank Account Details',
           backgroundColor: UiConstants.kSecondaryBackgroundColor,
           showAvatar: false,

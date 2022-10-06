@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,6 +15,7 @@ class AllTambolaTickets extends StatelessWidget {
     return Scaffold(
       backgroundColor: UiConstants.kArowButtonBackgroundColor,
       appBar: FAppBar(
+        type: FaqsType.play,
         showAvatar: false,
         showCoinBar: false,
         showHelpButton: false,

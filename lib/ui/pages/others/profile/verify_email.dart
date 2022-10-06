@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -275,6 +276,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       body: Column(
         children: [
           FAppBar(
+            type: FaqsType.yourAccount,
             title: "Verify Email",
             showAvatar: false,
             showCoinBar: false,
