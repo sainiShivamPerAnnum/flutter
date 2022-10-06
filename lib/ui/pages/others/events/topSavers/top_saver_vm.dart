@@ -39,7 +39,7 @@ class TopSaverViewModel extends BaseViewModel {
 
   String saverFreq = "daily";
 
-  String subTitle = "Save a penny a day";
+  String subTitle = "Be the top saver to win";
 
   int weekDay = DateTime.now().weekday;
 

@@ -93,9 +93,9 @@ class InitAutosaveCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TitleSubtitleContainer(
-                title: 'Start a New SIP',
+                title: 'Start Autosaving',
                 subTitle:
-                    'Invest safely in Gold with our Auto SIP to win tokens',
+                    'Save in Digital Gold automatically and win added rewards',
               ),
               SizedBox(
                 height: SizeConfig.padding32,
@@ -124,7 +124,7 @@ class InitAutosaveCard extends StatelessWidget {
                           constraints: BoxConstraints(
                             maxWidth: SizeConfig.screenWidth * 0.5,
                           ),
-                          child: Text('Invest in Fello Autosave today',
+                          child: Text('Setup Fello Autosave today',
                               style: TextStyles.sourceSans.bold.body1),
                         ),
                         SizedBox(

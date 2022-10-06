@@ -370,7 +370,7 @@ class Win extends StatelessWidget {
                           left: SizeConfig.padding24,
                         ),
                         child: Text(
-                          "LeaderBoard",
+                          "Leaderboard",
                           style: TextStyles.sourceSans.semiBold
                               .colour(Colors.white)
                               .title3,

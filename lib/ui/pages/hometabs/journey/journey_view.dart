@@ -86,12 +86,12 @@ class _JourneyViewState extends State<JourneyView>
                           height: SizeConfig.screenWidth / 2),
                       SizedBox(height: 20),
                       Text(
-                        'Snap!',
+                        'Journey failed to load',
                         style: TextStyles.rajdhaniEB.title2,
                       ),
                       SizedBox(height: 20),
                       AppNegativeBtn(
-                          btnText: 'Snap!',
+                          btnText: 'Retry',
                           onPressed: () {
                             AppState.delegate.appState.currentAction =
                                 PageAction(

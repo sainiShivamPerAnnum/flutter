@@ -168,7 +168,7 @@ class GoldAssetCard extends StatelessWidget {
                       children: [
                         Text('Digital Gold',
                             style: TextStyles.rajdhaniB.title2),
-                        Text('Safer way to invest',
+                        Text('Better way of saving',
                             style: TextStyles.sourceSans.body4),
                         SizedBox(
                           height: SizeConfig.padding20,
@@ -177,9 +177,8 @@ class GoldAssetCard extends StatelessWidget {
                           style: TextStyles.rajdhaniSB.title4,
                         ),
                         Text(
-                          'Invested',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
+                          'You own',
+                          style: TextStyles.sourceSans.body3,
                         ),
                       ],
                     ),

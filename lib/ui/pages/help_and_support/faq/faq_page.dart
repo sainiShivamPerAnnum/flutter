@@ -44,7 +44,7 @@ class FAQPage extends StatelessWidget {
                 color: UiConstants.kBackgroundColor),
             child: TextButton(
               child: Text(
-                "Chat with us",
+                "Need more help?",
                 style: TextStyles.sourceSans.body3,
               ),
               onPressed: () {

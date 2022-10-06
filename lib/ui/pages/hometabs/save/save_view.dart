@@ -76,7 +76,7 @@ class Save extends StatelessWidget {
                   // -- Break --
                   TitleSubtitleContainer(
                     title: 'Challenges',
-                    subTitle: 'Exciting contests to save more',
+                    subTitle: 'Take part in fun and exciting contests',
                   ),
                   CampaignCardSection(saveVm: model),
                   // -- Break --
@@ -90,8 +90,8 @@ class Save extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TitleSubtitleContainer(
-                          title: 'Fin-gyan',
-                          subTitle: 'Learn more about financial world',
+                          title: 'Fingyaan',
+                          subTitle: 'Read about the world of games and finance',
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -157,7 +157,7 @@ class AppFooter extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Version ${BaseUtil.packageInfo.version} (${BaseUtil.packageInfo.buildNumber})',
+              'v${BaseUtil.packageInfo.version} (${BaseUtil.packageInfo.buildNumber})',
               style: TextStyles.body3.colour(UiConstants.kTextColor2),
             ),
             RichText(

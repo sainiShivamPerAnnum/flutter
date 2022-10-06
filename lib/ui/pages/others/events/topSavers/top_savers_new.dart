@@ -380,7 +380,7 @@ class CampaignView extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () => model.switchTab(0),
                                           child: Text(
-                                            'LeaderBoard',
+                                            'Leaderboard',
                                             style: model.tabNo == 0
                                                 ? selectedTextStyle
                                                 : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
