@@ -57,23 +57,25 @@ class Milestones extends StatelessWidget {
               children: List.generate(model.currentMilestoneList.length, (i) {
                 if (model.currentMilestoneList[i].index ==
                     model.avatarActiveMilestoneLevel) {
-                  switch (model.currentMilestoneList[i].animType) {
-                    case "ROTATE":
-                      return ActiveFloatingMilestone(
-                        milestone: model.currentMilestoneList[i],
-                        model: model,
-                      );
-                    case "FLOAT":
-                      return ActiveFloatingMilestone(
-                        milestone: model.currentMilestoneList[i],
-                        model: model,
-                      );
-                    default:
-                      return StaticMilestone(
-                        milestone: model.currentMilestoneList[i],
-                        model: model,
-                      );
-                  }
+                  return ActiveFloatingMilestone(
+                      milestone: model.currentMilestoneList[i], model: model);
+                  // switch (model.currentMilestoneList[i].animType) {
+                  //   case "ROTATE":
+                  //     return ActiveFloatingMilestone(
+                  //       milestone: model.currentMilestoneList[i],
+                  //       model: model,
+                  //     );
+                  //   case "FLOAT":
+                  //     return ActiveFloatingMilestone(
+                  //       milestone: model.currentMilestoneList[i],
+                  //       model: model,
+                  //     );
+                  //   default:
+                  //     return StaticMilestone(
+                  //       milestone: model.currentMilestoneList[i],
+                  //       model: model,
+                  //     );
+                  // }
                 } else
                   return StaticMilestone(
                     milestone: model.currentMilestoneList[i],
@@ -194,7 +196,7 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
         ),
         if (widget.milestone.index != 1)
           Positioned(
-            left: widget.model.pageWidth * widget.milestone.x,
+            left: widget.model.pageWidth * widget.milestone.x / 2,
             bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
                     widget.model.pageHeight * widget.milestone.y) +
                 widget.model.pageHeight * widget.milestone.asset.height * 1.2,

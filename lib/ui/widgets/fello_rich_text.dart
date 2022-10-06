@@ -17,15 +17,41 @@ class FelloRichText extends RichText {
             style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor));
       }
 
-      String snip = '';
-      List<TextSpan> groups = [];
-      bool isBoldOn = false;
-      bool isItalicsOn = false;
-      paragraph.runes.forEach((element) {
-        var character = String.fromCharCode(element);
-        if (character == '*' || character == '_') {
-          if (snip == '') {
-            //this is the start of a text span
+
+    String snip = '';
+    List<TextSpan> groups = [];
+    bool isBoldOn = false;
+    bool isItalicsOn = false;
+    paragraph.runes.forEach((element) {
+      var character = String.fromCharCode(element);
+      if (character == '*' || character == '_') {
+        if (snip == '') {
+          //this is the start of a text span
+          if (character == '*') isBoldOn = true;
+          if (character == '_') isItalicsOn = true;
+        } else {
+          //this is the end of either a bold text or an italics text
+          if (isBoldOn) {
+            isBoldOn = false;
+            groups.add(TextSpan(
+              text: snip,
+              style:
+                  TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor),
+            ));
+          } else if (isItalicsOn) {
+            isItalicsOn = false;
+            groups.add(TextSpan(
+              text: snip,
+              style: TextStyles.sourceSans.body3
+                  .colour(UiConstants.kTextColor3)
+                  .italic,
+            ));
+          } else {
+            groups.add(TextSpan(
+              text: snip,
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+            ));
             if (character == '*') isBoldOn = true;
             if (character == '_') isItalicsOn = true;
           } else {

@@ -340,14 +340,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     int existingLevel = 1;
     int updatedLevel = 1;
     levels.forEach((l) {
-      if (avatarCachedMlIndex < l.end && avatarCachedMlIndex >= l.start)
+      if (avatarCachedMlIndex <= l.end && avatarCachedMlIndex >= l.start)
         existingLevel = l.level;
     });
     levels.forEach((l) {
-      if (avatarRemoteMlIndex < l.end && avatarRemoteMlIndex >= l.start)
+      if (avatarRemoteMlIndex <= l.end && avatarRemoteMlIndex >= l.start)
         updatedLevel = l.level;
     });
-
+    print("Existing level : $existingLevel || Updated Level: $updatedLevel");
     return (existingLevel != updatedLevel);
   }
 
@@ -405,10 +405,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       log("levelData ${levels[0].toString()}");
 
       JourneyLevel currentlevelData = levels.firstWhere(
-          (level) =>
-              avatarRemoteMlIndex >= level.start &&
-              avatarRemoteMlIndex <= level.end,
-          orElse: null);
+          (level) => level.level == _userService.userJourneyStats.level);
 
       if (currentlevelData != null &&
           lastMileStoneIndex > currentlevelData.end) {

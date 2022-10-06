@@ -161,7 +161,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                     ticket.redeemedTimestamp ==
                                         TimestampModel(
                                             seconds: 0, nanoseconds: 0)))
-                            ? goldenTicketWidget()
+                            ? goldenTicketWidget(ticket.isLevelChange)
                             : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
@@ -222,7 +222,7 @@ class _JourneyMilestoneDetailsModalSheetState
     );
   }
 
-  Widget goldenTicketWidget() {
+  Widget goldenTicketWidget(bool isLevelChange) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding12),
       child: Row(
@@ -233,7 +233,9 @@ class _JourneyMilestoneDetailsModalSheetState
               AppState.delegate.parseRoute(Uri.parse("/myWinnings"));
             },
             child: SvgPicture.asset(
-              Assets.unredemmedGoldenTicketBG,
+              isLevelChange
+                  ? Assets.levelUpUnRedeemedGoldenTicketBG
+                  : Assets.unredemmedGoldenTicketBG,
               height: SizeConfig.padding40,
               width: SizeConfig.padding40,
             ),

@@ -222,7 +222,7 @@ class LendboxSuccessView extends StatelessWidget {
                   WinningChips(
                     title: 'Tambola Ticket',
                     asset: Assets.singleTmbolaTicket,
-                    qty: _txnService.currentTxnAmount.toInt(),
+                    qty: _txnService.currentTxnTambolaTicketsCount.toInt(),
                   )
               ],
             ),

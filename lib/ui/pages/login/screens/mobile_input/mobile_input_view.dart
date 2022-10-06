@@ -12,6 +12,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
@@ -150,17 +151,23 @@ class LoginMobileViewState extends State<LoginMobileView> {
             ),
 
             Spacer(),
-            if (!isKeyboardOpen)
-              Container(
-                  margin: EdgeInsets.symmetric(
-                      vertical: SizeConfig.pageHorizontalMargins),
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
-                      horizontal: SizeConfig.padding20),
-                  decoration: BoxDecoration(
-                    color: UiConstants.kBackgroundColor3,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.roundness12)),
+            if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
+              Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/dual_star.svg",
+                        width: SizeConfig.padding20,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding14,
+                      ),
+                      FelloRichText(
+                          paragraph:
+                              'Join over *5 Lakh* users in making _finance fun!_')
+                    ],
                   ),
                   child: Column(
                     children: [

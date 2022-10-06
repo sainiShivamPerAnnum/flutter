@@ -537,6 +537,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
+      setMyAvatarId('CUSTOM');
       final updateUserAvatarResponse = await _userRepo.updateUser(
           dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser.uid);
       if (url != null &&

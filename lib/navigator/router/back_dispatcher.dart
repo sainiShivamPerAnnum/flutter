@@ -117,6 +117,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.delegate.appState.rootIndex != 0) {
       logger.w("Checking if app can be closed");
       AppState.delegate.appState.setCurrentTabIndex = 0;
+      _journeyService.checkForMilestoneLevelChange();
       return Future.value(true);
     }
 
