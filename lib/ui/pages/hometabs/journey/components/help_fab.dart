@@ -83,11 +83,15 @@ class _HelpFabState extends State<HelpFab> {
 
           () {
         isOpen ? collapseFab() : expandFab();
-        BaseUtil.openDialog(
-            hapticVibrate: true,
-            addToScreenStack: true,
-            content: JourneyOnboardingDialog(),
-            isBarrierDismissable: false);
+        // BaseUtil.openDialog(
+        //     hapticVibrate: true,
+        //     addToScreenStack: true,
+        //     content: JourneyOnboardingDialog(),
+        //     isBarrierDismissable: false);
+        AppState.delegate.appState.currentAction = PageAction(
+            page: InfoStoriesViewPageConfig,
+            widget: InfoStories(topic: 'onboarding'),
+            state: PageState.addWidget);
       },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,

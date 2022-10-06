@@ -229,7 +229,7 @@ class TicketsView extends StatelessWidget {
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 Text(
-                  "Total tickets: ${model.tambolaBoardViews.length}",
+                  "Total tickets: ${model.userWeeklyBoards.length}",
                   style: TextStyles.rajdhaniSB.body3,
                 ),
               ],
