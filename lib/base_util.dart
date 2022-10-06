@@ -341,7 +341,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  openDepositOptionsModalSheet({int amount, bool isSkipMl}) {
+  openDepositOptionsModalSheet({int amount, bool isSkipMl = false}) {
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,

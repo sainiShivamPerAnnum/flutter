@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view/story_view.dart';
 
@@ -22,22 +25,39 @@ class InfoStories extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return Scaffold(
-            body: Container(
-          decoration: model.backgroundDecoration,
-          child: model.state == ViewState.Busy
-              ? Center(
-                  child: FullScreenLoader(),
-                )
-              : StoryView(
-                  inline: false,
-                  storyItems: model.storyItems,
-                  controller: model.controller,
-                  repeat: false,
-                  onStoryShow: (s) {},
-                  onComplete: () {
-                    AppState.backButtonDispatcher.didPopRoute();
-                  },
-                  onVerticalSwipeComplete: (direction) {}),
+            body: Stack(
+          children: [
+            Container(
+              decoration: model.backgroundDecoration,
+              child: model.state == ViewState.Busy
+                  ? Center(
+                      child: FullScreenLoader(),
+                    )
+                  : StoryView(
+                      inline: false,
+                      storyItems: model.storyItems,
+                      controller: model.controller,
+                      repeat: false,
+                      onStoryShow: (s) {},
+                      onComplete: () {
+                        // AppState.backButtonDispatcher.didPopRoute();
+                      },
+                      onVerticalSwipeComplete: (direction) {}),
+            ),
+            Positioned(
+              right: SizeConfig.pageHorizontalMargins / 2,
+              top: kToolbarHeight,
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+              ),
+            )
+          ],
         ));
       },
     );

@@ -13,6 +13,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -61,6 +62,12 @@ class TambolaHomeView extends StatelessWidget {
               showHelpButton: false,
               title: "Tambola",
               backgroundColor: UiConstants.kArowButtonBackgroundColor,
+            ),
+            floatingActionButton: Container(
+              margin: EdgeInsets.only(
+                  left: SizeConfig.pageHorizontalMargins,
+                  bottom: SizeConfig.padding80),
+              child: HelpFab(),
             ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
@@ -137,7 +144,7 @@ class TambolaHomeView extends StatelessWidget {
                   child: ButTicketsComponent(
                     model: model,
                   ),
-                )
+                ),
               ],
             ),
           ),
