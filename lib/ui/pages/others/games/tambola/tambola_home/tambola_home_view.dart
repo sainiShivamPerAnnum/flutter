@@ -13,7 +13,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
@@ -693,13 +695,54 @@ class ButTicketsComponent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Get a Tambola ticket",
-            style: TextStyles.rajdhaniSB.body1,
-          ),
-          Text(
-            "Get 1 Ticket for every Rs.500 saved.",
-            style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Text(
+                  "Get a Tambola ticket",
+                  textAlign: TextAlign.left,
+                  style: TextStyles.rajdhaniSB.body1,
+                ),
+                Text(
+                  "Get 1 Ticket for every ₹500 saved",
+                  style: TextStyles.sourceSans.body4
+                      .colour(UiConstants.kTextColor2),
+                ),
+              ]),
+              Column(children: [
+                IconButton(
+                  onPressed: () {
+                    // AppState.backButtonDispatcher.didPopRoute();
+                    Navigator.of(AppState.delegate.navigatorKey.currentContext)
+                        .push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, anotherAnimation) {
+                          return InfoStories(
+                            topic: 'tambola',
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 500),
+                        transitionsBuilder:
+                            (context, animation, anotherAnimation, child) {
+                          animation = CurvedAnimation(
+                              curve: Curves.easeInCubic, parent: animation);
+                          return Align(
+                            child: SizeTransition(
+                              sizeFactor: animation,
+                              child: child,
+                              axisAlignment: 0.0,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.question_mark_sharp,
+                      color: Colors.white, size: SizeConfig.avatarRadius),
+                )
+              ])
+            ],
           ),
           SizedBox(
             height: SizeConfig.padding16,

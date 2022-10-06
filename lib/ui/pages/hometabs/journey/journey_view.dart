@@ -62,7 +62,9 @@ class _JourneyViewState extends State<JourneyView>
 
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: HelpFab(),
+          floatingActionButton: HelpFab(
+            topic: 'onboarding',
+          ),
           body: model.isLoading && model.pages == null
               ? Container(
                   width: SizeConfig.screenWidth,

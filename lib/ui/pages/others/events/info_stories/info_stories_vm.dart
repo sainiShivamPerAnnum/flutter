@@ -26,7 +26,7 @@ class InfoStoriesViewModel extends BaseViewModel {
   List<StoryItem> storyItems;
 
   _loadAssetsAndData(String topic) async {
-    final response = await _getterRepo.getStory(topic: 'onboarding');
+    final response = await _getterRepo.getStory(topic: topic);
     if (response.isSuccess()) {
       storyItemData = response.model;
       storyItems = [];

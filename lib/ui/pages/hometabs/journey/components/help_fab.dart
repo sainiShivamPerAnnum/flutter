@@ -14,7 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HelpFab extends StatefulWidget {
-  const HelpFab({Key key}) : super(key: key);
+  const HelpFab({Key key, this.topic}) : super(key: key);
+  final String topic;
 
   @override
   State<HelpFab> createState() => _HelpFabState();
@@ -89,7 +90,7 @@ class _HelpFabState extends State<HelpFab> {
           PageRouteBuilder(
             pageBuilder: (context, animation, anotherAnimation) {
               return InfoStories(
-                topic: "onboarding",
+                topic: widget.topic,
               );
             },
             transitionDuration: Duration(milliseconds: 500),
