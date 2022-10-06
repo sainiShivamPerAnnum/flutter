@@ -6,7 +6,11 @@ class FelloRichText extends RichText {
   final String paragraph;
 
   FelloRichText({Key key, @required this.paragraph})
-      : super(key: key, text: renderedWidget(paragraph));
+      : super(
+          key: key,
+          text: renderedWidget(paragraph),
+          textAlign: TextAlign.center,
+        );
 
   static TextSpan renderedWidget(String paragraph) {
     try {

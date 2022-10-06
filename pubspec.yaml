@@ -76,7 +76,7 @@ dependencies:
   story_view:
     git:
       url: https://github.com/KumarArab/story_view
-      ref: b2bd8af
+      ref: 0c9c113
 
 
   isar: ^2.4.0
