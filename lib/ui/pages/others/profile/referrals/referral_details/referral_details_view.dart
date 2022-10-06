@@ -323,7 +323,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Text(
                                       model.referalList == null
                                           ? '-'
-                                          : "${model.referalList.length} referals",
+                                          : "${model.referalList.length} referrals",
                                       style: TextStyles.body3
                                           .colour(UiConstants.kTextColor2)),
                                 ),
@@ -343,7 +343,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   FullScreenLoader(),
                                   SizedBox(height: SizeConfig.padding20),
                                   Text(
-                                    "Fetching your referals. Please wait!",
+                                    "Fetching your referals. Please wait..",
                                     style: TextStyles.sourceSans.body2
                                         .colour(Colors.white),
                                   ),
@@ -891,32 +891,32 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                       title: widget.locale.refstep1,
                       leadingAsset: Assets.paperClip,
                     ),
+                    // InfoTile(
+                    //   title:
+                    //       "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
+                    //   leadingAsset: Assets.wmtsaveMoney,
+                    // ),
                     InfoTile(
                       title:
-                          "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
-                      leadingAsset: Assets.wmtsaveMoney,
-                    ),
-                    InfoTile(
-                      title:
-                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you receive a new Golden Ticket.",
+                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} Fello tokens.",
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),
-                    InfoTile(
-                      title:
-                          "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
-                      leadingAsset: Assets.wmtShare,
-                    ),
-                    SizedBox(height: SizeConfig.padding8),
-                    Center(
-                      child: Text(
-                        "You can win upto ₹150 and 600 Fello tokens from each referral!",
-                        style: TextStyles.body3.bold.colour(Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    // InfoTile(
+                    //   title:
+                    //       "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
+                    //   leadingAsset: Assets.wmtShare,
+                    // ),
+                    // SizedBox(height: SizeConfig.padding8),
+                    // Center(
+                    //   child: Text(
+                    //     "You can win upto ₹150 and 600 Fello tokens from each referral!",
+                    //     style: TextStyles.body3.bold.colour(Colors.white),
+                    //     textAlign: TextAlign.center,
+                    //   ),
+                    // ),
                     SizedBox(
-                      height: SizeConfig.padding34,
+                      height: SizeConfig.screenWidth * 0.3,
                     ),
                   ],
                 )

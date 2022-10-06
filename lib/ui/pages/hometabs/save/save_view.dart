@@ -165,13 +165,13 @@ class AppFooter extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Made with love ',
+                    text: 'Made with ',
                     style: TextStyles.body4.colour(UiConstants.kTextColor2),
                   ),
                   WidgetSpan(
                       child: Icon(
-                    Icons.heart_broken,
-                    color: Colors.red,
+                    Icons.favorite,
+                    color: UiConstants.kTextColor2,
                     size: SizeConfig.iconSize2,
                   )),
                   TextSpan(

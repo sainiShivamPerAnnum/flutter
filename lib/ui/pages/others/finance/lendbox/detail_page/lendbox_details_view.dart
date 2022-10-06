@@ -66,7 +66,7 @@ class LendboxDetailsView extends StatelessWidget {
                           children: [
                             LBoxAssetCard(),
                             InfoComponent3(
-                              mainTitle: "What is Felllo Flo?",
+                              mainTitle: "What is Fello Flo?",
                               subTitle:
                                   "Fello Flo is an RBI regulated peer to peer lending asset offered in partnership with Lendbox-an RBI regulated P2P NBFC. The money invested is lent to high credit worthy borrowers for better returns with minimum risk.",
                               secondaryTitle: "Why to invest?",
