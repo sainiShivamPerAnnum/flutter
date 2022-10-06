@@ -68,10 +68,10 @@ class LendboxDetailsView extends StatelessWidget {
                             InfoComponent3(
                               mainTitle: "What is Felllo Flo?",
                               subTitle:
-                                  "Fello Flo is a P2P lending product powered by Lendbox. Start saving and investing in Fello Flo and earn 10% stable returns!",
+                                  "Fello Flo is an RBI regulated peer to peer lending asset offered in partnership with Lendbox-an RBI regulated P2P NBFC. The money invested is lent to high credit worthy borrowers for better returns with minimum risk.",
                               secondaryTitle: "Why to invest?",
-                              boxAssets: model.boxAssets,
-                              boxTitlles: model.boxTitlles,
+                              boxAssets: model.boxAssetsFlo,
+                              boxTitlles: model.boxTitllesFlo,
                               isBoxOpen: model.getQuantity(model.userFundWallet,
                                               InvestmentType.LENDBOXP2P) ==
                                           0 &&

@@ -23,22 +23,33 @@ class TambolaRepo extends BaseRepo {
       final token = await getBearerToken();
 
       // cache till end of week only
-      final ttl = DateHelper.timeToWeekendInMinutes();
-      return await _cacheService.cachedApi(
-          CacheKeys.TAMBOLA_TICKETS,
-          ttl,
-          () => APIService.instance.getData(
-                ApiPath.tambolaTickets(uid),
-                token: token,
-                cBaseUrl: _baseUrl,
-              ), (dynamic response) {
-        final responseData = response["data"]['tickets'];
-        logger.d('tambola repo $responseData');
-        return ApiResponse<List<TambolaModel>>(
-          model: TambolaModel.helper.fromMapArray(responseData),
-          code: 200,
-        );
-      });
+      // final ttl = DateHelper.timeToWeekendInMinutes();
+      // return await _cacheService.cachedApi(
+      //     CacheKeys.TAMBOLA_TICKETS,
+      //     ttl,
+      //     () => APIService.instance.getData(
+      //           ApiPath.tambolaTickets(uid),
+      //           token: token,
+      //           cBaseUrl: _baseUrl,
+      //         ), (dynamic response) {
+      //   final responseData = response["data"]['tickets'];
+      //   logger.d('tambola repo $responseData');
+      //   return ApiResponse<List<TambolaModel>>(
+      //     model: TambolaModel.helper.fromMapArray(responseData),
+      //     code: 200,
+      //   );
+      // });
+
+      final response = await APIService.instance.getData(
+        ApiPath.tambolaTickets(uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+      final responseData = response["data"]["tickets"];
+      return ApiResponse<List<TambolaModel>>(
+        model: TambolaModel.helper.fromMapArray(responseData),
+        code: 200,
+      );
     } catch (e) {
       logger.e('get all tambola tickets $e');
       return ApiResponse.withError(

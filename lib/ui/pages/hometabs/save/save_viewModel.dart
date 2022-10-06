@@ -67,15 +67,27 @@ class SaveViewModel extends BaseViewModel {
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
 
-  List<String> boxAssets = [
+  List<String> boxAssetsGold = [
     "assets/svg/single_gold_bar_asset.svg",
     Assets.singleCoinAsset,
-    Assets.singleTmbolaTicket,
+    Assets.goldSecure,
   ];
-  List<String> boxTitlles = [
-    'Assured 100% rewards',
-    'Fello’s own product',
-    'Play games with tokens earned',
+  List<String> boxTitllesGold = [
+    'Safe mode of saving',
+    'Grows with the price of gold',
+    'Pure 99.9% BIS Hallmark',
+  ];
+
+  List<String> boxAssetsFlo = [
+    Assets.star,
+    Assets.singleCoinAsset,
+    Assets.flatIsland,
+  ];
+
+  List<String> boxTitllesFlo = [
+    '10% returns per annum',
+    'Interest credited everyday',
+    '48 hour lock-in period',
   ];
 
   List<EventModel> get ongoingEvents => this._ongoingEvents;

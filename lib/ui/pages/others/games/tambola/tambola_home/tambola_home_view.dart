@@ -229,7 +229,7 @@ class TicketsView extends StatelessWidget {
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 Text(
-                  "Total tickets: ${model.tambolaBoardViews.length}",
+                  "Total tickets: ${model.userWeeklyBoards.length}",
                   style: TextStyles.rajdhaniSB.body3,
                 ),
               ],
@@ -292,7 +292,7 @@ class TicketsView extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    "View All",
+                    "View All (${model.userWeeklyBoards.length})",
                     style: TextStyles.sourceSansSB.body2
                         .colour(UiConstants.kTabBorderColor),
                   ),

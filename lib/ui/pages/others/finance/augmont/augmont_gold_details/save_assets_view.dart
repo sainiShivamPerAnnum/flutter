@@ -71,10 +71,10 @@ class SaveAssetView extends StatelessWidget {
                             InfoComponent3(
                               mainTitle: "What is Digital Gold?",
                               subTitle:
-                                  "Fello Flo is a P2P lending product powered by Lendbox. Start saving and investing in Fello Flo and earn 10% stable returns!",
+                                  "Digital gold is the new way of saving in gold online. For every gram of gold you buy, actual 24k gold is stored in a locker backed by Augmont Gold and IDBI trust.",
                               secondaryTitle: "Why to invest?",
-                              boxAssets: model.boxAssets,
-                              boxTitlles: model.boxTitlles,
+                              boxAssets: model.boxAssetsGold,
+                              boxTitlles: model.boxTitllesGold,
                               isBoxOpen: model.getQuantity(model.userFundWallet,
                                           InvestmentType.AUGGOLD99) ==
                                       0

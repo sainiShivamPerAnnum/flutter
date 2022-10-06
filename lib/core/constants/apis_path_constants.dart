@@ -93,6 +93,7 @@ class ApiPath {
   /// Subscription Apis
   static String getTransaction(String uid) => "/user/$uid/transactions";
   static const String kPromos = "/promos";
+  static const String kStory = "/story";
 
   //Game Apis
   static const String getGames = "/games";
