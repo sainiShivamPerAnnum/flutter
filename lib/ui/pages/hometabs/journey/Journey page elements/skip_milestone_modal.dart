@@ -188,6 +188,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                           .didPopRoute();
                                       return BaseUtil()
                                           .openDepositOptionsModalSheet(
+                                        isSkipMl: true,
                                         amount:
                                             widget.milestone.skipCost['amt'],
                                       );
