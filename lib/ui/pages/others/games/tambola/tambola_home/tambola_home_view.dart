@@ -1158,7 +1158,7 @@ class TambolaPrize extends StatelessWidget {
                 child: Text(
                   BaseRemoteConfig.remoteConfig.getString(
                           BaseRemoteConfig.GAME_TAMBOLA_ANNOUNCEMENT) ??
-                      "Stand to win prizes every week. Winners are arrounced every Sunday at midnight",
+                      "Winners are announced every Sunday at midnight, Complete a Full House and win 1Crore!",
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body4.colour(
                     Colors.white.withOpacity(0.5),
@@ -1215,7 +1215,7 @@ class TambolaPrize extends StatelessWidget {
                                           .colour(Colors.white),
                                     ),
                                     Text(
-                                      "Win full house to get",
+                                      "Complete ${model.tPrizes.prizesA[index].displayName} to get",
                                       style: TextStyles.sourceSans.body4.colour(
                                           Colors.white.withOpacity(0.5)),
                                     )
