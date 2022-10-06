@@ -347,7 +347,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       if (avatarRemoteMlIndex <= l.end && avatarRemoteMlIndex >= l.start)
         updatedLevel = l.level;
     });
-
+    print("Existing level : $existingLevel || Updated Level: $updatedLevel");
     return (existingLevel != updatedLevel);
   }
 

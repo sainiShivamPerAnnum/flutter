@@ -417,6 +417,9 @@ class ReferralDetailsView extends StatelessWidget {
                               curve: Curves.ease);
                         },
                       ),
+                      SizedBox(
+                        height: SizeConfig.padding40,
+                      )
                     ],
                   ),
                 ),

@@ -172,6 +172,7 @@ class LevelUpAnimation extends StatelessWidget {
                     child: Lottie.asset(
                       Assets.levelUpLottie,
                       width: SizeConfig.screenWidth,
+                      fit: BoxFit.fitWidth,
                       controller: jModel.levelUpLottieController,
                       onLoaded: (composition) {
                         jModel.levelUpLottieController

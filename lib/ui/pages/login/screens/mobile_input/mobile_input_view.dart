@@ -151,7 +151,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
             ),
 
             Spacer(),
-            if (!isKeyboardOpen)
+            if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
               Column(
                 children: [
                   Row(
