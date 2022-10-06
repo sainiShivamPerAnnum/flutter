@@ -62,10 +62,13 @@ class Constants {
   static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
 
   static const int CORNERS_COMPLETED = 0;
-  static const int ROW_ONE_COMPLETED = 1;
-  static const int ROW_TWO_COMPLETED = 2;
-  static const int ROW_THREE_COMPLETED = 3;
-  static const int FULL_HOUSE_COMPLETED = 4;
+  // static const int ROW_ONE_COMPLETED = 1;
+  // static const int ROW_TWO_COMPLETED = 2;
+  // static const int ROW_THREE_COMPLETED = 3;
+  // static const int FULL_HOUSE_COMPLETED = 4;
+  static const int ONE_ROW_COMPLETED = 1;
+  static const int TWO_ROWS_COMPLETED = 2;
+  static const int FULL_HOUSE_COMPLETED = 3;
 
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";

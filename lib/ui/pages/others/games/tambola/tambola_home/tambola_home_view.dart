@@ -73,12 +73,9 @@ class TambolaHomeView extends StatelessWidget {
                       ),
                       //Win Announcement card
                       if (model.showWinCard) TambolaResultCard(),
-                      //How to play
-                      InfoComponent2(
-                          heading: model.boxHeading,
-                          assetList: model.boxAssets,
-                          titleList: model.boxTitlles,
-                          height: SizeConfig.screenWidth * 0.35),
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.075,
+                      ),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
                           ? model.userWeeklyBoards != null
@@ -103,7 +100,6 @@ class TambolaHomeView extends StatelessWidget {
                                   ),
                                 )
                           : SizedBox.shrink(),
-                      SizedBox(height: SizeConfig.padding20),
                       (Platform.isIOS)
                           ? Text(
                               'Apple is not associated with Fello Tambola',
@@ -113,6 +109,12 @@ class TambolaHomeView extends StatelessWidget {
                                   color: Colors.white),
                             )
                           : Container(),
+                      //How to play
+                      InfoComponent2(
+                          heading: model.boxHeading,
+                          assetList: model.boxAssets,
+                          titleList: model.boxTitlles,
+                          height: SizeConfig.screenWidth * 0.35),
 
                       //Tambola Prizes
                       TambolaPrize(
@@ -223,8 +225,12 @@ class TicketsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Your Best ticket",
+                  "Your Best tickets",
                   style: TextStyles.rajdhaniSB.body0,
+                ),
+                Text(
+                  "Total tickets: ${model.tambolaBoardViews.length}",
+                  style: TextStyles.rajdhaniSB.body3,
                 ),
               ],
             ),
