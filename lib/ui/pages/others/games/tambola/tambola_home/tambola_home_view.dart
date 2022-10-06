@@ -64,6 +64,12 @@ class TambolaHomeView extends StatelessWidget {
               title: "Tambola",
               backgroundColor: UiConstants.kArowButtonBackgroundColor,
             ),
+            floatingActionButton: Container(
+              margin: EdgeInsets.only(
+                  left: SizeConfig.pageHorizontalMargins,
+                  bottom: SizeConfig.padding80),
+              child: HelpFab(),
+            ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
               children: [
@@ -139,7 +145,7 @@ class TambolaHomeView extends StatelessWidget {
                   child: ButTicketsComponent(
                     model: model,
                   ),
-                )
+                ),
               ],
             ),
           ),
