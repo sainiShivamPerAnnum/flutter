@@ -23,7 +23,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   TextEditingController nameController, panController;
   bool inEditMode = true;
   bool isUpadtingKycDetails = false;
-  bool _hasDetails = true;
+  bool _hasDetails = false;
 
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();

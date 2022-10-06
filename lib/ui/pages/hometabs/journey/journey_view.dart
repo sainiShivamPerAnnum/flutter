@@ -289,14 +289,18 @@ class LevelBlurView extends StatelessWidget {
                           child: Container(
                             color: Colors.transparent,
                             height:
-                                jModel.pageHeight * (1 - levelData.breakpoint),
+                                jModel.pageHeight * (1 - levelData.breakpoint) +
+                                    jModel.pageHeight *
+                                        (jModel.pageCount - levelData.pageEnd),
                             width: jModel.pageWidth,
                             alignment: Alignment.bottomCenter,
                           ),
                         ),
                       ),
                       Positioned(
-                        top: jModel.pageHeight * (1 - levelData.breakpoint) -
+                        top: jModel.pageHeight * (1 - levelData.breakpoint) +
+                            jModel.pageHeight *
+                                (jModel.pageCount - levelData.pageEnd) -
                             SizeConfig.avatarRadius,
                         child: Container(
                           width: jModel.pageWidth,
