@@ -292,7 +292,7 @@ class TicketsView extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    "View All",
+                    "View All (${model.userWeeklyBoards.length})",
                     style: TextStyles.sourceSansSB.body2
                         .colour(UiConstants.kTabBorderColor),
                   ),

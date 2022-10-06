@@ -151,50 +151,64 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
             Spacer(),
             if (!isKeyboardOpen)
-              Column(
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/svg/dual_star.svg",
-                        width: SizeConfig.padding20,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding14,
-                      ),
-                      FelloRichText(
-                          paragraph:
-                              'Join over *5 Lakh* users in making _finance fun!_')
-                    ],
+              Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: SizeConfig.pageHorizontalMargins),
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding16,
+                      horizontal: SizeConfig.padding20),
+                  decoration: BoxDecoration(
+                    color: UiConstants.kBackgroundColor3,
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.roundness12)),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                        SizeConfig.padding16, SizeConfig.padding10, 0),
-                    child: RichText(
-                      text: new TextSpan(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          new TextSpan(
-                            text: 'By continuing, you agree to our ',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor2),
+                          SvgPicture.asset(
+                            "assets/svg/dual_star.svg",
+                            width: SizeConfig.padding20,
                           ),
-                          new TextSpan(
-                            text: 'Terms of Service',
-                            style: TextStyles.sourceSans.body3.underline
-                                .colour(UiConstants.kTextColor),
-                            recognizer: new TapGestureRecognizer()
-                              ..onTap = () {
-                                model.onTermsAndConditionsClicked();
-                              },
+                          SizedBox(
+                            width: SizeConfig.padding14,
                           ),
+                          FelloRichText(
+                              paragraph:
+                                  'Join over *5 Lakh* users in making finance fun!')
                         ],
                       ),
+                    ],
+                  )),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                      SizeConfig.padding16, SizeConfig.padding10, 0),
+                  child: RichText(
+                    text: new TextSpan(
+                      children: [
+                        new TextSpan(
+                          text: 'By continuing, you agree to our ',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        new TextSpan(
+                          text: 'Terms of Service',
+                          style: TextStyles.sourceSans.body3.underline
+                              .colour(UiConstants.kTextColor),
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () {
+                              model.onTermsAndConditionsClicked();
+                            },
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-
+                ),
+              ],
+            ),
             SizedBox(
               height: SizeConfig.screenWidth * 0.1 +
                   MediaQuery.of(context).viewInsets.bottom,

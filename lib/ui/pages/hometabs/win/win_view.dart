@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -213,7 +214,8 @@ class Win extends StatelessWidget {
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                              text: 'Earn upto Rs.50 and',
+                                              text:
+                                                  'Earn upto ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and',
                                               style: TextStyles.sourceSans.body3
                                                   .colour(
                                                       UiConstants.kTextColor3)),
@@ -230,7 +232,7 @@ class Win extends StatelessWidget {
                                           )),
                                           TextSpan(
                                               text:
-                                                  '200 from every Golden Ticket. Win an iPad every month.',
+                                                  '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} from every Golden Ticket. Win an iPad every month.',
                                               style: TextStyles.sourceSans.body3
                                                   .colour(
                                                       UiConstants.kTextColor3)),

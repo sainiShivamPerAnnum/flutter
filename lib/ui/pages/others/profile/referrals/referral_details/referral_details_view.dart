@@ -147,8 +147,7 @@ class ReferralDetailsView extends StatelessWidget {
                                                     .REFERRAL_BONUS) +
                                             ' and ',
                                         style: TextStyles.sourceSans.body3
-                                            .colour(Color.fromARGB(
-                                                255, 71, 71, 168))),
+                                            .colour(UiConstants.kTextColor3)),
                                     WidgetSpan(
                                         child: Container(
                                       margin: EdgeInsets.symmetric(
