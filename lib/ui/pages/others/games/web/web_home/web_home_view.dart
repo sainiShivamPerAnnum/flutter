@@ -271,10 +271,10 @@ class WebHomeView extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding16),
                                   child: Text(
-                                    'Swing your wicket, throw fast pitches, and win upto ? Rs. 25,000 in one of our many free, online games!',
+                                    model.currentGameModel.description,
                                     style: TextStyles.sourceSans.body3
                                         .colour(Colors.grey.shade600),
-                                    maxLines: 2,
+                                    maxLines: 3,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -341,7 +341,7 @@ class RechargeOptions extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
           child: Text(
-            'Recharge Options',
+            'Get More Tokens',
             style: TextStyles.sourceSansSB.title5,
           ),
         ),

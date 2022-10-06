@@ -165,27 +165,14 @@ class BankDetailsView extends StatelessWidget {
                           SizedBox(
                             width: SizeConfig.padding14,
                           ),
-                          RichText(
-                            overflow: TextOverflow.ellipsis,
-                            text: new TextSpan(
-                              children: [
-                                new TextSpan(
-                                  text: 'Join over  ',
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                  'This account will be used for crediting your \n withdrawals',
                                   style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                                new TextSpan(
-                                  text: '5 lakh',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor),
-                                ),
-                                new TextSpan(
-                                  text: '  users in making finance fun!',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                              ],
-                            ),
+                                      .colour(UiConstants.kTextColor2))
+                            ],
                           ),
                         ],
                       ),

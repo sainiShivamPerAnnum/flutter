@@ -17,6 +17,7 @@ class InfoStoriesViewModel extends BaseViewModel {
   List<StoryItem> storyItems;
 
   init(String topic) {
+    storyItems = [];
     storyItems = [
       StoryItem.text(
         title: "This is a story view",

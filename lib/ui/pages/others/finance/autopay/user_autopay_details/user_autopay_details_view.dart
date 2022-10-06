@@ -53,7 +53,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: Text(
-              'Autopay Details',
+              'Autosave Details',
               style: TextStyles.rajdhaniSB.title4,
             ),
             centerTitle: false,

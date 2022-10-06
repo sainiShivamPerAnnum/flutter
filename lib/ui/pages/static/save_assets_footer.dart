@@ -14,13 +14,6 @@ class SaveAssetsFooter extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
       child: Column(
         children: [
-          Text(
-            '100% SAFE AND SECURED',
-            style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
-          ),
-          SizedBox(
-            height: SizeConfig.padding20,
-          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
             child: IntrinsicHeight(

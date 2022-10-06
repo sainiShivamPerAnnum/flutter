@@ -217,6 +217,8 @@ class Ticket extends StatelessWidget {
   }
 }
 
+/** 
+ * 
 class Odds extends StatelessWidget {
   final DailyPick _digitsObj;
   final TambolaBoard _board;
@@ -389,3 +391,4 @@ class Odds extends StatelessWidget {
     );
   }
 }
+**/

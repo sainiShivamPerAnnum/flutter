@@ -106,10 +106,9 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   List<String> tabList = [
     "All",
-    "Top Row",
-    "Middle Row",
-    "Bottom Row",
     "Corners",
+    "One Row",
+    "Two Rows",
     "Full House",
   ];
 
@@ -439,7 +438,7 @@ class TambolaHomeViewModel extends BaseViewModel {
         weeklyDigits.toList().isEmpty)
       _calledDigits = [];
     else {
-      _calledDigits = weeklyDigits.getPicksPostDate(board.generatedDayCode);
+      _calledDigits = weeklyDigits.getPicksPostDate(DateTime.monday);
     }
 
     return Ticket(
@@ -453,7 +452,7 @@ class TambolaHomeViewModel extends BaseViewModel {
       return new List<TambolaBoard>.filled(5, null);
     }
     _bestTambolaBoards = [];
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 4; i++) {
       _bestTambolaBoards.add(userWeeklyBoards[0]);
     }
 
@@ -466,27 +465,22 @@ class TambolaHomeViewModel extends BaseViewModel {
       if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
       if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
       if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
-      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
 
-      if (_bestTambolaBoards[0].getRowOdds(0, weeklyDigits.toList()) >
-          board.getRowOdds(0, weeklyDigits.toList())) {
+      if (_bestTambolaBoards[0].getCornerOdds(weeklyDigits.toList()) >
+          board.getCornerOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[0] = board;
       }
-      if (_bestTambolaBoards[1].getRowOdds(1, weeklyDigits.toList()) >
-          board.getRowOdds(1, weeklyDigits.toList())) {
+      if (_bestTambolaBoards[1].getOneRowOdds(weeklyDigits.toList()) >
+          board.getOneRowOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[1] = board;
       }
-      if (_bestTambolaBoards[2].getRowOdds(2, weeklyDigits.toList()) >
-          board.getRowOdds(2, weeklyDigits.toList())) {
+      if (_bestTambolaBoards[2].getTwoRowOdds(weeklyDigits.toList()) >
+          board.getTwoRowOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[2] = board;
       }
-      if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits.toList()) >
-          board.getCornerOdds(weeklyDigits.toList())) {
-        _bestTambolaBoards[3] = board;
-      }
-      if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits.toList()) >
+      if (_bestTambolaBoards[3].getFullHouseOdds(weeklyDigits.toList()) >
           board.getFullHouseOdds(weeklyDigits.toList())) {
-        _bestTambolaBoards[4] = board;
+        _bestTambolaBoards[3] = board;
       }
     });
 
@@ -502,43 +496,30 @@ class TambolaHomeViewModel extends BaseViewModel {
       return;
     }
 
-    // final show = PreferenceHelper.getBool(
-    //   PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
-    //   def: true,
-    // );
-    // if (show == false) return;
-
     userWeeklyBoards.forEach((boardObj) {
-      if (boardObj.getCornerOdds(
-              weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+      if (boardObj
+              .getCornerOdds(weeklyDigits.getPicksPostDate(DateTime.monday)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.CORNERS_COMPLETED;
       }
-      if (boardObj.getRowOdds(
-              0, weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+      if (boardObj
+              .getOneRowOdds(weeklyDigits.getPicksPostDate(DateTime.monday)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.ROW_ONE_COMPLETED;
+              Constants.ONE_ROW_COMPLETED;
       }
-      if (boardObj.getRowOdds(
-              1, weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+      if (boardObj
+              .getTwoRowOdds(weeklyDigits.getPicksPostDate(DateTime.monday)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.ROW_TWO_COMPLETED;
-      }
-      if (boardObj.getRowOdds(
-              2, weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
-          0) {
-        if (boardObj.getTicketNumber() != 'NA')
-          ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.ROW_THREE_COMPLETED;
+              Constants.TWO_ROWS_COMPLETED;
       }
       if (boardObj.getFullHouseOdds(
-              weeklyDigits.getPicksPostDate(boardObj.generatedDayCode)) ==
+              weeklyDigits.getPicksPostDate(DateTime.monday)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
@@ -546,12 +527,13 @@ class TambolaHomeViewModel extends BaseViewModel {
       }
     });
 
-    double totalInvestedPrinciple =
-        _userService.userFundWallet.augGoldPrinciple;
-    isEligible = (totalInvestedPrinciple >=
-        BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
+    // double totalInvestedPrinciple =
+    //     _userService.userFundWallet.augGoldPrinciple;
+    // isEligible = (totalInvestedPrinciple >=
+    //     BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+    //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
 
+    isEligible = true;
     _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     showWinCard = true;

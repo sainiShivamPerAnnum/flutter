@@ -123,8 +123,8 @@ class PicksCardView extends StatelessWidget {
                         ),
                         Text(
                           model.isShowingAllPicks
-                              ? "Next draw at 6 pm"
-                              : "Drawn at 6 PM",
+                              ? "Drawn everyday at 6pm"
+                              : "Drawn at 6pm",
                           style: TextStyles.sourceSans.body4
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -177,9 +177,12 @@ class PicksCardView extends StatelessWidget {
                                     model.dailyPicksCount, (index) => 0),
                           ))
                     : model.weeklyDigits == null
-                        ? FullScreenLoader(
-                            size: SizeConfig.screenWidth * 0.3,
-                          )
+                        ? Center(
+                            child: Text(
+                                'This week\'s picks are currently unavailable',
+                                style: TextStyles.sourceSansSB.body2.colour(
+                                    UiConstants
+                                        .kWinnerPlayerLightPrimaryColor)))
                         : WeeklyPicks(
                             weeklyDraws: model.weeklyDigits,
                           ),

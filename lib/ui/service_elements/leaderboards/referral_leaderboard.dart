@@ -61,7 +61,7 @@ class ReferralLeaderboard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Top Referers",
+                          "Top Referrers",
                           style: TextStyles.rajdhaniSB.body0.colour(
                               UiConstants.kSecondaryLeaderBoardTextColor),
                         ),
@@ -182,7 +182,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "Referals",
+                                            "Referrals",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(
                                                     UiConstants.kTextColor2),

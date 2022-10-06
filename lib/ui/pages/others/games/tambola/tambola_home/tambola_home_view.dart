@@ -73,12 +73,9 @@ class TambolaHomeView extends StatelessWidget {
                       ),
                       //Win Announcement card
                       if (model.showWinCard) TambolaResultCard(),
-                      //How to play
-                      InfoComponent2(
-                          heading: model.boxHeading,
-                          assetList: model.boxAssets,
-                          titleList: model.boxTitlles,
-                          height: SizeConfig.screenWidth * 0.35),
+                      SizedBox(
+                        height: SizeConfig.screenWidth * 0.075,
+                      ),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
                           ? model.userWeeklyBoards != null
@@ -95,7 +92,7 @@ class TambolaHomeView extends StatelessWidget {
                                       FullScreenLoader(),
                                       SizedBox(height: SizeConfig.padding20),
                                       Text(
-                                        "Fetching your referals. Please wait!",
+                                        "Fetching your tambola tickets..",
                                         style: TextStyles.sourceSans.body2
                                             .colour(Colors.white),
                                       ),
@@ -103,7 +100,6 @@ class TambolaHomeView extends StatelessWidget {
                                   ),
                                 )
                           : SizedBox.shrink(),
-                      SizedBox(height: SizeConfig.padding20),
                       (Platform.isIOS)
                           ? Text(
                               'Apple is not associated with Fello Tambola',
@@ -113,6 +109,12 @@ class TambolaHomeView extends StatelessWidget {
                                   color: Colors.white),
                             )
                           : Container(),
+                      //How to play
+                      InfoComponent2(
+                          heading: model.boxHeading,
+                          assetList: model.boxAssets,
+                          titleList: model.boxTitlles,
+                          height: SizeConfig.screenWidth * 0.35),
 
                       //Tambola Prizes
                       TambolaPrize(
@@ -141,9 +143,6 @@ class TambolaHomeView extends StatelessWidget {
       },
     );
   }
-
-  //Tambol tickets builder
-
 }
 
 class TicketsView extends StatelessWidget {
@@ -226,8 +225,12 @@ class TicketsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Your Best ticket",
+                  "Your Best tickets",
                   style: TextStyles.rajdhaniSB.body0,
+                ),
+                Text(
+                  "Total tickets: ${model.tambolaBoardViews.length}",
+                  style: TextStyles.rajdhaniSB.body3,
                 ),
               ],
             ),
@@ -359,11 +362,11 @@ class TambolaResultCard extends StatelessWidget {
           padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
           child: ListTile(
             title: Text(
-              "Results are Out",
+              "Tambola results are Out",
               style: TextStyles.rajdhaniB.title3,
             ),
             subtitle: Text(
-              "Tap to check if you are lucky",
+              "Find out if your tickets won",
               style: TextStyles.sourceSans.body2,
             ),
             trailing:
@@ -407,6 +410,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
 
   @override
   Widget build(BuildContext context) {
+    List<TambolaBoard> _bestBoards = widget.model.refreshBestBoards();
     return DefaultTabController(
         length: widget.model.tabList.length,
         child: Column(
@@ -464,58 +468,63 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                     model: widget.model,
                     showIndicator: widget.showIndicatorForAll,
                   ),
-
-                  //Top row
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length > 0
-                      ? Odds(
-                          widget.model.weeklyDigits,
-                          widget.model.userWeeklyBoards[0],
-                          widget.model.refreshBestBoards(),
-                          true,
-                          0)
-                      : NoTicketWidget(),
-                  //Middle row
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length > 1
-                      ? Odds(
-                          widget.model.weeklyDigits,
-                          widget.model.userWeeklyBoards[1],
-                          widget.model.refreshBestBoards(),
-                          true,
-                          1)
-                      : NoTicketWidget(),
-                  //Botom row
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length > 2
-                      ? Odds(
-                          widget.model.weeklyDigits,
-                          widget.model.userWeeklyBoards[2],
-                          widget.model.refreshBestBoards(),
-                          true,
-                          2)
-                      : NoTicketWidget(),
-
                   //Corner
                   widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length > 3
-                      ? Odds(
-                          widget.model.weeklyDigits,
-                          widget.model.userWeeklyBoards[3],
-                          widget.model.refreshBestBoards(),
-                          true,
-                          3)
+                          widget.model.userWeeklyBoards.length >= 1
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards[0],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model.weeklyDigits.toList()),
+                          ],
+                        )
                       : NoTicketWidget(),
-
-                  //Full House
+                  //Top row
                   widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length > 4
-                      ? Odds(
-                          widget.model.weeklyDigits,
-                          widget.model.userWeeklyBoards[4],
-                          widget.model.refreshBestBoards(),
-                          true,
-                          4)
+                          widget.model.userWeeklyBoards.length >= 1
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards[1],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model.weeklyDigits.toList()),
+                          ],
+                        )
+                      : NoTicketWidget(),
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length >= 1
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards[2],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model.weeklyDigits.toList()),
+                          ],
+                        )
+                      : NoTicketWidget(),
+                  widget.model.userWeeklyBoards != null &&
+                          widget.model.userWeeklyBoards.length >= 1
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards[3],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model.weeklyDigits.toList()),
+                          ],
+                        )
                       : NoTicketWidget(),
                 ],
               ),
@@ -541,7 +550,7 @@ class NoTicketWidget extends StatelessWidget {
           height: SizeConfig.padding14,
         ),
         Text(
-          "Oops! looks like nothing to show here.",
+          "No eligible tickets",
           style: TextStyles.sourceSans.body4.colour(Colors.white),
         ),
       ],
@@ -620,6 +629,20 @@ class Odds extends StatelessWidget {
             _bestBoards[0],
             _digits);
     }
+  }
+
+  Widget _buildBestTicket(
+      BuildContext cx, TambolaBoard _bestBoard, List<int> _digits) {
+    return Column(
+      children: [
+        Ticket(
+            dailyPicks: _digitsObj,
+            bestBoards: _bestBoards,
+            board: _bestBoard,
+            showBestOdds: false,
+            calledDigits: _digits),
+      ],
+    );
   }
 
   Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
