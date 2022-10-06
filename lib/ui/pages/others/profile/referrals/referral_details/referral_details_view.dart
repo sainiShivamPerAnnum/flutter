@@ -175,39 +175,80 @@ class ReferralDetailsView extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    model.loadingRefCode ? '-' : model.refCode,
-                                    style: TextStyles.rajdhaniEB.title2
-                                        .colour(Colors.white),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding14,
-                                  ),
                                   Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding12,
+                                        vertical: SizeConfig.padding6),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          UiConstants.kSecondaryBackgroundColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              SizeConfig.roundness8)),
+                                    ),
                                     child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        IconButton(
-                                          onPressed: () {
+                                        Text(
+                                          model.loadingRefCode
+                                              ? '-'
+                                              : model.refCode,
+                                          style: TextStyles.rajdhaniEB.title2
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding24,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
                                             model.copyReferCode();
                                           },
-                                          icon: Icon(
-                                            Icons.copy,
-                                            color: UiConstants.kTabBorderColor,
-                                            size: SizeConfig.padding28,
+                                          child: Row(
+                                            children: [
+                                              Text("COPY",
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor3
+                                                          .withOpacity(0.7))),
+                                              SizedBox(
+                                                width: SizeConfig.padding6,
+                                              ),
+                                              Icon(
+                                                Icons.copy,
+                                                color: UiConstants.kTextColor3
+                                                    .withOpacity(0.7),
+                                                size: SizeConfig.padding24,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            if (!model.isShareAlreadyClicked)
-                                              model.shareLink();
-                                          },
-                                          icon: Icon(
-                                            Icons.share,
-                                            color: UiConstants.kTabBorderColor,
-                                            size: SizeConfig.padding28,
-                                          ),
-                                        )
                                       ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding20,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding12,
+                                        vertical: SizeConfig.padding12),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          UiConstants.kSecondaryBackgroundColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (model.isShareAlreadyClicked ==
+                                            false) model.shareLink();
+                                      },
+                                      child: Icon(
+                                        Icons.share,
+                                        color: UiConstants.kTabBorderColor,
+                                        size: SizeConfig.padding28,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -417,6 +458,9 @@ class ReferralDetailsView extends StatelessWidget {
                               curve: Curves.ease);
                         },
                       ),
+                      SizedBox(
+                        height: SizeConfig.padding90,
+                      )
                     ],
                   ),
                 ),

@@ -288,8 +288,17 @@ class WebHomeView extends StatelessWidget {
                           if (model.currentCoinValue >=
                               model.currentGameModel.playCost)
                             RechargeOptions(model: model),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: SizeConfig.padding16,
+                                  top: SizeConfig.pageHorizontalMargins +
+                                      SizeConfig.pageHorizontalMargins),
+                              child: Text(
+                                "Past Week Winners",
+                                style: TextStyles.rajdhaniSB.title3,
+                              )),
                           SizedBox(
-                            height: SizeConfig.padding80 * 2,
+                            height: SizeConfig.pageHorizontalMargins,
                           ),
                           PastWeekWinners(count: 5, model: model),
                           SizedBox(

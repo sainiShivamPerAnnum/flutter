@@ -86,10 +86,10 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ],
                 ),
               ),
-              if (model.pageController.page == 2)
-                CustomKeyboardSubmitButton(onSubmit: () {
-                  model.sipAmountNode.unfocus();
-                })
+              // if (model.pageController.page == 2)
+              // CustomKeyboardSubmitButton(onSubmit: () {
+              //   model.sipAmountNode.unfocus();
+              // })
             ],
           ),
         );
