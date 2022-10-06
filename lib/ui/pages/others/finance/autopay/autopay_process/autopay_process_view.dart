@@ -86,10 +86,24 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ],
                 ),
               ),
-              if (model.pageController.page == 2)
-                CustomKeyboardSubmitButton(onSubmit: () {
-                  model.sipAmountNode.unfocus();
-                })
+              FutureBuilder(
+                future: Future.value(true),
+                builder: (BuildContext context, AsyncSnapshot<void> snap) {
+                  //If we do not have data as we wait for the future to complete,
+                  //show any widget, eg. empty Container
+                  if (!snap.hasData) {
+                    return Container();
+                  }
+
+                  //Otherwise the future completed, so we can now safely use the controller.page
+                  if (model.pageController?.page == 2)
+                    return CustomKeyboardSubmitButton(onSubmit: () {
+                      model.sipAmountNode.unfocus();
+                    });
+                  else
+                    return SizedBox();
+                },
+              ),
             ],
           ),
         );
@@ -618,123 +632,126 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildCompleteUI(AutosaveProcessViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: SizeConfig.padding20,
-        ),
-        Image.asset(
-          Assets.completeCheck,
-          width: SizeConfig.screenWidth * 0.5333,
-          height: SizeConfig.screenWidth * 0.5333,
-        ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        Text(
-          "Congrats!",
-          style: TextStyles.rajdhaniSB.title1,
-        ),
-        SizedBox(
-          height: SizeConfig.padding8,
-        ),
-        Text(
-          "Your fello Autosave account has been\nsuccessfully setup!",
-          style: TextStyles.sourceSans.body2,
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-          width: double.infinity,
-          height: 157,
-          decoration: BoxDecoration(
-            color: Color(0xFF57A6B0).withOpacity(0.22),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            border: Border.all(
-              color: UiConstants.kTextColor.withOpacity(0.1),
-              width: SizeConfig.border1,
-            ),
+    return Container(
+      height: SizeConfig.screenHeight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding20,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: SizeConfig.padding40,
+          Image.asset(
+            Assets.completeCheck,
+            width: SizeConfig.screenWidth * 0.5333,
+            height: SizeConfig.screenWidth * 0.5333,
+          ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+          Text(
+            "Congrats!",
+            style: TextStyles.rajdhaniSB.title1,
+          ),
+          SizedBox(
+            height: SizeConfig.padding8,
+          ),
+          Text(
+            "Your fello Autosave account has been\nsuccessfully setup!",
+            style: TextStyles.sourceSans.body2,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding24,
+            ),
+            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding40),
+            width: double.infinity,
+            // height: 157,
+            decoration: BoxDecoration(
+              color: Color(0xFF57A6B0).withOpacity(0.22),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              border: Border.all(
+                color: UiConstants.kTextColor.withOpacity(0.1),
+                width: SizeConfig.border1,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // SizedBox(
-                  //   width: SizeConfig.padding40,
-                  // ),
-                  Container(
-                    width: SizeConfig.screenWidth * 0.05866,
-                    height: SizeConfig.screenWidth * 0.05866,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness24),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        Assets.upiIcon,
-                        width: SizeConfig.screenWidth * 0.032,
-                        height: SizeConfig.screenWidth * 0.032,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // SizedBox(
+                    //   width: SizeConfig.padding40,
+                    // ),
+                    Container(
+                      width: SizeConfig.screenWidth * 0.05866,
+                      height: SizeConfig.screenWidth * 0.05866,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness24),
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          Assets.upiIcon,
+                          width: SizeConfig.screenWidth * 0.032,
+                          height: SizeConfig.screenWidth * 0.032,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding12,
-                  ),
-                  Text(
-                    "${model.vpaController.text}",
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding12,
-              ),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "₹${model.amountFieldController.text}/",
-                      style: TextStyles.rajdhaniB
-                          .size(SizeConfig.screenWidth * 0.1067),
+                    SizedBox(
+                      width: SizeConfig.padding12,
                     ),
-                    TextSpan(
-                      text: "${model.isDaily ? "Daily" : "Weekly"}",
-                      style: TextStyles.sourceSansSB.body1.setOpecity(0.5),
+                    Text(
+                      "${model.vpaController.text}",
+                      style: TextStyles.sourceSansSB.body1,
                     ),
                   ],
                 ),
-              ),
-              Spacer(),
-              Container(
-                color: UiConstants.kBackgroundColor,
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: AppPositiveBtn(
-                  btnText: "SHARE",
-                  width: SizeConfig.screenWidth -
-                      SizeConfig.pageHorizontalMargins * 2,
-                  onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
-                  },
+                SizedBox(
+                  height: SizeConfig.padding12,
                 ),
-              )
-            ],
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "₹${model.amountFieldController.text}/",
+                        style: TextStyles.rajdhaniB
+                            .size(SizeConfig.screenWidth * 0.1067),
+                      ),
+                      TextSpan(
+                        text: "${model.isDaily ? "Daily" : "Weekly"}",
+                        style: TextStyles.sourceSansSB.body1.setOpecity(0.5),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          Spacer(),
+          Container(
+            color: UiConstants.kBackgroundColor,
+            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            child: AppPositiveBtn(
+              btnText: "DONE",
+              width:
+                  SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+              onPressed: () {
+                AppState.backButtonDispatcher.didPopRoute();
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 

@@ -32,14 +32,16 @@ class FelloRichText extends RichText {
             isBoldOn = false;
             groups.add(TextSpan(
               text: snip,
-              style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor),
+              style:
+                  TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor),
             ));
           } else if (isItalicsOn) {
             isItalicsOn = false;
             groups.add(TextSpan(
               text: snip,
-              style:
-                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor3),
+              style: TextStyles.sourceSans.body3
+                  .colour(UiConstants.kTextColor3)
+                  .italic,
             ));
           } else {
             groups.add(TextSpan(

@@ -139,7 +139,8 @@ class JourneyPageViewModel extends BaseViewModel {
     Future.delayed(
       Duration(seconds: 4),
       () {
-        if (!_journeyService.isUserJourneyOnboarded) {
+        if (_userService.userJourneyStats.mlIndex == 1 &&
+            !_journeyService.isUserJourneyOnboarded) {
           _journeyService.isJourneyOnboardingInView = true;
           PreferenceHelper.setBool(
               PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
