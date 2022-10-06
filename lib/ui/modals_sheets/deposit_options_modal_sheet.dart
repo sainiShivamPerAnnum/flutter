@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 
 class DepositOptionModalSheet extends StatelessWidget {
   final int amount;
-  DepositOptionModalSheet({this.amount});
+  final bool isSkipMl;
+  DepositOptionModalSheet({this.amount, this.isSkipMl});
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +58,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                       AppState.backButtonDispatcher.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
                         amt: amount,
+                        isSkipMl: isSkipMl,
                         investmentType: InvestmentType.AUGGOLD99,
                       );
                     }),
@@ -84,6 +86,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                       AppState.backButtonDispatcher.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
                         amt: amount,
+                        isSkipMl: isSkipMl,
                         investmentType: InvestmentType.LENDBOXP2P,
                       );
                     }),

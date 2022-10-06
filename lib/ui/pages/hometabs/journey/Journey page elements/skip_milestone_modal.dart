@@ -186,11 +186,10 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                           .didPopRoute();
                                       AppState.backButtonDispatcher
                                           .didPopRoute();
-                                      return BaseUtil().openRechargeModalSheet(
-                                        amt: widget.milestone.skipCost['amt'],
-                                        isSkipMl: true,
-                                        investmentType:
-                                            InvestmentType.AUGGOLD99,
+                                      return BaseUtil()
+                                          .openDepositOptionsModalSheet(
+                                        amount:
+                                            widget.milestone.skipCost['amt'],
                                       );
                                     },
                                     width: SizeConfig.screenWidth),

@@ -152,42 +152,37 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
             Spacer(),
             if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
-              Column(
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/svg/dual_star.svg",
-                        width: SizeConfig.padding20,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding14,
-                      ),
-                      FelloRichText(
-                          paragraph:
-                              'Join over *5 Lakh* users in making _finance fun!_')
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/dual_star.svg",
-                            width: SizeConfig.padding20,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding14,
-                          ),
-                          FelloRichText(
-                              paragraph:
-                                  'Join over *5 Lakh* users in making finance fun!')
-                        ],
-                      ),
-                    ],
-                  )),
+              Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: SizeConfig.pageHorizontalMargins),
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding16,
+                    horizontal: SizeConfig.padding20),
+                decoration: BoxDecoration(
+                  color: UiConstants.kBackgroundColor3,
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svg/dual_star.svg",
+                          width: SizeConfig.padding20,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding14,
+                        ),
+                        FelloRichText(
+                            paragraph:
+                                'Join over *5 Lakh* users in making finance fun!')
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             Column(
               children: [
                 Padding(

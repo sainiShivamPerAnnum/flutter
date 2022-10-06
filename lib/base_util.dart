@@ -337,7 +337,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  openDepositOptionsModalSheet({int amount}) {
+  openDepositOptionsModalSheet({int amount, bool isSkipMl}) {
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -351,9 +351,7 @@ class BaseUtil extends ChangeNotifier {
           ),
           topRight: Radius.circular(SizeConfig.roundness24),
         ),
-        content: DepositOptionModalSheet(
-          amount: amount,
-        ));
+        content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
   }
 
   bool get checkKycMissing {

@@ -20,26 +20,6 @@ String generateAssetUrl(String name) {
 class Milestones extends StatelessWidget {
   final JourneyPageViewModel model;
   const Milestones({Key key, this.model}) : super(key: key);
-  // getMilestoneType(MilestoneModel milestone) {
-
-  //   switch (milestone.animType) {
-  //     case "ROTATE":
-  //       return ActiveRotatingMilestone(
-  //         milestone: milestone,
-  //         model: model,
-  //       );
-  //     case "FLOAT":
-  //       return ActiveFloatingMilestone(
-  //         milestone: milestone,
-  //         model: model,
-  //       );
-  //     default:
-  //       return StaticMilestone(
-  //         milestone: milestone,
-  //         model: model,
-  //       );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -59,23 +39,6 @@ class Milestones extends StatelessWidget {
                     model.avatarActiveMilestoneLevel) {
                   return ActiveFloatingMilestone(
                       milestone: model.currentMilestoneList[i], model: model);
-                  // switch (model.currentMilestoneList[i].animType) {
-                  //   case "ROTATE":
-                  //     return ActiveFloatingMilestone(
-                  //       milestone: model.currentMilestoneList[i],
-                  //       model: model,
-                  //     );
-                  //   case "FLOAT":
-                  //     return ActiveFloatingMilestone(
-                  //       milestone: model.currentMilestoneList[i],
-                  //       model: model,
-                  //     );
-                  //   default:
-                  //     return StaticMilestone(
-                  //       milestone: model.currentMilestoneList[i],
-                  //       model: model,
-                  //     );
-                  // }
                 } else
                   return StaticMilestone(
                     milestone: model.currentMilestoneList[i],
@@ -175,14 +138,6 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
           child: SlideTransition(
             position: _floatAnimation,
             child: GestureDetector(
-              // onTap: () {
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(
-              //       duration: const Duration(seconds: 2),
-              //       content: Text(widget.milestone.steps.first.title),
-              //     ),
-              //   );
-              // },
               onTap: () => widget.model
                   .showMilestoneDetailsModalSheet(widget.milestone, context),
               child: Transform(
@@ -194,42 +149,6 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
             ),
           ),
         ),
-        if (widget.milestone.index != 1)
-          Positioned(
-            left: widget.model.pageWidth * widget.milestone.x / 2,
-            bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
-                    widget.model.pageHeight * widget.milestone.y) +
-                widget.model.pageHeight * widget.milestone.asset.height * 1.2,
-            child: SafeArea(
-              child: GestureDetector(
-                  onTap: () => widget.model.showMilestoneDetailsModalSheet(
-                      widget.milestone, context),
-                  child: Container(
-                    decoration: ShapeDecoration(
-                      color: Colors.black,
-                      shape: TooltipShapeBorder(arrowArc: 0.5),
-                      shadows: [
-                        BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 4.0,
-                            offset: Offset(2, 2))
-                      ],
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("${widget.milestone.tooltip}",
-                              style: TextStyles.sourceSansSB.body2),
-                          Icon(Icons.arrow_forward_ios_rounded,
-                              color: Colors.white, size: SizeConfig.iconSize1),
-                        ],
-                      ),
-                    ),
-                  )),
-            ),
-          )
       ],
     );
   }

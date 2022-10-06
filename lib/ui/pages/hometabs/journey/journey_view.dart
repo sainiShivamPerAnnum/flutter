@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/foc
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jTooltip.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
@@ -136,7 +137,8 @@ class _JourneyViewState extends State<JourneyView>
                               Milestones(model: model),
                               FocusRing(),
                               Avatar(model: model),
-                              LevelBlurView()
+                              LevelBlurView(),
+                              MilestoneTooltip(model: model),
                             ],
                           ),
                         ),

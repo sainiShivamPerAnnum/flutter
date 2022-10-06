@@ -9,14 +9,11 @@ class FelloRichText extends RichText {
       : super(key: key, text: renderedWidget(paragraph));
 
   static TextSpan renderedWidget(String paragraph) {
-    try {
-      if (paragraph.isEmpty ||
-          (!paragraph.contains("*") && !paragraph.contains("_"))) {
-        return new TextSpan(
-            text: paragraph,
-            style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor));
-      }
-
+    if (paragraph.isEmpty ||
+        !paragraph.contains("*") ||
+        !paragraph.contains("_")) {
+      return const TextSpan();
+    }
 
     String snip = '';
     List<TextSpan> groups = [];
@@ -54,47 +51,14 @@ class FelloRichText extends RichText {
             ));
             if (character == '*') isBoldOn = true;
             if (character == '_') isItalicsOn = true;
-          } else {
-            //this is the end of either a bold text or an italics text
-            if (isBoldOn) {
-              isBoldOn = false;
-              groups.add(TextSpan(
-                text: snip,
-                style:
-                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor),
-              ));
-            } else if (isItalicsOn) {
-              isItalicsOn = false;
-              groups.add(TextSpan(
-                text: snip,
-                style:
-                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor3),
-              ));
-            } else {
-              groups.add(TextSpan(
-                text: snip,
-                style:
-                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
-              ));
-              if (character == '*') isBoldOn = true;
-              if (character == '_') isItalicsOn = true;
-            }
-            snip = '';
           }
-        } else {
-          snip = snip + character;
+          snip = '';
         }
-      });
-
-      if (snip != null && snip.isNotEmpty) {
-        groups.add(TextSpan(
-          text: snip,
-          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
-        ));
+      } else {
+        snip = snip + character;
       }
-      return new TextSpan(children: groups);
-    } catch (e) {
-      return const TextSpan();
-    }
+    });
+
+    return new TextSpan(children: groups);
   }
 }
