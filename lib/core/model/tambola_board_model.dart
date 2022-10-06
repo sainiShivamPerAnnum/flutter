@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -113,6 +114,30 @@ class TambolaBoard {
     // else if(rowLeftCount>digitsLeftToBeAnnounced)return 0;
     // else return '$rowLeftCount/$digitsLeftToBeAnnounced';
     return rowLeftCount;
+  }
+
+  int getOneRowOdds(List<int> calledDigits) {
+    int row_1 = getRowOdds(0, calledDigits);
+    int row_2 = getRowOdds(1, calledDigits);
+    int row_3 = getRowOdds(2, calledDigits);
+
+    int min = row_1;
+    min = math.min(min, row_2);
+    min = math.min(min, row_3);
+
+    return min;
+  }
+
+  int getTwoRowOdds(List<int> calledDigits) {
+    int row_1 = getRowOdds(0, calledDigits);
+    int row_2 = getRowOdds(1, calledDigits);
+    int row_3 = getRowOdds(2, calledDigits);
+
+    int min = row_1 + row_2;
+    min = math.min(min, row_1 + row_3);
+    min = math.min(min, row_2 + row_3);
+
+    return min;
   }
 
   int getCornerOdds(List<int> calledDigits) {

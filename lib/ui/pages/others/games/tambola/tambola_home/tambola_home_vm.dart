@@ -106,10 +106,9 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   List<String> tabList = [
     "All",
-    "Top Row",
-    "Middle Row",
-    "Bottom Row",
     "Corners",
+    "One Row",
+    "Two Rows",
     "Full House",
   ];
 
@@ -453,7 +452,7 @@ class TambolaHomeViewModel extends BaseViewModel {
       return new List<TambolaBoard>.filled(5, null);
     }
     _bestTambolaBoards = [];
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 4; i++) {
       _bestTambolaBoards.add(userWeeklyBoards[0]);
     }
 
@@ -466,27 +465,22 @@ class TambolaHomeViewModel extends BaseViewModel {
       if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
       if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
       if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
-      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
 
-      if (_bestTambolaBoards[0].getRowOdds(0, weeklyDigits.toList()) >
-          board.getRowOdds(0, weeklyDigits.toList())) {
+      if (_bestTambolaBoards[0].getCornerOdds(weeklyDigits.toList()) >
+          board.getCornerOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[0] = board;
       }
-      if (_bestTambolaBoards[1].getRowOdds(1, weeklyDigits.toList()) >
-          board.getRowOdds(1, weeklyDigits.toList())) {
+      if (_bestTambolaBoards[1].getOneRowOdds(weeklyDigits.toList()) >
+          board.getOneRowOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[1] = board;
       }
-      if (_bestTambolaBoards[2].getRowOdds(2, weeklyDigits.toList()) >
-          board.getRowOdds(2, weeklyDigits.toList())) {
+      if (_bestTambolaBoards[2].getTwoRowOdds(weeklyDigits.toList()) >
+          board.getTwoRowOdds(weeklyDigits.toList())) {
         _bestTambolaBoards[2] = board;
       }
-      if (_bestTambolaBoards[3].getCornerOdds(weeklyDigits.toList()) >
-          board.getCornerOdds(weeklyDigits.toList())) {
-        _bestTambolaBoards[3] = board;
-      }
-      if (_bestTambolaBoards[4].getFullHouseOdds(weeklyDigits.toList()) >
+      if (_bestTambolaBoards[3].getFullHouseOdds(weeklyDigits.toList()) >
           board.getFullHouseOdds(weeklyDigits.toList())) {
-        _bestTambolaBoards[4] = board;
+        _bestTambolaBoards[3] = board;
       }
     });
 
