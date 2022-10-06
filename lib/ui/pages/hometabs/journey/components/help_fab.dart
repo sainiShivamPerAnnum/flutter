@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -83,15 +84,33 @@ class _HelpFabState extends State<HelpFab> {
 
           () {
         isOpen ? collapseFab() : expandFab();
+        AppState.screenStack.add(ScreenItem.dialog);
+        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, anotherAnimation) {
+              return InfoStories(
+                topic: "onboarding",
+              );
+            },
+            transitionDuration: Duration(milliseconds: 500),
+            transitionsBuilder: (context, animation, anotherAnimation, child) {
+              animation =
+                  CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+              return Align(
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  child: child,
+                  axisAlignment: 0.0,
+                ),
+              );
+            },
+          ),
+        );
         // BaseUtil.openDialog(
         //     hapticVibrate: true,
         //     addToScreenStack: true,
         //     content: JourneyOnboardingDialog(),
         //     isBarrierDismissable: false);
-        AppState.delegate.appState.currentAction = PageAction(
-            page: InfoStoriesViewPageConfig,
-            widget: InfoStories(topic: 'onboarding'),
-            state: PageState.addWidget);
       },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,

@@ -153,8 +153,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
             Spacer(),
             if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
               Container(
-                margin: EdgeInsets.symmetric(
-                    vertical: SizeConfig.pageHorizontalMargins),
                 padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding16,
                     horizontal: SizeConfig.padding20),
@@ -163,23 +161,17 @@ class LoginMobileViewState extends State<LoginMobileView> {
                   borderRadius:
                       BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
                 ),
-                child: Column(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/svg/dual_star.svg",
-                          width: SizeConfig.padding20,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding14,
-                        ),
-                        FelloRichText(
-                            paragraph:
-                                'Join over *5 Lakh* users in making finance fun!')
-                      ],
+                    SvgPicture.asset(
+                      "assets/svg/dual_star.svg",
+                      width: SizeConfig.padding20,
                     ),
+                    SizedBox(
+                      width: SizeConfig.padding14,
+                    ),
+                    Text('Join over *5 Lakh* users in making finance fun!')
                   ],
                 ),
               ),

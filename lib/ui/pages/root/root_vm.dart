@@ -89,6 +89,7 @@ class RootViewModel extends BaseViewModel {
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
+
     _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
     await _txnHistoryService.fetchTransactions();

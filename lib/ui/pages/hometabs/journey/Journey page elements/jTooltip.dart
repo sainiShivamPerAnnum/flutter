@@ -27,7 +27,7 @@ class MilestoneTooltip extends StatelessWidget {
               children: List.generate(model.currentMilestoneList.length, (i) {
                 if (model.currentMilestoneList[i].index ==
                         model.avatarActiveMilestoneLevel &&
-                    model.currentMilestoneList[i] != 1) {
+                    model.currentMilestoneList[i].index != 1) {
                   final milestone = model.currentMilestoneList[i];
                   return Positioned(
                     left: model.pageWidth * milestone.x / 2,

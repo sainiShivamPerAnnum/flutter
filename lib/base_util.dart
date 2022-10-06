@@ -38,6 +38,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -234,12 +235,15 @@ class BaseUtil extends ChangeNotifier {
 
   openProfileDetailsScreen() {
     if (JourneyService.isAvatarAnimationInProgress) return;
-    // if (_userService.userJourneyStats.mlIndex > 1) {
-    AppState.delegate.parseRoute(Uri.parse("profile"));
-    // } else {
-    //   BaseUtil.showNegativeAlert(
-    //       "Proflie locked", "Complete milestone 1 to unlock profile");
-    // }
+    if (_userService.userJourneyStats.mlIndex > 1)
+      AppState.delegate.parseRoute(Uri.parse("profile"));
+    else {
+      AppState.delegate.appState.currentAction = PageAction(
+        page: UserProfileDetailsConfig,
+        state: PageState.addWidget,
+        widget: UserProfileDetails(isNewUser: true),
+      );
+    }
   }
 
   openRechargeModalSheet({

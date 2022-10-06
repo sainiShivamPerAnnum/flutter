@@ -122,4 +122,7 @@ class ApiPath {
 
   // prizes
   static const String claimPrize = '/prize/claim';
+
+  static const kOnboardingStory = '/story/onboarding';
+  static const kTambolaStory = '/story/tambola';
 }

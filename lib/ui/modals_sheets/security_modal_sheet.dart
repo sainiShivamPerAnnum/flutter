@@ -20,62 +20,67 @@ class SecurityModalSheet extends StatelessWidget {
   final UserService userService = locator<UserService>();
   @override
   Widget build(BuildContext context) {
-    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    return Padding(
-      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Container(
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-              child: SvgPicture.asset(
-                "assets/svg/safety_asset.svg",
-                width: SizeConfig.screenWidth * 0.15,
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher.didPopRoute();
+        return Future.value(true);
+      },
+      child: Padding(
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                child: SvgPicture.asset(
+                  "assets/svg/safety_asset.svg",
+                  width: SizeConfig.screenWidth * 0.15,
+                ),
               ),
             ),
-          ),
-          Text('Secure Fello', style: TextStyles.rajdhaniB.title3),
-          SizedBox(
-            height: SizeConfig.padding8,
-          ),
-          Text(
-              'Protect your Fello account by using your phone\'s default security.',
-              textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body2),
-          Container(
-            margin: EdgeInsets.only(
-                top: SizeConfig.padding16, bottom: SizeConfig.padding24),
-            width: SizeConfig.screenWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ReactivePositiveAppButton(
-                  btnText: 'Enable',
-                  onPressed: () async {
-                    // baseProvider.flipSecurityValue(true);
-                    await userRepo.updateUser(dMap: {
-                      BaseUser.fldUserPrefsTn: true,
-                      BaseUser.fldUserPrefsAl: true,
-                    }).then((value) => userService.setBaseUser());
-
-                    AppState.backButtonDispatcher.didPopRoute();
-                  },
-                ),
-                SizedBox(height: SizeConfig.padding16),
-                AppNegativeBtn(
-                  width: SizeConfig.screenWidth,
-                  btnText: "Not Now",
-                  onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
-                  },
-                ),
-              ],
+            Text('Secure Fello', style: TextStyles.rajdhaniB.title3),
+            SizedBox(
+              height: SizeConfig.padding8,
             ),
-          )
-        ],
+            Text(
+                'Protect your Fello account by using your phone\'s default security.',
+                textAlign: TextAlign.center,
+                style: TextStyles.sourceSans.body2),
+            Container(
+              margin: EdgeInsets.only(
+                  top: SizeConfig.padding16, bottom: SizeConfig.padding24),
+              width: SizeConfig.screenWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ReactivePositiveAppButton(
+                    btnText: 'Enable',
+                    onPressed: () async {
+                      // baseProvider.flipSecurityValue(true);
+                      await userRepo.updateUser(dMap: {
+                        BaseUser.fldUserPrefsTn: true,
+                        BaseUser.fldUserPrefsAl: true,
+                      }).then((value) => userService.setBaseUser());
+
+                      AppState.backButtonDispatcher.didPopRoute();
+                    },
+                  ),
+                  SizedBox(height: SizeConfig.padding16),
+                  AppNegativeBtn(
+                    width: SizeConfig.screenWidth,
+                    btnText: "Not Now",
+                    onPressed: () {
+                      AppState.backButtonDispatcher.didPopRoute();
+                    },
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

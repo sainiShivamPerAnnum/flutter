@@ -11,9 +11,11 @@ import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -53,6 +55,7 @@ class WebHomeViewModel extends BaseViewModel {
   final GameRepo _gamesRepo = locator<GameRepo>();
   final _getterRepo = locator<GetterRepository>();
   final _dbModel = locator<DBModel>();
+  final _internalOps = locator<InternalOpsService>();
 
   //Local Variables
 
@@ -201,11 +204,26 @@ class WebHomeViewModel extends BaseViewModel {
   // }
 
   Future<bool> setupGame() async {
-    if (checkIfUserIsBannedFromThisGame()) {
+    if (checkIfUserIsBannedFromThisGame() && checkIfDeviceIsNotAnEmulator()) {
       await getBearerToken();
       return _setupCurrentGame();
     }
     return false;
+  }
+
+  checkIfDeviceIsNotAnEmulator() async {
+    //TODO
+    final Map<String, dynamic> res = await _internalOps.initDeviceInfo();
+    if (res != null) {
+      if (res["isPhysicalDevice"] != null) {
+        if (res["isPhysicalDevice"] == false)
+          BaseUtil.showNegativeAlert(
+              "Simulators not allowed", "Please use the app on a real device");
+        return false;
+      }
+      return true;
+    }
+    return true;
   }
 
   Stream<DatabaseEvent> getRealTimePlayingStream(String game) {

@@ -14,7 +14,7 @@ class FelloRichText extends RichText {
           (!paragraph.contains("*") && !paragraph.contains("_"))) {
         return new TextSpan(
             text: paragraph,
-            style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor));
+            style: TextStyles.sourceSans.body1.colour(UiConstants.kTextColor));
       }
 
       String snip = '';
@@ -35,13 +35,13 @@ class FelloRichText extends RichText {
               groups.add(TextSpan(
                 text: snip,
                 style:
-                    TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor),
+                    TextStyles.sourceSansB.body1.colour(UiConstants.kTextColor),
               ));
             } else if (isItalicsOn) {
               isItalicsOn = false;
               groups.add(TextSpan(
                 text: snip,
-                style: TextStyles.sourceSans.body3
+                style: TextStyles.sourceSans.body1
                     .colour(UiConstants.kTextColor3)
                     .italic,
               ));
@@ -49,7 +49,7 @@ class FelloRichText extends RichText {
               groups.add(TextSpan(
                 text: snip,
                 style:
-                    TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+                    TextStyles.sourceSans.body1.colour(UiConstants.kTextColor2),
               ));
               if (character == '*') isBoldOn = true;
               if (character == '_') isItalicsOn = true;
@@ -64,7 +64,7 @@ class FelloRichText extends RichText {
       if (snip != null && snip.isNotEmpty) {
         groups.add(TextSpan(
           text: snip,
-          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+          style: TextStyles.sourceSans.body1.colour(UiConstants.kTextColor2),
         ));
       }
       return new TextSpan(children: groups);
