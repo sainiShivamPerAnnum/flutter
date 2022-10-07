@@ -310,8 +310,14 @@ class _GTInstantViewState extends State<GTInstantView>
                     alignment: Alignment.center,
                     child: IgnorePointer(
                       ignoring: true,
-                      child: Lottie.asset(Assets.gtScratch,
-                          width: SizeConfig.screenWidth * 0.6),
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            bottom: SizeConfig.screenHeight * 0.14),
+                        child: Lottie.asset(Assets.gtScratch,
+                            fit: BoxFit.contain,
+                            height: SizeConfig.screenWidth,
+                            width: SizeConfig.screenWidth),
+                      ),
                     ),
                   ),
               ],

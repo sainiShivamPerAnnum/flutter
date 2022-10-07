@@ -33,6 +33,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
@@ -42,6 +43,7 @@ import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.da
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -260,21 +262,7 @@ class BaseUtil extends ChangeNotifier {
           addToScreenStack: true,
           isBarrierDismissable: true,
           hapticVibrate: false,
-          content: FelloInfoDialog(
-            title: 'Complete Profile',
-            subtitle:
-                'Please complete your profile to win your first reward and to start saving',
-            action: Container(
-              width: SizeConfig.screenWidth,
-              child: FelloButtonLg(
-                child: Text(
-                  "Complete Profile",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-              ),
-            ),
-          ),
+          content: CompleteProfileDialog(),
         );
       final bool isAugDepositBanned = _userService
           ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.isBanned;
@@ -325,25 +313,10 @@ class BaseUtil extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.userJourneyStats.mlIndex == 1)
         return BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissable: true,
-          hapticVibrate: false,
-          content: FelloInfoDialog(
-            title: 'Complete Profile',
-            subtitle:
-                'Please complete your profile to win your first reward and to start saving',
-            action: Container(
-              width: SizeConfig.screenWidth,
-              child: FelloButtonLg(
-                child: Text(
-                  "Complete Profile",
-                  style: TextStyles.body2.bold.colour(Colors.white),
-                ),
-                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-              ),
-            ),
-          ),
-        );
+            addToScreenStack: true,
+            isBarrierDismissable: true,
+            hapticVibrate: false,
+            content: CompleteProfileDialog());
       final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String augSellBanNotice = _userService
@@ -975,5 +948,32 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool value) {
     this._isUpiInfoMissing = value;
     notifyListeners();
+  }
+}
+
+class CompleteProfileDialog extends StatelessWidget {
+  final String title, subtitle;
+  CompleteProfileDialog({this.title, this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher.didPopRoute();
+        return Future.value(true);
+      },
+      child: MoreInfoDialog(
+        title: title ?? 'Complete Profile',
+        text: subtitle ??
+            'Please complete your profile to win your first reward and to start saving',
+        imagePath: Assets.completeProfile,
+        btnText: "COMPLETE",
+        onPressed: () {
+          while (AppState.screenStack.length > 1)
+            AppState.backButtonDispatcher.didPopRoute();
+          AppState.delegate.appState.setCurrentTabIndex = 0;
+        },
+      ),
+    );
   }
 }

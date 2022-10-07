@@ -113,26 +113,10 @@ class _FelloButtonState extends State<FelloButton> {
                   if (await BaseUtil.showNoInternetAlert()) return;
                   if (_journeyService.avatarRemoteMlIndex < 2)
                     return BaseUtil.openDialog(
-                      addToScreenStack: true,
-                      isBarrierDismissable: true,
-                      hapticVibrate: false,
-                      content: FelloInfoDialog(
-                        title: 'Complete Profile',
-                        subtitle:
-                            'Please complete your profile to win your first reward and to start saving',
-                        action: Container(
-                          width: SizeConfig.screenWidth,
-                          child: FelloButtonLg(
-                            child: Text(
-                              "Complete Profile",
-                              style: TextStyles.body2.bold.colour(Colors.white),
-                            ),
-                            onPressed: () =>
-                                AppState.backButtonDispatcher.didPopRoute(),
-                          ),
-                        ),
-                      ),
-                    );
+                        addToScreenStack: true,
+                        isBarrierDismissable: true,
+                        hapticVibrate: false,
+                        content: CompleteProfileDialog());
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
                       widget.action(true);

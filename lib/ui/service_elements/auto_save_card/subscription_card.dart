@@ -45,26 +45,13 @@ class _AutosaveCardState extends State<AutosaveCard> {
                     return BaseUtil.showNoInternetAlert();
                   if (!subscriptionModel.isUserProfileComplete())
                     return BaseUtil.openDialog(
-                      addToScreenStack: true,
-                      isBarrierDismissable: true,
-                      hapticVibrate: false,
-                      content: FelloInfoDialog(
-                        title: 'Complete Profile',
-                        subtitle:
-                            'Please complete your profile to win your first reward and to start autosaving',
-                        action: Container(
-                          width: SizeConfig.screenWidth,
-                          child: FelloButtonLg(
-                            child: Text(
-                              "Complete Profile",
-                              style: TextStyles.body2.bold.colour(Colors.white),
-                            ),
-                            onPressed: () =>
-                                AppState.backButtonDispatcher.didPopRoute(),
-                          ),
-                        ),
-                      ),
-                    );
+                        addToScreenStack: true,
+                        isBarrierDismissable: true,
+                        hapticVibrate: false,
+                        content: CompleteProfileDialog(
+                          subtitle:
+                              'Please complete your profile to win your first reward and to start autosaving',
+                        ));
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;

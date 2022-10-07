@@ -326,13 +326,9 @@ class UserProfileVM extends BaseViewModel {
   }
 
   updateDetails() async {
-    if (isNewUser) {
-      if (!await validateUsername()) {
-        return BaseUtil.showNegativeAlert(
-            "Username invalid", "please try another username");
-      }
-    }
-    if (formKey.currentState.validate() && isValidDate() && usernameIsValid()) {
+    if (formKey.currentState.validate() &&
+        isValidDate() &&
+        await usernameIsValid()) {
       if (_checkForChanges() && checkForNullData()) {
         if (DateHelper.isAdult(selectedDate)) {
           isUpdaingUserDetails = true;
@@ -395,8 +391,13 @@ class UserProfileVM extends BaseViewModel {
           "Invalid details", "please check the fields again");
   }
 
-  bool usernameIsValid() {
+  Future<bool> usernameIsValid() async {
     if (!isNewUser) return true;
+    if (!await validateUsername()) {
+      BaseUtil.showNegativeAlert(
+          "Username invalid", "please try another username");
+      return false;
+    }
     return (username != null &&
         username.isNotEmpty &&
         isValid != null &&

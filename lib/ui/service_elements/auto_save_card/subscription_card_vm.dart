@@ -95,25 +95,13 @@ class SubscriptionCardViewModel extends BaseViewModel {
     Haptic.vibrate();
     if (_userService.userJourneyStats.mlIndex < 2)
       return BaseUtil.openDialog(
-        addToScreenStack: true,
-        isBarrierDismissable: true,
-        hapticVibrate: false,
-        content: FelloInfoDialog(
-          title: 'Complete Profile',
-          subtitle:
-              'Please complete your profile to win your first reward and to start autosaving',
-          action: Container(
-            width: SizeConfig.screenWidth,
-            child: FelloButtonLg(
-              child: Text(
-                "Complete Profile",
-                style: TextStyles.body2.bold.colour(Colors.white),
-              ),
-              onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
-            ),
-          ),
-        ),
-      );
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          hapticVibrate: false,
+          content: CompleteProfileDialog(
+            subtitle:
+                'Please complete your profile to win your first reward and to start autosaving',
+          ));
     await _paytmService.getActiveSubscriptionDetails();
     if (_paytmService.activeSubscription == null ||
         (_paytmService.activeSubscription.status ==

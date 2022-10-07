@@ -11,11 +11,15 @@ class MoreInfoDialog extends StatelessWidget {
   final String text;
   final String imagePath;
   final Size imageSize;
+  final Function onPressed;
+  final String btnText;
 
   MoreInfoDialog(
       {@required this.title,
       @required this.text,
       this.imagePath,
+      this.onPressed,
+      this.btnText,
       this.imageSize});
 
   @override
@@ -35,7 +39,7 @@ class MoreInfoDialog extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyles.rajdhaniSB.title4,
                 ),
-                Divider(color: UiConstants.kTextColor2),
+                // Divider(color: UiConstants.kTextColor2),
                 SizedBox(
                   height: 5,
                 ),
@@ -55,9 +59,9 @@ class MoreInfoDialog extends StatelessWidget {
                 ),
                 SizedBox(height: SizeConfig.padding20),
                 AppPositiveBtn(
-                    btnText: "OK",
-                    onPressed: () =>
-                        AppState.backButtonDispatcher.didPopRoute())
+                    btnText: btnText ?? "OK",
+                    onPressed: onPressed ??
+                        () => AppState.backButtonDispatcher.didPopRoute())
               ],
             ),
           ),

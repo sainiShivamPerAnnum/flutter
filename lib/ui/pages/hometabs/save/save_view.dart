@@ -157,7 +157,7 @@ class AppFooter extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'v${BaseUtil.packageInfo.version} (${BaseUtil.packageInfo.buildNumber})',
+              'v${BaseUtil.packageInfo?.version} (${BaseUtil.packageInfo?.buildNumber})',
               style:
                   TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor2),
             ),

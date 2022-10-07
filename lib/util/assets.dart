@@ -177,6 +177,8 @@ class Assets {
   static final String refreAndEarnBackgroundAsset =
       "assets/svg/refer_earn_background.svg";
 
+  static final String completeProfile = "assets/images/completeProfile.png";
+
   static final String iPadPNG = "images/ipad.png";
 
   //How to play aseets (Tambola Screen)

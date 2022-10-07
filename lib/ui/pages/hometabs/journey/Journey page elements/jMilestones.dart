@@ -35,7 +35,10 @@ class Milestones extends StatelessWidget {
             height: model.currentFullViewHeight,
             child: Stack(
               children: List.generate(model.currentMilestoneList.length, (i) {
-                if (model.currentMilestoneList[i].index ==
+                if (model.currentMilestoneList[i].asset.uri == null ||
+                    model.currentMilestoneList[i].asset.uri.isEmpty)
+                  return SizedBox();
+                else if (model.currentMilestoneList[i].index ==
                     model.avatarActiveMilestoneLevel) {
                   return ActiveFloatingMilestone(
                       milestone: model.currentMilestoneList[i], model: model);

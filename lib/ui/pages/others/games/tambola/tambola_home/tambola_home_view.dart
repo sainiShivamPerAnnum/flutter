@@ -7,6 +7,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -697,6 +698,7 @@ class ButTicketsComponent extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Text(
@@ -710,38 +712,39 @@ class ButTicketsComponent extends StatelessWidget {
                       .colour(UiConstants.kTextColor2),
                 ),
               ]),
-              Column(children: [
-                IconButton(
-                  onPressed: () {
-                    // AppState.backButtonDispatcher.didPopRoute();
-                    Navigator.of(AppState.delegate.navigatorKey.currentContext)
-                        .push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, anotherAnimation) {
-                          return InfoStories(
-                            topic: 'tambola',
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 500),
-                        transitionsBuilder:
-                            (context, animation, anotherAnimation, child) {
-                          animation = CurvedAnimation(
-                              curve: Curves.easeInCubic, parent: animation);
-                          return Align(
-                            child: SizeTransition(
-                              sizeFactor: animation,
-                              child: child,
-                              axisAlignment: 0.0,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.question_mark_sharp,
-                      color: Colors.white, size: SizeConfig.avatarRadius),
-                )
-              ])
+              InkWell(
+                onTap: () {
+                  // AppState.backButtonDispatcher.didPopRoute();
+                  AppState.screenStack.add(ScreenItem.dialog);
+                  Navigator.of(AppState.delegate.navigatorKey.currentContext)
+                      .push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, anotherAnimation) {
+                        return InfoStories(
+                          topic: 'tambola',
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 500),
+                      transitionsBuilder:
+                          (context, animation, anotherAnimation, child) {
+                        animation = CurvedAnimation(
+                            curve: Curves.easeInCubic, parent: animation);
+                        return Align(
+                          child: SizeTransition(
+                            sizeFactor: animation,
+                            child: child,
+                            axisAlignment: 0.0,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Icon(
+                  Icons.info_outline,
+                  color: Colors.white,
+                ),
+              )
             ],
           ),
           SizedBox(
