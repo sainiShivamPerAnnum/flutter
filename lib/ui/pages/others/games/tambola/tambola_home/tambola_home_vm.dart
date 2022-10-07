@@ -318,12 +318,13 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
   }
 
-  _refreshTambolaTickets() async {
+  Future<void> refreshTambolaTickets() async {
     _logger.i('Refreshing..');
     _topFiveTambolaBoards = [];
     ticketsBeingGenerated = true;
     tambolaService.weeklyTicksFetched = false;
     init();
+    notifyListeners();
   }
 
   int get activeTambolaCardCount {

@@ -54,7 +54,7 @@ class TambolaHomeView extends StatelessWidget {
         return RefreshIndicator(
           color: UiConstants.primaryColor,
           backgroundColor: Colors.black,
-          onRefresh: model.getLeaderboard,
+          onRefresh: model.refreshTambolaTickets,
           child: Scaffold(
             appBar: FAppBar(
               type: FaqsType.play,
@@ -63,14 +63,6 @@ class TambolaHomeView extends StatelessWidget {
               showHelpButton: false,
               title: "Tambola",
               backgroundColor: UiConstants.kArowButtonBackgroundColor,
-            ),
-            floatingActionButton: Container(
-              margin: EdgeInsets.only(
-                  left: SizeConfig.pageHorizontalMargins,
-                  bottom: SizeConfig.padding40),
-              child: HelpFab(
-                topic: 'tambola',
-              ),
             ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
