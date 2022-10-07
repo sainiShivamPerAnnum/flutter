@@ -2,8 +2,11 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -41,8 +44,27 @@ class _AutosaveCardState extends State<AutosaveCard> {
                   if (connectivityStatus == ConnectivityStatus.Offline)
                     return BaseUtil.showNoInternetAlert();
                   if (!subscriptionModel.isUserProfileComplete())
-                    return BaseUtil.showNegativeAlert("Autosave Locked",
-                        "Please complete profile to unlock autosave");
+                    return BaseUtil.openDialog(
+                      addToScreenStack: true,
+                      isBarrierDismissable: true,
+                      hapticVibrate: false,
+                      content: FelloInfoDialog(
+                        title: 'Complete Profile',
+                        subtitle:
+                            'Please complete your profile to win your first reward and to start autosaving',
+                        action: Container(
+                          width: SizeConfig.screenWidth,
+                          child: FelloButtonLg(
+                            child: Text(
+                              "Complete Profile",
+                              style: TextStyles.body2.bold.colour(Colors.white),
+                            ),
+                            onPressed: () =>
+                                AppState.backButtonDispatcher.didPopRoute(),
+                          ),
+                        ),
+                      ),
+                    );
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;

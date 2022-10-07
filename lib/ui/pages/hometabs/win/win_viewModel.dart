@@ -38,6 +38,8 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -453,8 +455,26 @@ class WinViewModel extends BaseViewModel {
 
   void navigateToRefer() {
     if (_userService.userJourneyStats.mlIndex == 1)
-      return BaseUtil.showNegativeAlert("Complete your profile",
-          "You can check referrals only after completing profile");
+      BaseUtil.openDialog(
+        addToScreenStack: true,
+        isBarrierDismissable: true,
+        hapticVibrate: false,
+        content: FelloInfoDialog(
+          title: 'Complete Profile',
+          subtitle:
+              'Please complete your profile to win your first reward and to start saving',
+          action: Container(
+            width: SizeConfig.screenWidth,
+            child: FelloButtonLg(
+              child: Text(
+                "Complete Profile",
+                style: TextStyles.body2.bold.colour(Colors.white),
+              ),
+              onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+            ),
+          ),
+        ),
+      );
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,

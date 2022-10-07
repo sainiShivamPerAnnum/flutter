@@ -39,6 +39,8 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vie
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -46,6 +48,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -253,8 +256,26 @@ class BaseUtil extends ChangeNotifier {
   }) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.userJourneyStats?.mlIndex == 1)
-        return BaseUtil.showNegativeAlert("Complete your profile",
-            "You can start investing after completing your profile");
+        return BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          hapticVibrate: false,
+          content: FelloInfoDialog(
+            title: 'Complete Profile',
+            subtitle:
+                'Please complete your profile to win your first reward and to start saving',
+            action: Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "Complete Profile",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+              ),
+            ),
+          ),
+        );
       final bool isAugDepositBanned = _userService
           ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.isBanned;
       final String augDepositBanNotice = _userService
@@ -303,8 +324,26 @@ class BaseUtil extends ChangeNotifier {
   openSellModalSheet({@required InvestmentType investmentType}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.userJourneyStats.mlIndex == 1)
-        return BaseUtil.showNegativeAlert("Complete your profile",
-            "You can make an investment after completing your profile");
+        return BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          hapticVibrate: false,
+          content: FelloInfoDialog(
+            title: 'Complete Profile',
+            subtitle:
+                'Please complete your profile to win your first reward and to start saving',
+            action: Container(
+              width: SizeConfig.screenWidth,
+              child: FelloButtonLg(
+                child: Text(
+                  "Complete Profile",
+                  style: TextStyles.body2.bold.colour(Colors.white),
+                ),
+                onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+              ),
+            ),
+          ),
+        );
       final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String augSellBanNotice = _userService

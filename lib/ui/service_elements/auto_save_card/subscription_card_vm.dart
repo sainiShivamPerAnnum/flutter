@@ -7,9 +7,14 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SubscriptionCardViewModel extends BaseViewModel {
@@ -89,8 +94,26 @@ class SubscriptionCardViewModel extends BaseViewModel {
   getActiveButtonAction() async {
     Haptic.vibrate();
     if (_userService.userJourneyStats.mlIndex < 2)
-      return BaseUtil.showNegativeAlert(
-          "Autosave locked", "Complete your profile to unlock autosave");
+      return BaseUtil.openDialog(
+        addToScreenStack: true,
+        isBarrierDismissable: true,
+        hapticVibrate: false,
+        content: FelloInfoDialog(
+          title: 'Complete Profile',
+          subtitle:
+              'Please complete your profile to win your first reward and to start autosaving',
+          action: Container(
+            width: SizeConfig.screenWidth,
+            child: FelloButtonLg(
+              child: Text(
+                "Complete Profile",
+                style: TextStyles.body2.bold.colour(Colors.white),
+              ),
+              onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+            ),
+          ),
+        ),
+      );
     await _paytmService.getActiveSubscriptionDetails();
     if (_paytmService.activeSubscription == null ||
         (_paytmService.activeSubscription.status ==
