@@ -10,6 +10,7 @@ class ScoreBoard {
   String username;
   double score;
   int gameDuration, refCount;
+  String displayScore;
 
   ScoreBoard(
       {this.isUserEligible,
@@ -18,6 +19,7 @@ class ScoreBoard {
       this.username,
       this.score,
       this.gameDuration,
+      this.displayScore,
       this.refCount});
 
   ScoreBoard copyWith({
@@ -28,6 +30,7 @@ class ScoreBoard {
     double score,
     int gameDuration,
     int refCount,
+    String displayScore,
   }) {
     return ScoreBoard(
       isUserEligible: isUserEligible ?? this.isUserEligible,
@@ -37,6 +40,7 @@ class ScoreBoard {
       score: score ?? this.score,
       gameDuration: gameDuration ?? this.gameDuration,
       refCount: refCount ?? this.refCount,
+      displayScore: displayScore ?? this.displayScore,
     );
   }
 
@@ -49,19 +53,20 @@ class ScoreBoard {
       'score': score,
       'gameDuration': gameDuration,
       'refCount': refCount,
+      'displayScore': displayScore,
     };
   }
 
   factory ScoreBoard.fromMap(Map<String, dynamic> map) {
     return ScoreBoard(
-      isUserEligible: map['isUserEligible'] ?? false,
-      timestamp: TimestampModel.fromMap(map['timestamp']),
-      userid: map['userid'] ?? '',
-      username: map['username'] ?? '',
-      score: (map['score'] ?? 0).toDouble(),
-      gameDuration: map['gameDuration'] ?? 0,
-      refCount: map['refCount'] ?? 0,
-    );
+        isUserEligible: map['isUserEligible'] ?? false,
+        timestamp: TimestampModel.fromMap(map['timestamp']),
+        userid: map['userid'] ?? '',
+        username: map['username'] ?? '',
+        score: (map['score'] ?? 0).toDouble(),
+        gameDuration: map['gameDuration'] ?? 0,
+        refCount: map['refCount'] ?? 0,
+        displayScore: map['displayScore'] ?? '');
   }
 
   String toJson() => json.encode(toMap());
@@ -71,7 +76,7 @@ class ScoreBoard {
 
   @override
   String toString() {
-    return 'ScoreBoard(isUserEligible: $isUserEligible, timestamp: $timestamp, userid: $userid, username: $username, score: $score, gameDuration: $gameDuration, refCount: $refCount)';
+    return 'ScoreBoard(isUserEligible: $isUserEligible, timestamp: $timestamp, userid: $userid, username: $username, score: $score, gameDuration: $gameDuration, refCount: $refCount, displayScore $displayScore)';
   }
 
   @override
@@ -85,6 +90,7 @@ class ScoreBoard {
         other.username == username &&
         other.score == score &&
         other.gameDuration == gameDuration &&
+        other.displayScore == displayScore &&
         other.refCount == refCount;
   }
 
@@ -96,6 +102,7 @@ class ScoreBoard {
         username.hashCode ^
         score.hashCode ^
         gameDuration.hashCode ^
+        displayScore.hashCode ^
         refCount.hashCode;
   }
 }

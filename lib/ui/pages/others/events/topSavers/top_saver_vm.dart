@@ -44,12 +44,12 @@ class TopSaverViewModel extends BaseViewModel {
   int weekDay = DateTime.now().weekday;
 
   int _userRank = 0;
-  double _userAmount = 0;
-  double _highestSavings = 0;
+  String _userDisplayAmount = '';
+  String _highestSavingsDisplayAmount = '';
   String winnerTitle = "Past Winners";
   EventModel event;
   bool showStandingsAndWinners = true;
-  String eventStandingsType = "HIGHEST_SAVER";
+  String eventStandingsType = "HIGHEST_SAVER_V2";
   String actionTitle = "Buy Digital Gold";
 
   bool isStreamLoading = true;
@@ -122,17 +122,17 @@ class TopSaverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get highestSavings => this._highestSavings;
+  String get highestSavings => this._highestSavingsDisplayAmount;
 
   set highestSavings(value) {
-    this._highestSavings = value;
+    this._highestSavingsDisplayAmount = value;
     notifyListeners();
   }
 
-  get userAmount => this._userAmount;
+  String get userDisplayAmount => this._userDisplayAmount;
 
-  set userAmount(value) {
-    this._userAmount = value;
+  set userDisplayAmount(value) {
+    this._userDisplayAmount = value;
     notifyListeners();
   }
 
@@ -309,8 +309,7 @@ class TopSaverViewModel extends BaseViewModel {
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
-        _userAmount =
-            BaseUtil.digitPrecision(curentUserStat.score, 4, false); //TODO
+        userDisplayAmount = curentUserStat.displayScore; //TODO
       }
 
       fetchHighestSavings();
@@ -378,11 +377,7 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   fetchHighestSavings() {
-    for (ScoreBoard e in currentParticipants) {
-      if ((e.score) > _highestSavings) {
-        _highestSavings = (e.score);
-      }
-    }
+    highestSavings = currentParticipants[0]?.displayScore ?? '';
   }
 
   Future<List<WinnersModel>> getPastWinners(

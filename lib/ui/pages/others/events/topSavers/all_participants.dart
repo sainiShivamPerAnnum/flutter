@@ -126,8 +126,9 @@ class AllParticipantsView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms"
-                                      .toString(),
+                                  model.currentParticipants[index]
+                                          ?.displayScore ??
+                                      ''.toString(),
                                   style: TextStyles.rajdhaniM.body3,
                                 ),
                               ],

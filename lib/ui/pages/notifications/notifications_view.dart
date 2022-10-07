@@ -47,7 +47,6 @@ class NotficationsPage extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(top: SizeConfig.padding24),
                 decoration: BoxDecoration(),
                 child: model.state == ViewState.Busy
                     ? Center(child: FullScreenLoader())

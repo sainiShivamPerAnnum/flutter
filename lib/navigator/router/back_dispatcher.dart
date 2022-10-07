@@ -55,6 +55,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    _journeyService.checkForMilestoneLevelChange();
     if (_journeyService.isJourneyOnboardingInView) {
       _journeyService.isJourneyOnboardingInView = false;
       _journeyService.isUserJourneyOnboarded = true;
@@ -117,7 +118,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.delegate.appState.rootIndex != 0) {
       logger.w("Checking if app can be closed");
       AppState.delegate.appState.setCurrentTabIndex = 0;
-      _journeyService.checkForMilestoneLevelChange();
+
       return Future.value(true);
     }
 

@@ -168,7 +168,7 @@ class CampaignView extends StatelessWidget {
                                       ),
                                       FittedBox(
                                         child: Text(
-                                          '${model.userAmount.toString()} gms',
+                                          model.userDisplayAmount ?? '',
                                           style: TextStyles.body1.bold
                                               .colour(Colors.white),
                                           maxLines: 1,
@@ -217,7 +217,7 @@ class CampaignView extends StatelessWidget {
                                                 ),
                                                 Flexible(
                                                   child: Text(
-                                                    "${model.highestSavings.toStringAsFixed(3)} gms",
+                                                    model.highestSavings ?? '',
                                                     style: TextStyles.body2.bold
                                                         .colour(Colors.white),
                                                     maxLines: 1,
@@ -644,7 +644,9 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "${model.currentParticipants[index].score.truncateToDecimalPlaces(3)} gms",
+                                      model.currentParticipants[index]
+                                              ?.displayScore ??
+                                          '',
                                       style: TextStyles.rajdhaniM.body3,
                                     ),
                                   ],

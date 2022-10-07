@@ -458,7 +458,7 @@ class ReferralDetailsView extends StatelessWidget {
                         },
                       ),
                       SizedBox(
-                        height: SizeConfig.padding40,
+                        height: SizeConfig.padding80,
                       )
                     ],
                   ),
