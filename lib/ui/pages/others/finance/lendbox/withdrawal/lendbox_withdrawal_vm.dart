@@ -93,6 +93,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     _inProgress = true;
     notifyListeners();
 
+    AppState.blockNavigation();
     final bankRes = await _paymentRepo.getActiveBankAccountDetails();
     if (bankRes.isSuccess()) {
       final withdrawalTxn = await _lendboxRepo.createWithdrawal(
@@ -117,6 +118,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert('Withdrawal Failed', bankRes.errorMessage);
     }
 
+    AppState.unblockNavigation();
     _inProgress = false;
     notifyListeners();
   }
