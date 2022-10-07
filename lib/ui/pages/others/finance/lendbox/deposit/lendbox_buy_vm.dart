@@ -74,7 +74,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
 
-    await _txnService.initiateTransaction(amount.toDouble(), false);
+    await _txnService.initiateTransaction(amount.toDouble(), skipMl);
     _isBuyInProgress = false;
     notifyListeners();
   }
