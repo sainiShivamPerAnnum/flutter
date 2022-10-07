@@ -103,7 +103,6 @@ class _GTInstantViewState extends State<GTInstantView>
                     ),
                   ),
                 ),
-
                 Column(
                   children: [
                     SafeArea(
@@ -295,29 +294,26 @@ class _GTInstantViewState extends State<GTInstantView>
                   ],
                 ),
                 if (model.isCardScratched && model.isShimmerEnabled)
-                  Positioned(
-                    top: SizeConfig.screenHeight * 0.3,
-                    left: SizeConfig.screenWidth / 2 -
-                        SizeConfig.screenWidth * 0.4,
-                    child: Lottie.asset(Assets.gtConfetti,
-                        height: SizeConfig.screenWidth * 0.8,
-                        width: SizeConfig.screenWidth * 0.8),
+                  Align(
+                    alignment: Alignment.center,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Lottie.asset(
+                        Assets.gtConfetti,
+                        height: SizeConfig.screenHeight,
+                        width: SizeConfig.screenWidth,
+                      ),
+                    ),
                   ),
-                // if (model.showScratchGuide && !model.isCardScratchStarted)
-                //   Align(
-                //     alignment: Alignment.center,
-                //     child: Container(
-                //       color: Color(0xffffc875),
-                //       width: SizeConfig.screenWidth * 0.62,
-                //       height: SizeConfig.padding40,
-                //       padding: EdgeInsets.all(10),
-                //       alignment: Alignment.center,
-                //       child: BreathingText(
-                //         alertText: "Scratch Here",
-                //         textStyle: TextStyles.body2.colour(Colors.black).bold,
-                //       ),
-                //     ),
-                //   ),
+                if (model.showScratchGuide && !model.isCardScratchStarted)
+                  Align(
+                    alignment: Alignment.center,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Lottie.asset(Assets.gtScratch,
+                          width: SizeConfig.screenWidth * 0.6),
+                    ),
+                  ),
               ],
             ),
           ),

@@ -473,7 +473,7 @@ class LoginControllerViewModel extends BaseViewModel {
         'Sending OTP failed',
         exceptionMessage,
       );
-      _otpScreenKey.currentState.model.otpFieldEnabled = true;
+      // _otpScreenKey.currentState.model.otpFieldEnabled = true;
 
       setState(ViewState.Idle);
     }
