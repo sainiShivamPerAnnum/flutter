@@ -372,6 +372,27 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
+  getProfilePicture() async {
+    if (baseUser.avatarId == "CUSTOM") {
+      if (!PreferenceHelper.exists('dpUrl')) {
+        try {
+          String myUserDpUrl;
+          if (baseUser != null)
+            myUserDpUrl = await _dbModel.getUserDP(baseUser.uid);
+          if (myUserDpUrl != null) {
+            await CacheManager.writeCache(
+                key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
+            setMyUserDpUrl(myUserDpUrl);
+            _logger.d("No profile picture found in cache, fetched from server");
+          }
+        } catch (e) {
+          _logger.e(e.toString());
+        }
+      } else
+        setMyUserDpUrl(PreferenceHelper.getString('dpUrl'));
+    }
+  }
+
   // Note: Already Setting in Root uneccessary Calling
   // Future<void> setProfilePicture() async {
   //   if (await CacheManager.readCache(key: 'dpUrl') == null) {

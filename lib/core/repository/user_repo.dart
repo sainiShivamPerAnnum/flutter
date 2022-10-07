@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -392,13 +394,17 @@ class UserRepository extends BaseRepo {
   }) async {
     final token = await getBearerToken();
     try {
-      await APIService.instance.putData(
+      final res = await APIService.instance.putData(
         ApiPath.kGetUserById(userService.baseUser.uid),
         body: dMap,
         token: token,
         cBaseUrl: _baseUrl,
       );
-
+      logger.d("Update user data: ${res['data']}");
+      final resData = res['data'];
+      if (resData != null && resData['gtId'] != null) {
+        GoldenTicketService.goldenTicketId = resData['gtId'];
+      }
       // clear cache
       await _cacheService.invalidateByKey(CacheKeys.USER);
 

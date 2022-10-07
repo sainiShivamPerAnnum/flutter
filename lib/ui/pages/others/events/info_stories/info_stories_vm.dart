@@ -26,7 +26,8 @@ class InfoStoriesViewModel extends BaseViewModel {
   List<StoryItem> storyItems;
 
   _loadAssetsAndData(String topic) async {
-    final response = await _getterRepo.getStory(topic: topic);
+    setState(ViewState.Busy);
+    final response = await _getterRepo.getStory(topic: topic ?? 'onboarding');
     if (response.isSuccess()) {
       storyItemData = response.model;
       storyItems = [];
@@ -50,15 +51,14 @@ class InfoStoriesViewModel extends BaseViewModel {
             textStyle: captionTextStyle,
             decoration: backgroundDecoration));
       });
+      setState(ViewState.Idle);
     } else {
       //What to do on Api Failure
     }
   }
 
   init(String topic) async {
-    setState(ViewState.Busy);
     await _loadAssetsAndData(topic);
-    setState(ViewState.Idle);
   }
 
   dump() {}

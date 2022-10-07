@@ -67,8 +67,10 @@ class TambolaHomeView extends StatelessWidget {
             floatingActionButton: Container(
               margin: EdgeInsets.only(
                   left: SizeConfig.pageHorizontalMargins,
-                  bottom: SizeConfig.padding80),
-              child: HelpFab(),
+                  bottom: SizeConfig.padding40),
+              child: HelpFab(
+                topic: 'tambola',
+              ),
             ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(

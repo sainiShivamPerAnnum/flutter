@@ -194,7 +194,7 @@ class GetterRepository extends BaseRepo {
       return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch promos", 400);
+      return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 

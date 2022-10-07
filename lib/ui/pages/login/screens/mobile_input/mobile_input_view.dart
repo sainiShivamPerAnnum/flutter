@@ -128,18 +128,11 @@ class LoginMobileViewState extends State<LoginMobileView> {
                         : 0),
                 textStyle: TextStyles.sourceSans.body3,
                 suffixIcon: model.showTickCheck
-                    ? Container(
-                        decoration: BoxDecoration(
-                          color: UiConstants.primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.done,
-                            color: Colors.white,
-                            size: SizeConfig.padding16,
-                          ),
-                        ))
+                    ? Icon(
+                        Icons.done,
+                        color: UiConstants.primaryColor,
+                        size: SizeConfig.iconSize0,
+                      )
                     : SizedBox.shrink(),
                 textEditingController: model.mobileController,
                 onChanged: (value) => model.upDateCheckTick(),
@@ -171,38 +164,42 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     SizedBox(
                       width: SizeConfig.padding14,
                     ),
-                    Text('Join over *5 Lakh* users in making finance fun!')
+                    Text(
+                      'Join over 5 Lakh users in making finance fun!',
+                      style: TextStyles.sourceSans.body4,
+                    )
                   ],
                 ),
               ),
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                      SizeConfig.padding16, SizeConfig.padding10, 0),
-                  child: RichText(
-                    text: new TextSpan(
-                      children: [
-                        new TextSpan(
-                          text: 'By continuing, you agree to our ',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        new TextSpan(
-                          text: 'Terms of Service',
-                          style: TextStyles.sourceSans.body3.underline
-                              .colour(UiConstants.kTextColor),
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () {
-                              model.onTermsAndConditionsClicked();
-                            },
-                        ),
-                      ],
+            if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                        SizeConfig.padding16, SizeConfig.padding10, 0),
+                    child: RichText(
+                      text: new TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: 'By continuing, you agree to our ',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2),
+                          ),
+                          new TextSpan(
+                            text: 'Terms of Service',
+                            style: TextStyles.sourceSans.body3.underline
+                                .colour(UiConstants.kTextColor),
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () {
+                                model.onTermsAndConditionsClicked();
+                              },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             SizedBox(
               height: SizeConfig.screenWidth * 0.1 +
                   MediaQuery.of(context).viewInsets.bottom,

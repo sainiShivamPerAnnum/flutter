@@ -149,7 +149,7 @@ class JourneyPageViewModel extends BaseViewModel {
             PageRouteBuilder(
               pageBuilder: (context, animation, anotherAnimation) {
                 return InfoStories(
-                  topic: "",
+                  topic: "onboarding",
                 );
               },
               transitionDuration: Duration(milliseconds: 500),

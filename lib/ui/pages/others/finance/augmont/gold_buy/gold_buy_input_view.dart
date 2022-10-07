@@ -95,7 +95,10 @@ class GoldBuyInputView extends StatelessWidget {
                       : augTxnService.isGoldBuyInProgress
                           ? SizedBox()
                           : GestureDetector(
-                              onTap: () => model.showOfferModal(model),
+                              onTap: () {
+                                model.buyFieldNode.unfocus();
+                                model.showOfferModal(model);
+                              },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,

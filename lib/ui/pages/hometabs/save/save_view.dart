@@ -158,7 +158,8 @@ class AppFooter extends StatelessWidget {
           children: [
             Text(
               'v${BaseUtil.packageInfo.version} (${BaseUtil.packageInfo.buildNumber})',
-              style: TextStyles.body3.colour(UiConstants.kTextColor2),
+              style:
+                  TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor2),
             ),
             RichText(
               textAlign: TextAlign.center,
@@ -223,7 +224,7 @@ class SaveNetWorthSection extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: SizeConfig.padding16,
+              height: SizeConfig.padding24,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
@@ -654,7 +655,7 @@ class SaveInfoSection extends StatelessWidget {
         SizedBox(
             height: imageHeight,
             width: imageWidth,
-            child: Image.asset(imageAsset)),
+            child: SvgPicture.asset(imageAsset)),
       ],
     );
   }

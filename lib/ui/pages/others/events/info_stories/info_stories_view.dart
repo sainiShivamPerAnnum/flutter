@@ -40,7 +40,7 @@ class InfoStories extends StatelessWidget {
                       repeat: false,
                       onStoryShow: (s) {},
                       onComplete: () {
-                        // AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                       },
                       onVerticalSwipeComplete: (direction) {}),
             ),

@@ -12,6 +12,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -77,6 +78,7 @@ class UserProfileVM extends BaseViewModel {
   final _googleSignInService = locator<GoogleSignInService>();
   final _bankAndKycService = locator<BankAndPanService>();
   final dbProvider = locator<DBModel>();
+  final _gtService = locator<GoldenTicketService>();
 
   double picSize;
   XFile selectedProfilePicture;
