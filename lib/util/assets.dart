@@ -458,4 +458,5 @@ class Assets {
 
   static const String levelUpLottie = "assets/lotties/levelup.json";
   static const String wohooLottie = "assets/lotties/woohoo.json";
+  static const String gtScratch = "assets/lotties/scratch.json";
 }

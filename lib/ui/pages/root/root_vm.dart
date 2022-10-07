@@ -251,19 +251,18 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
-      _userService.checkForUnscratchedGTStatus();
       _userService.getProfilePicture();
       // await _baseUtil.getProfilePicture();
 
       _initAdhocNotifications();
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
-      await handleStartUpNotifictionData();
+      await handleStartUpNotificationData();
       await checkIfAppLockModalSheetIsRequired();
     });
   }
 
-  handleStartUpNotifictionData() {
+  handleStartUpNotificationData() {
     if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
       canExecuteStartupNotification = false;
       _logger.d(

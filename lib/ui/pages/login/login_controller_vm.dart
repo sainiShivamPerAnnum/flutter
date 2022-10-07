@@ -248,7 +248,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 token,
                 cstate,
               );
-              logger.e(response.toString());
+              logger.i(response.toString());
               if (response.code == 400) {
                 message = response.errorMessage ??
                     "Unable to create account, please try again later.";
@@ -473,7 +473,7 @@ class LoginControllerViewModel extends BaseViewModel {
         'Sending OTP failed',
         exceptionMessage,
       );
-      _otpScreenKey.currentState.model.otpFieldEnabled = true;
+      // _otpScreenKey.currentState.model.otpFieldEnabled = true;
 
       setState(ViewState.Idle);
     }
