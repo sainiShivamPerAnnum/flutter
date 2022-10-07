@@ -204,14 +204,15 @@ class WebHomeViewModel extends BaseViewModel {
   // }
 
   Future<bool> setupGame() async {
-    if (checkIfUserIsBannedFromThisGame() && checkIfDeviceIsNotAnEmulator()) {
+    if (checkIfUserIsBannedFromThisGame() &&
+        await checkIfDeviceIsNotAnEmulator()) {
       await getBearerToken();
       return _setupCurrentGame();
     }
     return false;
   }
 
-  checkIfDeviceIsNotAnEmulator() async {
+  Future<bool> checkIfDeviceIsNotAnEmulator() async {
     //TODO
     final Map<String, dynamic> res = await _internalOps.initDeviceInfo();
     if (res != null) {
