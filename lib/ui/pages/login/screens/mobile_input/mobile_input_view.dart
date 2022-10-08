@@ -98,7 +98,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
             SizedBox(height: SizeConfig.padding80),
             SignupHeroAsset(asset: Assets.flatFullFlagIsland),
             Text(
-              'Login/Signup',
+              'Login/Sign up',
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding32),

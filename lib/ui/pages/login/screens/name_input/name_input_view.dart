@@ -67,7 +67,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins * 2,
                 ),
-                hintText: "Enter your name",
+                hintText: "Enter your name as per your PAN",
                 focusNode: model.nameFocusNode,
                 textCapitalization: TextCapitalization.words,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -89,7 +89,6 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 },
               ),
             ),
-
             SizedBox(height: SizeConfig.padding20),
             model.hasReferralCode
                 ? AppTextField(
@@ -101,22 +100,17 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     isEnabled: true,
                     scrollPadding:
                         EdgeInsets.only(bottom: SizeConfig.padding80),
-                    // decoration: InputDecoration(
                     hintText: "Enter your referral code here",
-                    textAlign: TextAlign.center,
-                    //   hintStyle: TextStyles.body3.colour(Colors.grey),
-                    // ),
+                    textAlign: TextAlign.left,
                     onSubmit: (_) => widget.loginModel.processScreenInput(2),
-
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
                         RegExp(r'[a-zA-Z0-9]'),
                       )
                     ],
-
                     validator: (val) {
                       if (val.trim().length == 0 || val == null) return null;
-                      if (val.trim().length < 3 || val.trim().length > 10)
+                      if (val.trim().length < 6 || val.trim().length > 10)
                         return "Invalid referral code";
                       return null;
                     },
@@ -134,15 +128,6 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       ),
                     ),
                   ),
-            if (model.hasReferralCode)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Referral codes are case-sensitive",
-                  textAlign: TextAlign.center,
-                  style: TextStyles.body4.colour(UiConstants.kPrimaryColor),
-                ),
-              ),
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );
