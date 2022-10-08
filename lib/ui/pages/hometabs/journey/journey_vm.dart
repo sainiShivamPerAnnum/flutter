@@ -136,39 +136,51 @@ class JourneyPageViewModel extends BaseViewModel {
       });
     });
 
+    checkIfUserIsNewAndNeedsStoryView();
+    checkIfUserIsOldAndNeedsStoryView();
+  }
+
+  checkIfUserIsNewAndNeedsStoryView() {
     Future.delayed(
       Duration(seconds: 4),
       () {
         if (_userService.userJourneyStats.mlIndex == 1 &&
             !_journeyService.isUserJourneyOnboarded) {
-          _journeyService.isJourneyOnboardingInView = true;
-          PreferenceHelper.setBool(
-              PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
-          AppState.screenStack.add(ScreenItem.dialog);
-          Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, anotherAnimation) {
-                return InfoStories(
-                  topic: "onboarding",
-                );
-              },
-              transitionDuration: Duration(milliseconds: 500),
-              transitionsBuilder:
-                  (context, animation, anotherAnimation, child) {
-                animation = CurvedAnimation(
-                    curve: Curves.easeInCubic, parent: animation);
-                return Align(
-                  child: SizeTransition(
-                    sizeFactor: animation,
-                    child: child,
-                    axisAlignment: 0.0,
-                  ),
-                );
-              },
-            ),
-          );
+          openStoryView();
         }
       },
+    );
+  }
+
+  checkIfUserIsOldAndNeedsStoryView() {
+    //TODO
+  }
+
+  openStoryView() {
+    _journeyService.isJourneyOnboardingInView = true;
+    PreferenceHelper.setBool(
+        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return InfoStories(
+            topic: "onboarding",
+          );
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (context, animation, anotherAnimation, child) {
+          animation =
+              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+          return Align(
+            child: SizeTransition(
+              sizeFactor: animation,
+              child: child,
+              axisAlignment: 0.0,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -182,32 +194,6 @@ class JourneyPageViewModel extends BaseViewModel {
 
   Future<void> checkIfThereIsAMilestoneLevelChange() async =>
       _journeyService.checkForMilestoneLevelChange();
-
-  //  (pages.length - model.page) * pageHeight +
-  //               pageHeight -
-  //               (pageHeight * model.coords[1]))
-
-  // init(int stPage) async {
-  //   isLoading = true;
-  //   await Future.delayed(Duration(seconds: 5));
-  //   pages = pages.sublist(0, 2);
-  //   pageWidth = SizeConfig.screenWidth;
-  //   pageHeight = pageWidth * 2.165;
-  //   startPage = stPage;
-  //   pageCount = pages.length;
-  //   currentFullViewHeight = pageHeight * pageCount;
-  //   startPage = pages[0].page;
-  //   lastPage = pages[pages.length - 1].page;
-  //   setCurrentMilestones();
-  //   setCustomPathItems();
-  //   setJourneyPathItems();
-  //   // avatarPath = drawPath();
-  //   // setAvatarPostion();
-  //   createPathForAvatarAnimation(2, 5);
-
-  //   await Future.delayed(Duration(seconds: 2));
-  //   isLoading = false;
-  // }
 
   addPageToTop() async {
     if (isLoading) return;

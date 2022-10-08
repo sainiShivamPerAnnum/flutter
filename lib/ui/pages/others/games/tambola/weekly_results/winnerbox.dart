@@ -22,15 +22,12 @@ class WinnerBox extends StatelessWidget {
         return "Corners";
         break;
       case 1:
-        return "First Row";
+        return "One Row";
         break;
       case 2:
-        return "Second Row";
+        return "Two Rows";
         break;
       case 3:
-        return "Third Row";
-        break;
-      case 4:
         return "Full House";
         break;
     }
@@ -122,40 +119,6 @@ class WinnerBox extends StatelessWidget {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   children: getWinningTicketTiles()),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding20, horizontal: SizeConfig.padding24),
-          decoration: BoxDecoration(
-            color: UiConstants.gameCardColor,
-            borderRadius:
-                BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Tokens Won",
-                style: TextStyles.sourceSans.body4
-                    .colour(UiConstants.kFAQsAnswerColor),
-              ),
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    Assets.token,
-                    width: SizeConfig.padding16,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding6,
-                  ),
-                  Text(
-                    totalFlcAmount.toString(),
-                    style: TextStyles.sourceSansSB.body3.colour(Colors.white),
-                  )
-                ],
-              )
             ],
           ),
         ),

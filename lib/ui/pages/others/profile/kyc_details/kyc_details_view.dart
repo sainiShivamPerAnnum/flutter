@@ -121,14 +121,15 @@ class KYCDetailsView extends StatelessWidget {
                           SizedBox(
                             width: SizeConfig.padding14,
                           ),
-                          Wrap(
-                            children: [
-                              Text(
+                          Expanded(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
                                 'This is required to securely verify your identity.',
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),

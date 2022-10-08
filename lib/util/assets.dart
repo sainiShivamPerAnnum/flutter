@@ -198,7 +198,6 @@ class Assets {
 
   static final String chevRonRightArrow =
       "assets/vectors/icons/chevron_right_arrow.svg";
-  static final String upDownArrow = "assets/svg/up-and-down-arrows.svg";
   //Golden Tickeets screen
   static final String unredemmedGoldenTicketBG = "assets/svg/unredeemed_gt.svg";
   static final String levelUpUnRedeemedGoldenTicketBG =

@@ -130,7 +130,7 @@ class PaytmRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
       final _responseModel = TransactionResponseModel.fromMap(response);
-      logger.d(_responseModel);
+
       return ApiResponse<TransactionResponseModel>(
           model: _responseModel, code: 200);
     } catch (e) {

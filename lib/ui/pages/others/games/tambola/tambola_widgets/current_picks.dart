@@ -10,15 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CurrentPicks extends StatelessWidget {
-  CurrentPicks({this.todaysPicks, this.dailyPicksCount});
+  CurrentPicks(
+      {this.todaysPicks, this.dailyPicksCount, this.isTambolaCard = true});
   final List<int> todaysPicks;
   final int dailyPicksCount;
+  bool isTambolaCard;
 
   int renderedTimes = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: SizeConfig.padding10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -27,6 +28,17 @@ class CurrentPicks extends StatelessWidget {
               picksList: todaysPicks,
             ),
           ),
+          if (!isTambolaCard)
+            Container(
+              padding: EdgeInsets.only(
+                  top: SizeConfig.padding24, bottom: SizeConfig.padding16),
+              child: Text(
+                todaysPicks == [0, 0, 0]
+                    ? "Will be drawn at 6pm"
+                    : "drawn at 6pm",
+                style: TextStyles.sourceSansSB.body4,
+              ),
+            )
         ],
       ),
     );
@@ -58,9 +70,8 @@ class TodayPicksBallsAnimation extends StatelessWidget {
           children: List.generate(
             picksList.length,
             (index) => Container(
-              margin: EdgeInsets.only(
-                  right:
-                      index == picksList.length - 1 ? 0 : SizeConfig.padding26),
+              height: SizeConfig.screenWidth * 0.14,
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
               child: AnimatedPicksDisplay(
                 number: picksList[index],
                 tabIndex: m.getCurrentTabIndex ?? 0,

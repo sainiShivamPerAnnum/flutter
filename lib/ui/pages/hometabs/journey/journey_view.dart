@@ -66,44 +66,7 @@ class _JourneyViewState extends State<JourneyView>
             topic: 'onboarding',
           ),
           body: model.isLoading && model.pages == null
-              ? Container(
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenHeight,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF097178).withOpacity(0.2),
-                        Color(0xFF0C867C),
-                        Color(0xff0B867C),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(Assets.fullScreenLoaderLottie,
-                          height: SizeConfig.screenWidth / 2),
-                      SizedBox(height: 20),
-                      Text(
-                        'Journey failed to load',
-                        style: TextStyles.rajdhaniEB.title2,
-                      ),
-                      SizedBox(height: 20),
-                      AppNegativeBtn(
-                          btnText: 'Retry',
-                          onPressed: () {
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                              state: PageState.replaceAll,
-                              page: SplashPageConfig,
-                            );
-                          })
-                    ],
-                  ),
-                )
+              ? JourneyErrorScreen()
               : Stack(
                   children: [
                     SizedBox(
@@ -116,18 +79,6 @@ class _JourneyViewState extends State<JourneyView>
                         child: Container(
                           height: model.currentFullViewHeight,
                           width: SizeConfig.screenWidth,
-                          // color: Colors.black,
-                          // decoration: BoxDecoration(
-                          // gradient: LinearGradient(
-                          //   colors: [
-                          //     Color(0xffB9D1FE),
-                          //     Color(0xffD6E0FF),
-                          //     Color(0xffF1EFFF)
-                          //   ],
-                          //   begin: Alignment.topCenter,
-                          //   end: Alignment.bottomCenter,
-                          // ),
-                          // ),
                           child: Stack(
                             children: [
                               Background(model: model),
@@ -146,18 +97,62 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
-
                     JourneyAppBar(),
                     JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
-                    // NewUserNavBar(model: model),
-
                     JPageLoader(model: model),
                     LevelUpAnimation(),
                   ],
                 ),
         );
       },
+    );
+  }
+}
+
+class JourneyErrorScreen extends StatelessWidget {
+  const JourneyErrorScreen({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenHeight,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF097178).withOpacity(0.2),
+            Color(0xFF0C867C),
+            Color(0xff0B867C),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset(Assets.fullScreenLoaderLottie,
+              height: SizeConfig.screenWidth / 2),
+          SizedBox(height: 20),
+          Text(
+            'Journey failed to load',
+            style: TextStyles.rajdhaniEB.title2,
+          ),
+          SizedBox(height: 20),
+          AppNegativeBtn(
+              btnText: 'Retry',
+              onPressed: () {
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.replaceAll,
+                  page: SplashPageConfig,
+                );
+              })
+        ],
+      ),
     );
   }
 }
@@ -316,12 +311,25 @@ class LevelBlurView extends StatelessWidget {
                                   painter: DottedLinePainter(),
                                 ),
                               ),
-                              CircleAvatar(
-                                radius: SizeConfig.avatarRadius,
-                                backgroundColor: Colors.white,
-                                child: Icon(Icons.lock,
-                                    size: SizeConfig.iconSize0,
-                                    color: Colors.black),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness24),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding6,
+                                    horizontal: SizeConfig.padding10),
+                                child: Row(
+                                  children: [
+                                    Text("Level ${levelData.level + 1} ",
+                                        style: TextStyles.rajdhaniB.body1
+                                            .colour(Colors.black)),
+                                    Icon(Icons.lock,
+                                        size: SizeConfig.iconSize1,
+                                        color: Colors.black),
+                                  ],
+                                ),
                               ),
                               Expanded(
                                 child: CustomPaint(

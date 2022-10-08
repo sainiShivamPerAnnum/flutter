@@ -97,7 +97,7 @@ class _PrizeWinState extends State<PrizeWin> {
                   padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding20,
                   ),
-                  child: Text("Your tickets won.",
+                  child: Text("Your tickets won!",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kFAQsAnswerColor)),

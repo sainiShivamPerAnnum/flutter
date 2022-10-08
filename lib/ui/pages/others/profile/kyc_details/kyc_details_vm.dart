@@ -35,6 +35,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
+
   FocusNode panFocusNode = FocusNode();
   TextInputType panTextInputType = TextInputType.name;
 
@@ -104,7 +105,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     }
     setState(ViewState.Idle);
     Future.delayed(Duration(milliseconds: 500), () {
-      if (inEditMode) kycNameFocusNode.requestFocus();
+      if (inEditMode) panFocusNode.requestFocus();
     });
   }
 

@@ -65,7 +65,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                         .colour(UiConstants.kTextColor2),
                   ),
                   Text(
-                    '₹ ${model.withdrawableQuantity?.amount ?? 0}',
+                    '₹ ${model.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
                     style: TextStyles.sourceSansSB.body0.colour(
                       UiConstants.kTextColor,
                     ),

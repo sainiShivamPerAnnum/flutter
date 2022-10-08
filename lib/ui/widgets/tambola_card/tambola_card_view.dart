@@ -95,13 +95,14 @@ class TambolaCard extends StatelessWidget {
                       height: SizeConfig.padding12,
                     ),
                     SizedBox(
-                      height: SizeConfig.screenWidth * 0.2,
                       child: CurrentPicks(
                         dailyPicksCount: model.dailyPicksCount ?? 3,
                         todaysPicks: model.todaysPicks != null
                             ? model.todaysPicks
                             : List.generate(
-                                model.dailyPicksCount ?? 3, (index) => 0),
+                                model.dailyPicksCount ?? 3,
+                                (index) => 0,
+                              ),
                       ),
                     ),
                     Padding(

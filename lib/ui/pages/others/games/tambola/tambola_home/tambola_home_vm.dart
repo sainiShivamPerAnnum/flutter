@@ -63,7 +63,6 @@ class TambolaHomeViewModel extends BaseViewModel {
   double cardOpacity = 1;
   GameModel game;
   List<Winners> _winners = [];
-  bool _showBuyModal = true;
   List<Ticket> _tambolaBoardViews;
   int ticketGenerationTryCount = 0;
   TextEditingController ticketCountController;
@@ -136,14 +135,8 @@ class TambolaHomeViewModel extends BaseViewModel {
   LeaderboardModel get tlboard => _tLeaderBoard;
   PrizesModel get tPrizes => _prizeService.tambolaPrizes;
   List<Winners> get winners => _winners;
-  get showBuyModal => _showBuyModal;
 
   int get ticketSavedAmount => _ticketSavedAmount;
-
-  set showBuyModal(value) {
-    _showBuyModal = value;
-    notifyListeners();
-  }
 
   int get dailyPicksCount => tambolaService.dailyPicksCount;
 

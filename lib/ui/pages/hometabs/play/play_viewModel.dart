@@ -38,9 +38,9 @@ class PlayViewModel extends BaseViewModel {
   String boxHeading = "How Fello games work?";
   List<String> boxAssets = [
     Assets.ludoGameAsset,
-    Assets.ludoGameAsset,
+    Assets.token,
     Assets.leaderboardGameAsset,
-    Assets.giftGameAsset,
+    Assets.gift,
   ];
   List<String> boxTitlles = [
     'Earn tokens by saving & completing milestones',

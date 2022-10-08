@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -16,24 +14,17 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class GoldSellViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
@@ -51,6 +42,13 @@ class GoldSellViewModel extends BaseViewModel {
   bool isGoldRateFetching = false;
   bool _isQntFetching = false;
   double _fieldWidth = 2;
+  int _deductedTokensCount = 0;
+  int get deductedTokensCount => this._deductedTokensCount;
+
+  set deductedTokensCount(int value) {
+    this._deductedTokensCount = value;
+    notifyListeners();
+  }
 
   get fieldWidth => this._fieldWidth;
 
@@ -114,6 +112,7 @@ class GoldSellViewModel extends BaseViewModel {
   }
 
   init() async {
+    deductedTokensCount = 0;
     setState(ViewState.Busy);
     _analyticsService.track(eventName: AnalyticsEvents.saveSell);
     goldAmountController = TextEditingController();
@@ -358,6 +357,9 @@ class GoldSellViewModel extends BaseViewModel {
     print(response['status']);
     if (_augTxnService.currentTransactionState == TransactionState.ongoing) {
       if (response['status'] != null) {
+        if (response['tickets'] != null) {
+          deductedTokensCount = response['tickets'];
+        }
         if (response['status'])
           _augTxnService.currentTransactionState = TransactionState.success;
         else {

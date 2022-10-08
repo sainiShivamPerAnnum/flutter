@@ -364,36 +364,26 @@ class TambolaResultCard extends StatelessWidget {
             right: SizeConfig.pageHorizontalMargins,
             left: SizeConfig.pageHorizontalMargins),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomLeft,
-            colors: [
-              UiConstants.primaryLight.withOpacity(0.3),
-              UiConstants.primaryColor.withOpacity(0),
-              UiConstants.primaryLight.withOpacity(0.3),
-            ],
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            color: UiConstants.primaryColor.withOpacity(0.2),
+            color: UiConstants.kSnackBarPositiveContentColor),
+        padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+        child: ListTile(
+          leading: SvgPicture.asset(
+            Assets.tambolaCardAsset,
+            width: SizeConfig.screenWidth * 0.13,
           ),
-          margin: EdgeInsets.all(1),
-          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-          child: ListTile(
-            title: Text(
-              "Tambola results are Out",
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "Tambola results are out   ",
               style: TextStyles.rajdhaniB.title3,
             ),
-            subtitle: Text(
-              "Find out if your tickets won",
-              style: TextStyles.sourceSans.body2,
-            ),
-            trailing:
-                Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
           ),
+          subtitle: Text(
+            "Find out if your tickets won",
+            style: TextStyles.sourceSans.body2,
+          ),
+          trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
         ),
       ),
     );
@@ -984,11 +974,7 @@ class TodayWeeklyPicksCard extends StatelessWidget {
           ),
         ),
       ),
-      child: PicksCardView(
-        showBuyTicketModal: (value) {
-          model.showBuyModal = value;
-        },
-      ),
+      child: PicksCardView(),
     );
   }
 }

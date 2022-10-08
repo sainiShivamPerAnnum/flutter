@@ -151,37 +151,26 @@ class WeeklyPicks extends StatelessWidget {
     List<Widget> side1 = colElems.sublist(0, 4);
     List<Widget> side2 = colElems.sublist(4);
 
-    return Container(
-      height: SizeConfig.screenWidth * 0.5,
-      decoration: BoxDecoration(
-        color: UiConstants.kArowButtonBackgroundColor,
-        border: Border.all(
-          color: Colors.white.withOpacity(0.5),
-          width: 0.5,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(SizeConfig.roundness24),
-        ),
-      ),
-      padding: EdgeInsets.only(bottom: 8, top: SizeConfig.screenHeight * 0.02),
-      child: Row(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              physics: NeverScrollableScrollPhysics(),
-              children: side1,
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            physics: NeverScrollableScrollPhysics(),
+            children: side1,
+            shrinkWrap: true,
           ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              physics: NeverScrollableScrollPhysics(),
-              children: side2,
-            ),
+        ),
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            physics: NeverScrollableScrollPhysics(),
+            children: side2,
+            shrinkWrap: true,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

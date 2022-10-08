@@ -258,7 +258,7 @@ class RootViewModel extends BaseViewModel {
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await handleStartUpNotificationData();
-      await checkIfAppLockModalSheetIsRequired();
+      // await checkIfAppLockModalSheetIsRequired();
     });
   }
 

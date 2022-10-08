@@ -219,6 +219,7 @@ class GoldBuySuccessView extends StatelessWidget {
               children: [
                 WinningChips(
                     title: 'Fello Tokens',
+                    tooltip: "Fello Tokens",
                     asset: Assets.token,
                     qty: _augTxnService.currentTxnAmount.toInt()),
                 if (GoldenTicketService.currentGT != null)
@@ -226,6 +227,7 @@ class GoldBuySuccessView extends StatelessWidget {
                 if (GoldenTicketService.currentGT != null)
                   WinningChips(
                       title: 'Golden Ticket',
+                      tooltip: "Golden Tickets",
                       asset: Assets.unredemmedGoldenTicketBG,
                       qty: 1),
                 if (_augTxnService.currentTxnTambolaTicketsCount > 0)
@@ -233,6 +235,7 @@ class GoldBuySuccessView extends StatelessWidget {
                 if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
                       title: 'Tambola Ticket',
+                      tooltip: "Tambola Tickets",
                       asset: Assets.singleTmbolaTicket,
                       qty: _augTxnService.currentTxnTambolaTicketsCount)
               ],
@@ -268,6 +271,7 @@ class WinningChips extends StatelessWidget {
   final String title;
   final String asset;
   final int qty;
+  final String tooltip;
   final EdgeInsets margin;
 
   const WinningChips(
@@ -275,6 +279,7 @@ class WinningChips extends StatelessWidget {
       @required this.title,
       @required this.asset,
       @required this.qty,
+      @required this.tooltip,
       this.margin})
       : super(key: key);
 
@@ -282,58 +287,28 @@ class WinningChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: LayoutBuilder(
-        builder: ((context, constraints) => Container(
-              // height: SizeConfig.padding80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                color: UiConstants.darkPrimaryColor2,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins,
-                vertical: SizeConfig.padding12,
-              ),
-              margin: margin ?? EdgeInsets.zero,
-              child: constraints.maxWidth < SizeConfig.screenWidth / 3
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title, style: TextStyles.sourceSans.body4),
-                        SizedBox(height: SizeConfig.padding6),
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              asset,
-                              width: SizeConfig.padding20,
-                              height: SizeConfig.padding20,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding6,
-                            ),
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                  maxWidth: SizeConfig.screenWidth * 0.08),
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(qty.toString(),
-                                    style: TextStyles.rajdhaniB.title3),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                          Expanded(
-                            child:
-                                Text(title, style: TextStyles.sourceSans.body4),
-                          ),
+        builder: ((context, constraints) => Tooltip(
+              triggerMode: TooltipTriggerMode.tap,
+              message: tooltip,
+              child: Container(
+                // height: SizeConfig.padding80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.darkPrimaryColor2,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                  vertical: SizeConfig.padding12,
+                ),
+                margin: margin ?? EdgeInsets.zero,
+                child: constraints.maxWidth < SizeConfig.screenWidth / 3
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title, style: TextStyles.sourceSans.body4),
+                          SizedBox(height: SizeConfig.padding6),
                           Row(
                             children: [
-                              SizedBox(
-                                width: SizeConfig.padding12,
-                              ),
                               SvgPicture.asset(
                                 asset,
                                 width: SizeConfig.padding20,
@@ -344,7 +319,7 @@ class WinningChips extends StatelessWidget {
                               ),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                    maxWidth: SizeConfig.screenWidth * 0.09),
+                                    maxWidth: SizeConfig.screenWidth * 0.08),
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(qty.toString(),
@@ -353,7 +328,41 @@ class WinningChips extends StatelessWidget {
                               ),
                             ],
                           )
-                        ]),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                            Expanded(
+                              child: Text(title,
+                                  style: TextStyles.sourceSans.body4),
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: SizeConfig.padding12,
+                                ),
+                                SvgPicture.asset(
+                                  asset,
+                                  width: SizeConfig.padding20,
+                                  height: SizeConfig.padding20,
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.padding6,
+                                ),
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      maxWidth: SizeConfig.screenWidth * 0.09),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(qty.toString(),
+                                        style: TextStyles.rajdhaniB.title3),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ]),
+              ),
             )),
       ),
     );

@@ -179,11 +179,12 @@ class GoldBuyViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
-    goldBuyAmount = amount.toDouble() ?? chipAmountList[1];
+    goldBuyAmount = amount.toDouble() ?? chipAmountList[2];
     goldAmountController = TextEditingController(
-        text: amount.toString() ?? chipAmountList[1].toInt().toString());
+        text: amount.toString() ?? chipAmountList[2].toInt().toString());
     fieldWidth =
         (SizeConfig.padding40 * goldAmountController.text.length.toDouble());
+    if (goldBuyAmount != chipAmountList[2]) lastTappedChipIndex = -1;
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
@@ -298,7 +299,7 @@ class GoldBuyViewModel extends BaseViewModel {
     return AmountChip(
       isActive: lastTappedChipIndex == index,
       amt: amt,
-      isBest: index == 1,
+      isBest: index == 2,
       onClick: (int amount) {
         if (couponApplyInProgress || isGoldBuyInProgress) return;
         showMaxCapText = false;
