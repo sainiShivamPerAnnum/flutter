@@ -300,6 +300,8 @@ class _GTInstantViewState extends State<GTInstantView>
                       ignoring: true,
                       child: Lottie.asset(
                         Assets.gtConfetti,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
                         height: SizeConfig.screenHeight,
                         width: SizeConfig.screenWidth,
                       ),

@@ -55,6 +55,7 @@ class GoldenTicketService extends ChangeNotifier {
   static String gameEndMsgText;
   static GoldenTicket currentGT;
   static String lastGoldenTicketId;
+  static String previousPrizeSubtype = '';
 
   List<GoldenTicket> _activeGoldenTickets;
 
@@ -86,13 +87,35 @@ class GoldenTicketService extends ChangeNotifier {
     return false;
   }
 
+  Future<bool> fetchAndVerifyGoldenTicketByPrizeSubtype() async {
+    if (previousPrizeSubtype != null && previousPrizeSubtype.isNotEmpty) {
+      ApiResponse<GoldenTicket> ticketResponse =
+          await _gtRepo.getGTByPrizeSubtype(
+        previousPrizeSubtype,
+      );
+
+      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model)) {
+        currentGT = ticketResponse.model;
+        return true;
+      } else {
+        currentGT = null;
+        return false;
+      }
+    }
+    return false;
+  }
+
   showInstantGoldenTicketView(
       {@required GTSOURCE source,
       String title,
       double amount = 0,
+      bool onJourney = false,
       bool showAutoSavePrompt = false}) {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
+      log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${GoldenTicketService.currentGT.prizeSubtype} ");
+      if (previousPrizeSubtype == GoldenTicketService.currentGT.prizeSubtype &&
+          !onJourney) return;
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
@@ -126,7 +149,6 @@ class GoldenTicketService extends ChangeNotifier {
     if (ticket.isRewarding != null &&
         ticket.gtId != null &&
         ticket.gtType != null &&
-        ticket.timestamp != null &&
         ticket.timestamp != null) return true;
     return false;
   }

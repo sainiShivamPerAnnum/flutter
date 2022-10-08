@@ -715,7 +715,7 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
         "Media query bottom insets ${MediaQuery.of(context).viewInsets.bottom}");
     return Positioned(
       bottom: MediaQuery.of(context).viewInsets.bottom,
-      child: MediaQuery.of(context).viewInsets.bottom >=
+      child: MediaQuery.of(context).viewInsets.bottom >
               SizeConfig.viewInsets.bottom
           ? Container(
               width: SizeConfig.screenWidth,

@@ -44,8 +44,8 @@ class TopSaverViewModel extends BaseViewModel {
   int weekDay = DateTime.now().weekday;
 
   int _userRank = 0;
-  String _userDisplayAmount = '';
-  String _highestSavingsDisplayAmount = '';
+  String _userDisplayAmount = '-';
+  String _highestSavingsDisplayAmount = '-';
   String winnerTitle = "Past Winners";
   EventModel event;
   bool showStandingsAndWinners = true;

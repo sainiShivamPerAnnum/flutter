@@ -35,7 +35,7 @@ class GoldenTicket {
   });
 
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
-    gtId = docId;
+    gtId = json['id'] ?? docId;
     userId = json['userId'];
     timestamp = TimestampModel.fromMap(json['timestamp']);
     eventType = json['eventType'];

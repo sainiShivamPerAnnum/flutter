@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
@@ -167,7 +169,7 @@ class GoldenTicketRepository extends BaseRepo {
       final String bearer = await getBearerToken();
 
       Map<String, dynamic> body = {"uid": uid, "gtId": gtId};
-
+      log("GT Redeem id: $body");
       final response = await APIService.instance.postData(
         ApiPath.kRedeemGtReward,
         body: body,

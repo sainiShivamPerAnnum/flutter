@@ -633,7 +633,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
     controller.reset();
     await scrollPageToAvatarPosition();
-    controller.forward().whenComplete(() {
+    controller.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();
       // if (gameLevelChangeResult != 0)
@@ -641,13 +641,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       //     "New Milestones on your way!");
       updateAvatarLocalLevel();
       baseGlow = 1;
-      Future.delayed(
-          Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
-
-      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
+      Future.delayed(Duration(milliseconds: 500),
+          () => isAvatarAnimationInProgress = false);
+      _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype().then((res) {
         if (res)
           _gtService.showInstantGoldenTicketView(
-              title: 'Congratulations!', source: GTSOURCE.newuser);
+              title: 'Congratulations!',
+              source: GTSOURCE.newuser,
+              onJourney: true);
       });
     });
   }

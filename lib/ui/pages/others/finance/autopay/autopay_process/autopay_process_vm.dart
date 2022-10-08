@@ -303,15 +303,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     _analyticsService.track(
         eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
     AppState.backButtonDispatcher.didPopRoute();
-    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-      if (res) {
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosaveSetupGTReceived);
-        _gtService.showInstantGoldenTicketView(
-            title: 'Your Autosave setup was successful!',
-            source: GTSOURCE.autosave);
-      }
-    });
+    _gtService.fetchAndVerifyGoldenTicketByID();
   }
 
   initiateCustomSubscription() async {

@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
@@ -16,7 +17,6 @@ import 'package:lottie/lottie.dart';
 class GoldBuySuccessView extends StatelessWidget {
   final _augTxnService = locator<AugmontTransactionService>();
   final _gtService = locator<GoldenTicketService>();
-
   GoldBuySuccessView({Key key}) : super(key: key);
 
   @override

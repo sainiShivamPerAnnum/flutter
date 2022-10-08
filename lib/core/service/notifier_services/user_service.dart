@@ -14,6 +14,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -155,10 +156,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userJourneyStats(UserJourneyStatsModel stats) {
+    if (stats.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '')
+      GoldenTicketService.previousPrizeSubtype =
+          _userJourneyStats?.prizeSubtype ?? '';
     _userJourneyStats = stats;
     notifyListeners(UserServiceProperties.myJourneyStats);
     _logger
         .d("Journey Stats updated in userservice, property listeners notified");
+    _logger.d(
+        "Previous PrizeSubtype : ${GoldenTicketService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {

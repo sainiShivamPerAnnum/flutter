@@ -166,13 +166,7 @@ class WebGameViewModel extends BaseViewModel {
       });
       return;
     }
-    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-      if (res)
-        Future.delayed(duration ?? Duration(seconds: 1), () {
-          _gtService.showInstantGoldenTicketView(
-              title: 'Game Milestone reached', source: GTSOURCE.game);
-        });
-    });
+    _gtService.fetchAndVerifyGoldenTicketByID();
   }
 
   //helper

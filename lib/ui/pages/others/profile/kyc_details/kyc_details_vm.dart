@@ -164,11 +164,7 @@ class KYCDetailsViewModel extends BaseViewModel {
               'Verification Successful', 'You are successfully verified!');
           // isKycInProgress = false;
 
-          _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-            if (res)
-              _gtService.showInstantGoldenTicketView(
-                  title: 'Your KYC is complete', source: GTSOURCE.panVerify);
-          });
+          _gtService.fetchAndVerifyGoldenTicketByID();
 
           AppState.backButtonDispatcher.didPopRoute();
         }
