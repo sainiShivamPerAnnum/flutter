@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -436,7 +437,6 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding28,
             ),
-
             !model.isNewUser
                 ? Column(
                     children: [
@@ -498,6 +498,25 @@ class UserProfileForm extends StatelessWidget {
                         color: UiConstants.kTextColor2,
                         thickness: 0.5,
                       ),
+                      SizedBox(height: SizeConfig.padding6),
+                      InkWell(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: FreshDeskHelpPageConfig,
+                          );
+                        },
+                        child: Row(
+                          // padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('Need Help?',
+                                style: TextStyles.sourceSansSB.body2
+                                    .colour(UiConstants.kTabBorderColor))
+                          ],
+                        ),
+                      ),
                       SizedBox(height: SizeConfig.padding54),
                       Center(
                         child: TextButton(
@@ -514,6 +533,7 @@ class UserProfileForm extends StatelessWidget {
                     width: SizeConfig.screenWidth,
                     btnText: "Complete",
                     onPressed: model.updateDetails),
+            SizedBox(height: SizeConfig.padding6),
             AppFooter(),
             SizedBox(height: SizeConfig.padding28),
           ],

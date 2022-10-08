@@ -93,13 +93,14 @@ class TrendingGames extends StatelessWidget {
               style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding12),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
                   Assets.token,
                   height: SizeConfig.padding20,
                 ),
-                SizedBox(height: SizeConfig.padding6),
+                SizedBox(width: SizeConfig.padding6),
                 Text(
                   game.playCost.toString(),
                   style: TextStyles.sourceSans.body2.colour(Colors.white),

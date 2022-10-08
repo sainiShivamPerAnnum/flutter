@@ -92,6 +92,7 @@ class Assets {
   static final String flatFullFlagIsland = 'assets/svg/flatFullFlagIsland.svg';
   static final String augmontLogo = 'assets/svg/augmont-white.svg';
   static final String lendboxLogo = 'assets/svg/lendbox-white.svg';
+  static final String idbiTrustee = 'assets/svg/idbi-trustee.svg';
 
   // WIN
 
