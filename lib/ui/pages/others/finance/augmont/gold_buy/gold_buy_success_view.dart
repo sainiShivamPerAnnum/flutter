@@ -169,7 +169,7 @@ class GoldBuySuccessView extends StatelessWidget {
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${_augTxnService.currentTxnGms} gms",
+                          Text("${_augTxnService.currentTxnGms} gm",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],

@@ -25,8 +25,8 @@ class TrendingGamesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-            title: "Your favorites",
-            subTitle: "The games you love and play most often"),
+            title: "All games",
+            subTitle: "New games are added regularly. Keep checking out!"),
         Container(
           height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth,
