@@ -633,6 +633,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
     controller.reset();
     await scrollPageToAvatarPosition();
+    _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
     controller.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();
@@ -643,13 +644,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       baseGlow = 1;
       Future.delayed(Duration(milliseconds: 500),
           () => isAvatarAnimationInProgress = false);
-      _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype().then((res) {
-        if (res)
-          _gtService.showInstantGoldenTicketView(
-              title: 'Congratulations!',
-              source: GTSOURCE.newuser,
-              onJourney: true);
-      });
+      _gtService.showInstantGoldenTicketView(
+          title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     });
   }
 }

@@ -498,6 +498,7 @@ class UserProfileVM extends BaseViewModel {
                 _analyticsService.signOut();
                 _paytmService.signout();
                 _bankAndKycService.dump();
+                GoldenTicketService.dump();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);

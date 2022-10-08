@@ -491,6 +491,7 @@ class RootViewModel extends BaseViewModel {
               _analyticsService.signOut();
               _paytmService.signout();
               _bankAndKycService.dump();
+              GoldenTicketService.dump();
               AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(

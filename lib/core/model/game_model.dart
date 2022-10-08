@@ -108,23 +108,23 @@ class GameModel {
     Map<String, dynamic> map,
   ) {
     return GameModel(
-        id: map['id'],
-        gameName: map['gameName'],
-        gameUri: map['gameUri'],
-        thumbnailUri: map['thumbnailUri'],
-        playCost: map['playCost'],
-        prizeAmount: map['prizeAmount'],
-        analyticEvent: map['analyticEvent'],
-        shadowColor: map['shadowColor'].toString().toColor(),
-        route: map['route'],
-        gameCode: map['gameCode'],
-        code: map['code'],
-        isGOW: map['isGOW'],
-        order: map['order'],
-        icon: map['icon'],
-        isTrending: map['isTrending'],
-        event: map['event'],
-        description: map['description']);
+        id: map['id'] ?? '',
+        gameName: map['gameName'] ?? '',
+        gameUri: map['gameUri'] ?? '',
+        thumbnailUri: map['thumbnailUri'] ?? '',
+        playCost: map['playCost'] ?? 0,
+        prizeAmount: map['prizeAmount'] ?? 0,
+        analyticEvent: map['analyticEvent'] ?? '',
+        shadowColor: (map['shadowColor'] ?? '#000000').toString().toColor(),
+        route: map['route'] ?? '',
+        gameCode: map['gameCode'] ?? '',
+        code: map['code'] ?? '',
+        isGOW: map['isGOW'] ?? false,
+        order: map['order'] ?? 0,
+        icon: map['icon'] ?? '',
+        isTrending: map['isTrending'] ?? false,
+        event: map['event'] ?? '',
+        description: map['description'] ?? '');
   }
 
   String toJson() => json.encode(toMap());

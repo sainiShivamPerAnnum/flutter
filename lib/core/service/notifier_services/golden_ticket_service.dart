@@ -57,6 +57,14 @@ class GoldenTicketService extends ChangeNotifier {
   static String lastGoldenTicketId;
   static String previousPrizeSubtype = '';
 
+  static dump() {
+    goldenTicketId = null;
+    gameEndMsgText = null;
+    currentGT = null;
+    lastGoldenTicketId = null;
+    previousPrizeSubtype = '';
+  }
+
   List<GoldenTicket> _activeGoldenTickets;
 
   List<GoldenTicket> get activeGoldenTickets => this._activeGoldenTickets ?? [];
