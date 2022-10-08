@@ -86,7 +86,7 @@ class Win extends StatelessWidget {
                                           .copyWith(fontSize: SizeConfig.body0),
                                     ),
                                     Text(
-                                      '₹ ${currentWinning.toString() ?? '-'}',
+                                      '₹ ${currentWinning.truncate() ?? '-'}',
                                       style: TextStyles.title1.extraBold
                                           .colour(Colors.white),
                                     ),

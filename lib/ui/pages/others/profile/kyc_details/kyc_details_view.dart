@@ -58,22 +58,6 @@ class KYCDetailsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppTextFieldLabel(locale.kycNameLabel),
-                    AppTextField(
-                      focusNode: model.kycNameFocusNode,
-                      inputFormatters: [
-                        // UpperCaseTextFormatter(),
-                        FilteringTextInputFormatter.allow(RegExp(r'[A-Z ]'))
-                      ],
-                      textCapitalization: TextCapitalization.characters,
-                      isEnabled: model.inEditMode,
-                      textEditingController: model.nameController,
-                      validator: (String value) {
-                        return '';
-                      },
-                      keyboardType: TextInputType.name,
-                    ),
-                    SizedBox(height: SizeConfig.padding24),
                     AppTextFieldLabel(
                       locale.pkPanLabel,
                     ),
@@ -95,6 +79,22 @@ class KYCDetailsView extends StatelessWidget {
                       validator: (String value) {
                         return '';
                       },
+                    ),
+                    SizedBox(height: SizeConfig.padding24),
+                    AppTextFieldLabel(locale.kycNameLabel),
+                    AppTextField(
+                      focusNode: model.kycNameFocusNode,
+                      inputFormatters: [
+                        // UpperCaseTextFormatter(),
+                        FilteringTextInputFormatter.allow(RegExp(r'[A-Z ]'))
+                      ],
+                      textCapitalization: TextCapitalization.characters,
+                      isEnabled: model.inEditMode,
+                      textEditingController: model.nameController,
+                      validator: (String value) {
+                        return '';
+                      },
+                      keyboardType: TextInputType.name,
                     ),
                     !isKeyboardOpen
                         ? Spacer()
