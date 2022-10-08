@@ -5,11 +5,13 @@ import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 
 // class PicksCardView extends StatelessWidget {
 //   final ValueChanged<bool> showBuyTicketModal;
@@ -134,10 +136,30 @@ class PicksCardView extends StatelessWidget {
                       onPressed: () {
                         model.onTap(showBuyTicketModal);
                       },
-                      child: Text(
-                        model.isShowingAllPicks ? "Weekly" : "Today",
-                        style: TextStyles.sourceSansSB.body2
-                            .colour(UiConstants.kTabBorderColor),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: SizeConfig.padding12,
+                          bottom: SizeConfig.padding12,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: SizeConfig.padding2),
+                              child: Text(
+                                model.isShowingAllPicks ? "Weekly" : "Today",
+                                style: TextStyles.rajdhaniSB.body2,
+                              ),
+                            ),
+                            SvgPicture.asset(
+                              Assets.upDownArrow,
+                              height: SizeConfig.padding24,
+                              width: SizeConfig.padding24,
+                              color: UiConstants.chipColor,
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],

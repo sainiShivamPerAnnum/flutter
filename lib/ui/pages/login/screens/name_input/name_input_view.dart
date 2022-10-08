@@ -212,7 +212,7 @@ class FelloUserAvatar extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: SizeConfig.padding8),
           child: SvgPicture.asset(
-            Assets.customAvatar,
+            Assets.cvtar2,
             height: SizeConfig.screenWidth * 0.3067,
             width: SizeConfig.screenWidth * 0.3067,
           ),

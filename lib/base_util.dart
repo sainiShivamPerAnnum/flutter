@@ -430,7 +430,9 @@ class BaseUtil extends ChangeNotifier {
   static showNegativeAlert(String title, String message, {int seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200)) return;
+        (message != null && message.length > 200 ||
+            message.toUpperCase().contains('EXCEPTION') ||
+            message.toUpperCase().contains('SOCKET'))) return;
     bool isKeyboardOpen =
         MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
                 .viewInsets

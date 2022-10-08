@@ -288,20 +288,37 @@ class TicketsView extends StatelessWidget {
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 TextButton(
-                  onPressed: () {
-                    AppState.delegate.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: AllTambolaTicketsPageConfig,
-                      widget: AllTambolaTickets(
-                          ticketList: model.tambolaBoardViews.toList()),
-                    );
-                  },
-                  child: Text(
-                    "View All (${model.userWeeklyBoards.length})",
-                    style: TextStyles.sourceSansSB.body2
-                        .colour(UiConstants.kTabBorderColor),
-                  ),
-                )
+                    onPressed: () {
+                      AppState.delegate.appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: AllTambolaTicketsPageConfig,
+                        widget: AllTambolaTickets(
+                            ticketList: model.tambolaBoardViews.toList()),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.padding2,
+                          ),
+                          child: Text(
+                              'View All (${model.userWeeklyBoards.length})',
+                              style: TextStyles.rajdhaniSB.body2),
+                        ),
+                        SvgPicture.asset(Assets.chevRonRightArrow,
+                            height: SizeConfig.padding24,
+                            width: SizeConfig.padding24,
+                            color: UiConstants.primaryColor)
+                      ],
+                    )
+                    // child: Text(
+                    //   "View All (${model.userWeeklyBoards.length})",
+                    //   style: TextStyles.sourceSansSB.body2
+                    //       .colour(UiConstants.kTabBorderColor),
+                    // ),
+                    )
               ],
             ),
           ),

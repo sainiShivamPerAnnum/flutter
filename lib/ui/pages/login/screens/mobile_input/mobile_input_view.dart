@@ -165,7 +165,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                       width: SizeConfig.padding14,
                     ),
                     Text(
-                      'Join over 5 Lakh users in making finance fun!',
+                      'Join over 5 Lakh users who save and win with us!',
                       style: TextStyles.sourceSans.body4,
                     )
                   ],

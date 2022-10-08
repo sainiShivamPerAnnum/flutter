@@ -62,21 +62,20 @@ class Data {
   String status;
   bool isUpdating;
   int tickets;
-  Data({
-    @required this.status,
-    @required this.isUpdating,
-    @required this.tickets,
-  });
+  double goldInTxnBought;
+  Data(
+      {@required this.status,
+      @required this.isUpdating,
+      @required this.tickets,
+      this.goldInTxnBought});
 
-  Data copyWith({
-    bool status,
-    bool isUpdating,
-    int tickets,
-  }) {
+  Data copyWith(
+      {bool status, bool isUpdating, int tickets, double goldInTxnBought}) {
     return Data(
         status: status ?? this.status,
         isUpdating: isUpdating ?? this.isUpdating,
-        tickets: tickets ?? this.tickets);
+        tickets: tickets ?? this.tickets,
+        goldInTxnBought: goldInTxnBought ?? this.goldInTxnBought);
   }
 
   Map<String, dynamic> toMap() {
@@ -89,10 +88,11 @@ class Data {
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-      status: map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
-      isUpdating: map['isUpdating'] as bool ?? true,
-      tickets: map['tickets'] as int ?? 0,
-    );
+        status:
+            map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
+        isUpdating: map['isUpdating'] as bool ?? true,
+        tickets: map['tickets'] as int ?? 0,
+        goldInTxnBought: map['goldInTxnBought'] as double ?? 0.0);
   }
 
   String toJson() => json.encode(toMap());

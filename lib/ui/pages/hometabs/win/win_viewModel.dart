@@ -454,15 +454,6 @@ class WinViewModel extends BaseViewModel {
   }
 
   void navigateToRefer() {
-    if (_userService.userJourneyStats.mlIndex == 1)
-      BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissable: true,
-          hapticVibrate: false,
-          content: CompleteProfileDialog(
-            subtitle:
-                'Please complete your profile to win your first reward and to start sharing',
-          ));
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
