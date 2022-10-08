@@ -52,9 +52,9 @@ class BankDetailsView extends StatelessWidget {
                               inputFormatters: [
                                 // UpperCaseTextFormatter(),
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'[A-Z ]'))
+                                    RegExp(r'[a-zA-Z ]'))
                               ],
-                              textCapitalization: TextCapitalization.characters,
+                              // textCapitalization: TextCapitalization.characters,
                               textEditingController:
                                   model.bankHolderNameController,
                               validator: (value) {

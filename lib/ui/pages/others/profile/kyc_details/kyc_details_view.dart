@@ -85,10 +85,9 @@ class KYCDetailsView extends StatelessWidget {
                     AppTextField(
                       focusNode: model.kycNameFocusNode,
                       inputFormatters: [
-                        // UpperCaseTextFormatter(),
-                        FilteringTextInputFormatter.allow(RegExp(r'[A-Z ]'))
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
                       ],
-                      textCapitalization: TextCapitalization.characters,
+                      // textCapitalization: TextCapitalization.characters,
                       isEnabled: model.inEditMode,
                       textEditingController: model.nameController,
                       validator: (String value) {
@@ -125,7 +124,7 @@ class KYCDetailsView extends StatelessWidget {
                           Wrap(
                             children: [
                               Text(
-                                'This is required to securly verify your identity.',
+                                'This is required to securely verify your identity.',
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
                               ),

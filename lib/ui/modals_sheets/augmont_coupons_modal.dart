@@ -77,14 +77,15 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                           ),
                           onTap: () {
                             if (_formKey.currentState.validate()) {
-                              model.applyCoupon(
-                                  couponCodeController.text.trim());
+                              model.applyCoupon(couponCodeController.text
+                                  .trim()
+                                  .toUpperCase());
                               AppState.backButtonDispatcher.didPopRoute();
                             }
                           },
                         ),
                       ),
-                      textCapitalization: TextCapitalization.characters,
+                      // textCapitalization: TextCapitalization.characters,
                       validator: (val) {
                         if (val.trim().length == 0 || val == null)
                           return "Please enter a code to continue";
