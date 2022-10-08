@@ -25,7 +25,7 @@ class SaveAssetsFooter extends StatelessWidget {
                     title: 'Govt. Accredited',
                     imageAsset: Assets.augmontLogo,
                     imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.07,
+                    imageWidth: SizeConfig.screenWidth * 0.16,
                   ),
                   VerticalDivider(
                     color: Colors.white,
@@ -38,7 +38,7 @@ class SaveAssetsFooter extends StatelessWidget {
                     title: 'RBI Certified',
                     imageAsset: Assets.lendboxLogo,
                     imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.07,
+                    imageWidth: SizeConfig.screenWidth * 0.16,
                   ),
                   VerticalDivider(
                     color: Colors.white,
@@ -48,8 +48,8 @@ class SaveAssetsFooter extends StatelessWidget {
                     endIndent: 2,
                   ),
                   SaveInfoSection(
-                    title: 'Banking Partner',
-                    imageAsset: Assets.iciciLogo,
+                    title: 'Gold Insurer',
+                    imageAsset: Assets.idbiTrustee,
                     imageHeight: SizeConfig.screenWidth * 0.07,
                     imageWidth: SizeConfig.screenWidth * 0.16,
                   ),

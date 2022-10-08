@@ -412,7 +412,7 @@ class UserProfileVM extends BaseViewModel {
         isDOBChanged() ||
         isGenderChanged()) return true;
     if (!isNewUser) inEditMode = false;
-    BaseUtil.showNegativeAlert("No changes", "please make some changes");
+    // BaseUtil.showNegativeAlert("No changes", "please make some changes");
     return false;
   }
 

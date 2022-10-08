@@ -383,9 +383,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   // UPI METHODS -- START
   Future<String> generateUpiTransactionDeepUri(
-    String pspApp,
-    CreatePaytmTransactionModel paytmTransactionModel,
-  ) async {
+      String pspApp,
+      CreatePaytmTransactionModel paytmTransactionModel,
+      String description) async {
     final ApiResponse<ProcessTransactionModel> processTransactionApiResponse =
         await _paytmRepo.processPaytmTransaction(
       tempToken: paytmTransactionModel.data.temptoken,
@@ -403,7 +403,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       }
       String url =
           processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink +
-              '&tn=FELLOGOLD';
+              '&tn=${description}';
 
       _logger.d("Transaction Url: $url");
       return url;

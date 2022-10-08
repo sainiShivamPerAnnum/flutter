@@ -44,7 +44,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
             child: Text(
-              "Your Withdrawal request has been placed, money will be deposited in your account in next 24 hours",
+              "Your withdrawal request has been placed and the money will be credited to your account in the next 1-2 business working days",
               style: TextStyles.sourceSans.body2.setOpecity(0.7),
               textAlign: TextAlign.center,
             ),

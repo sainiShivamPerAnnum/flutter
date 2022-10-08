@@ -87,9 +87,9 @@ class TambolaCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "Win Grand prize of ₹1 Crore!",
-                      style: TextStyles.sourceSans.body3.bold
-                          .colour(UiConstants.kBlogCardRandomColor2),
+                      "Win ₹1 Crore!",
+                      style: TextStyles.sourceSans.body1.bold
+                          .colour(UiConstants.kWinnerPlayerLightPrimaryColor),
                     ),
                     SizedBox(
                       height: SizeConfig.padding12,

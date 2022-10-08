@@ -91,7 +91,7 @@ class ShareCard extends StatelessWidget {
             height: SizeConfig.padding24,
           ),
           Text(
-            'Play fun games and get a chance to\nwin rewards as Digital Gold',
+            'Play fun games and get a chance to\nwin rewards as Digital Gold!',
             style: TextStyles.sourceSans.body3.colour(Colors.black),
             textAlign: TextAlign.center,
           ),

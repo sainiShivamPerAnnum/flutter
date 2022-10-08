@@ -56,9 +56,9 @@ class Play extends StatelessWidget {
                 GOWCard(
                   model: model,
                 ),
-                if (model.showSecurityMessageAtTop) SafetyWidget(),
-                MoreGamesSection(model: model),
-                if (!model.showSecurityMessageAtTop) SafetyWidget(),
+                SafetyWidget(),
+                // MoreGamesSection(model: model),
+                // if (!model.showSecurityMessageAtTop) SafetyWidget(),
                 AppFooter(),
                 SizedBox(
                   height: SizeConfig.padding80,

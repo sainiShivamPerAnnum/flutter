@@ -25,8 +25,8 @@ class TrendingGamesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-            title: "Your favorites",
-            subTitle: "The games you love and play most often"),
+            title: "All games",
+            subTitle: "New games are added regularly. Keep checking out!"),
         Container(
           height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth,
@@ -93,13 +93,14 @@ class TrendingGames extends StatelessWidget {
               style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding12),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
                   Assets.token,
                   height: SizeConfig.padding20,
                 ),
-                SizedBox(height: SizeConfig.padding6),
+                SizedBox(width: SizeConfig.padding6),
                 Text(
                   game.playCost.toString(),
                   style: TextStyles.sourceSans.body2.colour(Colors.white),
