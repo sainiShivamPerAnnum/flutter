@@ -90,7 +90,7 @@ class Save extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TitleSubtitleContainer(
-                          title: 'Fingyaan',
+                          title: 'Fin-gyan',
                           subTitle: 'Read about the world of games and finance',
                         ),
                         Padding(

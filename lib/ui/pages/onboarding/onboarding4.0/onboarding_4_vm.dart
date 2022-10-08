@@ -82,7 +82,7 @@ class OnboardingViewModel extends BaseViewModel {
     onboardingData = [
       [
         'Earn 10% returns',
-        'by saving in safe and secure assets like Gold and our all new Fello Flo',
+        'by saving in safe and secure assets like Digital Gold and our all new Fello Flo',
       ],
       [
         'Play fun games',
