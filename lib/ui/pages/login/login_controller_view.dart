@@ -39,8 +39,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom !=
-        SizeConfig.viewInsets.bottom;
+    bool keyboardIsOpen =
+        MediaQuery.of(context).viewInsets.bottom > SizeConfig.viewInsets.bottom;
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
         model.init(initPage, model);

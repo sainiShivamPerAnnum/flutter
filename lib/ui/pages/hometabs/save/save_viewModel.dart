@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/blog_model.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -39,6 +41,7 @@ class SaveViewModel extends BaseViewModel {
   final _txnHistoryService = locator<TransactionHistoryService>();
   final _userCoinService = locator<UserCoinService>();
   final _baseUtil = locator<BaseUtil>();
+  final _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
     UiConstants.kBlogCardRandomColor2,
@@ -251,6 +254,8 @@ class SaveViewModel extends BaseViewModel {
 
   /// `Navigation`
   navigateToBlogWebView(String slug, String title) {
+    _analyticsService.track(eventName: AnalyticsEvents.blogWebView);
+
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: BlogPostWebViewConfig,
@@ -265,22 +270,27 @@ class SaveViewModel extends BaseViewModel {
   ) {
     Haptic.vibrate();
 
-    if (investmentType == InvestmentType.AUGGOLD99)
+    if (investmentType == InvestmentType.AUGGOLD99) {
+      _analyticsService.track(eventName: AnalyticsEvents.aboutDigitalGold);
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
         widget: SaveAssetView(),
       );
-    else
+    } else {
+      _analyticsService.track(eventName: AnalyticsEvents.aboutDigitalGold);
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: LendboxDetailsPageConfig,
         widget: LendboxDetailsView(),
       );
+    }
   }
 
   navigateToCompleteKYC() {
     Haptic.vibrate();
+    _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
+
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
@@ -289,6 +299,7 @@ class SaveViewModel extends BaseViewModel {
 
   navigateToVerifyVPA() {
     Haptic.vibrate();
+
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: EditAugBankDetailsPageConfig,
@@ -297,6 +308,7 @@ class SaveViewModel extends BaseViewModel {
 
   navigateToViewAllBlogs() {
     Haptic.vibrate();
+    _analyticsService.track(eventName: AnalyticsEvents.allblogsview);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,

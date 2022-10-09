@@ -13,6 +13,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -39,6 +40,7 @@ class GoldSellViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _paymentRepo = locator<PaymentRepository>();
+  final _tambolaService = locator<TambolaService>();
   bool isGoldRateFetching = false;
   bool _isQntFetching = false;
   double _fieldWidth = 2;
@@ -353,6 +355,7 @@ class GoldSellViewModel extends BaseViewModel {
     _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
     _userService.getUserFundWalletData();
     final response = json.decode(data);
+    _tambolaService.weeklyTicksFetched = false;
     AppState.unblockNavigation();
     print(response['status']);
     if (_augTxnService.currentTransactionState == TransactionState.ongoing) {

@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
@@ -40,6 +41,7 @@ class _JourneyMilestoneDetailsModalSheetState
   final double scaleFactor = 2.5;
   final double pageHeight = SizeConfig.screenWidth * 2.165;
   final GoldenTicketRepository _gtService = locator<GoldenTicketRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
   bool _isLoading = false;
   GoldenTicket ticket;
 
@@ -60,8 +62,26 @@ class _JourneyMilestoneDetailsModalSheetState
     if (res.isSuccess())
       ticket = res.model;
     else
-      BaseUtil.showNegativeAlert(res.errorMessage, "");
-    isLoading = false;
+      // BaseUtil.showNegativeAlert(res.errorMessage, "");
+      isLoading = false;
+  }
+
+  String getTicketType(mlIndex) {
+    for (int i = 0; i < _journeyService.levels.length; i++) {
+      if (_journeyService.levels[i].end == mlIndex) {
+        return "Green";
+      }
+    }
+    return "Golden";
+  }
+
+  Color getTicketColor(mlIndex) {
+    for (int i = 0; i < _journeyService.levels.length; i++) {
+      if (_journeyService.levels[i].end == mlIndex) {
+        return UiConstants.primaryColor;
+      }
+    }
+    return UiConstants.tertiarySolid;
   }
 
   @override
@@ -144,13 +164,39 @@ class _JourneyMilestoneDetailsModalSheetState
                 style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding12),
-              Text(
-                widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
-                    ? "Wohoo, you completed this milestone"
-                    : widget.milestone.steps.first.subtitle,
-                style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
-              ),
-              SizedBox(height: SizeConfig.padding24),
+              widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
+                  ? Text(
+                      "Wohoo, you completed this milestone",
+                      style:
+                          TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.milestone.steps.first.subtitle,
+                          style: TextStyles.body3.colour(
+                            Colors.grey.withOpacity(0.6),
+                          ),
+                        ),
+                        RichText(
+                            text: TextSpan(children: [
+                          TextSpan(
+                              text: "Win a ",
+                              style: TextStyles.sourceSans.body3),
+                          TextSpan(
+                            text: getTicketType(widget.milestone.index),
+                            style: TextStyles.sourceSansB.body3.colour(
+                              getTicketColor(widget.milestone.index),
+                            ),
+                          ),
+                          TextSpan(
+                              text: " ticket",
+                              style: TextStyles.sourceSans.body3),
+                        ]))
+                      ],
+                    ),
+              SizedBox(height: SizeConfig.padding12),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 isLoading
                     ? CircularProgressIndicator(strokeWidth: 1)

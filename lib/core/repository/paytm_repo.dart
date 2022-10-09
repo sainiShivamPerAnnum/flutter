@@ -25,7 +25,7 @@ class PaytmRepository extends BaseRepo {
       : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
 
   String _baseUrl2 = FlavorConfig.isProduction()
-      ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
+      ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(

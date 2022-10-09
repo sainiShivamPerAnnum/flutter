@@ -18,6 +18,7 @@ import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -46,6 +47,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final _analyticsService = locator<AnalyticsService>();
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
+  final _tambolaService = locator<TambolaService>();
 
   double currentTxnGms = 0.0;
   DepositFcmResponseModel depositFcmResponseModel;
@@ -260,6 +262,7 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data.isUpdating) {
+            _tambolaService.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model.data.tickets;
             if (res.model.data != null &&
                 res.model.data.goldInTxnBought != null &&

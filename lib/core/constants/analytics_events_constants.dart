@@ -55,6 +55,9 @@ class AnalyticsEvents {
   static const helpAndSupport = 'Help and Support';
   static const howItWorks = 'How it Works';
   static const aboutDigitalGold = 'About Digital Gold';
+  static const aboutLendBox = 'About Lendbox';
+  static const blogWebView = "Opened a blog in web view";
+  static const allblogsview = "All blogs view opened";
 
   static const openAppFirstTimeInADay = "App Open";
   static const addFLCTokensTopRight = 'Add FLC tokens top-right';
@@ -65,7 +68,8 @@ class AnalyticsEvents {
   static const winLeaderboard = "Select Leaderboard";
   static const winReferral = "Going to referral section through win";
   static const winWinnings = "Going to winnings section";
-  static const winRedeemWinnings = "Redeeming winnings";
+  static const winRedeemWinningsTapped = "Redeeming winnings Tapped";
+  static const winRedeemWinnings = "winnings redeemed";
 
   static const referralSection = "Going to referral section";
   static const shareReferralLink = "Shared referral link";
@@ -73,6 +77,23 @@ class AnalyticsEvents {
   static const kycVerificationSuccessful = "KYC verification successful";
   static const panVerified = "Pan Verified";
   static const kycVerificationFailed = "KYC verification failed";
+
+  //Recharge events
+  static const rechargeOptionModalSheet = "Opened recharge option modalsheet";
+  static const goldRechargeModalSheet = "Opened gold recharge  modalsheet";
+  static const lBoxRechargeModalSheet = "Opened lbox recharge  modalsheet";
+
+  static const goldSellModalSheet = "Opened gold sell  modalsheet";
+  static const lBoxSellModalSheet = "Opened lbox sell  modalsheet";
+
+  //new analytics 4.0
+  static const profileUpdated = "Updated profile";
+  static const completedMilestoneTapped = "Tapped on a completed milestone";
+  static const inCompleteMilestoneTapped = "Tapped on an incomplete milestone";
+  static const activeMilestoneTapped = "Tapped on an active milestone";
+
+  static const buildProfileTapped = "Tapped on build profile button";
+  static const tambolaGameCard = "Tapped on tambola game card";
 
   // old analytics naming
   static const investedInGold = "Invested in gold";

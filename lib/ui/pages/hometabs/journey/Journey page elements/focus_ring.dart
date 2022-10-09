@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
@@ -28,8 +30,7 @@ class _FocusRingState extends State<FocusRing>
   AnimationController _animationController;
 
   Animation<double> endingAnimation;
-  final _userService = locator<UserService>();
-  final _journeyService = locator<JourneyService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   bool _showButton = false;
 
@@ -137,6 +138,9 @@ class _FocusRingState extends State<FocusRing>
                             curve: Curves.bounceOut,
                             child: GestureDetector(
                               onTap: () {
+                                _analyticsService.track(
+                                    eventName:
+                                        AnalyticsEvents.buildProfileTapped);
                                 return BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
                                   isBarrierDismissable: true,

@@ -3,12 +3,14 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -27,6 +29,8 @@ class JourneyPageViewModel extends BaseViewModel {
   final _dbModel = locator<DBModel>();
   final _journeyService = locator<JourneyService>();
   final _userService = locator<UserService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   DocumentSnapshot lastDoc;
 
   get avatarAnimation => _journeyService.avatarAnimation;
@@ -255,10 +259,17 @@ class JourneyPageViewModel extends BaseViewModel {
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
     JOURNEY_MILESTONE_STATUS status = JOURNEY_MILESTONE_STATUS.INCOMPLETE;
-    if (_journeyService.avatarRemoteMlIndex > milestone.index)
+    if (_journeyService.avatarRemoteMlIndex > milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
-    else if (_journeyService.avatarRemoteMlIndex == milestone.index)
+      _analyticsService.track(
+          eventName: AnalyticsEvents.completedMilestoneTapped);
+    } else if (_journeyService.avatarRemoteMlIndex == milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
+      _analyticsService.track(eventName: AnalyticsEvents.activeMilestoneTapped);
+    } else {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.inCompleteMilestoneTapped);
+    }
     log("Current Screen Stack: ${AppState.screenStack}");
 
     return BaseUtil.openModalBottomSheet(

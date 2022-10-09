@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -26,6 +27,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -67,6 +69,7 @@ class BaseUtil extends ChangeNotifier {
   final UserService _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _analyticsService = locator<AnalyticsService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -243,6 +246,8 @@ class BaseUtil extends ChangeNotifier {
     if (_userService.userJourneyStats.mlIndex > 1)
       AppState.delegate.parseRoute(Uri.parse("profile"));
     else {
+      _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
+
       AppState.delegate.appState.currentAction = PageAction(
         page: UserProfileDetailsConfig,
         state: PageState.addWidget,
@@ -288,7 +293,10 @@ class BaseUtil extends ChangeNotifier {
           "Please try after some time",
         );
       }
-
+      _analyticsService.track(
+          eventName: investmentType == InvestmentType.AUGGOLD99
+              ? AnalyticsEvents.goldRechargeModalSheet
+              : AnalyticsEvents.lBoxRechargeModalSheet);
       return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -339,6 +347,11 @@ class BaseUtil extends ChangeNotifier {
             lBoxSellBanNotice ?? "Asset not available at the moment",
             "Please try after some time");
       }
+      _analyticsService.track(
+          eventName: investmentType == InvestmentType.AUGGOLD99
+              ? AnalyticsEvents.goldSellModalSheet
+              : AnalyticsEvents.lBoxSellModalSheet);
+
       return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -354,6 +367,14 @@ class BaseUtil extends ChangeNotifier {
   }
 
   openDepositOptionsModalSheet({int amount, bool isSkipMl = false}) {
+    if (_userService.userJourneyStats.mlIndex == 1)
+      return BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          hapticVibrate: false,
+          content: CompleteProfileDialog());
+    _analyticsService.track(
+        eventName: AnalyticsEvents.rechargeOptionModalSheet);
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,

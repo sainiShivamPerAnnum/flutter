@@ -34,24 +34,42 @@ class DailyPick {
       this.sun});
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
-    final data = picksData['picks'];
-    return DailyPick(
-      // weekCode: data[fldWeekCode],
-      mon:
-          (data[fldWeekDay[0]] != null) ? List.from(data[fldWeekDay[0]]) : null,
-      tue:
-          (data[fldWeekDay[1]] != null) ? List.from(data[fldWeekDay[1]]) : null,
-      wed:
-          (data[fldWeekDay[2]] != null) ? List.from(data[fldWeekDay[2]]) : null,
-      thu:
-          (data[fldWeekDay[3]] != null) ? List.from(data[fldWeekDay[3]]) : null,
-      fri:
-          (data[fldWeekDay[4]] != null) ? List.from(data[fldWeekDay[4]]) : null,
-      sat:
-          (data[fldWeekDay[5]] != null) ? List.from(data[fldWeekDay[5]]) : null,
-      sun:
-          (data[fldWeekDay[6]] != null) ? List.from(data[fldWeekDay[6]]) : null,
-    );
+    final Map<String, dynamic> data = picksData['picks'] ?? {};
+    if (data != null)
+      return DailyPick(
+        // weekCode: data[fldWeekCode],
+        mon: (data[fldWeekDay[0]] != null)
+            ? List.from(data[fldWeekDay[0]])
+            : null,
+        tue: (data[fldWeekDay[1]] != null)
+            ? List.from(data[fldWeekDay[1]])
+            : null,
+        wed: (data[fldWeekDay[2]] != null)
+            ? List.from(data[fldWeekDay[2]])
+            : null,
+        thu: (data[fldWeekDay[3]] != null)
+            ? List.from(data[fldWeekDay[3]])
+            : null,
+        fri: (data[fldWeekDay[4]] != null)
+            ? List.from(data[fldWeekDay[4]])
+            : null,
+        sat: (data[fldWeekDay[5]] != null)
+            ? List.from(data[fldWeekDay[5]])
+            : null,
+        sun: (data[fldWeekDay[6]] != null)
+            ? List.from(data[fldWeekDay[6]])
+            : null,
+      );
+    else
+      return DailyPick(
+        mon: [0, 0, 0],
+        thu: [0, 0, 0],
+        fri: [0, 0, 0],
+        sat: [0, 0, 0],
+        sun: [0, 0, 0],
+        tue: [0, 0, 0],
+        wed: [0, 0, 0],
+      );
   }
 
   List<int> getWeekdayDraws(int weekday) {

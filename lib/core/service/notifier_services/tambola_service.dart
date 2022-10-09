@@ -177,7 +177,7 @@ class TambolaService extends ChangeNotifier {
           }
           notifyListeners();
         } else {
-          BaseUtil.showNegativeAlert(picksResponse.errorMessage, '');
+          //BaseUtil.showNegativeAlert(picksResponse.errorMessage, '');
         }
       } catch (e) {
         _logger.e('$e');

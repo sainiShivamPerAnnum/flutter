@@ -279,69 +279,71 @@ class StaticMilestone extends StatelessWidget {
                 // ),
                 ),
           ),
-        Positioned(
-          left: model.pageWidth * milestone.x,
-          bottom: model.pageHeight * (milestone.page - 1) +
-              model.pageHeight * milestone.y,
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
-            child: model.isInComplete(milestone.index)
-                ? Tooltip(
-                    // message: "Hello World!!",
-                    triggerMode: TooltipTriggerMode.tap,
-                    showDuration: Duration(seconds: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                    ),
+        if (milestone.tooltip != null && milestone.tooltip.isNotEmpty)
+          Positioned(
+            left: model.pageWidth * milestone.x,
+            bottom: model.pageHeight * (milestone.page - 1) +
+                model.pageHeight * milestone.y,
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
+              child: model.isInComplete(milestone.index)
+                  ? Tooltip(
+                      // message: "Hello World!!",
+                      triggerMode: TooltipTriggerMode.tap,
+                      showDuration: Duration(seconds: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
 
-                    richMessage: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          child: Container(
-                            decoration: ShapeDecoration(
-                              color: Colors.black,
-                              shape: TooltipShapeBorder(arrowArc: 0.5),
-                              shadows: [
-                                BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4.0,
-                                    offset: Offset(2, 2))
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.lock_rounded,
-                                      color: Colors.white,
-                                      size: SizeConfig.iconSize1),
-                                  Text("${milestone.tooltip}",
-                                      style: TextStyles.sourceSansSB.body2),
+                      richMessage: TextSpan(
+                        children: [
+                          WidgetSpan(
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                color: Colors.black,
+                                shape: TooltipShapeBorder(arrowArc: 0.5),
+                                shadows: [
+                                  BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 4.0,
+                                      offset: Offset(2, 2))
                                 ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.lock_rounded,
+                                        color: Colors.white,
+                                        size: SizeConfig.iconSize1),
+                                    Text("${milestone.tooltip}",
+                                        style: TextStyles.sourceSansSB.body2),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      enableFeedback: true,
+                      margin:
+                          EdgeInsets.only(bottom: milestone.asset.height * 2),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding10,
+                        vertical: SizeConfig.padding12,
+                      ),
+                      preferBelow: false,
+                      child: SourceAdaptiveAssetView(asset: milestone.asset),
+                    )
+                  : GestureDetector(
+                      onTap: () => model.showMilestoneDetailsModalSheet(
+                          milestone, context),
+                      child: SourceAdaptiveAssetView(asset: milestone.asset),
                     ),
-                    enableFeedback: true,
-                    margin: EdgeInsets.only(bottom: milestone.asset.height * 2),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding10,
-                      vertical: SizeConfig.padding12,
-                    ),
-                    preferBelow: false,
-                    child: SourceAdaptiveAssetView(asset: milestone.asset),
-                  )
-                : GestureDetector(
-                    onTap: () => model.showMilestoneDetailsModalSheet(
-                        milestone, context),
-                    child: SourceAdaptiveAssetView(asset: milestone.asset),
-                  ),
+            ),
           ),
-        ),
         if (milestone.index < model.avatarActiveMilestoneLevel)
           Positioned(
               left: model.pageWidth * milestone.x,

@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -34,6 +35,7 @@ class LendboxTransactionService extends BaseTransactionService {
   final _txnHistoryService = locator<TransactionHistoryService>();
   final _paytmService = locator<PaytmService>();
   final _razorpayService = locator<RazorpayService>();
+  final _tambolaService = locator<TambolaService>();
 
   bool skipMl = false;
 
@@ -143,6 +145,8 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data.isUpdating) {
             currentTxnTambolaTicketsCount = res.model.data.tickets;
+            _tambolaService.weeklyTicksFetched = false;
+
             timer.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,

@@ -447,6 +447,7 @@ class WinViewModel extends BaseViewModel {
 
   void navigateToMyWinnings(WinViewModel model) {
     showUnscratchedCount = false;
+    _analyticsService.track(eventName: AnalyticsEvents.myGoldenTickets);
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MyWinnigsPageConfig,
@@ -462,6 +463,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
+    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissable: false,

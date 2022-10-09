@@ -301,7 +301,9 @@ class GoldBuyViewModel extends BaseViewModel {
       amt: amt,
       isBest: index == 2,
       onClick: (int amount) {
-        if (couponApplyInProgress || isGoldBuyInProgress) return;
+        if (couponApplyInProgress ||
+            isGoldBuyInProgress ||
+            _augTxnService.isGoldBuyInProgress) return;
         showMaxCapText = false;
         showMinCapText = false;
         Haptic.vibrate();
