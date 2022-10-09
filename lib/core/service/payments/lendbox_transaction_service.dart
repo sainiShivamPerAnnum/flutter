@@ -225,7 +225,7 @@ class LendboxTransactionService extends BaseTransactionService {
 
     if (createdPaytmTransactionData != null) {
       final deepUri = await _paytmService.generateUpiTransactionDeepUri(
-          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOFLO");
+          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
 
       if (deepUri != null && deepUri.isNotEmpty) {
         final res = await _paytmService.initiateUpiTransaction(

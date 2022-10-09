@@ -106,7 +106,7 @@ class AugmontTransactionService extends BaseTransactionService {
       currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
       final deepUri = await _paytmService.generateUpiTransactionDeepUri(
-          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOGOLD");
+          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
       if (deepUri != null && deepUri.isNotEmpty) {
         final res = await _paytmService.initiateUpiTransaction(
           amount: currentGoldPurchaseDetails.goldBuyAmount,
