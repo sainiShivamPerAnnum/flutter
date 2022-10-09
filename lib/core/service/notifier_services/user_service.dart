@@ -103,8 +103,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
     notifyListeners(UserServiceProperties.myUserDpUrl);
-    _logger.d(
-        "My user dp url updated in userservice, property listeners notified");
   }
 
   setMyAvatarId(String avId) {
@@ -373,23 +371,29 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   getProfilePicture() async {
-    if (baseUser.avatarId == "CUSTOM") {
+    if (baseUser.avatarId == null ||
+        baseUser.avatarId.isEmpty ||
+        baseUser.avatarId == "CUSTOM") {
       if (!PreferenceHelper.exists('dpUrl')) {
-        try {
-          String myUserDpUrl;
-          if (baseUser != null)
-            myUserDpUrl = await _dbModel.getUserDP(baseUser.uid);
-          if (myUserDpUrl != null) {
-            await CacheManager.writeCache(
-                key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
-            setMyUserDpUrl(myUserDpUrl);
-            _logger.d("No profile picture found in cache, fetched from server");
-          }
-        } catch (e) {
-          _logger.e(e.toString());
+        // try {
+        _logger.d("Fetching profile picture");
+
+        String myUserDpUrl;
+        if (baseUser != null)
+          myUserDpUrl = await _dbModel.getUserDP(baseUser.uid);
+        if (myUserDpUrl != null) {
+          await CacheManager.writeCache(
+              key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
+          setMyUserDpUrl(myUserDpUrl);
+          _logger.d("No profile picture found in cache, fetched from server");
         }
-      } else
+        // } catch (e) {
+        //   _logger.e(e.toString());
+        // }
+      } else {
+        print(PreferenceHelper.getString('dpUrl'));
         setMyUserDpUrl(PreferenceHelper.getString('dpUrl'));
+      }
     }
   }
 

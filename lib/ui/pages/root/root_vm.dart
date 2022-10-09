@@ -252,7 +252,6 @@ class RootViewModel extends BaseViewModel {
       await _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
-      // await _baseUtil.getProfilePicture();
 
       _initAdhocNotifications();
       await verifyUserBootupDetails();

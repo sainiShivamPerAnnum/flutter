@@ -157,9 +157,8 @@ class AppFooter extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'v${BaseUtil.packageInfo?.version} (${BaseUtil.packageInfo?.buildNumber})',
-              style:
-                  TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor2),
+              'v${BaseUtil.packageInfo?.version ?? 0.0} (${BaseUtil.packageInfo?.buildNumber ?? 0.0})',
+              style: TextStyles.rajdhaniB.body3.colour(UiConstants.kTextColor2),
             ),
             RichText(
               textAlign: TextAlign.center,
@@ -170,10 +169,13 @@ class AppFooter extends StatelessWidget {
                     style: TextStyles.body4.colour(UiConstants.kTextColor2),
                   ),
                   WidgetSpan(
-                      child: Icon(
-                    Icons.favorite,
-                    color: UiConstants.kTextColor2,
-                    size: SizeConfig.iconSize2,
+                      child: Padding(
+                    padding: EdgeInsets.only(bottom: SizeConfig.padding1),
+                    child: Icon(
+                      Icons.favorite,
+                      color: UiConstants.kTextColor2,
+                      size: SizeConfig.iconSize2,
+                    ),
                   )),
                   TextSpan(
                     text: ' in India',
