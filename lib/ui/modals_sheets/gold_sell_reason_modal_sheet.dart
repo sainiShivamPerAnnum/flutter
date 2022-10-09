@@ -14,9 +14,9 @@ class SellingReasonBottomSheet extends StatelessWidget {
   final InvestmentType investmentType;
 
   final List<String> _sellingReasons = [
-    'Not interested anymore',
-    'Not interested a little more',
-    'Not anymore',
+    'Not interested in the asset',
+    'Returns are not good enough',
+    'Require immediate funds',
     'Others'
   ];
 
@@ -42,7 +42,7 @@ class SellingReasonBottomSheet extends StatelessWidget {
               height: SizeConfig.padding40,
             ),
             Text(
-              'What makes you want to sell the asset?',
+              'What makes you want to sell?',
               style: TextStyles.rajdhaniSB.body1,
             ),
             SizedBox(

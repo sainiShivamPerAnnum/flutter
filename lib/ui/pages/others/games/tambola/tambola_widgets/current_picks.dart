@@ -35,7 +35,7 @@ class CurrentPicks extends StatelessWidget {
               child: Text(
                 todaysPicks == [0, 0, 0]
                     ? "Will be drawn at 6pm"
-                    : "drawn at 6pm",
+                    : "Drawn at 6pm",
                 style: TextStyles.sourceSansSB.body4,
               ),
             )

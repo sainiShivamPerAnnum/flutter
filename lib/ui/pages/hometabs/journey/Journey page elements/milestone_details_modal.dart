@@ -166,7 +166,7 @@ class _JourneyMilestoneDetailsModalSheetState
               SizedBox(height: SizeConfig.padding12),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? Text(
-                      "Wohoo, you completed this milestone",
+                      "You have completed this milestone",
                       style:
                           TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
                     )

@@ -13,8 +13,9 @@ class SellText extends StatelessWidget {
   Widget build(BuildContext context) {
     final title = investmentType == InvestmentType.AUGGOLD99
         ? 'Sell your Digital Gold \nat current market rate'
-        : 'Withdrawal your savings';
-    final subTitle = "With every transaction, some tokens will be deducted.";
+        : 'Withdraw from Flo';
+    final subTitle =
+        "With every withdrawal, some tokens and tambola tickets will be deducted.";
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

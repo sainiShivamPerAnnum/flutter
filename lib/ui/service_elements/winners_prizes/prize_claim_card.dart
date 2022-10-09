@@ -53,7 +53,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Total Cashback",
+                                    "Total Rewards",
                                     style:
                                         TextStyles.body1.colour(Colors.white),
                                   ),

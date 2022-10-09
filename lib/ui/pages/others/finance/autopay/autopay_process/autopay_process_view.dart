@@ -120,7 +120,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth * 0.12,
         ),
         Text(
-          "SETUP AUTO PAY",
+          "SETUP AUTO SAVE",
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(
@@ -250,7 +250,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth * 0.12,
         ),
         Text(
-          "SETUP AUTO PAY",
+          "SETUP AUTO SAVE",
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(
@@ -398,7 +398,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth * 0.05,
         ),
         Text(
-          "SETUP AUTO PAY",
+          "SETUP AUTO SAVE",
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(

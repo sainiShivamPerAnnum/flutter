@@ -125,7 +125,7 @@ class _TransactionDetailsBottomSheetState
                           ),
                         ),
                         Text(
-                          'Safest digital investment',
+                          'Transaction Details',
                           style: TextStyles.rajdhani.body4.colour(
                             UiConstants.kTextColor2,
                           ),

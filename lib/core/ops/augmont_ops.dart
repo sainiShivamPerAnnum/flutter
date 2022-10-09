@@ -69,9 +69,9 @@ class AugmontService extends ChangeNotifier {
 
   Future<bool> _init() async {
     _sellingReasons = [
-      'Not interested anymore',
-      'Not interested anymore',
-      'Not interested anymore',
+      'Not interested in the asset',
+      'Returns are not good enough',
+      'Require immediate funds',
       'Others'
     ];
     if (_dbModel == null) return false;
@@ -228,7 +228,8 @@ class AugmontService extends ChangeNotifier {
     };
     var _request = http.Request(
         'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
-    _request.headers.addAll(headers);
+    _request.headers
+        .addAll({'x-api-key': "aOwnj8SQ8k1TFl1gIZCbq7nrgemhnBAb5YPwzP8z"});
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await _processResponse(_response);

@@ -222,7 +222,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
-          Text(' Cashback!',
+          Text(' rewards won!',
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
@@ -334,7 +334,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                 ),
               ),
               Text(
-                ' Cashback!',
+                ' reward won!',
                 style: TextStyles.sourceSans.body4.colour(Colors.black),
               )
             ],
