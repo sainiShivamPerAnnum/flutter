@@ -69,7 +69,7 @@ class FelloCoinBar extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.padding12,
                     vertical: SizeConfig.padding6),
-                height: SizeConfig.roundedButtonRadius * 2,
+                height: SizeConfig.avatarRadius * 2,
                 decoration: BoxDecoration(
                   color: UiConstants.kTextFieldColor.withOpacity(0.4),
                   border: Border.all(color: borderColor ?? Colors.white10),

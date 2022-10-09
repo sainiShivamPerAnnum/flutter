@@ -132,7 +132,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   _analyticsService.track(
                       eventName: AnalyticsEvents.earnMoreRefer);
                   AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.parseRoute(Uri.parse("save"));
+                  AppState.delegate.parseRoute(Uri.parse("augDetails"));
                 },
               ),
               SizedBox(height: SizeConfig.padding24),
