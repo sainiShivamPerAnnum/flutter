@@ -69,7 +69,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   }
 
   Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid) ?? "";
+    return await _dbModel.getUserDP(uid);
   }
 
   String getDateRange() {

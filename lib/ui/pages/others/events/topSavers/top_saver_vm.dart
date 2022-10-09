@@ -295,7 +295,7 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid) ?? "";
+    return await _dbModel.getUserDP(uid);
   }
 
   getUserRankIfAny() {

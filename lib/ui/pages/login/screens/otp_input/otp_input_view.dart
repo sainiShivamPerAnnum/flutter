@@ -56,7 +56,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
         return ListView(
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding80),
+            SizedBox(height: SizeConfig.padding54 + SizeConfig.padding4),
             SignupHeroAsset(asset: Assets.flatFullFlagIsland),
             Align(
               alignment: Alignment.center,

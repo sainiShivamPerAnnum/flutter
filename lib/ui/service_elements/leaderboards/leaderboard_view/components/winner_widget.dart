@@ -107,7 +107,8 @@ class WinnerWidgets extends StatelessWidget {
                       ? SizeConfig.screenWidth * 0.0055
                       : SizeConfig.screenWidth * 0.0083,
                 ),
-                child: userProfilePicUrl[rank] == null
+                child: userProfilePicUrl[rank] == null ||
+                        userProfilePicUrl[rank].isEmpty
                     ? SvgPicture.asset(
                         getDefaultProfilePicture(rank),
                         width: rank == 0

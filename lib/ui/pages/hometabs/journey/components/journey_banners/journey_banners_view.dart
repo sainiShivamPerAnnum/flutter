@@ -27,56 +27,62 @@ class JourneyBannersView extends StatelessWidget {
                     controller: model.promoPageController,
                     itemCount: model.offerList.length,
                     itemBuilder: (cntx, i) {
-                      return Container(
-                        padding: EdgeInsets.only(left: SizeConfig.padding16),
-                        color: UiConstants.kBackgroundColor,
-                        height: kBottomNavigationBarHeight,
-                        width: SizeConfig.screenWidth,
-                        child: Row(
-                          children: [
-                            model.offerList[i].bgImage != null
-                                ? Container(
-                                    width: kBottomNavigationBarHeight * 0.8,
-                                    height: kBottomNavigationBarHeight * 0.8,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
-                                      image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                              model.offerList[i].bgImage),
-                                          fit: BoxFit.cover),
+                      return InkWell(
+                        onTap: () {
+                          AppState.delegate.parseRoute(
+                              Uri.parse(model.offerList[i].actionUri));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(left: SizeConfig.padding16),
+                          color: UiConstants.kBackgroundColor,
+                          height: kBottomNavigationBarHeight,
+                          width: SizeConfig.screenWidth,
+                          child: Row(
+                            children: [
+                              model.offerList[i].bgImage != null
+                                  ? Container(
+                                      width: kBottomNavigationBarHeight * 0.8,
+                                      height: kBottomNavigationBarHeight * 0.8,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness12),
+                                        image: DecorationImage(
+                                            image: CachedNetworkImageProvider(
+                                                model.offerList[i].bgImage),
+                                            fit: BoxFit.cover),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(width: SizeConfig.padding10),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      model.offerList[i].title ?? "Hello World",
+                                      style: TextStyles.rajdhaniEB.body0.bold
+                                          .colour(Colors.white),
                                     ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(width: SizeConfig.padding10),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    model.offerList[i].title ?? "Hello World",
-                                    style: TextStyles.rajdhaniEB.body0.bold
-                                        .colour(Colors.white),
-                                  ),
-                                  Text(
-                                    model.offerList[i].subtitle ??
-                                        "Welcome to this Universe and win ",
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(Colors.white),
-                                  ),
-                                ],
+                                    Text(
+                                      model.offerList[i].subtitle ??
+                                          "Welcome to this Universe and win ",
+                                      style: TextStyles.sourceSans.body4
+                                          .colour(Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                AppState.delegate.parseRoute(
-                                    Uri.parse(model.offerList[i].actionUri));
-                              },
-                              icon: Icon(Icons.arrow_right_rounded,
-                                  color: Colors.white),
-                            )
-                          ],
+                              IconButton(
+                                onPressed: () {
+                                  AppState.delegate.parseRoute(
+                                      Uri.parse(model.offerList[i].actionUri));
+                                },
+                                icon: Icon(Icons.arrow_right_rounded,
+                                    color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },

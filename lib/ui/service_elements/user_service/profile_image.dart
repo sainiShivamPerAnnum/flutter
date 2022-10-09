@@ -42,13 +42,11 @@ class ProfileImageSE extends StatelessWidget {
               child: CircleAvatar(
                 radius: radius ?? SizeConfig.avatarRadius,
                 backgroundColor: Colors.black,
-                child: model.myUserDpUrl == null
-                    ? (model.avatarId != null && model.avatarId != 'CUSTOM'
-                        ? SvgPicture.asset(
-                            "assets/vectors/userAvatars/${model.avatarId}.svg",
-                            fit: BoxFit.cover,
-                          )
-                        : SizedBox())
+                child: model.avatarId != null && model.avatarId != 'CUSTOM'
+                    ? SvgPicture.asset(
+                        "assets/vectors/userAvatars/${model.avatarId}.svg",
+                        fit: BoxFit.cover,
+                      )
                     : SizedBox(),
                 backgroundImage:
                     (model.avatarId != null && model.avatarId == 'CUSTOM') ||
