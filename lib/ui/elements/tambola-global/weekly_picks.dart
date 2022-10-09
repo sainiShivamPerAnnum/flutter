@@ -41,7 +41,9 @@ class WeeklyPicks extends StatelessWidget {
     List<Widget> balls = [];
     DateTime today = DateTime.now();
     int colCount = today.weekday;
-    if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
+    if (draws != null &&
+        draws.getWeekdayDraws(day - 1) != null &&
+        !draws.getWeekdayDraws(day - 1).contains(-1)) {
       draws.getWeekdayDraws(day - 1).forEach((element) {
         balls.add(
             _getDrawBall(element.toString(), colCount == day ? true : false));

@@ -31,6 +31,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   bool _isMoreTxnsBeingFetched = false;
   List<UserTransaction> apiTxns = [];
   String _filterValue = "All";
+  String lastSipTxnDocId;
   List<String> _tranTypeFilterItems = [
     "All",
     "Deposits",
@@ -38,9 +39,16 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   ];
   List<UserTransaction> _filteredList;
   ScrollController _scrollController;
+  ScrollController _sipScrollController;
+
+  get sipScrollController => this._sipScrollController;
+
+  set sipScrollController(value) {
+    this._sipScrollController = value;
+  }
+
   PageController _pageController;
   int _tabIndex = 0;
-  double tranAnimWidth = SizeConfig.screenWidth / 3;
   int get filter => _filter;
   String get filterValue => _filterValue;
   ActiveSubscriptionModel _activeSubscription;
@@ -92,6 +100,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  appendToSipList(List<AutosaveTransactionModel> value) {
+    _filteredSIPList.addAll(value);
+    notifyListeners();
+  }
+
   set activeSubscription(value) {
     _activeSubscription = value;
     notifyListeners();
@@ -102,30 +115,39 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init(InvestmentType investmentType) {
+  init(InvestmentType investmentType, bool showAutosave) {
     this._investmentType = investmentType;
     _scrollController = ScrollController();
+    if (investmentType == InvestmentType.AUGGOLD99)
+      _sipScrollController = ScrollController();
     _pageController = PageController(initialPage: 0);
-
-    if (_txnHistoryService.txnList == null ||
-        _txnHistoryService.txnList.length < 5) {
-      getTransactions().then((_) {
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
-          tranAnimWidth = 0;
-          notifyListeners();
-        });
+    if (showAutosave) {
+      tabIndex = 1;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        pageController.animateToPage(1,
+            duration: Duration(milliseconds: 200), curve: Curves.linear);
       });
+    }
+    if (_txnHistoryService.txnList == null ||
+        _txnHistoryService.txnList.length <= 5) {
+      getTransactions();
     }
 
     if (_txnHistoryService.txnList != null) {
       filteredList = _txnHistoryService.txnList;
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
-        tranAnimWidth = 0;
-        notifyListeners();
-      });
     } else {
       filteredList = [];
     }
+
+    _sipScrollController.addListener(() async {
+      if (_sipScrollController.offset >=
+              _sipScrollController.position.maxScrollExtent &&
+          !_sipScrollController.position.outOfRange) {
+        if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
+          getMoreSipTransactions();
+        }
+      }
+    });
 
     _scrollController.addListener(() async {
       if (_scrollController.offset >=
@@ -239,14 +261,46 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         await _subcriptionRepo.getAutosaveTransactions(
       uid: _userService.baseUser.uid,
       lastDocument: null,
-      limit: 5,
+      limit: 30,
     );
     if (result.code == 200) {
-      filteredSIPList = result.model;
-      if (filteredSIPList.isNotEmpty && filteredSIPList.length > 4) {
-        _hasMoreSIPTxns = true;
+      if (result.model != null && result.model.isNotEmpty) {
+        filteredSIPList = result.model;
+        if (filteredSIPList.isNotEmpty && filteredSIPList.length == 30) {
+          _hasMoreSIPTxns = true;
+          lastSipTxnDocId = filteredSIPList.last.id;
+        } else {
+          _hasMoreSIPTxns = false;
+          lastSipTxnDocId = null;
+        }
       }
     }
     setState(ViewState.Idle);
+  }
+
+  getMoreSipTransactions() async {
+    if (_hasMoreSIPTxns) {
+      isMoreTxnsBeingFetched = true;
+      final ApiResponse<List<AutosaveTransactionModel>> result =
+          await _subcriptionRepo.getAutosaveTransactions(
+        uid: _userService.baseUser.uid,
+        lastDocument: lastSipTxnDocId,
+        limit: 30,
+      );
+      isMoreTxnsBeingFetched = false;
+      if (result.isSuccess()) {
+        final moreSIPTxns = result.model;
+        if (moreSIPTxns != null && moreSIPTxns.isNotEmpty) {
+          appendToSipList(result.model);
+          if (moreSIPTxns.length == 30) {
+            _hasMoreSIPTxns = true;
+            lastSipTxnDocId = moreSIPTxns.last.id;
+          } else {
+            _hasMoreSIPTxns = false;
+            lastSipTxnDocId = null;
+          }
+        }
+      }
+    }
   }
 }

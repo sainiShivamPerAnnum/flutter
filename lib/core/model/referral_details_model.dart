@@ -33,13 +33,13 @@ class ReferralDetail {
 
   factory ReferralDetail.fromMap(Map<String, dynamic> rMap) {
     return ReferralDetail(
-      rMap['usr_name'],
+      rMap['usr_name'] ?? '',
       TimestampModel.fromMap(rMap['timestamp']),
-      rMap[fldUsrBonusFlag],
-      rMap[fldRefereeBonusFlag],
-      rMap[fldUserReferralCount],
-      rMap['bonus_values'],
-      rMap['id'],
+      rMap[fldUsrBonusFlag] ?? false,
+      rMap[fldRefereeBonusFlag] ?? false,
+      rMap[fldUserReferralCount] ?? 0,
+      rMap['bonus_values'] ?? {},
+      rMap['id'] ?? '',
     );
   }
 

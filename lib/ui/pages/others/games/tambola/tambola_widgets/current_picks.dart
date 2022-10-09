@@ -33,7 +33,7 @@ class CurrentPicks extends StatelessWidget {
               padding: EdgeInsets.only(
                   top: SizeConfig.padding24, bottom: SizeConfig.padding16),
               child: Text(
-                todaysPicks == [0, 0, 0]
+                todaysPicks == [-1, -1, -1]
                     ? "Will be drawn at 6pm"
                     : "Drawn at 6pm",
                 style: TextStyles.sourceSansSB.body4,
@@ -71,7 +71,7 @@ class TodayPicksBallsAnimation extends StatelessWidget {
             picksList.length,
             (index) => Container(
               height: SizeConfig.screenWidth * 0.14,
-              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
               child: AnimatedPicksDisplay(
                 number: picksList[index],
                 tabIndex: m.getCurrentTabIndex ?? 0,
@@ -150,7 +150,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                nToShow.toString(),
+                nToShow == -1 || nToShow == 0 ? '-' : nToShow.toString(),
                 style: TextStyles.rajdhaniB.body2.colour(Colors.black),
               ),
             ),

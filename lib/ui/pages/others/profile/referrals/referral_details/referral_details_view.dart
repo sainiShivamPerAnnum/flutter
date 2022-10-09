@@ -60,6 +60,19 @@ class ReferralDetailsView extends StatelessWidget {
         onModelReady: (model) => model.init(context),
         builder: (ctx, model, child) {
           return Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              automaticallyImplyLeading: false,
+              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              leading: IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  )),
+            ),
             body: Stack(
               children: [
                 NewSquareBackground(),
@@ -69,19 +82,6 @@ class ReferralDetailsView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppBar(
-                        elevation: 0.0,
-                        automaticallyImplyLeading: false,
-                        backgroundColor: UiConstants.kArowButtonBackgroundColor,
-                        leading: IconButton(
-                            onPressed: () {
-                              AppState.backButtonDispatcher.didPopRoute();
-                            },
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                            )),
-                      ),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -536,7 +536,8 @@ class BonusLockedReferals extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
-                          if (!(model.referalList[i].isUserBonusUnlocked)) {
+                          if (!(model.referalList[i].isUserBonusUnlocked ??
+                              false)) {
                             return Padding(
                               padding:
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
@@ -583,7 +584,7 @@ class BonusLockedReferals extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(model.referalList[i].userName,
+                                      Text(model.referalList[i].userName ?? '-',
                                           style: TextStyles.sourceSans.body1
                                               .colour(
                                             Colors.white,
@@ -703,7 +704,8 @@ class BonusUnlockedReferals extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
-                          if (model.referalList[i].isUserBonusUnlocked) {
+                          if (model.referalList[i].isUserBonusUnlocked ??
+                              false) {
                             return Padding(
                               padding:
                                   EdgeInsets.only(bottom: SizeConfig.padding24),

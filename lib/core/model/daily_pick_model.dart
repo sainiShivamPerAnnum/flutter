@@ -35,7 +35,7 @@ class DailyPick {
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
     final Map<String, dynamic> data = picksData['picks'] ?? {};
-    if (data != null)
+    if (data != null && data.isNotEmpty)
       return DailyPick(
         // weekCode: data[fldWeekCode],
         mon: (data[fldWeekDay[0]] != null)
@@ -62,14 +62,26 @@ class DailyPick {
       );
     else
       return DailyPick(
-        mon: [0, 0, 0],
-        thu: [0, 0, 0],
-        fri: [0, 0, 0],
-        sat: [0, 0, 0],
-        sun: [0, 0, 0],
-        tue: [0, 0, 0],
-        wed: [0, 0, 0],
+        mon: [-1, -1, -1],
+        thu: [-1, -1, -1],
+        fri: [-1, -1, -1],
+        sat: [-1, -1, -1],
+        sun: [-1, -1, -1],
+        tue: [-1, -1, -1],
+        wed: [-1, -1, -1],
       );
+  }
+
+  factory DailyPick.noPicks() {
+    return DailyPick(
+      mon: [-1, -1, -1],
+      thu: [-1, -1, -1],
+      fri: [-1, -1, -1],
+      sat: [-1, -1, -1],
+      sun: [-1, -1, -1],
+      tue: [-1, -1, -1],
+      wed: [-1, -1, -1],
+    );
   }
 
   List<int> getWeekdayDraws(int weekday) {

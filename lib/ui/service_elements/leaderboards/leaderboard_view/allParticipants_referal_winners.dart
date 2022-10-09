@@ -38,6 +38,13 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
     }
   }
 
+  dynamic getPoints(double points) {
+    if (points > points.toInt())
+      return points;
+    else
+      return points.toInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,8 +108,8 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                         ),
                                         Text(
                                           showPoints
-                                              ? referralLeaderBoard[i]
-                                                      .score
+                                              ? getPoints(referralLeaderBoard[i]
+                                                          .score)
                                                       .toString() ??
                                                   "00"
                                               : referralLeaderBoard[i]

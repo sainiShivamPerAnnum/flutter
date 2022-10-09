@@ -103,14 +103,17 @@ class TambolaRepo extends BaseRepo {
                 cBaseUrl: _baseUrl,
               ), (dynamic response) {
         final data = response['data'];
-        return ApiResponse<DailyPick>(
-          model: DailyPick.fromMap(data),
-          code: 200,
-        );
+        if (data != null && data.isNotEmpty)
+          return ApiResponse<DailyPick>(
+            model: DailyPick.fromMap(data),
+            code: 200,
+          );
+        else
+          return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
       });
     } catch (e) {
       logger.e('daily pick $e');
-      return ApiResponse.withError(e.toString(), 400);
+      return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
     }
   }
 

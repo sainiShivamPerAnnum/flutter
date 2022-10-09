@@ -101,7 +101,7 @@ class NotificationButton extends StatelessWidget {
                         ),
                         child: CircleAvatar(
                           radius: SizeConfig.iconSize4 / 1.4,
-                          backgroundColor: Colors.green,
+                          backgroundColor: Colors.red,
                         ),
                       ),
                     )

@@ -237,7 +237,7 @@ class LendboxSuccessView extends StatelessWidget {
               this.showGtIfAvailable();
             },
             child: Text(
-              "START PLAYING",
+              "DONE",
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

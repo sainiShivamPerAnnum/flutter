@@ -59,11 +59,10 @@ class _JourneyMilestoneDetailsModalSheetState
     isLoading = true;
     final res =
         await _gtService.getGTByPrizeSubtype(widget.milestone.prizeSubType);
-    if (res.isSuccess())
-      ticket = res.model;
-    else
-      // BaseUtil.showNegativeAlert(res.errorMessage, "");
-      isLoading = false;
+    if (res.isSuccess()) ticket = res.model;
+    // else
+    // BaseUtil.showNegativeAlert(res.errorMessage, "");
+    isLoading = false;
   }
 
   String getTicketType(mlIndex) {
@@ -158,12 +157,12 @@ class _JourneyMilestoneDetailsModalSheetState
                 "Milestone ${widget.milestone.index}",
                 style: TextStyles.sourceSansL.body3,
               ),
-              SizedBox(height: SizeConfig.padding4),
+              SizedBox(height: SizeConfig.padding12),
               Text(
                 widget.milestone.steps.first.title,
                 style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
               ),
-              SizedBox(height: SizeConfig.padding12),
+              SizedBox(height: SizeConfig.padding4),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? Text(
                       "You have completed this milestone",
@@ -175,28 +174,17 @@ class _JourneyMilestoneDetailsModalSheetState
                       children: [
                         Text(
                           widget.milestone.steps.first.subtitle,
-                          style: TextStyles.body3.colour(
-                            Colors.grey.withOpacity(0.6),
-                          ),
+                          style:
+                              TextStyles.body3.colour(UiConstants.kTextColor3),
                         ),
-                        RichText(
-                            text: TextSpan(children: [
-                          TextSpan(
-                              text: "Win a ",
-                              style: TextStyles.sourceSans.body3),
-                          TextSpan(
-                            text: getTicketType(widget.milestone.index),
-                            style: TextStyles.sourceSansB.body3.colour(
-                              getTicketColor(widget.milestone.index),
-                            ),
-                          ),
-                          TextSpan(
-                              text: " ticket",
-                              style: TextStyles.sourceSans.body3),
-                        ]))
+                        SizedBox(height: SizeConfig.padding24),
+                        Text(
+                          "Win a ${getTicketType(widget.milestone.index)} ticket",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.primaryColor),
+                        )
                       ],
                     ),
-              SizedBox(height: SizeConfig.padding12),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 isLoading
                     ? CircularProgressIndicator(strokeWidth: 1)

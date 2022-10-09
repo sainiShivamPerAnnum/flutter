@@ -256,7 +256,7 @@ class GoldBuySuccessView extends StatelessWidget {
               });
             },
             child: Text(
-              "START PLAYING",
+              "DONE",
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

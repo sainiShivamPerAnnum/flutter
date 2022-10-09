@@ -146,6 +146,7 @@ class TambolaService extends ChangeNotifier {
         if (picksResponse.isSuccess()) {
           final DailyPick _picks = picksResponse.model;
           weeklyDrawFetched = true;
+          _logger.d("Weekly pickst: ${_picks.toList().toString()}");
           if (_picks != null) {
             weeklyDigits = _picks;
             switch (DateTime.now().weekday) {

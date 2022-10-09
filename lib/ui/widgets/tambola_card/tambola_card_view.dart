@@ -97,7 +97,7 @@ class TambolaCard extends StatelessWidget {
                           .colour(UiConstants.kWinnerPlayerLightPrimaryColor),
                     ),
                     SizedBox(
-                      height: SizeConfig.padding12,
+                      height: SizeConfig.padding20,
                     ),
                     SizedBox(
                       child: CurrentPicks(
@@ -111,7 +111,7 @@ class TambolaCard extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding8),
+                      padding: EdgeInsets.only(top: SizeConfig.padding20),
                       child: Text(
                         "Next draws at 6 PM",
                         style: TextStyles.sourceSans.body3.colour(Colors.white),

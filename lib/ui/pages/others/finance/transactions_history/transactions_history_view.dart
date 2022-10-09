@@ -22,14 +22,17 @@ import 'package:flutter_svg/svg.dart';
 
 class TransactionsHistory extends StatelessWidget {
   final InvestmentType investmentType;
+  final bool showAutosave;
 
-  const TransactionsHistory({Key key, this.investmentType}) : super(key: key);
+  const TransactionsHistory(
+      {Key key, this.investmentType, this.showAutosave = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BaseView<TransactionsHistoryViewModel>(
       onModelReady: (model) {
-        model.init(investmentType);
+        model.init(investmentType, showAutosave);
       },
       child: NoTransactionsContent(),
       builder: (ctx, model, child) {
@@ -231,7 +234,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                         )
                       : ListView(
                           physics: BouncingScrollPhysics(),
-                          controller: model.tranListController,
+                          controller: model.sipScrollController,
                           children: List.generate(
                             model.filteredSIPList.length,
                             (index) => TransactionSIPTile(
@@ -383,15 +386,25 @@ class TransactionSIPTile extends StatelessWidget {
       onTap: () {
         Haptic.vibrate();
       },
+      contentPadding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       dense: true,
-      title: Text('AUTO SIP', style: TextStyles.sourceSans.body3),
+      title: Text('DEPOSIT', style: TextStyles.sourceSans.body3),
       subtitle: Text(
         _txnHistoryService.getFormattedSIPDate(DateTime.parse(txn.txnDateTime)),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
-      trailing: Text(
-        _txnHistoryService.getFormattedTxnAmount(txn.amount),
-        style: TextStyles.sourceSansM.body3,
+      trailing: Wrap(
+        children: [
+          TransactionStatusChip(
+            color: _txnHistoryService.getTileColor(txn.status),
+            status: txn.status,
+          ),
+          Text(
+            _txnHistoryService.getFormattedTxnAmount(txn.amount),
+            style: TextStyles.sourceSansM.body3,
+          ),
+        ],
       ),
     );
   }
@@ -406,7 +419,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         height: SizeConfig.screenWidth * 0.09,
-        width: SizeConfig.screenWidth * 0.54,
+        width: SizeConfig.screenWidth * 0.6,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -423,7 +436,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     },
                     child: Container(
                         height: SizeConfig.padding24,
-                        width: SizeConfig.padding44,
+                        // width: SizeConfig.padding44,
                         color: Colors.transparent,
                         child: Text('Single',
                             style: TextStyles.sourceSansSB.body2))),
@@ -431,18 +444,20 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                   width: SizeConfig.padding64,
                 ),
                 GestureDetector(
-                    onTap: () {
-                      model.tabIndex = 1;
-                      model.pageController.animateToPage(1,
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.linear);
-                    },
-                    child: Container(
-                        height: SizeConfig.padding24,
-                        width: SizeConfig.padding32,
-                        color: Colors.transparent,
-                        child:
-                            Text('SIP', style: TextStyles.sourceSansSB.body2))),
+                  onTap: () {
+                    model.tabIndex = 1;
+                    model.pageController.animateToPage(1,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.linear);
+                  },
+                  child: Container(
+                    height: SizeConfig.padding24,
+                    // width: SizeConfig.padding32,
+                    color: Colors.transparent,
+                    child:
+                        Text('Autosave', style: TextStyles.sourceSansSB.body2),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: SizeConfig.padding10),

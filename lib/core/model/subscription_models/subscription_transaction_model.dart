@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:flutter/foundation.dart';
 
 class AutosaveTransactionModel {
+  String id;
   double amount;
   String status;
   String txnId;
@@ -23,6 +24,7 @@ class AutosaveTransactionModel {
     (map) => AutosaveTransactionModel.fromMap(map),
   );
   AutosaveTransactionModel({
+    @required this.id,
     @required this.amount,
     @required this.status,
     @required this.txnId,
@@ -39,6 +41,7 @@ class AutosaveTransactionModel {
   });
 
   AutosaveTransactionModel copyWith({
+    String id,
     double amount,
     String status,
     String txnId,
@@ -54,6 +57,7 @@ class AutosaveTransactionModel {
     Timestamp createdOn,
   }) {
     return AutosaveTransactionModel(
+      id: id ?? this.id,
       amount: amount ?? this.amount,
       status: status ?? this.status,
       txnId: txnId ?? this.txnId,
@@ -72,6 +76,7 @@ class AutosaveTransactionModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'amount': amount,
       'status': status,
       'txnId': txnId,
@@ -90,6 +95,7 @@ class AutosaveTransactionModel {
 
   factory AutosaveTransactionModel.fromMap(Map<String, dynamic> map) {
     return AutosaveTransactionModel(
+      id: map["id"] ?? '',
       amount: map['amount']?.toDouble() ?? 0.0,
       status: map['status'] ?? '',
       txnId: map['txnId'] ?? '',
@@ -113,7 +119,7 @@ class AutosaveTransactionModel {
 
   @override
   String toString() {
-    return 'AutosaveTransactionModel(amount: $amount, status: $status, txnId: $txnId, txnDateTime: $txnDateTime, currency: $currency, paymentMode: $paymentMode, bankTxnId: $bankTxnId, gatewayName: $gatewayName, bankName: $bankName, note: $note, augmontMap: $augmontMap, closingBalance: $closingBalance, createdOn: $createdOn)';
+    return 'AutosaveTransactionModel(id: $id amount: $amount, status: $status, txnId: $txnId, txnDateTime: $txnDateTime, currency: $currency, paymentMode: $paymentMode, bankTxnId: $bankTxnId, gatewayName: $gatewayName, bankName: $bankName, note: $note, augmontMap: $augmontMap, closingBalance: $closingBalance, createdOn: $createdOn)';
   }
 
   @override

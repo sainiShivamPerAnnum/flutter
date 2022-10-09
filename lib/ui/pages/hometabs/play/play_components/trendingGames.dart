@@ -80,12 +80,10 @@ class TrendingGames extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ClipOval(
-              child: SvgPicture.network(
-                game.icon,
-                fit: BoxFit.cover,
-                width: SizeConfig.screenWidth * 0.32,
-              ),
+            SvgPicture.network(
+              game.icon,
+              fit: BoxFit.cover,
+              width: SizeConfig.screenWidth * 0.32,
             ),
             Text(
               game.gameName.split(' ').first,

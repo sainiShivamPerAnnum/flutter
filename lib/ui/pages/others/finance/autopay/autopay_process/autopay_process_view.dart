@@ -21,8 +21,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosaveProcessView extends StatefulWidget {
   final int page;
+  final bool isUpdate;
 
-  const AutosaveProcessView({Key key, this.page = 0}) : super(key: key);
+  const AutosaveProcessView({Key key, this.page = 0, this.isUpdate = false})
+      : super(key: key);
 
   @override
   State<AutosaveProcessView> createState() => _AutosaveProcessViewState();
@@ -77,7 +79,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   children: [
                     _buildEnterUpi(model),
                     _buildPendingUI(model),
-                    _buildAmountSetUi(model),
+                    _buildAmountSetUi(model, widget.isUpdate),
                     _buildCompleteUI(model),
                     Center(
                       child: Text("cancelledUI",
@@ -389,7 +391,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
     }
   }
 
-  Widget _buildAmountSetUi(AutosaveProcessViewModel model) {
+  Widget _buildAmountSetUi(AutosaveProcessViewModel model, bool isUpdate) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -398,14 +400,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth * 0.05,
         ),
         Text(
-          "SETUP AUTO SAVE",
+          isUpdate ? "UPDATE AUTOSAVE" : "SETUP AUTOSAVE",
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(
           height: SizeConfig.padding10,
         ),
         Text(
-          "Enter amount",
+          isUpdate ? "Update amount" : "Enter amount",
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -608,7 +610,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 size: 20,
               )
             : AppPositiveBtn(
-                btnText: 'Set up',
+                btnText: isUpdate ? 'Update' : 'Set up',
                 onPressed: () async {
                   Haptic.vibrate();
                   model.setSubscriptionAmount(

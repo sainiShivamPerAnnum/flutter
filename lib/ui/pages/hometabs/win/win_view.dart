@@ -340,10 +340,15 @@ class Win extends StatelessWidget {
                                 SizeConfig.padding14,
                             right: SizeConfig.pageHorizontalMargins +
                                 SizeConfig.padding14,
-                            child: Icon(
-                              Icons.keyboard_arrow_right,
-                              size: SizeConfig.padding28,
-                              color: Colors.white,
+                            child: IconButton(
+                              onPressed: () {
+                                model.navigateToRefer();
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_right,
+                                size: SizeConfig.padding28,
+                                color: Colors.white,
+                              ),
                             ),
                           )
                         ],

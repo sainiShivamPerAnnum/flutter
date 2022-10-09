@@ -28,7 +28,8 @@ class SubscriptionRepo extends BaseRepo {
         },
         token: token,
       );
-
+      final responseData = res['data'];
+      logger.d(responseData);
       final result = AutosaveTransactionModel.helper.fromMapArray(res['data']);
 
       return ApiResponse(model: result, code: 200);

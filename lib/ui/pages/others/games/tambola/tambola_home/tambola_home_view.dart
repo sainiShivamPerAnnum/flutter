@@ -722,38 +722,38 @@ class ButTicketsComponent extends StatelessWidget {
                       .colour(UiConstants.kTextColor2),
                 ),
               ]),
-              // InkWell(
-              //   onTap: () {
-              //     AppState.screenStack.add(ScreenItem.dialog);
-              //     Navigator.of(AppState.delegate.navigatorKey.currentContext)
-              //         .push(
-              //       PageRouteBuilder(
-              //         pageBuilder: (context, animation, anotherAnimation) {
-              //           return InfoStories(
-              //             topic: 'tambola',
-              //           );
-              //         },
-              //         transitionDuration: Duration(milliseconds: 500),
-              //         transitionsBuilder:
-              //             (context, animation, anotherAnimation, child) {
-              //           animation = CurvedAnimation(
-              //               curve: Curves.easeInCubic, parent: animation);
-              //           return Align(
-              //             child: SizeTransition(
-              //               sizeFactor: animation,
-              //               child: child,
-              //               axisAlignment: 0.0,
-              //             ),
-              //           );
-              //         },
-              //       ),
-              //     );
-              //   },
-              //   child: Icon(
-              //     Icons.info_outline,
-              //     color: Colors.white,
-              //   ),
-              // )
+              InkWell(
+                onTap: () {
+                  AppState.screenStack.add(ScreenItem.dialog);
+                  Navigator.of(AppState.delegate.navigatorKey.currentContext)
+                      .push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, anotherAnimation) {
+                        return InfoStories(
+                          topic: 'tambola',
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 500),
+                      transitionsBuilder:
+                          (context, animation, anotherAnimation, child) {
+                        animation = CurvedAnimation(
+                            curve: Curves.easeInCubic, parent: animation);
+                        return Align(
+                          child: SizeTransition(
+                            sizeFactor: animation,
+                            child: child,
+                            axisAlignment: 0.0,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Icon(
+                  Icons.info_outline,
+                  color: Colors.white,
+                ),
+              )
             ],
           ),
           SizedBox(

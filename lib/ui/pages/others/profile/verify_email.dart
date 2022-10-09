@@ -180,7 +180,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         await _userService.setBaseUser();
         BaseUtil.showPositiveAlert(
             "Email verified", "Thank you for verifying your email");
-        AppState.backButtonDispatcher.didPopRoute();
+        while (AppState.screenStack.length > 1)
+          AppState.backButtonDispatcher.didPopRoute();
       } else {
         BaseUtil.showNegativeAlert(
           "Email verification failed",

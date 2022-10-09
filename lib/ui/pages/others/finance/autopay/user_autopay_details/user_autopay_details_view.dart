@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -23,6 +24,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -105,9 +107,53 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                     top: SizeConfig.padding20,
                                     bottom: SizeConfig.padding20,
                                   ),
-                                  child: Text(
-                                    "Recent Transaction",
-                                    style: TextStyles.rajdhaniSB.body1,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Recent Transaction",
+                                        style: TextStyles.rajdhaniSB.body1,
+                                      ),
+                                      Spacer(),
+                                      if (model.hasMoreTxns)
+                                        GestureDetector(
+                                          onTap: () {
+                                            Haptic.vibrate();
+                                            AppState.delegate.appState
+                                                .currentAction = PageAction(
+                                              state: PageState.addWidget,
+                                              widget: TransactionsHistory(
+                                                investmentType:
+                                                    InvestmentType.AUGGOLD99,
+                                                showAutosave: true,
+                                              ),
+                                              page:
+                                                  TransactionsHistoryPageConfig,
+                                            );
+                                          },
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: SizeConfig.padding2,
+                                                ),
+                                                child: Text('See All',
+                                                    style: TextStyles
+                                                        .rajdhaniSB.body2),
+                                              ),
+                                              SvgPicture.asset(
+                                                Assets.chevRonRightArrow,
+                                                height: SizeConfig.padding24,
+                                                width: SizeConfig.padding24,
+                                              ),
+                                              SizedBox(
+                                                width: SizeConfig.padding16,
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                    ],
                                   ),
                                 ),
                                 model.filteredList == null
@@ -405,7 +451,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
             //NOTE: CHECK IN EDIT MODE
             AppState.delegate.appState.currentAction = PageAction(
               page: AutosaveProcessViewPageConfig,
-              widget: AutosaveProcessView(page: 2),
+              widget: AutosaveProcessView(
+                page: 2,
+                isUpdate: true,
+              ),
               state: PageState.replaceWidget,
             );
           },
@@ -456,9 +505,7 @@ class TransationTile extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding20,
-          ),
+          padding: EdgeInsets.symmetric(vertical: SizeConfig.padding20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

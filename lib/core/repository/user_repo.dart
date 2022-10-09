@@ -560,13 +560,13 @@ class UserRepository extends BaseRepo {
       final query = {
         'email': email,
       };
-
+      final token = await getBearerToken();
       final uid = userService?.baseUser?.uid;
       final res = await APIService.instance.getData(
-        ApiPath.isEmailRegistered(uid),
-        queryParams: query,
-        cBaseUrl: _baseUrl,
-      );
+          ApiPath.isEmailRegistered(uid),
+          queryParams: query,
+          cBaseUrl: _baseUrl,
+          token: token);
 
       return ApiResponse(code: 200, model: res['data']['isEmailRegistered']);
     } catch (e) {
