@@ -5,6 +5,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mixpanel_flutter/web/mixpanel_js_bindings.dart';
 
 class AmountInputView extends StatefulWidget {
   final TextEditingController amountController;
@@ -45,6 +46,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.amountController.text == '501' ? 2 : -1;
     updateFieldWidth();
   }
 

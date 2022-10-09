@@ -104,7 +104,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                       eventName: AnalyticsEvents.earnMoreSaveMoney);
                   while (AppState.screenStack.length > 1)
                     AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.setCurrentTabIndex = 2;
+                  AppState.delegate.appState.setCurrentTabIndex = 1;
                 },
               ),
               SizedBox(height: SizeConfig.padding16),

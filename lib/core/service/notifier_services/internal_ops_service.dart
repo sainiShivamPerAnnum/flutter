@@ -22,6 +22,18 @@ class InternalOpsService extends ChangeNotifier {
   final _internalOps = locator<InternalOpsRepository>();
   final Log log = new Log("DBModel");
 
+  Future<bool> checkIfDeviceIsReal() async {
+    if (Platform.isIOS) {
+      IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
+      logger.d("Device info: ${iosDeviceInfo?.isPhysicalDevice}");
+      return iosDeviceInfo?.isPhysicalDevice ?? true;
+    } else {
+      AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+      logger.d("Device info: ${androidDeviceInfo?.isPhysicalDevice}");
+      return androidDeviceInfo?.isPhysicalDevice ?? true;
+    }
+  }
+
   Future<Map<String, dynamic>> initDeviceInfo() async {
     String _deviceId;
     String _platform;
@@ -40,7 +52,7 @@ class InternalOpsService extends ChangeNotifier {
           brand = "apple";
           _platform = "ios";
           logger.d(
-              "Device Information - \n $phoneModel \n $softwareVersion \n $_deviceId");
+              "Device Information - $phoneModel \n $softwareVersion \n $_deviceId");
         } else if (Platform.isAndroid) {
           AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
           phoneModel = androidDeviceInfo.model;
@@ -50,7 +62,7 @@ class InternalOpsService extends ChangeNotifier {
           isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
           _platform = "android";
           logger.d(
-              "Device Information - \n phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
+              "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
         isDeviceInfoInitiated = true;
         return {

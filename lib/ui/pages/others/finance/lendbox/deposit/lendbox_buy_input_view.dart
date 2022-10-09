@@ -47,6 +47,7 @@ class LendboxBuyInputView extends StatelessWidget {
               minAmountMsg: "Minimum purchase amount is ₹10",
               notice: model.buyNotice,
               onAmountChange: (int amount) {},
+              bestChipIndex: 2,
             ),
             Spacer(),
             SizedBox(

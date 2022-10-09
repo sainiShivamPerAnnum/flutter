@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -507,10 +508,7 @@ class CampaignView extends StatelessWidget {
                   child: ReactivePositiveAppButton(
                     btnText: 'Start Saving',
                     onPressed: () {
-                      AppState.delegate.appState.currentAction = PageAction(
-                          widget: SaveAssetView(),
-                          page: SaveAssetsViewConfig,
-                          state: PageState.addWidget);
+                      BaseUtil().openDepositOptionsModalSheet();
                     },
                   ),
                 ),

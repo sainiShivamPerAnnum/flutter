@@ -145,12 +145,13 @@ class WebHomeViewModel extends BaseViewModel {
   init(String game) async {
     currentGame = game;
     isLoading = true;
+    fetchUsersCurrentCoins();
     // await loadGameLists();
     await fetchGame(game);
     // scrollController = _lbService.parentController;
     // pageController = new PageController(initialPage: 0);
     // refreshPrizes();
-    fetchUsersCurrentCoins();
+
     fetchTopSaversPastWeek(game);
     isLoading = false;
   }
@@ -214,15 +215,11 @@ class WebHomeViewModel extends BaseViewModel {
 
   Future<bool> checkIfDeviceIsNotAnEmulator() async {
     //TODO
-    final Map<String, dynamic> res = await _internalOps.initDeviceInfo();
-    if (res != null) {
-      if (res["isPhysicalDevice"] != null) {
-        if (res["isPhysicalDevice"] == false)
-          BaseUtil.showNegativeAlert(
-              "Simulators not allowed", "Please use the app on a real device");
-        return false;
-      }
-      return true;
+    final bool isReal = await _internalOps.checkIfDeviceIsReal();
+    if (isReal != null && !isReal) {
+      BaseUtil.showNegativeAlert(
+          "Simulators not allowed", "Please use the app on a real device");
+      return false;
     }
     return true;
   }

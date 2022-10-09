@@ -13,6 +13,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
       this.winners,
       this.referralLeaderBoard,
       this.showPoints = false,
+      this.appBarTitle,
       Key key})
       : super(key: key);
 
@@ -20,6 +21,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
   final List<Winners> winners;
   final List<ScoreBoard> referralLeaderBoard;
   final bool showPoints;
+  final String appBarTitle;
 
   getGameName(String gamename) {
     switch (gamename) {
@@ -43,10 +45,10 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
         title: Text(
-          isForTopReferers ? 'Top Referers' : 'Top Winners',
+          appBarTitle ?? (isForTopReferers ? 'Top Referers' : 'Top Winners'),
           maxLines: 1,
           overflow: TextOverflow.clip,
-          style: TextStyles.title4.bold.colour(Colors.white),
+          style: TextStyles.rajdhaniSB.title4,
         ),
       ),
       body: Stack(

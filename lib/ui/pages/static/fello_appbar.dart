@@ -72,16 +72,11 @@ class NotificationButton extends StatelessWidget {
                 Haptic.vibrate();
                 _analytics.track(eventName: AnalyticsEvents.notifications);
                 model.hasNewNotifications = false;
-                // AppState.delegate.appState.currentAction = PageAction(
-                //     state: PageState.addPage, page: NotificationsConfig);
+
                 AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.addPage,
                   page: NotificationsConfig,
                 );
-                // AppState.delegate.appState.currentAction = PageAction(
-                //   state: PageState.addPage,
-                //   page: Level2ViewPageConfig,
-                // );
               },
               child: Stack(
                 children: [
@@ -101,22 +96,12 @@ class NotificationButton extends StatelessWidget {
                       right: 2,
                       top: 2,
                       child: Container(
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                          BoxShadow(
-                              blurRadius: 8,
-                              color: UiConstants.tertiarySolid,
-                              offset: Offset(3, -1),
-                              spreadRadius: 0),
-                          BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.grey[700],
-                              offset: Offset(-3, 1),
-                              spreadRadius: 0)
-                        ]),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
                         child: CircleAvatar(
                           radius: SizeConfig.iconSize4 / 1.4,
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.green,
                         ),
                       ),
                     )

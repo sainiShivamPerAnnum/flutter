@@ -92,7 +92,7 @@ class Data {
             map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
         isUpdating: map['isUpdating'] as bool ?? true,
         tickets: map['tickets'] as int ?? 0,
-        goldInTxnBought: map['goldInTxnBought'] as double ?? 0.0);
+        goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble());
   }
 
   String toJson() => json.encode(toMap());

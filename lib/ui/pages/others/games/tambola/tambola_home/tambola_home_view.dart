@@ -77,7 +77,10 @@ class TambolaHomeView extends StatelessWidget {
                         model: model,
                       ),
                       //Win Announcement card
-                      if (model.showWinCard) TambolaResultCard(),
+                      if (model.showWinCard)
+                        TambolaResultCard(
+                          model: model,
+                        ),
                       SizedBox(
                         height: SizeConfig.screenWidth * 0.075,
                       ),

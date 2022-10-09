@@ -895,8 +895,9 @@ class PastWeekWinners extends StatelessWidget {
                                             state: PageState.addWidget,
                                             widget:
                                                 AllParticipantsWinnersTopReferers(
-                                              isForTopReferers: false,
+                                              isForTopReferers: true,
                                               showPoints: true,
+                                              appBarTitle: "Past Week Winners",
                                               referralLeaderBoard:
                                                   model.pastWeekParticipants,
                                             ),

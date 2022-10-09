@@ -207,6 +207,7 @@ class LendboxSuccessView extends StatelessWidget {
               children: [
                 WinningChips(
                     title: 'Fello Tokens',
+                    tooltip: "Fello Tokens",
                     asset: Assets.token,
                     qty: _txnService.currentTxnAmount.toInt()),
                 if (GoldenTicketService.currentGT != null)
@@ -214,6 +215,7 @@ class LendboxSuccessView extends StatelessWidget {
                 if (GoldenTicketService.currentGT != null)
                   WinningChips(
                       title: 'Golden Ticket',
+                      tooltip: "Golden Tickets",
                       asset: Assets.unredemmedGoldenTicketBG,
                       qty: 1),
                 if (_txnService.currentTxnTambolaTicketsCount > 0)
@@ -221,6 +223,7 @@ class LendboxSuccessView extends StatelessWidget {
                 if (_txnService.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
                     title: 'Tambola Ticket',
+                    tooltip: "Tambola Tickets",
                     asset: Assets.singleTmbolaTicket,
                     qty: _txnService.currentTxnTambolaTicketsCount.toInt(),
                   )

@@ -47,14 +47,14 @@ class LendboxBuyViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     skipMl = isSkipMilestone;
     amountController = TextEditingController(
-      text: amount.toString() ?? chipAmountList[1].toInt().toString(),
+      text: amount?.toString() ?? chipAmountList[2].toInt().toString(),
     );
     setState(ViewState.Idle);
   }
 
   resetBuyOptions() {
     amountController.text = chipAmountList[1].toInt().toString();
-    lastTappedChipIndex = 1;
+    lastTappedChipIndex = 2;
     notifyListeners();
   }
 
