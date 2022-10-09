@@ -43,21 +43,22 @@ class ProfileImageSE extends StatelessWidget {
                 radius: radius ?? SizeConfig.avatarRadius,
                 backgroundColor: Colors.black,
                 child: model.myUserDpUrl == null
-                    ? (model.avatarId == null || model.avatarId != 'CUSTOM'
+                    ? (model.avatarId != null && model.avatarId != 'CUSTOM'
                         ? SvgPicture.asset(
-                            "assets/vectors/userAvatars/${model.avatarId ?? 'AV2'}.svg",
+                            "assets/vectors/userAvatars/${model.avatarId}.svg",
                             fit: BoxFit.cover,
                           )
                         : SizedBox())
                     : SizedBox(),
-                backgroundImage: model.avatarId ??
-                        '' == 'CUSTOM' || model.myUserDpUrl != null
-                    ? CachedNetworkImageProvider(
-                        model.myUserDpUrl,
-                      )
-                    : AssetImage(
-                        Assets.profilePic,
-                      ),
+                backgroundImage:
+                    (model.avatarId != null && model.avatarId == 'CUSTOM') ||
+                            model.myUserDpUrl != null
+                        ? CachedNetworkImageProvider(
+                            model.myUserDpUrl,
+                          )
+                        : AssetImage(
+                            Assets.profilePic,
+                          ),
               ),
             );
           },

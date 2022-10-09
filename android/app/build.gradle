@@ -78,18 +78,18 @@ android {
 
          //Comment it before push to develop, to build using CICD 
          //Uncomment for local build and release.
-        // release {
-        //     keyAlias keystoreProperties['keyAlias']
-        //     keyPassword keystoreProperties['keyPassword']
-        //     storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-        //     storePassword keystoreProperties['storePassword']
-        // }
         release {
-            keyAlias keystoreProperties['debugkeyAlias']
-            keyPassword keystoreProperties['debugkeyPassword']
-            storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
-            storePassword keystoreProperties['debugstorePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
+        // release {
+        //     keyAlias keystoreProperties['debugkeyAlias']
+        //     keyPassword keystoreProperties['debugkeyPassword']
+        //     storeFile keystoreProperties['debugstoreFile'] ? file(keystoreProperties['debugstoreFile']) : null
+        //     storePassword keystoreProperties['debugstorePassword']
+        // }
         //Uncomment below, before push to develop to initiate CI and CD from gitlab.
         //Comment for local build and release.
         // release {
