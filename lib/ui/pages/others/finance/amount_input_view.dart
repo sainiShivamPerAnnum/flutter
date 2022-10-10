@@ -104,6 +104,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     curve: Curves.easeIn,
                     width: _fieldWidth,
                     child: TextFormField(
+                      autofocus: true,
                       controller: widget.amountController,
                       focusNode: widget.focusNode,
                       enabled: widget.isEnabled,

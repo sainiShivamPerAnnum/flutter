@@ -310,6 +310,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       createAvatarAnimationObject();
       animateAvatar();
     } else {
+      BaseUtil.showPositiveAlert(
+          'Congratulations, you have completed a new milestone! 🎉',
+          "Go to your journey to find out what you've won");
       _logger.i(
           "User not a Journey screen at the moment. skipping animation for now");
     }
