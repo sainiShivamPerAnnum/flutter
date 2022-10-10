@@ -91,75 +91,23 @@ class _InfoComponentState extends State<InfoComponent> {
           ),
           isBoxOpen
               ? Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                    TitlesGames(
-                      richText: RichText(
-                        text: TextSpan(
-                          text: widget.titleList[0],
-                          style: TextStyles.sourceSans.body3,
-                        ),
-                      ),
-                      icon: SvgPicture.asset(
-                        widget.assetList[0],
-                        height: SizeConfig.padding54,
-                        width: SizeConfig.padding54,
+                  children: List.generate(
+                  widget.titleList.length,
+                  (index) => TitlesGames(
+                    richText: RichText(
+                      text: TextSpan(
+                        text: widget.titleList[index],
+                        style: TextStyles.sourceSans.body3,
                       ),
                     ),
-                    TitlesGames(
-                      richText: RichText(
-                        text: TextSpan(
-                          text: widget.titleList[1],
-                          style: TextStyles.sourceSans.body3,
-                        ),
-                      ),
-                      icon: SvgPicture.asset(
-                        widget.assetList[1],
-                        height: SizeConfig.padding54,
-                        width: SizeConfig.padding54,
-                      ),
+                    icon: SvgPicture.asset(
+                      widget.assetList[index],
+                      height: SizeConfig.padding54,
+                      width: SizeConfig.padding54,
                     ),
-                    TitlesGames(
-                      richText: RichText(
-                        text: TextSpan(
-                          text: widget.titleList[2],
-                          style: TextStyles.sourceSans.body3,
-                        ),
-                      ),
-                      icon: Padding(
-                        padding: EdgeInsets.only(top: SizeConfig.padding4),
-                        child: SvgPicture.asset(
-                          widget.assetList[2],
-                          height: SizeConfig.padding40,
-                          width: SizeConfig.padding40,
-                        ),
-                      ),
-                      isLast: true,
-                    ),
-                    TitlesGames(
-                      richText: RichText(
-                        text: TextSpan(
-                          text: widget.titleList[3],
-                          style: TextStyles.sourceSans.body3,
-                        ),
-                      ),
-                      icon: Padding(
-                        padding: EdgeInsets.only(top: SizeConfig.padding4),
-                        child: SvgPicture.asset(
-                          widget.assetList[3],
-                          height: SizeConfig.padding40,
-                          width: SizeConfig.padding40,
-                        ),
-                      ),
-                      isLast: true,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding40,
-                    ),
-                  ],
-                )
+                    isLast: index == widget.titleList.length - 1,
+                  ),
+                ))
               : SizedBox.shrink(),
         ],
       ),

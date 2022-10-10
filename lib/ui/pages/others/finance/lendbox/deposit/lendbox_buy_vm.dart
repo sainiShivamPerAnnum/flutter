@@ -34,7 +34,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   TextEditingController amountController;
   TextEditingController vpaController;
   final List<int> chipAmountList = [101, 201, 501, 1001];
-  final double minAmount = 10;
+  final double minAmount = 100;
   final double maxAmount = 50000;
 
   bool get skipMl => this._skipMl;

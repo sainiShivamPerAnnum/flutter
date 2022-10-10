@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class PrizeClaimCard extends StatelessWidget {
-  final WinViewModel model;
-  PrizeClaimCard({this.model});
+  // final WinViewModel model;
+  // PrizeClaimCard({this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -70,42 +70,42 @@ class PrizeClaimCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: SizeConfig.padding8),
-                            if (m.userFundWallet.unclaimedBalance >=
-                                    minWithdrawPrizeAmt &&
-                                m.userFundWallet.augGoldPrinciple >=
-                                    refUnlockAmt)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding6),
-                                child: Row(
-                                  children: [
-                                    _isAmazonVoucherRedemptionAvailable()
-                                        ? ClaimButton(
-                                            color: Color(0xff11192B),
-                                            image: Assets.amazonClaim,
-                                            onTap: () =>
-                                                model.showConfirmDialog(
-                                                    PrizeClaimChoice
-                                                        .AMZ_VOUCHER),
-                                            text:
-                                                "Redeem as Amazon Pay Gift Card",
-                                          )
-                                        : SizedBox(),
-                                    _isAmazonVoucherRedemptionAvailable()
-                                        ? SizedBox(width: SizeConfig.padding12)
-                                        : SizedBox(),
-                                    ClaimButton(
-                                      color: UiConstants.tertiarySolid,
-                                      image: Assets.augmontShare,
-                                      onTap: () => model.showConfirmDialog(
-                                          PrizeClaimChoice.GOLD_CREDIT),
-                                      text: "Redeem as Digital Gold",
-                                    )
-                                  ],
-                                ),
-                              ),
+                            // if (m.userFundWallet.unclaimedBalance >=
+                            //         minWithdrawPrizeAmt &&
+                            //     m.userFundWallet.augGoldPrinciple >=
+                            //         refUnlockAmt)
+                            //   Container(
+                            //     padding: EdgeInsets.symmetric(
+                            //         horizontal: SizeConfig.padding16),
+                            //     margin: EdgeInsets.symmetric(
+                            //         vertical: SizeConfig.padding6),
+                            //     child: Row(
+                            //       children: [
+                            //         _isAmazonVoucherRedemptionAvailable()
+                            //             ? ClaimButton(
+                            //                 color: Color(0xff11192B),
+                            //                 image: Assets.amazonClaim,
+                            //                 onTap: () =>
+                            //                     model.showConfirmDialog(
+                            //                         PrizeClaimChoice
+                            //                             .AMZ_VOUCHER),
+                            //                 text:
+                            //                     "Redeem as Amazon Pay Gift Card",
+                            //               )
+                            //             : SizedBox(),
+                            //         _isAmazonVoucherRedemptionAvailable()
+                            //             ? SizedBox(width: SizeConfig.padding12)
+                            //             : SizedBox(),
+                            //         ClaimButton(
+                            //           color: UiConstants.tertiarySolid,
+                            //           image: Assets.augmontShare,
+                            //           onTap: () => model.showConfirmDialog(
+                            //               PrizeClaimChoice.GOLD_CREDIT),
+                            //           text: "Redeem as Digital Gold",
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
                             if (m.userFundWallet.unclaimedBalance <
                                 minWithdrawPrizeAmt)
                               Container(

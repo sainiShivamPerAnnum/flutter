@@ -451,7 +451,7 @@ class WinViewModel extends BaseViewModel {
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MyWinnigsPageConfig,
-        widget: MyWinningsView(winModel: model));
+        widget: MyWinningsView());
   }
 
   void navigateToRefer() {

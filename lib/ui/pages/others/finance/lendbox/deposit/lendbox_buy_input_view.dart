@@ -44,7 +44,7 @@ class LendboxBuyInputView extends StatelessWidget {
               maxAmount: model.maxAmount,
               maxAmountMsg: "Up to ₹50,000 can be invested at one go.",
               minAmount: model.minAmount,
-              minAmountMsg: "Minimum purchase amount is ₹10",
+              minAmountMsg: "Minimum purchase amount is ₹100",
               notice: model.buyNotice,
               onAmountChange: (int amount) {},
               bestChipIndex: 2,

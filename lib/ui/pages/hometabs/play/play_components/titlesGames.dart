@@ -6,11 +6,13 @@ class TitlesGames extends StatelessWidget {
   final Widget icon, richText;
   final bool isLast;
   final bool startPaddingAvilable;
+  final bool endPaddingAvailble;
   TitlesGames({
     this.icon,
     this.richText,
     this.isLast = false,
     this.startPaddingAvilable = true,
+    this.endPaddingAvailble = false,
   });
 
   @override
@@ -20,19 +22,23 @@ class TitlesGames extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         startPaddingAvilable
-            ? SizedBox(width: SizeConfig.screenWidth * 0.16)
+            ? SizedBox(width: SizeConfig.screenWidth * 0.1)
             : SizedBox.shrink(),
         Column(
           children: [
             SizedBox(width: SizeConfig.screenWidth * 0),
             icon,
-            if (!isLast) GameStepper(),
+            isLast ? SizedBox(height: SizeConfig.padding12) : GameStepper(),
           ],
         ),
         SizedBox(
           width: SizeConfig.padding20,
         ),
         Flexible(child: richText),
+        // if (endPaddingAvailble)
+        startPaddingAvilable
+            ? SizedBox(width: SizeConfig.screenWidth * 0.1)
+            : SizedBox.shrink(),
       ],
     );
   }

@@ -112,7 +112,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
               key: model.formKey,
               child: AppTextField(
                 hintText: ' Enter your 10 digit phone number',
-                isEnabled: true,
+                isEnabled: widget?.loginModel?.state == ViewState.Idle &&
+                    widget?.loginModel?.loginUsingTrueCaller == false,
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
                 keyboardType: TextInputType.phone,

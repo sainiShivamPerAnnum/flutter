@@ -13,9 +13,9 @@ import 'package:flutter/material.dart';
 
 class MyWinningsView extends StatelessWidget {
   final openFirst;
-  final WinViewModel winModel;
+  // final WinViewModel winModel;
 
-  MyWinningsView({this.openFirst = false, this.winModel});
+  MyWinningsView({this.openFirst = false});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -68,8 +68,8 @@ class MyWinningsView extends StatelessWidget {
                                   delegate: SliverChildListDelegate(
                                     [
                                       PrizeClaimCard(
-                                        model: winModel,
-                                      ),
+                                          // model: winModel,
+                                          ),
                                     ],
                                   ),
                                 ),
