@@ -20,6 +20,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
       @required this.claimPrize,
       @required this.choice,
       @required this.dpUrl,
+      @required this.wonGrams,
       Key key})
       : super(key: key);
 
@@ -27,6 +28,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
   final double claimPrize;
   final PrizeClaimChoice choice;
   final String dpUrl;
+  final String wonGrams;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +136,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                                     height: SizeConfig.padding14,
                                   ),
                                   Text(
-                                    "0.0045g",
+                                    wonGrams,
                                     style: TextStyles.sourceSansSB.title5
                                         .colour(Colors.white),
                                   ),

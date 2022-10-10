@@ -9,11 +9,13 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
@@ -504,17 +506,29 @@ class WinViewModel extends BaseViewModel {
           "Winning History fetch failed", "Please try again after sometime");
   }
 
-  showSuccessPrizeWithdrawalDialog(
-      PrizeClaimChoice choice, String subtitle, double claimPrize) async {
+  Future<String> getGramsWon(double amount) async {
+    AugmontService augmontService = locator<AugmontService>();
+    if (augmontService == null) return '0.0gm';
+    AugmontRates goldRates = await augmontService.getRates();
+
+    if (goldRates != null && goldRates.goldSellPrice != 0.0)
+      return '${BaseUtil.digitPrecision(amount / goldRates.goldSellPrice, 4, false)}gm';
+    else
+      return '0.0gm';
+  }
+
+  showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice, String subtitle,
+      double claimPrize, String gramsWon) async {
     //Starting the redemption sucessfull screen
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: RedeemSucessfulScreen(
-        subTitleWidget: getSubtitleWidget(subtitle),
-        claimPrize: claimPrize,
-        dpUrl: _userService.myUserDpUrl,
-        choice: choice,
-      ),
+          subTitleWidget: getSubtitleWidget(subtitle),
+          claimPrize: claimPrize,
+          dpUrl: _userService.myUserDpUrl,
+          choice: choice,
+          wonGrams: gramsWon //await getGramsWon(claimPrize),
+          ),
       page: RedeemSucessfulScreenPageConfig,
     );
   }
@@ -535,14 +549,17 @@ class WinViewModel extends BaseViewModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      AppState.backButtonDispatcher.didPopRoute();
-      if (flag) {
-        getWinningHistory();
-        showSuccessPrizeWithdrawalDialog(
-            choice,
-            choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
-            claimPrize);
-      }
+      getGramsWon(claimPrize).then((value) {
+        AppState.backButtonDispatcher.didPopRoute();
+        if (flag) {
+          getWinningHistory();
+          showSuccessPrizeWithdrawalDialog(
+              choice,
+              choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
+              claimPrize,
+              value);
+        }
+      });
     });
 
     _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);

@@ -251,7 +251,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-          'Gold Rates Unavailable', 'Please try again in sometime');
+          'Loading Gold Rates', 'Please wait while the Gold rates load');
       return false;
     }
     if (goldBuyAmount == null) {
