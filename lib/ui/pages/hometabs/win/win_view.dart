@@ -232,7 +232,7 @@ class Win extends StatelessWidget {
                                           )),
                                           TextSpan(
                                               text:
-                                                  '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} from every Golden Ticket. Win an iPad every month.',
+                                                  '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} from every Golden Ticket. Highest referrer wins an iPad every month.',
                                               style: TextStyles.sourceSans.body3
                                                   .colour(
                                                       UiConstants.kTextColor3)),
