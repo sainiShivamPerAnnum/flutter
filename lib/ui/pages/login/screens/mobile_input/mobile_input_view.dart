@@ -144,7 +144,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
             ),
 
             Spacer(),
-            if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
+            if (!isKeyboardOpen &&
+                widget.loginModel.state == ViewState.Idle &&
+                !widget.loginModel.loginUsingTrueCaller)
               Container(
                 padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding16,
@@ -171,7 +173,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
                   ],
                 ),
               ),
-            if (!isKeyboardOpen && widget.loginModel.state == ViewState.Idle)
+            if (!isKeyboardOpen &&
+                widget.loginModel.state == ViewState.Idle &&
+                !widget.loginModel.loginUsingTrueCaller)
               Column(
                 children: [
                   Padding(

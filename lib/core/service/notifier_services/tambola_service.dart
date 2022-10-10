@@ -19,7 +19,7 @@ class TambolaService extends ChangeNotifier {
   final _internalOpsService = locator<InternalOpsService>();
 
   static int _ticketCount;
-  static int _dailyPicksCount;
+  static int _dailyPicksCount = 3;
   static List<int> _todaysPicks;
   static DailyPick _weeklyDigits;
   static List<TambolaBoard> _userWeeklyBoards;

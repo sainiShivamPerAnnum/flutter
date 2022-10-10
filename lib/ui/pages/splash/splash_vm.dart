@@ -244,13 +244,13 @@ class LauncherViewModel extends BaseViewModel {
     ///Check if app needs to be open securely
     ///NOTE: CHECK APP LOCK
     bool _unlocked = true;
-    // if (userService.baseUser.userPreferences != null &&
-    //     userService.baseUser.userPreferences
-    //             .getPreference(Preferences.APPLOCK) ==
-    //         1 &&
-    //     deviceUnlock != null) {
-    //   _unlocked = await authenticateDevice();
-    // }
+    if (userService.baseUser.userPreferences != null &&
+        userService.baseUser.userPreferences
+                .getPreference(Preferences.APPLOCK) ==
+            1 &&
+        deviceUnlock != null) {
+      _unlocked = await authenticateDevice();
+    }
 
     if (_unlocked) {
       return navigator.currentAction =
@@ -278,25 +278,25 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   Future<bool> authenticateDevice() async {
-    // bool _res = false;
-    // try {
-    //   _res = await deviceUnlock.request(
-    //       localizedReason:
-    //           'Confirm your phone screen lock pattern,PIN or password');
-    // } on DeviceUnlockUnavailable {
-    //   BaseUtil.showPositiveAlert('No Device Authentication Found',
-    //       'Logging in, please enable device security to add lock');
-    //   return true;
-    // } on RequestInProgress {
-    //   _res = false;
-    //   print('Request in progress');
-    // } catch (e) {
-    //   _logger.e("error", [e]);
-    //   BaseUtil.showNegativeAlert(
-    //       'Authentication Failed', 'Please restart and try again');
-    // }
-    // return _res;
-    return true;
+    bool _res = false;
+    try {
+      _res = await deviceUnlock.request(
+          localizedReason:
+              'Confirm your phone screen lock pattern,PIN or password');
+    } on DeviceUnlockUnavailable {
+      BaseUtil.showPositiveAlert('No Device Authentication Found',
+          'Logging in, please enable device security to add lock');
+      return true;
+    } on RequestInProgress {
+      _res = false;
+      print('Request in progress');
+    } catch (e) {
+      _logger.e("error", [e]);
+      BaseUtil.showNegativeAlert(
+          'Authentication Failed', 'Please restart and try again');
+    }
+    return _res;
+    // return true;
   }
 
   Future<bool> checkBreakingUpdate() async {

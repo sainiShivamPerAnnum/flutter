@@ -485,7 +485,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (userWeeklyBoards == null ||
         userWeeklyBoards.isEmpty ||
         weeklyDigits == null ||
-        weeklyDigits.toList().length != 7 * dailyPicksCount ||
+        weeklyDigits.toList().length != 7 * (dailyPicksCount ?? 3) ||
         weeklyDigits.toList().contains(-1)) {
       _logger.i('Testing is not ready yet');
       return;

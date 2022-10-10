@@ -177,6 +177,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 BaseUtil.showNegativeAlert(
                     "Authentication failed", "Please try again after sometime");
               });
+              setState(ViewState.Idle);
             } else {
               _otpScreenKey.currentState.model.pinEditingController.clear();
               _otpScreenKey.currentState.model.otpFieldEnabled = true;
@@ -311,7 +312,7 @@ class LoginControllerViewModel extends BaseViewModel {
     logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
     logger.d("User is set: " + userService.firebaseUser.uid);
-    _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
+    _otpScreenKey?.currentState?.model?.otpFocusNode?.requestFocus();
 
     ApiResponse<BaseUser> user =
         await _userRepo.getUserById(id: userService.firebaseUser.uid);

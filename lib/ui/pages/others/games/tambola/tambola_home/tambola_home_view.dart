@@ -166,7 +166,7 @@ class TicketsView extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.all(10),
         child: Container(
-          width: double.infinity,
+          width: SizeConfig.screenWidth,
           child: Center(
               child: (model.ticketsBeingGenerated)
                   ? Column(
@@ -330,13 +330,9 @@ class TicketsView extends StatelessWidget {
           ),
           Container(
             width: SizeConfig.screenWidth,
-            child: Stack(
-              children: [
-                TabViewGenerator(
-                  model: model,
-                  showIndicatorForAll: true,
-                ),
-              ],
+            child: TabViewGenerator(
+              model: model,
+              showIndicatorForAll: true,
             ),
           ),
         ],
@@ -410,6 +406,7 @@ class TabViewGenerator extends StatefulWidget {
 class _TabViewGeneratorState extends State<TabViewGenerator>
     with TickerProviderStateMixin {
   TabController _tabController;
+  List<TambolaBoard> _bestBoards;
 
   @override
   void initState() {
@@ -417,6 +414,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
     _tabController =
         new TabController(vsync: this, length: widget.model.tabList.length);
     _tabController.addListener(_handleTabSelection);
+    _bestBoards = widget.model.refreshBestBoards();
   }
 
   void _handleTabSelection() {
@@ -425,7 +423,6 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
 
   @override
   Widget build(BuildContext context) {
-    List<TambolaBoard> _bestBoards = widget.model.refreshBestBoards();
     return DefaultTabController(
         length: widget.model.tabList.length,
         child: Column(
@@ -501,45 +498,30 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                   //Top row
                   widget.model.userWeeklyBoards != null &&
                           widget.model.userWeeklyBoards.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards[1],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model.weeklyDigits.toList()),
-                          ],
-                        )
+                      ? Ticket(
+                          dailyPicks: widget.model.weeklyDigits,
+                          bestBoards: _bestBoards,
+                          board: _bestBoards[1],
+                          showBestOdds: false,
+                          calledDigits: widget.model.weeklyDigits.toList())
                       : NoTicketWidget(),
                   widget.model.userWeeklyBoards != null &&
                           widget.model.userWeeklyBoards.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards[2],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model.weeklyDigits.toList()),
-                          ],
-                        )
+                      ? Ticket(
+                          dailyPicks: widget.model.weeklyDigits,
+                          bestBoards: _bestBoards,
+                          board: _bestBoards[2],
+                          showBestOdds: false,
+                          calledDigits: widget.model.weeklyDigits.toList())
                       : NoTicketWidget(),
                   widget.model.userWeeklyBoards != null &&
                           widget.model.userWeeklyBoards.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards[3],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model.weeklyDigits.toList()),
-                          ],
-                        )
+                      ? Ticket(
+                          dailyPicks: widget.model.weeklyDigits,
+                          bestBoards: _bestBoards,
+                          board: _bestBoards[3],
+                          showBestOdds: false,
+                          calledDigits: widget.model.weeklyDigits.toList())
                       : NoTicketWidget(),
                 ],
               ),
@@ -862,20 +844,15 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
   }
 
   _buildCircleIndicator() {
-    return Positioned(
-      left: 0.0,
-      right: 0.0,
-      bottom: 0.0,
-      child: Padding(
-        padding: EdgeInsets.all(SizeConfig.padding4),
-        child: CirclePageIndicator(
-          itemCount: ticketsCount,
-          currentPageNotifier: _currentPageNotifier,
-          selectedDotColor: UiConstants.kSelectedDotColor,
-          dotColor: Colors.white.withOpacity(0.5),
-          selectedSize: SizeConfig.padding8,
-          size: SizeConfig.padding6,
-        ),
+    return Padding(
+      padding: EdgeInsets.all(SizeConfig.padding4),
+      child: CirclePageIndicator(
+        itemCount: ticketsCount,
+        currentPageNotifier: _currentPageNotifier,
+        selectedDotColor: UiConstants.kSelectedDotColor,
+        dotColor: Colors.white.withOpacity(0.5),
+        selectedSize: SizeConfig.padding8,
+        size: SizeConfig.padding6,
       ),
     );
   }
@@ -886,6 +863,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
       children: [
         Container(
           height: SizeConfig.screenWidth * 0.48,
+          width: SizeConfig.screenWidth,
           child: PageView(
             physics: BouncingScrollPhysics(),
             controller: widget.model.ticketPageController,
