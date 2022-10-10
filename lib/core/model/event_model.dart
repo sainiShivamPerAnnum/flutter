@@ -13,6 +13,7 @@ class EventModel {
   int maxWin;
   List<dynamic> instructions;
   int minVersion;
+  List<dynamic> info;
   String url; //only for new fello
   String formUrl;
   String todayMatch; //Only for FPL
@@ -28,6 +29,7 @@ class EventModel {
     @required this.image,
     @required this.maxWin,
     @required this.minVersion,
+    @required this.info,
     @required this.url,
     @required this.formUrl,
     @required this.instructions,
@@ -44,6 +46,7 @@ class EventModel {
     int maxWin,
     String color,
     int minVersion,
+    List<String> info,
     String image,
     List<dynamic> instructions,
     List<dynamic> winners,
@@ -58,6 +61,7 @@ class EventModel {
       maxWin: maxWin ?? this.maxWin,
       image: image ?? this.image,
       minVersion: minVersion ?? this.minVersion,
+      info: info ?? this.info,
       instructions: instructions ?? this.instructions,
       formUrl: formUrl ?? this.formUrl,
       url: url ?? this.url,
@@ -77,6 +81,7 @@ class EventModel {
       'image': image,
       'maxWin': maxWin,
       'minVersion': minVersion,
+      'info': info,
       'url': url,
       'instructions': instructions,
       'formUrl': formUrl,
@@ -98,6 +103,7 @@ class EventModel {
       url: map['url'] ?? '',
       formUrl: map['formUrl'] ?? '',
       minVersion: map["minVersion"] ?? 0,
+      info: map["info"] ?? [],
       instructions: map['info'] ?? ["Fello Event Instructions"],
       todayMatch: map['todayMatch'] ?? "",
       winners: map['winners'] ?? ["ritika won ₹4000"],

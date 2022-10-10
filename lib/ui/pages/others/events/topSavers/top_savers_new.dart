@@ -363,7 +363,7 @@ class CampaignView extends StatelessWidget {
                                                   .kWinnerPlayerPrimaryColor),
                                         ),
                                         Text(
-                                          "Win amazing rewards\nin digital gold.",
+                                          "Win grand rewards\nas digital gold.",
                                           style: TextStyles.body3
                                               .colour(Colors.white),
                                         ),
@@ -484,8 +484,10 @@ class CampaignView extends StatelessWidget {
                             children: [
                               InfoComponent(
                                   heading: model.boxHeading,
-                                  assetList: model.boxAssets,
-                                  titleList: model.boxTitlles,
+                                  assetList: model
+                                      .getBoxAssets(model.event.info.length),
+                                  titleList:
+                                      model.getBoxTitles(model.event.info),
                                   onStateChanged: () {
                                     _controller.animateTo(
                                         _controller.position.maxScrollExtent,
@@ -872,7 +874,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gm",
+                                      "Rs. ${model.pastWinners[index].score.truncateToDecimalPlaces(3)}",
                                       style: TextStyles.rajdhaniM.body3,
                                     ),
                                   ],

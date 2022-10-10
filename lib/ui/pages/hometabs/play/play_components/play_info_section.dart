@@ -138,6 +138,23 @@ class _InfoComponentState extends State<InfoComponent> {
                       ),
                       isLast: true,
                     ),
+                    TitlesGames(
+                      richText: RichText(
+                        text: TextSpan(
+                          text: widget.titleList[3],
+                          style: TextStyles.sourceSans.body3,
+                        ),
+                      ),
+                      icon: Padding(
+                        padding: EdgeInsets.only(top: SizeConfig.padding4),
+                        child: SvgPicture.asset(
+                          widget.assetList[3],
+                          height: SizeConfig.padding40,
+                          width: SizeConfig.padding40,
+                        ),
+                      ),
+                      isLast: true,
+                    ),
                     SizedBox(
                       height: SizeConfig.padding40,
                     ),

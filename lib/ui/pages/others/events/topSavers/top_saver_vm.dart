@@ -91,16 +91,16 @@ class TopSaverViewModel extends BaseViewModel {
 
   //Related to the info box/////////////////
   String boxHeading = "How to participate?";
-  List<String> boxAssets = [
+  List<String> boxAssetsList = [
     Assets.singleStarAsset,
     Assets.singleCoinAsset,
     Assets.singleTmbolaTicket,
   ];
-  List<String> boxTitlles = [
-    'Choose a product for\nsaving.',
-    'Enter an amount you\nwant to save. ',
-    'Play games with tokens\nearned.'
-  ];
+  // List<String> boxTitlles = [
+  //   'Choose a product for\nsaving.',
+  //   'Enter an amount you\nwant to save. ',
+  //   'Play games with tokens\nearned.'
+  // ];
   ////////////////////////////////////////////
 
   List<ScoreBoard> currentParticipants;
@@ -171,6 +171,27 @@ class TopSaverViewModel extends BaseViewModel {
     //     isBarrierDismissable: false,
     //     content: EventInstructionsModal(instructions: event.instructions),
     //   );
+  }
+
+  List<String> getBoxTitles(List<dynamic> infoList) {
+    List<String> assetList = [];
+    for (int i = 0; i < infoList.length; i++) {
+      assetList.add(infoList[i].toString());
+    }
+    return assetList;
+  }
+
+  List<String> getBoxAssets(int count) {
+    List<String> assetList = [];
+    int i = count;
+    int j = 0;
+    while (i > 0) {
+      assetList.add(boxAssetsList[j++]);
+      j = j % boxAssetsList.length;
+      i--;
+    }
+
+    return assetList;
   }
 
   setAppbarTitle() {
