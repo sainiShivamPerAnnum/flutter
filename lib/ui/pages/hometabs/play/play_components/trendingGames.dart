@@ -10,6 +10,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/util/locator.dart';
 
 class TrendingGamesSection extends StatelessWidget {
   final PlayViewModel model;
@@ -62,8 +64,11 @@ class TrendingGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
     return GestureDetector(
       onTap: () {
+        _analyticsService.track(
+            eventName: 'Game Tapped', properties: {'name': game.gameName});
         Haptic.vibrate();
         AppState.delegate.parseRoute(
           Uri.parse(game.route),

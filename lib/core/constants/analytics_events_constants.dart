@@ -93,7 +93,7 @@ class AnalyticsEvents {
   static const activeMilestoneTapped = "Tapped on an active milestone";
 
   static const buildProfileTapped = "Tapped on build profile button";
-  static const tambolaGameCard = "Tapped on tambola game card";
+  static const tambolaGameCard = "Tapped Banner Clicked";
 
   // old analytics naming
   static const investedInGold = "Invested in gold";

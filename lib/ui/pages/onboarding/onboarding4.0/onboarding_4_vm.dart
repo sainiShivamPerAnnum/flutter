@@ -99,6 +99,9 @@ class OnboardingViewModel extends BaseViewModel {
     PreferenceHelper.setBool(
         PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
     onBoardingCompleted(comingFrom);
+
+    if (_analyticsService != null)
+      _analyticsService.track(eventName: 'Splash Screen Proceed');
   }
 
   onBoardingCompleted(String comingFrom) {

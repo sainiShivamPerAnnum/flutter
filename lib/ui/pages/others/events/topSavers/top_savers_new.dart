@@ -874,7 +874,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Rs. ${model.pastWinners[index].score.truncateToDecimalPlaces(3)}",
+                                      "${model.pastWinners[index].displayScore}",
                                       style: TextStyles.rajdhaniM.body3,
                                     ),
                                   ],

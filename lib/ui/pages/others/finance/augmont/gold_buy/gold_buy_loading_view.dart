@@ -33,7 +33,7 @@ class GoldBuyLoadingView extends StatelessWidget {
           width: SizeConfig.screenWidth,
         ),
         Text(
-          "Better way of saving",
+          "99.9% pure | 24K Gold | 100% secure",
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(

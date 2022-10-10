@@ -262,13 +262,17 @@ class JourneyPageViewModel extends BaseViewModel {
     if (_journeyService.avatarRemoteMlIndex > milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
       _analyticsService.track(
-          eventName: AnalyticsEvents.completedMilestoneTapped);
+          eventName: AnalyticsEvents.completedMilestoneTapped,
+          properties: {'milestone': milestone.index});
     } else if (_journeyService.avatarRemoteMlIndex == milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
-      _analyticsService.track(eventName: AnalyticsEvents.activeMilestoneTapped);
+      _analyticsService.track(
+          eventName: AnalyticsEvents.activeMilestoneTapped,
+          properties: {'milestone': milestone.index});
     } else {
       _analyticsService.track(
-          eventName: AnalyticsEvents.inCompleteMilestoneTapped);
+          eventName: AnalyticsEvents.inCompleteMilestoneTapped,
+          properties: {'milestone': milestone.index});
     }
     log("Current Screen Stack: ${AppState.screenStack}");
 

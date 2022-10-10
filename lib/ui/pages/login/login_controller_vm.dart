@@ -146,8 +146,8 @@ class LoginControllerViewModel extends BaseViewModel {
               break;
             }
             _analyticsService.track(
-              eventName: AnalyticsEvents.signupEnterMobile,
-            );
+                eventName: AnalyticsEvents.signupEnterMobile,
+                properties: {'mobile': this.userMobile});
             this._verificationId = '+91' + this.userMobile;
             _verifyPhone();
             // FocusScope.of(_mobileScreenKey.currentContext).unfocus();

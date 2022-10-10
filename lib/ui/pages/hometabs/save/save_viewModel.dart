@@ -271,14 +271,16 @@ class SaveViewModel extends BaseViewModel {
     Haptic.vibrate();
 
     if (investmentType == InvestmentType.AUGGOLD99) {
-      _analyticsService.track(eventName: AnalyticsEvents.aboutDigitalGold);
+      _analyticsService.track(
+          eventName: 'Asset Banner Tapped', properties: {'asset': 'Gold'});
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
         widget: SaveAssetView(),
       );
     } else {
-      _analyticsService.track(eventName: AnalyticsEvents.aboutDigitalGold);
+      _analyticsService.track(
+          eventName: 'Asset Banner Tapped', properties: {'asset': 'Flo'});
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: LendboxDetailsPageConfig,

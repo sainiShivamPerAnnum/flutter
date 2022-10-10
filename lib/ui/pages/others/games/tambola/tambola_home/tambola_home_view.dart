@@ -10,6 +10,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -28,6 +29,7 @@ import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -673,6 +675,7 @@ class ButTicketsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
     return Container(
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.symmetric(
@@ -707,6 +710,7 @@ class ButTicketsComponent extends StatelessWidget {
               InkWell(
                 onTap: () {
                   AppState.screenStack.add(ScreenItem.dialog);
+                  _analyticsService.track(eventName: 'Tambola Help Tapped');
                   Navigator.of(AppState.delegate.navigatorKey.currentContext)
                       .push(
                     PageRouteBuilder(
@@ -807,6 +811,7 @@ class ButTicketsComponent extends StatelessWidget {
                   height: SizeConfig.padding54,
                   width: SizeConfig.screenWidth * 0.34,
                   onPressed: () {
+                    _analyticsService.track(eventName: 'Tambola Save Tapped');
                     BaseUtil().openDepositOptionsModalSheet(
                         amount: model.ticketSavedAmount);
                   },

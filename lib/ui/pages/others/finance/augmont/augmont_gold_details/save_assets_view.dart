@@ -168,7 +168,7 @@ class GoldAssetCard extends StatelessWidget {
                       children: [
                         Text('Digital Gold',
                             style: TextStyles.rajdhaniB.title2),
-                        Text('Better way of saving',
+                        Text('99.9% pure | 24K Gold | 100% secure',
                             style: TextStyles.sourceSans.body4),
                         SizedBox(
                           height: SizeConfig.padding20,

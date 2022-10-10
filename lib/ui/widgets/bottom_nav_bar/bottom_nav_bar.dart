@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';

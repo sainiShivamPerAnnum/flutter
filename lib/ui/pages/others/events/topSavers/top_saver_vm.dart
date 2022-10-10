@@ -425,6 +425,7 @@ class PastHighestSaver {
   String username;
   String gameType;
   String code;
+  String displayScore;
 
   PastHighestSaver(
       {this.score,
@@ -434,7 +435,8 @@ class PastHighestSaver {
       this.isMockUser,
       this.amount,
       this.flc,
-      this.code});
+      this.code,
+      this.displayScore});
 
   factory PastHighestSaver.fromMap(Winners map, String gameType, String code) {
     return PastHighestSaver(
@@ -445,7 +447,8 @@ class PastHighestSaver {
         amount: map.amount,
         flc: map.flc,
         isMockUser: map.isMockUser,
-        code: code);
+        code: code,
+        displayScore: map.displayScore);
   }
 
   @override

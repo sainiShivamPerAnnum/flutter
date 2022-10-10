@@ -107,7 +107,7 @@ class UserProfileForm extends StatelessWidget {
                   return null;
                 } else {
                   // model.hasInputError = true;
-                  return 'Please enter your name';
+                  return 'Please enter your name as per PAN';
                 }
               },
             ),

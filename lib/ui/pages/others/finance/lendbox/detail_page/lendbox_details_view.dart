@@ -165,7 +165,7 @@ class LBoxAssetCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
-                        Text('Safer way to invest',
+                        Text('10% p.a. returns | RBI regulated | P2P asset',
                             style: TextStyles.sourceSans.body4),
                       ],
                     ),
@@ -259,7 +259,7 @@ class AssetCard extends StatelessWidget {
                     children: [
                       Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
                       Text(
-                        'Safer way to invest',
+                        '10% p.a. returns | RBI regulated | P2P asset',
                         style: TextStyles.sourceSans.body4,
                       ),
                       SizedBox(

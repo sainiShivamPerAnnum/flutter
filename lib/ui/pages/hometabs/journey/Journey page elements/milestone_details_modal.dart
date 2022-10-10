@@ -20,8 +20,10 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 
 enum JOURNEY_MILESTONE_STATUS { COMPLETED, INCOMPLETE, ACTIVE }
 
@@ -42,6 +44,7 @@ class _JourneyMilestoneDetailsModalSheetState
   final double pageHeight = SizeConfig.screenWidth * 2.165;
   final GoldenTicketRepository _gtService = locator<GoldenTicketRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  final _analyticsService = locator<AnalyticsService>();
   bool _isLoading = false;
   GoldenTicket ticket;
 
@@ -219,6 +222,15 @@ class _JourneyMilestoneDetailsModalSheetState
                                       widget.milestone.actionUri.isNotEmpty)
                                     AppState.delegate.parseRoute(
                                         Uri.parse(widget.milestone.actionUri));
+                                  try {
+                                    _analyticsService.track(
+                                        eventName: 'Journey Milestone Start',
+                                        properties: {
+                                          'uid': FirebaseAuth
+                                              .instance.currentUser.uid,
+                                          'milestone': widget.milestone.index
+                                        });
+                                  } catch (e) {}
                                 },
                                 width: SizeConfig.screenWidth),
                             if (widget.milestone.skipCost != null &&
