@@ -139,15 +139,16 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       filteredList = [];
     }
 
-    _sipScrollController.addListener(() async {
-      if (_sipScrollController.offset >=
-              _sipScrollController.position.maxScrollExtent &&
-          !_sipScrollController.position.outOfRange) {
-        if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
-          getMoreSipTransactions();
+    if (investmentType == InvestmentType.AUGGOLD99)
+      _sipScrollController.addListener(() async {
+        if (_sipScrollController.offset >=
+                _sipScrollController.position.maxScrollExtent &&
+            !_sipScrollController.position.outOfRange) {
+          if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
+            getMoreSipTransactions();
+          }
         }
-      }
-    });
+      });
 
     _scrollController.addListener(() async {
       if (_scrollController.offset >=

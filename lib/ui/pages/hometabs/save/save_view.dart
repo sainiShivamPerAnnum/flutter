@@ -248,7 +248,7 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
             SaveCustomCard(
               title: 'Digital Gold',
-              subtitle: "You own",
+              subtitle: "You Own",
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,

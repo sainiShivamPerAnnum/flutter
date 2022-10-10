@@ -13,6 +13,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
@@ -642,20 +643,16 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                   addToScreenStack: true,
                   isBarrierDismissable: false,
                   hapticVibrate: true,
-                  content: FelloConfirmationDialog(
+                  content: ConfirmationDialog(
                     title: "Are you sure ?",
-                    subtitle:
+                    description:
                         "You will lose out on automated savings & many exclusive rewards⏸️",
-                    reject: "No",
-                    acceptColor: Colors.grey.withOpacity(0.5),
-                    rejectColor: UiConstants.primaryColor,
-                    acceptTextColor: Colors.black,
-                    rejectTextColor: Colors.white,
-                    onReject: () {
+                    cancelBtnText: "No",
+                    cancelAction: () {
                       AppState.backButtonDispatcher.didPopRoute();
                     },
-                    accept: "Yes",
-                    onAccept: () async {
+                    buttonText: "Yes",
+                    confirmAction: () async {
                       if (isPausing) return;
                       setState(() {
                         isPausing = false;

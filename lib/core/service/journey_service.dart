@@ -4,18 +4,19 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -26,7 +27,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 
 const String AVATAR_CURRENT_MILESTONE_LEVEL = "avatarcurrentMilestoneLevel";
 const String AVATAR_CURRENT_JOURNEY_LEVEL = "avatarcurrentJourneyLevel";
@@ -640,6 +640,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       // if (gameLevelChangeResult != 0)
       // BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
       //     "New Milestones on your way!");
+      checkIfUserIsOldAndNeedsStoryView();
       updateAvatarLocalLevel();
       baseGlow = 1;
       Future.delayed(Duration(milliseconds: 500),
@@ -647,5 +648,42 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       _gtService.showInstantGoldenTicketView(
           title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     });
+  }
+
+  checkIfUserIsOldAndNeedsStoryView() {
+    //TODO
+    Future.delayed(
+      Duration(seconds: 2),
+      () {
+        if (_userService.baseUser.isOldUser && avatarRemoteMlIndex == 2) {
+          isJourneyOnboardingInView = true;
+          PreferenceHelper.setBool(
+              PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
+          AppState.screenStack.add(ScreenItem.dialog);
+          Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, anotherAnimation) {
+                return InfoStories(
+                  topic: "onboarding",
+                );
+              },
+              transitionDuration: Duration(milliseconds: 500),
+              transitionsBuilder:
+                  (context, animation, anotherAnimation, child) {
+                animation = CurvedAnimation(
+                    curve: Curves.easeInCubic, parent: animation);
+                return Align(
+                  child: SizeTransition(
+                    sizeFactor: animation,
+                    child: child,
+                    axisAlignment: 0.0,
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 }

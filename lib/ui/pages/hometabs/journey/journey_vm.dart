@@ -141,7 +141,6 @@ class JourneyPageViewModel extends BaseViewModel {
     });
 
     checkIfUserIsNewAndNeedsStoryView();
-    checkIfUserIsOldAndNeedsStoryView();
   }
 
   checkIfUserIsNewAndNeedsStoryView() {
@@ -154,10 +153,6 @@ class JourneyPageViewModel extends BaseViewModel {
         }
       },
     );
-  }
-
-  checkIfUserIsOldAndNeedsStoryView() {
-    //TODO
   }
 
   openStoryView() {
