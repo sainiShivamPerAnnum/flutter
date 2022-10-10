@@ -243,6 +243,7 @@ class AugmontTransactionService extends BaseTransactionService {
       if (currentTransactionState == TransactionState.ongoing) {
         GoldenTicketService.goldenTicketId = gtId;
         await _gtService.fetchAndVerifyGoldenTicketByID();
+        await _userService.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();

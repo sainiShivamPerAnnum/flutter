@@ -254,8 +254,8 @@ class RootViewModel extends BaseViewModel {
       _userService.getProfilePicture();
 
       _initAdhocNotifications();
-      // await verifyUserBootupDetails();
-      // await checkForBootUpAlerts();
+      await verifyUserBootupDetails();
+      await checkForBootUpAlerts();
       await handleStartUpNotificationData();
       // await checkIfAppLockModalSheetIsRequired();
     });
