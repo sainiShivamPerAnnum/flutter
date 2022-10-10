@@ -272,6 +272,7 @@ class EnterAmountView extends StatelessWidget {
                       curve: Curves.easeIn,
                       width: model.fieldWidth,
                       child: TextFormField(
+                        autofocus: true,
                         controller: model.goldAmountController,
                         focusNode: model.buyFieldNode,
                         enabled: !txnService.isGoldBuyInProgress &&

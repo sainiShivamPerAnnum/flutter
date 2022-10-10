@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
@@ -69,6 +70,7 @@ class UserRepository extends BaseRepo {
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
           BaseUser.fldStateId: state,
           BaseUser.fldAppFlyerId: await _appsFlyerService.appFlyerId,
+          'referralCode': BaseUtil.manualReferralCode ?? ''
         }
       };
 

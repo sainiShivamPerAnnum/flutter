@@ -288,6 +288,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
     GoldenTicketService.goldenTicketId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
+    if (!userIsAtJourneyScreen())
+      BaseUtil.showPositiveAlert(
+          'Congratulations, you have completed a new milestone! 🎉',
+          "Go to your journey to find out what you've won",
+          seconds: 2);
     checkAndAnimateAvatar();
   }
 
