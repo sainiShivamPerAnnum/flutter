@@ -115,9 +115,12 @@ class RazorpayService extends ChangeNotifier {
       final options = {
         'key': _keyId,
         'amount': amount.toInt() * 100,
-        'name': 'Digital Gold Purchase',
+        'name': investmentType == InvestmentType.AUGGOLD99
+            ? 'Digital Gold Purchase'
+            : 'Fello Flo Saving',
         'order_id': txnModel.data.orderId,
-        'description': 'GOLD',
+        'description':
+            investmentType == InvestmentType.AUGGOLD99 ? 'GOLD' : 'FLO',
         'timeout': 120, // in seconds
         'image': Assets.logoBase64,
         'remember_customer': false,
@@ -141,9 +144,12 @@ class RazorpayService extends ChangeNotifier {
         final options = {
           'key': _keyId,
           'amount': amount.toInt() * 100,
-          'name': 'Digital Gold Purchase',
+          'name': investmentType == InvestmentType.AUGGOLD99
+              ? 'Digital Gold Purchase'
+              : 'Fello Flo Saving',
           'order_id': txnModel.data.orderId,
-          'description': 'GOLD',
+          'description':
+              investmentType == InvestmentType.AUGGOLD99 ? 'GOLD' : 'FLO',
           'timeout': 120, // in seconds
           'image': Assets.logoBase64,
           'remember_customer': false,
