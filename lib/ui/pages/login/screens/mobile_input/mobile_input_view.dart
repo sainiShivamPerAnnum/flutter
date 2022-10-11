@@ -137,7 +137,10 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     : SizedBox.shrink(),
                 textEditingController: model.mobileController,
                 onChanged: (value) => model.upDateCheckTick(),
-                onTap: model.showAvailablePhoneNumbers,
+                onTap: () {
+                  if (widget.loginModel.loginUsingTrueCaller) return;
+                  model.showAvailablePhoneNumbers();
+                },
                 validator: (value) => model.validateMobile(),
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins * 2),
