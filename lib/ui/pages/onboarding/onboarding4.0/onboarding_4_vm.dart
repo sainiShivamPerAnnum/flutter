@@ -82,15 +82,15 @@ class OnboardingViewModel extends BaseViewModel {
     onboardingData = [
       [
         'Earn 10% returns',
-        'by saving in safe and secure assets like Digital Gold and our all new Fello Flo',
+        'by saving in safe and secure assets like Digital Gold and 10% fund Fello Flo',
       ],
       [
-        'Play fun games',
+        'Win Rs.1 Crore',
         'Earn tambola tickets and Fello tokens for your savings and play weekly games'
       ],
       [
         'Win rewards',
-        'Win the daily and weekly games and earn rewards of upto 1 Crore!',
+        'Win the daily and weekly games and earn Rs 1 Crore in rewards',
       ],
     ];
   }

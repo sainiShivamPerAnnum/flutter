@@ -60,119 +60,158 @@ class Win extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //Current Winnings section
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(SizeConfig.roundness12),
-                            bottomRight:
-                                Radius.circular(SizeConfig.roundness12),
+                      GestureDetector(
+                        onTap: () => AppState.delegate
+                            .parseRoute(Uri.parse('/myWinnings')),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(SizeConfig.roundness12),
+                              bottomRight:
+                                  Radius.circular(SizeConfig.roundness12),
+                            ),
                           ),
-                        ),
-                        padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
-                            SizeConfig.padding34, SizeConfig.padding24, 0.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Current Winnings',
-                                      style: TextStyles.rajdhaniSB
-                                          .copyWith(fontSize: SizeConfig.body0),
-                                    ),
-                                    Text(
-                                      '₹ ${currentWinning.truncate() ?? '-'}',
-                                      style: TextStyles.title1.extraBold
-                                          .colour(Colors.white),
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding32,
-                                    ),
-                                    currentWinning >= model.minWithdrawPrizeAmt
-                                        ? AppPositiveBtn(
-                                            height:
-                                                SizeConfig.screenWidth * 0.12,
-                                            btnText: "Redeem",
-                                            onPressed: () {
-                                              model.showConfirmDialog(
-                                                  PrizeClaimChoice.GOLD_CREDIT);
-                                            },
-                                            width:
-                                                SizeConfig.screenWidth * 0.32)
-                                        : currentWinning > 0
-                                            ? Text(
-                                                'Rewards can be\nredeemed at Rs. ${model.minWithdrawPrizeAmt}',
-                                                style: TextStyles
-                                                    .sourceSans.body3
-                                                    .colour(UiConstants
-                                                        .kTextColor2),
-                                              )
-                                            : SizedBox(),
-                                  ],
-                                ),
-                                if (m.userFundWallet != null)
-                                  Expanded(
-                                    child: SvgPicture.asset(
-                                        model.getRedeemAsset(
-                                            m.userFundWallet.unclaimedBalance)),
-                                  ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding24,
-                            ),
-                            Divider(
-                              color: Colors.white,
-                              thickness: 0.3,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding16,
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                model.navigateToMyWinnings(model);
-                              },
-                              child: Row(
+                          padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
+                              SizeConfig.padding34, SizeConfig.padding24, 0.0),
+                          child: Column(
+                            children: [
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Row(
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      SvgPicture.asset(
-                                          Assets.unredemmedGoldenTicketBG,
-                                          height: SizeConfig.padding32),
-                                      SizedBox(
-                                        width: SizeConfig.padding8,
+                                      Text(
+                                        'Current Winnings',
+                                        style: TextStyles.rajdhaniSB.copyWith(
+                                            fontSize: SizeConfig.body0),
                                       ),
                                       Text(
-                                        'Golden Tickets',
-                                        style: TextStyles.sourceSans.body2
+                                        '₹ ${currentWinning.truncate() ?? '-'}',
+                                        style: TextStyles.title1.extraBold
                                             .colour(Colors.white),
                                       ),
+                                      SizedBox(
+                                        height: SizeConfig.padding32,
+                                      ),
+                                      currentWinning >=
+                                              model.minWithdrawPrizeAmt
+                                          ? AppPositiveBtn(
+                                              height:
+                                                  SizeConfig.screenWidth * 0.12,
+                                              btnText: "Redeem",
+                                              onPressed: () {
+                                                model.showConfirmDialog(
+                                                    PrizeClaimChoice
+                                                        .GOLD_CREDIT);
+                                              },
+                                              width:
+                                                  SizeConfig.screenWidth * 0.32)
+                                          : currentWinning == 0
+                                              ? Container(
+                                                  width:
+                                                      SizeConfig.screenWidth /
+                                                          2.5,
+                                                  child: RichText(
+                                                    maxLines: 3,
+                                                    softWrap: true,
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text:
+                                                              "Winnings can be redeemed as ",
+                                                          style: TextStyles
+                                                              .sourceSans.body3
+                                                              .colour(UiConstants
+                                                                  .kTextColor2),
+                                                        ),
+                                                        TextSpan(
+                                                          text: "digital gold",
+                                                          style: TextStyles
+                                                              .sourceSansSB
+                                                              .body3
+                                                              .colour(UiConstants
+                                                                  .tertiarySolid),
+                                                        ),
+                                                        TextSpan(
+                                                          text:
+                                                              " on reaching ₹200",
+                                                          style: TextStyles
+                                                              .sourceSans.body3
+                                                              .colour(UiConstants
+                                                                  .kTextColor2),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : SizedBox(),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      UnscratchedGTCountChip(model: model),
-                                      SizedBox(
-                                        width: SizeConfig.padding10,
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white,
-                                        size: SizeConfig.padding24,
-                                      )
-                                    ],
-                                  )
+                                  if (m.userFundWallet != null)
+                                    Expanded(
+                                      child: SvgPicture.asset(
+                                          model.getRedeemAsset(m.userFundWallet
+                                              .unclaimedBalance)),
+                                    ),
                                 ],
                               ),
-                            )
-                          ],
+                              SizedBox(
+                                height: SizeConfig.padding24,
+                              ),
+                              Divider(
+                                color: Colors.white,
+                                thickness: 0.3,
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding16,
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  model.navigateToMyWinnings(model);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            Assets.unredemmedGoldenTicketBG,
+                                            height: SizeConfig.padding32),
+                                        SizedBox(
+                                          width: SizeConfig.padding8,
+                                        ),
+                                        Text(
+                                          'Golden Tickets',
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        UnscratchedGTCountChip(model: model),
+                                        SizedBox(
+                                          width: SizeConfig.padding10,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white,
+                                          size: SizeConfig.padding24,
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
 

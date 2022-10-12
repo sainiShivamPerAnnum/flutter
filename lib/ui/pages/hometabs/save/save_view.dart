@@ -346,6 +346,104 @@ class CampaignCardSection extends StatelessWidget {
   }
 }
 
+class IOSCampaignCard extends StatelessWidget {
+  final EventModel event;
+  final Widget subText;
+  final bool isLoading;
+  final double topPadding;
+  final double leftPadding;
+
+  const IOSCampaignCard(
+      {@required this.event,
+      @required this.subText,
+      @required this.isLoading,
+      @required this.topPadding,
+      @required this.leftPadding});
+
+  @override
+  Widget build(BuildContext context) {
+    final i = isLoading ? 0 : event.title.lastIndexOf(' ');
+    final prefix = isLoading ? '' : event.title.substring(0, i);
+    final suffix = isLoading ? '' : event.title.substring(i + 1);
+    final asset = isLoading
+        ? ''
+        : event.type == 'SAVER_MONTHLY'
+            ? Assets.monthlySaver
+            : event.type == 'SAVER_DAILY'
+                ? Assets.dailySaver
+                : Assets.weeklySaver;
+
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInCubic,
+      child: this.isLoading
+          ? Shimmer.fromColors(
+              child: Container(
+                width: SizeConfig.screenWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.kBackgroundColor,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  child: Container(
+                    height: SizeConfig.screenWidth * 0.18,
+                    decoration: BoxDecoration(
+                      color: UiConstants.kSecondaryBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+              baseColor: UiConstants.kUserRankBackgroundColor,
+              highlightColor: UiConstants.kBackgroundColor,
+            )
+          : Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                color: UiConstants.kSecondaryBackgroundColor,
+              ),
+              padding: EdgeInsets.only(
+                  left: this.leftPadding,
+                  right: SizeConfig.padding24,
+                  top: SizeConfig.viewInsets.top + kToolbarHeight / 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        prefix,
+                        style: TextStyles.sourceSans.body1.bold,
+                      ),
+                      Text(
+                        suffix.toUpperCase(),
+                        style: TextStyles.sourceSansEB.title50
+                            .letterSpace(0.6)
+                            .colour(
+                              event.textColor.toColor(),
+                            )
+                            .setHeight(1),
+                      ),
+                      this.subText,
+                      SizedBox(height: SizeConfig.padding32)
+                    ],
+                  ),
+                  Expanded(
+                    child: SvgPicture.asset(
+                      asset,
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+}
+
 class CampaignCard extends StatelessWidget {
   final EventModel event;
   final Widget subText;

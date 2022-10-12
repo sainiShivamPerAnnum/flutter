@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,6 +7,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/components/campaignOverviewWidget.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/components/campaign_participants.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/components/campaign_prize_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
@@ -44,12 +48,6 @@ class CampaignView extends StatelessWidget {
   final bool isGameRedirected;
   CampaignView({this.eventType, this.isGameRedirected = false});
 
-  final TextStyle selectedTextStyle =
-      TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
-
-  final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
-      .colour(UiConstants.titleTextColor.withOpacity(0.6));
-
   bool isInteger(num value) => value is int || value == value.roundToDouble();
 
   ScrollController _controller = ScrollController();
@@ -74,411 +72,73 @@ class CampaignView extends StatelessWidget {
                     )
                   : CustomScrollView(
                       controller: _controller,
-                      physics: BouncingScrollPhysics(),
+                      physics: ClampingScrollPhysics(),
                       slivers: [
-                        SliverLayoutBuilder(
-                          builder: (context, constraints) {
-                            final scrolled = constraints.scrollOffset > 0;
-                            return SliverAppBar(
-                              title: scrolled
-                                  ? Text(
-                                      model.appbarTitle,
-                                      style: TextStyles.rajdhaniSB.title4
-                                          .colour(Colors.white),
-                                    )
-                                  : SizedBox.shrink(),
-                              pinned: true,
-                              backgroundColor: UiConstants.kBackgroundColor,
-                              leading: IconButton(
-                                onPressed: () {
-                                  AppState.backButtonDispatcher.didPopRoute();
+                        Platform.isIOS
+                            ? SliverToBoxAdapter(
+                                child: IOSCampaignCard(
+                                  event: model.event,
+                                  subText: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: SizeConfig.padding10,
+                                    ),
+                                    child: _realtimeView(model),
+                                  ),
+                                  isLoading: model.event == null,
+                                  topPadding: 1,
+                                  leftPadding: SizeConfig.padding24,
+                                ),
+                              )
+                            : SliverLayoutBuilder(
+                                builder: (context, constraints) {
+                                  final scrolled = constraints.scrollOffset > 0;
+                                  return SliverAppBar(
+                                    title: scrolled
+                                        ? Text(
+                                            model.appbarTitle,
+                                            style: TextStyles.rajdhaniSB.title4
+                                                .colour(Colors.white),
+                                          )
+                                        : SizedBox.shrink(),
+                                    pinned: true,
+                                    backgroundColor:
+                                        UiConstants.kBackgroundColor,
+                                    leading: IconButton(
+                                      onPressed: () {
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
+                                      },
+                                      icon: Icon(Icons.arrow_back_ios),
+                                    ),
+                                    expandedHeight:
+                                        SizeConfig.sliverAppExpandableSize,
+                                    flexibleSpace: FlexibleSpaceBar(
+                                      background: Padding(
+                                        padding: EdgeInsets.only(
+                                          // left: SizeConfig.padding24,
+                                          // right: SizeConfig.padding24,
+                                          bottom: SizeConfig.padding24,
+                                        ),
+                                        child: CampaignCard(
+                                          event: model.event,
+                                          subText: Padding(
+                                            padding: EdgeInsets.only(
+                                              top: SizeConfig.padding10,
+                                            ),
+                                            child: _realtimeView(model),
+                                          ),
+                                          isLoading: model.event == null,
+                                          topPadding: 90,
+                                          leftPadding: SizeConfig.padding38,
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 },
-                                icon: Icon(Icons.arrow_back_ios),
                               ),
-                              expandedHeight:
-                                  SizeConfig.sliverAppExpandableSize,
-                              flexibleSpace: FlexibleSpaceBar(
-                                background: Padding(
-                                  padding: EdgeInsets.only(
-                                    // left: SizeConfig.padding24,
-                                    // right: SizeConfig.padding24,
-                                    bottom: SizeConfig.padding24,
-                                  ),
-                                  child: CampaignCard(
-                                    event: model.event,
-                                    subText: Padding(
-                                      padding: EdgeInsets.only(
-                                        top: SizeConfig.padding10,
-                                      ),
-                                      child: _realtimeView(model),
-                                    ),
-                                    isLoading: model.event == null,
-                                    topPadding: 90,
-                                    leftPadding: SizeConfig.padding38,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "DAY ${model.weekDay.toString().padLeft(2, '0')}",
-                                    style: TextStyles.rajdhaniB.title5
-                                        .colour(Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: SizeConfig.boxWidthLarge,
-                                        width: SizeConfig.boxWidthLarge,
-                                        padding: EdgeInsets.fromLTRB(
-                                            SizeConfig.padding24,
-                                            0,
-                                            SizeConfig.padding34,
-                                            0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                SizeConfig.roundness12),
-                                          ),
-                                          color: UiConstants.kDarkBoxColor,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            ProfileImageSE(
-                                              radius: SizeConfig.profileDPSize,
-                                              reactive: false,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              "Your Savings",
-                                              style: TextStyles.body3
-                                                  .colour(Colors.white),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            FittedBox(
-                                              child: Text(
-                                                model.userDisplayAmount ?? '-',
-                                                style: TextStyles.body1.bold
-                                                    .colour(Colors.white),
-                                                maxLines: 1,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: SizeConfig.boxWidthLarge,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  SizeConfig.roundness12),
-                                            ),
-                                            color: Colors.transparent,
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      SizeConfig
-                                                          .boxDividerMargins,
-                                                      0,
-                                                      0,
-                                                      (SizeConfig
-                                                              .boxDividerMargins) /
-                                                          2),
-                                                  padding: EdgeInsets.all(
-                                                      SizeConfig.padding16),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(SizeConfig
-                                                          .roundness12),
-                                                    ),
-                                                    color: UiConstants
-                                                        .kDarkBoxColor,
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Highest\nSaving",
-                                                        style: TextStyles.body3
-                                                            .colour(
-                                                                Colors.white),
-                                                      ),
-                                                      Flexible(
-                                                        child: Text(
-                                                          model.highestSavings ??
-                                                              '-',
-                                                          style: TextStyles
-                                                              .body2.bold
-                                                              .colour(
-                                                                  Colors.white),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              //RANK
-                                              Expanded(
-                                                child: Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      SizeConfig
-                                                          .boxDividerMargins,
-                                                      (SizeConfig
-                                                              .boxDividerMargins) /
-                                                          2,
-                                                      0,
-                                                      0),
-                                                  padding: EdgeInsets.all(
-                                                      SizeConfig.padding16),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(SizeConfig
-                                                          .roundness12),
-                                                    ),
-                                                    color: UiConstants
-                                                        .kDarkBoxColor,
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                          child: Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                            Assets
-                                                                .rewardGameAsset,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          Text(
-                                                            "Rank",
-                                                            style: TextStyles
-                                                                .body3
-                                                                .colour(Colors
-                                                                    .white),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                      Flexible(
-                                                        child: Text(
-                                                          model.userRank == 0
-                                                              ? 'N/A'
-                                                              : model.userRank
-                                                                  .toString()
-                                                                  .padLeft(
-                                                                      2, '0'),
-                                                          style: TextStyles
-                                                              .body2.bold
-                                                              .colour(
-                                                                  Colors.white),
-                                                          maxLines: 1,
-                                                          textAlign:
-                                                              TextAlign.end,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    SizeConfig.pageHorizontalMargins * 1.2),
-                            decoration: BoxDecoration(
-                              gradient:
-                                  UiConstants.kCampaignBannerBackgrondGradient,
-                            ),
-                            height: SizeConfig.bannerHeight,
-                            width: SizeConfig.screenWidth,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    // height: SizeConfig.bannerHeight,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "WIN",
-                                          style: TextStyles
-                                              .rajdhaniSB.body0.bold
-                                              .colour(Colors.white),
-                                        ),
-                                        Text(
-                                          "₹ ${model?.event?.maxWin ?? 250}",
-                                          style: TextStyles
-                                              .rajdhaniB.title0.bold
-                                              .colour(UiConstants
-                                                  .kWinnerPlayerPrimaryColor),
-                                        ),
-                                        Text(
-                                          "Win grand rewards\nas digital gold.",
-                                          style: TextStyles.body3
-                                              .colour(Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: SizeConfig.screenWidth * 0.3,
-                                  height: SizeConfig.bannerHeight,
-                                  decoration: BoxDecoration(),
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        bottom: SizeConfig.bannerHeight * 0.15,
-                                        child: Container(
-                                          width: SizeConfig.screenWidth * 0.3,
-                                          height:
-                                              (SizeConfig.bannerHeight) / 3.9,
-                                          decoration: BoxDecoration(
-                                              gradient:
-                                                  UiConstants.kTrophyBackground,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft:
-                                                      Radius.circular(10.0),
-                                                  topRight:
-                                                      Radius.circular(10.0))),
-                                        ),
-                                      ),
-                                      SvgPicture.asset(
-                                        "assets/svg/trophy_banner.svg",
-                                        width: double.maxFinite,
-                                        fit: BoxFit.fitWidth,
-                                        height: double.maxFinite,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                            child: model.state == ViewState.Idle
-                                ? Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding34),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextButton(
-                                                onPressed: () =>
-                                                    model.switchTab(0),
-                                                child: Text(
-                                                  'Leaderboard',
-                                                  style: model.tabNo == 0
-                                                      ? selectedTextStyle
-                                                      : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: TextButton(
-                                                onPressed: () =>
-                                                    model.switchTab(1),
-                                                child: Text(
-                                                  'Past Winners',
-                                                  style: model.tabNo == 1
-                                                      ? selectedTextStyle
-                                                      : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            AnimatedContainer(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              height: 5,
-                                              width: model.tabPosWidthFactor,
-                                            ),
-                                            Container(
-                                              color:
-                                                  UiConstants.kTabBorderColor,
-                                              height: 5,
-                                              width:
-                                                  SizeConfig.screenWidth * 0.38,
-                                            )
-                                          ],
-                                        ),
-                                        HeightAdaptivePageView(
-                                          controller: model.pageController,
-                                          onPageChanged: (int page) {
-                                            model.switchTab(page);
-                                          },
-                                          children: [
-                                            //Current particiapnts
-                                            CurrentParticipantsLeaderBoard(
-                                              model: model,
-                                            ),
-
-                                            //Current particiapnts
-                                            PastWinnersLeaderBoard(
-                                              model: model,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox.shrink()),
+                        CampaignOverviewWidget(model: model),
+                        CampaignPrizeWidget(model: model),
+                        CampaignParticipantsWidget(model: model),
                         SliverToBoxAdapter(
                           child: Column(
                             children: [
@@ -503,6 +163,21 @@ class CampaignView extends StatelessWidget {
                         ),
                       ],
                     ),
+              Positioned(
+                left: SizeConfig.padding10,
+                child: SafeArea(
+                  child: CircleAvatar(
+                    backgroundColor: UiConstants.kSecondaryBackgroundColor,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                      ),
+                      color: Colors.white,
+                      onPressed: AppState.backButtonDispatcher.didPopRoute,
+                    ),
+                  ),
+                ),
+              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
