@@ -12,6 +12,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -42,6 +43,7 @@ class MyWinningsViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _internalOpsService = locator<InternalOpsService>();
   final _prizingRepo = locator<PrizingRepo>();
+  final _appFlyer = locator<AppFlyerAnalytics>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -189,14 +191,20 @@ class MyWinningsViewModel extends BaseViewModel {
                 result: (res) async {
                   if (res) {
                     try {
-                      String url =
-                          await _userService.createDynamicLink(true, 'Other');
-                      caputure(
-                          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                      String url;
+                      final link = await _appFlyer.inviteLink();
+                      if (link['status'] == 'success') {
+                        url = link['payload']['userInviteUrl'];
+                        if (url == null) url = link['payload']['userInviteURL'];
+                      }
+
+                      if (url != null)
+                        caputure(
+                            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
                     } catch (e) {
                       _logger.e(e.toString());
                       BaseUtil.showNegativeAlert(
-                          "An error occured!", "Please try again");
+                          "An error occurred!", "Please try again");
                     }
                   }
                 },
@@ -285,85 +293,6 @@ class MyWinningsViewModel extends BaseViewModel {
       );
       return false;
     }
-  }
-
-  showPrizeDetailsDialog(String type, double amount) async {
-    String subtitle = "Fello Rewards";
-    if (type == "AMZ_VOUCHER") {
-      choice = PrizeClaimChoice.AMZ_VOUCHER;
-      subtitle = "Amazon Gift Voucher";
-    } else if (type == "GOLD_CREDIT") {
-      choice = PrizeClaimChoice.GOLD_CREDIT;
-      subtitle = "Digital Gold";
-    } else
-      choice = PrizeClaimChoice.FELLO_PRIZE;
-
-    AppState.screenStack.add(ScreenItem.dialog);
-    showDialog(
-        context: AppState.delegate.navigatorKey.currentContext,
-        builder: (ctx) {
-          return Stack(
-            children: [
-              FelloConfirmationDialog(
-                result: (res) async {
-                  if (res) {
-                    try {
-                      String url =
-                          await _userService.createDynamicLink(true, 'Other');
-                      caputure(
-                          'Hey, I won ₹${amount.toInt()} on Fello! \nLet\'s save and play together: $url');
-                    } catch (e) {
-                      _logger.e(e.toString());
-                      BaseUtil.showNegativeAlert(
-                          "An error occured!", "Please try again");
-                    }
-                  }
-                },
-                content: Column(
-                  children: [
-                    SizedBox(height: SizeConfig.screenHeight * 0.02),
-                    Container(
-                      height: SizeConfig.screenHeight * 0.38,
-                      width: SizeConfig.screenWidth,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: RepaintBoundary(
-                          key: imageKey,
-                          child: ShareCard(
-                            dpUrl: _userService.myUserDpUrl,
-                            claimChoice: choice,
-                            prizeAmount: amount.abs(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.02),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        "Congratulations!",
-                        style: TextStyles.title2.bold,
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    Text(
-                      subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body2.colour(Colors.grey),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.03),
-                  ],
-                ),
-                showCrossIcon: true,
-                accept: "Share",
-                reject: "Done",
-                acceptColor: UiConstants.primaryColor,
-                rejectColor: Colors.grey[300],
-                onReject: AppState.backButtonDispatcher.didPopRoute,
-              ),
-            ],
-          );
-        });
   }
 
   Widget getSubtitleWidget(String subtitle) {
