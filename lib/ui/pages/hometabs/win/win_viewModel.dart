@@ -27,7 +27,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -39,9 +38,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -536,9 +532,16 @@ class WinViewModel extends BaseViewModel {
   sharePrizeDetails() async {
     startShareLoading();
     try {
-      String url = await _userService.createDynamicLink(true, 'Other');
-      caputure(
-          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+      String url;
+      final link = await _appFlyer.inviteLink();
+      if (link['status'] == 'success') {
+        url = link['payload']['userInviteUrl'];
+        if (url == null) url = link['payload']['userInviteURL'];
+      }
+
+      if (url != null)
+        caputure(
+            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
     } catch (e) {
       _logger.e(e.toString());
       BaseUtil.showNegativeAlert("An error occured!", "Please try again");
