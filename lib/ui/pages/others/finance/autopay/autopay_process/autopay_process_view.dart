@@ -306,7 +306,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         ),
         Spacer(),
         Text(
-          "Do not press back until the paymet is completed",
+          "Do not press back until the payment is completed",
           style: TextStyles.sourceSansL.body4.colour(Colors.red),
         ),
         SizedBox(

@@ -112,7 +112,7 @@ class Win extends StatelessWidget {
                                               },
                                               width:
                                                   SizeConfig.screenWidth * 0.32)
-                                          : currentWinning == 0
+                                          : currentWinning > 0
                                               ? Container(
                                                   width:
                                                       SizeConfig.screenWidth /
@@ -133,10 +133,9 @@ class Win extends StatelessWidget {
                                                         TextSpan(
                                                           text: "digital gold",
                                                           style: TextStyles
-                                                              .sourceSansSB
-                                                              .body3
+                                                              .sourceSans.body3
                                                               .colour(UiConstants
-                                                                  .tertiarySolid),
+                                                                  .kTextColor2),
                                                         ),
                                                         TextSpan(
                                                           text:

@@ -85,12 +85,12 @@ class OnboardingViewModel extends BaseViewModel {
         'by saving in safe and secure assets like Digital Gold and 10% fund Fello Flo',
       ],
       [
-        'Win Rs.1 Crore',
+        'Play fun games',
         'Earn tambola tickets and Fello tokens for your savings and play weekly games'
       ],
       [
-        'Win rewards',
-        'Win the daily and weekly games and earn Rs 1 Crore in rewards',
+        'Win Rs.1 Crore!',
+        'Win the daily and weekly games and earn upto Rs 1 Crore in rewards',
       ],
     ];
   }
