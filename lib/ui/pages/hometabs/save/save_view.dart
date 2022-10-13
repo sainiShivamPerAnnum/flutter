@@ -402,6 +402,7 @@ class IOSCampaignCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                 color: UiConstants.kSecondaryBackgroundColor,
               ),
+              margin: EdgeInsets.only(bottom: SizeConfig.padding16),
               padding: EdgeInsets.only(
                   left: this.leftPadding,
                   right: SizeConfig.padding24,

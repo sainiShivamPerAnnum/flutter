@@ -16,8 +16,10 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginControllerView extends StatefulWidget {
   final int initPage;
@@ -153,7 +155,75 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       : SizedBox(),
                 ),
               ),
-              // if (!keyboardIsOpen)
+              if (!keyboardIsOpen &&
+                  model.state == ViewState.Idle &&
+                  !model.loginUsingTrueCaller)
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding16,
+                              horizontal: SizeConfig.padding20),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kBackgroundColor3,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(SizeConfig.roundness12)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/svg/dual_star.svg",
+                                width: SizeConfig.padding20,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding14,
+                              ),
+                              Text(
+                                'Join over 5 Lakh users who save and win with us!',
+                                style: TextStyles.sourceSans.body4,
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                              SizeConfig.padding16, SizeConfig.padding10, 0),
+                          child: RichText(
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                  text: 'By continuing, you agree to our ',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                                new TextSpan(
+                                  text: 'Terms of Service',
+                                  style: TextStyles.sourceSans.body3.underline
+                                      .colour(UiConstants.kTextColor),
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      model.onTermsAndConditionsClicked();
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenWidth * 0.1 +
+                              MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
