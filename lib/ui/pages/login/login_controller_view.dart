@@ -155,7 +155,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       : SizedBox(),
                 ),
               ),
-              if (!keyboardIsOpen &&
+              if (model.currentPage == 0 &&
+                  !keyboardIsOpen &&
                   model.state == ViewState.Idle &&
                   !model.loginUsingTrueCaller)
                 Positioned(
