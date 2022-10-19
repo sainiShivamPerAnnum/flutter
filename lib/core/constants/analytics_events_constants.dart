@@ -7,6 +7,8 @@ class AnalyticsEvents {
   static const signupDemo = "Save, play, win demo track";
   static const signupComplete = "Completed Signup";
   static const termsAndConditions = "Terms And Conditions";
+  static const resendOtpTapped = "Resend OTP Tapped";
+  static const proceedToSignUp = "Proceed to Signup";
 
   // Journey section
   static const journeySection = "Journey Section";
