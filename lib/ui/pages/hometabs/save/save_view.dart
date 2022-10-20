@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -44,7 +45,6 @@ class Save extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("ROOT: Save view build called");
-
     return BaseView<SaveViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
