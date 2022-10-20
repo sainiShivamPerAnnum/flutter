@@ -1,6 +1,6 @@
 class AnalyticsEvents {
   // signup/signin events
-  static const signupEnterMobile = "Entered Mobile number @ Signup";
+  static const signupEnterMobile = "Entered Mobile number";
   static const signupProfile = "Enter personal details @Signup";
   static const profileInformationAdded = "Profile information entered";
   static const signupName = "Enter gaming name @signup";
@@ -105,7 +105,7 @@ class AnalyticsEvents {
   static const whatsappShare = "Whatsapp Share";
   static const referralCount = "Referral Count";
   static const updatedProfilePicture = "Updated profile picture";
-  static const mobileOtpDone = "Mobile-otp done";
+  static const mobileOtpDone = "Entered OTP";
   static const truecallerVerified = "Truecaller verified done";
   static const truecallerSignup = "Signup using Truecaller";
   static const truecallerLogin = "Login using Truecaller";
