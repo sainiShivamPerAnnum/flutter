@@ -1,4 +1,7 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
@@ -19,6 +22,8 @@ class HelpFab extends StatefulWidget {
 
 class _HelpFabState extends State<HelpFab> {
   final _userService = locator<UserService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   double width = SizeConfig.avatarRadius * 2.4;
   bool isOpen = false;
   expandFab() {
@@ -45,6 +50,12 @@ class _HelpFabState extends State<HelpFab> {
     //   expandFab();
     // });
     super.initState();
+  }
+
+  trackHelpTappedEvent() {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.journeyHelpTapped,
+        properties: AnalyticsProperties.getDefaultPropertiesMap());
   }
 
   @override
@@ -79,6 +90,7 @@ class _HelpFabState extends State<HelpFab> {
         //     addToScreenStack: true,
         //     content: JourneyOnboardingDialog(),
         //     isBarrierDismissable: false);
+        trackHelpTappedEvent();
       },
       child: AnimatedContainer(
           height: SizeConfig.avatarRadius * 2.4,

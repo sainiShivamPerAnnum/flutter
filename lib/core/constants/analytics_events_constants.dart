@@ -7,11 +7,9 @@ class AnalyticsEvents {
   static const signupDemo = "Save, play, win demo track";
   static const signupComplete = "Completed Signup";
   static const termsAndConditions = "Terms And Conditions";
-  static const resendOtpTapped = "Resend OTP Tapped";
-  static const proceedToSignUp = "Proceed to Signup";
 
   // Journey section
-  static const journeySection = "Journey Section";
+  static const journeySection = "Journey Tab Clicked";
   // save section
   static const saveSection = "Save Section";
   static const saveBuy = "Select Buy Digital Gold";
@@ -50,7 +48,7 @@ class AnalyticsEvents {
   static const gamePlayStarted = "Game started";
 
   // profile section
-  static const profileClicked = "Profile Clicked";
+  static const profileClicked = "Profile Tapped";
   static const myGoldenTickets = 'My Golden Tickets';
   static const selectKYC = 'Select KYC';
   static const transactions = "Transactions";
@@ -144,4 +142,10 @@ class AnalyticsEvents {
   static const autosavePauseTwoWeeks = "Autosave paused for two weeks";
   static const autosavePauseOneMonth = "Autosave paused for one month";
   static const autosavePauseForever = "Autosave paused forever";
+
+  //Added in alnalytics-phase 1
+  static const resendOtpTapped = "Resend OTP Tapped";
+  static const proceedToSignUp = "Proceed to Signup";
+  static const splashScrenProceed = "Proceed to Signup";
+  static const journeyHelpTapped = "Journey Help Tapped";
 }

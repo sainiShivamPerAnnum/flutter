@@ -10,11 +10,8 @@ class AnalyticsProperties {
   static final _userCoinService = locator<UserCoinService>();
   static final _paytmService = locator<PaytmService>();
 
-  static double getTotalInvestedAmount() {
-    double totalInvestedAmount = _userService.userFundWallet.augGoldPrinciple ??
-        0 + _userService.userFundWallet.wLbPrinciple ??
-        0;
-    return totalInvestedAmount;
+  init() async {
+    await _paytmService.init();
   }
 
   static double getGoldInvestedAmount() {
@@ -49,17 +46,47 @@ class AnalyticsProperties {
   }
 
   static int getTokens() {
-    return _userCoinService.flcBalance;
+    return _userCoinService?.flcBalance ?? 0;
   }
 
   static bool isAutoSIPActive() {
-    return _paytmService.activeSubscription.status ==
-            Constants.SUBSCRIPTION_ACTIVE
-        ? true
-        : false;
+    if (_paytmService.activeSubscription == null) {
+      return false;
+    } else {
+      return _paytmService.activeSubscription.status ==
+              Constants.SUBSCRIPTION_ACTIVE
+          ? true
+          : false;
+    }
   }
 
   static double getAutoSIPAmount() {
-    return _paytmService.activeSubscription.autoAmount;
+    if (_paytmService.activeSubscription == null)
+      return 0.0;
+    else
+      return _paytmService.activeSubscription.autoAmount;
+  }
+
+  static Map<String, dynamic> getDefaultPropertiesMap(
+      {Map<String, dynamic> extraValuesMap}) {
+    Map<String, dynamic> defaultProperties = {
+      "Total Invested Amount": getGoldInvestedAmount() + getFelloFloAmount(),
+      "Amount Invested in Gold": getGoldInvestedAmount(),
+      "Grams of Gold owned": getGoldQuantityInGrams(),
+      "Amount Invested in Flo": getFelloFloAmount(),
+      "Auto SIP done": isAutoSIPActive(),
+      "Auto SIP amount": getAutoSIPAmount(),
+      "KYC Verified": isKYCVerified(),
+      "Level": getCurrentLevel(),
+      "MileStones Completed": getMileStonesCompleted(),
+      "Current Milestone": getCurrentMilestone(),
+      "Token Balance": getTokens(),
+    };
+
+    if (extraValuesMap != null) {
+      defaultProperties.addAll(extraValuesMap);
+    }
+
+    return defaultProperties;
   }
 }
