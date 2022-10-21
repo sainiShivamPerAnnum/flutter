@@ -23,7 +23,7 @@ class AnalyticsEvents {
   static const selllendboxReason = "Selling felloflo reason";
 
   // play section
-  static const playSection = "Play section";
+  static const playSection = "Play Tab Tapped";
   static const earnMoreTokens = "Select Earn more tokens";
   static const earnMoreSaveMoney = "Select Save more in earn more section";
   static const earnMoreRefer = "Select refer in earn more section";

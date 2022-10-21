@@ -1,4 +1,6 @@
+import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -11,9 +13,11 @@ class AnalyticsProperties {
   static final _userCoinService = locator<UserCoinService>();
   static final _paytmService = locator<PaytmService>();
   static final _journeyService = locator<JourneyService>();
+  static final _tambolaService = locator<TambolaService>();
 
   init() async {
     await _paytmService.init();
+    await _tambolaService.init();
   }
 
   static double getGoldInvestedAmount() {
@@ -87,6 +91,23 @@ class AnalyticsProperties {
         .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
         .steps[0]
         .subtitle;
+  }
+
+  static String getTimeLeftForTambolaDraw() {
+    DateTime currentTime = DateTime.now();
+    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 18, 00, 10);
+    Duration timeDiff = drawTime.difference(currentTime);
+
+    if (timeDiff.inSeconds <= 0) {
+      return "Drawn";
+    } else {
+      return timeDiff.inMinutes.toString();
+    }
+  }
+
+  static int getTabolaTicketCount() {
+    return _tambolaService.ticketCount ?? 0;
   }
 
   static Map<String, dynamic> getDefaultPropertiesMap(

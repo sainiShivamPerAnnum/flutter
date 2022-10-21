@@ -136,7 +136,25 @@ class RootViewModel extends BaseViewModel {
         _analyticsService.track(eventName: AnalyticsEvents.saveSection);
         break;
       case 2:
-        _analyticsService.track(eventName: AnalyticsEvents.playSection);
+        {
+          _analyticsService.track(
+              eventName: AnalyticsEvents.playSection,
+              properties:
+                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Time left for draw Tambola (mins)":
+                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                "Tambola Tickets Owned":
+                    AnalyticsProperties.getTabolaTicketCount(),
+              }));
+
+          print(
+              "Testing: ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Time left for draw Tambola (mins)":
+                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                "Tambola Tickets Owned":
+                    AnalyticsProperties.getTabolaTicketCount(),
+              })} ");
+        }
         break;
       case 3:
         _analyticsService.track(eventName: AnalyticsEvents.winSection);
