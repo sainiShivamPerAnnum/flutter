@@ -186,7 +186,7 @@ class UserRepository extends BaseRepo {
       return ApiResponse(code: 200, model: res['data']['token']);
     } catch (e) {
       logger.d(e);
-      return ApiResponse.withError("send OTP failed", 400);
+      return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
@@ -44,6 +45,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
       builder: (ctx, model, child) {
         return ListView(
           // mainAxisAlignment: MainAxisAlignment.start,
+          controller: widget.loginModel.nameViewScrollController,
           shrinkWrap: true,
           children: [
             SizedBox(height: SizeConfig.padding44),
@@ -117,6 +119,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                   )
                 : TextButton(
                     onPressed: () {
+                      if (widget.loginModel.state == ViewState.Busy) return;
                       model.hasReferralCode = true;
                     },
                     child: Center(
