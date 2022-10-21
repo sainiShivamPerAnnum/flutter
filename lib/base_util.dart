@@ -408,6 +408,7 @@ class BaseUtil extends ChangeNotifier {
           content: CompleteProfileDialog());
     _analyticsService.track(
         eventName: AnalyticsEvents.rechargeOptionModalSheet);
+
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,

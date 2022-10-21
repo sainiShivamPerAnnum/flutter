@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -30,7 +31,15 @@ class TambolaCard extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           Haptic.vibrate();
-          _analyticsService.track(eventName: AnalyticsEvents.tambolaGameCard);
+          _analyticsService.track(
+              eventName: AnalyticsEvents.tambolaGameCard,
+              properties:
+                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Time left for draw Tambola (mins)":
+                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                "Tambola Tickets Owned":
+                    AnalyticsProperties.getTabolaTicketCount(),
+              }));
           AppState.delegate.parseRoute(
             Uri.parse(model.game.route),
           );

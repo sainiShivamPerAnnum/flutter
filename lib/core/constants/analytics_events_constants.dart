@@ -11,7 +11,7 @@ class AnalyticsEvents {
   // Journey section
   static const journeySection = "Journey Tab Clicked";
   // save section
-  static const saveSection = "Save Section";
+  static const saveSection = "Save Tab Clicked";
   static const saveBuy = "Select Buy Digital Gold";
   static const saveBuyCoupon = "User selecting coupons";
   static const buyGold = "Buy gold initiated";
@@ -93,7 +93,7 @@ class AnalyticsEvents {
   static const activeMilestoneTapped = "Tapped on an active milestone";
 
   static const buildProfileTapped = "Tapped on build profile button";
-  static const tambolaGameCard = "Tapped Banner Clicked";
+  static const tambolaGameCard = "Tambola Banner Clicked";
 
   // old analytics naming
   static const investedInGold = "Invested in gold";
@@ -149,4 +149,8 @@ class AnalyticsEvents {
   static const splashScrenProceed = "Proceed to Signup";
   static const journeyHelpTapped = "Journey Help Tapped";
   static const journeyMileStoneTapped = "Journey Milestone Tapped";
+  static const gameTapped = "Game Tapped";
+  static const playGameTapped = "Play Game Tapped";
+  static const tambolaSaveTapped = "Tambola Save Tapped";
+  static const tambolaHelpTapped = "Tambola Help Tapped";
 }

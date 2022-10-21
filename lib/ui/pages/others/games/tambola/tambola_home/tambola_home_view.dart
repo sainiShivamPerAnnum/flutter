@@ -4,12 +4,14 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -710,7 +712,15 @@ class ButTicketsComponent extends StatelessWidget {
               InkWell(
                 onTap: () {
                   AppState.screenStack.add(ScreenItem.dialog);
-                  _analyticsService.track(eventName: 'Tambola Help Tapped');
+                  _analyticsService.track(
+                      eventName: AnalyticsEvents.tambolaHelpTapped,
+                      properties: AnalyticsProperties.getDefaultPropertiesMap(
+                          extraValuesMap: {
+                            "Time left for draw Tambola (mins)":
+                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                            "Tambola Tickets Owned":
+                                AnalyticsProperties.getTabolaTicketCount(),
+                          }));
                   Navigator.of(AppState.delegate.navigatorKey.currentContext)
                       .push(
                     PageRouteBuilder(
@@ -811,7 +821,18 @@ class ButTicketsComponent extends StatelessWidget {
                   height: SizeConfig.padding54,
                   width: SizeConfig.screenWidth * 0.34,
                   onPressed: () {
-                    _analyticsService.track(eventName: 'Tambola Save Tapped');
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.tambolaSaveTapped,
+                        properties: AnalyticsProperties
+                            .getDefaultPropertiesMap(extraValuesMap: {
+                          "Time left for draw Tambola (mins)":
+                              AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                          "Tambola Tickets Owned":
+                              AnalyticsProperties.getTabolaTicketCount(),
+                          "Number of Tickets":
+                              model.ticketCountController.text ?? "",
+                          "Amount": model.ticketSavedAmount,
+                        }));
                     BaseUtil().openDepositOptionsModalSheet(
                         amount: model.ticketSavedAmount);
                   },

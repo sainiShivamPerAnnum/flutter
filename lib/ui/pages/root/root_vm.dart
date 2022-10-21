@@ -133,7 +133,9 @@ class RootViewModel extends BaseViewModel {
             properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 1:
-        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        _analyticsService.track(
+            eventName: AnalyticsEvents.saveSection,
+            properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 2:
         {
@@ -146,14 +148,6 @@ class RootViewModel extends BaseViewModel {
                 "Tambola Tickets Owned":
                     AnalyticsProperties.getTabolaTicketCount(),
               }));
-
-          print(
-              "Testing: ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                "Time left for draw Tambola (mins)":
-                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                "Tambola Tickets Owned":
-                    AnalyticsProperties.getTabolaTicketCount(),
-              })} ");
         }
         break;
       case 3:

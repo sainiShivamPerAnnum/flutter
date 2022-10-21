@@ -13,6 +13,7 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -160,6 +161,20 @@ class WebHomeViewModel extends BaseViewModel {
     currentGame = game;
   }
 
+  trackPlayTappedAnalytics() {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.playGameTapped,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          'Game name': _currentGameModel.gameName,
+          "Entry fee": _currentGameModel.playCost,
+          "Win upto": _currentGameModel.prizeAmount,
+          "Time left for draw Tambola (mins)":
+              AnalyticsProperties.getTimeLeftForTambolaDraw(),
+          "Tambola Tickets Owned": AnalyticsProperties.getTabolaTicketCount(),
+        }));
+  }
+
   clear() {}
 
   // refreshPrizes() async {
@@ -300,7 +315,7 @@ class WebHomeViewModel extends BaseViewModel {
   launchGame() {
     String initialUrl;
     viewpage(1);
-    _analyticsService.track(eventName: AnalyticsEvents.gamePlayStarted);
+    trackPlayTappedAnalytics();
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
         _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);

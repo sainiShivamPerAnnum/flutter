@@ -1,9 +1,13 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,6 +25,8 @@ class GOWCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
+
     return (model.isGamesListDataLoading)
         ? GameCardShimmer()
         : (model.gow == null
@@ -36,6 +42,18 @@ class GOWCard extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Haptic.vibrate();
+                      _analyticsService.track(
+                          eventName: AnalyticsEvents.gameTapped,
+                          properties: AnalyticsProperties
+                              .getDefaultPropertiesMap(extraValuesMap: {
+                            'Game name': model.gow.gameName,
+                            "Entry fee": model.gow.playCost,
+                            "Win upto": model.gow.prizeAmount,
+                            "Time left for draw Tambola (mins)":
+                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                            "Tambola Tickets Owned":
+                                AnalyticsProperties.getTabolaTicketCount(),
+                          }));
                       AppState.delegate.parseRoute(
                         Uri.parse(model.gow.route),
                       );
