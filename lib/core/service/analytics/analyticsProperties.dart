@@ -1,3 +1,4 @@
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -9,6 +10,7 @@ class AnalyticsProperties {
   static final _userService = locator<UserService>();
   static final _userCoinService = locator<UserCoinService>();
   static final _paytmService = locator<PaytmService>();
+  static final _journeyService = locator<JourneyService>();
 
   init() async {
     await _paytmService.init();
@@ -65,6 +67,26 @@ class AnalyticsProperties {
       return 0.0;
     else
       return _paytmService.activeSubscription.autoAmount;
+  }
+
+  static String getJouneryCapsuleText() {
+    return _journeyService
+        .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+        .tooltip;
+  }
+
+  static String getJourneyMileStoneText() {
+    return _journeyService
+        .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+        .steps[0]
+        .title;
+  }
+
+  static String getJourneyMileStoneSubText() {
+    return _journeyService
+        .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+        .steps[0]
+        .subtitle;
   }
 
   static Map<String, dynamic> getDefaultPropertiesMap(

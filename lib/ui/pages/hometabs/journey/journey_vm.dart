@@ -258,17 +258,41 @@ class JourneyPageViewModel extends BaseViewModel {
     if (_journeyService.avatarRemoteMlIndex > milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
       _analyticsService.track(
-          eventName: AnalyticsEvents.completedMilestoneTapped,
-          properties: {'milestone': milestone.index});
+          eventName: AnalyticsEvents.journeyMileStoneTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Capsulet text": AnalyticsProperties.getJouneryCapsuleText(),
+            "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
+            "MileStone tub Text":
+                AnalyticsProperties.getJourneyMileStoneSubText(),
+            "MileStone number": milestone.index,
+            "Milestone completed": true,
+          }));
     } else if (_journeyService.avatarRemoteMlIndex == milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
       _analyticsService.track(
-          eventName: AnalyticsEvents.activeMilestoneTapped,
-          properties: {'milestone': milestone.index});
+          eventName: AnalyticsEvents.journeyMileStoneTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Capsulet text": AnalyticsProperties.getJouneryCapsuleText(),
+            "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
+            "MileStone tub Text":
+                AnalyticsProperties.getJourneyMileStoneSubText(),
+            "MileStone number": milestone.index,
+            "Milestone completed": false,
+          }));
     } else {
       _analyticsService.track(
-          eventName: AnalyticsEvents.inCompleteMilestoneTapped,
-          properties: {'milestone': milestone.index});
+          eventName: AnalyticsEvents.journeyMileStoneTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Capsulet text": AnalyticsProperties.getJouneryCapsuleText(),
+            "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
+            "MileStone tub Text":
+                AnalyticsProperties.getJourneyMileStoneSubText(),
+            "MileStone number": milestone.index,
+            "Milestone completed": false,
+          }));
     }
     log("Current Screen Stack: ${AppState.screenStack}");
 

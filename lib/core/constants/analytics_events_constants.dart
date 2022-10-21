@@ -89,7 +89,7 @@ class AnalyticsEvents {
   //new analytics 4.0
   static const profileUpdated = "Updated profile";
   static const completedMilestoneTapped = "Tapped on a completed milestone";
-  static const inCompleteMilestoneTapped = "Tapped on an incomplete milestone";
+  static const inCompleteMilestoneTapped = "Journey Milestone Tapped";
   static const activeMilestoneTapped = "Tapped on an active milestone";
 
   static const buildProfileTapped = "Tapped on build profile button";
@@ -148,4 +148,5 @@ class AnalyticsEvents {
   static const proceedToSignUp = "Proceed to Signup";
   static const splashScrenProceed = "Proceed to Signup";
   static const journeyHelpTapped = "Journey Help Tapped";
+  static const journeyMileStoneTapped = "Journey Milestone Tapped";
 }

@@ -27,6 +27,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -246,13 +247,45 @@ class BaseUtil extends ChangeNotifier {
     if (_userService.userJourneyStats.mlIndex > 1)
       AppState.delegate.parseRoute(Uri.parse("profile"));
     else {
-      _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
+      // print("Reachng");
+
+      // print(
+      //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+      //       "Test": "test"
+      //     })}");
 
       AppState.delegate.appState.currentAction = PageAction(
         page: UserProfileDetailsConfig,
         state: PageState.addWidget,
         widget: UserProfileDetails(isNewUser: true),
       );
+    }
+
+    _analyticsService.track(
+        eventName: AnalyticsEvents.profileClicked,
+        properties: AnalyticsProperties.getDefaultPropertiesMap(
+            extraValuesMap: {"location": getLocationForCurrentTab()}));
+  }
+
+  getLocationForCurrentTab() {
+    int tab = AppState.delegate.appState.getCurrentTabIndex;
+
+    switch (tab) {
+      case 0:
+        return "Journey View, top Left Corner";
+        break;
+      case 1:
+        return "Save Section, top Left Corner";
+        break;
+      case 2:
+        return "Play Section, top Left Corner";
+        break;
+      case 3:
+        return "Win Section, top Left Corner";
+        break;
+      default:
+        return "";
+        break;
     }
   }
 
