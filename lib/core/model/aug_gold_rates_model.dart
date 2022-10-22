@@ -29,10 +29,12 @@ class AugmontRates {
             getDouble(data['taxes'][0]['taxPerc']),
             getDouble(data['taxes'][1]['taxPerc']));
 
-  static double getDouble(String s) {
+  static double getDouble(dynamic s) {
     if (s == null) {
       return null;
     }
+
+    if (s.runtimeType == double) return s;
     return double.tryParse(s);
   }
 

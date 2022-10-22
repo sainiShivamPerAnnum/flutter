@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/cupertino.dart';
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -36,6 +38,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
+const String LendboxDetailsPath = '/lendboxDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -68,6 +71,9 @@ const String AllParticipantsWinnersTopReferersPath =
     "/allParticipantsWinnersTopReferersPath";
 const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
 const String SharePriceScreenPath = "/SharePriceScreenPath";
+const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
+const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
+const String InfoStoriesViewPath = "/inforStoriesViewPath";
 
 enum Pages {
   Splash,
@@ -100,12 +106,12 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-
   TxnHistory,
   KycDetails,
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
+  LendboxDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -136,6 +142,9 @@ enum Pages {
   AllParticipantsWinnersTopReferersView,
   RedeemSucessfulScreenView,
   SharePriceScreenView,
+  AllTambolaTicketsView,
+  UserUpiDetailsView,
+  InfoStoriesView
 }
 
 class PageConfiguration {
@@ -413,6 +422,13 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   name: 'About Digital Gold Screen',
 );
 
+PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+  key: 'lendboxDetails',
+  path: LendboxDetailsPath,
+  uiPage: Pages.LendboxDetails,
+  name: 'About Fello Flo Screen',
+);
+
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
   key: 'referDetails',
   path: ReferralDetailsPath,
@@ -608,3 +624,21 @@ PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
   uiPage: Pages.SharePriceScreenView,
   name: "Reward sharing screen",
 );
+
+PageConfiguration AllTambolaTicketsPageConfig = PageConfiguration(
+  key: 'AllTambolaTickets',
+  path: AllTambolaTicketsPath,
+  uiPage: Pages.AllTambolaTicketsView,
+  name: "All Tambola tickets screen",
+);
+PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
+    key: 'UserUpiDetailsView',
+    path: UserUPIDetailsViewPath,
+    uiPage: Pages.UserUpiDetailsView,
+    name: "User Upi details Screen");
+
+PageConfiguration InfoStoriesViewPageConfig = PageConfiguration(
+    key: 'InfoStoresView',
+    path: InfoStoriesViewPath,
+    uiPage: Pages.InfoStoriesView,
+    name: "Info Stories details Screen");

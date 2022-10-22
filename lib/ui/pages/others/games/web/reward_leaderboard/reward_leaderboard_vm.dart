@@ -8,7 +8,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
-class RewardLeaderboardViewModel extends BaseModel {
+class RewardLeaderboardViewModel extends BaseViewModel {
   String _currentGame;
   bool _isPrizesLoading = false;
   PageController _pageController;

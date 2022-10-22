@@ -57,9 +57,11 @@ class LeaderboardModel {
       freq: map['freq'] ?? '',
       gametype: map['gametype'] ?? '',
       lastupdated: TimestampModel.fromMap(map['lastupdated']),
-      scoreboard: List<ScoreBoard>.from(
-        map["scoreboard"].map((x) => ScoreBoard.fromMap(x)),
-      ),
+      scoreboard: map["scoreboard"] != null
+          ? List<ScoreBoard>.from(
+              map["scoreboard"].map((x) => ScoreBoard.fromMap(x)),
+            )
+          : [],
       code: map['code'] ?? '',
     );
   }

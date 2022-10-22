@@ -87,16 +87,17 @@ class Winners {
   final String userid;
   final String gameType;
   final double score;
+  final String displayScore;
 
-  Winners({
-    this.amount,
-    this.isMockUser,
-    this.username,
-    this.flc,
-    this.userid,
-    this.score,
-    this.gameType,
-  });
+  Winners(
+      {this.amount,
+      this.isMockUser,
+      this.username,
+      this.flc,
+      this.userid,
+      this.score,
+      this.gameType,
+      this.displayScore});
 
   Winners copyWith(
       {int amount,
@@ -105,16 +106,17 @@ class Winners {
       int flc,
       String userid,
       double score,
-      String gameType}) {
+      String gameType,
+      String displayScore}) {
     return Winners(
-      amount: amount ?? this.amount,
-      isMockUser: isMockUser ?? this.isMockUser,
-      username: username ?? this.username,
-      flc: flc ?? this.flc,
-      userid: userid ?? this.userid,
-      score: score ?? this.score,
-      gameType: gameType ?? this.gameType,
-    );
+        amount: amount ?? this.amount,
+        isMockUser: isMockUser ?? this.isMockUser,
+        username: username ?? this.username,
+        flc: flc ?? this.flc,
+        userid: userid ?? this.userid,
+        score: score ?? this.score,
+        gameType: gameType ?? this.gameType,
+        displayScore: displayScore ?? this.displayScore);
   }
 
   Map<String, dynamic> toMap() {
@@ -126,19 +128,20 @@ class Winners {
       'userid': userid,
       'score': score,
       'gameType': gameType,
+      'displayScore': displayScore
     };
   }
 
   factory Winners.fromMap(Map<String, dynamic> map, String gameType) {
     return Winners(
-      amount: map['amount'] ?? 0,
-      isMockUser: map['isMockUser'] ?? false,
-      username: map['username'] ?? '',
-      flc: map['flc'] ?? 0,
-      userid: map['userid'] ?? '',
-      score: (map['score'] ?? 0).toDouble(),
-      gameType: gameType ?? '',
-    );
+        amount: map['amount'] ?? 0,
+        isMockUser: map['isMockUser'] ?? false,
+        username: map['username'] ?? '',
+        flc: map['flc'] ?? 0,
+        userid: map['userid'] ?? '',
+        score: (map['score'] ?? 0).toDouble(),
+        gameType: gameType ?? '',
+        displayScore: map['displayScore'] ?? '');
   }
 
   String toJson() => json.encode(toMap());

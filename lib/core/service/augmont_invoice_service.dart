@@ -18,13 +18,14 @@ class AugmontInvoiceService {
 
   AugmontInvoiceService();
 
-  Future<String> generateInvoice(Map<String, dynamic> invoiceMap) async {
+  Future<String> generateInvoice(
+      Map<String, dynamic> invoiceMap, Map<String, String> userDetails) async {
     if (invoiceMap == null || invoiceMap[GetInvoice.resTransactionId] == null) {
       return null;
     }
     try {
       final pdfFile = await PdfInvoiceApi.generate(
-          await _generateInvoiceContent(invoiceMap));
+          await _generateInvoiceContent(invoiceMap, userDetails));
       return pdfFile.path;
     } catch (e) {
       log.error('$e');
@@ -32,7 +33,8 @@ class AugmontInvoiceService {
     }
   }
 
-  Future<Invoice> _generateInvoiceContent(Map<String, dynamic> data) async {
+  Future<Invoice> _generateInvoiceContent(
+      Map<String, dynamic> data, Map<String, String> userDetails) async {
     final bgImage = await _getImageFileFromAssets("invoice_bg.png");
     final brokerLogo = await _getImageFileFromAssets("fello_logo.png");
     final sellerLogo = await _getImageFileFromAssets("aug-logo.png");
@@ -45,8 +47,16 @@ class AugmontInvoiceService {
           GSTIN: "GSTIN: 27AATCA3030A1Z3",
         ),
         customer: Customer(
-          name: _userService.baseUser.name ?? "N/A",
-          address: _userService.baseUser.email ?? "N/A",
+          name: userDetails != null
+              ? userDetails["name"]
+              : (_userService.baseUser.kycName != null &&
+                          _userService.baseUser.kycName.isNotEmpty
+                      ? _userService.baseUser.kycName
+                      : _userService.baseUser.name) ??
+                  "N/A",
+          address: userDetails != null
+              ? userDetails["email"]
+              : _userService.baseUser.email ?? "N/A",
         ),
         info: InvoiceInfo(
           date: data[GetInvoice.resDate] != null

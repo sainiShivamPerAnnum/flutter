@@ -60,7 +60,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   Text("Current Tokens:", style: TextStyles.rajdhani.body1),
                   Spacer(),
                   SvgPicture.asset(
-                    'assets/temp/Tokens.svg',
+                    Assets.token,
                     width: SizeConfig.padding26,
                     height: SizeConfig.padding26,
                   ),
@@ -104,7 +104,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                       eventName: AnalyticsEvents.earnMoreSaveMoney);
                   while (AppState.screenStack.length > 1)
                     AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.setCurrentTabIndex = 2;
+                  AppState.delegate.appState.setCurrentTabIndex = 1;
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -125,14 +125,14 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               SizedBox(height: SizeConfig.padding16),
               FelloTile(
                 leadingAsset: Assets.repeat,
-                title: "Set up Auto SIP",
-                subtitle: "Set up Auto SIP & Earn 100 tokens ",
+                title: "Set up Autosave",
+                subtitle: "Set up Autosave & earn daily tokens ",
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
                   _analyticsService.track(
                       eventName: AnalyticsEvents.earnMoreRefer);
                   AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.parseRoute(Uri.parse("save"));
+                  AppState.delegate.parseRoute(Uri.parse("augDetails"));
                 },
               ),
               SizedBox(height: SizeConfig.padding24),

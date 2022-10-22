@@ -29,6 +29,7 @@ class BaseUser {
   TimestampModel createdOn;
   String appFlyerId;
   String avatarId;
+  bool isOldUser;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -52,36 +53,41 @@ class BaseUser {
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
   static final String fldUserPrefs = "mUserPrefs";
+  static final String fldUserPrefsAl = "mUserPrefsAl";
+  static final String fldUserPrefsTn = "mUserPrefsTn";
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
   static final String fldStateId = "stateId";
   static final String fldAppFlyerId = "mAppFlyerId";
   static final String fldAvatarId = "mAvatarId";
+  static final String fldIsOldUser = "isOldUser";
 
   BaseUser(
-      this.uid,
-      this.mobile,
-      this.email,
-      this.name,
-      this.dob,
-      this.gender,
-      this.client_token,
-      this.isInvested,
-      this.isIciciOnboarded,
-      this.isAugmontOnboarded,
-      this.isSimpleKycVerified,
-      this.isKycVerified,
-      this.kycName,
-      this.pendingTxnId,
-      this.isIciciEnabled,
-      this.isAugmontEnabled,
-      this.username,
-      this.isEmailVerified,
-      this.isBlocked,
-      this.userPreferences,
-      this.createdOn,
-      this.appFlyerId,
-      this.avatarId);
+    this.uid,
+    this.mobile,
+    this.email,
+    this.name,
+    this.dob,
+    this.gender,
+    this.client_token,
+    this.isInvested,
+    this.isIciciOnboarded,
+    this.isAugmontOnboarded,
+    this.isSimpleKycVerified,
+    this.isKycVerified,
+    this.kycName,
+    this.pendingTxnId,
+    this.isIciciEnabled,
+    this.isAugmontEnabled,
+    this.username,
+    this.isEmailVerified,
+    this.isBlocked,
+    this.userPreferences,
+    this.createdOn,
+    this.appFlyerId,
+    this.avatarId,
+    this.isOldUser,
+  );
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -108,34 +114,35 @@ class BaseUser {
           TimestampModel.currentTimeStamp(),
           null,
           null,
+          false,
         );
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
-          id,
-          data[fldMobile]?.toString(),
-          data[fldEmail]?.toString(),
-          data[fldName]?.toString(),
-          data[fldDob]?.toString(),
-          data[fldGender]?.toString()?.toUpperCase(),
-          client_token?.toString(),
-          data[fldIsInvested] ?? false,
-          data[fldIsIciciOnboarded],
-          data[fldIsAugmontOnboarded] ?? false,
-          data[fldIsSimpleKycVerified],
-          data[fldIsKycVerified],
-          data[fldKycName],
-          data[fldPendingTxnId],
-          data[fldIsIciciEnabled],
-          data[fldIsAugmontEnabled],
-          data[fldUsername]?.toString(),
-          data[fldIsEmailVerified] ?? false,
-          data[fldIsBlocked] ?? false,
-          UserPreferences(data[fldUserPrefs]),
-          TimestampModel.fromMap(data[fldCreatedOn]),
-          data[fldAppFlyerId],
-          data[fldAvatarId],
-        );
+            id,
+            data[fldMobile]?.toString(),
+            data[fldEmail]?.toString(),
+            data[fldName]?.toString(),
+            data[fldDob]?.toString(),
+            data[fldGender]?.toString()?.toUpperCase(),
+            client_token?.toString(),
+            data[fldIsInvested] ?? false,
+            data[fldIsIciciOnboarded],
+            data[fldIsAugmontOnboarded] ?? false,
+            data[fldIsSimpleKycVerified],
+            data[fldIsKycVerified],
+            data[fldKycName],
+            data[fldPendingTxnId],
+            data[fldIsIciciEnabled],
+            data[fldIsAugmontEnabled],
+            data[fldUsername]?.toString(),
+            data[fldIsEmailVerified] ?? false,
+            data[fldIsBlocked] ?? false,
+            UserPreferences(data[fldUserPrefs]),
+            TimestampModel.fromMap(data[fldCreatedOn]),
+            data[fldAppFlyerId],
+            data[fldAvatarId],
+            data[fldIsOldUser] ?? false);
 
   //to send user object to server
   toJson() {
@@ -169,7 +176,7 @@ class BaseUser {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return ((mobile?.isEmpty ?? true) || (username?.isEmpty ?? true));
+    return ((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true));
   }
 
   @override

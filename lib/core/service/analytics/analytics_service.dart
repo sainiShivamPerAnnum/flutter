@@ -12,6 +12,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
   static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
@@ -45,6 +46,12 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void track({String eventName, Map<String, dynamic> properties}) {
+    try {
+      String uid = FirebaseAuth.instance.currentUser.uid;
+      String phone = FirebaseAuth.instance.currentUser.phoneNumber;
+      if (uid != null && uid.isNotEmpty) properties['uid'] = uid;
+      if (phone != null && phone.isNotEmpty) properties['mobile'] = phone;
+    } catch (e) {}
     try {
       _logger.d(eventName);
       _mixpanel.track(eventName: eventName, properties: properties);

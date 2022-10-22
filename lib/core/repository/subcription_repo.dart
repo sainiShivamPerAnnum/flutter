@@ -28,13 +28,14 @@ class SubscriptionRepo extends BaseRepo {
         },
         token: token,
       );
-
+      final responseData = res['data'];
+      logger.d(responseData);
       final result = AutosaveTransactionModel.helper.fromMapArray(res['data']);
 
       return ApiResponse(model: result, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to get txns", 400);
+      return ApiResponse.withError(e?.toString() ?? "Unable to get txns", 400);
     }
   }
 }

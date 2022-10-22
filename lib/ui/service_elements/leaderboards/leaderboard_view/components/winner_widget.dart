@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -8,6 +9,8 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+
+import 'package:flutter_svg/svg.dart';
 
 class WinnerWidgets extends StatelessWidget {
   const WinnerWidgets({
@@ -49,11 +52,11 @@ class WinnerWidgets extends StatelessWidget {
   getDefaultProfilePicture(int rank) {
     switch (rank) {
       case 1:
-        return "assets/temp/rank_one_profile.png";
+        return Assets.cvtar1;
       case 2:
-        return "assets/temp/rank_two_profile.png";
+        return Assets.cvtar2;
       case 3:
-        return "assets/temp/rank_three_profile.png";
+        return Assets.cvtar3;
       default:
         return Assets.profilePic;
     }
@@ -104,8 +107,9 @@ class WinnerWidgets extends StatelessWidget {
                       ? SizeConfig.screenWidth * 0.0055
                       : SizeConfig.screenWidth * 0.0083,
                 ),
-                child: userProfilePicUrl[rank] == null
-                    ? Image.asset(
+                child: userProfilePicUrl[rank] == null ||
+                        userProfilePicUrl[rank].isEmpty
+                    ? SvgPicture.asset(
                         getDefaultProfilePicture(rank),
                         width: rank == 0
                             ? SizeConfig.screenWidth * 0.2344
@@ -118,6 +122,26 @@ class WinnerWidgets extends StatelessWidget {
                     : ClipOval(
                         child: CachedNetworkImage(
                             imageUrl: userProfilePicUrl[rank],
+                            errorWidget: (a, b, c) => DefaultAvatar(
+                                  size: Size(
+                                    rank == 0
+                                        ? SizeConfig.screenWidth * 0.2344
+                                        : SizeConfig.screenWidth * 0.2083,
+                                    rank == 0
+                                        ? SizeConfig.screenWidth * 0.2344
+                                        : SizeConfig.screenWidth * 0.2083,
+                                  ),
+                                ),
+                            placeholder: (ctx, a) => DefaultAvatar(
+                                  size: Size(
+                                    rank == 0
+                                        ? SizeConfig.screenWidth * 0.2344
+                                        : SizeConfig.screenWidth * 0.2083,
+                                    rank == 0
+                                        ? SizeConfig.screenWidth * 0.2344
+                                        : SizeConfig.screenWidth * 0.2083,
+                                  ),
+                                ),
                             width: rank == 0
                                 ? SizeConfig.screenWidth * 0.2344
                                 : SizeConfig.screenWidth * 0.2083,

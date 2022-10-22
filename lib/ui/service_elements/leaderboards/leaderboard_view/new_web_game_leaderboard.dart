@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/components
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -36,7 +37,8 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         return m.isLeaderboardLoading
             ? LeaderboardShimmer()
             : (m.WebGameLeaderBoard != null &&
-                    m.WebGameLeaderBoard.scoreboard != null
+                    m.WebGameLeaderBoard.scoreboard != null &&
+                    m.WebGameLeaderBoard.scoreboard.isNotEmpty)
                 // &&
                 // (m.userProfilePicUrl.length >=
                 //     m.WebGameLeaderBoard.scoreboard.length)
@@ -46,21 +48,20 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                     currentUserRank: m.currentUserRank,
                     isUserInTopThree: m.isUserInTopThree,
                   )
-                : Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                    decoration: BoxDecoration(
-                      color: UiConstants.gameCardColor,
-                      borderRadius: BorderRadius.circular(
-                        SizeConfig.roundness8,
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: SizeConfig.padding32),
+                      SvgPicture.asset(
+                        Assets.noWinnersAsset,
                       ),
-                    ),
-                    padding: EdgeInsets.only(bottom: SizeConfig.padding80 * 3),
-                    child: NoRecordDisplayWidget(
-                      asset: "images/leaderboard.png",
-                      text: "Leaderboard will be updated soon",
-                    ),
-                  ));
+                      Text(
+                        "Start playing to see yourself on the leaderboard",
+                        style: TextStyles.sourceSans.body2.colour(Colors.white),
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                    ],
+                  );
       },
     );
   }
@@ -136,7 +137,8 @@ class NewLeaderBoardView extends StatelessWidget {
                     width: SizeConfig.padding6,
                   ),
                   SvgPicture.asset(
-                    'assets/temp/chevron_right.svg',
+                    Assets.chevRonRightArrow,
+                    color: Colors.white,
                     width: SizeConfig.iconSize1,
                     height: SizeConfig.iconSize1,
                   )
@@ -191,7 +193,7 @@ class RemainingRank extends StatelessWidget {
                       width: SizeConfig.padding20,
                     ),
                     userProfilePicUrl[countedIndex] == null
-                        ? Image.asset(
+                        ? SvgPicture.asset(
                             getDefaultProfilePicture(countedIndex),
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
@@ -200,6 +202,8 @@ class RemainingRank extends StatelessWidget {
                         : ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: userProfilePicUrl[countedIndex],
+                              errorWidget: (a, b, c) => DefaultAvatar(),
+                              placeholder: (ctx, a) => DefaultAvatar(),
                               width: SizeConfig.iconSize5,
                               height: SizeConfig.iconSize5,
                               fit: BoxFit.cover,
@@ -239,11 +243,11 @@ class RemainingRank extends StatelessWidget {
   getDefaultProfilePicture(int rank) {
     switch (rank) {
       case 4:
-        return "assets/temp/rank_three_profile.png";
+        return Assets.cvtar4;
       case 5:
-        return "assets/temp/rank_one_profile.png";
+        return Assets.cvtar4;
       case 6:
-        return "assets/temp/rank_two_profile.png";
+        return Assets.cvtar1;
       default:
         return Assets.profilePic;
     }

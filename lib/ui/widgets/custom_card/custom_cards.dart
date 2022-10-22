@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
-import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -11,21 +12,21 @@ class SaveCustomCard extends StatelessWidget {
   final String title;
   final Function() onCardTap;
   final Color cardBgColor;
+  final String subtitle;
   final String cardAssetName;
   final Function() onTap;
-  final double investedAmount;
-  final bool isGoldAssets;
+  final InvestmentType investmentType;
 
-  const SaveCustomCard(
-      {Key key,
-      this.title,
-      this.cardBgColor,
-      this.cardAssetName,
-      this.onTap,
-      this.investedAmount = 0,
-      this.onCardTap,
-      this.isGoldAssets = false})
-      : super(key: key);
+  const SaveCustomCard({
+    Key key,
+    this.title,
+    this.subtitle,
+    this.cardBgColor,
+    this.cardAssetName,
+    this.onTap,
+    this.onCardTap,
+    @required this.investmentType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +80,6 @@ class SaveCustomCard extends StatelessWidget {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   title,
@@ -89,7 +89,7 @@ class SaveCustomCard extends StatelessWidget {
                                   Icons.arrow_forward_ios_rounded,
                                   color: Colors.white,
                                   size: SizeConfig.padding16,
-                                )
+                                ),
                               ],
                             ),
                             Row(
@@ -100,31 +100,21 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Balance",
+                                      subtitle ?? "Balance",
                                       style: TextStyles.sourceSansM.body4,
                                     ),
-                                    isGoldAssets
-                                        ? UserGoldQuantitySE(
-                                            style:
-                                                TextStyles.sourceSansSB.title4,
-                                          )
-                                        : Text(
-                                            "₹" + investedAmount.toString() ??
-                                                0.toString(),
-                                            style:
-                                                TextStyles.sourceSansSB.title4,
-                                          ),
+                                    UserFundQuantitySE(
+                                      style: TextStyles.sourceSansSB.title4,
+                                      investmentType: investmentType,
+                                    )
                                   ],
                                 ),
-                                title == "Fello Flo"
-                                    ? Icon(Icons.lock,
-                                        size: SizeConfig.padding34,
-                                        color: Colors.black.withOpacity(0.5))
-                                    : CustomSaveButton(
-                                        onTap: onTap,
-                                        title: 'Save',
-                                        isFullScreen: false,
-                                      )
+                                CustomSaveButton(
+                                  onTap: onTap,
+                                  title: 'Save',
+                                  width: SizeConfig.screenWidth * 0.2,
+                                  height: SizeConfig.screenWidth * 0.11,
+                                )
                               ],
                             )
                           ],
@@ -249,26 +239,24 @@ class CustomSaveCardPainter extends CustomPainter {
 class CustomSaveButton extends StatelessWidget {
   final Function() onTap;
   final String title;
-  final bool isFullScreen;
   final double width;
+  final double height;
 
   const CustomSaveButton(
-      {Key key, this.onTap, this.title, this.isFullScreen = false, this.width})
+      {Key key, this.onTap, this.height, this.title, this.width})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding2),
+    return Container(
+      height: height ?? SizeConfig.screenWidth * 0.13,
+      width: width ?? SizeConfig.screenWidth,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        child: MaterialButton(
+          padding: EdgeInsets.zero,
+          onPressed: onTap,
           child: Container(
-            height: SizeConfig.screenWidth * 0.1,
-            width: isFullScreen ? width : SizeConfig.screenWidth * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness5),
               color: UiConstants.kBackgroundDividerColor.withAlpha(200),

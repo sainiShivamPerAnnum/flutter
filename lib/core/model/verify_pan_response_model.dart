@@ -8,7 +8,7 @@ class VerifyPanResponseModel {
       {this.flag, this.upstreamName, this.message, this.gtId});
 
   VerifyPanResponseModel.fromJson(Map<String, dynamic> json) {
-    flag = json['flag'];
+    flag = json['flag'] ?? false;
     upstreamName = json['upstreamName'];
     message = json['message'];
     gtId = json['gtId'];

@@ -9,7 +9,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -22,7 +22,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class UserAutosaveDetailsViewModel extends BaseModel {
+class UserAutosaveDetailsViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
@@ -155,10 +155,7 @@ class UserAutosaveDetailsViewModel extends BaseModel {
     bool response =
         await _paytmService.pauseSubscription(getResumeDate(pauseValue));
     isPausingInProgress = false;
-    if (!response) {
-      BaseUtil.showNegativeAlert(
-          "Failed to pause Autosave", "Please try again");
-    } else {
+    if (response) {
       trackPause(pauseValue);
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
@@ -363,9 +360,6 @@ class UserAutosaveDetailsViewModel extends BaseModel {
       // init();
       BaseUtil.showPositiveAlert("Autosave amount update successful",
           "Check Autosave section for more details");
-    } else {
-      BaseUtil.showNegativeAlert(
-          "Amount update failed", "Please try again in sometime");
     }
   }
 
@@ -389,10 +383,11 @@ class UserAutosaveDetailsViewModel extends BaseModel {
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         hapticVibrate: true,
-        backgroundColor: Colors.white,
+        backgroundColor:
+            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness32),
-          topRight: Radius.circular(SizeConfig.roundness32),
+          topLeft: Radius.circular(SizeConfig.roundness16),
+          topRight: Radius.circular(SizeConfig.roundness16),
         ),
         isBarrierDismissable: false,
         isScrollControlled: true,

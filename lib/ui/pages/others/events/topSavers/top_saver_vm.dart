@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/service/api.dart';
 import '../../../../../util/assets.dart';
 
-class TopSaverViewModel extends BaseModel {
+class TopSaverViewModel extends BaseViewModel {
   final _logger = locator<CustomLogger>();
   final _dbModel = locator<DBModel>();
   final _userService = locator<UserService>();
@@ -39,17 +39,17 @@ class TopSaverViewModel extends BaseModel {
 
   String saverFreq = "daily";
 
-  String subTitle = "Save a penny a day";
+  String subTitle = "Be the top saver to win";
 
   int weekDay = DateTime.now().weekday;
 
   int _userRank = 0;
-  double _userAmount = 0;
-  double _highestSavings = 0;
+  String _userDisplayAmount = '-';
+  String _highestSavingsDisplayAmount = '-';
   String winnerTitle = "Past Winners";
   EventModel event;
   bool showStandingsAndWinners = true;
-  String eventStandingsType = "HIGHEST_SAVER";
+  String eventStandingsType = "HIGHEST_SAVER_V2";
   String actionTitle = "Buy Digital Gold";
 
   bool isStreamLoading = true;
@@ -91,16 +91,16 @@ class TopSaverViewModel extends BaseModel {
 
   //Related to the info box/////////////////
   String boxHeading = "How to participate?";
-  List<String> boxAssets = [
+  List<String> boxAssetsList = [
     Assets.singleStarAsset,
     Assets.singleCoinAsset,
     Assets.singleTmbolaTicket,
   ];
-  List<String> boxTitlles = [
-    'Choose a product for\nsaving.',
-    'Enter an amount you\nwant to save. ',
-    'Play games with tokens\nearned.'
-  ];
+  // List<String> boxTitlles = [
+  //   'Choose a product for\nsaving.',
+  //   'Enter an amount you\nwant to save. ',
+  //   'Play games with tokens\nearned.'
+  // ];
   ////////////////////////////////////////////
 
   List<ScoreBoard> currentParticipants;
@@ -122,17 +122,17 @@ class TopSaverViewModel extends BaseModel {
     notifyListeners();
   }
 
-  get highestSavings => this._highestSavings;
+  String get highestSavings => this._highestSavingsDisplayAmount;
 
   set highestSavings(value) {
-    this._highestSavings = value;
+    this._highestSavingsDisplayAmount = value;
     notifyListeners();
   }
 
-  get userAmount => this._userAmount;
+  String get userDisplayAmount => this._userDisplayAmount;
 
-  set userAmount(value) {
-    this._userAmount = value;
+  set userDisplayAmount(value) {
+    this._userDisplayAmount = value;
     notifyListeners();
   }
 
@@ -158,19 +158,40 @@ class TopSaverViewModel extends BaseModel {
     // _logger.d(CodeFromFreq.getPastMonthCode());
     _logger.d(event.type);
     _logger.d(isGameRedirected);
-    if (event.type == "FPL" && isGameRedirected)
-      BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        backgroundColor: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness32),
-          topRight: Radius.circular(SizeConfig.roundness32),
-        ),
-        isScrollControlled: true,
-        hapticVibrate: true,
-        isBarrierDismissable: false,
-        content: EventInstructionsModal(instructions: event.instructions),
-      );
+    // if (event.type == "FPL" && isGameRedirected)
+    //   BaseUtil.openModalBottomSheet(
+    //     addToScreenStack: true,
+    //     backgroundColor: Colors.white,
+    //     borderRadius: BorderRadius.only(
+    //       topLeft: Radius.circular(SizeConfig.roundness32),
+    //       topRight: Radius.circular(SizeConfig.roundness32),
+    //     ),
+    //     isScrollControlled: true,
+    //     hapticVibrate: true,
+    //     isBarrierDismissable: false,
+    //     content: EventInstructionsModal(instructions: event.instructions),
+    //   );
+  }
+
+  List<String> getBoxTitles(List<dynamic> infoList) {
+    List<String> assetList = [];
+    for (int i = 0; i < infoList.length; i++) {
+      assetList.add(infoList[i].toString());
+    }
+    return assetList;
+  }
+
+  List<String> getBoxAssets(int count) {
+    List<String> assetList = [];
+    int i = count;
+    int j = 0;
+    while (i > 0) {
+      assetList.add(boxAssetsList[j++]);
+      j = j % boxAssetsList.length;
+      i--;
+    }
+
+    return assetList;
   }
 
   setAppbarTitle() {
@@ -242,8 +263,9 @@ class TopSaverViewModel extends BaseModel {
       ongoingEvents.forEach((element) {
         if (element.type == eventType) event = element;
       });
-    }
-
+    } else
+      BaseUtil.showNegativeAlert(
+          response.errorMessage, "Please try again in sometime");
     _logger.d(event.toString());
     return event;
   }
@@ -255,7 +277,6 @@ class TopSaverViewModel extends BaseModel {
     );
     if (response.code == 200) {
       currentParticipants = LeaderboardModel.fromMap(response.model).scoreboard;
-
       getUserRankIfAny();
     } else
       currentParticipants = [];
@@ -264,9 +285,7 @@ class TopSaverViewModel extends BaseModel {
 
   fetchPastWinners() async {
     List<WinnersModel> winnerModels = await getPastWinners(
-      event.type == "FPL"
-          ? Constants.GAME_TYPE_FPL
-          : Constants.GAME_TYPE_HIGHEST_SAVER,
+      Constants.GAME_TYPE_HIGHEST_SAVER,
       saverFreq,
     );
     if (winnerModels != null && winnerModels.isNotEmpty) {
@@ -297,7 +316,7 @@ class TopSaverViewModel extends BaseModel {
   }
 
   Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid) ?? "";
+    return await _dbModel.getUserDP(uid);
   }
 
   getUserRankIfAny() {
@@ -311,8 +330,7 @@ class TopSaverViewModel extends BaseModel {
         int rank = currentParticipants
             .indexWhere((e) => e.userid == _userService.baseUser.uid);
         userRank = rank + 1;
-        _userAmount =
-            BaseUtil.digitPrecision(curentUserStat.score, 4, false); //TODO
+        userDisplayAmount = curentUserStat.displayScore; //TODO
       }
 
       fetchHighestSavings();
@@ -380,11 +398,7 @@ class TopSaverViewModel extends BaseModel {
   }
 
   fetchHighestSavings() {
-    for (ScoreBoard e in currentParticipants) {
-      if ((e.score) > _highestSavings) {
-        _highestSavings = (e.score);
-      }
-    }
+    highestSavings = currentParticipants[0]?.displayScore ?? '';
   }
 
   Future<List<WinnersModel>> getPastWinners(
@@ -395,8 +409,10 @@ class TopSaverViewModel extends BaseModel {
     );
     if (response.code == 200) {
       return response.model;
-    } else
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
       return [];
+    }
   }
 }
 
@@ -409,6 +425,7 @@ class PastHighestSaver {
   String username;
   String gameType;
   String code;
+  String displayScore;
 
   PastHighestSaver(
       {this.score,
@@ -418,7 +435,8 @@ class PastHighestSaver {
       this.isMockUser,
       this.amount,
       this.flc,
-      this.code});
+      this.code,
+      this.displayScore});
 
   factory PastHighestSaver.fromMap(Winners map, String gameType, String code) {
     return PastHighestSaver(
@@ -429,7 +447,8 @@ class PastHighestSaver {
         amount: map.amount,
         flc: map.flc,
         isMockUser: map.isMockUser,
-        code: code);
+        code: code,
+        displayScore: map.displayScore);
   }
 
   @override

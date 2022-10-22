@@ -1,40 +1,28 @@
-import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_history/referral_history_view.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralDetailsView extends StatelessWidget {
@@ -43,7 +31,7 @@ class ReferralDetailsView extends StatelessWidget {
   var _selectedTextStyle =
       TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
 
-  var _unselectedTextStyle = TextStyles.sourceSansSB.body1
+  var _unselectedTextStyle = TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
   List<Shadow> shadowDrawerList = [
@@ -72,6 +60,19 @@ class ReferralDetailsView extends StatelessWidget {
         onModelReady: (model) => model.init(context),
         builder: (ctx, model, child) {
           return Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              automaticallyImplyLeading: false,
+              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              leading: IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher.didPopRoute();
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  )),
+            ),
             body: Stack(
               children: [
                 NewSquareBackground(),
@@ -81,19 +82,6 @@ class ReferralDetailsView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppBar(
-                        elevation: 0.0,
-                        automaticallyImplyLeading: false,
-                        backgroundColor: UiConstants.kArowButtonBackgroundColor,
-                        leading: IconButton(
-                            onPressed: () {
-                              AppState.backButtonDispatcher.didPopRoute();
-                            },
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                            )),
-                      ),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -115,8 +103,6 @@ class ReferralDetailsView extends StatelessWidget {
                                   alignment: Alignment.bottomCenter,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(
-                                          bottom: SizeConfig.padding1),
                                       child: SvgPicture.asset(
                                           Assets.refreAndEarnBackgroundAsset,
                                           width: SizeConfig.screenWidth * 0.5),
@@ -155,7 +141,11 @@ class ReferralDetailsView extends StatelessWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                        text: 'Earn upto Rs.50 and',
+                                        text: 'Earn upto ₹' +
+                                            BaseRemoteConfig.remoteConfig
+                                                .getString(BaseRemoteConfig
+                                                    .REFERRAL_BONUS) +
+                                            ' and ',
                                         style: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor3)),
                                     WidgetSpan(
@@ -165,12 +155,14 @@ class ReferralDetailsView extends StatelessWidget {
                                       height: 17,
                                       width: 17,
                                       child: SvgPicture.asset(
-                                        Assets.aFelloToken,
+                                        Assets.token,
                                       ),
                                     )),
                                     TextSpan(
-                                        text:
-                                            '200 from every Golden Ticket. Win an iPad every month.',
+                                        text: BaseRemoteConfig.remoteConfig
+                                                .getString(BaseRemoteConfig
+                                                    .REFERRAL_FLC_BONUS) +
+                                            ' from every Golden Ticket. Highest referrer wins iPad every month!',
                                         style: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor3)),
                                   ],
@@ -180,54 +172,82 @@ class ReferralDetailsView extends StatelessWidget {
                                 height: SizeConfig.padding28,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding32,
+                                        horizontal: SizeConfig.padding12,
                                         vertical: SizeConfig.padding6),
                                     decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.3),
-                                        borderRadius: BorderRadius.all(
+                                      color:
+                                          UiConstants.kSecondaryBackgroundColor,
+                                      borderRadius: BorderRadius.all(
                                           Radius.circular(
-                                              SizeConfig.roundness8),
-                                        ),
-                                        border: Border.all(
-                                            color: Colors.white, width: 0.6)),
-                                    child: Text(
-                                      model.loadingRefCode
-                                          ? '-'
-                                          : model.refCode,
-                                      style: TextStyles.rajdhaniEB.title2
-                                          .colour(Colors.white),
+                                              SizeConfig.roundness8)),
                                     ),
-                                  ),
-                                  Container(
                                     child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        IconButton(
-                                          onPressed: () {
+                                        Text(
+                                          model.loadingRefCode
+                                              ? '-'
+                                              : model.refCode,
+                                          style: TextStyles.rajdhaniEB.title2
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding24,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
                                             model.copyReferCode();
                                           },
-                                          icon: Icon(
-                                            Icons.copy,
-                                            color: UiConstants.kTabBorderColor,
-                                            size: SizeConfig.padding28,
+                                          child: Row(
+                                            children: [
+                                              Text("COPY",
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor3
+                                                          .withOpacity(0.7))),
+                                              SizedBox(
+                                                width: SizeConfig.padding6,
+                                              ),
+                                              Icon(
+                                                Icons.copy,
+                                                color: UiConstants.kTextColor3
+                                                    .withOpacity(0.7),
+                                                size: SizeConfig.padding24,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            if (!model.isShareAlreadyClicked)
-                                              model.shareLink();
-                                          },
-                                          icon: Icon(
-                                            Icons.share,
-                                            color: UiConstants.kTabBorderColor,
-                                            size: SizeConfig.padding28,
-                                          ),
-                                        )
                                       ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding20,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding12,
+                                        vertical: SizeConfig.padding12),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          UiConstants.kSecondaryBackgroundColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (model.isShareAlreadyClicked ==
+                                            false) model.shareLink();
+                                      },
+                                      child: Icon(
+                                        Icons.share,
+                                        color: UiConstants.kTabBorderColor,
+                                        size: SizeConfig.padding28,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -247,7 +267,7 @@ class ReferralDetailsView extends StatelessWidget {
                           left: SizeConfig.pageHorizontalMargins,
                         ),
                         child: Text(
-                          "My Referals",
+                          "My Referrals",
                           style: TextStyles.sourceSans.semiBold
                               .colour(Colors.white)
                               .title3,
@@ -303,7 +323,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Text(
                                       model.referalList == null
                                           ? '-'
-                                          : "${model.referalList.length} referals",
+                                          : "${model.referalList.length} referrals",
                                       style: TextStyles.body3
                                           .colour(UiConstants.kTextColor2)),
                                 ),
@@ -313,94 +333,115 @@ class ReferralDetailsView extends StatelessWidget {
                         ),
                       ),
                       model.referalList == null
-                          ? Padding(
+                          ? Container(
+                              width: SizeConfig.screenWidth,
                               padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.pageHorizontalMargins),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  SpinKitWave(
-                                    color: UiConstants.primaryColor,
-                                  ),
+                                  FullScreenLoader(),
                                   SizedBox(height: SizeConfig.padding20),
                                   Text(
-                                    "Fetching your referals. Please wait!",
+                                    "Fetching your referals. Please wait..",
                                     style: TextStyles.sourceSans.body2
                                         .colour(Colors.white),
                                   ),
                                 ],
                               ),
                             )
-                          : Container(
-                              margin: EdgeInsets.only(
-                                top: SizeConfig.padding34,
-                                bottom: SizeConfig.padding12,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          : model.referalList.isEmpty
+                              ? Center(
+                                  child: Column(
                                     children: [
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: () => model.switchTab(0),
-                                          child: Text(
-                                            'Successful',
-                                            style: model.tabNo == 0
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                          ),
-                                        ),
+                                      SizedBox(height: SizeConfig.padding34),
+                                      SvgPicture.asset(Assets.noReferalAsset),
+                                      SizedBox(height: SizeConfig.padding34),
+                                      Text(
+                                        "No referrals yet",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(Colors.white),
                                       ),
-                                      SizedBox(
-                                        width: SizeConfig.padding16,
-                                      ),
-                                      Expanded(
-                                        child: TextButton(
-                                          onPressed: () => model.switchTab(1),
-                                          child: Text(
-                                            'Have not saved',
-                                            style: model.tabNo == 1
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                          ),
-                                        ),
-                                      )
+                                      SizedBox(height: SizeConfig.padding34),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 5,
-                                        width: model.tabPosWidthFactor,
-                                      ),
-                                      Container(
-                                        color: UiConstants.kTabBorderColor,
-                                        height: 5,
-                                        width: SizeConfig.screenWidth * 0.38,
-                                      )
-                                    ],
+                                )
+                              : Container(
+                                  margin: EdgeInsets.only(
+                                    top: SizeConfig.padding34,
+                                    bottom: SizeConfig.padding12,
                                   ),
-                                  HeightAdaptivePageView(
-                                    controller: model.pageController,
-                                    onPageChanged: (int page) {
-                                      model.switchTab(page);
-                                    },
+                                  child: Column(
                                     children: [
-                                      //Current particiapnts
-                                      BonusUnlockedReferals(
-                                        model: model,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () =>
+                                                  model.switchTab(0),
+                                              child: Text(
+                                                'Successful',
+                                                style: model.tabNo == 0
+                                                    ? _selectedTextStyle
+                                                    : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding16,
+                                          ),
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () =>
+                                                  model.switchTab(1),
+                                              child: Text(
+                                                'Have not saved',
+                                                style: model.tabNo == 1
+                                                    ? _selectedTextStyle
+                                                    : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
+                                      Row(
+                                        children: [
+                                          AnimatedContainer(
+                                            duration:
+                                                Duration(milliseconds: 500),
+                                            height: 5,
+                                            width: model.tabPosWidthFactor,
+                                          ),
+                                          Container(
+                                            color: UiConstants.kTabBorderColor,
+                                            height: 5,
+                                            width:
+                                                SizeConfig.screenWidth * 0.38,
+                                          )
+                                        ],
+                                      ),
+                                      HeightAdaptivePageView(
+                                        controller: model.pageController,
+                                        onPageChanged: (int page) {
+                                          model.switchTab(page);
+                                        },
+                                        children: [
+                                          //Current particiapnts
+                                          BonusUnlockedReferals(
+                                            model: model,
+                                          ),
 
-                                      //Current particiapnts
-                                      BonusLockedReferals(
-                                        model: model,
+                                          //Current particiapnts
+                                          BonusLockedReferals(
+                                            model: model,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
@@ -416,9 +457,27 @@ class ReferralDetailsView extends StatelessWidget {
                               curve: Curves.ease);
                         },
                       ),
+                      SizedBox(
+                        height: SizeConfig.padding80,
+                      )
                     ],
                   ),
                 ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: UiConstants.kBackgroundColor,
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: AppPositiveBtn(
+                      btnText: "SHARE",
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.pageHorizontalMargins * 2,
+                      onPressed: () {
+                        if (!model.isShareAlreadyClicked) model.shareLink();
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
           );
@@ -437,11 +496,17 @@ class BonusLockedReferals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return model.referalList.isEmpty
-        ? NoRecordDisplayWidget(
-            assetLottie: Assets.noData,
-            text: "No Referrals yet",
-            topPadding: false,
-            bottomPadding: false,
+        ? Column(
+            children: [
+              SizedBox(height: SizeConfig.padding16),
+              SvgPicture.asset(Assets.noReferalAsset),
+              SizedBox(height: SizeConfig.padding16),
+              Text(
+                "No referrals yet",
+                style: TextStyles.sourceSans.body2.colour(Colors.white),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+            ],
           )
         : model.bonusLockedReferalPresent(model.referalList)
             ? Padding(
@@ -471,7 +536,8 @@ class BonusLockedReferals extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
-                          if (!(model.referalList[i].isUserBonusUnlocked)) {
+                          if (!(model.referalList[i].isUserBonusUnlocked ??
+                              false)) {
                             return Padding(
                               padding:
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
@@ -481,12 +547,10 @@ class BonusLockedReferals extends StatelessWidget {
                                     future: model.getProfileDpWithUid(
                                         model.referalList[i].uid),
                                     builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
-                                        );
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.waiting ||
+                                          !snapshot.hasData) {
+                                        return DefaultAvatar();
                                       }
 
                                       String imageUrl = snapshot.data as String;
@@ -495,23 +559,19 @@ class BonusLockedReferals extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: imageUrl,
                                           fit: BoxFit.cover,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
+                                          width: SizeConfig.iconSize5,
+                                          height: SizeConfig.iconSize5,
                                           placeholder: (context, url) =>
                                               Container(
-                                            width: SizeConfig.iconSize5_5,
-                                            height: SizeConfig.iconSize5_5,
+                                            width: SizeConfig.iconSize5,
+                                            height: SizeConfig.iconSize5,
                                             decoration: BoxDecoration(
                                               color: Colors.grey,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
                                           errorWidget: (a, b, c) {
-                                            return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
-                                              width: SizeConfig.iconSize5,
-                                              height: SizeConfig.iconSize5,
-                                            );
+                                            return DefaultAvatar();
                                           },
                                         ),
                                       );
@@ -524,7 +584,7 @@ class BonusLockedReferals extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(model.referalList[i].userName,
+                                      Text(model.referalList[i].userName ?? '-',
                                           style: TextStyles.sourceSans.body1
                                               .colour(
                                             Colors.white,
@@ -578,11 +638,17 @@ class BonusLockedReferals extends StatelessWidget {
                   ],
                 ),
               )
-            : NoRecordDisplayWidget(
-                assetLottie: Assets.noData,
-                text: "No Referrals yet",
-                topPadding: false,
-                bottomPadding: false,
+            : Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding16),
+                  SvgPicture.asset(Assets.noReferalAsset),
+                  SizedBox(height: SizeConfig.padding16),
+                  Text(
+                    "No referrals yet",
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                  ),
+                  SizedBox(height: SizeConfig.padding16),
+                ],
               );
   }
 }
@@ -598,11 +664,17 @@ class BonusUnlockedReferals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return model.referalList.isEmpty
-        ? NoRecordDisplayWidget(
-            assetLottie: Assets.noData,
-            text: "No Referrals yet",
-            topPadding: false,
-            bottomPadding: false,
+        ? Column(
+            children: [
+              SizedBox(height: SizeConfig.padding16),
+              SvgPicture.asset(Assets.noReferalAsset),
+              SizedBox(height: SizeConfig.padding16),
+              Text(
+                "No referrals yet",
+                style: TextStyles.sourceSans.body2.colour(Colors.white),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+            ],
           )
         : model.bonusUnlockedReferalPresent(model.referalList)
             ? Padding(
@@ -632,7 +704,8 @@ class BonusUnlockedReferals extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
-                          if (model.referalList[i].isUserBonusUnlocked) {
+                          if (model.referalList[i].isUserBonusUnlocked ??
+                              false) {
                             return Padding(
                               padding:
                                   EdgeInsets.only(bottom: SizeConfig.padding24),
@@ -642,13 +715,10 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     future: model.getProfileDpWithUid(
                                         model.referalList[i].uid),
                                     builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Image.asset(
-                                          Assets.defaultProfilePlaceholder,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
-                                        );
-                                      }
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.waiting ||
+                                          !snapshot.hasData)
+                                        return DefaultAvatar();
 
                                       String imageUrl = snapshot.data as String;
 
@@ -656,23 +726,19 @@ class BonusUnlockedReferals extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: imageUrl,
                                           fit: BoxFit.cover,
-                                          width: SizeConfig.iconSize5_5,
-                                          height: SizeConfig.iconSize5_5,
+                                          width: SizeConfig.iconSize5,
+                                          height: SizeConfig.iconSize5,
                                           placeholder: (context, url) =>
                                               Container(
-                                            width: SizeConfig.iconSize5_5,
-                                            height: SizeConfig.iconSize5_5,
+                                            width: SizeConfig.iconSize5,
+                                            height: SizeConfig.iconSize5,
                                             decoration: BoxDecoration(
                                               color: Colors.grey,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
                                           errorWidget: (a, b, c) {
-                                            return Image.asset(
-                                              Assets.defaultProfilePlaceholder,
-                                              width: SizeConfig.iconSize5,
-                                              height: SizeConfig.iconSize5,
-                                            );
+                                            return DefaultAvatar();
                                           },
                                         ),
                                       );
@@ -739,11 +805,17 @@ class BonusUnlockedReferals extends StatelessWidget {
                   ],
                 ),
               )
-            : NoRecordDisplayWidget(
-                assetLottie: Assets.noData,
-                text: "No Referrals yet",
-                topPadding: false,
-                bottomPadding: false,
+            : Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding16),
+                  SvgPicture.asset(Assets.noReferalAsset),
+                  SizedBox(height: SizeConfig.padding16),
+                  Text(
+                    "No referrals yet",
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                  ),
+                  SizedBox(height: SizeConfig.padding16),
+                ],
               );
   }
 }
@@ -821,32 +893,32 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                       title: widget.locale.refstep1,
                       leadingAsset: Assets.paperClip,
                     ),
+                    // InfoTile(
+                    //   title:
+                    //       "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
+                    //   leadingAsset: Assets.wmtsaveMoney,
+                    // ),
                     InfoTile(
                       title:
-                          "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
-                      leadingAsset: Assets.wmtsaveMoney,
-                    ),
-                    InfoTile(
-                      title:
-                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you receive a new Golden Ticket.",
+                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} Fello tokens.",
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),
-                    InfoTile(
-                      title:
-                          "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
-                      leadingAsset: Assets.wmtShare,
-                    ),
-                    SizedBox(height: SizeConfig.padding8),
-                    Center(
-                      child: Text(
-                        "You can win upto ₹150 and 600 Fello tokens from each referral!",
-                        style: TextStyles.body3.bold.colour(Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    // InfoTile(
+                    //   title:
+                    //       "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
+                    //   leadingAsset: Assets.wmtShare,
+                    // ),
+                    // SizedBox(height: SizeConfig.padding8),
+                    // Center(
+                    //   child: Text(
+                    //     "You can win upto ₹150 and 600 Fello tokens from each referral!",
+                    //     style: TextStyles.body3.bold.colour(Colors.white),
+                    //     textAlign: TextAlign.center,
+                    //   ),
+                    // ),
                     SizedBox(
-                      height: SizeConfig.padding34,
+                      height: SizeConfig.screenWidth * 0.3,
                     ),
                   ],
                 )

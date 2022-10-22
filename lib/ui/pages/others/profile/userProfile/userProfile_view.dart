@@ -1,12 +1,21 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -34,13 +43,16 @@ class UserProfileDetails extends StatelessWidget {
         body: Stack(
           children: [
             NewSquareBackground(),
-            ListView(
-              shrinkWrap: true,
-              children: [
-                ProfileHeader(model: model),
-                UserProfileForm(locale: locale, model: model),
-              ],
-            ),
+            model.state == ViewState.Busy
+                ? Center(child: FullScreenLoader())
+                : ListView(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    children: [
+                      ProfileHeader(model: model),
+                      UserProfileForm(locale: locale, model: model),
+                    ],
+                  ),
           ],
         ),
       ),
@@ -73,7 +85,7 @@ class UserProfileForm extends StatelessWidget {
             ),
             AppTextField(
               textEditingController: model.nameController,
-              isEnabled: model.inEditMode,
+              isEnabled: model.inEditMode && model.isNameEnabled,
               focusNode: model.nameFocusNode,
               textCapitalization: TextCapitalization.words,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -82,14 +94,20 @@ class UserProfileForm extends StatelessWidget {
                   RegExp(r'[a-zA-Z ]'),
                 ),
               ],
-              // suffix: SizedBox(),
+              suffixIcon: !model.isNameEnabled
+                  ? Icon(
+                      Icons.verified,
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.iconSize1,
+                    )
+                  : SizedBox(),
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
                   // model.hasInputError = false;
                   return null;
                 } else {
                   // model.hasInputError = true;
-                  return 'Please enter your name';
+                  return 'Please enter your name as per PAN';
                 }
               },
             ),
@@ -99,32 +117,46 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obEmailLabel,
             ),
-            model.inEditMode && model.isEmailEnabled
-                ? AppTextField(
-                    textEditingController: model.emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    autoFocus: true,
-                    isEnabled: true,
-                    focusNode: model.emailFocusNode,
-                    hintText: locale.obEmailHint,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      return (value != null &&
-                              value.isNotEmpty &&
-                              model.emailRegex.hasMatch(value))
-                          ? null
-                          : 'Please enter a valid email';
-                    },
-                  )
+            model.inEditMode && !model.isEmailVerified
+                ? (model.isEmailEnabled
+                    ? AppTextField(
+                        textEditingController: model.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        autoFocus: true,
+                        isEnabled: true,
+                        focusNode: model.emailFocusNode,
+                        hintText: locale.obEmailHint,
+                        // suffixIcon: UserEmailVerificationButton(),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          return (value != null &&
+                                  value.isNotEmpty &&
+                                  model.emailRegex.hasMatch(value))
+                              ? null
+                              : 'Please enter a valid email';
+                        },
+                      )
+                    : AppTextField(
+                        readOnly: true,
+                        isEnabled: true,
+                        validator: (va) {
+                          return null;
+                        },
+                        onTap: model.isContinuedWithGoogle
+                            ? () {}
+                            : model.showEmailOptions,
+                        focusNode: model.emailOptionsFocusNode,
+                        // suffixIcon: UserEmailVerificationButton(),
+                        textEditingController: model.emailController,
+                        hintText: model.inEditMode ? "Enter email" : "",
+                      ))
                 : AppTextField(
-                    isEnabled: model.inEditMode && model.isgmailFieldEnabled,
+                    readOnly: true,
+                    isEnabled: model.isEmailVerified ? false : true,
                     validator: (va) {
                       return null;
                     },
                     focusNode: model.emailOptionsFocusNode,
-                    onTap: model.isContinuedWithGoogle
-                        ? () {}
-                        : model.showEmailOptions,
                     suffixIcon: UserEmailVerificationButton(),
                     textEditingController: model.emailController,
                     hintText: model.inEditMode ? "Enter email" : "",
@@ -345,6 +377,46 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding16,
             ),
+            if (model.isNewUser)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextFieldLabel("Username"),
+                  AppTextField(
+                    hintText: 'Your username',
+                    onTap: () {},
+                    prefixText: '@',
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    textEditingController: model.usernameController,
+                    isEnabled: model.inEditMode,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'[a-z0-9.]'),
+                      )
+                    ],
+                    validator: (val) {
+                      if (val == null || val.isEmpty)
+                        return "";
+                      else
+                        return null;
+                    },
+                    onChanged: (String value) {
+                      model.validateUsername();
+                    },
+                  ),
+                  Container(
+                    height: model.errorPadding,
+                  ),
+                  if (model.showResult().runtimeType != SizedBox)
+                    Container(
+                      margin: EdgeInsets.only(
+                        // top: SizeConfig.padding8,
+                        bottom: SizeConfig.padding24,
+                      ),
+                      child: model.showResult(),
+                    ),
+                ],
+              ),
             if (!model.isNewUser)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,10 +434,44 @@ class UserProfileForm extends StatelessWidget {
                   ),
                 ],
               ),
-            SizedBox(height: SizeConfig.padding40),
+            SizedBox(
+              height: SizeConfig.padding28,
+            ),
             !model.isNewUser
                 ? Column(
                     children: [
+                      Divider(
+                        color: UiConstants.kTextColor2,
+                        thickness: 0.5,
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        onTap: model.navigateToKycScreen,
+                        title: Text(
+                          "Your KYC Details",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios_rounded,
+                            size: SizeConfig.iconSize2,
+                            color: UiConstants.kTextColor2),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        onTap: model.navigateToBankDetailsScreen,
+                        title: Text(
+                          "Your Bank Account Details",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios_rounded,
+                            size: SizeConfig.iconSize2,
+                            color: UiConstants.kTextColor2),
+                      ),
+                      Divider(
+                        color: UiConstants.kTextColor2,
+                        thickness: 0.5,
+                      ),
                       Container(
                         height: SizeConfig.padding40,
                         child: Row(
@@ -388,26 +494,26 @@ class UserProfileForm extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: SizeConfig.padding16),
-                      Container(
-                        height: SizeConfig.padding40,
+                      Divider(
+                        color: UiConstants.kTextColor2,
+                        thickness: 0.5,
+                      ),
+                      SizedBox(height: SizeConfig.padding6),
+                      InkWell(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: FreshDeskHelpPageConfig,
+                          );
+                        },
                         child: Row(
+                          // padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              "Tambola Notifications",
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                            Spacer(),
-                            AppSwitch(
-                              onToggle: (val) => model
-                                  .onTambolaNotificationPreferenceChanged(val),
-                              value: model.tambolaNotification,
-                              isLoading: model.isTambolaNotificationLoading,
-                              height: SizeConfig.screenWidth * 0.059,
-                              width: SizeConfig.screenWidth * 0.087,
-                              toggleSize: SizeConfig.screenWidth * 0.032,
-                            ),
+                            Text('Need Help?',
+                                style: TextStyles.sourceSansSB.body2
+                                    .colour(UiConstants.kTabBorderColor))
                           ],
                         ),
                       ),
@@ -427,8 +533,9 @@ class UserProfileForm extends StatelessWidget {
                     width: SizeConfig.screenWidth,
                     btnText: "Complete",
                     onPressed: model.updateDetails),
-
-            SizedBox(height: SizeConfig.padding64),
+            SizedBox(height: SizeConfig.padding6),
+            AppFooter(),
+            SizedBox(height: SizeConfig.padding28),
           ],
         ),
       ),

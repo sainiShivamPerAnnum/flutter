@@ -4,7 +4,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 
-class FelloCoinBarViewModel extends BaseModel {
+class FelloCoinBarViewModel extends BaseViewModel {
   // final _userCoinService = locator<UserCoinService>();
   // final _logger = locator<CustomLogger>();
 

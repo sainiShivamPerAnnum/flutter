@@ -1,10 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -12,27 +14,24 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
@@ -47,6 +46,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   String _myUserDpUrl;
   String _myUserName;
+  // String _myUpiId;
   String _dob;
   String _gender;
   String _idToken;
@@ -55,6 +55,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet _userFundWallet;
   UserJourneyStatsModel _userJourneyStats;
+  UserAugmontDetail _userAugmontDetails;
+  UserBootUpDetailsModel userBootUp;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
@@ -74,12 +76,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String get dob => _dob;
   String get gender => _gender;
   String get email => _email;
+  // String get upiId => _myUpiId;
+
   bool get isEmailVerified => _isEmailVerified ?? false;
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
-
-  FocusScopeNode buyFieldFocusNode = FocusScopeNode();
+  UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
 
   set baseUser(baseUser) {
     _baseUser = baseUser;
@@ -100,8 +103,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
     notifyListeners(UserServiceProperties.myUserDpUrl);
-    _logger.d(
-        "My user dp url updated in userservice, property listeners notified");
   }
 
   setMyAvatarId(String avId) {
@@ -117,6 +118,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger
         .d("My user name updated in userservice, property listeners notified");
   }
+
+  // setMyUpiId(String upi) {
+  //   _myUpiId = upi;
+  //   notifyListeners(UserServiceProperties.myUpiId);
+  //   _logger.d(
+  //       "My user upi Id updated in userservice, property listeners notified");
+  // }
 
   setDateOfBirth(String dob) {
     _dob = dob;
@@ -146,10 +154,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userJourneyStats(UserJourneyStatsModel stats) {
+    if (stats.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '')
+      GoldenTicketService.previousPrizeSubtype =
+          _userJourneyStats?.prizeSubtype ?? '';
     _userJourneyStats = stats;
     notifyListeners(UserServiceProperties.myJourneyStats);
     _logger
         .d("Journey Stats updated in userservice, property listeners notified");
+    _logger.d(
+        "Previous PrizeSubtype : ${GoldenTicketService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
@@ -178,13 +191,20 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Email:User simple kyc verified, property listeners notified");
   }
 
+  setUserAugmontDetails(value) {
+    this._userAugmontDetails = value;
+    notifyListeners(UserServiceProperties.myAugmontDetails);
+    _logger.d(
+        "AgmontDetails :User augmontDetails updated, property listeners notified");
+  }
+
   bool get isUserOnborded {
     try {
       if (_firebaseUser != null &&
           _baseUser != null &&
           _baseUser.uid.isNotEmpty &&
           _baseUser.mobile.isNotEmpty &&
-          _baseUser.username.isNotEmpty) {
+          _baseUser.name.isNotEmpty) {
         _logger.d("Onborded User: ${_baseUser.uid}");
         return true;
       }
@@ -195,27 +215,92 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return false;
   }
 
+  Future<void> userBootUpEE() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      setLastOpened();
+      dayOPenCount();
+
+      String userId, deviceId, platform, appVersion, lastOpened;
+      int dayOpenCount;
+
+      userId = FirebaseAuth.instance.currentUser.uid;
+
+      Map<String, dynamic> response =
+          await _internalOpsService.initDeviceInfo();
+      if (response != null) {
+        deviceId = response["deviceId"];
+        platform = response["platform"];
+      }
+
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      appVersion = packageInfo.buildNumber;
+
+      lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED) ?? "";
+      dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+
+      final ApiResponse<UserBootUpDetailsModel> res =
+          await _userRepo.fetchUserBootUpRssponse(
+              userId: userId,
+              deviceId: deviceId,
+              platform: platform,
+              appVersion: appVersion,
+              lastOpened: lastOpened,
+              dayOpenCount: dayOpenCount);
+      if (res.isSuccess()) {
+        userBootUp = res.model;
+      }
+    } else {
+      //No user logged in
+      _logger.d("No user logged in, exiting user boot up details");
+    }
+  }
+
+  void dayOPenCount() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      var now = new DateTime.now();
+      var formatter = new DateFormat('dd-MM-yyyy');
+      String today = formatter.format(now);
+
+      String savedDate = prefs.getString(Constants.DATE_TODAY) ?? "";
+
+      if (savedDate == today) {
+        //The count is for today
+        //Increase the count
+        int current_count = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+        current_count = current_count + 1;
+        prefs.setInt(Constants.DAY_OPENED_COUNT, current_count);
+      } else {
+        //Date has changed
+        prefs.setString(Constants.DATE_TODAY, today);
+        prefs.setInt(Constants.DAY_OPENED_COUNT, 0);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void setLastOpened() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var now = new DateTime.now();
+      var formatter = new DateFormat('dd-MM-yyyy');
+      String formattedTime = DateFormat('kk:mm:ss:a').format(now);
+      String formattedDate = formatter.format(now);
+
+      prefs.setString(
+          Constants.LAST_OPENED, formattedDate + " " + formattedTime);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> init() async {
     try {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
-      if (baseUser != null) {
-        isEmailVerified = baseUser.isEmailVerified ?? false;
-        isSimpleKycVerified = baseUser.isSimpleKycVerified ?? false;
-        setEmail(baseUser.email);
-        setMyAvatarId(baseUser.avatarId);
-        setMyUserName(baseUser.name);
-        setDateOfBirth(baseUser.dob);
-        setGender(baseUser.gender);
-
-        await Future.wait([
-          // note: Already Setting profile in Root uneccessary Calling
-          // setProfilePicture(),
-          getUserJourneyStats()
-        ]);
-        // checkForNewNotifications();
-        // checkForUnscratchedGTStatus();
-      }
+      if (baseUser != null) await getUserJourneyStats();
     } catch (e) {
       _logger.e(e.toString());
       _internalOpsService
@@ -244,6 +329,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
       showSecurityPrompt = null;
+      _userAugmontDetails = null;
+      // _myUpiId = null;
       return true;
     } catch (e) {
       _logger.e("Failed to logout user: ${e.toString()}");
@@ -271,9 +358,42 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               .d("Current FCM token from baseUser : ${_baseUser?.client_token}")
           : _logger.d("No FCM token in firestored");
 
-      _myUserName = _baseUser?.name;
+      isEmailVerified = baseUser?.isEmailVerified ?? false;
+      isSimpleKycVerified = baseUser?.isSimpleKycVerified ?? false;
+      setEmail(baseUser.email);
+      setMyAvatarId(baseUser.avatarId);
+      setMyUserName(baseUser?.kycName ?? baseUser.name);
+      setDateOfBirth(baseUser.dob);
+      setGender(baseUser.gender);
     } else {
       _logger.d("Firebase User is null");
+    }
+  }
+
+  getProfilePicture() async {
+    if (baseUser.avatarId == null ||
+        baseUser.avatarId.isEmpty ||
+        baseUser.avatarId == "CUSTOM") {
+      if (!PreferenceHelper.exists('dpUrl')) {
+        // try {
+        _logger.d("Fetching profile picture");
+
+        String myUserDpUrl;
+        if (baseUser != null)
+          myUserDpUrl = await _dbModel.getUserDP(baseUser.uid);
+        if (myUserDpUrl != null) {
+          await CacheManager.writeCache(
+              key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
+          setMyUserDpUrl(myUserDpUrl);
+          _logger.d("No profile picture found in cache, fetched from server");
+        }
+        // } catch (e) {
+        //   _logger.e(e.toString());
+        // }
+      } else {
+        print(PreferenceHelper.getString('dpUrl'));
+        setMyUserDpUrl(PreferenceHelper.getString('dpUrl'));
+      }
     }
   }
 
@@ -340,13 +460,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     });
   }
 
-  checkForUnscratchedGTStatus() {
-    _logger.d("Looking for Unscratched GTs");
-    _dbModel.checkIfUserHasUnscratchedGT(baseUser.uid).then((value) {
-      if (value) isAnyUnscratchedGTAvailable = true;
-    });
-  }
-
   diplayUsername(String username) {
     return username.replaceAll('@', '.');
   }
@@ -398,51 +511,18 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
+  Future<void> fetchUserAugmontDetail() async {
+    if (userAugmontDetails == null) {
+      ApiResponse<UserAugmontDetail> augmontDetailResponse =
+          await _userRepo.getUserAugmontDetails();
+      if (augmontDetailResponse.isSuccess())
+        setUserAugmontDetails(augmontDetailResponse.model);
+    }
+  }
   // Future<bool> completeOnboarding() async {
   //   ApiResponse response = await _userRepo.completeOnboarding();
   //   return response.model;
   // }
-
-  Future<bool> checkGalleryPermission() async {
-    if (await BaseUtil.showNoInternetAlert()) return false;
-    var _status = await Permission.photos.status;
-    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
-      BaseUtil.openDialog(
-        isBarrierDismissable: false,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-          title: "Request Permission",
-          description:
-              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-          buttonText: "Continue",
-          asset: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Image.asset(
-              "images/gallery.png",
-              height: SizeConfig.screenWidth * 0.24,
-            ),
-          ),
-          confirmAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return true;
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
-            return false;
-          },
-        ),
-      );
-    } else if (_status.isGranted) {
-      return true;
-    } else {
-      BaseUtil.showNegativeAlert(
-        'Permission Unavailable',
-        'Please enable permission from settings to continue',
-      );
-      return false;
-    }
-    return false;
-  }
 
   Future<bool> updateProfilePicture(XFile selectedProfilePicture) async {
     Directory supportDir;
@@ -475,6 +555,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
+      setMyAvatarId('CUSTOM');
       final updateUserAvatarResponse = await _userRepo.updateUser(
           dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser.uid);
       if (url != null &&

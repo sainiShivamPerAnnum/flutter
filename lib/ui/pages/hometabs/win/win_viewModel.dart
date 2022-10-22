@@ -6,16 +6,21 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/fello_facts_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -25,7 +30,6 @@ import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -33,7 +37,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -49,13 +53,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+// import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class WinViewModel extends BaseModel {
+class WinViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
   final _analyticsService = locator<AnalyticsService>();
-  final _campaignRepo = locator<CampaignRepo>();
   final _journeyRepo = locator<JourneyRepository>();
   final _baseUtil = locator<BaseUtil>();
   final _refRepo = locator<ReferralRepo>();
@@ -63,10 +66,13 @@ class WinViewModel extends BaseModel {
   final _winnerService = locator<WinnerService>();
   final _lbService = locator<LeaderboardService>();
   final userRepo = locator<UserRepository>();
-  final _httpModel = locator<HttpModel>();
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _internalOpsService = locator<InternalOpsService>();
-  final _getterrepo = locator<GetterRepository>(); //TR
+  final _prizingRepo = locator<PrizingRepo>();
+  final _campaignRepo = locator<CampaignRepo>();
+  final _gtRepo = locator<GoldenTicketRepository>();
+  int _unscratchedGTCount = 0;
+  bool _showUnscratchedCount = true;
 
   Timer _timer;
   bool _showOldView = false;
@@ -98,6 +104,16 @@ class WinViewModel extends BaseModel {
   List<UserTransaction> get winningHistory => this._winningHistory;
   set winningHistory(List<UserTransaction> value) {
     this._winningHistory = value;
+    notifyListeners();
+  }
+
+  List<FelloFactsModel> fellofacts = [];
+
+  bool _isFelloFactsLoading = false;
+  get isFelloFactsLoading => this._isFelloFactsLoading;
+
+  set isFelloFactsLoading(value) {
+    this._isFelloFactsLoading = value;
     notifyListeners();
   }
 
@@ -163,7 +179,7 @@ class WinViewModel extends BaseModel {
 
   List<EventModel> _ongoingEvents;
 
-  static PanelController _panelController = PanelController();
+  // static PanelController _panelController = PanelController();
 
   List<EventModel> get ongoingEvents => this._ongoingEvents;
 
@@ -172,12 +188,12 @@ class WinViewModel extends BaseModel {
     notifyListeners();
   }
 
-  PanelController get panelController => _panelController;
+  // PanelController get panelController => _panelController;
 
-  set panelController(val) {
-    _panelController = val;
-    notifyListeners();
-  }
+  // set panelController(val) {
+  //   _panelController = val;
+  //   notifyListeners();
+  // }
 
   set setCurrentPage(int currentPage) {
     this._currentPage = currentPage;
@@ -193,18 +209,33 @@ class WinViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get unscratchedGTCount => this._unscratchedGTCount;
+
+  set unscratchedGTCount(int count) {
+    this._unscratchedGTCount = count;
+    notifyListeners();
+    print("Unscratched gt count: $_unscratchedGTCount");
+  }
+
+  bool get showUnscratchedCount => this._showUnscratchedCount;
+
+  set showUnscratchedCount(bool value) {
+    this._showUnscratchedCount = value;
+    notifyListeners();
+  }
+
   double get getUnclaimedPrizeBalance =>
       _userService.userFundWallet.unclaimedBalance;
 
   init() {
     // setupAutoEventScroll();
-    // getOngoingEvents();
     _pageController = PageController(initialPage: 0);
 
     fetchReferralCode();
-    fectchBasicConstantValues();
-    _baseUtil.fetchUserAugmontDetail();
-
+    fetchBasicConstantValues();
+    getUnscratchedGTCount();
+    // _baseUtil.fetchUserAugmontDetail();
+    getFelloFacts();
     _lbService.fetchReferralLeaderBoard();
 
     _winnerService.fetchWinners();
@@ -214,7 +245,7 @@ class WinViewModel extends BaseModel {
     _isShareAlreadyClicked = true;
     notifyListeners();
 
-    _getterrepo.getGoldenTickets(); //TR
+    // _getterrepo.getGoldenTickets(); //TR
 
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
@@ -266,7 +297,7 @@ class WinViewModel extends BaseModel {
     notifyListeners();
   }
 
-  fectchBasicConstantValues() {
+  fetchBasicConstantValues() {
     _minWithdrawPrize = BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
     _refUnlock = BaseRemoteConfig.remoteConfig
@@ -412,15 +443,16 @@ class WinViewModel extends BaseModel {
     return await _localDBModel.getPrizeClaimChoice();
   }
 
-  void navigateToMyWinnings() {
-    AppState.delegate.appState.currentAction =
-        PageAction(state: PageState.addPage, page: MyWinnigsPageConfig);
+  void navigateToMyWinnings(WinViewModel model) {
+    showUnscratchedCount = false;
+    _analyticsService.track(eventName: AnalyticsEvents.myGoldenTickets);
+    AppState.delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: MyWinnigsPageConfig,
+        widget: MyWinningsView());
   }
 
   void navigateToRefer() {
-    if (_userService.userJourneyStats.mlIndex == 1)
-      return BaseUtil.showNegativeAlert("Complete your profile",
-          "You can check referrals only after completing profile");
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
@@ -429,6 +461,7 @@ class WinViewModel extends BaseModel {
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
+    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissable: false,
@@ -448,6 +481,14 @@ class WinViewModel extends BaseModel {
     );
   }
 
+  getUnscratchedGTCount() async {
+    final ApiResponse<List<GoldenTicket>> res =
+        await _gtRepo.getUnscratchedGoldenTickets();
+    if (res.isSuccess()) {
+      unscratchedGTCount = res.model.length;
+    }
+  }
+
   getWinningHistory() async {
     isWinningHistoryLoading = true;
     ApiResponse<List<UserTransaction>> temp =
@@ -461,17 +502,29 @@ class WinViewModel extends BaseModel {
           "Winning History fetch failed", "Please try again after sometime");
   }
 
-  showSuccessPrizeWithdrawalDialog(
-      PrizeClaimChoice choice, String subtitle, double claimPrize) async {
+  Future<String> getGramsWon(double amount) async {
+    AugmontService augmontService = locator<AugmontService>();
+    if (augmontService == null) return '0.0gm';
+    AugmontRates goldRates = await augmontService.getRates();
+
+    if (goldRates != null && goldRates.goldSellPrice != 0.0)
+      return '${BaseUtil.digitPrecision(amount / goldRates.goldSellPrice, 4, false)}gm';
+    else
+      return '0.0gm';
+  }
+
+  showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice, String subtitle,
+      double claimPrize, String gramsWon) async {
     //Starting the redemption sucessfull screen
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: RedeemSucessfulScreen(
-        subTitleWidget: getSubtitleWidget(subtitle),
-        claimPrize: claimPrize,
-        dpUrl: _userService.myUserDpUrl,
-        choice: choice,
-      ),
+          subTitleWidget: getSubtitleWidget(subtitle),
+          claimPrize: claimPrize,
+          dpUrl: _userService.myUserDpUrl,
+          choice: choice,
+          wonGrams: gramsWon //await getGramsWon(claimPrize),
+          ),
       page: RedeemSucessfulScreenPageConfig,
     );
   }
@@ -479,9 +532,16 @@ class WinViewModel extends BaseModel {
   sharePrizeDetails() async {
     startShareLoading();
     try {
-      String url = await _userService.createDynamicLink(true, 'Other');
-      caputure(
-          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+      String url;
+      final link = await _appFlyer.inviteLink();
+      if (link['status'] == 'success') {
+        url = link['payload']['userInviteUrl'];
+        if (url == null) url = link['payload']['userInviteURL'];
+      }
+
+      if (url != null)
+        caputure(
+            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
     } catch (e) {
       _logger.e(e.toString());
       BaseUtil.showNegativeAlert("An error occured!", "Please try again");
@@ -492,14 +552,17 @@ class WinViewModel extends BaseModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      AppState.backButtonDispatcher.didPopRoute();
-      if (flag) {
-        getWinningHistory();
-        showSuccessPrizeWithdrawalDialog(
-            choice,
-            choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
-            claimPrize);
-      }
+      getGramsWon(claimPrize).then((value) {
+        AppState.backButtonDispatcher.didPopRoute();
+        if (flag) {
+          getWinningHistory();
+          showSuccessPrizeWithdrawalDialog(
+              choice,
+              choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
+              claimPrize,
+              value);
+        }
+      });
     });
 
     _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
@@ -508,21 +571,23 @@ class WinViewModel extends BaseModel {
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-        _userService.baseUser.uid,
-        _userService.baseUser.username,
-        _userService.userFundWallet.unclaimedBalance,
-        choice);
-    if (response['status'] != null && response['status']) {
+    final response = await _prizingRepo.claimPrize(
+      _userService.userFundWallet.unclaimedBalance,
+      choice,
+    );
+
+    if (response.isSuccess()) {
       _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 
       return true;
     } else {
-      BaseUtil.showNegativeAlert('Withdrawal Failed',
-          response['message'] ?? "Please try again after sometime");
+      BaseUtil.showNegativeAlert(
+        'Withdrawal Failed',
+        response.errorMessage ?? "Please try again after sometime",
+      );
       return false;
     }
   }
@@ -687,42 +752,25 @@ class WinViewModel extends BaseModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
-  openVoucherModal(
-    String asset,
-    String title,
-    String subtitle,
-    Color color,
-    bool commingsoon,
-    List<String> instructions,
-  ) {
-    if (Platform.isIOS && commingsoon)
-      return;
-    else
-      return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        content: VoucherModal(
-          color: color,
-          asset: asset,
-          commingSoon: commingsoon,
-          title: title,
-          subtitle: subtitle,
-          instructions: instructions,
-        ),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding24),
-            topRight: Radius.circular(SizeConfig.padding24)),
-        // backgroundColor: Color(0xffFFDBF6),
-        isBarrierDismissable: false,
-        hapticVibrate: true,
-      );
-  }
-
   double calculateFillHeight(
       double winningAmount, double containerHeight, int redeemAmount) {
     double fillPercent = (winningAmount / redeemAmount) * 100;
     double heightToFill = (fillPercent / 100) * containerHeight;
 
     return heightToFill;
+  }
+
+  getFelloFacts() async {
+    isFelloFactsLoading = true;
+    final res = await _campaignRepo.getFelloFacts();
+    if (res.isSuccess()) {
+      fellofacts = res.model;
+      _logger.d("Fello Facts Fetched Length: ${fellofacts.length}");
+    } else {
+      fellofacts = [];
+    }
+    _logger.d("Fello Facts Length: ${fellofacts.length}");
+    isFelloFactsLoading = false;
   }
 
   getRedeemAsset(double walletBalnce) {
@@ -745,17 +793,5 @@ class WinViewModel extends BaseModel {
     } else if (walletBalnce >= minWithdrawPrizeAmt) {
       return Assets.prizeClaimAssets[8];
     }
-  }
-
-  getOngoingEvents() async {
-    final response = await _campaignRepo.getOngoingEvents();
-    if (response.code == 200) {
-      ongoingEvents = response.model;
-      ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
-      ongoingEvents.forEach((element) {
-        print(element.toString());
-      });
-    } else
-      ongoingEvents = [];
   }
 }

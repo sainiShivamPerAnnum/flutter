@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -5,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FelloInfoDialog extends StatelessWidget {
-  final String title, subtitle, asset;
+  final String title, subtitle, asset, png;
   final Widget action;
-  final bool showCrossIcon;
+
   final Widget customContent;
   final bool isAddedToScreenStack;
   final bool defaultPadding;
@@ -17,15 +18,15 @@ class FelloInfoDialog extends StatelessWidget {
     this.subtitle,
     this.customContent,
     this.action,
-    this.showCrossIcon,
+    this.png,
     this.defaultPadding = true,
     this.isAddedToScreenStack = false,
   });
   @override
   Widget build(BuildContext context) {
-    return FelloDialog(
-      defaultPadding: defaultPadding,
-      isAddedToScreenStack: isAddedToScreenStack,
+    return BaseDialog(
+      // defaultPadding: defaultPadding,
+      // isAddedToScreenStack: isAddedToScreenStack,
       content: customContent != null
           ? customContent
           : Container(
@@ -41,6 +42,17 @@ class FelloInfoDialog extends StatelessWidget {
                       height: SizeConfig.screenHeight * 0.16,
                     ),
                   if (asset != null)
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.04,
+                    ),
+                  if (png != null)
+                    SizedBox(height: SizeConfig.screenHeight * 0.04),
+                  if (asset != null)
+                    Image.asset(
+                      png,
+                      height: SizeConfig.screenHeight * 0.16,
+                    ),
+                  if (png != null)
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.04,
                     ),
@@ -60,7 +72,6 @@ class FelloInfoDialog extends StatelessWidget {
                 ],
               ),
             ),
-      showCrossIcon: showCrossIcon ?? false,
     );
   }
 }

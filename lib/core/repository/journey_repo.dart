@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
@@ -15,11 +14,9 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 
 class JourneyRepository extends BaseRepo {
   final _cacheService = new CacheService();
@@ -28,6 +25,14 @@ class JourneyRepository extends BaseRepo {
   static const String PAGE_DIRECTION_DOWN = "down";
   static const String LOCAL_ASSET_DATABASE = "localAssetDatabase";
   String _filePathDirectory;
+
+  final _baseUrlJourney = FlavorConfig.isDevelopment()
+      ? 'https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev'
+      : 'https://rs0wiakaw7.execute-api.ap-south-1.amazonaws.com/prod';
+
+  final _baseUrlStats = FlavorConfig.isDevelopment()
+      ? "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev"
+      : 'https://08wplse7he.execute-api.ap-south-1.amazonaws.com/prod';
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
@@ -166,11 +171,9 @@ class JourneyRepository extends BaseRepo {
           endPage,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
-                ApiPath().kJourney,
+                ApiPath.kJourney,
                 token: token,
-                cBaseUrl: FlavorConfig.isDevelopment()
-                    ? "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev"
-                    : "not yet found",
+                cBaseUrl: _baseUrlJourney,
                 queryParams: queryParams,
               ), (dynamic responseData) {
         // parser
@@ -187,12 +190,13 @@ class JourneyRepository extends BaseRepo {
       });
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to journey pages", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to journey pages", 400);
     }
   }
 
-  //Returns User Journey stats
-  //refer UserJourneyStatsModel for the response
+  // Returns User Journey stats
+  // refer UserJourneyStatsModel for the response
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
     try {
       final String _uid = userService.baseUser.uid;
@@ -200,7 +204,7 @@ class JourneyRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.journeyStats(_uid),
         token: _token,
-        cBaseUrl: "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev",
+        cBaseUrl: _baseUrlStats,
       );
 
       final responseData = response["data"];
@@ -209,7 +213,8 @@ class JourneyRepository extends BaseRepo {
           model: UserJourneyStatsModel.fromMap(responseData), code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch user stats", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch user stats", 400);
     }
   }
 
@@ -242,7 +247,7 @@ class JourneyRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.kJourneyLevel,
         token: _token,
-        cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
+        cBaseUrl: _baseUrlJourney,
       );
 
       final responseData = response["data"];
@@ -253,7 +258,8 @@ class JourneyRepository extends BaseRepo {
       return ApiResponse(model: journeylevels, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch user levels", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch user levels", 400);
     }
   }
 }

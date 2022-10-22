@@ -9,11 +9,11 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_buy_screen/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -23,13 +23,13 @@ import 'package:flutter/material.dart';
 
 // enum STATUS { Pending, Complete, Cancel }
 
-class AutosaveProcessViewModel extends BaseModel {
+class AutosaveProcessViewModel extends BaseViewModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
   final GoldenTicketService _gtService = GoldenTicketService();
-
+  FocusNode sipAmountNode = FocusNode();
   bool _showSetAmountView = false;
   bool _isDaily = true;
   bool _showProgressIndicator = false;
@@ -303,15 +303,7 @@ class AutosaveProcessViewModel extends BaseModel {
     _analyticsService.track(
         eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
     AppState.backButtonDispatcher.didPopRoute();
-    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-      if (res) {
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosaveSetupGTReceived);
-        _gtService.showInstantGoldenTicketView(
-            title: 'Your Autosave setup was successful!',
-            source: GTSOURCE.autosave);
-      }
-    });
+    _gtService.fetchAndVerifyGoldenTicketByID();
   }
 
   initiateCustomSubscription() async {
@@ -383,15 +375,12 @@ class AutosaveProcessViewModel extends BaseModel {
         _paytmService.fraction = 0;
         _paytmService.getActiveSubscriptionDetails();
         showProgressIndicator = false;
-        Future.delayed(Duration(milliseconds: 1000), () {
-          lottieAnimationController.forward();
-          _paytmService.currentSubscriptionId = null;
-        });
+        // Future.delayed(Duration(milliseconds: 1000), () {
+        //   lottieAnimationController.forward();
+        //   _paytmService.currentSubscriptionId = null;
+        // });
         _analyticsService.track(
             eventName: AnalyticsEvents.autosaveSetupCompleted);
-      } else {
-        BaseUtil.showNegativeAlert(
-            "Amount update failed", "Please try again in sometime");
       }
     }
   }

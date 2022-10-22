@@ -56,9 +56,6 @@ class _FormDialogState extends State<ConfirmationDialog> {
         ),
       ),
       width: SizeConfig.screenWidth,
-      // height: widget.description == ''
-      //     ? SizeConfig.screenWidth * 0.5278
-      //     : SizeConfig.screenWidth * 0.5833,
       child: Container(
         padding: EdgeInsets.only(
           bottom: SizeConfig.padding12,
@@ -66,14 +63,6 @@ class _FormDialogState extends State<ConfirmationDialog> {
           left: SizeConfig.padding12,
           top: SizeConfig.padding32,
         ),
-        // constraints: BoxConstraints(
-        //   maxHeight: widget.description == ''
-        //       ? SizeConfig.screenWidth * 0.5222
-        //       : SizeConfig.screenWidth * 0.5778,
-        //   minHeight: widget.description == ''
-        //       ? SizeConfig.screenWidth * 0.5222
-        //       : SizeConfig.screenWidth * 0.5778,
-        // ),
         margin: EdgeInsets.all(1),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
@@ -84,19 +73,13 @@ class _FormDialogState extends State<ConfirmationDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.asset != null) widget.asset,
-            if (widget.asset != null)
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
             Text(
               widget.title,
-              // style: widget.description == ''
-              //     ? TextStyles.sourceSansSB.body2
-              //     : TextStyles.sourceSansSB.title4,
-              style: TextStyles.rajdhaniB.title2,
+              style: TextStyles.rajdhaniB.title3,
               textAlign: TextAlign.center,
             ),
+            if (widget.asset != null)
+              Padding(padding: EdgeInsets.zero, child: widget.asset),
             if (widget.description.isNotEmpty)
               Container(
                 padding: EdgeInsets.only(
@@ -155,129 +138,3 @@ class _FormDialogState extends State<ConfirmationDialog> {
     );
   }
 }
-
-
-// class ConfirmActionDialog extends StatefulWidget {
-//   final String title, description, buttonText, cancelBtnText;
-//   final Function confirmAction, cancelAction;
-//   final Widget asset;
-
-//   ConfirmActionDialog(
-//       {@required this.title,
-//       @required this.description,
-//       @required this.buttonText,
-//       @required this.confirmAction,
-//       @required this.cancelAction,
-//       this.asset,
-//       this.cancelBtnText = 'Cancel'});
-
-//   @override
-//   State createState() => _FormDialogState();
-// }
-
-// class _FormDialogState extends State<ConfirmActionDialog> {
-//   Log log = new Log('ConfirmActionDialog');
-//   final _formKey = GlobalKey<FormState>();
-//   final fdbkController = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Dialog(
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-//       ),
-//       elevation: 0.0,
-//       backgroundColor: Colors.transparent,
-//       child: dialogContent(context),
-//     );
-//   }
-
-//   dialogContent(BuildContext context) {
-//     return Stack(
-//       children: <Widget>[
-//         //...bottom card part,
-//         Container(
-//           padding: EdgeInsets.only(
-//             top: 5 + SizeConfig.cardBorderRadius,
-//             bottom: SizeConfig.cardBorderRadius,
-//             left: SizeConfig.cardBorderRadius,
-//             right: SizeConfig.cardBorderRadius,
-//           ),
-//           margin: EdgeInsets.all(10),
-//           decoration: new BoxDecoration(
-//             color: Colors.white,
-//             shape: BoxShape.rectangle,
-//             borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-//             boxShadow: [
-//               BoxShadow(
-//                 color: Colors.black26,
-//                 blurRadius: 10.0,
-//                 offset: const Offset(0.0, 10.0),
-//               ),
-//             ],
-//           ),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min, // To make the card compact
-//             children: <Widget>[
-//               Text(
-//                 widget.title,
-//                 textAlign: TextAlign.center,
-//                 style: GoogleFonts.montserrat(
-//                   fontSize: 24.0,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//               ),
-//               SizedBox(height: 16.0),
-//               widget.asset ?? SizedBox(),
-//               Text(
-//                 widget.description,
-//                 textAlign: TextAlign.center,
-//                 style: GoogleFonts.montserrat(
-//                   fontSize: SizeConfig.mediumTextSize,
-//                 ),
-//               ),
-//               SizedBox(height: 16.0),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: <Widget>[
-//                   Align(
-//                     alignment: Alignment.bottomLeft,
-//                     child: TextButton(
-//                       onPressed: () {
-//                         Haptic.vibrate();
-//                         log.debug('DialogAction cancelled');
-//                         AppState.backButtonDispatcher.didPopRoute();
-//                         return widget.cancelAction();
-//                       },
-//                       child: Text(
-//                         widget.cancelBtnText,
-//                         style: GoogleFonts.montserrat(
-//                             color: UiConstants.primaryColor),
-//                       ),
-//                     ),
-//                   ),
-//                   Align(
-//                     alignment: Alignment.bottomRight,
-//                     child: TextButton(
-//                       onPressed: () {
-//                         Haptic.vibrate();
-//                         log.debug('DialogAction clicked');
-//                         AppState.backButtonDispatcher.didPopRoute();
-//                         return widget.confirmAction();
-//                       },
-//                       child: Text(
-//                         widget.buttonText,
-//                         style: GoogleFonts.montserrat(
-//                             color: UiConstants.primaryColor),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               )
-//             ],
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

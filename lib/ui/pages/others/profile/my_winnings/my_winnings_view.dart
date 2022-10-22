@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/material.dart';
 
 class MyWinningsView extends StatelessWidget {
   final openFirst;
+  // final WinViewModel winModel;
+
   MyWinningsView({this.openFirst = false});
   @override
   Widget build(BuildContext context) {
@@ -65,8 +68,8 @@ class MyWinningsView extends StatelessWidget {
                                   delegate: SliverChildListDelegate(
                                     [
                                       PrizeClaimCard(
-                                        model: model,
-                                      ),
+                                          // model: winModel,
+                                          ),
                                     ],
                                   ),
                                 ),

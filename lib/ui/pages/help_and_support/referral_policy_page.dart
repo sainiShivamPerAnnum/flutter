@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -72,8 +71,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: HomeBackground(
-      child: Container(
+      body: Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenHeight,
         child: Column(
@@ -134,6 +132,6 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
           ],
         ),
       ),
-    ));
+    );
   }
 }

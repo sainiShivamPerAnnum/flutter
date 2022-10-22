@@ -1,15 +1,16 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
-import 'package:felloapp/core/model/fundbalance_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
@@ -17,13 +18,13 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 
 import 'base_repo.dart';
 
@@ -69,6 +70,7 @@ class UserRepository extends BaseRepo {
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
           BaseUser.fldStateId: state,
           BaseUser.fldAppFlyerId: await _appsFlyerService.appFlyerId,
+          'referralCode': BaseUtil.manualReferralCode ?? ''
         }
       };
 
@@ -175,13 +177,16 @@ class UserRepository extends BaseRepo {
         'otp': otp,
       };
 
-      final res = await APIService.instance
-          .getData(ApiPath.verifyOtp, queryParams: query, cBaseUrl: _baseUrl);
+      final res = await APIService.instance.getData(
+        ApiPath.verifyOtp,
+        queryParams: query,
+        cBaseUrl: _baseUrl,
+      );
 
       return ApiResponse(code: 200, model: res['data']['token']);
     } catch (e) {
       logger.d(e);
-      return ApiResponse.withError("send OTP failed", 400);
+      return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
     }
   }
 
@@ -391,22 +396,25 @@ class UserRepository extends BaseRepo {
   }) async {
     final token = await getBearerToken();
     try {
-      await APIService.instance.putData(
+      final res = await APIService.instance.putData(
         ApiPath.kGetUserById(userService.baseUser.uid),
         body: dMap,
         token: token,
         cBaseUrl: _baseUrl,
       );
-
+      logger.d("Update user data: ${res['data']}");
+      final resData = res['data'];
+      if (resData != null && resData['gtId'] != null) {
+        GoldenTicketService.goldenTicketId = resData['gtId'];
+      }
       // clear cache
       await _cacheService.invalidateByKey(CacheKeys.USER);
-      await getUserById(id: userService.baseUser.uid);
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(
-        "Unable to update user",
+        e.toString() ?? "Unable to update user",
         400,
       );
     }
@@ -444,7 +452,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.postData(
         ApiPath.getCompleteOnboarding(userService.baseUser.uid),
         cBaseUrl: _baseUrl,
-        token: "Bearer $token",
+        token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -454,30 +462,6 @@ class UserRepository extends BaseRepo {
         "Unable to update fcm",
         400,
       );
-    }
-  }
-
-  Future<ApiResponse<bool>> updateUserWalkthroughCompletion() async {
-    bool isGtRewarded = false;
-    try {
-      final String _bearer = await getBearerToken();
-      final res = await APIService.instance.postData(
-          ApiPath.kWalkthrough(userService.baseUser.uid),
-          cBaseUrl: _baseUrl,
-          token: _bearer);
-      logger.d(res);
-      final responseData = res['data'];
-      logger.d(responseData);
-      if (responseData["isGtRewarded"] != null && responseData["isGtRewarded"])
-        isGtRewarded = true;
-      if (responseData["gtId"] != null &&
-          responseData["gtId"].toString().isNotEmpty)
-        GoldenTicketService.goldenTicketId = responseData["gtId"];
-      return ApiResponse(code: 200, model: isGtRewarded);
-    } catch (e) {
-      logger.d(e);
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to create user account", 400);
     }
   }
 
@@ -513,6 +497,83 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger.e(e);
       return false;
+    }
+  }
+
+  //Method to fetch the user-boot-up-ee
+
+  Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse(
+      {@required String userId,
+      @required String deviceId,
+      @required String platform,
+      @required String appVersion,
+      @required String lastOpened,
+      @required int dayOpenCount}) async {
+    UserBootUpDetailsModel userBootUp;
+
+    try {
+      Map<String, dynamic> queryParameters = {
+        'deviceId': deviceId,
+        'platform': platform,
+        'appVersion': appVersion,
+        'lastOpened': lastOpened,
+        'dayOpenCount': dayOpenCount.toString(),
+      };
+
+      final token = await getBearerToken();
+
+      final respone = await APIService.instance.getData(
+        ApiPath.userBootUp(
+          userService.baseUser.uid,
+        ),
+        token: token,
+        queryParams: queryParameters,
+        cBaseUrl: _baseUrl,
+      );
+
+      userBootUp = UserBootUpDetailsModel.fromMap(respone);
+
+      return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
+    } catch (e) {
+      logger.d("Unable to fetch user boot up ee ${e.toString()}");
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to get user bootup details", 400);
+    }
+  }
+
+  Future<ApiResponse<String>> getUserPan() async {
+    try {
+      final String token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.kGetPan(userService.baseUser.uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+      );
+      final String pan = response["data"]["pan"];
+      return ApiResponse(model: pan ?? '', code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> isEmailRegistered(String email) async {
+    try {
+      final query = {
+        'email': email,
+      };
+      final token = await getBearerToken();
+      final uid = userService?.baseUser?.uid;
+      final res = await APIService.instance.getData(
+          ApiPath.isEmailRegistered(uid),
+          queryParams: query,
+          cBaseUrl: _baseUrl,
+          token: token);
+
+      return ApiResponse(code: 200, model: res['data']['isEmailRegistered']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError("send OTP failed", 400);
     }
   }
 }

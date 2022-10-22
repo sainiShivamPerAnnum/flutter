@@ -5,15 +5,18 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class OnboardingViewModel extends BaseModel {
+class OnboardingViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _userService = locator<UserService>();
   final UserRepository _userRepository = locator<UserRepository>();
@@ -35,6 +38,26 @@ class OnboardingViewModel extends BaseModel {
   PageController get pageController => _pageController;
 
   int get currentPage => _currentPage;
+
+  List<Widget> assetWidgets = [
+    SvgPicture.asset(
+      "assets/svg/partner_assets_frame.svg",
+      width: SizeConfig.screenWidth * 0.7,
+    ),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: List.generate(Assets.assetList2OnBoarding.length, (index) {
+        return SvgPicture.asset(
+          Assets.assetList2OnBoarding[index],
+          height: SizeConfig.screenWidth * 0.1,
+          width: SizeConfig.screenWidth * 0.1,
+          fit: BoxFit.cover,
+        );
+      }),
+    ),
+    SizedBox.shrink(),
+  ];
 
   List<List<String>> get onboardingData => _onboardingData;
 
@@ -58,16 +81,16 @@ class OnboardingViewModel extends BaseModel {
     currentPage = 0;
     onboardingData = [
       [
-        'Save and Invest',
-        'In strong, low risk assets with steady growth',
+        'Earn 10% returns',
+        'by saving in safe and secure assets like Digital Gold and 10% fund Fello Flo',
       ],
       [
-        'Play games',
+        'Play fun games',
         'Earn tambola tickets and Fello tokens for your savings and play weekly games'
       ],
       [
-        'Win rewards',
-        'Win the daily and weekly games and get rewards and prizes!',
+        'Win Rs.1 Crore!',
+        'Win the daily and weekly games and earn upto Rs 1 Crore in rewards',
       ],
     ];
   }
@@ -75,22 +98,10 @@ class OnboardingViewModel extends BaseModel {
   registerWalkthroughCompletion(String comingFrom) async {
     PreferenceHelper.setBool(
         PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
-    if (_userService.firebaseUser != null) {
-      isWalkthroughRegistrationInProgress = true;
-      if (_journeyService.avatarRemoteMlIndex == 1) {
-        final ApiResponse<bool> res =
-            await _userRepository.updateUserWalkthroughCompletion();
-        if (res.isSuccess()) {
-          BaseUtil.showPositiveAlert(
-              "Walkthrough completed!", "You cleared milestone 1");
-        } else {
-          BaseUtil.showNegativeAlert(
-              "Unable to registed walkthrough completion!", "Please try again");
-        }
-      }
-      isWalkthroughRegistrationInProgress = false;
-    }
     onBoardingCompleted(comingFrom);
+
+    if (_analyticsService != null)
+      _analyticsService.track(eventName: 'Splash Screen Proceed');
   }
 
   onBoardingCompleted(String comingFrom) {

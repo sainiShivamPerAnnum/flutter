@@ -54,7 +54,7 @@ class LeaderboardShimmer extends StatelessWidget {
           ),
           Column(
             children: List.generate(
-              3,
+              4,
               (index) {
                 return Shimmer.fromColors(
                   baseColor: UiConstants.kUserRankBackgroundColor,
@@ -76,7 +76,7 @@ class LeaderboardShimmer extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: SizeConfig.screenWidth * 0.07,
+            height: SizeConfig.screenWidth * 0.08,
           ),
         ],
       ),

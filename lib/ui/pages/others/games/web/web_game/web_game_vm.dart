@@ -27,7 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class WebGameViewModel extends BaseModel {
+class WebGameViewModel extends BaseViewModel {
   final _gtService = locator<GoldenTicketService>();
   final _logger = locator<CustomLogger>();
   final _lbService = locator<LeaderboardService>();
@@ -166,13 +166,7 @@ class WebGameViewModel extends BaseModel {
       });
       return;
     }
-    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-      if (res)
-        Future.delayed(duration ?? Duration(seconds: 1), () {
-          _gtService.showInstantGoldenTicketView(
-              title: 'Game Milestone reached', source: GTSOURCE.game);
-        });
-    });
+    _gtService.fetchAndVerifyGoldenTicketByID();
   }
 
   //helper

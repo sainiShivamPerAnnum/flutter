@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -52,13 +53,17 @@ class LoginOtpViewState extends State<LoginOtpView> {
         model.init(context);
       },
       builder: (ctx, model, child) {
-        return Column(
+        return ListView(
+          shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
-            Text(
-              'Verify OTP',
-              style: TextStyles.rajdhaniB.title2,
+            SizedBox(height: SizeConfig.padding54 + SizeConfig.padding4),
+            SignupHeroAsset(asset: Assets.flatFullFlagIsland),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Verify OTP',
+                style: TextStyles.rajdhaniB.title2,
+              ),
             ),
             SizedBox(height: SizeConfig.padding32),
             //input
@@ -93,6 +98,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                         pin.toString() +
                         "\n  No action taken.",
                   );
+                  widget.loginModel.processScreenInput(1);
                 },
               ),
             ),

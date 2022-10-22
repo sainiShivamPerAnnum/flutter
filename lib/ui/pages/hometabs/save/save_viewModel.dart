@@ -1,38 +1,47 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
-import 'package:felloapp/core/service/notifier_services/sell_service.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_assets_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/view_all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_sell/augmont_gold_sell_view.dart';
-import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
+import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
-import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class SaveViewModel extends BaseModel {
+class SaveViewModel extends BaseViewModel {
   final _campaignRepo = locator<CampaignRepo>();
   final _saveRepo = locator<SaveRepo>();
   final _userService = locator<UserService>();
   BaseUtil baseProvider;
-  final SellService _sellService = locator<SellService>();
+  final BankAndPanService _sellService = locator<BankAndPanService>();
   final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
+  final _paymentRepo = locator<PaymentRepository>();
+  final _txnHistoryService = locator<TransactionHistoryService>();
+  final _userCoinService = locator<UserCoinService>();
   final _baseUtil = locator<BaseUtil>();
+  final _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
     UiConstants.kBlogCardRandomColor2,
@@ -54,12 +63,35 @@ class SaveViewModel extends BaseModel {
   bool _isKYCVerified = false;
   bool _isVPAVerified = false;
   bool _isGoldSaleActive = false;
-  bool _isOngoingTransaction = false;
+  bool _isongoing = false;
   bool _isLockInReached = false;
   bool _isSellButtonVisible = false;
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
+
+  List<String> boxAssetsGold = [
+    "assets/svg/single_gold_bar_asset.svg",
+    Assets.singleCoinAsset,
+    Assets.goldSecure,
+  ];
+  List<String> boxTitllesGold = [
+    'Safe mode of saving',
+    'Grows with the price of gold',
+    'Pure 99.9% BIS Hallmark',
+  ];
+
+  List<String> boxAssetsFlo = [
+    Assets.star,
+    Assets.singleCoinAsset,
+    Assets.flatIsland,
+  ];
+
+  List<String> boxTitllesFlo = [
+    '10% returns per annum',
+    'Interest credited everyday',
+    '48 hour lock-in period',
+  ];
 
   List<EventModel> get ongoingEvents => this._ongoingEvents;
   List<BlogPostModel> get blogPosts => this._blogPosts;
@@ -70,10 +102,10 @@ class SaveViewModel extends BaseModel {
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
   Map<String, dynamic> get filteredBlogList => _filteredList;
-  bool get isKYCVerified => _isKYCVerified;
-  bool get isVPAVerified => _isVPAVerified;
+  // bool get isKYCVerified => _isKYCVerified;
+  // bool get isVPAVerified => _isVPAVerified;
   bool get isGoldSaleActive => _isGoldSaleActive;
-  bool get isOngoingTransaction => _isOngoingTransaction;
+  bool get isongoing => _isongoing;
   bool get isLockInReached => _isLockInReached;
   bool get isSellButtonVisible => _isSellButtonVisible;
   UserService get userService => _userService;
@@ -107,13 +139,13 @@ class SaveViewModel extends BaseModel {
   }
 
   init() {
-    _baseUtil.fetchUserAugmontDetail();
+    // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
     getCampaignEvents();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      fetchLockedGoldQnt();
+      // fetchLockedGoldQnt();
       _sellService.init();
-      updateSellButtonDetails();
+      // _sellService.updateSellButtonDetails();
     });
     getSaveViewBlogs();
     notifyListeners();
@@ -133,17 +165,6 @@ class SaveViewModel extends BaseModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
-  updateSellButtonDetails() async {
-    _isKYCVerified = _sellService?.isKYCVerified ?? false;
-    _isVPAVerified = _sellService?.isVPAVerified ?? false;
-    if (withdrawableQnt <= nonWithdrawableQnt) {
-      _isLockInReached = true;
-    }
-    _isGoldSaleActive = _baseUtil.augmontDetail?.isSellLocked ?? false;
-    _isOngoingTransaction = _sellService?.isOngoingTransaction ?? false;
-    notifyListeners();
-  }
-
   getCampaignEvents() async {
     updateIsChallengesLoading(true);
     final response = await _campaignRepo.getOngoingEvents();
@@ -157,52 +178,6 @@ class SaveViewModel extends BaseModel {
       ongoingEvents = [];
     }
     updateIsChallengesLoading(false);
-  }
-
-  fetchLockedGoldQnt() async {
-    await _userService.getUserFundWalletData();
-    ApiResponse<double> qunatityApiResponse =
-        await _transactionHistoryRepo.getWithdrawableAugGoldQuantity();
-    if (qunatityApiResponse.code == 200) {
-      setWithdrawableQnt = qunatityApiResponse.model;
-      if (_withdrawableQnt == null || _withdrawableQnt < 0) {
-        setWithdrawableQnt = 0.0;
-      }
-      if (userFundWallet == null ||
-          userFundWallet.augGoldQuantity == null ||
-          userFundWallet.augGoldQuantity <= 0.0) {
-        setNonWithdrawableQnt = 0.0;
-      } else {
-        setNonWithdrawableQnt = BaseUtil.digitPrecision(
-            math.max(0.0, userFundWallet.augGoldQuantity - _withdrawableQnt),
-            4,
-            false);
-      }
-    } else {
-      setNonWithdrawableQnt = 0.0;
-      setWithdrawableQnt = 0.0;
-    }
-    refresh();
-  }
-
-  Color getRandomColor() {
-    math.Random random = math.Random();
-    return randomBlogCardCornerColors[random.nextInt(5)];
-  }
-
-  bool getButtonAvailibility() {
-    if (_isKYCVerified && _isVPAVerified) {
-      if (!_isGoldSaleActive && (_isKYCVerified && _isVPAVerified)) {
-        return true;
-      }
-      if (!_isLockInReached && (_isKYCVerified && _isVPAVerified)) {
-        return true;
-      }
-      if (!_isOngoingTransaction && (_isKYCVerified && _isVPAVerified)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   getSaveViewBlogs() async {
@@ -227,6 +202,36 @@ class SaveViewModel extends BaseModel {
     notifyListeners();
   }
 
+  refreshTransactions(InvestmentType investmentType) async {
+    await _txnHistoryService.updateTransactions(investmentType);
+    await _userCoinService.getUserCoinBalance();
+    await _userService.getUserFundWalletData();
+  }
+
+  double getQuantity(
+    UserFundWallet fund,
+    var investmentType,
+  ) {
+    final quantity = investmentType == InvestmentType.AUGGOLD99
+        ? fund?.augGoldQuantity
+        : fund?.wLbBalance;
+
+    if (quantity != null) {
+      return quantity;
+    } else {
+      return 0;
+    }
+  }
+
+  double getInvestedQuantity(UserFundWallet fund) {
+    final quantity = fund?.wLbPrinciple;
+
+    if (quantity != null) {
+      return quantity;
+    } else
+      return 0;
+  }
+
   List<BlogPostModelByCategory> getAllBlogsByCategory() {
     List<BlogPostModelByCategory> result = [];
 
@@ -249,6 +254,8 @@ class SaveViewModel extends BaseModel {
 
   /// `Navigation`
   navigateToBlogWebView(String slug, String title) {
+    _analyticsService.track(eventName: AnalyticsEvents.blogWebView);
+
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: BlogPostWebViewConfig,
@@ -258,32 +265,43 @@ class SaveViewModel extends BaseModel {
         ));
   }
 
-  navigateToSaveAssetView() {
+  void navigateToSaveAssetView(
+    InvestmentType investmentType,
+  ) {
     Haptic.vibrate();
-    AppState.delegate.appState.currentAction = PageAction(
+
+    if (investmentType == InvestmentType.AUGGOLD99) {
+      _analyticsService.track(
+          eventName: 'Asset Banner Tapped', properties: {'asset': 'Gold'});
+      AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
-        widget: SaveAssetView());
-  }
-
-  navigateToSellGoldPage() {
-    Haptic.vibrate();
-    AppState.delegate.appState.currentAction = PageAction(
+        widget: SaveAssetView(),
+      );
+    } else {
+      _analyticsService.track(
+          eventName: 'Asset Banner Tapped', properties: {'asset': 'Flo'});
+      AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
-        page: AugmontGoldSellPageConfig,
-        widget: AugmontGoldSellView());
+        page: LendboxDetailsPageConfig,
+        widget: LendboxDetailsView(),
+      );
+    }
   }
 
   navigateToCompleteKYC() {
     Haptic.vibrate();
+    _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
+
     AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: KycDetailsPageConfig,
-        widget: KYCDetailsView());
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
   }
 
   navigateToVerifyVPA() {
     Haptic.vibrate();
+
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: EditAugBankDetailsPageConfig,
@@ -292,6 +310,7 @@ class SaveViewModel extends BaseModel {
 
   navigateToViewAllBlogs() {
     Haptic.vibrate();
+    _analyticsService.track(eventName: AnalyticsEvents.allblogsview);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,

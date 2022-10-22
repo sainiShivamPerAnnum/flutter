@@ -1,12 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -24,19 +27,41 @@ class FAQPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: UiConstants.kBackgroundColor,
       appBar: FAppBar(
-        title: 'FAQs',
-        showAvatar: false,
-        showCoinBar: false,
-        showHelpButton: false,
-      ),
+          title: 'FAQs',
+          showAvatar: false,
+          showCoinBar: false,
+          showHelpButton: false,
+          action: Container(
+            height: SizeConfig.avatarRadius * 2,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(
+                  color: Colors.white,
+                ),
+                color: UiConstants.kBackgroundColor),
+            child: TextButton(
+              child: Text(
+                "Need more help?",
+                style: TextStyles.sourceSans.body3,
+              ),
+              onPressed: () {
+                Haptic.vibrate();
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: FreshDeskHelpPageConfig,
+                );
+              },
+            ),
+          )),
       body: BaseView<FaqPageViewModel>(
         onModelReady: (model) => model.init(type),
         builder: (ctx, model, child) {
           return model.state == ViewState.Busy
               ? Center(
-                  child: FullScreenLoader(),
+                  child: FullScreenLoader(bottomPadding: true),
                 )
               : Padding(
                   padding: EdgeInsets.only(top: SizeConfig.padding8),
@@ -46,9 +71,18 @@ class FAQPage extends StatelessWidget {
                       bottom: SizeConfig.padding12,
                     ),
                     itemBuilder: (context, index) => ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
                       title: Text(
                         model.list[index].title,
                         style: TextStyles.sourceSans.body3,
+                      ),
+                      trailing: Container(
+                        margin: EdgeInsets.only(left: SizeConfig.padding44),
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: UiConstants.kFAQArrowColor,
+                        ),
                       ),
                       minVerticalPadding: SizeConfig.padding8,
                       style: ListTileStyle.list,
@@ -57,8 +91,8 @@ class FAQPage extends StatelessWidget {
                       },
                     ),
                     separatorBuilder: (context, index) => Divider(
-                      color: UiConstants.kBackgroundColor,
-                      thickness: 2,
+                      color: UiConstants.kLastUpdatedTextColor,
+                      thickness: 1,
                       endIndent: SizeConfig.padding20,
                       indent: SizeConfig.padding20,
                       height: SizeConfig.padding28,

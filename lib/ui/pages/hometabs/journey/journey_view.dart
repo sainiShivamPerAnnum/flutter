@@ -15,23 +15,25 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/foc
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jTooltip.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 final avatarKey = GlobalKey();
 
@@ -60,63 +62,11 @@ class _JourneyViewState extends State<JourneyView>
 
         return Scaffold(
           backgroundColor: Colors.black,
-          // floatingActionButton: Container(
-          //   margin: EdgeInsets.only(bottom: 60),
-          //   child: (PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != null &&
-          //           PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL) != 1)
-          //       ? FloatingActionButton(
-          //           child: const Icon(
-          //             Icons.replay,
-          //             color: Colors.white,
-          //           ),
-          //           backgroundColor: Colors.black,
-          //           onPressed: () {
-          //             PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, 1);
-          //           },
-          //         )
-          //       : SizedBox(),
-          // ),
-          // floatingActionButton: Container(
-          //   margin: EdgeInsets.only(bottom: 80, left: 50),
-          //   child: FloatingActionButton(
-          //       child: Icon(Icons.stop),
-          //       onPressed: //model.controller.stop
-          //           () {
-          //         _animationController.reset();
-          //         _animationController.forward().then((value) {
-          //           showButton = true;
-          //         });
-          //       }),
-          // ),
+          floatingActionButton: HelpFab(
+            topic: 'onboarding',
+          ),
           body: model.isLoading && model.pages == null
-              ? Container(
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenHeight,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF097178).withOpacity(0.2),
-                        Color(0xFF0C867C),
-                        Color(0xff0B867C),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(Assets.fullScreenLoaderLottie,
-                          height: SizeConfig.screenWidth / 2),
-                      SizedBox(height: 20),
-                      Text(
-                        'Loading',
-                        style: TextStyles.rajdhaniEB.title2,
-                      )
-                    ],
-                  ),
-                )
+              ? JourneyErrorScreen()
               : Stack(
                   children: [
                     SizedBox(
@@ -129,18 +79,6 @@ class _JourneyViewState extends State<JourneyView>
                         child: Container(
                           height: model.currentFullViewHeight,
                           width: SizeConfig.screenWidth,
-                          // color: Colors.black,
-                          // decoration: BoxDecoration(
-                          // gradient: LinearGradient(
-                          //   colors: [
-                          //     Color(0xffB9D1FE),
-                          //     Color(0xffD6E0FF),
-                          //     Color(0xffF1EFFF)
-                          //   ],
-                          //   begin: Alignment.topCenter,
-                          //   end: Alignment.bottomCenter,
-                          // ),
-                          // ),
                           child: Stack(
                             children: [
                               Background(model: model),
@@ -152,24 +90,98 @@ class _JourneyViewState extends State<JourneyView>
                               Milestones(model: model),
                               FocusRing(),
                               Avatar(model: model),
-                              LevelBlurView()
+                              LevelBlurView(),
+                              MilestoneTooltip(model: model),
                             ],
                           ),
                         ),
                       ),
                     ),
-
                     JourneyAppBar(),
-                    // JourneyBannersView(),
+                    JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
-                    // NewUserNavBar(model: model),
-
-                    JPageLoader(model: model)
+                    JPageLoader(model: model),
+                    LevelUpAnimation(),
                   ],
                 ),
         );
       },
     );
+  }
+}
+
+class JourneyErrorScreen extends StatelessWidget {
+  const JourneyErrorScreen({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenHeight,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF097178).withOpacity(0.2),
+            Color(0xFF0C867C),
+            Color(0xff0B867C),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset(Assets.fullScreenLoaderLottie,
+              height: SizeConfig.screenWidth / 2),
+          SizedBox(height: 20),
+          Text(
+            'Journey failed to load',
+            style: TextStyles.rajdhaniEB.title2,
+          ),
+          SizedBox(height: 20),
+          AppNegativeBtn(
+              btnText: 'Retry',
+              onPressed: () {
+                AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.replaceAll,
+                  page: SplashPageConfig,
+                );
+              })
+        ],
+      ),
+    );
+  }
+}
+
+class LevelUpAnimation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
+        properties: [JourneyServiceProperties.LevelCompletion],
+        builder: (context, jModel, properties) {
+          return jModel.showLevelUpAnimation
+              ? Align(
+                  alignment: Alignment.center,
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: Lottie.asset(
+                      Assets.levelUpLottie,
+                      width: SizeConfig.screenWidth,
+                      fit: BoxFit.fitWidth,
+                      controller: jModel.levelUpLottieController,
+                      onLoaded: (composition) {
+                        jModel.levelUpLottieController
+                          ..duration = composition.duration;
+                      },
+                    ),
+                  ),
+                )
+              : SizedBox();
+        });
   }
 }
 
@@ -207,86 +219,6 @@ class JRefreshIndicator extends StatelessWidget {
           color: UiConstants.tertiarySolid,
         ),
       ),
-    );
-  }
-}
-
-class NewUserNavBar extends StatelessWidget {
-  final JourneyPageViewModel model;
-
-  const NewUserNavBar({Key key, @required this.model}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
-      builder: (context, m, properties) {
-        return
-            //  m.avatarRemoteMlIndex > 2
-            //     ? SizedBox()
-            //     :
-            Positioned(
-          bottom: 0,
-          child: SafeArea(
-            child: GestureDetector(
-                onTap: () {
-                  model.showMilestoneDetailsModalSheet(
-                      model.currentMilestoneList.firstWhere((milestone) =>
-                          milestone.index == m.avatarRemoteMlIndex),
-                      context);
-                },
-                child: Container(
-                  width: SizeConfig.screenWidth -
-                      SizeConfig.pageHorizontalMargins * 2,
-                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  decoration: BoxDecoration(
-                    color: UiConstants.gameCardColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding4,
-                        vertical: SizeConfig.pageHorizontalMargins),
-                    leading: GestureDetector(
-                      onDoubleTap: () {
-                        AppState.delegate.appState.currentAction = PageAction(
-                          page: UserProfileDetailsConfig,
-                          state: PageState.addWidget,
-                          widget: UserProfileDetails(isNewUser: true),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: SizeConfig.avatarRadius * 2,
-                        child: SvgPicture.asset(Assets.aFelloToken,
-                            height: SizeConfig.padding32),
-                      ),
-                    ),
-                    title: FittedBox(
-                      child: Text(
-                        "Welcome to Fello",
-                        style: TextStyles.rajdhaniB.title3.colour(Colors.white),
-                      ),
-                    ),
-                    subtitle: Text(
-                      "Lets get started with the journey",
-                      style: TextStyles.sourceSans.body3.colour(Colors.white60),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.navigate_next_rounded,
-                          color: Colors.white),
-                      onPressed: () {
-                        model.showMilestoneDetailsModalSheet(
-                            model.currentMilestoneList.firstWhere((milestone) =>
-                                milestone.index == m.avatarRemoteMlIndex),
-                            context);
-                      },
-                    ),
-                  ),
-                )),
-          ),
-        );
-      },
     );
   }
 }
@@ -357,14 +289,18 @@ class LevelBlurView extends StatelessWidget {
                           child: Container(
                             color: Colors.transparent,
                             height:
-                                jModel.pageHeight * (1 - levelData.breakpoint),
+                                jModel.pageHeight * (1 - levelData.breakpoint) +
+                                    jModel.pageHeight *
+                                        (jModel.pageCount - levelData.pageEnd),
                             width: jModel.pageWidth,
                             alignment: Alignment.bottomCenter,
                           ),
                         ),
                       ),
                       Positioned(
-                        top: jModel.pageHeight * (1 - levelData.breakpoint) -
+                        top: jModel.pageHeight * (1 - levelData.breakpoint) +
+                            jModel.pageHeight *
+                                (jModel.pageCount - levelData.pageEnd) -
                             SizeConfig.avatarRadius,
                         child: Container(
                           width: jModel.pageWidth,
@@ -375,12 +311,25 @@ class LevelBlurView extends StatelessWidget {
                                   painter: DottedLinePainter(),
                                 ),
                               ),
-                              CircleAvatar(
-                                radius: SizeConfig.avatarRadius,
-                                backgroundColor: Colors.white,
-                                child: Icon(Icons.lock,
-                                    size: SizeConfig.iconSize0,
-                                    color: Colors.black),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness24),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding6,
+                                    horizontal: SizeConfig.padding10),
+                                child: Row(
+                                  children: [
+                                    Text("Level ${levelData.level + 1} ",
+                                        style: TextStyles.rajdhaniB.body1
+                                            .colour(Colors.black)),
+                                    Icon(Icons.lock,
+                                        size: SizeConfig.iconSize1,
+                                        color: Colors.black),
+                                  ],
+                                ),
                               ),
                               Expanded(
                                 child: CustomPaint(

@@ -11,9 +11,10 @@ class UiConstants {
   static final Color felloBlue = const Color(0xff26A6F4);
   static final Color autosaveColor = const Color(0xff6b7AA1);
   static final Color gameCardColor = const Color(0xff39393C);
-
+  static final Color playButtonColor = const Color(0xff5A5A5D);
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color(0XFF02484D);
+  static final Color primarySemiLight = Color(0xff4B9A8E);
   static final Color darkPrimaryColor2 = const Color(0XFF1B262C);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
@@ -56,6 +57,7 @@ class UiConstants {
   static const Color kBackgroundColor = const Color(0xFF232326);
   static const Color kBackgroundColor2 = const Color(0xFF151D22);
   static final Color kBackgroundColor3 = Color(0xff131315);
+  static final Color kFAQArrowColor = Color(0xffA2A2A2);
 
   static const Color kSecondaryBackgroundColor = const Color(0xFF39393C);
   static const Color kModalSheetBackgroundColor = const Color(0xFF1B262C);
@@ -93,6 +95,8 @@ class UiConstants {
   static const Color kSaveStableFelloCardBg = const Color(0xFF01656B);
   static const Color kBlogTitleColor = const Color(0xFF93B5FE);
   static const Color kcashBackAmountTextColor = const Color(0xFFFFE9B1);
+  static const Color kTicketPeachColor = const Color(0xFFFFCCBF);
+  static const Color kSelectedDotColor = const Color(0xFFCEF8F5);
 
   static const Color kFAQsAnswerColor = const Color(0xFFA9C6D6);
 
@@ -152,12 +156,33 @@ class UiConstants {
     tileMode: TileMode.clamp,
   );
 
+  static LinearGradient infoComponentGradient = LinearGradient(
+    colors: [kBackgroundColor, gameCardColor],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [0.2, 1.6],
+    tileMode: TileMode.clamp,
+  );
+
   static Color kAnimationBackGroundColor = Color(0xFF1B262C);
   static Color kAnimationRingColor = Color(0xFF0C5A59);
+  static Color kTambolaMidTextColor = Color(0xff323232);
 
   static Color kBlogCardRandomColor1 = Color(0xFFF79780);
   static Color kBlogCardRandomColor2 = Color(0xFF62E3C4);
   static Color kBlogCardRandomColor3 = Color(0xFF495DB2);
   static Color kBlogCardRandomColor4 = Color(0xFFFFD979);
   static Color kBlogCardRandomColor5 = Color(0xFFA5E4FF);
+}
+
+extension ColorExtension on String {
+  Color toColor() {
+    var hexColor = this.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+  }
 }

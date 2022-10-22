@@ -5,10 +5,12 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -18,7 +20,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class GoldenTicketsView extends StatelessWidget {
   final bool openFirst;
-  GoldenTicketsView({this.openFirst = false});
+  GoldenTicketsView({
+    this.openFirst = false,
+  });
   @override
   Widget build(BuildContext context) {
     return BaseView<GoldenTicketsViewModel>(
@@ -39,15 +43,13 @@ class GoldenTicketsView extends StatelessWidget {
                 AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
               if (snapshot.hasError)
                 return new NoRecordDisplayWidget(
-                  asset: "Assets.badticket.png",
+                  assetSvg: Assets.noTransactionAsset,
                   text: "Unable to load your tickets at the moment",
                 );
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return Center(
-                    child: SpinKitWave(
-                        color: UiConstants.primaryColor,
-                        size: SizeConfig.padding32),
+                    child: FullScreenLoader(),
                   );
                 default:
                   log("Items: " + snapshot.data.length.toString());
@@ -60,7 +62,7 @@ class GoldenTicketsView extends StatelessWidget {
                           shrinkWrap: true,
                           children: [
                             NoRecordDisplayWidget(
-                              assetLottie: Assets.noData,
+                              assetSvg: Assets.noTickets,
                               text: "No Golden Tickets won",
                             )
                           ],

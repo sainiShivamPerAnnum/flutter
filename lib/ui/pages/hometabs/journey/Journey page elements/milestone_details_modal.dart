@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
@@ -18,8 +20,10 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 
 enum JOURNEY_MILESTONE_STATUS { COMPLETED, INCOMPLETE, ACTIVE }
 
@@ -39,6 +43,8 @@ class _JourneyMilestoneDetailsModalSheetState
   final double scaleFactor = 2.5;
   final double pageHeight = SizeConfig.screenWidth * 2.165;
   final GoldenTicketRepository _gtService = locator<GoldenTicketRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final _analyticsService = locator<AnalyticsService>();
   bool _isLoading = false;
   GoldenTicket ticket;
 
@@ -57,7 +63,27 @@ class _JourneyMilestoneDetailsModalSheetState
     final res =
         await _gtService.getGTByPrizeSubtype(widget.milestone.prizeSubType);
     if (res.isSuccess()) ticket = res.model;
+    // else
+    // BaseUtil.showNegativeAlert(res.errorMessage, "");
     isLoading = false;
+  }
+
+  String getTicketType(mlIndex) {
+    for (int i = 0; i < _journeyService.levels.length; i++) {
+      if (_journeyService.levels[i].end == mlIndex) {
+        return "Green";
+      }
+    }
+    return "Golden";
+  }
+
+  Color getTicketColor(mlIndex) {
+    for (int i = 0; i < _journeyService.levels.length; i++) {
+      if (_journeyService.levels[i].end == mlIndex) {
+        return UiConstants.primaryColor;
+      }
+    }
+    return UiConstants.tertiarySolid;
   }
 
   @override
@@ -134,19 +160,34 @@ class _JourneyMilestoneDetailsModalSheetState
                 "Milestone ${widget.milestone.index}",
                 style: TextStyles.sourceSansL.body3,
               ),
-              SizedBox(height: SizeConfig.padding4),
+              SizedBox(height: SizeConfig.padding12),
               Text(
                 widget.milestone.steps.first.title,
                 style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
               ),
-              SizedBox(height: SizeConfig.padding12),
-              Text(
-                widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
-                    ? "Wohoo, you completed this milestone"
-                    : widget.milestone.steps.first.subtitle,
-                style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
-              ),
-              SizedBox(height: SizeConfig.padding24),
+              SizedBox(height: SizeConfig.padding4),
+              widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
+                  ? Text(
+                      "You have completed this milestone",
+                      style:
+                          TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.milestone.steps.first.subtitle,
+                          style:
+                              TextStyles.body3.colour(UiConstants.kTextColor3),
+                        ),
+                        SizedBox(height: SizeConfig.padding24),
+                        Text(
+                          "Win a ${getTicketType(widget.milestone.index)} ticket",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.primaryColor),
+                        )
+                      ],
+                    ),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 isLoading
                     ? CircularProgressIndicator(strokeWidth: 1)
@@ -157,7 +198,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                     ticket.redeemedTimestamp ==
                                         TimestampModel(
                                             seconds: 0, nanoseconds: 0)))
-                            ? goldenTicketWidget()
+                            ? goldenTicketWidget(ticket.isLevelChange)
                             : rewardWidget(ticket.rewardArr),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
@@ -181,6 +222,15 @@ class _JourneyMilestoneDetailsModalSheetState
                                       widget.milestone.actionUri.isNotEmpty)
                                     AppState.delegate.parseRoute(
                                         Uri.parse(widget.milestone.actionUri));
+                                  try {
+                                    _analyticsService.track(
+                                        eventName: 'Journey Milestone Start',
+                                        properties: {
+                                          'uid': FirebaseAuth
+                                              .instance.currentUser.uid,
+                                          'milestone': widget.milestone.index
+                                        });
+                                  } catch (e) {}
                                 },
                                 width: SizeConfig.screenWidth),
                             if (widget.milestone.skipCost != null &&
@@ -195,19 +245,13 @@ class _JourneyMilestoneDetailsModalSheetState
                                         .colour(Colors.white),
                                   ),
                                   onPressed: () {
-                                    AppState.screenStack
-                                        .add(ScreenItem.modalsheet);
-                                    log("Current Screen Stack: ${AppState.screenStack}");
-                                    return showModalBottomSheet(
+                                    BaseUtil.openModalBottomSheet(
+                                      addToScreenStack: true,
                                       backgroundColor: Colors.transparent,
-                                      isDismissible: true,
+                                      isBarrierDismissable: true,
                                       enableDrag: false,
-                                      useRootNavigator: true,
-                                      context: context,
-                                      builder: (ctx) {
-                                        return SkipMilestoneModalSheet(
-                                            milestone: widget.milestone);
-                                      },
+                                      content: SkipMilestoneModalSheet(
+                                          milestone: widget.milestone),
                                     );
                                   },
                                 ),
@@ -224,7 +268,7 @@ class _JourneyMilestoneDetailsModalSheetState
     );
   }
 
-  Widget goldenTicketWidget() {
+  Widget goldenTicketWidget(bool isLevelChange) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding12),
       child: Row(
@@ -235,7 +279,9 @@ class _JourneyMilestoneDetailsModalSheetState
               AppState.delegate.parseRoute(Uri.parse("/myWinnings"));
             },
             child: SvgPicture.asset(
-              Assets.unredemmedGoldenTicketBG,
+              isLevelChange
+                  ? Assets.levelUpUnRedeemedGoldenTicketBG
+                  : Assets.unredemmedGoldenTicketBG,
               height: SizeConfig.padding40,
               width: SizeConfig.padding40,
             ),
@@ -301,7 +347,7 @@ class _JourneyMilestoneDetailsModalSheetState
   getLeadingAsset(String type) {
     switch (type) {
       case 'flc':
-        return Assets.aFelloToken;
+        return Assets.token;
       case 'amt':
         return Assets.moneyIcon;
       case 'rupee':

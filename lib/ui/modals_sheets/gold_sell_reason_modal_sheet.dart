@@ -1,0 +1,85 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:flutter/material.dart';
+
+class SellingReasonBottomSheet extends StatelessWidget {
+  final InvestmentType investmentType;
+
+  final List<String> _sellingReasons = [
+    'Not interested in the asset',
+    'Returns are not good enough',
+    'Require immediate funds',
+    'Others'
+  ];
+
+  String selectedReasonForSelling = '';
+  final _analyticsService = locator<AnalyticsService>();
+
+  SellingReasonBottomSheet({Key key, @required this.investmentType})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.screenStack.removeLast();
+        return Future.value(true);
+      },
+      child: Padding(
+        padding: EdgeInsets.all(SizeConfig.padding10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: SizeConfig.padding40,
+            ),
+            Text(
+              'What makes you want to sell?',
+              style: TextStyles.rajdhaniSB.body1,
+            ),
+            SizedBox(
+              height: SizeConfig.padding10,
+            ),
+            ListView(
+              shrinkWrap: true,
+              children: _sellingReasons
+                  .map(
+                    (x) => RadioListTile(
+                      toggleable: true,
+                      selected: true,
+                      value: x,
+                      groupValue: selectedReasonForSelling,
+                      onChanged: (value) {
+                        selectedReasonForSelling = x;
+                        _analyticsService.track(
+                            eventName:
+                                investmentType == InvestmentType.AUGGOLD99
+                                    ? AnalyticsEvents.sellGoldReason
+                                    : AnalyticsEvents.selllendboxReason,
+                            properties: {'reason': selectedReasonForSelling});
+                        AppState.backButtonDispatcher.didPopRoute();
+                        BaseUtil()
+                            .openSellModalSheet(investmentType: investmentType);
+                      },
+                      title: Text(
+                        x,
+                        style: TextStyles.rajdhani.body2,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

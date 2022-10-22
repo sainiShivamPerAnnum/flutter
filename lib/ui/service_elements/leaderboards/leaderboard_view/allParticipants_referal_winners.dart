@@ -12,12 +12,16 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
       {@required this.isForTopReferers,
       this.winners,
       this.referralLeaderBoard,
+      this.showPoints = false,
+      this.appBarTitle,
       Key key})
       : super(key: key);
 
   final bool isForTopReferers;
   final List<Winners> winners;
   final List<ScoreBoard> referralLeaderBoard;
+  final bool showPoints;
+  final String appBarTitle;
 
   getGameName(String gamename) {
     switch (gamename) {
@@ -34,6 +38,13 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
     }
   }
 
+  dynamic getPoints(double points) {
+    if (points > points.toInt())
+      return points;
+    else
+      return points.toInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,10 +52,10 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
         title: Text(
-          isForTopReferers ? 'Top Referers' : 'Top Winners',
+          appBarTitle ?? (isForTopReferers ? 'Top Referers' : 'Top Winners'),
           maxLines: 1,
           overflow: TextOverflow.clip,
-          style: TextStyles.title4.bold.colour(Colors.white),
+          style: TextStyles.rajdhaniSB.title4,
         ),
       ),
       body: Stack(
@@ -96,10 +107,15 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          referralLeaderBoard[i]
-                                                  .refCount
-                                                  .toString() ??
-                                              "00",
+                                          showPoints
+                                              ? getPoints(referralLeaderBoard[i]
+                                                          .score)
+                                                      .toString() ??
+                                                  "00"
+                                              : referralLeaderBoard[i]
+                                                      .refCount
+                                                      .toString() ??
+                                                  "00",
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
                                         )

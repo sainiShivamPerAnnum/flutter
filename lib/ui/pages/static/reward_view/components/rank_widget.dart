@@ -1,3 +1,4 @@
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -31,7 +32,7 @@ class RankWidget extends StatelessWidget {
           children: [
             _buildRankPiller(
               rank: 3,
-              image: 'rank_third.svg',
+              image: Assets.prizeRankThird,
               priceMoney: thirdPriceMoney,
               pricePoint: thirdPricePoint,
               color: UiConstants.kThirdRankPillerColor,
@@ -39,7 +40,7 @@ class RankWidget extends StatelessWidget {
             ),
             _buildRankPiller(
               rank: 1,
-              image: 'rank_first.svg',
+              image: Assets.prizeRankOne,
               priceMoney: firstPriceMoney,
               pricePoint: firstPricePoint,
               color: UiConstants.kFirstRankPillerColor,
@@ -47,7 +48,7 @@ class RankWidget extends StatelessWidget {
             ),
             _buildRankPiller(
               rank: 2,
-              image: 'rank_second.svg',
+              image: Assets.prizeRankTwo,
               priceMoney: secondPriceMoney,
               pricePoint: secondPricePoint,
               color: UiConstants.kSecondRankPillerColor,
@@ -120,7 +121,7 @@ class RankWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/temp/Tokens.svg',
+                        Assets.token,
                         width: SizeConfig.body2,
                         height: SizeConfig.body2,
                       ),
@@ -146,7 +147,7 @@ class RankWidget extends StatelessWidget {
                 ? SizeConfig.screenWidth * 0.045
                 : SizeConfig.screenWidth * 0.0694,
             child: SvgPicture.asset(
-              'assets/temp/$image',
+              image,
               width: rank == 1 ? SizeConfig.iconSize7 : SizeConfig.iconSize6,
             ),
           ),

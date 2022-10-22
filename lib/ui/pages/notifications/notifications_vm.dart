@@ -12,7 +12,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
-class NotificationsViewModel extends BaseModel {
+class NotificationsViewModel extends BaseViewModel {
   //dependencies
   final _userService = locator<UserService>();
   final _userRepo = locator<UserRepository>();

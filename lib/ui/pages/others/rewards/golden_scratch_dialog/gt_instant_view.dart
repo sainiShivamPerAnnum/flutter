@@ -3,13 +3,10 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -17,10 +14,9 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:shimmer/shimmer.dart';
 
 enum GTSOURCE {
   newuser,
@@ -83,14 +79,14 @@ class _GTInstantViewState extends State<GTInstantView>
         model.lottieAnimationController = AnimationController(vsync: this);
         model.init();
 
-        if (widget.source == GTSOURCE.deposit)
-          model.initDepositSuccessAnimation(widget.amount);
-        else
-          model.initNormalFlow();
+        // if (widget.source == GTSOURCE.deposit)
+        //   model.initDepositSuccessAnimation(widget.amount);
+        // else
+        model.initNormalFlow();
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          backgroundColor: Colors.black.withOpacity(0.9),
+          backgroundColor: Colors.black.withOpacity(0.7),
           body: Container(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,
@@ -104,78 +100,6 @@ class _GTInstantViewState extends State<GTInstantView>
                       Assets.gtBackground,
                       height: SizeConfig.screenHeight,
                       fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                if (model.showMainContent)
-                  Align(
-                    alignment: Alignment.center,
-                    child: Lottie.asset(Assets.glitter, repeat: false),
-                  ),
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
-                  opacity: model.isInvestmentAnimationInProgress ? 1 : 0,
-                  curve: Curves.decelerate,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset(Assets.txnFinish,
-                            repeat: false,
-                            height: SizeConfig.screenWidth * 0.8),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              widget.title ?? "Hurray!",
-                              style:
-                                  TextStyles.title3.bold.colour(Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        //SizedBox(height: SizeConfig.screenWidth / 4)
-                      ],
-                    ),
-                  ),
-                ),
-                AnimatedOpacity(
-                  opacity: model.isCoinAnimationInProgress ? 1 : 0,
-                  duration: Duration(milliseconds: 100),
-                  curve: Curves.decelerate,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(height: SizeConfig.padding32),
-                        Lottie.asset(Assets.coinStack,
-                            controller: model.lottieAnimationController,
-                            onLoaded: (composition) {
-                          model.lottieAnimationController
-                            ..duration = composition.duration;
-                        },
-                            height: SizeConfig.screenWidth,
-                            width: SizeConfig.screenWidth * 0.6),
-                        SizedBox(height: SizeConfig.padding64),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          child: Text(
-                            "${widget.amount.toInt()} Fello Tokens have been credited to your wallet!",
-                            style: TextStyles.title3.bold.colour(Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.screenWidth / 4)
-                      ],
                     ),
                   ),
                 ),
@@ -243,7 +167,6 @@ class _GTInstantViewState extends State<GTInstantView>
                                         onThreshold: () {
                                           if (model.goldenTicket.isRewarding) {
                                             model.isShimmerEnabled = true;
-                                            model.confettiController.play();
 
                                             Future.delayed(
                                                 Duration(
@@ -259,31 +182,27 @@ class _GTInstantViewState extends State<GTInstantView>
                                           model.redeemTicket();
                                         },
                                         image: Image.asset(
-                                          Assets.unredemmedGoldenTicketBG_png,
+                                          model.goldenTicket.isLevelChange
+                                              ? Assets
+                                                  .levelUpUnredemmedGoldenTicketBGPNG
+                                              : Assets
+                                                  .unredemmedGoldenTicketBG_png,
                                           fit: BoxFit.contain,
                                           height: SizeConfig.screenWidth * 0.6,
                                           width: SizeConfig.screenWidth * 0.6,
                                         ),
-                                        child: Shimmer(
-                                          color: UiConstants.tertiarySolid,
-                                          enabled:
-                                              false, //model.isShimmerEnabled,
-                                          child: model.state == ViewState.Busy
-                                              ? Container(
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.6,
-                                                  height:
-                                                      SizeConfig.screenWidth *
-                                                          0.5,
-                                                )
-                                              : RedeemedGoldenScratchCard(
-                                                  ticket: model.goldenTicket,
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.6,
-                                                ),
-                                        ),
+                                        child: model.state == ViewState.Busy
+                                            ? Container(
+                                                width: SizeConfig.screenWidth *
+                                                    0.6,
+                                                height: SizeConfig.screenWidth *
+                                                    0.5,
+                                              )
+                                            : RedeemedGoldenScratchCard(
+                                                ticket: model.goldenTicket,
+                                                width: SizeConfig.screenWidth *
+                                                    0.6,
+                                              ),
                                       ),
                                     ),
                                   ),
@@ -326,24 +245,24 @@ class _GTInstantViewState extends State<GTInstantView>
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeInCirc,
-                                    opacity: model.buttonOpacity,
-                                    child: AppPositiveBtn(
-                                      width: SizeConfig.screenWidth / 2,
-                                      btnText:
-                                          getButtonText(model, widget.source) ??
-                                              "Continue",
-                                      onPressed: getButtonAction(
-                                              model, widget.source) ??
-                                          () {
-                                            if (!model.isCardScratched) return;
-                                            AppState.backButtonDispatcher
-                                                .didPopRoute();
-                                          },
-                                    ),
-                                  ),
+                                  // AnimatedOpacity(
+                                  //   duration: Duration(milliseconds: 300),
+                                  //   curve: Curves.easeInCirc,
+                                  //   opacity: model.buttonOpacity,
+                                  //   child: AppPositiveBtn(
+                                  //     width: SizeConfig.screenWidth / 2,
+                                  //     btnText:
+                                  //         getButtonText(model, widget.source) ??
+                                  //             "Continue",
+                                  //     onPressed: getButtonAction(
+                                  //             model, widget.source) ??
+                                  //         () {
+                                  //           if (!model.isCardScratched) return;
+                                  //           AppState.backButtonDispatcher
+                                  //               .didPopRoute();
+                                  //         },
+                                  //   ),
+                                  // ),
                                   SizedBox(height: 12),
                                   TextButton(
                                     onPressed: () {
@@ -375,29 +294,34 @@ class _GTInstantViewState extends State<GTInstantView>
                   ],
                 ),
                 if (model.isCardScratched && model.isShimmerEnabled)
-                  Positioned(
-                    top: SizeConfig.screenHeight * 0.3,
-                    left: SizeConfig.screenWidth / 2 -
-                        SizeConfig.screenWidth * 0.4,
-                    child: Lottie.asset(Assets.gtConfetti,
-                        height: SizeConfig.screenWidth * 0.8,
-                        width: SizeConfig.screenWidth * 0.8),
+                  Align(
+                    alignment: Alignment.center,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Lottie.asset(
+                        Assets.gtConfetti,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        height: SizeConfig.screenHeight,
+                        width: SizeConfig.screenWidth,
+                      ),
+                    ),
                   ),
-                // if (model.showScratchGuide && !model.isCardScratchStarted)
-                //   Align(
-                //     alignment: Alignment.center,
-                //     child: Container(
-                //       color: Color(0xffffc875),
-                //       width: SizeConfig.screenWidth * 0.62,
-                //       height: SizeConfig.padding40,
-                //       padding: EdgeInsets.all(10),
-                //       alignment: Alignment.center,
-                //       child: BreathingText(
-                //         alertText: "Scratch Here",
-                //         textStyle: TextStyles.body2.colour(Colors.black).bold,
-                //       ),
-                //     ),
-                //   ),
+                if (model.showScratchGuide && !model.isCardScratchStarted)
+                  Align(
+                    alignment: Alignment.center,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            bottom: SizeConfig.screenHeight * 0.14),
+                        child: Lottie.asset(Assets.gtScratch,
+                            fit: BoxFit.contain,
+                            height: SizeConfig.screenWidth,
+                            width: SizeConfig.screenWidth),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -428,19 +352,9 @@ class _GTInstantViewState extends State<GTInstantView>
     onPressed = () {
       if (!model.isCardScratched) return;
       AppState.backButtonDispatcher.didPopRoute();
+      // if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup)
+      //   model.showAutosavePrompt();
     };
-    // } else {
-    //   onPressed = () {
-    //     if (!model.isCardScratched) return;
-    //     while (AppState.screenStack.length > 1) {
-    //       AppState.backButtonDispatcher.didPopRoute();
-    //     }
-    //     if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup) {
-    //       AppState.delegate.appState.setCurrentTabIndex = 0;
-    //       model.showAutosavePrompt();
-    //     } else
-    //       AppState.delegate.appState.setCurrentTabIndex = 1;
-    //   };
     // }
     return onPressed;
   }

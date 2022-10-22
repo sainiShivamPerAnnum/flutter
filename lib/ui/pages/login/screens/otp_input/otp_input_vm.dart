@@ -4,7 +4,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-class LoginOtpViewModel extends BaseModel with CodeAutoFill {
+class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   final pinEditingController = new TextEditingController();
   Log log = new Log("OtpInputScreen");
   String _loaderMessage = "Enter the received OTP..";
@@ -26,6 +26,11 @@ class LoginOtpViewModel extends BaseModel with CodeAutoFill {
 
   set showResendOption(bool val) {
     _showResendOption = val;
+    notifyListeners();
+  }
+
+  set otpFieldEnabled(bool val) {
+    this._otpFieldEnabled = val;
     notifyListeners();
   }
 

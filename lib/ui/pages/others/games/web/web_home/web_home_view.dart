@@ -1,18 +1,27 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
+import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,7 +30,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key key, @required this.game}) : super(key: key);
@@ -42,6 +50,8 @@ class WebHomeView extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return RefreshIndicator(
+          color: UiConstants.primaryColor,
+          backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
             body: Stack(
@@ -51,42 +61,40 @@ class WebHomeView extends StatelessWidget {
                   controller: _controller,
                   physics: BouncingScrollPhysics(),
                   slivers: [
-                    SliverLayoutBuilder(builder: (context, constraints) {
-                      final scrolled = constraints.scrollOffset > 0;
-                      return SliverAppBar(
-                        title: scrolled
-                            ? Text(
-                                model.currentGameModel.gameName,
-                                style: TextStyles.rajdhaniB.title5
-                                    .colour(Colors.white),
-                              )
-                            : SizedBox.shrink(),
-                        pinned: true,
-                        centerTitle: false,
-                        backgroundColor:
-                            UiConstants.kSliverAppBarBackgroundColor,
-                        leading: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  AppState.backButtonDispatcher.didPopRoute();
-                                },
-                                icon: Icon(Icons.arrow_back_ios)),
-                          ],
-                        ),
-                        actions: [
-                          Padding(
-                            padding:
-                                EdgeInsets.only(right: SizeConfig.padding4),
-                            child: Row(
-                              children: [
-                                FelloCoinBar(svgAsset: Assets.aFelloToken),
-                              ],
+                    SliverLayoutBuilder(
+                      builder: (context, constraints) {
+                        final scrolled = constraints.scrollOffset > 0;
+                        print(constraints.scrollOffset);
+                        return SliverAppBar(
+                          title: AnimatedOpacity(
+                            duration: Duration(milliseconds: 100),
+                            curve: Curves.easeIn,
+                            opacity: constraints.scrollOffset >
+                                    (SizeConfig.screenWidth * 0.35)
+                                ? 1
+                                : 0, //constraints.scrollOffset.clamp(0, 1),
+                            child: Text(
+                              model.currentGameModel.gameName,
+                              style: TextStyles.rajdhaniB.title5
+                                  .colour(Colors.white),
                             ),
                           ),
-                        ],
-                        expandedHeight: SizeConfig.screenWidth * 0.456,
-                        flexibleSpace: FlexibleSpaceBar(
+                          pinned: true,
+                          centerTitle: false,
+                          backgroundColor: model.currentGameModel.shadowColor,
+                          actions: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding4),
+                              child: Row(
+                                children: [
+                                  FelloCoinBar(svgAsset: Assets.token),
+                                ],
+                              ),
+                            ),
+                          ],
+                          expandedHeight: SizeConfig.screenWidth * 0.45,
+                          flexibleSpace: FlexibleSpaceBar(
                             background: model.isLoading
                                 ? Shimmer.fromColors(
                                     baseColor:
@@ -97,21 +105,67 @@ class WebHomeView extends StatelessWidget {
                                       color: Colors.grey,
                                     ),
                                   )
-                                : Hero(
-                                    tag: model.currentGameModel.code,
-                                    child: SvgPicture.network(
-                                      model.currentGameModel.thumbnailUri,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
+                                : Container(
+                                    color: model.currentGameModel.shadowColor,
+                                    padding: EdgeInsets.only(
+                                        top: SizeConfig.viewInsets.top +
+                                            SizeConfig.padding12,
+                                        left: SizeConfig.pageHorizontalMargins *
+                                            2),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                  model
+                                                      .currentGameModel.gameName
+                                                      .split(' ')
+                                                      .first,
+                                                  style: TextStyles
+                                                      .rajdhaniB.title1),
+                                              Text(
+                                                  model
+                                                      .currentGameModel.gameName
+                                                      .split(' ')
+                                                      .last,
+                                                  style: TextStyles
+                                                      .rajdhaniSB.title3),
+                                              SizedBox(
+                                                  height: SizeConfig.padding16),
+                                            ]),
+                                        Spacer(),
+                                        SvgPicture.network(
+                                            model.currentGameModel.icon,
+                                            fit: BoxFit.cover,
+                                            height:
+                                                SizeConfig.screenWidth * 0.5,
+                                            width:
+                                                SizeConfig.screenWidth * 0.5),
+                                        SizedBox(
+                                          width:
+                                              SizeConfig.pageHorizontalMargins,
+                                        )
+                                      ],
                                     ),
-                                  )),
-                      );
-                    }),
+                                  ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                          ),
+                        );
+                      },
+                    ),
                     SliverList(
                       delegate: SliverChildListDelegate(
                         [
                           SizedBox(height: SizeConfig.padding40),
-
                           model.isLoading
                               ? Row(
                                   mainAxisAlignment:
@@ -174,7 +228,7 @@ class WebHomeView extends StatelessWidget {
                                           '${model.currentGameModel.playCost}',
                                       coinText: 'Per Game',
                                       assetHeight: SizeConfig.padding20,
-                                      assetUrl: Assets.aFelloToken,
+                                      assetUrl: Assets.token,
                                     ),
                                   ],
                                 ),
@@ -217,55 +271,38 @@ class WebHomeView extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding16),
                                   child: Text(
-                                    'Swing your wicket, throw fast pitches, and win upto ? Rs. 25,000 in one of our many free, online games!',
-                                    style: TextStyles.sourceSans.body2
+                                    model.currentGameModel.description,
+                                    style: TextStyles.sourceSans.body3
                                         .colour(Colors.grey.shade600),
-                                    maxLines: 2,
+                                    maxLines: 3,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
+                          if (model.currentCoinValue <
+                              model.currentGameModel.playCost)
+                            RechargeOptions(model: model),
                           SizedBox(
                             height: SizeConfig.padding32,
                           ),
-                          //   ],
-                          // ),
                           RewardLeaderboardView(game: game),
-                          SizedBox(height: SizeConfig.padding40),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16),
-                                child: Text(
-                                  'Recharge Options',
-                                  style: TextStyles.sourceSansSB.title5,
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.padding24,
-                                ),
-                                height: SizeConfig.screenWidth * 0.125,
-                                width: SizeConfig.screenWidth,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: model.rechargeOptions.length,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding12),
-                                  itemBuilder: (ctx, i) {
-                                    return RechargeBox(
-                                      rechargeOption: model.rechargeOptions[i],
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding80 * 2,
-                              ),
-                            ],
+                          if (model.currentCoinValue >=
+                              model.currentGameModel.playCost)
+                            RechargeOptions(model: model),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: SizeConfig.padding16,
+                                  top: SizeConfig.pageHorizontalMargins +
+                                      SizeConfig.pageHorizontalMargins),
+                              child: Text(
+                                "Past Week Winners",
+                                style: TextStyles.rajdhaniSB.title3,
+                              )),
+                          SizedBox(
+                            height: SizeConfig.pageHorizontalMargins,
+                          ),
+                          PastWeekWinners(count: 5, model: model),
+                          SizedBox(
+                            height: SizeConfig.padding80 * 2,
                           ),
                         ],
                       ),
@@ -280,11 +317,8 @@ class WebHomeView extends StatelessWidget {
                       btnText: 'Play',
                       onPressed: () async {
                         Haptic.vibrate();
-                        if (await model.setupGame()) {
-                          model.launchGame();
-                        } else {
-                          model.earnMoreTokens();
-                        }
+                        if (await model.setupGame()) model.launchGame();
+
                         // model.pageController.jumpToPage(1);
                       },
                     ),
@@ -302,8 +336,51 @@ class WebHomeView extends StatelessWidget {
   }
 }
 
+class RechargeOptions extends StatelessWidget {
+  final WebHomeViewModel model;
+  const RechargeOptions({Key key, @required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: SizeConfig.padding32),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          child: Text(
+            'Get More Tokens',
+            style: TextStyles.sourceSansSB.title5,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(
+            top: SizeConfig.padding24,
+          ),
+          height: SizeConfig.screenWidth * 0.125,
+          width: SizeConfig.screenWidth,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            itemCount: model.rechargeOptions.length,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+            itemBuilder: (ctx, i) {
+              return RechargeBox(
+                rechargeOption: model.rechargeOptions[i],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class PlayButtonOverlapper extends StatelessWidget {
-  const PlayButtonOverlapper({
+  final _analytics = locator<AnalyticsService>();
+
+  PlayButtonOverlapper({
     Key key,
   }) : super(key: key);
 
@@ -313,14 +390,32 @@ class PlayButtonOverlapper extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Stack(
         children: [
-          Container(
-            height: SizeConfig.navBarHeight + SizeConfig.padding64,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: UiConstants.kBackgroundColor.withOpacity(0.5),
+          GestureDetector(
+            onTap: () {
+              if (JourneyService.isAvatarAnimationInProgress) return;
+              _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+              BaseUtil.openModalBottomSheet(
+                addToScreenStack: true,
+                backgroundColor: UiConstants.gameCardColor,
+                content: WantMoreTicketsModalSheet(),
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness24),
-                    topRight: Radius.circular(SizeConfig.roundness24))),
+                  topLeft: Radius.circular(SizeConfig.roundness24),
+                  topRight: Radius.circular(SizeConfig.roundness24),
+                ),
+                hapticVibrate: true,
+                isScrollControlled: true,
+                isBarrierDismissable: true,
+              );
+            },
+            child: Container(
+              height: SizeConfig.navBarHeight + SizeConfig.padding64,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: UiConstants.kBackgroundColor.withOpacity(0.5),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness24),
+                      topRight: Radius.circular(SizeConfig.roundness24))),
+            ),
           ),
           Container(
             padding: EdgeInsets.all(SizeConfig.padding12),
@@ -375,7 +470,6 @@ class StreamView extends StatelessWidget {
             coinText: 'Playing',
             assetHeight: SizeConfig.padding16,
             isDot: true,
-            assetUrl: Assets.circleGameAsset,
           );
         }
 
@@ -398,7 +492,6 @@ class StreamView extends StatelessWidget {
               coinText: 'Playing',
               assetHeight: SizeConfig.padding16,
               isDot: true,
-              assetUrl: Assets.circleGameAsset,
               key: ValueKey<String>(requiredTimeData['value'].toString()),
             ),
           );
@@ -408,7 +501,6 @@ class StreamView extends StatelessWidget {
             coinText: 'Playing',
             assetHeight: SizeConfig.padding16,
             isDot: true,
-            assetUrl: Assets.circleGameAsset,
           );
         }
       },
@@ -426,7 +518,7 @@ class RechargeBox extends StatelessWidget {
     return rechargeOption.isCustom
         ? InkWell(
             onTap: () {
-              return BaseUtil().openRechargeModalSheet();
+              return BaseUtil().openDepositOptionsModalSheet();
             },
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -447,7 +539,7 @@ class RechargeBox extends StatelessWidget {
         : InkWell(
             onTap: () {
               return BaseUtil()
-                  .openRechargeModalSheet(amt: rechargeOption.amount);
+                  .openDepositOptionsModalSheet(amount: rechargeOption.amount);
             },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
@@ -467,7 +559,7 @@ class RechargeBox extends StatelessWidget {
                     style: TextStyles.sourceSansSB.body1.bold,
                   ),
                   SvgPicture.asset(
-                    Assets.aFelloToken,
+                    Assets.token,
                     height: SizeConfig.padding24,
                   ),
                   SizedBox(width: SizeConfig.padding4),
@@ -527,6 +619,330 @@ class GameInfoBlock extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PastWeekWinners extends StatelessWidget {
+  const PastWeekWinners({Key key, @required this.count, @required this.model})
+      : super(key: key);
+  final int count;
+  final WebHomeViewModel model;
+
+  getLength(int listLength) {
+    if (count != null) {
+      if (listLength < count)
+        return listLength;
+      else
+        return count;
+    } else
+      return listLength;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        //1
+        Container(
+          margin: EdgeInsets.only(top: SizeConfig.padding32),
+          width: SizeConfig.screenWidth * 0.5,
+          height: SizeConfig.screenWidth * 0.5,
+          decoration: BoxDecoration(
+            color: UiConstants.kSecondaryBackgroundColor,
+            shape: BoxShape.circle,
+          ),
+        ),
+        //2
+        Container(
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding20,
+              horizontal: SizeConfig.pageHorizontalMargins),
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.padding14,
+              SizeConfig.screenWidth * 0.15 + SizeConfig.padding32,
+              SizeConfig.padding14,
+              0.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: UiConstants.kSecondaryBackgroundColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding32,
+              ),
+
+              //Old code to refactor starts here
+              Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      padding: EdgeInsets.only(top: SizeConfig.padding8),
+                      child: model.pastWeekParticipants == null
+                          ? Container(
+                              width: SizeConfig.screenWidth,
+                              color: Colors.transparent,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding24),
+                              alignment: Alignment.center,
+                              child: FullScreenLoader(
+                                size: SizeConfig.screenWidth * 0.5,
+                              ),
+                            )
+                          : (model.pastWeekParticipants.isEmpty
+                              ? Container(
+                                  width: SizeConfig.screenWidth,
+                                  color: Colors.transparent,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: SizeConfig.padding24),
+                                  child: NoRecordDisplayWidget(
+                                    topPadding: false,
+                                    assetSvg: Assets.noWinnersAsset,
+                                    text: " Leaderboard will be updated soon",
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "#",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor2),
+                                        ),
+                                        SizedBox(width: SizeConfig.padding12),
+                                        SizedBox(width: SizeConfig.padding12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text("Names",
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2)),
+                                              SizedBox(
+                                                  height: SizeConfig.padding4),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          "Points",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor2),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding14,
+                                    ),
+                                    Column(
+                                      children: List.generate(
+                                        getLength(
+                                            model.pastWeekParticipants.length),
+                                        (i) {
+                                          return Container(
+                                            width: SizeConfig.screenWidth,
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "${i + 1}",
+                                                      style: TextStyles
+                                                          .rajdhani.body3
+                                                          .colour(Colors.white),
+                                                    ),
+                                                    SizedBox(
+                                                        width: SizeConfig
+                                                            .padding12),
+                                                    FutureBuilder(
+                                                      future: model
+                                                          .getProfileDpWithUid(model
+                                                              .pastWeekParticipants[
+                                                                  i]
+                                                              .userid),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (!snapshot.hasData ||
+                                                            snapshot.connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                          return DefaultAvatar();
+                                                        }
+
+                                                        String imageUrl =
+                                                            snapshot.data
+                                                                as String;
+
+                                                        return ClipOval(
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl: imageUrl,
+                                                            fit: BoxFit.cover,
+                                                            width: SizeConfig
+                                                                .iconSize5,
+                                                            height: SizeConfig
+                                                                .iconSize5,
+                                                            placeholder:
+                                                                (context,
+                                                                        url) =>
+                                                                    Container(
+                                                              width: SizeConfig
+                                                                  .iconSize5,
+                                                              height: SizeConfig
+                                                                  .iconSize5,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    Colors.grey,
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                            ),
+                                                            errorWidget:
+                                                                (a, b, c) {
+                                                              return DefaultAvatar();
+                                                            },
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                    SizedBox(
+                                                        width: SizeConfig
+                                                            .padding12),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                              model
+                                                                      .pastWeekParticipants[
+                                                                          i]
+                                                                      .username
+                                                                      .replaceAll(
+                                                                          '@',
+                                                                          '.') ??
+                                                                  "username",
+                                                              style: TextStyles
+                                                                  .rajdhani
+                                                                  .body3
+                                                                  .colour(Colors
+                                                                      .white)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "${model.pastWeekParticipants[i].score.toInt().toString() ?? "00"} points",
+                                                      style: TextStyles
+                                                          .rajdhani.body3
+                                                          .colour(Colors.white),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: SizeConfig.padding10,
+                                                ),
+                                                if (i + 1 <
+                                                    getLength(model
+                                                        .pastWeekParticipants
+                                                        .length))
+                                                  Divider(
+                                                    color: Colors.white,
+                                                    thickness: 0.2,
+                                                  ),
+                                                SizedBox(
+                                                  height: SizeConfig.padding10,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding16,
+                                    ),
+                                    if (model.pastWeekParticipants.length >
+                                        getLength(
+                                            model.pastWeekParticipants.length))
+                                      GestureDetector(
+                                        onTap: () {
+                                          Haptic.vibrate();
+                                          AppState.delegate.appState
+                                              .currentAction = PageAction(
+                                            state: PageState.addWidget,
+                                            widget:
+                                                AllParticipantsWinnersTopReferers(
+                                              isForTopReferers: true,
+                                              showPoints: true,
+                                              appBarTitle: "Past Week Winners",
+                                              referralLeaderBoard:
+                                                  model.pastWeekParticipants,
+                                            ),
+                                            page:
+                                                AllParticipantsWinnersTopReferersConfig,
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                top: SizeConfig.padding2,
+                                              ),
+                                              child: Text('See All',
+                                                  style: TextStyles
+                                                      .rajdhaniSB.body2),
+                                            ),
+                                            SvgPicture.asset(
+                                                Assets.chevRonRightArrow,
+                                                height: SizeConfig.padding24,
+                                                width: SizeConfig.padding24,
+                                                color: UiConstants.primaryColor)
+                                          ],
+                                        ),
+                                      )
+                                  ],
+                                )),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        //3
+        Container(
+          margin: EdgeInsets.only(right: SizeConfig.padding14),
+          child: SvgPicture.asset(
+            Assets.winScreenHighestScorers,
+            width: SizeConfig.screenWidth * 0.3,
+          ),
+        ),
+      ],
     );
   }
 }

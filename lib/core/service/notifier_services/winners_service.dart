@@ -1,15 +1,12 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/winners_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -17,7 +14,6 @@ import '../../ops/db_ops.dart';
 
 class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
   final _logger = locator<CustomLogger>();
-  final _winnersRepo = locator<WinnersRepository>();
   final _apiCacheManager = locator<ApiCacheManager>();
   final _getterRepo = locator<GetterRepository>();
   final _dbModel = locator<DBModel>();
@@ -72,18 +68,8 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         "Top Winners of New Fello App Campaign updated, property listeners notified");
   }
 
-  fetchTopWinner() async {
-    ApiResponse<List<String>> response = await _winnersRepo.getTopWinners();
-    if (response.code == 200) {
-      _topWinners.clear();
-      _topWinners = response.model;
-      setTopWinners();
-      _logger.d("Top winners successfully fetched");
-    }
-  }
-
   Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid) ?? "";
+    return await _dbModel.getUserDP(uid);
   }
 
   String getDateRange() {
@@ -118,6 +104,34 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     ];
     setNewFelloWinners();
     _logger.d("New Fello winners successfully fetched");
+  }
+
+  fetchtambolaWinners() async {
+    _winners.clear();
+    WinnersModel _tambolaWinners = await getWinners(
+      Constants.GAME_TYPE_TAMBOLA,
+      "weekly",
+    );
+
+    if (_tambolaWinners != null &&
+        _tambolaWinners.winners != null &&
+        _tambolaWinners?.winners?.length != 0) {
+      _timestamp = _tambolaWinners.timestamp;
+      _tambolaWinnersLength = _tambolaWinners?.winners?.length;
+      _winners.addAll(_tambolaWinners.winners);
+      _logger.d("Only Tambola Winners added to leaderboard");
+    } else {
+      _logger.i("Tambola Winners not added to leaderboard");
+    }
+
+    if (_winners != null)
+      _winners.sort((a, b) => (a.amount == null || b.amount == null)
+          ? -1
+          : b.amount.compareTo(a.amount));
+    else
+      _winners = [];
+
+    setWinners();
   }
 
   fetchWinners() async {
@@ -240,7 +254,6 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
     if (response.code == 200) {
       return response.model;
     }
-
     return null;
   }
 }

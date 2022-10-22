@@ -51,7 +51,7 @@ class SizeConfig {
 
   // TEXT SIZES
   static double get title68 => screenWidth * 0.181; //68
-  static double get title50 => screenWidth * 0.120; //50
+  static double get title50 => screenWidth * 0.133; //50
   static double get title0 => screenWidth * 0.106; //40
   static double get title1 => screenWidth * 0.093; //35
   static double get title2 => screenWidth * 0.08; //30
@@ -63,6 +63,7 @@ class SizeConfig {
   static double get body2 => screenWidth * 0.042; //16
   static double get body3 => screenWidth * 0.037; //14
   static double get body4 => screenWidth * 0.032; //12;
+  static double get body5 => screenWidth * 0.024; //8;
 
   // ICON SIZES
   static double get iconSize0 => screenWidth * 0.0533; //20
@@ -78,6 +79,7 @@ class SizeConfig {
   // PADDINGS
   static double get padding1 => screenWidth * 0.0024;
   static double get padding2 => screenWidth * 0.0048;
+  static double get padding3 => screenWidth * 0.0072;
   static double get padding4 => screenWidth * 0.0096;
   static double get padding6 => screenWidth * 0.014;
   static double get padding8 => screenWidth * 0.019;
@@ -125,7 +127,7 @@ class SizeConfig {
   static double get boxWidthLarge => screenWidth * 0.371;
   static double get profileDPSize => screenWidth * 0.05;
   static double get boxDividerMargins => screenWidth * 0.016;
-  static double get bannerHeight => screenWidth * 0.61;
+  static double get bannerHeight => screenWidth * 0.5;
 
   //Navbar
   static double get navBarWidth =>

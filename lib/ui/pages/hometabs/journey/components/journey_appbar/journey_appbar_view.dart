@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -11,7 +12,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_gold_quantity.dart';
+import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -89,6 +90,12 @@ class JourneyAppBar extends StatelessWidget {
                                 },
                               ),
                             ),
+                            // IconButton(
+                            //     onPressed: () {
+                            //       AppState.delegate
+                            //           .parseRoute(Uri.parse('/augSell'));
+                            //     },
+                            //     icon: Icon(Icons.navigation)),
                             FelloCoinBar(),
                             NotificationButton()
                           ],
@@ -103,8 +110,10 @@ class JourneyAppBar extends StatelessWidget {
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
+                            investmentType: InvestmentType.AUGGOLD99,
                             asset: Assets.digitalGoldBar,
-                            value: UserGoldQuantitySE(
+                            value: UserFundQuantitySE(
+                              investmentType: InvestmentType.AUGGOLD99,
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
@@ -114,9 +123,10 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
-                            asset: Assets.stableFello,
-                            value: Text(
-                              "₹ 3000",
+                            asset: Assets.felloFlo,
+                            investmentType: InvestmentType.LENDBOXP2P,
+                            value: UserFundQuantitySE(
+                              investmentType: InvestmentType.LENDBOXP2P,
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                             ),
@@ -138,8 +148,9 @@ class JourneyAppBar extends StatelessWidget {
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
   final String asset;
   final Widget value;
-
-  JourneyAppBarAssetDetailsTile({@required this.asset, @required this.value});
+  final InvestmentType investmentType;
+  JourneyAppBarAssetDetailsTile(
+      {@required this.asset, @required this.value, this.investmentType});
 
   @override
   Widget build(BuildContext context) {
@@ -149,10 +160,16 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
           if (JourneyService.isAvatarAnimationInProgress) return;
 
           Haptic.vibrate();
-          AppState.delegate.appState.currentAction = PageAction(
-            state: PageState.addPage,
-            page: SaveAssetsViewConfig,
-          );
+          if (investmentType == InvestmentType.AUGGOLD99)
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: SaveAssetsViewConfig,
+            );
+          else
+            AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: LendboxDetailsPageConfig,
+            );
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

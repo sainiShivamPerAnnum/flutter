@@ -17,7 +17,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class GoldenTicketsViewModel extends BaseModel {
+class GoldenTicketsViewModel extends BaseViewModel {
   //Dependencies
   final _userService = locator<UserService>();
   final _logger = locator<CustomLogger>();
@@ -49,12 +49,14 @@ class GoldenTicketsViewModel extends BaseModel {
 
 // Core Methods
   Future<void> init(bool openFirst) async {
-    _query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(_userService.baseUser.uid)
-        .collection(Constants.SUBCOLN_USER_REWARDS)
-        .orderBy('timestamp', descending: true);
-    await getGoldenTickets();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      _query = _db
+          .collection(Constants.COLN_USERS)
+          .doc(_userService.baseUser.uid)
+          .collection(Constants.SUBCOLN_USER_REWARDS)
+          .orderBy('timestamp', descending: true);
+      await getGoldenTickets();
+    });
   }
 
   void finish() {

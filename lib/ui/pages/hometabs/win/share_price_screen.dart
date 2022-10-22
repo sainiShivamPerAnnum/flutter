@@ -47,7 +47,7 @@ class SharePriceScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Share the news with\nyour fellows",
+                      "Share the good news with\nyour friends",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.semiBold.body2
                           .colour(Colors.white),

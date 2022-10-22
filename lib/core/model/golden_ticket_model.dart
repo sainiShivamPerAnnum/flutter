@@ -9,6 +9,7 @@ class GoldenTicket {
   String eventType;
   String gtType;
   bool isRewarding;
+  bool isLevelChange;
   String note;
   String prizeSubtype;
   TimestampModel redeemedTimestamp;
@@ -22,6 +23,7 @@ class GoldenTicket {
     this.userId,
     this.timestamp,
     this.eventType,
+    this.isLevelChange,
     this.prizeSubtype,
     this.note,
     this.gtType,
@@ -33,15 +35,16 @@ class GoldenTicket {
   });
 
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
-    gtId = docId;
+    gtId = json['id'] ?? docId;
     userId = json['userId'];
     timestamp = TimestampModel.fromMap(json['timestamp']);
     eventType = json['eventType'];
     gtType = json['gtType'];
+    isLevelChange = json['isLevelChange'] ?? false;
     prizeSubtype = json['prizeSubtype'];
-    note = json['note'];
-    canTransfer = json['canTransfer'];
-    isRewarding = json['isRewarding'];
+    note = json['note'] ?? '';
+    canTransfer = json['canTransfer'] ?? false;
+    isRewarding = json['isRewarding'] ?? false;
     redeemedTimestamp = TimestampModel.fromMap(json['redeemedTimestamp']);
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];

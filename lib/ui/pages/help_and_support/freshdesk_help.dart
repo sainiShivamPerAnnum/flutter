@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -43,7 +44,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
     bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     log("build run");
     return Scaffold(
-      backgroundColor: UiConstants.primaryColor,
+      backgroundColor: UiConstants.kBackgroundColor,
       floatingActionButton: keyboardIsOpen && Platform.isIOS
           ? FloatingActionButton(
               child: Icon(
@@ -113,12 +114,9 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
             ),
             if (isLoading)
               Container(
-                color: Colors.white,
+                color: Colors.black,
                 child: Center(
-                  child: SpinKitWave(
-                    color: UiConstants.primaryColor,
-                    size: SizeConfig.padding40,
-                  ),
+                  child: FullScreenLoader(),
                 ),
               ),
             Positioned(

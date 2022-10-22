@@ -1,18 +1,23 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class SubscriptionCardViewModel extends BaseModel {
+class SubscriptionCardViewModel extends BaseViewModel {
   final _paytmService = locator<PaytmService>();
   final _userService = locator<UserService>();
   bool _isResumingInProgress = false;
@@ -88,6 +93,15 @@ class SubscriptionCardViewModel extends BaseModel {
 
   getActiveButtonAction() async {
     Haptic.vibrate();
+    if (_userService.userJourneyStats.mlIndex < 2)
+      return BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: true,
+          hapticVibrate: false,
+          content: CompleteProfileDialog(
+            subtitle:
+                'Please complete your profile to win your first reward and to start autosaving',
+          ));
     await _paytmService.getActiveSubscriptionDetails();
     if (_paytmService.activeSubscription == null ||
         (_paytmService.activeSubscription.status ==
@@ -144,32 +158,6 @@ class SubscriptionCardViewModel extends BaseModel {
       return DateFormat("dd MMM yyyy").format(resumeDate);
     } else {
       return "Forever";
-    }
-  }
-
-  getImage(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return Assets.preautosave;
-    }
-    if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return Assets.preautosave;
-    } else {
-      if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return Assets.postautosave;
-      }
-      if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
-          return Assets.preautosave;
-        else {
-          if (subscription.resumeDate.isEmpty)
-            return Assets.preautosave;
-          else
-            return Assets.autopause;
-        }
-      }
-      return Assets.preautosave;
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -29,17 +30,7 @@ abstract class API {
 }
 
 class APIService implements API {
-  // String _baseUrl = 'http://028b-103-108-4-230.ngrok.io/fello-dev-station/asia-south1';
   String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
-  //"https://asia-south1-fello-dev-station.cloudfunctions.net";
-
-  // String _awsdeviceUrl = FlavorConfig.isProduction()
-  //     ? "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/prod"
-  //     : "https://w7l6dgq5n9.execute-api.ap-south-1.amazonaws.com/dev";
-
-  // String _awstxnUrl = FlavorConfig.isProduction()
-  //     ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
-  //     : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
   final logger = locator<CustomLogger>();
   final userService = locator<UserService>();
   String _versionString = "";
@@ -58,6 +49,7 @@ class APIService implements API {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     await metric.start();
+    int startTime = DateTime.now().millisecondsSinceEpoch;
 
     var responseJson;
     // token = Preference.getString('token');
@@ -78,7 +70,7 @@ class APIService implements API {
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.firebaseUser?.uid,
       });
-
+      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       logger.d("response from $finalPath");
       logger.d("Full url: $finalPath");
       logger.d("Get Response: ${response.statusCode}");
@@ -109,6 +101,7 @@ class APIService implements API {
     await metric.start();
     var responseJson;
     String queryString = '';
+    int startTime = DateTime.now().millisecondsSinceEpoch;
 
     try {
       Map<String, String> _headers = {
@@ -138,6 +131,8 @@ class APIService implements API {
         headers: _headers,
         body: jsonEncode(body ?? {}),
       );
+      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException(
@@ -174,8 +169,7 @@ class APIService implements API {
         ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader:
-              token != null ? token : 'Bearer $token',
+          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
@@ -313,9 +307,7 @@ class APIService implements API {
         throw UnauthorisedException(response.body.toString());
       case 500:
       default:
-        throw FetchDataException(
-          'Error occured while Communication with Server with StatusCode : ${response.statusCode}',
-        );
+        throw FetchDataException(responseJson["message"]);
     }
   }
 

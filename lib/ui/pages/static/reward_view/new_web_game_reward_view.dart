@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/ui/pages/static/reward_view/components/rank_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -56,7 +57,7 @@ class RewardView extends StatelessWidget {
                       child: Center(
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            'assets/temp/medal.svg',
+                            Assets.medal,
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
                           ),
@@ -81,7 +82,7 @@ class RewardView extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SvgPicture.asset(
-                                    'assets/temp/Tokens.svg',
+                                    Assets.token,
                                     width: SizeConfig.body2,
                                     height: SizeConfig.body2,
                                   ),

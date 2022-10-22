@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -33,9 +34,9 @@ class TambolaBoard {
 
   factory TambolaBoard.fromMap(Map<String, dynamic> map) {
     return TambolaBoard(
-      TimestampModel.fromMap(map['assigned_time']),
-      map['val'] ?? '',
-      map['id'] ?? 0,
+      TimestampModel.fromMap(map['createdOn']),
+      map['tval'] ?? '',
+      map['tid'] ?? 0,
       map['week_code'] ?? 0,
     );
   }
@@ -100,8 +101,8 @@ class TambolaBoard {
         tambolaBoard.isEmpty ||
         calledDigits == null ||
         calledDigits.isEmpty) return 5;
-    int digitsLeftToBeAnnounced =
-        _tambolaService.dailyPicksCount * 7 - calledDigits.length;
+    // int digitsLeftToBeAnnounced =
+    //     _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     int rowCalledCount = 0;
     for (int i = 0; i < boardLength; i++) {
       if (tambolaBoard[rowIndex][i] != 0 &&
@@ -113,6 +114,30 @@ class TambolaBoard {
     // else if(rowLeftCount>digitsLeftToBeAnnounced)return 0;
     // else return '$rowLeftCount/$digitsLeftToBeAnnounced';
     return rowLeftCount;
+  }
+
+  int getOneRowOdds(List<int> calledDigits) {
+    int row_1 = getRowOdds(0, calledDigits);
+    int row_2 = getRowOdds(1, calledDigits);
+    int row_3 = getRowOdds(2, calledDigits);
+
+    int min = row_1;
+    min = math.min(min, row_2);
+    min = math.min(min, row_3);
+
+    return min;
+  }
+
+  int getTwoRowOdds(List<int> calledDigits) {
+    int row_1 = getRowOdds(0, calledDigits);
+    int row_2 = getRowOdds(1, calledDigits);
+    int row_3 = getRowOdds(2, calledDigits);
+
+    int min = row_1 + row_2;
+    min = math.min(min, row_1 + row_3);
+    min = math.min(min, row_2 + row_3);
+
+    return min;
   }
 
   int getCornerOdds(List<int> calledDigits) {
@@ -155,8 +180,8 @@ class TambolaBoard {
         calledDigits == null ||
         calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
-    int digitsLeftToBeAnnounced =
-        _tambolaService.dailyPicksCount * 7 - calledDigits.length;
+    // int digitsLeftToBeAnnounced =
+    //     _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         if (tambolaBoard[i][j] != 0) {

@@ -1,11 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -15,9 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class PrizeClaimCard extends StatelessWidget {
-  final MyWinningsViewModel model;
-
-  PrizeClaimCard({this.model});
+  // final WinViewModel model;
+  // PrizeClaimCard({this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +31,7 @@ class PrizeClaimCard extends StatelessWidget {
               children: [
                 (m.userFundWallet.isPrizeBalanceUnclaimed())
                     ? Container(
+                        width: SizeConfig.screenWidth,
                         margin: EdgeInsets.only(
                             top: SizeConfig.padding24,
                             left: SizeConfig.pageHorizontalMargins,
@@ -55,7 +54,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Total Cashback",
+                                    "Total Rewards",
                                     style:
                                         TextStyles.body1.colour(Colors.white),
                                   ),
@@ -72,42 +71,42 @@ class PrizeClaimCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: SizeConfig.padding8),
-                            if (m.userFundWallet.unclaimedBalance >=
-                                    minWithdrawPrizeAmt &&
-                                m.userFundWallet.augGoldPrinciple >=
-                                    refUnlockAmt)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding6),
-                                child: Row(
-                                  children: [
-                                    _isAmazonVoucherRedemptionAvailable()
-                                        ? ClaimButton(
-                                            color: Color(0xff11192B),
-                                            image: Assets.amazonClaim,
-                                            onTap: () =>
-                                                model.showConfirmDialog(
-                                                    PrizeClaimChoice
-                                                        .AMZ_VOUCHER),
-                                            text:
-                                                "Redeem as Amazon Pay Gift Card",
-                                          )
-                                        : SizedBox(),
-                                    _isAmazonVoucherRedemptionAvailable()
-                                        ? SizedBox(width: SizeConfig.padding12)
-                                        : SizedBox(),
-                                    ClaimButton(
-                                      color: UiConstants.tertiarySolid,
-                                      image: Assets.augmontShare,
-                                      onTap: () => model.showConfirmDialog(
-                                          PrizeClaimChoice.GOLD_CREDIT),
-                                      text: "Redeem as Digital Gold",
-                                    )
-                                  ],
-                                ),
-                              ),
+                            // if (m.userFundWallet.unclaimedBalance >=
+                            //         minWithdrawPrizeAmt &&
+                            //     m.userFundWallet.augGoldPrinciple >=
+                            //         refUnlockAmt)
+                            //   Container(
+                            //     padding: EdgeInsets.symmetric(
+                            //         horizontal: SizeConfig.padding16),
+                            //     margin: EdgeInsets.symmetric(
+                            //         vertical: SizeConfig.padding6),
+                            //     child: Row(
+                            //       children: [
+                            //         _isAmazonVoucherRedemptionAvailable()
+                            //             ? ClaimButton(
+                            //                 color: Color(0xff11192B),
+                            //                 image: Assets.amazonClaim,
+                            //                 onTap: () =>
+                            //                     model.showConfirmDialog(
+                            //                         PrizeClaimChoice
+                            //                             .AMZ_VOUCHER),
+                            //                 text:
+                            //                     "Redeem as Amazon Pay Gift Card",
+                            //               )
+                            //             : SizedBox(),
+                            //         _isAmazonVoucherRedemptionAvailable()
+                            //             ? SizedBox(width: SizeConfig.padding12)
+                            //             : SizedBox(),
+                            //         ClaimButton(
+                            //           color: UiConstants.tertiarySolid,
+                            //           image: Assets.augmontShare,
+                            //           onTap: () => model.showConfirmDialog(
+                            //               PrizeClaimChoice.GOLD_CREDIT),
+                            //           text: "Redeem as Digital Gold",
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
                             if (m.userFundWallet.unclaimedBalance <
                                 minWithdrawPrizeAmt)
                               Container(

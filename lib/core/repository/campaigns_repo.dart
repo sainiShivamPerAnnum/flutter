@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -12,8 +13,8 @@ import 'base_repo.dart';
 class CampaignRepo extends BaseRepo {
   final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com"
-      : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com";
+      ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
+      : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<List<EventModel>>> getOngoingEvents() async {
     List<EventModel> events = [];
@@ -26,7 +27,7 @@ class CampaignRepo extends BaseRepo {
         CacheKeys.CAMPAIGNS,
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
-          ApiPath().kOngoingCampaigns,
+          ApiPath.kOngoingCampaigns,
           token: _token,
           cBaseUrl: _baseUrl,
           queryParams: _queryParams,
@@ -45,7 +46,34 @@ class CampaignRepo extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch campaings", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch campaigns", 400);
+    }
+  }
+
+  Future<ApiResponse<List<FelloFactsModel>>> getFelloFacts() async {
+    List<FelloFactsModel> facts = [];
+    try {
+      final _token = await getBearerToken();
+
+      final response = await APIService.instance.getData(
+        ApiPath.kFelloFacts,
+        token: _token,
+        cBaseUrl: _baseUrl,
+      );
+
+      final responseData = response["data"];
+      logger.d(responseData);
+      if (responseData != null) {
+        responseData.forEach((e) {
+          facts.add(FelloFactsModel.fromMap(e));
+        });
+      }
+      return ApiResponse<List<FelloFactsModel>>(model: facts, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch campaigns", 400);
     }
   }
 }

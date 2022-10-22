@@ -4,8 +4,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ShareCard extends StatelessWidget {
   final String dpUrl;
@@ -93,7 +91,7 @@ class ShareCard extends StatelessWidget {
             height: SizeConfig.padding24,
           ),
           Text(
-            'Play fun games and get a chance to\nwin rewards as Digital Gold',
+            'Play fun games and get a chance to\nwin rewards as Digital Gold!',
             style: TextStyles.sourceSans.body3.colour(Colors.black),
             textAlign: TextAlign.center,
           ),

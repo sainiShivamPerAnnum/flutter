@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -18,14 +17,10 @@ class BottomNavBar extends StatelessWidget {
   BottomNavBar({@required this.parentModel});
 
   final List<NavBarItemModel> navbarItems = [
-    NavBarItemModel('Journey', Assets.navJourneyActive,
-        Assets.navJourneyInactive, Assets.navJourneyLottie),
-    NavBarItemModel('Play', Assets.navPlayActive, Assets.navPlayInactive,
-        Assets.navPlayLottie),
-    NavBarItemModel('Save', Assets.navSaveActive, Assets.navSaveInactive,
-        Assets.navSaveLottie),
-    NavBarItemModel(
-        'Win', Assets.navWinActive, Assets.navWinInactive, Assets.navWinLottie)
+    NavBarItemModel('Journey', Assets.navJourneyLottie),
+    NavBarItemModel('Save', Assets.navSaveLottie),
+    NavBarItemModel('Play', Assets.navPlayLottie),
+    NavBarItemModel('Win', Assets.navWinLottie)
   ];
 
   @override

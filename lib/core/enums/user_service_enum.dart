@@ -12,4 +12,6 @@ enum UserServiceProperties {
   myConfirmDialogViewStatus,
   myJourneyStats,
   myAvatarId,
+  myUpiId,
+  myAugmontDetails,
 }

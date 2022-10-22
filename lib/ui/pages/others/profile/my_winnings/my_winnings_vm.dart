@@ -4,16 +4,17 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -33,15 +34,16 @@ import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class MyWinningsViewModel extends BaseModel {
+class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final _logger = locator<CustomLogger>();
-  final _httpModel = locator<HttpModel>();
   final _userService = locator<UserService>();
   final _transactionHistoryService = locator<TransactionHistoryService>();
   final _localDBModel = locator<LocalDBModel>();
   final _analyticsService = locator<AnalyticsService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _prizingRepo = locator<PrizingRepo>();
+  final _appFlyer = locator<AppFlyerAnalytics>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -65,7 +67,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   UserService get userService => _userService;
-  // TransactionService get txnService => _transactionService;
+  // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
     this._choice = value;
@@ -73,7 +75,7 @@ class MyWinningsViewModel extends BaseModel {
   }
 
   getWinningHistory() async {
-    isWinningHistoryLoading = true;
+    _isWinningHistoryLoading = true;
     ApiResponse<List<UserTransaction>> temp =
         await userRepo.getWinningHistory(_userService.baseUser.uid);
     temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -189,14 +191,20 @@ class MyWinningsViewModel extends BaseModel {
                 result: (res) async {
                   if (res) {
                     try {
-                      String url =
-                          await _userService.createDynamicLink(true, 'Other');
-                      caputure(
-                          'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                      String url;
+                      final link = await _appFlyer.inviteLink();
+                      if (link['status'] == 'success') {
+                        url = link['payload']['userInviteUrl'];
+                        if (url == null) url = link['payload']['userInviteURL'];
+                      }
+
+                      if (url != null)
+                        caputure(
+                            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
                     } catch (e) {
                       _logger.e(e.toString());
                       BaseUtil.showNegativeAlert(
-                          "An error occured!", "Please try again");
+                          "An error occurred!", "Please try again");
                     }
                   }
                 },
@@ -266,102 +274,25 @@ class MyWinningsViewModel extends BaseModel {
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    Map<String, dynamic> response = await _httpModel.registerPrizeClaim(
-        _userService.baseUser.uid,
-        _userService.baseUser.username,
-        _userService.userFundWallet.unclaimedBalance,
-        choice);
-    if (response['status'] != null && response['status']) {
+    final response = await _prizingRepo.claimPrize(
+      _userService.userFundWallet.unclaimedBalance,
+      choice,
+    );
+
+    if (response.isSuccess()) {
       _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       await _localDBModel.savePrizeClaimChoice(choice);
 
       return true;
     } else {
-      BaseUtil.showNegativeAlert('Withdrawal Failed',
-          response['message'] ?? "Please try again after sometime");
+      BaseUtil.showNegativeAlert(
+        'Withdrawal Failed',
+        response.errorMessage ?? "Please try again after sometime",
+      );
       return false;
     }
-  }
-
-  showPrizeDetailsDialog(String type, double amount) async {
-    String subtitle = "Fello Rewards";
-    if (type == "AMZ_VOUCHER") {
-      choice = PrizeClaimChoice.AMZ_VOUCHER;
-      subtitle = "Amazon Gift Voucher";
-    } else if (type == "GOLD_CREDIT") {
-      choice = PrizeClaimChoice.GOLD_CREDIT;
-      subtitle = "Digital Gold";
-    } else
-      choice = PrizeClaimChoice.FELLO_PRIZE;
-
-    AppState.screenStack.add(ScreenItem.dialog);
-    showDialog(
-        context: AppState.delegate.navigatorKey.currentContext,
-        builder: (ctx) {
-          return Stack(
-            children: [
-              FelloConfirmationDialog(
-                result: (res) async {
-                  if (res) {
-                    try {
-                      String url =
-                          await _userService.createDynamicLink(true, 'Other');
-                      caputure(
-                          'Hey, I won ₹${amount.toInt()} on Fello! \nLet\'s save and play together: $url');
-                    } catch (e) {
-                      _logger.e(e.toString());
-                      BaseUtil.showNegativeAlert(
-                          "An error occured!", "Please try again");
-                    }
-                  }
-                },
-                content: Column(
-                  children: [
-                    SizedBox(height: SizeConfig.screenHeight * 0.02),
-                    Container(
-                      height: SizeConfig.screenHeight * 0.38,
-                      width: SizeConfig.screenWidth,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: RepaintBoundary(
-                          key: imageKey,
-                          child: ShareCard(
-                            dpUrl: _userService.myUserDpUrl,
-                            claimChoice: choice,
-                            prizeAmount: amount.abs(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.02),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        "Congratulations!",
-                        style: TextStyles.title2.bold,
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    Text(
-                      subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.body2.colour(Colors.grey),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.03),
-                  ],
-                ),
-                showCrossIcon: true,
-                accept: "Share",
-                reject: "Done",
-                acceptColor: UiConstants.primaryColor,
-                rejectColor: Colors.grey[300],
-                onReject: AppState.backButtonDispatcher.didPopRoute,
-              ),
-            ],
-          );
-        });
   }
 
   Widget getSubtitleWidget(String subtitle) {

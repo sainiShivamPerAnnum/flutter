@@ -61,33 +61,38 @@ class TransactionResponseModel {
 class Data {
   String status;
   bool isUpdating;
-  Data({
-    @required this.status,
-    @required this.isUpdating,
-  });
+  int tickets;
+  double goldInTxnBought;
+  Data(
+      {@required this.status,
+      @required this.isUpdating,
+      @required this.tickets,
+      this.goldInTxnBought});
 
-  Data copyWith({
-    bool status,
-    bool isUpdating,
-  }) {
+  Data copyWith(
+      {bool status, bool isUpdating, int tickets, double goldInTxnBought}) {
     return Data(
-      status: status ?? this.status,
-      isUpdating: isUpdating ?? this.isUpdating,
-    );
+        status: status ?? this.status,
+        isUpdating: isUpdating ?? this.isUpdating,
+        tickets: tickets ?? this.tickets,
+        goldInTxnBought: goldInTxnBought ?? this.goldInTxnBought);
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
       'isUpdating': isUpdating,
+      'tickets': tickets
     };
   }
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-      status: map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
-      isUpdating: map['isUpdating'] as bool ?? true,
-    );
+        status:
+            map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
+        isUpdating: map['isUpdating'] as bool ?? true,
+        tickets: map['tickets'] as int ?? 0,
+        goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble());
   }
 
   String toJson() => json.encode(toMap());
@@ -96,7 +101,8 @@ class Data {
       Data.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Data(status: $status, isUpdating: $isUpdating)';
+  String toString() =>
+      'Data(status: $status, isUpdating: $isUpdating, tickets: $tickets)';
 
   @override
   bool operator ==(covariant Data other) {

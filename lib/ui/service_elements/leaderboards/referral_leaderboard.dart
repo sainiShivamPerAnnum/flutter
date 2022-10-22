@@ -6,8 +6,10 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
+import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -59,7 +61,7 @@ class ReferralLeaderboard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Top Referers",
+                          "Top Referrers",
                           style: TextStyles.rajdhaniSB.body0.colour(
                               UiConstants.kSecondaryLeaderBoardTextColor),
                         ),
@@ -130,8 +132,8 @@ class ReferralLeaderboard extends StatelessWidget {
                                 margin: EdgeInsets.symmetric(
                                     vertical: SizeConfig.padding24),
                                 alignment: Alignment.center,
-                                child: SpinKitWave(
-                                  color: UiConstants.primaryColor,
+                                child: FullScreenLoader(
+                                  size: SizeConfig.padding40,
                                 ),
                               )
                             : (model.referralLeaderBoard.isEmpty
@@ -142,7 +144,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                         vertical: SizeConfig.padding24),
                                     child: NoRecordDisplayWidget(
                                       topPadding: false,
-                                      asset: "images/leaderboard.png",
+                                      assetSvg: Assets.noReferalAsset,
                                       text:
                                           "Referral Leaderboard will be updated soon",
                                     ),
@@ -180,7 +182,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "Referals",
+                                            "Referrals",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(
                                                     UiConstants.kTextColor2),
@@ -224,15 +226,11 @@ class ReferralLeaderboard extends StatelessWidget {
                                                         builder: (context,
                                                             snapshot) {
                                                           if (!snapshot
-                                                              .hasData) {
-                                                            return Image.asset(
-                                                              Assets
-                                                                  .defaultProfilePlaceholder,
-                                                              width: SizeConfig
-                                                                  .iconSize5,
-                                                              height: SizeConfig
-                                                                  .iconSize5,
-                                                            );
+                                                                  .hasData ||
+                                                              snapshot.connectionState ==
+                                                                  ConnectionState
+                                                                      .waiting) {
+                                                            return DefaultAvatar();
                                                           }
 
                                                           String imageUrl =
@@ -267,15 +265,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                               ),
                                                               errorWidget:
                                                                   (a, b, c) {
-                                                                return Image
-                                                                    .asset(
-                                                                  Assets
-                                                                      .defaultProfilePlaceholder,
-                                                                  width: SizeConfig
-                                                                      .iconSize5,
-                                                                  height: SizeConfig
-                                                                      .iconSize5,
-                                                                );
+                                                                return DefaultAvatar();
                                                               },
                                                             ),
                                                           );

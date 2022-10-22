@@ -1,8 +1,10 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -17,7 +19,7 @@ class TambolaService extends ChangeNotifier {
   final _internalOpsService = locator<InternalOpsService>();
 
   static int _ticketCount;
-  static int _dailyPicksCount;
+  static int _dailyPicksCount = 3;
   static List<int> _todaysPicks;
   static DailyPick _weeklyDigits;
   static List<TambolaBoard> _userWeeklyBoards;
@@ -94,6 +96,7 @@ class TambolaService extends ChangeNotifier {
 
   set winnerDialogCalled(value) {
     _winnerDialogCalled = value;
+    notifyListeners();
   }
 
   set atomicTicketGenerationLeftCount(value) {
@@ -116,6 +119,8 @@ class TambolaService extends ChangeNotifier {
     final count = await _tambolaRepo.getTicketCount();
     if (count.code == 200) {
       setTicketCount = count.model;
+    } else {
+      BaseUtil.showNegativeAlert(count.errorMessage, '');
     }
   }
 
@@ -136,38 +141,45 @@ class TambolaService extends ChangeNotifier {
     if (!weeklyDrawFetched) {
       try {
         _logger.i('Requesting for weekly picks');
-        final DailyPick _picks = (await _tambolaRepo.getWeeklyPicks()).model;
-        weeklyDrawFetched = true;
-        if (_picks != null) {
-          weeklyDigits = _picks;
-          switch (DateTime.now().weekday) {
-            case 1:
-              todaysPicks = weeklyDigits.mon;
-              break;
-            case 2:
-              todaysPicks = weeklyDigits.tue;
-              break;
-            case 3:
-              todaysPicks = weeklyDigits.wed;
-              break;
-            case 4:
-              todaysPicks = weeklyDigits.thu;
-              break;
-            case 5:
-              todaysPicks = weeklyDigits.fri;
-              break;
-            case 6:
-              todaysPicks = weeklyDigits.sat;
-              break;
-            case 7:
-              todaysPicks = weeklyDigits.sun;
-              break;
+        final ApiResponse<DailyPick> picksResponse =
+            await _tambolaRepo.getWeeklyPicks();
+        if (picksResponse.isSuccess()) {
+          final DailyPick _picks = picksResponse.model;
+          weeklyDrawFetched = true;
+          _logger.d("Weekly pickst: ${_picks.toList().toString()}");
+          if (_picks != null) {
+            weeklyDigits = _picks;
+            switch (DateTime.now().weekday) {
+              case 1:
+                todaysPicks = weeklyDigits.mon;
+                break;
+              case 2:
+                todaysPicks = weeklyDigits.tue;
+                break;
+              case 3:
+                todaysPicks = weeklyDigits.wed;
+                break;
+              case 4:
+                todaysPicks = weeklyDigits.thu;
+                break;
+              case 5:
+                todaysPicks = weeklyDigits.fri;
+                break;
+              case 6:
+                todaysPicks = weeklyDigits.sat;
+                break;
+              case 7:
+                todaysPicks = weeklyDigits.sun;
+                break;
+            }
           }
+          if (todaysPicks == null) {
+            _logger.i("Today's picks are not generated yet");
+          }
+          notifyListeners();
+        } else {
+          //BaseUtil.showNegativeAlert(picksResponse.errorMessage, '');
         }
-        if (todaysPicks == null) {
-          _logger.i("Today's picks are not generated yet");
-        }
-        notifyListeners();
       } catch (e) {
         _logger.e('$e');
       }

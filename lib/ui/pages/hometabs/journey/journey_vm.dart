@@ -1,31 +1,36 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
-import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
-import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
-class JourneyPageViewModel extends BaseModel {
+class JourneyPageViewModel extends BaseViewModel {
   final logger = locator<CustomLogger>();
+
   final _dbModel = locator<DBModel>();
   final _journeyService = locator<JourneyService>();
   final _userService = locator<UserService>();
+  final _analyticsService = locator<AnalyticsService>();
+
   DocumentSnapshot lastDoc;
 
   get avatarAnimation => _journeyService.avatarAnimation;
@@ -112,7 +117,7 @@ class JourneyPageViewModel extends BaseModel {
       _journeyService.placeAvatarAtTheCurrentMileStone();
     }
 
-    _journeyService.mainController = ScrollController(initialScrollOffset: 400);
+    _journeyService.mainController = ScrollController(initialScrollOffset: 600);
     isLoading = false;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       if (_journeyService.avatarRemoteMlIndex < 3) {
@@ -134,6 +139,48 @@ class JourneyPageViewModel extends BaseModel {
         }
       });
     });
+
+    checkIfUserIsNewAndNeedsStoryView();
+  }
+
+  checkIfUserIsNewAndNeedsStoryView() {
+    Future.delayed(
+      Duration(seconds: 4),
+      () {
+        if (_userService.userJourneyStats.mlIndex == 1 &&
+            !_journeyService.isUserJourneyOnboarded) {
+          openStoryView();
+        }
+      },
+    );
+  }
+
+  openStoryView() {
+    _journeyService.isJourneyOnboardingInView = true;
+    PreferenceHelper.setBool(
+        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return InfoStories(
+            topic: "onboarding",
+          );
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (context, animation, anotherAnimation, child) {
+          animation =
+              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+          return Align(
+            child: SizeTransition(
+              sizeFactor: animation,
+              child: child,
+              axisAlignment: 0.0,
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Future<void> updatingJourneyView() async {
@@ -146,32 +193,6 @@ class JourneyPageViewModel extends BaseModel {
 
   Future<void> checkIfThereIsAMilestoneLevelChange() async =>
       _journeyService.checkForMilestoneLevelChange();
-
-  //  (pages.length - model.page) * pageHeight +
-  //               pageHeight -
-  //               (pageHeight * model.coords[1]))
-
-  // init(int stPage) async {
-  //   isLoading = true;
-  //   await Future.delayed(Duration(seconds: 5));
-  //   pages = pages.sublist(0, 2);
-  //   pageWidth = SizeConfig.screenWidth;
-  //   pageHeight = pageWidth * 2.165;
-  //   startPage = stPage;
-  //   pageCount = pages.length;
-  //   currentFullViewHeight = pageHeight * pageCount;
-  //   startPage = pages[0].page;
-  //   lastPage = pages[pages.length - 1].page;
-  //   setCurrentMilestones();
-  //   setCustomPathItems();
-  //   setJourneyPathItems();
-  //   // avatarPath = drawPath();
-  //   // setAvatarPostion();
-  //   createPathForAvatarAnimation(2, 5);
-
-  //   await Future.delayed(Duration(seconds: 2));
-  //   isLoading = false;
-  // }
 
   addPageToTop() async {
     if (isLoading) return;
@@ -233,10 +254,21 @@ class JourneyPageViewModel extends BaseModel {
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
     JOURNEY_MILESTONE_STATUS status = JOURNEY_MILESTONE_STATUS.INCOMPLETE;
-    if (_journeyService.avatarRemoteMlIndex > milestone.index)
+    if (_journeyService.avatarRemoteMlIndex > milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
-    else if (_journeyService.avatarRemoteMlIndex == milestone.index)
+      _analyticsService.track(
+          eventName: AnalyticsEvents.completedMilestoneTapped,
+          properties: {'milestone': milestone.index});
+    } else if (_journeyService.avatarRemoteMlIndex == milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
+      _analyticsService.track(
+          eventName: AnalyticsEvents.activeMilestoneTapped,
+          properties: {'milestone': milestone.index});
+    } else {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.inCompleteMilestoneTapped,
+          properties: {'milestone': milestone.index});
+    }
     log("Current Screen Stack: ${AppState.screenStack}");
 
     return BaseUtil.openModalBottomSheet(

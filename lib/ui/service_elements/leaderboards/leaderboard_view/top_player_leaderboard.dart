@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+// import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class TopPlayerLeaderboardView extends StatelessWidget {
   const TopPlayerLeaderboardView({Key key}) : super(key: key);
@@ -51,73 +51,51 @@ class TopPlayer extends StatelessWidget {
   final List<String> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
-  final PanelController panelController = PanelController();
+  // final PanelController panelController = PanelController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
-      body: Stack(
-        children: [
-          NewSquareBackground(),
-          _buildTopPlayer(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopPlayer(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: SizeConfig.padding20,
-            ),
-            child: Row(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Column(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Padding(
-                    padding: EdgeInsets.only(right: SizeConfig.padding20),
-                    child: SvgPicture.asset('assets/temp/chevron_left.svg'),
-                  ),
+                Text(
+                  "Leaderboard",
+                  style: TextStyles.rajdhaniSB.title3,
                 ),
                 if (model.lastupdated != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Leaderboard",
-                        style: TextStyles.rajdhaniSB.title4,
-                      ),
-                      Text(
-                        "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTextColor2),
-                      ),
-                    ],
+                  Text(
+                    "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())} ${model.scoreboard.length}",
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
                   ),
               ],
             ),
-          ),
-          // SizedBox(height: SizeConfig.padding20),
-          Expanded(
-            child: SlidingUpPanel(
-              body: WinnerWidgets(
-                scoreboard: model.scoreboard,
-                userProfilePicUrl: userProfilePicUrl,
-                isSpotLightVisible: false,
-              ),
-              panel: _buildAllPlayerList(),
-              controller: panelController,
-              defaultPanelState: PanelState.CLOSED,
-              isDraggable: false,
-              color: Colors.transparent,
-              minHeight: SizeConfig.screenHeight * 0.6,
-              maxHeight: SizeConfig.screenHeight * 0.9,
+          ],
+        ),
+      ),
+      body: Stack(
+        children: [
+          NewSquareBackground(),
+          Container(
+            height: SizeConfig.screenHeight -
+                SizeConfig.viewInsets.top -
+                kToolbarHeight,
+            width: SizeConfig.screenWidth,
+            child: Column(
+              children: [
+                WinnerWidgets(
+                  scoreboard: model.scoreboard,
+                  userProfilePicUrl: userProfilePicUrl,
+                  isSpotLightVisible: false,
+                ),
+                Expanded(child: _buildAllPlayerList())
+              ],
             ),
           ),
         ],
@@ -142,7 +120,7 @@ class TopPlayer extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildLeaderBoardHeader(),
+          // _buildLeaderBoardHeader(),
           if (model.scoreboard.length >= 7 &&
               !isUserInTopThree &&
               currentUserRank != 0)
@@ -151,31 +129,18 @@ class TopPlayer extends StatelessWidget {
               currentUserRank: currentUserRank,
             ),
           Expanded(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification value) {
-                log(value.metrics.pixels.toString());
-                if (value.metrics.pixels >= 60 &&
-                    panelController.isPanelClosed) {
-                  panelController.open();
-                }
-                if (value.metrics.pixels == 0 && panelController.isPanelOpen) {
-                  panelController.close();
-                }
-                return true;
-              },
-              child: Scrollbar(
-                radius: Radius.circular(SizeConfig.roundness24),
+            child: Scrollbar(
+              radius: Radius.circular(SizeConfig.roundness24),
+              controller: _scrollController,
+              child: ListView.builder(
                 controller: _scrollController,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  itemCount: model.scoreboard.length - 3,
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    int countedIndex = index + 3;
-                    return _buildLeaderboardTile(countedIndex);
-                  },
-                ),
+                shrinkWrap: true,
+                itemCount: model.scoreboard.length - 3,
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  int countedIndex = index + 3;
+                  return _buildLeaderboardTile(countedIndex);
+                },
               ),
             ),
           ),

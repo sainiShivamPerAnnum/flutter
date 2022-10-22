@@ -1,12 +1,13 @@
-import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/constants.dart';
@@ -17,7 +18,7 @@ import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
-class GTInstantViewModel extends BaseModel {
+class GTInstantViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _userCoinService = locator<UserCoinService>();
   final _logger = locator<CustomLogger>();
@@ -27,7 +28,7 @@ class GTInstantViewModel extends BaseModel {
 
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
-  ConfettiController confettiController;
+  final _gtRepo = locator<GoldenTicketRepository>();
   AnimationController lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
@@ -106,11 +107,8 @@ class GTInstantViewModel extends BaseModel {
                 _paytmService.activeSubscription.resumeDate.isNotEmpty));
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
-    confettiController = new ConfettiController(
-      duration: new Duration(seconds: 2),
-    );
 
-    Future.delayed(Duration(seconds: 18), () {
+    Future.delayed(Duration(seconds: 3), () {
       if (!isCardScratchStarted) {
         showScratchGuide = true;
       }
@@ -126,23 +124,12 @@ class GTInstantViewModel extends BaseModel {
     Haptic.vibrate();
     buttonOpacity = 1.0;
     isCardScratched = true;
-    Map<String, dynamic> _body = {
-      "uid": _userService.baseUser.uid,
-      "gtId": goldenTicket.gtId
-    };
-    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    if (await _rsaEncryption.init()) {
-      _body = _rsaEncryption.encryptRequestBody(_body);
-      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    } else {
-      _logger.e("Encrypter initialization failed!! exiting method");
-    }
+
     try {
       _getBearerToken().then(
-        (String token) => APIService.instance
-            .postData(_apiPaths.kRedeemGtReward, token: token, body: _body)
-            .then(
+        (String token) => _gtRepo.redeemReward(goldenTicket.gtId).then(
           (_) {
+            _gtService.updateUnscratchedGTCount();
             _userService.getUserFundWalletData();
             _userCoinService.getUserCoinBalance().then(
               (_) {
@@ -159,6 +146,10 @@ class GTInstantViewModel extends BaseModel {
           "An error occured while redeeming your golden ticket",
           "Please try again in your winnings section");
     }
+
+    Future.delayed(Duration(seconds: 3), () {
+      AppState.backButtonDispatcher.didPopRoute();
+    });
   }
 
   Future<String> _getBearerToken() async {
@@ -168,36 +159,36 @@ class GTInstantViewModel extends BaseModel {
     return token;
   }
 
-  initDepositSuccessAnimation(double amount) async {
-    coinsCount = _coinService.flcBalance - amount.toInt();
-    isInvestmentAnimationInProgress = true;
-    notifyListeners();
-    Future.delayed(Duration(milliseconds: 2500), () {
-      isInvestmentAnimationInProgress = false;
-      notifyListeners();
-      initCoinAnimation(amount);
-    });
-  }
+  // initDepositSuccessAnimation(double amount) async {
+  //   coinsCount = _coinService.flcBalance - amount.toInt();
+  //   isInvestmentAnimationInProgress = true;
+  //   notifyListeners();
+  //   Future.delayed(Duration(milliseconds: 2500), () {
+  //     isInvestmentAnimationInProgress = false;
+  //     notifyListeners();
+  //     initCoinAnimation(amount);
+  //   });
+  // }
 
-  initCoinAnimation(double amount) async {
-    await Future.delayed(Duration(milliseconds: 100), () {
-      isCoinAnimationInProgress = true;
-      lottieAnimationController.forward();
-      coinsCount = _coinService.flcBalance;
-      notifyListeners();
-    });
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   coinContentOpacity = 0;
-    //   notifyListeners();
-    // });
-    await Future.delayed(Duration(milliseconds: 2500), () {
-      isCoinAnimationInProgress = false;
-      notifyListeners();
-    });
-    await Future.delayed(Duration(milliseconds: 100), () {
-      initNormalFlow();
-    });
-  }
+  // initCoinAnimation(double amount) async {
+  //   await Future.delayed(Duration(milliseconds: 100), () {
+  //     isCoinAnimationInProgress = true;
+  //     lottieAnimationController.forward();
+  //     coinsCount = _coinService.flcBalance;
+  //     notifyListeners();
+  //   });
+  //   // await Future.delayed(Duration(seconds: 2), () {
+  //   //   coinContentOpacity = 0;
+  //   //   notifyListeners();
+  //   // });
+  //   await Future.delayed(Duration(milliseconds: 2500), () {
+  //     isCoinAnimationInProgress = false;
+  //     notifyListeners();
+  //   });
+  //   await Future.delayed(Duration(milliseconds: 100), () {
+  //     initNormalFlow();
+  //   });
+  // }
 
   initNormalFlow() {
     Future.delayed(Duration(milliseconds: 500), () {

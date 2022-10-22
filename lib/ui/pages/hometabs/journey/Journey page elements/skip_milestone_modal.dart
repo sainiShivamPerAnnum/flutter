@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/modals_sheets/recharge_modal_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -30,6 +30,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   final GoldenTicketRepository _goldenTicketRepo =
       locator<GoldenTicketRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
 
   get skippingInProgress => this._skippingInProgress;
@@ -45,6 +46,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
     skippingInProgress = true;
     final res = await _goldenTicketRepo.skipMilestone();
     if (res.isSuccess()) {
+      _userCoinService.getUserCoinBalance();
       skippingInProgress = false;
       AppState.screenStack.removeLast();
       while (AppState.screenStack.length > 1)
@@ -59,7 +61,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
       AppState.screenStack.removeLast();
       AppState.backButtonDispatcher.didPopRoute();
       AppState.backButtonDispatcher.didPopRoute();
-      BaseUtil.showNegativeAlert("Please try again", res.errorMessage);
+      BaseUtil.showNegativeAlert("", res.errorMessage);
     }
   }
 
@@ -90,8 +92,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                 width: SizeConfig.screenWidth,
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                    onPressed: () =>
-                        AppState.backButtonDispatcher.didPopRoute(),
+                    onPressed: skippingInProgress
+                        ? () {}
+                        : () => AppState.backButtonDispatcher.didPopRoute(),
                     icon: Icon(
                       Icons.close,
                       color: Colors.white,
@@ -151,7 +154,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                             SizedBox(height: SizeConfig.padding6),
                             Row(
                               children: [
-                                SvgPicture.asset(Assets.tokens,
+                                SvgPicture.asset(Assets.token,
                                     height: SizeConfig.iconSize1),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(
@@ -183,9 +186,11 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                           .didPopRoute();
                                       AppState.backButtonDispatcher
                                           .didPopRoute();
-                                      return BaseUtil().openRechargeModalSheet(
-                                        amt: widget.milestone.skipCost['amt'],
+                                      return BaseUtil()
+                                          .openDepositOptionsModalSheet(
                                         isSkipMl: true,
+                                        amount:
+                                            widget.milestone.skipCost['amt'],
                                       );
                                     },
                                     width: SizeConfig.screenWidth),

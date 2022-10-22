@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -11,24 +13,24 @@ class TransactionHistoryRepository extends BaseRepo {
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
-  Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
-    try {
-      final token = await getBearerToken();
-      final quntityResponse = await APIService.instance.getData(
-        ApiPath.getWithdrawableGoldQuantity(
-          this.userService.baseUser.uid,
-        ),
-        cBaseUrl: _baseUrl,
-        token: token,
-      );
+  // Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
+  //   try {
+  //     final token = await getBearerToken();
+  //     final quntityResponse = await APIService.instance.getData(
+  //       ApiPath.getWithdrawableGoldQuantity(
+  //         this.userService.baseUser.uid,
+  //       ),
+  //       cBaseUrl: _baseUrl,
+  //       token: token,
+  //     );
 
-      final quantity = quntityResponse["data"]["quantity"].toDouble();
-      return ApiResponse(model: quantity, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch QUNTITY", 400);
-    }
-  }
+  //     final quantity = quntityResponse["data"]["quantity"].toDouble();
+  //     return ApiResponse(model: quantity, code: 200);
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     return ApiResponse.withError("Unable to fetch QUNTITY", 400);
+  //   }
+  // }
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
     String start,
@@ -42,7 +44,7 @@ class TransactionHistoryRepository extends BaseRepo {
       final _token = await getBearerToken();
       final _queryParams = {
         "type": type,
-        "subtype": subtype,
+        "subType": subtype,
         "start": start,
         "status": status
       };
@@ -54,6 +56,7 @@ class TransactionHistoryRepository extends BaseRepo {
       );
 
       final responseData = response["data"];
+      log("Transactions data: $responseData");
       responseData["transactions"].forEach((e) {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });
@@ -65,7 +68,8 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch transactions", 400);
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch transactions", 400);
     }
   }
 }

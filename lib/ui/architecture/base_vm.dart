@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
 
-class BaseModel extends ChangeNotifier {
+class BaseViewModel extends ChangeNotifier {
   ViewState _state = ViewState.Idle;
   ViewState get state => _state;
 

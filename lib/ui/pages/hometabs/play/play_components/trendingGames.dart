@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/gameRewards.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,6 +10,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/util/locator.dart';
 
 class TrendingGamesSection extends StatelessWidget {
   final PlayViewModel model;
@@ -26,10 +26,9 @@ class TrendingGamesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GameTitleWithSubTitle(
-            title: "Your favorites",
-            subtitle:
-                "Play using fello tokens. Money from savings will not be deducted"),
+        TitleSubtitleContainer(
+            title: "All games",
+            subTitle: "New games are added regularly. Keep checking out!"),
         Container(
           height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth,
@@ -43,7 +42,7 @@ class TrendingGamesSection extends StatelessWidget {
                 : model.trendingGamesListData.length,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             itemBuilder: (ctx, index) {
-              return (model.isGamesListDataLoading)
+              return model.isGamesListDataLoading
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
@@ -65,8 +64,11 @@ class TrendingGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
     return GestureDetector(
       onTap: () {
+        _analyticsService.track(
+            eventName: 'Game Tapped', properties: {'name': game.gameName});
         Haptic.vibrate();
         AppState.delegate.parseRoute(
           Uri.parse(game.route),
@@ -81,33 +83,27 @@ class TrendingGames extends StatelessWidget {
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.roundness112))),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: SizeConfig.screenWidth * 0.23,
-              width: SizeConfig.screenWidth * 0.23,
-              decoration: BoxDecoration(shape: BoxShape.circle),
-              child: Hero(
-                tag: game.code,
-                child: ClipOval(
-                    child: SvgPicture.network(
-                  game.icon,
-                  fit: BoxFit.cover,
-                )),
-              ),
+            SvgPicture.network(
+              game.icon,
+              fit: BoxFit.cover,
+              width: SizeConfig.screenWidth * 0.32,
             ),
             Text(
-              game.gameName,
+              game.gameName.split(' ').first,
               textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body1.colour(Colors.white),
+              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
-            Column(
+            SizedBox(height: SizeConfig.padding12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
-                  Assets.aFelloToken,
+                  Assets.token,
                   height: SizeConfig.padding20,
                 ),
-                SizedBox(height: SizeConfig.padding6),
+                SizedBox(width: SizeConfig.padding6),
                 Text(
                   game.playCost.toString(),
                   style: TextStyles.sourceSans.body2.colour(Colors.white),

@@ -3,7 +3,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -48,7 +47,6 @@ class NotficationsPage extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(top: SizeConfig.padding24),
                 decoration: BoxDecoration(),
                 child: model.state == ViewState.Busy
                     ? Center(child: FullScreenLoader())
@@ -98,26 +96,13 @@ class NotficationsPage extends StatelessWidget {
                                             .withOpacity(0.1),
                                         radius:
                                             SizeConfig.notificationAvatarRadius,
-                                        child: model.getNotificationAsset(model
-                                                    .notifications[index]
-                                                    .title) ==
-                                                Assets.logoShortform
-                                            ? Image.asset(
-                                                model.getNotificationAsset(model
-                                                    .notifications[index]
-                                                    .title),
-                                                color: UiConstants.primaryColor,
-                                                height: SizeConfig.iconSize1,
-                                                fit: BoxFit.contain,
-                                              )
-                                            : SvgPicture.asset(
-                                                model.getNotificationAsset(model
-                                                    .notifications[index]
-                                                    .title),
-                                                color: UiConstants.primaryColor,
-                                                height: SizeConfig.iconSize1,
-                                                fit: BoxFit.contain,
-                                              ),
+                                        child: SvgPicture.asset(
+                                          model.getNotificationAsset(
+                                              model.notifications[index].title),
+                                          color: UiConstants.primaryColor,
+                                          height: SizeConfig.iconSize1,
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                       SizedBox(width: SizeConfig.padding24),
                                       Expanded(

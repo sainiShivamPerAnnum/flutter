@@ -1,1 +1,12 @@
-enum FaqsType { savings, withdrawals, play, win }
+enum FaqsType {
+  gettingStarted,
+  yourAccount,
+  savings,
+  autosave,
+  withdrawals,
+  play,
+  winnings,
+  gold,
+  flo,
+  journey
+}

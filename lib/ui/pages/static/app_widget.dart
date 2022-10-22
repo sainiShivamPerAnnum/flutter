@@ -41,6 +41,7 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.hintText = '',
     this.autoFocus = false,
+    this.obscure = false,
     this.borderRadius,
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
@@ -50,6 +51,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.textAlign = TextAlign.start,
     this.textStyle,
+    this.maxLines = 1,
     this.suffixText,
     this.suffixTextStyle,
     this.scrollPadding,
@@ -62,7 +64,9 @@ class AppTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.suffixIconConstraints,
     this.margin,
+    this.readOnly = false,
     this.autovalidateMode,
+    this.onSubmit,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -72,6 +76,7 @@ class AppTextField extends StatelessWidget {
   final List<TextInputFormatter> inputFormatters;
   final TextInputType keyboardType;
   final bool autoFocus;
+  final bool obscure;
   final BorderRadius borderRadius;
   final Widget suffixIcon;
   final Widget prefixIcon;
@@ -80,9 +85,11 @@ class AppTextField extends StatelessWidget {
   final String suffixText;
   final TextStyle suffixTextStyle;
   //executes on every change
-  AutovalidateMode autovalidateMode;
+  final AutovalidateMode autovalidateMode;
+  final int maxLines;
   final Function onChanged;
   final Function onTap;
+  final Function onSubmit;
   final TextAlign textAlign;
   final TextStyle textStyle;
   final Widget suffix;
@@ -95,6 +102,7 @@ class AppTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final BoxConstraints suffixIconConstraints;
   final EdgeInsets margin;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +125,7 @@ class AppTextField extends StatelessWidget {
         scrollPadding: EdgeInsets.zero,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
+        onFieldSubmitted: onSubmit,
         inputFormatters: inputFormatters ??
             [
               FilteringTextInputFormatter.allow(
@@ -130,13 +139,15 @@ class AppTextField extends StatelessWidget {
                   : UiConstants.kTextFieldTextColor,
             ),
         textAlign: textAlign,
-        maxLines: null,
+        maxLines: maxLines,
         minLines: null,
         maxLength: maxLength,
         autofocus: autoFocus,
         keyboardType: keyboardType,
         onChanged: onChanged,
+        obscureText: obscure,
         onTap: onTap ?? () {},
+        readOnly: readOnly,
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(
@@ -328,7 +339,7 @@ class AppPositiveBtn extends StatelessWidget {
     Key key,
     @required this.btnText,
     @required this.onPressed,
-    @required this.width,
+    this.width,
     this.height,
   }) : super(key: key);
   final String btnText;
@@ -340,7 +351,7 @@ class AppPositiveBtn extends StatelessWidget {
       children: [
         Container(
           height: height ?? SizeConfig.screenWidth * 0.1556,
-          width: width,
+          width: width ?? SizeConfig.screenWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
               SizeConfig.buttonBorderRadius,
@@ -365,7 +376,7 @@ class AppPositiveBtn extends StatelessWidget {
         ),
         Container(
           height: SizeConfig.padding2,
-          width: width - SizeConfig.padding4,
+          width: (width ?? SizeConfig.screenWidth) - SizeConfig.padding4,
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding2,
           ),
@@ -389,7 +400,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
     Key key,
     @required this.child,
     @required this.onPressed,
-    @required this.width,
+    this.width,
   }) : super(key: key);
   final Widget child;
   final VoidCallback onPressed;
@@ -402,7 +413,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
         children: [
           Container(
             height: SizeConfig.screenWidth * 0.1556,
-            width: width,
+            width: width ?? SizeConfig.screenWidth,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                 SizeConfig.buttonBorderRadius,
@@ -422,7 +433,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
           ),
           Container(
             height: SizeConfig.padding2,
-            width: width - SizeConfig.padding4,
+            width: (width ?? SizeConfig.screenWidth) - SizeConfig.padding4,
             margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding2,
             ),
@@ -529,6 +540,7 @@ class AppNegativeBtn extends StatelessWidget {
   final String btnText;
   final VoidCallback onPressed;
   final double width;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -687,6 +699,42 @@ class AppSwitch extends StatelessWidget {
                 ),
         ),
       ),
+    );
+  }
+}
+
+class CustomKeyboardSubmitButton extends StatelessWidget {
+  final Function onSubmit;
+
+  CustomKeyboardSubmitButton({this.onSubmit});
+
+  @override
+  Widget build(BuildContext context) {
+    print("size config bottom insets: ${SizeConfig.viewInsets.bottom}");
+    print(
+        "Media query bottom insets ${MediaQuery.of(context).viewInsets.bottom}");
+    return Positioned(
+      bottom: MediaQuery.of(context).viewInsets.bottom,
+      child: MediaQuery.of(context).viewInsets.bottom >
+              SizeConfig.viewInsets.bottom
+          ? Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              color: UiConstants.kArowButtonBackgroundColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: onSubmit,
+                child: Text(
+                  'DONE',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.primaryColor),
+                ),
+              ),
+            )
+          : SizedBox(),
     );
   }
 }

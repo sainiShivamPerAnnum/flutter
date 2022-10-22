@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
@@ -16,6 +17,7 @@ class TransactionHistoryService
   final _logger = locator<CustomLogger>();
   final _baseUtil = locator<BaseUtil>();
   final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
+
   List<UserTransaction> _txnList;
   String lastTxnDocId;
   String lastPrizeTxnDocId;
@@ -48,18 +50,21 @@ class TransactionHistoryService
   fetchTransactions({
     String status,
     String type,
-    String subtype,
+    InvestmentType subtype,
   }) async {
     //fetch filtered transactions
     final response = await _transactionHistoryRepo.getUserTransactions(
       type: type,
-      subtype: subtype,
+      subtype: subtype.name,
       status: status,
       start: getLastTxnDocType(status: status, type: type),
     );
+
     if (!response.isSuccess()) {
       return BaseUtil.showNegativeAlert(
-          "Unable to fetch txns", "Please try again");
+        response.errorMessage ?? "Unable to fetch transactions",
+        "Please try again",
+      );
     }
     // if transaction list is empty
     if (_txnList == null || _txnList.length == 0) {
@@ -72,9 +77,10 @@ class TransactionHistoryService
     // set proper lastDocument snapshot for further fetches
     if (response.model.transactions.isNotEmpty)
       setLastTxnDocType(
-          status: status,
-          type: type,
-          lastDocId: response.model.transactions.last.docKey);
+        status: status,
+        type: type,
+        lastDocId: response.model.transactions.last.docKey,
+      );
     // check and set which category has no more items to fetch
     if (response.model.isLastPage)
       setHasMoreTxnsValue(type: type, status: status);
@@ -144,7 +150,7 @@ class TransactionHistoryService
     }
   }
 
-  updateTransactions() async {
+  updateTransactions(InvestmentType investmentType) async {
     lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
@@ -152,7 +158,7 @@ class TransactionHistoryService
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
     txnList?.clear();
-    await fetchTransactions();
+    await fetchTransactions(subtype: investmentType);
     _logger.i("Transactions got updated");
   }
 
@@ -171,9 +177,9 @@ class TransactionHistoryService
 
   String getFormattedTxnAmount(double amount) {
     if (amount > 0)
-      return "₹ ${amount.abs().toStringAsFixed(2)}";
+      return "₹${amount == amount.toInt() ? amount.toInt() : amount.toStringAsFixed(2)}";
     else
-      return "- ₹ ${amount.abs().toStringAsFixed(2)}";
+      return "- ₹${amount == amount.toInt() ? amount.abs().toInt() : amount.abs().toStringAsFixed(2)}";
   }
 
   String getFormattedTime(Timestamp tTime) {
@@ -185,7 +191,13 @@ class TransactionHistoryService
   String getFormattedDate(Timestamp time) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
-    return DateFormat('MMMMd').format(now);
+    return DateFormat('MMMM dd').format(now);
+  }
+
+  getFormattedDateAndTime(Timestamp time) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    return DateFormat('d MMMM, yyyy - hh:mm a').format(now);
   }
 
   String getFormattedSIPDate(DateTime time) {

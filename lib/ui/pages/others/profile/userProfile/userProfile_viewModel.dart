@@ -4,24 +4,29 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/username_response_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/components/sign_in_options.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
@@ -29,26 +34,34 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
 //Pub Imports
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../../core/repository/user_repo.dart';
 
-class UserProfileVM extends BaseModel {
+class UserProfileVM extends BaseViewModel {
   RegExp emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final usernameRegex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
+  UsernameResponse response;
+
   Log log = new Log('User Profile');
   bool _inEditMode = false;
   bool _isgmailFieldEnabled = true;
-
   bool _isNewUser = false;
   bool _isEmailEnabled = false;
   bool _isContinuedWithGoogle = false;
   bool _isSigningInWithGoogle = false;
+  bool _isNameEnabled = true;
+
+  bool isUsernameLoading = false;
+  bool isValid = false;
 
   final _userRepo = locator<UserRepository>();
   final _userService = locator<UserService>();
@@ -63,6 +76,9 @@ class UserProfileVM extends BaseModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _journeyService = locator<JourneyService>();
   final _googleSignInService = locator<GoogleSignInService>();
+  final _bankAndKycService = locator<BankAndPanService>();
+  final dbProvider = locator<DBModel>();
+  final _gtService = locator<GoldenTicketService>();
 
   double picSize;
   XFile selectedProfilePicture;
@@ -75,6 +91,8 @@ class UserProfileVM extends BaseModel {
   String gender;
   DateTime selectedDate;
   String _dateInputError = "";
+  String username = "";
+  double _errorPadding = 0;
 
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -86,7 +104,8 @@ class UserProfileVM extends BaseModel {
       mobileController,
       dateFieldController,
       monthFieldController,
-      yearFieldController;
+      yearFieldController,
+      usernameController;
 
   FocusNode nameFocusNode = FocusNode();
   FocusNode emailOptionsFocusNode = FocusNode();
@@ -123,6 +142,8 @@ class UserProfileVM extends BaseModel {
   bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
   get isNewUser => this._isNewUser;
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
+  get errorPadding => this._errorPadding;
+  get isNameEnabled => this._isNameEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -186,6 +207,15 @@ class UserProfileVM extends BaseModel {
     notifyListeners();
   }
 
+  set errorPadding(value) {
+    this._errorPadding = value;
+    notifyListeners();
+  }
+
+  set isNameEnabled(value) {
+    this._isNameEnabled = value;
+  }
+
   init(bool inu) {
     isNewUser = inu;
     if (isNewUser) enableEdit();
@@ -196,6 +226,9 @@ class UserProfileVM extends BaseModel {
     setGender();
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
+    if (_userService.isEmailVerified) isgmailFieldEnabled = false;
+    if (isNewUser) usernameController = TextEditingController();
+    checkIfUserIsKYCVerified();
   }
 
   setGender() {
@@ -280,8 +313,22 @@ class UserProfileVM extends BaseModel {
     });
   }
 
+  checkIfUserIsKYCVerified() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(ViewState.Busy);
+      if (_bankAndKycService.isKYCVerified) {
+        nameController.text =
+            _userService.baseUser.kycName ?? _userService.baseUser.name;
+        isNameEnabled = false;
+      }
+      setState(ViewState.Idle);
+    });
+  }
+
   updateDetails() async {
-    if (formKey.currentState.validate() && isValidDate()) {
+    if (formKey.currentState.validate() &&
+        isValidDate() &&
+        await usernameIsValid()) {
       if (_checkForChanges() && checkForNullData()) {
         if (DateHelper.isAdult(selectedDate)) {
           isUpdaingUserDetails = true;
@@ -291,7 +338,8 @@ class UserProfileVM extends BaseModel {
           _userService.baseUser.gender = getGender();
           _userService.baseUser.isEmailVerified = _userService.isEmailVerified;
           _userService.baseUser.email = emailController.text.trim();
-
+          _userService.baseUser.username =
+              isNewUser ? username : _userService.baseUser.username;
           await _userRepo.updateUser(
             uid: _userService.baseUser.uid,
             dMap: {
@@ -302,11 +350,13 @@ class UserProfileVM extends BaseModel {
                   _userService.baseUser.isEmailVerified,
               BaseUser.fldEmail: _userService.baseUser.email,
               BaseUser.fldAvatarId: "AV1",
+              BaseUser.fldUsername: _userService.baseUser.username
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
               await _userRepo.getUserById(id: _userService.baseUser.uid);
-              _userService.setMyUserName(_userService.baseUser.name);
+              _userService.setMyUserName(_userService?.baseUser?.kycName ??
+                  _userService.baseUser.name);
               _userService.setEmail(_userService.baseUser.email);
               _userService.setDateOfBirth(_userService.baseUser.dob);
               _userService.setGender(_userService.baseUser.gender);
@@ -341,6 +391,20 @@ class UserProfileVM extends BaseModel {
           "Invalid details", "please check the fields again");
   }
 
+  Future<bool> usernameIsValid() async {
+    if (!isNewUser) return true;
+    if (!await validateUsername()) {
+      BaseUtil.showNegativeAlert(
+          "Username invalid", "please try another username");
+      return false;
+    }
+    return (username != null &&
+        username.isNotEmpty &&
+        isValid != null &&
+        isValid &&
+        isUsernameLoading == false);
+  }
+
   bool _checkForChanges() {
     if (isNewUser) return true;
     if (myname != nameController.text.trim() ||
@@ -348,7 +412,7 @@ class UserProfileVM extends BaseModel {
         isDOBChanged() ||
         isGenderChanged()) return true;
     if (!isNewUser) inEditMode = false;
-    BaseUtil.showNegativeAlert("No changes", "please make some changes");
+    // BaseUtil.showNegativeAlert("No changes", "please make some changes");
     return false;
   }
 
@@ -433,7 +497,8 @@ class UserProfileVM extends BaseModel {
                 _tambolaService.signOut();
                 _analyticsService.signOut();
                 _paytmService.signout();
-
+                _bankAndKycService.dump();
+                GoldenTicketService.dump();
                 AppState.backButtonDispatcher.didPopRoute();
                 AppState.delegate.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
@@ -482,12 +547,50 @@ class UserProfileVM extends BaseModel {
     }
   }
 
+  Future<bool> checkGalleryPermission() async {
+    if (await BaseUtil.showNoInternetAlert()) return false;
+    var _status = await Permission.photos.status;
+    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "Request Permission",
+          description:
+              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+          buttonText: "Continue",
+          asset: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Image.asset(
+              "images/gallery.png",
+              height: SizeConfig.screenWidth * 0.24,
+            ),
+          ),
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            _chooseprofilePicture();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+        ),
+      );
+    } else if (_status.isGranted) {
+      _chooseprofilePicture();
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Permission Unavailable',
+        'Please enable permission from settings to continue',
+      );
+      return false;
+    }
+    return false;
+  }
+
   handleDPOperation() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     AppState.backButtonDispatcher.didPopRoute();
-    if (await _userService.checkGalleryPermission()) {
-      _chooseprofilePicture();
-    }
+    checkGalleryPermission();
 
     // var _status = await Permission.photos.status;
     // if (_status.isRestricted || _status.isLimited || _status.isDenied) {
@@ -631,6 +734,7 @@ class UserProfileVM extends BaseModel {
             1,
       },
     ).then((value) {
+      _userService.setBaseUser();
       Log("Preferences updated");
     });
     isApplockLoading = false;
@@ -697,5 +801,130 @@ class UserProfileVM extends BaseModel {
       // isGoogleVerified = true;
     }
     isSigningInWithGoogle = false;
+  }
+
+  Widget showResult() {
+    print("Response " + response.toString());
+    if (isValid == null) {
+      return SizedBox();
+    }
+    if (isUsernameLoading) {
+      return Container(
+        height: SizeConfig.padding16,
+        width: SizeConfig.padding16,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+        ),
+      );
+    } else if (response == UsernameResponse.EMPTY)
+      return Text(
+        "username cannot be empty",
+        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+      );
+    else if (response == UsernameResponse.UNAVAILABLE)
+      return Text(
+        "@${usernameController.text.trim()} is not available",
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    else if (response == UsernameResponse.AVAILABLE) {
+      return Text(
+        "@${usernameController.text.trim()} is available",
+        style: TextStyle(
+          color: UiConstants.primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    } else if (response == UsernameResponse.INVALID) {
+      if (usernameController.text.trim().length < 4)
+        return Text(
+          "please enter a username with more than 3 characters.",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+      else if (usernameController.text.trim().length > 20)
+        return Text(
+          "please enter a username with less than 20 characters.",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+      else
+        return Text(
+          "@${usernameController.text.trim()} is invalid",
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+    }
+
+    return SizedBox(
+      height: SizeConfig.padding16,
+    );
+  }
+
+  Future<bool> validateUsername() async {
+    // if (isUsernameLoading) return false;
+    isUsernameLoading = true;
+    notifyListeners();
+    if (usernameController.text == null || usernameController.text.isEmpty) {
+      errorPadding = 0;
+      isValid = null;
+      response = UsernameResponse.EMPTY;
+      isUsernameLoading = false;
+      notifyListeners();
+      return isValid;
+    }
+    username = usernameController.text?.trim();
+    if (username == null || username == "") {
+      errorPadding = 0;
+      isValid = null;
+      response = UsernameResponse.EMPTY;
+    } else {
+      errorPadding = SizeConfig.padding8;
+
+      if (usernameRegex.hasMatch(username)) {
+        bool res = await dbProvider
+            .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
+
+        isValid = res;
+        if (res)
+          response = UsernameResponse.AVAILABLE;
+        else
+          response = UsernameResponse.UNAVAILABLE;
+      } else {
+        isValid = false;
+        response = UsernameResponse.INVALID;
+      }
+    }
+
+    isUsernameLoading = false;
+    notifyListeners();
+    return isValid;
+  }
+
+  navigateToKycScreen() {
+    Haptic.vibrate();
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
+  }
+
+  navigateToBankDetailsScreen() {
+    Haptic.vibrate();
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: BankDetailsPageConfig,
+    );
   }
 }

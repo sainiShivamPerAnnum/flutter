@@ -4,6 +4,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -14,23 +15,26 @@ class JourneyBannersView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<JourneyBannersViewModel>(
       onModelReady: (model) => model.loadOfferList(),
+      onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
         return Positioned(
           bottom: SizeConfig.navBarHeight,
-          child: SafeArea(
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: kBottomNavigationBarHeight,
-              child: !model.isOfferListLoading && model.offerList.isNotEmpty
-                  ? PageView.builder(
-                      controller: model.promoPageController,
-                      itemCount: model.offerList.length,
-                      itemBuilder: (cntx, i) {
-                        return Container(
+          child: Container(
+            width: SizeConfig.screenWidth,
+            height: kBottomNavigationBarHeight,
+            child: !model.isOfferListLoading && model.offerList.isNotEmpty
+                ? PageView.builder(
+                    controller: model.promoPageController,
+                    itemCount: model.offerList.length,
+                    itemBuilder: (cntx, i) {
+                      return InkWell(
+                        onTap: () {
+                          AppState.delegate.parseRoute(
+                              Uri.parse(model.offerList[i].actionUri));
+                        },
+                        child: Container(
                           padding: EdgeInsets.only(left: SizeConfig.padding16),
-                          color: Color((math.Random().nextDouble() * 0xFFFFFF)
-                                  .toInt())
-                              .withOpacity(1.0),
+                          color: UiConstants.kBackgroundColor,
                           height: kBottomNavigationBarHeight,
                           width: SizeConfig.screenWidth,
                           child: Row(
@@ -79,11 +83,11 @@ class JourneyBannersView extends StatelessWidget {
                               )
                             ],
                           ),
-                        );
-                      },
-                    )
-                  : SizedBox(),
-            ),
+                        ),
+                      );
+                    },
+                  )
+                : SizedBox(),
           ),
         );
       },

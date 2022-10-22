@@ -73,7 +73,9 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
       height: width,
       width: width,
       child: SvgPicture.asset(
-        Assets.unredemmedGoldenTicketBG,
+        ticket.isLevelChange
+            ? Assets.levelUpUnRedeemedGoldenTicketBG
+            : Assets.unredemmedGoldenTicketBG,
         width: double.maxFinite,
         height: double.maxFinite,
         fit: BoxFit.contain,
@@ -220,7 +222,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
-          Text(' Cashback!',
+          Text(' rewards won!',
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
@@ -233,7 +235,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           Row(
             children: [
               SvgPicture.asset(
-                Assets.newTokenAsset,
+                Assets.token,
                 width: SizeConfig.padding32,
                 height: SizeConfig.padding32,
               ),
@@ -332,7 +334,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                 ),
               ),
               Text(
-                ' Cashback!',
+                ' reward won!',
                 style: TextStyles.sourceSans.body4.colour(Colors.black),
               )
             ],
@@ -351,7 +353,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               Row(
                 children: [
                   SvgPicture.asset(
-                    Assets.newTokenAsset,
+                    Assets.token,
                     width: SizeConfig.padding24,
                     height: SizeConfig.padding24,
                   ),

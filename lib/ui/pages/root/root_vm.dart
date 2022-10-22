@@ -1,64 +1,55 @@
-import 'dart:convert';
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/https/http_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
-import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
-class RootViewModel extends BaseModel {
+class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  final HttpModel _httpModel = locator<HttpModel>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
-  final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final LocalDBModel _lModel = locator<LocalDBModel>();
-  final DBModel _dbModel = locator<DBModel>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final _tambolaService = locator<TambolaService>();
+  final _gtService = locator<GoldenTicketService>();
+  final _bankAndKycService = locator<BankAndPanService>();
   int _bottomNavBarIndex = 1;
+  static bool canExecuteStartupNotification = true;
 
   final winnerService = locator<WinnerService>();
 
@@ -69,7 +60,6 @@ class RootViewModel extends BaseModel {
   final _refRepo = locator<ReferralRepo>();
 
   BuildContext rootContext;
-  bool _isInitialized = false;
   bool _isUploading = false;
 
   get isUploading => this._isUploading;
@@ -97,13 +87,14 @@ class RootViewModel extends BaseModel {
   //int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
-    if (AppState().getCurrentTabIndex == 2) return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
+
     _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
     await _txnHistoryService.fetchTransactions();
     await _journeyService.checkForMilestoneLevelChange();
+    await _gtService.updateUnscratchedGTCount();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -132,28 +123,11 @@ class RootViewModel extends BaseModel {
         PageAction(state: PageState.addPage, page: NotificationsConfig);
   }
 
-  showDrawer() {
-    // print("drawer opened");
-    //AppState.screenStack.add(ScreenItem.dialog);
-    scaffoldKey.currentState.openDrawer();
-    _analyticsService.track(eventName: AnalyticsEvents.profileClicked);
-  }
-
-  // showTicketModal(BuildContext context) {
-  //   AppState.screenStack.add(ScreenItem.dialog);
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (ctx) {
-  //         return WantMoreTicketsModalSheet();
-  //       });
-  // }
-
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
-      //TODO: use the analytics event provided for journey.
       case 0:
-        print('journey triggered');
+        _analyticsService.track(eventName: AnalyticsEvents.journeySection);
         break;
       case 1:
         _analyticsService.track(eventName: AnalyticsEvents.playSection);
@@ -168,11 +142,10 @@ class RootViewModel extends BaseModel {
       default:
     }
     bottomNavBarIndex = index;
-    _userService.buyFieldFocusNode.unfocus();
     AppState.delegate.appState.setCurrentTabIndex = index;
     Haptic.vibrate();
     if (AppState.delegate.appState.getCurrentTabIndex == 0)
-      _journeyService.checkAndAnimateAvatar();
+      _journeyService.checkForMilestoneLevelChange();
   }
 
   _initAdhocNotifications() {
@@ -194,40 +167,6 @@ class RootViewModel extends BaseModel {
     _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
 
-  // uploadJourneyPage() async {
-  //   // await _journeyRepo.uploadJourneyPage(jourenyPages.first);
-  //   log(json.encode(jourenyPages.last.toMap()));
-  // }
-
-  // uploadMilestones() async {
-  //   // jourenyPages.forEach((page) => page.milestones.forEach((milestone) {
-  //   //       log(milestone.toMap().toString());
-  //   //     }));
-  //   log(json.encode(jourenyPages
-  //       .map((e) => e.milestones.map((m) => m.toMap(e.page)).toList())
-  //       .toList()));
-  // }
-
-  // completeNViewDownloadSaveLViewAsset() async {
-  //   if (_journeyRepo.checkIfAssetIsAvailableLocally('b1')) {
-  //     log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
-  //     svgSource = _journeyRepo.getAssetLocalFilePath('b1');
-  //   } else {
-  //     svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
-  //     log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
-  //     await Future.delayed(Duration(seconds: 5));
-  //     final bool result = await _journeyRepo.downloadAndSaveFile(
-  //         "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg");
-  //     if (result) {
-  //       log("ROOTVM: Asset downlaoding & caching completed successfully. updating asset from local to network in widget tree");
-
-  //       svgSource = _journeyRepo.getAssetLocalFilePath('b1');
-  //     } else {
-  //       log("ROOTVM: Asset downlaoding & caching failed. showing asset from network this time, will try again on next startup");
-  //     }
-  //   }
-  // }
-
   Future<void> openJourneyView() async {
     AppState.delegate.appState.currentAction =
         PageAction(page: JourneyViewPageConfig, state: PageState.addPage);
@@ -238,98 +177,123 @@ class RootViewModel extends BaseModel {
       addToScreenStack: true,
       isBarrierDismissable: false,
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-      backgroundColor: UiConstants.bottomNavBarColor,
-      content: const SecurityModalSheet(),
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(SizeConfig.roundness12)),
+      backgroundColor:
+          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+      content: SecurityModalSheet(),
     );
   }
 
+  checkForBootUpAlerts() async {
+    bool updateAvilable =
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVILABLE, def: false);
+    bool isMsgNoticeAvilable =
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVILABLE, def: false);
+
+    if (updateAvilable) {
+      canExecuteStartupNotification = false;
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "App Update Avilable",
+          description:
+              "A new version of the app is avilable. Update now to enjoy the hastle free experience.",
+          buttonText: "Update Now",
+          cancelBtnText: "Not now",
+          confirmAction: () {
+            try {
+              if (Platform.isIOS)
+                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
+              else if (Platform.isAndroid)
+                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+            } catch (e) {
+              Log(e.toString());
+              // BaseUtil.showNegativeAlert(
+              //     "Something went wrong", "Please try again");
+            }
+            AppState.backButtonDispatcher.didPopRoute();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    } else if (isMsgNoticeAvilable) {
+      canExecuteStartupNotification = false;
+      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE) ?? " ";
+      BaseUtil.openDialog(
+        isBarrierDismissable: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "Notice",
+          description: msg,
+          buttonText: "Ok",
+          cancelBtnText: "Cancel",
+          confirmAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return true;
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher.didPopRoute();
+            return false;
+          },
+        ),
+      );
+    }
+  }
+
   initialize() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      bool canExecuteStartupNotification = true;
-
-      // bool showSecurityPrompt = false;
-      // if (_userService.showSecurityPrompt == null) {
-      //   showSecurityPrompt = await _lModel.showSecurityPrompt();
-      //   _userService.showSecurityPrompt = showSecurityPrompt;
-      // }
-
-      _userService.getUserFundWalletData();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
-      _userService.checkForUnscratchedGTStatus();
-      _baseUtil.getProfilePicture();
-      // await _baseUtil.getProfilePicture();
+      _userService.getProfilePicture();
 
       _initAdhocNotifications();
-
-      // show security modal
-      // if (showSecurityPrompt &&
-      //     _userService.baseUser.isAugmontOnboarded &&
-      //     _userService.userFundWallet.augGoldQuantity > 0 &&
-      //     _userService.baseUser.userPreferences
-      //             .getPreference(Preferences.APPLOCK) ==
-      //         0) {
-      //   canExecuteStartupNotification = false;
-      //   WidgetsBinding.instance?.addPostFrameCallback((_) {
-      //     _showSecurityBottomSheet();
-      //     _localDBModel.updateSecurityPrompt(false);
-      //   });
-      // }
-
-      if (canExecuteStartupNotification &&
-          AppState.startupNotifMessage != null) {
-        canExecuteStartupNotification = false;
-        _logger.d(
-          "terminated startup message: ${AppState.startupNotifMessage}",
-        );
-        _fcmListener.handleMessage(
-          AppState.startupNotifMessage,
-          MsgSource.Terminated,
-        );
-      }
-
-      // if (canExecuteStartupNotification &&
-      //     _userService.isAnyUnscratchedGTAvailable) {
-      //   int lastWeekday;
-      //   if (await CacheManager.exits(CacheManager.CACHE_LAST_UGT_CHECK_TIME))
-      //     lastWeekday = await CacheManager.readCache(
-      //         key: CacheManager.CACHE_LAST_UGT_CHECK_TIME, type: CacheType.int);
-      //   // _logger.d("Unscratched Golden Ticket Show Count: $count");
-      //   if (lastWeekday == null ||
-      //       lastWeekday == 7 ||
-      //       lastWeekday < DateTime.now().weekday)
-      //     BaseUtil.openDialog(
-      //       addToScreenStack: true,
-      //       hapticVibrate: true,
-      //       isBarrierDismissable: false,
-      //       content: FelloInfoDialog(
-      //         showCrossIcon: true,
-      //         asset: Assets.goldenTicket,
-      //         title: "Your Golden Tickets are waiting",
-      //         subtitle:
-      //             "You have unopened Golden Tickets available in your rewards wallet",
-      //         action: FelloButtonLg(
-      //           child: Text(
-      //             "Open Rewards",
-      //             style: TextStyles.body2.bold.colour(Colors.white),
-      //           ),
-      //           onPressed: () {
-      //             AppState.backButtonDispatcher.didPopRoute();
-      //             AppState.delegate.appState.currentAction = PageAction(
-      //               widget: MyWinningsView(openFirst: true),
-      //               page: MyWinnigsPageConfig,
-      //               state: PageState.addWidget,
-      //             );
-      //           },
-      //         ),
-      //       ),
-      //     );
-      //   CacheManager.writeCache(
-      //       key: CacheManager.CACHE_LAST_UGT_CHECK_TIME,
-      //       value: DateTime.now().weekday,
-      //       type: CacheType.int);
-      // }
+      await verifyUserBootupDetails();
+      await checkForBootUpAlerts();
+      await handleStartUpNotificationData();
+      // await checkIfAppLockModalSheetIsRequired();
     });
+  }
+
+  handleStartUpNotificationData() {
+    if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
+      canExecuteStartupNotification = false;
+      _logger.d(
+        "terminated startup message: ${AppState.startupNotifMessage}",
+      );
+      _fcmListener.handleMessage(
+        AppState.startupNotifMessage,
+        MsgSource.Terminated,
+      );
+    }
+  }
+
+  checkIfAppLockModalSheetIsRequired() async {
+    // show security modal
+    if (!canExecuteStartupNotification) return;
+
+    bool showSecurityPrompt = PreferenceHelper.getBool(
+        PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
+        def: true);
+    if (showSecurityPrompt &&
+        _userService.baseUser.isAugmontOnboarded &&
+        _userService.userFundWallet.augGoldQuantity > 0 &&
+        _userService.baseUser.userPreferences
+                .getPreference(Preferences.APPLOCK) ==
+            0) {
+      canExecuteStartupNotification = false;
+      Future.delayed(Duration(seconds: 2), () {
+        _showSecurityBottomSheet();
+        PreferenceHelper.setBool(
+            PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET, false);
+      });
+    }
   }
 
   Future<dynamic> _verifyReferral(BuildContext context) async {
@@ -340,10 +304,9 @@ class RootViewModel extends BaseModel {
         def: false,
       )) return;
 
-      await _httpModel.postUserReferral(
+      await _refRepo.createReferral(
         _userService.baseUser.uid,
         BaseUtil.referrerUserId,
-        _userService.myUserName,
       );
 
       _logger.d('referral processed from link');
@@ -362,11 +325,12 @@ class RootViewModel extends BaseModel {
         .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
 
     if (referrerId.code == 200) {
-      await _httpModel.postUserReferral(
+      await _refRepo.createReferral(
         _userService.baseUser.uid,
         referrerId.model,
-        _userService.myUserName,
       );
+    } else {
+      BaseUtil.showNegativeAlert(referrerId.errorMessage, '');
     }
   }
 
@@ -413,10 +377,7 @@ class RootViewModel extends BaseModel {
   _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
     String _uri = deepLink.toString();
 
-    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
-      //Golden ticket dynamic link
-      int flag = await _submitGoldenTicket(userId, _uri, context);
-    } else if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
       _submitTrack(_uri);
     } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
       try {
@@ -472,11 +433,9 @@ class RootViewModel extends BaseModel {
         String referee = deepLink.replaceAll(prefix, '');
         _logger.d(referee);
         if (prefix.length > 0 && prefix != userId) {
-          return _httpModel
-              .postUserReferral(userId, referee, userName)
-              .then((flag) {
+          return _refRepo.createReferral(userId, referee).then((res) {
             // _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return flag;
+            return res.model;
           });
         } else
           return false;
@@ -488,90 +447,102 @@ class RootViewModel extends BaseModel {
     }
   }
 
-  Future<int> _submitGoldenTicket(
-      String userId, String deepLink, BuildContext context) async {
-    try {
-      String prefix = "https://fello.in/goldenticketdynlnk/";
-      if (!deepLink.startsWith(prefix)) return -1;
-      String docId = deepLink.replaceAll(prefix, '');
-      if (docId != null && docId.isNotEmpty) {
-        return _httpModel
-            .postGoldenTicketRedemption(userId, docId)
-            .then((redemptionMap) {
-          //_logger.d('Flag is ${tckCount.toString()}');
-          if (redemptionMap != null &&
-              redemptionMap['flag'] &&
-              redemptionMap['count'] > 0) {
-            _userCoinService.getUserCoinBalance();
-            _userService.getUserFundWalletData();
+  Future<void> verifyUserBootupDetails() async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_userService.baseUser != null && _userService.userBootUp != null) {
+        //1.check if the account is blocked
+        if (_userService.userBootUp.data != null &&
+            _userService.userBootUp.data.isBlocked != null &&
+            _userService.userBootUp.data.isBlocked == true) {
+          canExecuteStartupNotification = false;
+          AppState.isUpdateScreen = true;
+          AppState.delegate.appState.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: BlockedUserPageConfig,
+          );
+          return;
+        }
+        // //2.Checking for forced App Update
+        if (_userService.userBootUp.data.isAppForcedUpdateRequired != null &&
+            _userService.userBootUp.data.isAppForcedUpdateRequired == true) {
+          AppState.isUpdateScreen = true;
+          canExecuteStartupNotification = false;
+          AppState.delegate.appState.currentAction = PageAction(
+              state: PageState.replaceAll, page: UpdateRequiredConfig);
+          return;
+        }
 
-            AppState.screenStack.add(ScreenItem.dialog);
-            return showDialog(
-              context: context,
-              builder: (_) => GoldenTicketClaimDialog(
-                ticketCount: redemptionMap['count'],
-                cashPrize: redemptionMap['amt'],
-              ),
-            );
-          } else {
-            AppState.screenStack.add(ScreenItem.dialog);
-            return showDialog(
-              context: context,
-              builder: (_) => GoldenTicketClaimDialog(
-                ticketCount: 0,
-                failMsg: redemptionMap['fail_msg'],
-              ),
-            );
+        //3. Sign out the user automatically
+        if (_userService.userBootUp.data.signOutUser != null &&
+            _userService.userBootUp.data.signOutUser == true) {
+          Haptic.vibrate();
+          canExecuteStartupNotification = false;
+          _userService.signOut(() async {
+            _analyticsService.track(eventName: AnalyticsEvents.signOut);
+            _analyticsService.signOut();
+            await _userRepo.removeUserFCM(_userService.baseUser.uid);
+          }).then((flag) async {
+            if (flag) {
+              //log.debug('Sign out process complete');
+              await BaseUtil().signOut();
+              // _journeyService.dump();
+              _tambolaService.signOut();
+              _analyticsService.signOut();
+              _paytmService.signout();
+              _bankAndKycService.dump();
+              GoldenTicketService.dump();
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.replaceAll, page: SplashPageConfig);
+              BaseUtil.showPositiveAlert(
+                'Signed out automatically.',
+                'Seems like some internal issues. Please sign in again.',
+              );
+            }
+          });
+        }
+
+        //4. App update present (Not forced)
+        if (_userService.userBootUp.data.isAppUpdateRequired != null) {
+          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE,
+              _userService.userBootUp.data.isAppUpdateRequired);
+        } else {
+          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
+        }
+
+        //5. Clear all the caches
+        if (_userService.userBootUp.data.cache.keys != null) {
+          for (String id in _userService.userBootUp.data.cache.keys) {
+            CacheService().invalidateByKey(id);
           }
-        });
+        }
+
+        //6. Notice
+        if (_userService.userBootUp.data.notice != null) {
+          if (_userService.userBootUp.data.notice.message != null &&
+              _userService.userBootUp.data.notice.message != "") {
+            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
+            PreferenceHelper.setString(Constants.MSG_NOTICE,
+                _userService.userBootUp.data.notice.message);
+          } else {
+            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
+          }
+
+          if (_userService.userBootUp.data.notice.url != null &&
+              _userService.userBootUp.data.notice.url != "") {
+            canExecuteStartupNotification = false;
+            try {
+              if (Platform.isIOS)
+                BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
+              else if (Platform.isAndroid)
+                BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
+            } catch (e) {
+              _logger.d(e.toString());
+              // BaseUtil.showNegativeAlert(
+              //     "Something went wrong", "Please try again");
+            }
+          } else {}
+        }
       }
-      return -1;
-    } catch (e) {
-      _logger.e('$e');
-      return -1;
-    }
-  }
-
-  // void earnMoreTokens() {
-  //   _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
-  //        BaseUtil.openModalBottomSheet(
-  //                     addToScreenStack: true,
-  //                     backgroundColor: UiConstants.gameCardColor,
-  //                     content: WantMoreTicketsModalSheet(),
-  //                     borderRadius: BorderRadius.only(
-  //                       topLeft: Radius.circular(SizeConfig.roundness24),
-  //                       topRight: Radius.circular(SizeConfig.roundness24),
-  //                     ),
-  //                     hapticVibrate: true,
-  //                     isScrollControlled: true,
-  //                     isBarrierDismissable: true,
-  //                   );
-  // }
-
-  // addJourneyPage() async {
-  //   isUploading = true;
-  //   jourenyPages.forEach((page) async {
-  //     await _dbModel.addJourneypage(page);
-  //   });
-  //   isUploading = false;
-  // }
-
-  void focusBuyField() {
-    Haptic.vibrate();
-    if (_userService.buyFieldFocusNode.hasPrimaryFocus ||
-        _userService.buyFieldFocusNode.hasFocus) {
-      _logger.d("field has focus");
-      FocusManager.instance.primaryFocus.unfocus();
-    }
-    Future.delayed(Duration(milliseconds: 100), () {
-      _userService.buyFieldFocusNode.requestFocus();
     });
-  }
-
-  Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
-
-    return token;
   }
 }

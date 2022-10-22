@@ -1,20 +1,14 @@
 import 'dart:developer' as dev;
 import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/user_input_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -22,8 +16,10 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginControllerView extends StatefulWidget {
   final int initPage;
@@ -45,12 +41,13 @@ class _LoginControllerViewState extends State<LoginControllerView> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    bool keyboardIsOpen =
+        MediaQuery.of(context).viewInsets.bottom > SizeConfig.viewInsets.bottom;
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
         model.init(initPage, model);
         if (Platform.isAndroid) {
-          Future.delayed(Duration(seconds: 2), () {
+          Future.delayed(Duration(seconds: 1), () {
             model.initTruecaller();
           });
         }
@@ -65,35 +62,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               NewSquareBackground(
                   backgroundColor: UiConstants
                       .kRechargeModalSheetAmountSectionBackgroundColor),
-              // if (model.currentPage == 1 || model.currentPage == 0)
-              // Positioned(
-              //   top: 0,
-              //   child: Container(
-              //     height: SizeConfig.screenHeight * 0.5,
-              //     width: SizeConfig.screenWidth,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //         begin: Alignment.topCenter,
-              //         end: Alignment.bottomCenter,
-              //         colors: [
-              //           Color(0xFF135756),
-              //           UiConstants.kBackgroundColor,
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // if (model.currentPage == 2)
-              //   Positioned(
-              //     top: 0,
-              //     child: CustomPaint(
-              //       painter: HeaderPainter(),
-              //       size: Size(
-              //         SizeConfig.screenWidth,
-              //         SizeConfig.screenWidth * 0.74,
-              //       ),
-              //     ),
-              //   ),
+
               SingleChildScrollView(
                 reverse: true,
                 child: Column(
@@ -105,7 +74,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              // physics: new NeverScrollableScrollPhysics(),
+                              physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -156,7 +125,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                 size: SizeConfig.padding20,
                               ))
                           : Text(
-                              model.currentPage == LoginUserNameView.index
+                              model.currentPage == LoginNameInputView.index
                                   ? 'FINISH'
                                   : 'NEXT',
                               style: TextStyles.rajdhaniB.body1
@@ -186,7 +155,76 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       : SizedBox(),
                 ),
               ),
-              // if (!keyboardIsOpen)
+              if (model.currentPage == 0 &&
+                  !keyboardIsOpen &&
+                  model.state == ViewState.Idle &&
+                  !model.loginUsingTrueCaller)
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding16,
+                              horizontal: SizeConfig.padding20),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kBackgroundColor3,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(SizeConfig.roundness12)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/svg/dual_star.svg",
+                                width: SizeConfig.padding20,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding14,
+                              ),
+                              Text(
+                                'Join over 5 Lakh users who save and win with us!',
+                                style: TextStyles.sourceSans.body4,
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                              SizeConfig.padding16, SizeConfig.padding10, 0),
+                          child: RichText(
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                  text: 'By continuing, you agree to our ',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                                new TextSpan(
+                                  text: 'Terms of Service',
+                                  style: TextStyles.sourceSans.body3.underline
+                                      .colour(UiConstants.kTextColor),
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      model.onTermsAndConditionsClicked();
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenWidth * 0.1 +
+                              MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -227,7 +265,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     //       child: model.state == ViewState.Idle
                     //           ? Text(
                     //               model.currentPage ==
-                    //                       LoginUserNameView.index
+                    //                       LoginNameInputView.index
                     //                   ? 'FINISH'
                     //                   : 'NEXT',
                     //               style: TextStyles.rajdhaniB.title5,

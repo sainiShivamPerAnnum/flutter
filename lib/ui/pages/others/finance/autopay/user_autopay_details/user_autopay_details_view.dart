@@ -1,27 +1,31 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/notifier_services/paytm_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
-import 'package:felloapp/ui/pages/others/profile/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -42,7 +46,6 @@ class UserAutosaveDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return BaseView<UserAutosaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -53,10 +56,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: Text(
-              'Autopay Details',
+              'Autosave Details',
               style: TextStyles.rajdhaniSB.title4,
             ),
-            centerTitle: true,
+            centerTitle: false,
             backgroundColor: UiConstants.kBackgroundColor,
             elevation: 0.0,
             leading: IconButton(
@@ -70,159 +73,175 @@ class UserAutosaveDetailsView extends StatelessWidget {
             ),
           ),
           backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: model.state == ViewState.Busy
-                    ? Center(
-                        child: SpinKitWave(
-                          color: UiConstants.primaryColor,
-                          size: SizeConfig.padding32,
-                        ),
-                      )
-                    : model.activeSubscription == null
-                        ? Center(
-                            child: NoRecordDisplayWidget(
-                              assetLottie: Assets.noData,
-                              text: "No Autosave Details available",
-                            ),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildAmountSavedCard(model),
-                              SizedBox(
-                                height: SizeConfig.padding40,
+          body: model.state == ViewState.Busy
+              ? Center(
+                  child: FullScreenLoader(),
+                )
+              : Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: model.activeSubscription == null
+                          ? Center(
+                              child: NoRecordDisplayWidget(
+                                assetSvg: Assets.noTransactionAsset,
+                                text: "No Autosave Details available",
                               ),
-                              _buildPaymentMethod(model),
-                              SizedBox(
-                                height: SizeConfig.padding32,
-                              ),
-                              Divider(
-                                height: SizeConfig.border1,
-                                color: Color(0xFF999999).withOpacity(0.4),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: SizeConfig.padding20,
-                                  top: SizeConfig.padding20,
-                                  bottom: SizeConfig.padding20,
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildAmountSavedCard(model),
+                                SizedBox(
+                                  height: SizeConfig.padding40,
                                 ),
-                                child: Text(
-                                  "Recent Transaction",
-                                  style: TextStyles.rajdhaniSB.body1,
+                                _buildPaymentMethod(model),
+                                SizedBox(
+                                  height: SizeConfig.padding32,
                                 ),
-                              ),
-                              model.filteredList == null
-                                  ? Center(
-                                      child: SpinKitWave(
-                                        color: UiConstants.primaryColor,
-                                        size: SizeConfig.padding32,
+                                Divider(
+                                  height: SizeConfig.border1,
+                                  color: Color(0xFF999999).withOpacity(0.4),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.padding20,
+                                    top: SizeConfig.padding20,
+                                    bottom: SizeConfig.padding20,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Recent Transaction",
+                                        style: TextStyles.rajdhaniSB.body1,
                                       ),
-                                    )
-                                  : model.filteredList?.length == 0
-                                      ? Center(
-                                          child: NoTransactionsContent(
-                                            width: SizeConfig.screenWidth * 0.8,
+                                      Spacer(),
+                                      if (model.hasMoreTxns)
+                                        GestureDetector(
+                                          onTap: () {
+                                            Haptic.vibrate();
+                                            AppState.delegate.appState
+                                                .currentAction = PageAction(
+                                              state: PageState.addWidget,
+                                              widget: TransactionsHistory(
+                                                investmentType:
+                                                    InvestmentType.AUGGOLD99,
+                                                showAutosave: true,
+                                              ),
+                                              page:
+                                                  TransactionsHistoryPageConfig,
+                                            );
+                                          },
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: SizeConfig.padding2,
+                                                ),
+                                                child: Text('See All',
+                                                    style: TextStyles
+                                                        .rajdhaniSB.body2),
+                                              ),
+                                              SvgPicture.asset(
+                                                Assets.chevRonRightArrow,
+                                                height: SizeConfig.padding24,
+                                                width: SizeConfig.padding24,
+                                              ),
+                                              SizedBox(
+                                                width: SizeConfig.padding16,
+                                              )
+                                            ],
                                           ),
                                         )
-                                      : Container(
-                                          color: Color(0xFF595F5F)
-                                              .withOpacity(0.14),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.padding20,
+                                    ],
+                                  ),
+                                ),
+                                model.filteredList == null
+                                    ? Center(
+                                        child: FullScreenLoader(
+                                        size: SizeConfig.padding80,
+                                      ))
+                                    : model.filteredList?.length == 0
+                                        ? Center(
+                                            child: NoRecordDisplayWidget(
+                                            assetSvg: Assets.noTransactionAsset,
+                                            text: "No Transactions to show yet",
+                                          ))
+                                        : Container(
+                                            color: Color(0xFF595F5F)
+                                                .withOpacity(0.14),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.padding20,
+                                            ),
+                                            child: ListView.builder(
+                                              itemCount:
+                                                  model.filteredList?.length,
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                return TransationTile(
+                                                  isLast: index ==
+                                                      model.filteredList
+                                                              .length -
+                                                          1,
+                                                  txn:
+                                                      model.filteredList[index],
+                                                );
+                                              },
+                                            ),
                                           ),
-                                          child: ListView.builder(
-                                            itemCount:
-                                                model.filteredList?.length,
-                                            shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            itemBuilder: (context, index) {
-                                              return TransationTile(
-                                                isLast: index ==
-                                                    model.filteredList.length -
-                                                        1,
-                                                txn: model.filteredList[index],
-                                              );
-                                            },
-                                          ),
-                                        ),
-                              SizedBox(
-                                height: SizeConfig.padding80 * 2,
-                              ),
-                            ],
+                                SizedBox(
+                                  height: SizeConfig.padding80 * 2,
+                                ),
+                              ],
+                            ),
+                    ),
+                    if (model.state == ViewState.Idle &&
+                        model.activeSubscription != null &&
+                        !model.isInEditMode)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            // color: UiConstants.kSecondaryBackgroundColor,
+                            gradient: LinearGradient(
+                              colors: [
+                                UiConstants.kSecondaryBackgroundColor
+                                    .withOpacity(0.2),
+                                UiConstants.kSecondaryBackgroundColor
+                                    .withOpacity(0.9),
+                                UiConstants.kSecondaryBackgroundColor
+                                    .withOpacity(0.2),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [
+                                0.02,
+                                0.8,
+                                1.0,
+                              ],
+                            ),
                           ),
-              ),
-              // Positioned(
-              //   bottom: 0,
-              //   child: Container(
-              //     width: SizeConfig.screenWidth,
-              //     height: 120,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //           begin: Alignment.bottomCenter,
-              //           end: Alignment.topCenter,
-              //           colors: [
-              //             UiConstants.kSecondaryBackgroundColor
-              //                 .withOpacity(0.8),
-              //             UiConstants.kSecondaryBackgroundColor
-              //                 .withOpacity(0.2),
-              //           ],
-              //           stops: [
-              //             0.8,
-              //             1
-              //           ]),
-              //     ),
-              //     child: BackdropFilter(
-              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              //     ),
-              //   ),
-              // ),
-              if (model.state == ViewState.Idle &&
-                  model.activeSubscription != null &&
-                  !model.isInEditMode)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      // color: UiConstants.kSecondaryBackgroundColor,
-                      gradient: LinearGradient(
-                        colors: [
-                          UiConstants.kSecondaryBackgroundColor
-                              .withOpacity(0.2),
-                          UiConstants.kSecondaryBackgroundColor
-                              .withOpacity(0.9),
-                          UiConstants.kSecondaryBackgroundColor
-                              .withOpacity(0.2),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [
-                          0.02,
-                          0.8,
-                          1.0,
-                        ],
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding40,
+                            vertical: SizeConfig.padding10,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: (model.activeSubscription.status ==
+                                        Constants.SUBSCRIPTION_INACTIVE &&
+                                    model.activeSubscription.resumeDate.isEmpty)
+                                ? _buildRestartAutoPay()
+                                : _buildUpdateAutoPay(model),
+                          ),
+                        ),
                       ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding40,
-                      vertical: SizeConfig.padding10,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: (model.activeSubscription.status ==
-                                  Constants.SUBSCRIPTION_INACTIVE &&
-                              model.activeSubscription.resumeDate.isEmpty)
-                          ? _buildRestartAutoPay()
-                          : _buildUpdateAutoPay(model),
-                    ),
-                  ),
+                  ],
                 ),
-            ],
-          ),
         );
       },
     );
@@ -255,8 +274,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Image.asset(
-                    "assets/temp/upi_payment_logo.png",
+                  child: SvgPicture.asset(
+                    Assets.upiIcon,
                     width: SizeConfig.iconSize0,
                     height: SizeConfig.iconSize0,
                   ),
@@ -277,10 +296,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
                       SizedBox(
                         width: SizeConfig.padding8,
                       ),
-                      SvgPicture.asset(
-                        'assets/temp/verified.svg',
-                        width: SizeConfig.padding20,
-                        height: SizeConfig.padding20,
+                      Icon(
+                        Icons.verified,
+                        color: UiConstants.primaryColor,
+                        size: SizeConfig.padding20,
                       ),
                     ],
                   ),
@@ -433,7 +452,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
             //NOTE: CHECK IN EDIT MODE
             AppState.delegate.appState.currentAction = PageAction(
               page: AutosaveProcessViewPageConfig,
-              widget: AutosaveProcessView(page: 2),
+              widget: AutosaveProcessView(
+                page: 2,
+                isUpdate: true,
+              ),
               state: PageState.replaceWidget,
             );
           },
@@ -484,9 +506,7 @@ class TransationTile extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding20,
-          ),
+          padding: EdgeInsets.symmetric(vertical: SizeConfig.padding20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -572,17 +592,10 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
         children: [
           Row(
             children: [
-              Text(
-                "Pause Autosave",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 24,
-                ),
-              ),
+              Text("Pause Autosave", style: TextStyles.rajdhaniB.title3),
               Spacer(),
               CircleAvatar(
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.transparent,
                 child: IconButton(
                   onPressed: () {
                     AppState.backButtonDispatcher.didPopRoute();
@@ -595,10 +608,6 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                 ),
               ),
             ],
-          ),
-          Divider(
-            height: SizeConfig.padding24,
-            thickness: 2,
           ),
           SizedBox(height: SizeConfig.padding16),
           pauseOptionTile(
@@ -618,7 +627,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             radioValue: 4,
           ),
           Container(height: SizeConfig.padding16),
-          FelloButtonLg(
+          AppPositiveCustomChildBtn(
             child: isPausing
                 ? SpinKitThreeBounce(
                     color: Colors.white,
@@ -626,7 +635,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                   )
                 : Text(
                     "PAUSE",
-                    style: TextStyles.body2.bold.colour(Colors.white),
+                    style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
                   ),
             onPressed: () async {
               if (pauseValue == 4) {
@@ -634,20 +643,16 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                   addToScreenStack: true,
                   isBarrierDismissable: false,
                   hapticVibrate: true,
-                  content: FelloConfirmationDialog(
+                  content: ConfirmationDialog(
                     title: "Are you sure ?",
-                    subtitle:
+                    description:
                         "You will lose out on automated savings & many exclusive rewards⏸️",
-                    reject: "No",
-                    acceptColor: Colors.grey.withOpacity(0.5),
-                    rejectColor: UiConstants.primaryColor,
-                    acceptTextColor: Colors.black,
-                    rejectTextColor: Colors.white,
-                    onReject: () {
+                    cancelBtnText: "No",
+                    cancelAction: () {
                       AppState.backButtonDispatcher.didPopRoute();
                     },
-                    accept: "Yes",
-                    onAccept: () async {
+                    buttonText: "Yes",
+                    confirmAction: () async {
                       if (isPausing) return;
                       setState(() {
                         isPausing = false;
@@ -692,17 +697,20 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               width: pauseValue == radioValue ? 0.5 : 0,
               color: pauseValue == radioValue
                   ? UiConstants.primaryColor
-                  : Colors.black26,
+                  : UiConstants.kTextColor2,
             ),
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
             color: pauseValue == radioValue
-                ? UiConstants.primaryLight.withOpacity(0.5)
+                ? UiConstants.kTealTextColor.withOpacity(0.1)
                 : Colors.transparent),
         padding: EdgeInsets.symmetric(
           vertical: SizeConfig.padding4,
         ),
         child: ListTile(
-          title: Text(text),
+          title: Text(
+            text,
+            style: TextStyles.sourceSans.body2,
+          ),
           trailing: Radio(
             value: radioValue,
             groupValue: pauseValue,

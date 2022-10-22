@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -14,11 +15,13 @@ import 'package:flutter/material.dart';
 import 'package:felloapp/base_util.dart';
 import '../../../../util/assets.dart';
 
-class PlayViewModel extends BaseModel {
+class PlayViewModel extends BaseViewModel {
   final _getterRepo = locator<GetterRepository>();
+  final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
   final GameRepo gamesRepo = locator<GameRepo>();
   final _baseUtil = locator<BaseUtil>();
+  bool _showSecurityMessageAtTop = true;
 
   String _message;
   String _sessionId;
@@ -32,16 +35,18 @@ class PlayViewModel extends BaseModel {
   List<GameModel> moreGamesListData;
 
   //Related to the info box/////////////////
-  String boxHeading = "What to do on Play?";
+  String boxHeading = "How Fello games work?";
   List<String> boxAssets = [
     Assets.ludoGameAsset,
+    Assets.token,
     Assets.leaderboardGameAsset,
-    Assets.giftGameAsset,
+    Assets.gift,
   ];
   List<String> boxTitlles = [
-    'Play Games with the\ntokens won',
-    'Get listed on the game\nleaderboard',
-    'Win coupons and cashbacks\nas rewards',
+    'Earn tokens by saving & completing milestones',
+    'Use tokens to play different games',
+    'Get listed on the game leaderboard',
+    'Win rewards every sunday midnight',
   ];
   ////////////////////////////////////////////
 
@@ -72,6 +77,13 @@ class PlayViewModel extends BaseModel {
     notifyListeners();
   }
 
+  get showSecurityMessageAtTop => this._showSecurityMessageAtTop;
+
+  set showSecurityMessageAtTop(value) {
+    this._showSecurityMessageAtTop = value;
+    notifyListeners();
+  }
+
   openProfile() {
     _baseUtil.openProfileDetailsScreen();
   }
@@ -79,9 +91,13 @@ class PlayViewModel extends BaseModel {
   init() async {
     isGamesListDataLoading = true;
     final response = await gamesRepo.getGames();
+    showSecurityMessageAtTop =
+        _userService.userJourneyStats.mlIndex > 6 ? false : true;
     if (response.isSuccess()) {
       gamesListData = response.model;
       isGamesListDataLoading = false;
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
     }
   }
 

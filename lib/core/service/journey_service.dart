@@ -4,18 +4,19 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -26,9 +27,9 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 
-const String AVATAR_CURRENT_LEVEL = "avatarcurrentLevel";
+const String AVATAR_CURRENT_MILESTONE_LEVEL = "avatarcurrentMilestoneLevel";
+const String AVATAR_CURRENT_JOURNEY_LEVEL = "avatarcurrentJourneyLevel";
 
 class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Dependency Injection
@@ -64,6 +65,19 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   int fcmRemoteAvatarLevel;
   // UserJourneyStatsModel _userJourneyStats;
   bool _journeyBuildFailure = false;
+  bool _showLevelUpAnimation = false;
+  bool _isUserJourneyOnboarded = false;
+  get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
+
+  set isUserJourneyOnboarded(value) {
+    this._isUserJourneyOnboarded = value;
+    notifyListeners(JourneyServiceProperties.Onboarding);
+    _logger.d("User Journey Onboarded");
+  }
+
+  bool isJourneyOnboardingInView = false;
+
+  AnimationController levelUpLottieController;
 
   //Getters and Setters
 
@@ -156,24 +170,32 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   set mainController(ScrollController value) => this._mainController = value;
 
+  get showLevelUpAnimation => this._showLevelUpAnimation;
+
+  set showLevelUpAnimation(value) {
+    this._showLevelUpAnimation = value;
+    notifyListeners(JourneyServiceProperties.LevelCompletion);
+  }
+
   // INIT MAIN
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth * 2.165;
     await getJourneyLevels();
-    // NOTE: REQUIRED METHOD
     await updateUserJourneyStats();
     await fetchNetworkPages();
+    checkIfJourneyOnboardingRequried();
   }
 
   Future<void> dump() async {
     _userService.userJourneyStats = null;
     controller?.dispose();
     mainController?.dispose();
+    levelUpLottieController?.dispose();
     avatarRemoteMlIndex = 1;
     avatarCachedMlIndex = 1;
     resetJourneyData();
-    PreferenceHelper.remove(AVATAR_CURRENT_LEVEL);
+    PreferenceHelper.remove(AVATAR_CURRENT_MILESTONE_LEVEL);
     levels.clear();
     vsync = null;
     pages.clear();
@@ -196,8 +218,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           FailType.Journey,
           {'error': "failed to fetch journey pages"},
         );
-        return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
-            "Please try again in some time");
+        return BaseUtil.showNegativeAlert("", response.errorMessage);
       } else {
         if (pages == null || pages.isEmpty)
           pages = response.model;
@@ -205,6 +226,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           addMorePages(response.model);
       }
     }
+  }
+
+  checkIfJourneyOnboardingRequried() {
+    _isUserJourneyOnboarded = PreferenceHelper.getBool(
+        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED,
+        def: false);
   }
 
   //Fetching additional journeypages from Journey Repository
@@ -217,8 +244,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         FailType.Journey,
         {'error': "failed to fetch journey pages"},
       );
-      return BaseUtil.showNegativeAlert("Unable to fetch pages at the moment",
-          "Please try again in some time");
+      return BaseUtil.showNegativeAlert("", response.errorMessage);
     } else {
       if (pages == null || pages.isEmpty)
         pages = response.model;
@@ -226,12 +252,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         addMorePages(response.model);
     }
   }
-
-  //Get User journey stats from userservice
-  // getUserJourneyStats() {
-  // userJourneyStats = _userService.userJourneyStats;
-  //   avatarRemoteMlIndex = userJourneyStats.mlIndex;
-  // }
 
   //Update the user Journey status
   updateUserJourneyStats() async {
@@ -268,6 +288,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
     GoldenTicketService.goldenTicketId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
+    if (!userIsAtJourneyScreen())
+      BaseUtil.showPositiveAlert(
+          'Congratulations, you have completed a new milestone! 🎉',
+          "Go to your journey to find out what you've won",
+          seconds: 2);
     checkAndAnimateAvatar();
   }
 
@@ -278,6 +303,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //if any Golden Ticket is present at the moment, pops up after animation
   checkAndAnimateAvatar() {
     // Future.delayed(Duration(seconds: 2), () {
+    if (avatarCachedMlIndex == avatarRemoteMlIndex) {
+      placeAvatarAtTheCurrentMileStone();
+    }
     _logger.d("Checking if there is any animation left to happen");
     if (isThereAnyMilestoneLevelChange() &&
         userIsAtJourneyScreen() &&
@@ -295,6 +323,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //On startup, if cached and remote mlIndex is same, then just place the avatar at the requried milestone and turn on glow
   void placeAvatarAtTheCurrentMileStone() {
+    _logger.d("Placing avatar at current milestone");
     AvatarPathModel path = customPathDataList
         .lastWhere((path) => path.mlIndex == avatarCachedMlIndex ?? 0);
     avatarPosition = Offset(pageWidth * path.coords[0],
@@ -303,7 +332,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   //Check if user has completed the Journey Level
-  int checkForGameLevelChange() {
+  int getUserCurrentJourneyLevel() {
     for (int i = 0; i < levels.length; i++) {
       log("Avatar Cache Level: $avatarCachedMlIndex || ${levels[i]} || Avatar remote level: $avatarRemoteMlIndex");
       if (avatarRemoteMlIndex < levels[i].end &&
@@ -312,21 +341,39 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     return 0;
   }
 
+  bool checkIfUserHasCompletedJourneyLevel() {
+    int existingLevel = 1;
+    int updatedLevel = 1;
+    levels.forEach((l) {
+      if (avatarCachedMlIndex <= l.end && avatarCachedMlIndex >= l.start)
+        existingLevel = l.level;
+    });
+    levels.forEach((l) {
+      if (avatarRemoteMlIndex <= l.end && avatarRemoteMlIndex >= l.start)
+        updatedLevel = l.level;
+    });
+    print("Existing level : $existingLevel || Updated Level: $updatedLevel");
+    return (existingLevel != updatedLevel);
+  }
+
   //Returns if there is any cached mlIndex
   //else sets mlIndex to 1 and cache it to shared prefs
   getAvatarCachedMilestoneIndex() {
-    if (PreferenceHelper.exists(AVATAR_CURRENT_LEVEL))
-      avatarCachedMlIndex = PreferenceHelper.getInt(AVATAR_CURRENT_LEVEL);
+    if (PreferenceHelper.exists(AVATAR_CURRENT_MILESTONE_LEVEL))
+      avatarCachedMlIndex =
+          PreferenceHelper.getInt(AVATAR_CURRENT_MILESTONE_LEVEL);
     else {
       avatarCachedMlIndex = 1;
-      PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, avatarCachedMlIndex);
+      PreferenceHelper.setInt(
+          AVATAR_CURRENT_MILESTONE_LEVEL, avatarCachedMlIndex);
     }
   }
 
   //Updates cached mlIndex to remote mlIndex
   updateAvatarLocalLevel() {
     avatarCachedMlIndex = avatarRemoteMlIndex;
-    PreferenceHelper.setInt(AVATAR_CURRENT_LEVEL, avatarCachedMlIndex);
+    PreferenceHelper.setInt(
+        AVATAR_CURRENT_MILESTONE_LEVEL, avatarCachedMlIndex);
   }
 
   //fetches the current mlIndex from remote and
@@ -342,7 +389,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex += 1;
     final currentMilestone = currentMilestoneList
         .firstWhere((milestone) => milestone.index == avatarRemoteMlIndex);
-    int jLevel = checkForGameLevelChange();
+    int jLevel = getUserCurrentJourneyLevel();
     _userService.userJourneyStats = UserJourneyStatsModel(
         page: currentMilestone.page,
         level: jLevel,
@@ -363,10 +410,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       log("levelData ${levels[0].toString()}");
 
       JourneyLevel currentlevelData = levels.firstWhere(
-          (level) =>
-              avatarRemoteMlIndex >= level.start &&
-              avatarRemoteMlIndex <= level.end,
-          orElse: null);
+          (level) => level.level == _userService.userJourneyStats.level);
 
       if (currentlevelData != null &&
           lastMileStoneIndex > currentlevelData.end) {
@@ -472,7 +516,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   createPathForAvatarAnimation(int start, int end) {
     if (end - start > 4) {
-      start = end - 4;
+      start = end - 2;
     }
     baseGlow = 0;
     List<AvatarPathModel> requiredPathItems = [];
@@ -582,24 +626,69 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   animateAvatar() async {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()) return;
     isAvatarAnimationInProgress = true;
+    if (checkIfUserHasCompletedJourneyLevel()) {
+      levelUpLottieController =
+          AnimationController(vsync: vsync, duration: Duration(seconds: 3));
+      showLevelUpAnimation = true;
+
+      levelUpLottieController.forward().then((value) {
+        showLevelUpAnimation = false;
+      });
+      Future.delayed(Duration(milliseconds: 800), () {});
+    }
     controller.reset();
     await scrollPageToAvatarPosition();
-    controller.forward().whenComplete(() {
+    _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
+    controller.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();
       // if (gameLevelChangeResult != 0)
       // BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
       //     "New Milestones on your way!");
+      checkIfUserIsOldAndNeedsStoryView();
       updateAvatarLocalLevel();
       baseGlow = 1;
-      Future.delayed(
-          Duration(seconds: 1), () => isAvatarAnimationInProgress = false);
-
-      _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-        if (res)
-          _gtService.showInstantGoldenTicketView(
-              title: 'Congratulations!', source: GTSOURCE.newuser);
-      });
+      Future.delayed(Duration(milliseconds: 500),
+          () => isAvatarAnimationInProgress = false);
+      _gtService.showInstantGoldenTicketView(
+          title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     });
+  }
+
+  checkIfUserIsOldAndNeedsStoryView() {
+    //TODO
+    Future.delayed(
+      Duration(seconds: 2),
+      () {
+        if (_userService.baseUser.isOldUser && avatarRemoteMlIndex == 2) {
+          isJourneyOnboardingInView = true;
+          PreferenceHelper.setBool(
+              PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
+          AppState.screenStack.add(ScreenItem.dialog);
+          Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, anotherAnimation) {
+                return InfoStories(
+                  topic: "onboarding",
+                );
+              },
+              transitionDuration: Duration(milliseconds: 500),
+              transitionsBuilder:
+                  (context, animation, anotherAnimation, child) {
+                animation = CurvedAnimation(
+                    curve: Curves.easeInCubic, parent: animation);
+                return Align(
+                  child: SizeTransition(
+                    sizeFactor: animation,
+                    child: child,
+                    axisAlignment: 0.0,
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 }

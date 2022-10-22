@@ -5,12 +5,17 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/leaderboard_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/repository/flc_actions_repo.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -38,17 +43,19 @@ class RechargeOption {
   RechargeOption({this.color, this.amount, this.isCustom = false});
 }
 
-class WebHomeViewModel extends BaseModel {
+class WebHomeViewModel extends BaseViewModel {
   //Dependency Injection
   final _userService = locator<UserService>();
   final _lbService = locator<LeaderboardService>();
   final _analyticsService = locator<AnalyticsService>();
   final _prizeService = locator<PrizeService>();
-  final _fclActionRepo = locator<FlcActionsRepo>();
   final _userRepo = locator<UserRepository>();
   final _logger = locator<CustomLogger>();
   final _coinService = locator<UserCoinService>();
   final GameRepo _gamesRepo = locator<GameRepo>();
+  final _getterRepo = locator<GetterRepository>();
+  final _dbModel = locator<DBModel>();
+  final _internalOps = locator<InternalOpsService>();
 
   //Local Variables
 
@@ -89,8 +96,10 @@ class WebHomeViewModel extends BaseModel {
   ];
   String gameToken;
   int _currentCoinValue;
+  List<ScoreBoard> _pastWeekParticipants;
 
   //Getters
+  List<ScoreBoard> get pastWeekParticipants => _pastWeekParticipants;
   String get currentGame => this._currentGame;
   PrizesModel get prizes => _prizes;
   bool get isPrizesLoading => this._isPrizesLoading;
@@ -136,12 +145,14 @@ class WebHomeViewModel extends BaseModel {
   init(String game) async {
     currentGame = game;
     isLoading = true;
+    fetchUsersCurrentCoins();
     // await loadGameLists();
     await fetchGame(game);
     // scrollController = _lbService.parentController;
     // pageController = new PageController(initialPage: 0);
     // refreshPrizes();
-    fetchUsersCurrentCoins();
+
+    fetchTopSaversPastWeek(game);
     isLoading = false;
   }
 
@@ -194,8 +205,23 @@ class WebHomeViewModel extends BaseModel {
   // }
 
   Future<bool> setupGame() async {
-    await getBearerToken();
-    return _setupCurrentGame();
+    if (checkIfUserIsBannedFromThisGame() &&
+        await checkIfDeviceIsNotAnEmulator()) {
+      await getBearerToken();
+      return _setupCurrentGame();
+    }
+    return false;
+  }
+
+  Future<bool> checkIfDeviceIsNotAnEmulator() async {
+    //TODO
+    final bool isReal = await _internalOps.checkIfDeviceIsReal();
+    if (isReal != null && !isReal) {
+      BaseUtil.showNegativeAlert(
+          "Simulators not allowed", "Please use the app on a real device");
+      return false;
+    }
+    return true;
   }
 
   Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
@@ -205,6 +231,70 @@ class WebHomeViewModel extends BaseModel {
   fetchUsersCurrentCoins() {
     _currentCoinValue = _coinService.flcBalance;
     notifyListeners();
+  }
+
+  Future getProfileDpWithUid(String uid) async {
+    return await _dbModel.getUserDP(uid);
+  }
+
+  fetchTopSaversPastWeek(String game) async {
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+      freq: "weekly",
+      type: game,
+      isForPast: true,
+    );
+    if (response.code == 200) {
+      _pastWeekParticipants =
+          LeaderboardModel.fromMap(response.model).scoreboard;
+    } else
+      _pastWeekParticipants = [];
+    notifyListeners();
+  }
+
+  bool checkIfUserIsBannedFromThisGame() {
+    bool isUserBannedForThisGame = false;
+    String userBannedNotice = '';
+    switch (currentGame) {
+      case Constants.GAME_TYPE_CRICKET:
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.cricketMap?.isBanned ??
+            false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.cricketMap?.reason ??
+                '';
+        break;
+      case Constants.GAME_TYPE_CANDYFIESTA:
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.candyFiestaMap?.isBanned ??
+            false;
+        userBannedNotice = _userService
+                .userBootUp?.data?.banMap?.games?.candyFiestaMap?.reason ??
+            '';
+        break;
+      case Constants.GAME_TYPE_FOOTBALL:
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.footballMap?.isBanned ??
+            false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.footballMap?.reason ??
+                '';
+        break;
+      case Constants.GAME_TYPE_POOLCLUB:
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.poolClubMap?.isBanned ??
+            false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
+                '';
+        break;
+    }
+    if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
+      BaseUtil.showNegativeAlert(
+          userBannedNotice ?? "Game locked for security reasons",
+          "Please contact us for more details");
+      return false;
+    }
+    return true;
   }
 
   launchGame() {
@@ -255,6 +345,7 @@ class WebHomeViewModel extends BaseModel {
         _flcResponse.model.flcBalance >= _playCost)
       return true;
     else {
+      earnMoreTokens();
       return false;
     }
   }
@@ -348,8 +439,10 @@ class WebHomeViewModel extends BaseModel {
     final response = await _gamesRepo.getGameByCode(gameCode: game);
     if (response.isSuccess()) {
       currentGameModel = response.model;
+      isGameLoading = false;
+    } else {
+      BaseUtil.showNegativeAlert("", response.errorMessage);
     }
-    isGameLoading = false;
   }
 
   String sortPlayerNumbers(String number) {

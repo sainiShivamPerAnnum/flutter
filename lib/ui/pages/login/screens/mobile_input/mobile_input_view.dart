@@ -1,7 +1,10 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/login/login_components/login_textfield.dart';
+import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/widgets/fello_rich_text.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -9,19 +12,80 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
-  const LoginMobileView({Key key}) : super(key: key);
+  const LoginMobileView({Key key, @required this.loginModel}) : super(key: key);
+  final LoginControllerViewModel loginModel;
   @override
   State<LoginMobileView> createState() => LoginMobileViewState();
 }
 
 class LoginMobileViewState extends State<LoginMobileView> {
   LoginMobileViewModel model;
+
+  static TextSpan renderedWidget(String paragraph) {
+    if (paragraph.isEmpty ||
+        !paragraph.contains("*") ||
+        !paragraph.contains("_")) {
+      return const TextSpan();
+    }
+
+    String snip = '';
+    List<TextSpan> groups = [];
+    bool isBoldOn = false;
+    bool isItalicsOn = false;
+    paragraph.runes.forEach((element) {
+      var character = String.fromCharCode(element);
+      print('We\'re at: $character');
+      if (character == '*' || character == '_') {
+        if (snip == '') {
+          //this is the start of a text span
+          if (character == '*') isBoldOn = true;
+          if (character == '_') isItalicsOn = true;
+        } else {
+          //this is the end of either a bold text or an italics text
+          if (isBoldOn) {
+            print('Groupd added: bold');
+            isBoldOn = false;
+            groups.add(TextSpan(
+              text: snip,
+              style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor),
+            ));
+          } else if (isItalicsOn) {
+            print('Groupd added: italic');
+            isItalicsOn = false;
+            groups.add(TextSpan(
+              text: snip,
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor3),
+            ));
+          } else {
+            print('Groupd added: non bold non italic');
+            groups.add(TextSpan(
+              text: snip,
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),
+            ));
+            if (character == '*') isBoldOn = true;
+            if (character == '_') isItalicsOn = true;
+          }
+          snip = '';
+        }
+      } else {
+        snip = snip + character;
+      }
+    });
+
+    print('Children created: ' + groups.toString());
+    return new TextSpan(children: groups);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
+        SizeConfig.viewInsets.bottom;
     return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -32,9 +96,9 @@ class LoginMobileViewState extends State<LoginMobileView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: 'assets/svg/flag_svg.svg'),
+            SignupHeroAsset(asset: Assets.flatFullFlagIsland),
             Text(
-              'Login/Signup',
+              'Login/Sign up',
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding32),
@@ -48,13 +112,15 @@ class LoginMobileViewState extends State<LoginMobileView> {
               key: model.formKey,
               child: AppTextField(
                 hintText: ' Enter your 10 digit phone number',
-                isEnabled: true,
+                isEnabled: widget?.loginModel?.state == ViewState.Idle &&
+                    widget?.loginModel?.loginUsingTrueCaller == false,
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
                 prefixText: "+91 ",
+                onSubmit: (val) => widget.loginModel.processScreenInput(0),
                 prefixTextStyle: TextStyles.sourceSans.body3,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom >
@@ -62,66 +128,23 @@ class LoginMobileViewState extends State<LoginMobileView> {
                         ? SizeConfig.screenHeight * 0.1
                         : 0),
                 textStyle: TextStyles.sourceSans.body3,
+                suffixIcon: model.showTickCheck
+                    ? Icon(
+                        Icons.done,
+                        color: UiConstants.primaryColor,
+                        size: SizeConfig.iconSize0,
+                      )
+                    : SizedBox.shrink(),
                 textEditingController: model.mobileController,
-                onTap: model.showAvailablePhoneNumbers,
+                onChanged: (value) => model.upDateCheckTick(),
+                onTap: () {
+                  if (widget.loginModel.loginUsingTrueCaller) return;
+                  model.showAvailablePhoneNumbers();
+                },
                 validator: (value) => model.validateMobile(),
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins * 2),
               ),
-            ),
-            Spacer(),
-            if (!isKeyboardOpen)
-              Column(
-                children: [
-                  Text(
-                    '100% Safe & Secure',
-                    style:
-                        TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),
-                  ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      BankingLogo(
-                        asset: 'assets/images/augmont_logo.png',
-                      ),
-                      BankingLogo(
-                        asset: 'assets/images/icici_logo.png',
-                      ),
-                      BankingLogo(
-                        asset: 'assets/images/cbi_logo.png',
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 16, 10, 0),
-                    child: RichText(
-                      text: new TextSpan(
-                        children: [
-                          new TextSpan(
-                            text: 'By continuing, you agree to our ',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor2),
-                          ),
-                          new TextSpan(
-                            text: 'Terms of Service',
-                            style: TextStyles.sourceSans.body3.underline
-                                .colour(UiConstants.kTextColor),
-                            recognizer: new TapGestureRecognizer()
-                              ..onTap = () {
-                                model.onTermsAndConditionsClicked();
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-            SizedBox(
-              height: SizeConfig.screenWidth * 0.1 +
-                  MediaQuery.of(context).viewInsets.bottom,
             ),
           ],
         );
