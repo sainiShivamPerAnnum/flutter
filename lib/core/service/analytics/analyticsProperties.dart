@@ -1,6 +1,9 @@
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -14,10 +17,39 @@ class AnalyticsProperties {
   static final _paytmService = locator<PaytmService>();
   static final _journeyService = locator<JourneyService>();
   static final _tambolaService = locator<TambolaService>();
+  static final _txnHistoryService = locator<TransactionHistoryService>();
 
   init() async {
     await _paytmService.init();
     await _tambolaService.init();
+    await _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+  }
+
+  static int getSucessTxnCount() {
+    int count = 0;
+    for (UserTransaction ut in _txnHistoryService.txnList) {
+      if (ut.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) count++;
+    }
+
+    return count;
+  }
+
+  static int getPendingTxnCount() {
+    int count = 0;
+    for (UserTransaction ut in _txnHistoryService.txnList) {
+      if (ut.tranStatus == UserTransaction.TRAN_STATUS_PENDING) count++;
+    }
+
+    return count;
+  }
+
+  static int getFailedTxnCount() {
+    int count = 0;
+    for (UserTransaction ut in _txnHistoryService.txnList) {
+      if (ut.tranStatus == UserTransaction.TRAN_STATUS_FAILED) count++;
+    }
+
+    return count;
   }
 
   static double getGoldInvestedAmount() {

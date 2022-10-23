@@ -1,5 +1,8 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/util/list_utils.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -60,6 +63,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController.text) ?? 0;
     if (currentAmt == null) widget.amountController.text = "0.0";
+    final _analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
@@ -172,6 +176,13 @@ class _AmountInputViewState extends State<AmountInputView> {
                   amt: item,
                   isBest: widget.bestChipIndex == i,
                   onClick: (amt) {
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.suggestedAmountTapped,
+                        properties: {
+                          'order': i,
+                          'Amount': amt,
+                          'Best flag': i == 2
+                        });
                     setState(() {
                       _selectedIndex = i;
                       widget.amountController.text = amt.toString();

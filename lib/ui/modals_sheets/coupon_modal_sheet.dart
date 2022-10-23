@@ -1,7 +1,11 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -17,6 +21,22 @@ class CouponModalSheet extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
+
+    List<String> taggedCoupons = [];
+    for (CouponModel cm in model.couponList) {
+      taggedCoupons.add(cm.code);
+    }
+    _analyticsService
+        .track(eventName: AnalyticsEvents.applyCouponTapped, properties: {
+      'Amount entered': model.goldAmountController.text,
+      'Gold weight': model.goldAmountInGrams,
+      "per gram rate": model.isGoldBuyInProgress
+          ? "Not fetched"
+          : model.goldRates.goldBuyPrice.toString(),
+      "coupons tagged": taggedCoupons,
+    });
+
     return Container(
       width: double.infinity,
       child: Column(

@@ -1,9 +1,12 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -24,6 +27,8 @@ class LendboxBuyInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
+
     return Stack(
       children: [
         Column(
@@ -34,6 +39,14 @@ class LendboxBuyInputView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding16),
             LendboxAppBar(
               isEnabled: !model.isBuyInProgress,
+              trackClosingEvent: () {
+                _analyticsService.track(
+                    eventName: AnalyticsEvents.savePageClosed,
+                    properties: {
+                      "Amount entered": model.amountController.text,
+                      "Asset": 'Flo',
+                    });
+              },
             ),
             SizedBox(height: SizeConfig.padding32),
             AmountInputView(

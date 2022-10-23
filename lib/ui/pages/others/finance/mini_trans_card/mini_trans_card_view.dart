@@ -45,6 +45,7 @@ class MiniTransactionCard extends StatelessWidget {
                       .where((e) => e.subType == investmentType.name)
                       .toList()
                   : [];
+
               return Column(
                 children: [
                   model.state == ViewState.Busy || m.txnList == null

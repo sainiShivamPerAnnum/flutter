@@ -153,4 +153,9 @@ class AnalyticsEvents {
   static const playGameTapped = "Play Game Tapped";
   static const tambolaSaveTapped = "Tambola Save Tapped";
   static const tambolaHelpTapped = "Tambola Help Tapped";
+  static const assetBannerTapped = "Asset Banner Tapped";
+  static const suggestedAmountTapped = "Suggested Amount Tapped";
+  static const applyCouponTapped = "Apply Coupon Code Tapped";
+  static const savePageClosed = "Save Page Cross Tapped";
+  static const saveCheckout = "Save Checkout";
 }

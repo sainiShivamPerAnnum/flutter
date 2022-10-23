@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -104,7 +105,16 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
+    _analyticsService.track(
+        eventName: AnalyticsEvents.saveCheckout,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "Asset": "Flo",
+          "Amount Entered": amountController.text,
+          "Best flag": amountController.text == chipAmountList[2].toString()
+              ? true
+              : false,
+        }));
     return buyAmount;
   }
 

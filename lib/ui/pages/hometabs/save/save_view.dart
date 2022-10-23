@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -252,9 +253,11 @@ class SaveNetWorthSection extends StatelessWidget {
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,
-              onCardTap: () => saveViewModel.navigateToSaveAssetView(
-                InvestmentType.AUGGOLD99,
-              ),
+              onCardTap: () {
+                saveViewModel.navigateToSaveAssetView(
+                  InvestmentType.AUGGOLD99,
+                );
+              },
               onTap: () {
                 Haptic.vibrate();
                 return BaseUtil().openRechargeModalSheet(
@@ -268,9 +271,11 @@ class SaveNetWorthSection extends StatelessWidget {
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,
-              onCardTap: () => saveViewModel.navigateToSaveAssetView(
-                InvestmentType.LENDBOXP2P,
-              ),
+              onCardTap: () {
+                saveViewModel.navigateToSaveAssetView(
+                  InvestmentType.LENDBOXP2P,
+                );
+              },
               onTap: () {
                 Haptic.vibrate();
                 return BaseUtil().openRechargeModalSheet(
