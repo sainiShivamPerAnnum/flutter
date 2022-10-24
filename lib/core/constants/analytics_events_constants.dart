@@ -137,7 +137,7 @@ class AnalyticsEvents {
       "Autosave user switched from daily to weekly";
   static const autosaveWeeklyToDailySaver =
       "Autosave user switched weekly to daily";
-  static const autosavePauseModal = "Autosave pause modal opened";
+
   static const autosavePauseOneWeek = "Autosave paused for one week";
   static const autosavePauseTwoWeeks = "Autosave paused for two weeks";
   static const autosavePauseOneMonth = "Autosave paused for one month";
@@ -160,4 +160,11 @@ class AnalyticsEvents {
   static const saveCheckout = "Save Checkout";
   static const sipStartTapped = "SIP - Start Tapped";
   static const getStartTapped = "SIP - Get Started Tapped";
+  static const upiSubmitTappped = "SIP - UPI Submit Tapped";
+  static const openUPIAppTapped = "SIP - Open UPI App Tapped";
+  static const enterAmountSetup = "SIP - Enter Amount Setup";
+  static const autoSaveUpdateTapped = "SIP - Update Autosave Tapped";
+  static const autosavePauseModal = "SIP - Pause Autosave Tapped";
+  static const completeKYCTapped = "Complete KYC Tapped";
+  static const bannerClick = "Banner Click";
 }

@@ -119,6 +119,15 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   void navigateToKycScreen() {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
+      "location": "Fello Felo Invest",
+      "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+          AnalyticsProperties.getFelloFloAmount(),
+      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
+    });
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,

@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/subscription_models/active_subscription_mode
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -368,6 +369,19 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         Constants.SUBSCRIPTION_INACTIVE) {
       if (model.isResumingInProgress) return;
       isResumingInProgress = true;
+      _analyticsService
+          .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
+        "frequency": activeSubscription.autoFrequency,
+        "amount": activeSubscription.autoAmount,
+        "SIP deducted Count": filteredList != null ? filteredList.length : 0,
+        "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
+            activeSubscription.createdOn.microsecondsSinceEpoch),
+        "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+            AnalyticsProperties.getFelloFloAmount(),
+        "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+        "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      });
+
       bool response = await _paytmService.resumeSubscription();
       if (!response) {
         isResumingInProgress = false;
@@ -379,7 +393,18 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         AppState.backButtonDispatcher.didPopRoute();
       }
     } else {
-      _analyticsService.track(eventName: AnalyticsEvents.autosavePauseModal);
+      _analyticsService
+          .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
+        "frequency": activeSubscription.autoFrequency,
+        "amount": activeSubscription.autoAmount,
+        "SIP deducted Count": filteredList != null ? filteredList.length : 0,
+        "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
+            activeSubscription.createdOn.microsecondsSinceEpoch),
+        "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+            AnalyticsProperties.getFelloFloAmount(),
+        "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+        "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      });
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         hapticVibrate: true,

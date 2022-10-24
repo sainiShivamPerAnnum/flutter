@@ -311,6 +311,14 @@ class SaveViewModel extends BaseViewModel {
     }
   }
 
+  trackBannerClickEvent(int orderNumber) {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.bannerClick, properties: {
+      "Location": "Fin Gyaan",
+      "Order": orderNumber,
+    });
+  }
+
   navigateToCompleteKYC() {
     Haptic.vibrate();
     _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);

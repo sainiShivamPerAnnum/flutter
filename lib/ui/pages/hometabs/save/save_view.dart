@@ -602,6 +602,8 @@ class SaveBlogSection extends StatelessWidget {
                           padding: EdgeInsets.only(right: SizeConfig.padding10),
                           child: SaveBlogTile(
                             onTap: () {
+                              model.trackBannerClickEvent(index);
+
                               model.navigateToBlogWebView(
                                   model.blogPosts[index].slug,
                                   model.blogPosts[index].acf.categories);

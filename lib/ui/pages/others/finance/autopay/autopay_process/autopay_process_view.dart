@@ -1,6 +1,11 @@
 import 'dart:developer';
 
 import 'package:external_app_launcher/external_app_launcher.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/amount_chips.dart';
@@ -11,6 +16,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -244,6 +250,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildPendingUI(AutosaveProcessViewModel model) {
+    final _analyticService = locator<AnalyticsService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -317,6 +324,12 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           btnText: 'Open ${getUpiAppName(model)}',
           onPressed: () async {
             Haptic.vibrate();
+            _analyticService.track(
+                eventName: AnalyticsEvents.openUPIAppTapped,
+                properties: {
+                  "App name": getUpiAppName(model),
+                  "UPI Id": model.vpaController.text,
+                });
             await LaunchApp.openApp(
               androidPackageName: model.androidPackageName,
               iosUrlScheme: model.iosUrlScheme,
@@ -392,6 +405,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildAmountSetUi(AutosaveProcessViewModel model, bool isUpdate) {
+    final _analyticService = locator<AnalyticsService>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -613,6 +628,11 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 btnText: isUpdate ? 'Update' : 'Set up',
                 onPressed: () async {
                   Haptic.vibrate();
+                  if (isUpdate) {
+                    model.trackSIPUpdateEvent();
+                  } else {
+                    model.trackSIPSetUpEvent();
+                  }
                   model.setSubscriptionAmount(
                     int.tryParse(
                       model.amountFieldController == null ||

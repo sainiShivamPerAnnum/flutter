@@ -7,6 +7,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -29,6 +30,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _analyticsService = locator<AnalyticsService>();
   final GoldenTicketService _gtService = GoldenTicketService();
+  final _analyticService = locator<AnalyticsService>();
+
   FocusNode sipAmountNode = FocusNode();
   bool _showSetAmountView = false;
   bool _isDaily = true;
@@ -261,6 +264,40 @@ class AutosaveProcessViewModel extends BaseViewModel {
     });
   }
 
+  trackSIPUpdateEvent() {
+    bool isSuggested = false;
+    for (AmountChipsModel a in dailyChips) {
+      if (a.value.toString() == amountFieldController.text) {
+        isSuggested = true;
+        break;
+      }
+    }
+    _analyticService
+        .track(eventName: AnalyticsEvents.autoSaveUpdateTapped, properties: {
+      "Previous Amount": _paytmService.activeSubscription != null
+          ? _paytmService.activeSubscription.autoAmount.toString()
+          : "Not fetched",
+      "New Amount": amountFieldController.text,
+      "Previous Frequency": _paytmService.activeSubscription.autoFrequency,
+      "New Frequency": isDaily ? "DAILY" : "MONTHLY",
+      "Auto Suggest": isSuggested,
+      "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+          AnalyticsProperties.getFelloFloAmount(),
+      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+    });
+  }
+
+  trackSIPSetUpEvent() {
+    _analyticService.track(
+        eventName: AnalyticsEvents.enterAmountSetup,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "Frequency": isDaily ? "Daily" : "Weekly",
+          "Amount": amountFieldController.text,
+        }));
+  }
+
   // getTitle() {
   //   switch (pageController.page.toInt()) {
   //     case 0:
@@ -309,6 +346,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   initiateCustomSubscription() async {
     _analyticsService.track(eventName: AnalyticsEvents.autosaveSetupInitiated);
     _analyticsService.track(eventName: AnalyticsEvents.autosaveUpiEntered);
+
     if (counter > 4) {
       return BaseUtil.showNegativeAlert(
           "Too many attempts", "Please try again later");
@@ -326,8 +364,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
       AppState.screenStack.removeLast();
     }
     if (response.status) {
-      _analyticsService.track(
-          eventName: AnalyticsEvents.autosaveMandateGenerated);
+      _analyticsService
+          .track(eventName: AnalyticsEvents.upiSubmitTappped, properties: {
+        "verification status": "Sucess",
+        "UPI Id": vpaController.text,
+      });
       checkForUPIAppExistence(vpaController.text.trim().split("@").last);
       checkTransactionStatus();
       _paytmService.jumpToSubPage(1);
@@ -335,8 +376,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
       Future.delayed(Duration(minutes: 8), () {
         if (_paytmService.fraction == 1) {
           _paytmService.fraction = 0;
-          _analyticsService.track(
-              eventName: AnalyticsEvents.autosaveMandateTimeout);
+          _analyticsService
+              .track(eventName: AnalyticsEvents.upiSubmitTappped, properties: {
+            "verification status": "Pending",
+            "UPI Id": vpaController.text,
+          });
           AppState.backButtonDispatcher.didPopRoute();
           showAutosavePendingDialog();
         }
