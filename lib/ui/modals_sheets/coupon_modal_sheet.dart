@@ -102,7 +102,7 @@ class CouponModalSheet extends StatelessWidget {
                   ),
                   onTap: () {
                     if (_formKey.currentState.validate()) {
-                      model.applyCoupon(couponCodeController.text.trim());
+                      model.applyCoupon(couponCodeController.text.trim(), true);
                       AppState.backButtonDispatcher.didPopRoute();
                     }
                   },
@@ -142,7 +142,7 @@ class CouponModalSheet extends StatelessWidget {
                           couponCode: model.couponList[i].code,
                           desc: model.couponList[i].description,
                           onTap: () {
-                            model.applyCoupon(model.couponList[i].code);
+                            model.applyCoupon(model.couponList[i].code, false);
                             AppState.backButtonDispatcher.didPopRoute();
                           },
                         ),

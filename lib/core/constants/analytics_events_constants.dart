@@ -13,7 +13,7 @@ class AnalyticsEvents {
   // save section
   static const saveSection = "Save Tab Clicked";
   static const saveBuy = "Select Buy Digital Gold";
-  static const saveBuyCoupon = "User selecting coupons";
+  static const saveBuyCoupon = "Coupon Applied";
   static const buyGold = "Buy gold initiated";
   static const buyGoldInvestMore = "Investing more through pop up";
   static const saveBalance = "Selecting Gold Balance";
@@ -158,4 +158,6 @@ class AnalyticsEvents {
   static const applyCouponTapped = "Apply Coupon Code Tapped";
   static const savePageClosed = "Save Page Cross Tapped";
   static const saveCheckout = "Save Checkout";
+  static const sipStartTapped = "SIP - Start Tapped";
+  static const getStartTapped = "SIP - Get Started Tapped";
 }

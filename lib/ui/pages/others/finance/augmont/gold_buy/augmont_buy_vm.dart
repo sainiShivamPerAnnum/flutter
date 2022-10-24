@@ -499,10 +499,20 @@ class GoldBuyViewModel extends BaseViewModel {
     }
   }
 
-  Future applyCoupon(String couponCode) async {
+  Future applyCoupon(String couponCode, bool isManuallyTyped) async {
     if (couponApplyInProgress || isGoldBuyInProgress) return;
 
-    _analyticsService.track(eventName: AnalyticsEvents.saveBuyCoupon);
+    int order = -1;
+    int minTransaction = -1;
+    int counter = 0;
+    for (CouponModel c in couponList) {
+      if (c.code == couponCode) {
+        order = counter;
+        minTransaction = c.minPurchase;
+        break;
+      }
+      counter++;
+    }
 
     buyFieldNode.unfocus();
 
@@ -533,6 +543,15 @@ class GoldBuyViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert(
           "Coupon not applied", "Please try another coupon");
     }
+    _analyticsService
+        .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
+      "Manual Code entry": isManuallyTyped,
+      "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
+      "Coupon Name": couponCode,
+      "Error message": response.code == 400 ? response?.model?.message : "",
+      "Asset": "Gold",
+      "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
+    });
   }
 }
 

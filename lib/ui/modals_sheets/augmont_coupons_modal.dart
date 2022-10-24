@@ -77,9 +77,11 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                           ),
                           onTap: () {
                             if (_formKey.currentState.validate()) {
-                              model.applyCoupon(couponCodeController.text
-                                  .trim()
-                                  .toUpperCase());
+                              model.applyCoupon(
+                                  couponCodeController.text
+                                      .trim()
+                                      .toUpperCase(),
+                                  true);
                               AppState.backButtonDispatcher.didPopRoute();
                             }
                           },
@@ -117,7 +119,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                       couponCode: model.couponList[i].code,
                       desc: model.couponList[i].description,
                       onTap: () {
-                        model.applyCoupon(model.couponList[i].code);
+                        model.applyCoupon(model.couponList[i].code, false);
                         AppState.backButtonDispatcher.didPopRoute();
                       },
                     ),
