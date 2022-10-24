@@ -8,10 +8,7 @@ class AnalyticsEvents {
   static const signupComplete = "Completed Signup";
   static const termsAndConditions = "Terms And Conditions";
 
-  // Journey section
-  static const journeySection = "Journey Tab Clicked";
   // save section
-  static const saveSection = "Save Tab Clicked";
   static const saveBuy = "Select Buy Digital Gold";
   static const saveBuyCoupon = "Coupon Applied";
   static const buyGold = "Buy gold initiated";
@@ -23,7 +20,6 @@ class AnalyticsEvents {
   static const selllendboxReason = "Selling felloflo reason";
 
   // play section
-  static const playSection = "Play Tab Tapped";
   static const earnMoreTokens = "Select Earn more tokens";
   static const earnMoreSaveMoney = "Select Save more in earn more section";
   static const earnMoreRefer = "Select refer in earn more section";
@@ -64,7 +60,6 @@ class AnalyticsEvents {
   static const notifications = 'Notifications';
 
   // win section
-  static const winSection = "Win Section";
   static const winLeaderboard = "Select Leaderboard";
   static const winReferral = "Going to referral section through win";
   static const winWinnings = "Going to winnings section";
@@ -167,4 +162,11 @@ class AnalyticsEvents {
   static const autosavePauseModal = "SIP - Pause Autosave Tapped";
   static const completeKYCTapped = "Complete KYC Tapped";
   static const bannerClick = "Banner Click";
+  static const challangeTapped = "Challange Tapped";
+  static const notificationsClicked = "Notifications Click";
+  static const sellInitiate = "Sell Initiate";
+  static const playSection = "Play Tab Tapped";
+  static const saveSection = "Save Tab Clicked";
+  static const journeySection = "Journey Tab Clicked";
+  static const winSection = "Win Tab tapped";
 }

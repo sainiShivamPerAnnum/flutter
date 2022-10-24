@@ -87,6 +87,11 @@ class AnalyticsProperties {
     return _userCoinService?.flcBalance ?? 0;
   }
 
+  static double getUserCurrentWinnings() {
+    double currentWinning = _userService.userFundWallet?.unclaimedBalance ?? 0;
+    return currentWinning;
+  }
+
   static bool isAutoSIPActive() {
     if (_paytmService.activeSubscription == null) {
       return false;

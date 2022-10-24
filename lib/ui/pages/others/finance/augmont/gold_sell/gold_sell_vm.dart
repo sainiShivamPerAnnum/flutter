@@ -345,8 +345,12 @@ class GoldSellViewModel extends BaseViewModel {
     final totalSellAmount =
         BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
     _analyticsService.track(
-      eventName: AnalyticsEvents.sellGold,
-      properties: {'selling_amount': totalSellAmount},
+      eventName: AnalyticsEvents.sellInitiate,
+      properties: {
+        'Amount to be sold': totalSellAmount,
+        "Weight (Gold)": goldAmountController.text,
+        "Asset": "Gold"
+      },
     );
   }
 

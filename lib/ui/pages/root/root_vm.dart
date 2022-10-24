@@ -151,7 +151,18 @@ class RootViewModel extends BaseViewModel {
         }
         break;
       case 3:
-        _analyticsService.track(eventName: AnalyticsEvents.winSection);
+        {
+          _analyticsService.track(
+              eventName: AnalyticsEvents.winSection,
+              properties:
+                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
+                "Unscratched Ticket Count": _gtService.unscratchedTicketsCount,
+                "Scratched Ticket Count":
+                    (_gtService.activeGoldenTickets.length) -
+                        _gtService.unscratchedTicketsCount,
+              }));
+        }
         break;
 
       default:

@@ -311,6 +311,17 @@ class SaveViewModel extends BaseViewModel {
     }
   }
 
+  trackChallangeTapped(String name, int order) {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.challangeTapped,
+        properties: AnalyticsProperties.getDefaultPropertiesMap(
+            extraValuesMap: {
+              "Challlaneg Name": name,
+              "Order": order,
+              "Location": "Save Section"
+            }));
+  }
+
   trackBannerClickEvent(int orderNumber) {
     _analyticsService
         .track(eventName: AnalyticsEvents.bannerClick, properties: {
