@@ -45,7 +45,6 @@ class AnalyticsEvents {
 
   // profile section
   static const profileClicked = "Profile Tapped";
-  static const myGoldenTickets = 'My Golden Tickets';
   static const selectKYC = 'Select KYC';
   static const transactions = "Transactions";
   static const helpAndSupport = 'Help and Support';
@@ -169,4 +168,10 @@ class AnalyticsEvents {
   static const saveSection = "Save Tab Clicked";
   static const journeySection = "Journey Tab Clicked";
   static const winSection = "Win Tab tapped";
+  static const copyReferalCode = "Copy Referral Code";
+  static const shareReferalCode = "Share Referral Code";
+  static const referAndEarnTapped = "Refer Earn section tap";
+  static const redeemWinningsTapped = "Redeem Winnings Tapped";
+  static const questionMarkTaoped = "Question Mark Tapped";
+  static const goldenTicketSectionOpen = 'Golden Ticket section open';
 }

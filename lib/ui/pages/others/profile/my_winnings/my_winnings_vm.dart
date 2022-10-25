@@ -11,8 +11,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -44,6 +46,7 @@ class MyWinningsViewModel extends BaseViewModel {
   final _internalOpsService = locator<InternalOpsService>();
   final _prizingRepo = locator<PrizingRepo>();
   final _appFlyer = locator<AppFlyerAnalytics>();
+  final _gtService = locator<GoldenTicketService>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice _choice;
@@ -76,6 +79,8 @@ class MyWinningsViewModel extends BaseViewModel {
 
   getWinningHistory() async {
     _isWinningHistoryLoading = true;
+    _gtService.updateUnscratchedGTCount();
+    trackGoldenTicketsOpen();
     ApiResponse<List<UserTransaction>> temp =
         await userRepo.getWinningHistory(_userService.baseUser.uid);
     temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -85,6 +90,19 @@ class MyWinningsViewModel extends BaseViewModel {
     else
       BaseUtil.showNegativeAlert(
           "Winning History fetch failed", "Please try again after sometime");
+  }
+
+  trackGoldenTicketsOpen() {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.goldenTicketSectionOpen, properties: {
+      "Unscratched tickets count": _gtService.unscratchedTicketsCount,
+      "Scratched tickets count": _gtService.activeGoldenTickets == null
+          ? 0
+          : _gtService.activeGoldenTickets.length,
+      "total prize won": _userService.userFundWallet.prizeLifetimeWin,
+      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
+      "Referred count sucess": AnalyticsProperties.getSucessReferalCount(),
+    });
   }
 
   getWinningHistoryTitle(UserTransaction tran) {
@@ -268,7 +286,17 @@ class MyWinningsViewModel extends BaseViewModel {
       }
     });
 
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
+    _analyticsService
+        .track(eventName: AnalyticsEvents.redeemWinningsTapped, properties: {
+      "total Winnings amount":
+          _userService.userFundWallet.unclaimedBalance ?? 0,
+      "Token Balance": AnalyticsProperties.getTokens(),
+      "Total Invested Amount": AnalyticsProperties.getGoldInvestedAmount() +
+          AnalyticsProperties.getFelloFloAmount(),
+      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
+    });
   }
 
 // SET AND GET CLAIM CHOICE

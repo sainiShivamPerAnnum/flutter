@@ -1,6 +1,9 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -9,6 +12,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:provider/provider.dart';
 
 class AnalyticsProperties {
   //Required depedencies
@@ -18,11 +22,51 @@ class AnalyticsProperties {
   static final _journeyService = locator<JourneyService>();
   static final _tambolaService = locator<TambolaService>();
   static final _txnHistoryService = locator<TransactionHistoryService>();
+  static final _baseUtil = locator<BaseUtil>();
+  final _referralRepo = locator<ReferralRepo>();
 
   init() async {
     await _paytmService.init();
     await _tambolaService.init();
     await _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+
+    if (!_baseUtil.referralsFetched) {
+      _referralRepo.getReferralHistory().then((refHisModel) {
+        if (refHisModel.isSuccess()) {
+          _baseUtil.referralsFetched = true;
+          _baseUtil.userReferralsList = refHisModel.model ?? [];
+        } else {
+          BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
+        }
+      });
+    }
+  }
+
+  static getTotalReferalCount() {
+    if (!_baseUtil.referralsFetched) {
+      return 0;
+    } else {
+      return _baseUtil.userReferralsList?.length;
+    }
+  }
+
+  static getSucessReferalCount() {
+    if (!_baseUtil.referralsFetched) {
+      return 0;
+    } else {
+      int counter = 0;
+      for (ReferralDetail r in _baseUtil.userReferralsList) {
+        if (r.isRefereeBonusUnlocked) counter++;
+      }
+      return counter;
+    }
+  }
+
+  static getPendingReferalCount() {
+    int pendingCount = 0;
+    if (getTotalReferalCount() >= getSucessReferalCount())
+      pendingCount = getTotalReferalCount() - getSucessReferalCount();
+    return pendingCount;
   }
 
   static int getSucessTxnCount() {
