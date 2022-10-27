@@ -143,6 +143,8 @@ class AnalyticsEvents {
   static const splashScrenProceed = "Proceed to Signup";
   static const journeyHelpTapped = "Journey Help Tapped";
   static const journeyMileStoneTapped = "Journey Milestone Tapped";
+  static const journeyMileStarted = "Journey Milestone Start";
+
   static const gameTapped = "Game Tapped";
   static const playGameTapped = "Play Game Tapped";
   static const tambolaSaveTapped = "Tambola Save Tapped";

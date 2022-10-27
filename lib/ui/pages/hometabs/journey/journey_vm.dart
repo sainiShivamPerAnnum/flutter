@@ -261,9 +261,9 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Capsulet text": AnalyticsProperties.getJouneryCapsuleText(),
+            "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
-            "MileStone tub Text":
+            "MileStone sub Text":
                 AnalyticsProperties.getJourneyMileStoneSubText(),
             "MileStone number": milestone.index,
             "Milestone completed": true,
@@ -274,9 +274,9 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Capsulet text": AnalyticsProperties.getJouneryCapsuleText(),
+            "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
-            "MileStone tub Text":
+            "MileStone sub Text":
                 AnalyticsProperties.getJourneyMileStoneSubText(),
             "MileStone number": milestone.index,
             "Milestone completed": false,
@@ -286,9 +286,9 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Capsulet text": AnalyticsProperties.getJouneryCapsuleText(),
+            "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
-            "MileStone tub Text":
+            "MileStone sub Text":
                 AnalyticsProperties.getJourneyMileStoneSubText(),
             "MileStone number": milestone.index,
             "Milestone completed": false,
