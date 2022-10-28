@@ -164,7 +164,6 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     //   return false;
     // }
 
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     return amount;
   }
 

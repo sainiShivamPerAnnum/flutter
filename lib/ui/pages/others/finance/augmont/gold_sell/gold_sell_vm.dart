@@ -116,7 +116,6 @@ class GoldSellViewModel extends BaseViewModel {
   init() async {
     deductedTokensCount = 0;
     setState(ViewState.Busy);
-    _analyticsService.track(eventName: AnalyticsEvents.saveSell);
     goldAmountController = TextEditingController();
     await _userService.fetchUserAugmontDetail();
     setUpNoticeIfAny();

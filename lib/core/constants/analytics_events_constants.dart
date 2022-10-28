@@ -1,47 +1,25 @@
 class AnalyticsEvents {
   // signup/signin events
-  static const signupEnterMobile = "Entered Mobile number";
   static const signupProfile = "Enter personal details @Signup";
   static const profileInformationAdded = "Profile information entered";
   static const signupName = "Enter gaming name @signup";
   static const signupDemo = "Save, play, win demo track";
-  static const signupComplete = "Completed Signup";
   static const termsAndConditions = "Terms And Conditions";
 
   // save section
   static const saveBuy = "Select Buy Digital Gold";
   static const saveBuyCoupon = "Coupon Applied";
-  static const buyGold = "Buy gold initiated";
   static const buyGoldInvestMore = "Investing more through pop up";
   static const saveBalance = "Selecting Gold Balance";
-  static const saveSell = "Selling Gold";
-  static const sellGold = "Selling Gold Succcessful";
-  static const sellGoldReason = "Selling gold reason";
-  static const selllendboxReason = "Selling felloflo reason";
 
   // play section
   static const earnMoreTokens = "Select Earn more tokens";
   static const earnMoreSaveMoney = "Select Save more in earn more section";
   static const earnMoreRefer = "Select refer in earn more section";
-  static const selectPlayCricket = "Select Cricket";
-  static const startPlayingCricket = "Play Cricket";
-  static const selectPlayFootball = "Select Football";
-  static const startPlayingFootball = "Play Football";
-  static const selectCandyFiesta = "Select CandyFiesta";
-  static const startPlayingCandyFiesta = "Play CandyFiesta";
-
   static const selectPlayTambola = "Select Tambola";
   static const selectPlayPoolClub = "Select PoolClub";
   static const startPlayingTambola = "Enter Tambola";
   static const buyTambolaTickets = "Play Tambola";
-  static const poolClubStarts = "Pool Club starts";
-  static const poolClubEnds = "Pool Club ends";
-  static const candyFiestaEnds = "Candy Fiesta ends";
-  static const candyFiestaStarts = "Candy Fiesta starts";
-  static const footBallEnds = "Foot Ball ends";
-  static const cricketHeroGameStarts = "Cricket Hero game starts";
-  static const cricketHeroGameEnds = "Cricket Hero game ends";
-  static const gamePlayStarted = "Game started";
 
   // profile section
   static const profileClicked = "Profile Tapped";
@@ -72,13 +50,8 @@ class AnalyticsEvents {
   static const panVerified = "Pan Verified";
   static const kycVerificationFailed = "KYC verification failed";
 
-  //Recharge events
-  static const rechargeOptionModalSheet = "Opened recharge option modalsheet";
-  static const goldRechargeModalSheet = "Opened gold recharge  modalsheet";
-  static const lBoxRechargeModalSheet = "Opened lbox recharge  modalsheet";
-
-  static const goldSellModalSheet = "Opened gold sell  modalsheet";
-  static const lBoxSellModalSheet = "Opened lbox sell  modalsheet";
+  static const goldSellModalSheet = "Opened gold sell modalsheet";
+  static const lBoxSellModalSheet = "Opened lbox sell modalsheet";
 
   //new analytics 4.0
   static const profileUpdated = "Updated profile";
@@ -97,7 +70,6 @@ class AnalyticsEvents {
   static const whatsappShare = "Whatsapp Share";
   static const referralCount = "Referral Count";
   static const updatedProfilePicture = "Updated profile picture";
-  static const mobileOtpDone = "Entered OTP";
   static const truecallerVerified = "Truecaller verified done";
   static const truecallerSignup = "Signup using Truecaller";
   static const truecallerLogin = "Login using Truecaller";
@@ -118,15 +90,12 @@ class AnalyticsEvents {
   static const autosaveUpiEntered = "Autosave UPI Entered";
   static const autosaveMandateGenerated = "Autosave mandate generated";
   static const autosaveMandateTimeout = "Autosave Mandate Expired";
-  static const autosaveDailySaver = "Autosave daily frequency selected";
   static const autosaveWeeklySaver = "Autosave weekly frequency selected";
-  static const autosaveSetupCompleted = "Autosave setup completed successfully";
   static const autosaveCompleteScreenClosed =
       "Autosave setup complete screen closed";
   static const autosaveSetupGTReceived =
       "Autosave Setup GT received and opened";
-  static const autosaveUserDetailsScreenViewed =
-      "Autosave User details screen viewed";
+
   static const autosaveDailyToWeeklySaver =
       "Autosave user switched from daily to weekly";
   static const autosaveWeeklyToDailySaver =
@@ -135,7 +104,6 @@ class AnalyticsEvents {
   static const autosavePauseOneWeek = "Autosave paused for one week";
   static const autosavePauseTwoWeeks = "Autosave paused for two weeks";
   static const autosavePauseOneMonth = "Autosave paused for one month";
-  static const autosavePauseForever = "Autosave paused forever";
 
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";
@@ -176,5 +144,6 @@ class AnalyticsEvents {
   static const redeemWinningsTapped = "Redeem Winnings Tapped";
   static const questionMarkTaoped = "Question Mark Tapped";
   static const goldenTicketSectionOpen = 'Golden Ticket section open';
-  static const journeyMileStarted = 'Journey Milestone Started';
+  static const signupEnterMobile = "Entered Mobile number";
+  static const mobileOtpDone = "Entered OTP";
 }

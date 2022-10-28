@@ -75,7 +75,6 @@ class WebGameViewModel extends BaseViewModel {
   }
 
   handleCricketHeroRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.cricketHeroGameEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
@@ -84,7 +83,6 @@ class WebGameViewModel extends BaseViewModel {
   }
 
   handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.poolClubEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
@@ -93,7 +91,6 @@ class WebGameViewModel extends BaseViewModel {
   }
 
   handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.footBallEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
@@ -102,7 +99,6 @@ class WebGameViewModel extends BaseViewModel {
   }
 
   handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.candyFiestaEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];

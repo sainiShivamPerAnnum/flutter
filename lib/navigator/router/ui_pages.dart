@@ -195,7 +195,6 @@ PageConfiguration RootPageConfig = PageConfiguration(
   key: 'Root',
   path: RootPath,
   uiPage: Pages.Root,
-  name: 'Root Screen',
 );
 
 PageConfiguration OnboardPageConfig = PageConfiguration(
@@ -335,7 +334,6 @@ PageConfiguration THomePageConfig = PageConfiguration(
   key: 'THome',
   path: THome,
   uiPage: Pages.THome,
-  name: 'Tambolla Home Screen',
 );
 
 PageConfiguration TGamePageConfig = PageConfiguration(
@@ -426,7 +424,6 @@ PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
   key: 'lendboxDetails',
   path: LendboxDetailsPath,
   uiPage: Pages.LendboxDetails,
-  name: 'About Fello Flo Screen',
 );
 
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
@@ -447,7 +444,6 @@ PageConfiguration MyWinnigsPageConfig = PageConfiguration(
   key: 'myWinnings',
   path: MyWinningsPath,
   uiPage: Pages.MyWinnings,
-  name: 'My Winnings Screen',
 );
 
 PageConfiguration BlockedUserPageConfig = PageConfiguration(
@@ -499,13 +495,11 @@ PageConfiguration WebHomeViewPageConfig = PageConfiguration(
   key: 'WebHomeView',
   path: WebHomeViewPath,
   uiPage: Pages.WebHomeView,
-  name: 'Web Games Home Screen',
 );
 PageConfiguration WebGameViewPageConfig = PageConfiguration(
   key: 'WebGameView',
   path: WebGameViewPath,
   uiPage: Pages.WebGameView,
-  name: 'Web games Screen',
 );
 PageConfiguration PoolViewPageConfig = PageConfiguration(
   key: 'PoolView',
@@ -522,16 +516,16 @@ PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
 );
 
 PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
-    key: 'AutosaveProcessView',
-    path: AutosaveProcessViewPath,
-    uiPage: Pages.AutosaveProcessView,
-    name: "Autosave Process Screen");
+  key: 'AutosaveProcessView',
+  path: AutosaveProcessViewPath,
+  uiPage: Pages.AutosaveProcessView,
+);
 
 PageConfiguration UserAutosaveDetailsViewPageConfig = PageConfiguration(
-    key: 'UserAutosaveDetailsView',
-    path: UserAutosaveDetailsViewPath,
-    uiPage: Pages.UserAutosaveDetailsView,
-    name: "User Autosave DetailsScreen");
+  key: 'UserAutosaveDetailsView',
+  path: UserAutosaveDetailsViewPath,
+  uiPage: Pages.UserAutosaveDetailsView,
+);
 
 PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
     key: 'AutosaveTransactionsView',
@@ -550,7 +544,6 @@ PageConfiguration TopPlayerLeaderboardPageConfig = PageConfiguration(
   key: 'TopPlayerLeaderboard',
   path: TopPlayerLeaderboard,
   uiPage: Pages.TopPlayerLeaderboard,
-  name: "Top Player Leaderboard Screen",
 );
 PageConfiguration JourneyViewPageConfig = PageConfiguration(
     key: 'JourneyView',
@@ -562,7 +555,6 @@ PageConfiguration OnBoardingViewPageConfig = PageConfiguration(
   key: 'OnBoardingView',
   path: OnBoardingPath,
   uiPage: Pages.OnBoardingView,
-  name: "On Boarding View",
 );
 PageConfiguration CompleteProfileViewPageConfig = PageConfiguration(
     key: 'CompleteProfileView',
@@ -587,7 +579,6 @@ PageConfiguration SaveAssetsViewConfig = PageConfiguration(
   key: 'SaveAssetsView',
   path: SaveAssetViewPath,
   uiPage: Pages.SaveAssetView,
-  name: "Save Asset View",
 );
 
 PageConfiguration SellConfirmationViewConfig = PageConfiguration(
@@ -608,7 +599,6 @@ PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
   key: 'AllParticipantsWinnersTopReferersView',
   path: AllParticipantsWinnersTopReferersPath,
   uiPage: Pages.AllParticipantsWinnersTopReferersView,
-  name: "View All Participants for Win View",
 );
 
 PageConfiguration RedeemSucessfulScreenPageConfig = PageConfiguration(
@@ -629,7 +619,6 @@ PageConfiguration AllTambolaTicketsPageConfig = PageConfiguration(
   key: 'AllTambolaTickets',
   path: AllTambolaTicketsPath,
   uiPage: Pages.AllTambolaTicketsView,
-  name: "All Tambola tickets screen",
 );
 PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
     key: 'UserUpiDetailsView',

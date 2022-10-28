@@ -316,24 +316,7 @@ class WebHomeViewModel extends BaseViewModel {
     String initialUrl;
     viewpage(1);
     trackPlayTappedAnalytics();
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        _analyticsService.track(eventName: AnalyticsEvents.poolClubStarts);
 
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.cricketHeroGameStarts);
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.startPlayingFootball);
-        break;
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.startPlayingCandyFiesta);
-        break;
-    }
     initialUrl = generateGameUrl();
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(

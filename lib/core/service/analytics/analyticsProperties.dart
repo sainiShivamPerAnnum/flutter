@@ -121,7 +121,7 @@ class AnalyticsProperties {
   }
 
   static int getMileStonesCompleted() {
-    if (_userService.userJourneyStats.mlIndex ?? 0 > 1)
+    if (_userService.userJourneyStats.mlIndex > 1)
       return (_userService.userJourneyStats.mlIndex) - 1;
     else
       return 0;

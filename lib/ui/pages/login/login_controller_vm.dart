@@ -379,10 +379,6 @@ class LoginControllerViewModel extends BaseViewModel {
           baseUser: userService.baseUser);
 
       BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
-      _analyticsService.track(
-        eventName: AnalyticsEvents.signupComplete,
-        properties: {'uid': userService.baseUser.uid},
-      );
 
       // bool res = await lclDbProvider.showHomeTutorial;
       // if (res) {

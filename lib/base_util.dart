@@ -326,10 +326,7 @@ class BaseUtil extends ChangeNotifier {
           "Please try after some time",
         );
       }
-      _analyticsService.track(
-          eventName: investmentType == InvestmentType.AUGGOLD99
-              ? AnalyticsEvents.goldRechargeModalSheet
-              : AnalyticsEvents.lBoxRechargeModalSheet);
+
       return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -406,8 +403,6 @@ class BaseUtil extends ChangeNotifier {
           isBarrierDismissable: true,
           hapticVibrate: false,
           content: CompleteProfileDialog());
-    _analyticsService.track(
-        eventName: AnalyticsEvents.rechargeOptionModalSheet);
 
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,

@@ -121,8 +121,6 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   init() async {
-    _analyticsService.track(
-        eventName: AnalyticsEvents.autosaveUserDetailsScreenViewed);
     setState(ViewState.Busy);
     _paytmService.isOnSubscriptionFlow = false;
     subIdController = new TextEditingController();
@@ -157,36 +155,10 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         await _paytmService.pauseSubscription(getResumeDate(pauseValue));
     isPausingInProgress = false;
     if (response) {
-      trackPause(pauseValue);
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
       AppState.backButtonDispatcher.didPopRoute();
       AppState.backButtonDispatcher.didPopRoute();
-    }
-  }
-
-  trackPause(int pauseValue) {
-    switch (pauseValue) {
-      case 1:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosavePauseOneWeek);
-        return;
-      case 2:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosavePauseTwoWeeks);
-        return;
-      case 3:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosavePauseOneMonth);
-        return;
-      case 4:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosavePauseForever);
-        return;
-      default:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosavePauseForever);
-        return;
     }
   }
 

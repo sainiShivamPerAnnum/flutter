@@ -393,11 +393,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   setSubscriptionAmount(double amount) async {
-    if (isDaily)
-      _analyticsService.track(eventName: AnalyticsEvents.autosaveDailySaver);
-    else
-      _analyticsService.track(eventName: AnalyticsEvents.autosaveWeeklySaver);
-
     if (amount == null || amount == 0) {
       BaseUtil.showNegativeAlert(
           "No Amount Entered", "Please enter some amount to continue");
@@ -423,8 +418,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
         //   lottieAnimationController.forward();
         //   _paytmService.currentSubscriptionId = null;
         // });
-        _analyticsService.track(
-            eventName: AnalyticsEvents.autosaveSetupCompleted);
+
       }
     }
   }
