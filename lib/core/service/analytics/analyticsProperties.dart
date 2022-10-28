@@ -97,31 +97,31 @@ class AnalyticsProperties {
   }
 
   static double getGoldInvestedAmount() {
-    return _userService.userFundWallet.augGoldPrinciple;
+    return _userService.userFundWallet.augGoldPrinciple ?? 0;
   }
 
   static double getGoldQuantityInGrams() {
-    return _userService.userFundWallet.augGoldQuantity;
+    return _userService.userFundWallet.augGoldQuantity ?? 0;
   }
 
   static double getFelloFloAmount() {
-    return _userService.userFundWallet.wLbPrinciple;
+    return _userService.userFundWallet.wLbPrinciple ?? 0;
   }
 
   static bool isKYCVerified() {
-    return _userService.baseUser.isSimpleKycVerified;
+    return _userService.baseUser.isSimpleKycVerified ?? false;
   }
 
   static int getCurrentLevel() {
-    return _userService.userJourneyStats.level;
+    return _userService.userJourneyStats.level ?? -1;
   }
 
   static int getCurrentMilestone() {
-    return _userService.userJourneyStats.mlIndex;
+    return _userService.userJourneyStats.mlIndex ?? -1;
   }
 
   static int getMileStonesCompleted() {
-    if (_userService.userJourneyStats.mlIndex > 1)
+    if (_userService.userJourneyStats.mlIndex ?? 0 > 1)
       return (_userService.userJourneyStats.mlIndex) - 1;
     else
       return 0;
@@ -151,27 +151,30 @@ class AnalyticsProperties {
     if (_paytmService.activeSubscription == null)
       return 0.0;
     else
-      return _paytmService.activeSubscription.autoAmount;
+      return _paytmService.activeSubscription.autoAmount ?? 0;
   }
 
   static String getJouneryCapsuleText() {
     return _journeyService
-        .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
-        .tooltip;
+            .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+            .tooltip ??
+        "null";
   }
 
   static String getJourneyMileStoneText() {
     return _journeyService
-        .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
-        .steps[0]
-        .title;
+            .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+            .steps[0]
+            .title ??
+        "null";
   }
 
   static String getJourneyMileStoneSubText() {
     return _journeyService
-        .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
-        .steps[0]
-        .subtitle;
+            .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+            .steps[0]
+            .subtitle ??
+        "null";
   }
 
   static String getTimeLeftForTambolaDraw() {
