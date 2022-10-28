@@ -174,4 +174,5 @@ class AnalyticsEvents {
   static const redeemWinningsTapped = "Redeem Winnings Tapped";
   static const questionMarkTaoped = "Question Mark Tapped";
   static const goldenTicketSectionOpen = 'Golden Ticket section open';
+  static const journeyMileStarted = 'Journey Milestone Started';
 }
