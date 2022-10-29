@@ -49,73 +49,78 @@ class _HelpFabState extends State<HelpFab> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        isOpen ? collapseFab() : expandFab();
-        AppState.screenStack.add(ScreenItem.dialog);
-        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, anotherAnimation) {
-              return InfoStories(
-                topic: widget.topic,
-              );
-            },
-            transitionDuration: Duration(milliseconds: 500),
-            transitionsBuilder: (context, animation, anotherAnimation, child) {
-              animation =
-                  CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
-              return Align(
-                child: SizeTransition(
-                  sizeFactor: animation,
-                  child: child,
-                  axisAlignment: 0.0,
-                ),
-              );
-            },
-          ),
-        );
-        // BaseUtil.openDialog(
-        //     hapticVibrate: true,
-        //     addToScreenStack: true,
-        //     content: JourneyOnboardingDialog(),
-        //     isBarrierDismissable: false);
-      },
-      child: AnimatedContainer(
-          height: SizeConfig.avatarRadius * 2.4,
-          duration: Duration(milliseconds: 600),
-          width: this.width,
-          curve: Curves.easeInOutCubic,
-          margin: EdgeInsets.only(
-              bottom: SizeConfig.navBarHeight + kBottomNavigationBarHeight),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: Colors.white, width: 1),
-            color: Colors.black,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Transform.translate(
-                offset: Offset(0, SizeConfig.padding3),
-                child: SvgPicture.asset(
-                  Assets.winScreenReferalAsset,
-                  height: SizeConfig.avatarRadius * 1.8,
-                  width: SizeConfig.avatarRadius * 1.8,
-                ),
-              ),
-              AnimatedContainer(
-                duration: Duration(milliseconds: 600),
-                curve: Curves.easeInOutCubic,
-                width: isOpen ? SizeConfig.padding32 : 0,
-                child: FittedBox(
-                  child: Text(
-                    " Help",
-                    style: TextStyles.sourceSansSB.body3,
+    return Positioned(
+      bottom: SizeConfig.navBarHeight +
+          kBottomNavigationBarHeight +
+          SizeConfig.padding16,
+      right: SizeConfig.padding16,
+      child: InkWell(
+        onTap: () {
+          isOpen ? collapseFab() : expandFab();
+          AppState.screenStack.add(ScreenItem.dialog);
+          Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, anotherAnimation) {
+                return InfoStories(
+                  topic: widget.topic,
+                );
+              },
+              transitionDuration: Duration(milliseconds: 500),
+              transitionsBuilder:
+                  (context, animation, anotherAnimation, child) {
+                animation = CurvedAnimation(
+                    curve: Curves.easeInCubic, parent: animation);
+                return Align(
+                  child: SizeTransition(
+                    sizeFactor: animation,
+                    child: child,
+                    axisAlignment: 0.0,
+                  ),
+                );
+              },
+            ),
+          );
+          // BaseUtil.openDialog(
+          //     hapticVibrate: true,
+          //     addToScreenStack: true,
+          //     content: JourneyOnboardingDialog(),
+          //     isBarrierDismissable: false);
+        },
+        child: AnimatedContainer(
+            height: SizeConfig.avatarRadius * 2.4,
+            duration: Duration(milliseconds: 600),
+            width: this.width,
+            curve: Curves.easeInOutCubic,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(color: Colors.white, width: 1),
+              color: Colors.black,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Transform.translate(
+                  offset: Offset(0, SizeConfig.padding3),
+                  child: SvgPicture.asset(
+                    Assets.winScreenReferalAsset,
+                    height: SizeConfig.avatarRadius * 1.8,
+                    width: SizeConfig.avatarRadius * 1.8,
                   ),
                 ),
-              )
-            ],
-          )),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 600),
+                  curve: Curves.easeInOutCubic,
+                  width: isOpen ? SizeConfig.padding32 : 0,
+                  child: FittedBox(
+                    child: Text(
+                      " Help",
+                      style: TextStyles.sourceSansSB.body3,
+                    ),
+                  ),
+                )
+              ],
+            )),
+      ),
     );
   }
 }

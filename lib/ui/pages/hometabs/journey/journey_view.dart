@@ -62,9 +62,6 @@ class _JourneyViewState extends State<JourneyView>
 
         return Scaffold(
           backgroundColor: Colors.black,
-          floatingActionButton: HelpFab(
-            topic: 'onboarding',
-          ),
           body: model.isLoading && model.pages == null
               ? JourneyErrorScreen()
               : Stack(
@@ -96,6 +93,9 @@ class _JourneyViewState extends State<JourneyView>
                           ),
                         ),
                       ),
+                    ),
+                    HelpFab(
+                      topic: 'onboarding',
                     ),
                     JourneyAppBar(),
                     JourneyBannersView(),
