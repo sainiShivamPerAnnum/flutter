@@ -176,7 +176,7 @@ class _InfoComponent2State extends State<InfoComponent2> {
           switchOutCurve: Curves.easeOut,
           child: isOpen
               ? Container(
-                  height: widget.height + SizeConfig.padding80,
+                  height: widget.height + SizeConfig.padding90,
                   margin: EdgeInsets.symmetric(
                       vertical: SizeConfig.pageHorizontalMargins),
                   child: ListView.builder(
