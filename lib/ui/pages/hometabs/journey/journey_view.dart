@@ -391,17 +391,21 @@ class Avatar extends StatelessWidget {
           // curve: Curves.decelerate,
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                width: 3,
-                color: Colors.white,
+          child: CustomPaint(
+            size: Size(40, 40),
+            painter: AvatarPainter(),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  width: 3,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            child: ProfileImageSE(
-              radius: SizeConfig.avatarRadius * 0.9,
-              reactive: false,
+              child: ProfileImageSE(
+                radius: SizeConfig.avatarRadius * 0.7,
+                reactive: false,
+              ),
             ),
           ),
         );
@@ -409,6 +413,39 @@ class Avatar extends StatelessWidget {
     );
   }
 }
+
+class AvatarPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var path = Path();
+    path.moveTo(size.width * 0.3, size.height * 0.9);
+    path.lineTo(size.width * 0.5, size.height * 1.08);
+    path.lineTo(size.width * 0.7, size.height * 0.9);
+    path.close();
+    canvas.drawPath(
+        path,
+        Paint()
+          ..color = Colors.white
+          ..strokeWidth = 10);
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(size.width*0.47, size.height * 1.18),
+        width: 12,
+        height: 6,
+      ),
+      0,
+      2 * 3.14,
+      true,
+      Paint()
+        ..color = UiConstants.kSecondaryBackgroundColor
+        ..strokeWidth = 20.0,
+    );
+  }
+  @override
+  bool shouldRepaint(AvatarPainter oldDelegate) => true;
+}
+
 
 class PathPainter extends CustomPainter {
   Path path;
