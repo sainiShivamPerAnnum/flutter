@@ -392,7 +392,7 @@ class Avatar extends StatelessWidget {
           top: model.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
           child: CustomPaint(
-            size: Size(40, 40),
+            size: Size(SizeConfig.padding20, SizeConfig.padding20),
             painter: AvatarPainter(),
             child: Container(
               decoration: BoxDecoration(
@@ -422,30 +422,23 @@ class AvatarPainter extends CustomPainter {
     path.lineTo(size.width * 0.5, size.height * 1.08);
     path.lineTo(size.width * 0.7, size.height * 0.9);
     path.close();
-    canvas.drawPath(
-        path,
-        Paint()
-          ..color = Colors.white
-          ..strokeWidth = 10);
+    canvas.drawPath(path, Paint()..color = Colors.white);
 
     canvas.drawArc(
-      Rect.fromCenter(
-        center: Offset(size.width*0.47, size.height * 1.18),
-        width: 12,
-        height: 6,
-      ),
-      0,
-      2 * 3.14,
-      true,
-      Paint()
-        ..color = UiConstants.kSecondaryBackgroundColor
-        ..strokeWidth = 20.0,
-    );
+        Rect.fromCenter(
+          center: Offset(size.width * 0.47, size.height * 1.18),
+          width: SizeConfig.padding12,
+          height: SizeConfig.padding6,
+        ),
+        0,
+        2 * 3.14,
+        true,
+        Paint()..color = UiConstants.kSecondaryBackgroundColor);
   }
+
   @override
   bool shouldRepaint(AvatarPainter oldDelegate) => true;
 }
-
 
 class PathPainter extends CustomPainter {
   Path path;
