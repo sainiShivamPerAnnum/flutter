@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 
 class LendboxAppBar extends StatelessWidget {
   final bool isEnabled;
-  const LendboxAppBar({@required this.isEnabled});
+  final Function trackClosingEvent;
+  const LendboxAppBar({@required this.isEnabled, this.trackClosingEvent});
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +50,7 @@ class LendboxAppBar extends StatelessWidget {
           : IconButton(
               icon: Icon(Icons.close, color: Colors.white),
               onPressed: () {
+                if (trackClosingEvent != null) trackClosingEvent();
                 AppState.backButtonDispatcher.didPopRoute();
               },
             ),

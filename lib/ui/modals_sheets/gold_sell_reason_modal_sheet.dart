@@ -59,12 +59,7 @@ class SellingReasonBottomSheet extends StatelessWidget {
                       groupValue: selectedReasonForSelling,
                       onChanged: (value) {
                         selectedReasonForSelling = x;
-                        _analyticsService.track(
-                            eventName:
-                                investmentType == InvestmentType.AUGGOLD99
-                                    ? AnalyticsEvents.sellGoldReason
-                                    : AnalyticsEvents.selllendboxReason,
-                            properties: {'reason': selectedReasonForSelling});
+
                         AppState.backButtonDispatcher.didPopRoute();
                         BaseUtil()
                             .openSellModalSheet(investmentType: investmentType);

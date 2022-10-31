@@ -165,7 +165,9 @@ class LoginControllerViewModel extends BaseViewModel {
             final verifyOtp =
                 await this._userRepo.verifyOtp(this._verificationId, otp);
             if (verifyOtp.isSuccess()) {
-              _analyticsService.track(eventName: AnalyticsEvents.mobileOtpDone);
+              _analyticsService.track(
+                  eventName: AnalyticsEvents.mobileOtpDone,
+                  properties: {'mobile': this.userMobile});
               AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.model.onOtpReceived();
               FirebaseAuth.instance
@@ -273,8 +275,11 @@ class LoginControllerViewModel extends BaseViewModel {
 
             if (flag) {
               _analyticsService.track(
-                eventName: AnalyticsEvents.signupName,
-                properties: {'userId': userService?.baseUser?.uid},
+                eventName: AnalyticsEvents.proceedToSignUp,
+                properties: {
+                  'username': name ?? "",
+                  'referralCode': refCode ?? ""
+                },
               );
               logger.d("User object saved successfully");
               // userService.showOnboardingTutorial = true;
@@ -382,10 +387,6 @@ class LoginControllerViewModel extends BaseViewModel {
           baseUser: userService.baseUser);
 
       BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
-      _analyticsService.track(
-        eventName: AnalyticsEvents.signupComplete,
-        properties: {'uid': userService.baseUser.uid},
-      );
 
       // bool res = await lclDbProvider.showHomeTutorial;
       // if (res) {
@@ -540,6 +541,9 @@ class LoginControllerViewModel extends BaseViewModel {
   _onOtpResendRequested() {
     if (baseProvider.isOtpResendCount < 2) {
       _verifyPhone();
+      _analyticsService.track(
+          eventName: AnalyticsEvents.resendOtpTapped,
+          properties: {'mobile': this.userMobile});
     } else {
       _otpScreenKey.currentState.model.onOtpResendConfirmed(false);
       BaseUtil.showNegativeAlert(

@@ -1,4 +1,6 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
@@ -68,7 +70,17 @@ class TrendingGames extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         _analyticsService.track(
-            eventName: 'Game Tapped', properties: {'name': game.gameName});
+            eventName: AnalyticsEvents.gameTapped,
+            properties:
+                AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+              'Game name': game.gameName,
+              "Entry fee": game.playCost,
+              "Win upto": game.prizeAmount,
+              "Time left for draw Tambola (mins)":
+                  AnalyticsProperties.getTimeLeftForTambolaDraw(),
+              "Tambola Tickets Owned":
+                  AnalyticsProperties.getTabolaTicketCount(),
+            }));
         Haptic.vibrate();
         AppState.delegate.parseRoute(
           Uri.parse(game.route),

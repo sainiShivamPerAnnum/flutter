@@ -1,5 +1,8 @@
 import "dart:math" as math;
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -7,6 +10,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,6 +36,8 @@ class GoldBuyInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _analyticsService = locator<AnalyticsService>();
+
     return Stack(
       children: [
         Column(
@@ -40,7 +46,21 @@ class GoldBuyInputView extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            RechargeModalSheetAppBar(txnService: augTxnService),
+            RechargeModalSheetAppBar(
+              txnService: augTxnService,
+              trackCloseTapped: () {
+                _analyticsService.track(
+                    eventName: AnalyticsEvents.savePageClosed,
+                    properties: {
+                      "Amount entered": model.goldAmountController.text,
+                      "Grams of gold": model.goldAmountInGrams,
+                      "Asset": 'Gold',
+                      "Coupon Applied": model.appliedCoupon != null
+                          ? model.appliedCoupon.code
+                          : "Not Applied",
+                    });
+              },
+            ),
             SizedBox(height: SizeConfig.padding32),
             EnterAmountView(
               model: model,
@@ -97,6 +117,7 @@ class GoldBuyInputView extends StatelessWidget {
                           : GestureDetector(
                               onTap: () {
                                 model.buyFieldNode.unfocus();
+
                                 model.showOfferModal(model);
                               },
                               child: Row(
@@ -156,7 +177,8 @@ class GoldBuyInputView extends StatelessWidget {
 
 class RechargeModalSheetAppBar extends StatelessWidget {
   final AugmontTransactionService txnService;
-  RechargeModalSheetAppBar({@required this.txnService});
+  final Function trackCloseTapped;
+  RechargeModalSheetAppBar({@required this.txnService, this.trackCloseTapped});
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -196,6 +218,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
               : IconButton(
                   icon: Icon(Icons.close, color: Colors.white),
                   onPressed: () {
+                    if (trackCloseTapped != null) trackCloseTapped();
                     AppState.backButtonDispatcher.didPopRoute();
                   },
                 ),

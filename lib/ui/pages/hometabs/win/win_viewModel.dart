@@ -23,6 +23,7 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
@@ -257,7 +258,12 @@ class WinViewModel extends BaseViewModel {
       method: 'message',
     );
 
-    _analyticsService.track(eventName: AnalyticsEvents.shareReferralLink);
+    _analyticsService
+        .track(eventName: AnalyticsEvents.shareReferalCode, properties: {
+      "Referrred Count Success": AnalyticsProperties.getSucessReferalCount(),
+      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
+      "code": _refCode,
+    });
     shareLinkInProgress = true;
     refresh();
 
@@ -312,7 +318,12 @@ class WinViewModel extends BaseViewModel {
 
   void copyReferCode() {
     Haptic.vibrate();
-    _analyticsService.track(eventName: AnalyticsEvents.referCodeCopied);
+    _analyticsService
+        .track(eventName: AnalyticsEvents.copyReferalCode, properties: {
+      "Referrred Count Success": AnalyticsProperties.getSucessReferalCount(),
+      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
+      "code": _refCode,
+    });
     Clipboard.setData(ClipboardData(text: _refCode)).then((_) {
       BaseUtil.showPositiveAlert("Code: $_refCode", "Copied to Clipboard");
     });
@@ -445,7 +456,7 @@ class WinViewModel extends BaseViewModel {
 
   void navigateToMyWinnings(WinViewModel model) {
     showUnscratchedCount = false;
-    _analyticsService.track(eventName: AnalyticsEvents.myGoldenTickets);
+
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MyWinnigsPageConfig,

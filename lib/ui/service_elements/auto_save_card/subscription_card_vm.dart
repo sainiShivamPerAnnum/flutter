@@ -1,11 +1,15 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
@@ -22,6 +26,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   bool _isResumingInProgress = false;
   bool _isLoading = false;
+  final _analyticsService = locator<AnalyticsService>();
 
   bool get isResumingInProcess => _isResumingInProgress;
   bool get isLoading => _isLoading;
@@ -145,6 +150,16 @@ class SubscriptionCardViewModel extends BaseViewModel {
         }
       }
     }
+
+    _analyticsService.track(
+        eventName: AnalyticsEvents.sipStartTapped,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "location":
+              AppState.delegate.appState.currentAction.widget == SaveAssetView()
+                  ? "Save Asset View"
+                  : "Save Section",
+        }));
   }
 
   String getResumeDate() {

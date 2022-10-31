@@ -116,7 +116,6 @@ class GoldSellViewModel extends BaseViewModel {
   init() async {
     deductedTokensCount = 0;
     setState(ViewState.Busy);
-    _analyticsService.track(eventName: AnalyticsEvents.saveSell);
     goldAmountController = TextEditingController();
     await _userService.fetchUserAugmontDetail();
     setUpNoticeIfAny();
@@ -345,8 +344,12 @@ class GoldSellViewModel extends BaseViewModel {
     final totalSellAmount =
         BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
     _analyticsService.track(
-      eventName: AnalyticsEvents.sellGold,
-      properties: {'selling_amount': totalSellAmount},
+      eventName: AnalyticsEvents.sellInitiate,
+      properties: {
+        'Amount to be sold': totalSellAmount,
+        "Weight (Gold)": goldAmountController.text,
+        "Asset": "Gold"
+      },
     );
   }
 

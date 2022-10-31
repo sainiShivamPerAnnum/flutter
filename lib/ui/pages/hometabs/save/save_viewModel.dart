@@ -11,6 +11,7 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -41,6 +42,7 @@ class SaveViewModel extends BaseViewModel {
   final _txnHistoryService = locator<TransactionHistoryService>();
   final _userCoinService = locator<UserCoinService>();
   final _baseUtil = locator<BaseUtil>();
+
   final _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
@@ -272,7 +274,17 @@ class SaveViewModel extends BaseViewModel {
 
     if (investmentType == InvestmentType.AUGGOLD99) {
       _analyticsService.track(
-          eventName: 'Asset Banner Tapped', properties: {'asset': 'Gold'});
+          eventName: AnalyticsEvents.assetBannerTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            'Asset': 'Gold',
+            "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
+            "Successs transaction count":
+                AnalyticsProperties.getSucessTxnCount(),
+            "Pending transaction count":
+                AnalyticsProperties.getPendingTxnCount(),
+          }));
+
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
@@ -280,13 +292,42 @@ class SaveViewModel extends BaseViewModel {
       );
     } else {
       _analyticsService.track(
-          eventName: 'Asset Banner Tapped', properties: {'asset': 'Flo'});
+          eventName: AnalyticsEvents.assetBannerTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            'Asset': 'Flo',
+            "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
+            "Successs transaction count":
+                AnalyticsProperties.getSucessTxnCount(),
+            "Pending transaction count":
+                AnalyticsProperties.getPendingTxnCount(),
+          }));
+
       AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: LendboxDetailsPageConfig,
         widget: LendboxDetailsView(),
       );
     }
+  }
+
+  trackChallangeTapped(String name, int order) {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.challangeTapped,
+        properties: AnalyticsProperties.getDefaultPropertiesMap(
+            extraValuesMap: {
+              "Challlaneg Name": name,
+              "Order": order,
+              "Location": "Save Section"
+            }));
+  }
+
+  trackBannerClickEvent(int orderNumber) {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.bannerClick, properties: {
+      "Location": "Fin Gyaan",
+      "Order": orderNumber,
+    });
   }
 
   navigateToCompleteKYC() {

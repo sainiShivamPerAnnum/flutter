@@ -29,6 +29,7 @@ class JourneyBannersView extends StatelessWidget {
                     itemBuilder: (cntx, i) {
                       return InkWell(
                         onTap: () {
+                          model.trackJourneyBannerClickEvent(i);
                           AppState.delegate.parseRoute(
                               Uri.parse(model.offerList[i].actionUri));
                         },

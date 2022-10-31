@@ -1,12 +1,16 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modals_sheets/gold_sell_reason_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -135,11 +139,23 @@ class SellCardView extends StatelessWidget {
     );
   }
 
-  navigateToKycScreen() =>
-      AppState.delegate.appState.currentAction = PageAction(
-        state: PageState.addPage,
-        page: KycDetailsPageConfig,
-      );
+  navigateToKycScreen() {
+    final _analyticsService = locator<AnalyticsService>();
+
+    _analyticsService
+        .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
+      "location": "Felo/Gold Sell card",
+      "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+          AnalyticsProperties.getFelloFloAmount(),
+      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
+    });
+    return AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
+  }
 
   navigateToBankDetailsScreen() =>
       AppState.delegate.appState.currentAction = PageAction(

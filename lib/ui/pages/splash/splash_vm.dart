@@ -5,10 +5,12 @@ import 'dart:io';
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -164,6 +166,8 @@ class LauncherViewModel extends BaseViewModel {
           isOnBoarded: userService?.isUserOnborded,
           baseUser: userService?.baseUser,
         );
+        //To fetch the properties required to pass for the analytics
+        await AnalyticsProperties().init();
         log("Splash init analytics: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
     } catch (e) {

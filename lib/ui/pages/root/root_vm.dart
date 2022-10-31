@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -127,16 +128,41 @@ class RootViewModel extends BaseViewModel {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
       case 0:
-        _analyticsService.track(eventName: AnalyticsEvents.journeySection);
+        _analyticsService.track(
+            eventName: AnalyticsEvents.journeySection,
+            properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 1:
-        _analyticsService.track(eventName: AnalyticsEvents.playSection);
+        _analyticsService.track(
+            eventName: AnalyticsEvents.saveSection,
+            properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 2:
-        _analyticsService.track(eventName: AnalyticsEvents.saveSection);
+        {
+          _analyticsService.track(
+              eventName: AnalyticsEvents.playSection,
+              properties:
+                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Time left for draw Tambola (mins)":
+                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                "Tambola Tickets Owned":
+                    AnalyticsProperties.getTabolaTicketCount(),
+              }));
+        }
         break;
       case 3:
-        _analyticsService.track(eventName: AnalyticsEvents.winSection);
+        {
+          _analyticsService.track(
+              eventName: AnalyticsEvents.winSection,
+              properties:
+                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
+                "Unscratched Ticket Count": _gtService.unscratchedTicketsCount,
+                "Scratched Ticket Count":
+                    (_gtService.activeGoldenTickets.length) -
+                        _gtService.unscratchedTicketsCount,
+              }));
+        }
         break;
 
       default:

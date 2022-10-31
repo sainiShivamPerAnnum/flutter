@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -224,12 +226,23 @@ class _JourneyMilestoneDetailsModalSheetState
                                         Uri.parse(widget.milestone.actionUri));
                                   try {
                                     _analyticsService.track(
-                                        eventName: 'Journey Milestone Start',
-                                        properties: {
-                                          'uid': FirebaseAuth
-                                              .instance.currentUser.uid,
-                                          'milestone': widget.milestone.index
-                                        });
+                                        eventName:
+                                            AnalyticsEvents.journeyMileStarted,
+                                        properties: AnalyticsProperties
+                                            .getDefaultPropertiesMap(
+                                                extraValuesMap: {
+                                              "Capsule text":
+                                                  AnalyticsProperties
+                                                      .getJouneryCapsuleText(),
+                                              "MileStone text":
+                                                  AnalyticsProperties
+                                                      .getJourneyMileStoneText(),
+                                              "MileStone sub Text":
+                                                  AnalyticsProperties
+                                                      .getJourneyMileStoneSubText(),
+                                              "MileStone number":
+                                                  widget.milestone.index,
+                                            }));
                                   } catch (e) {}
                                 },
                                 width: SizeConfig.screenWidth),

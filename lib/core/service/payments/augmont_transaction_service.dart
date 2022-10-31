@@ -94,7 +94,6 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processUpiTransaction() async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     CreatePaytmTransactionModel createdPaytmTransactionData =
         await this.createPaytmTransaction(
       PaymentMode.UPI,
@@ -176,7 +175,6 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processPaytmTransaction() async {
     AppState.blockNavigation();
     isGoldBuyInProgress = true;
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     CreatePaytmTransactionModel createdPaytmTransactionData =
         await this.createPaytmTransaction(
       PaymentMode.PAYTM,

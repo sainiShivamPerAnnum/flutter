@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -257,17 +258,41 @@ class JourneyPageViewModel extends BaseViewModel {
     if (_journeyService.avatarRemoteMlIndex > milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
       _analyticsService.track(
-          eventName: AnalyticsEvents.completedMilestoneTapped,
-          properties: {'milestone': milestone.index});
+          eventName: AnalyticsEvents.journeyMileStoneTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
+            "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
+            "MileStone sub Text":
+                AnalyticsProperties.getJourneyMileStoneSubText(),
+            "MileStone number": milestone.index,
+            "Milestone completed": true,
+          }));
     } else if (_journeyService.avatarRemoteMlIndex == milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
       _analyticsService.track(
-          eventName: AnalyticsEvents.activeMilestoneTapped,
-          properties: {'milestone': milestone.index});
+          eventName: AnalyticsEvents.journeyMileStoneTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
+            "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
+            "MileStone sub Text":
+                AnalyticsProperties.getJourneyMileStoneSubText(),
+            "MileStone number": milestone.index,
+            "Milestone completed": false,
+          }));
     } else {
       _analyticsService.track(
-          eventName: AnalyticsEvents.inCompleteMilestoneTapped,
-          properties: {'milestone': milestone.index});
+          eventName: AnalyticsEvents.journeyMileStoneTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
+            "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
+            "MileStone sub Text":
+                AnalyticsProperties.getJourneyMileStoneSubText(),
+            "MileStone number": milestone.index,
+            "Milestone completed": false,
+          }));
     }
     log("Current Screen Stack: ${AppState.screenStack}");
 

@@ -179,7 +179,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     AppState.screenStack.add(ScreenItem.page);
     print("Added a page ${pageConfig.key}");
     log("Current Stack: ${AppState.screenStack}");
-    _analytics.trackScreen(screen: pageConfig.name);
+    if (pageConfig.name != null && pageConfig.name.isNotEmpty) {
+      _analytics.trackScreen(screen: pageConfig.name);
+    }
     _pages.add(
       _createPage(child, pageConfig),
     );

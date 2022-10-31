@@ -93,6 +93,15 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     _inProgress = true;
     notifyListeners();
 
+    _analyticsService.track(
+      eventName: AnalyticsEvents.sellInitiate,
+      properties: {
+        'Amount to be sold': amountController.text,
+        "Weight (Gold)": "",
+        "Asset": "Flo"
+      },
+    );
+
     AppState.blockNavigation();
     final bankRes = await _paymentRepo.getActiveBankAccountDetails();
     if (bankRes.isSuccess()) {
@@ -155,7 +164,6 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     //   return false;
     // }
 
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
     return amount;
   }
 

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -8,6 +10,8 @@ import 'package:flutter/material.dart';
 
 class JourneyBannersViewModel extends BaseViewModel {
   final _getterRepo = locator<GetterRepository>();
+  final _analyticService = locator<AnalyticsService>();
+
   final PageController promoPageController = new PageController(initialPage: 0);
   int _currentPage = 0;
   Timer _timer;
@@ -50,6 +54,13 @@ class JourneyBannersViewModel extends BaseViewModel {
         duration: Duration(milliseconds: 600),
         curve: Curves.easeIn,
       );
+    });
+  }
+
+  void trackJourneyBannerClickEvent(int bannerOrder) {
+    _analyticService.track(eventName: AnalyticsEvents.bannerClick, properties: {
+      "Location": "Journey Footer",
+      "Order": bannerOrder,
     });
   }
 

@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -247,11 +248,15 @@ class GoldBuyViewModel extends BaseViewModel {
 
   //2 Basic Checks
   Future<bool> initChecks() async {
-    if (status == STATUS_UNAVAILABLE) return false;
+    if (status == STATUS_UNAVAILABLE) {
+      trackCheckOOutEvent("Status was unavilable");
+      return false;
+    }
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
           'Loading Gold Rates', 'Please wait while the Gold rates load');
+
       return false;
     }
     if (goldBuyAmount == null) {
@@ -268,6 +273,8 @@ class GoldBuyViewModel extends BaseViewModel {
         'Deposit Failed',
         'Please try again in sometime or contact us',
       );
+      trackCheckOOutEvent("Deposit Failed");
+
       return false;
     }
 
@@ -276,6 +283,9 @@ class GoldBuyViewModel extends BaseViewModel {
         'Purchase Failed',
         "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
       );
+      trackCheckOOutEvent(
+          "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
+
       return false;
     }
 
@@ -286,10 +296,31 @@ class GoldBuyViewModel extends BaseViewModel {
         'Purchase Failed',
         'Gold buying is currently on hold. Please try again after sometime.',
       );
+      trackCheckOOutEvent(
+          "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
       return false;
     }
-    _analyticsService.track(eventName: AnalyticsEvents.buyGold);
+
+    trackCheckOOutEvent("");
     return true;
+  }
+
+  trackCheckOOutEvent(String errorMessage) {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.saveCheckout,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "Asset": "Gold",
+          "Coupon Code":
+              appliedCoupon != null ? appliedCoupon.code : "Not Applied",
+          "Amount Entered": goldAmountController.text,
+          "Gold Weight": goldAmountInGrams,
+          "Per gram rate": goldRates.goldBuyPrice,
+          "Best flag": goldAmountController.text == chipAmountList[2].toString()
+              ? true
+              : false,
+          "Error message": errorMessage,
+        }));
   }
 
   // UI ESSENTIALS
@@ -314,6 +345,13 @@ class GoldBuyViewModel extends BaseViewModel {
         updateGoldAmount();
         //checkIfCouponIsStillApplicable();
         appliedCoupon = null;
+        _analyticsService.track(
+            eventName: AnalyticsEvents.suggestedAmountTapped,
+            properties: {
+              'order': index,
+              'Amount': amt,
+              'Best flag': index == 2
+            });
         notifyListeners();
       },
     );
@@ -461,10 +499,20 @@ class GoldBuyViewModel extends BaseViewModel {
     }
   }
 
-  Future applyCoupon(String couponCode) async {
+  Future applyCoupon(String couponCode, bool isManuallyTyped) async {
     if (couponApplyInProgress || isGoldBuyInProgress) return;
 
-    _analyticsService.track(eventName: AnalyticsEvents.saveBuyCoupon);
+    int order = -1;
+    int minTransaction = -1;
+    int counter = 0;
+    for (CouponModel c in couponList) {
+      if (c.code == couponCode) {
+        order = counter;
+        minTransaction = c.minPurchase;
+        break;
+      }
+      counter++;
+    }
 
     buyFieldNode.unfocus();
 
@@ -495,6 +543,15 @@ class GoldBuyViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert(
           "Coupon not applied", "Please try another coupon");
     }
+    _analyticsService
+        .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
+      "Manual Code entry": isManuallyTyped,
+      "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
+      "Coupon Name": couponCode,
+      "Error message": response.code == 400 ? response?.model?.message : "",
+      "Asset": "Gold",
+      "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
+    });
   }
 }
 
