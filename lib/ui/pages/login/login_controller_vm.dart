@@ -88,6 +88,7 @@ class LoginControllerViewModel extends BaseViewModel {
   ValueNotifier<double> _pageNotifier;
   StreamSubscription streamSubscription;
   static List<Widget> _pages;
+  ScrollController nameViewScrollController = ScrollController();
 
 //Getters and Setters
   get controller => _controller;
@@ -124,7 +125,7 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   processScreenInput(int currentPage) async {
-    // FocusScope.of(AppState.delegate.navigatorKey.currentContext).unfocus();
+    if (state == ViewState.Busy) return;
     switch (currentPage) {
       case LoginMobileView.index:
         {
@@ -185,7 +186,8 @@ class LoginControllerViewModel extends BaseViewModel {
               _otpScreenKey.currentState.model.otpFieldEnabled = true;
               _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
               BaseUtil.showNegativeAlert(
-                  'Invalid Otp', 'Please enter a valid otp');
+                  verifyOtp.errorMessage ?? 'Invalid Otp',
+                  'Please enter a valid otp or try again after sometime');
 
               // FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(ViewState.Idle);
@@ -357,6 +359,12 @@ class LoginControllerViewModel extends BaseViewModel {
           LoginNameInputView.index,
         );
       loginUsingTrueCaller = false;
+      Future.delayed(Duration(seconds: 1), () {
+        nameViewScrollController.animateTo(
+            nameViewScrollController.position.maxScrollExtent,
+            duration: Duration(seconds: 1),
+            curve: Curves.easeIn);
+      });
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -628,6 +636,7 @@ class LoginControllerViewModel extends BaseViewModel {
   exit() {
     _controller.removeListener(_pageListener);
     _controller.dispose();
+    nameViewScrollController.dispose();
     streamSubscription?.cancel();
   }
 }

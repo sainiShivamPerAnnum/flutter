@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -153,7 +154,7 @@ class AugmontTransactionService extends BaseTransactionService {
       "aTaxedGoldBalance":
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
-
+    log("AUGMAP : $augMap");
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
     await _razorpayService.initiateRazorpayTxn(
