@@ -14,6 +14,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 
@@ -30,6 +31,7 @@ class TransactionDetailsBottomSheet extends StatefulWidget {
 class _TransactionDetailsBottomSheetState
     extends State<TransactionDetailsBottomSheet> {
   bool _showInvoiceButton = false;
+  bool _showAppliedCoupon = false;
   final AugmontService augmontProvider = locator<AugmontService>();
   final TransactionHistoryService _txnHistoryService =
       locator<TransactionHistoryService>();
@@ -43,6 +45,13 @@ class _TransactionDetailsBottomSheetState
         widget.transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
       _showInvoiceButton = true;
+
+    if (widget.transaction.subType ==
+            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+        widget.transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+        widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
+        widget.transaction.couponCode != null) 
+        _showAppliedCoupon = true;
     super.initState();
   }
 
@@ -247,6 +256,27 @@ class _TransactionDetailsBottomSheetState
                             summary: widget.transaction.transactionUpdatesMap)
                       ],
                     ),
+                  ),
+                SizedBox(height: SizeConfig.padding16),
+                if (_showAppliedCoupon)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        Assets.ticketTilted,
+                        width: SizeConfig.iconSize0,
+                        height: SizeConfig.iconSize0,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding8,
+                      ),
+                      Text(
+                        widget.transaction.couponCode + " coupon applied",
+                        style: TextStyles.sourceSans.body2
+                            .colour(UiConstants.kPrimaryColor),
+                      ),
+                    ],
                   ),
                 SizedBox(height: SizeConfig.padding16),
                 if (_showInvoiceButton)
