@@ -376,7 +376,6 @@ class UserTransaction {
   }
 
   String get couponCode => _couponCode;
-
   set couponCode(String value) {
     _couponCode = value;
   }

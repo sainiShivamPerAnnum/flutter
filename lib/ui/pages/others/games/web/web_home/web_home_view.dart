@@ -311,16 +311,24 @@ class WebHomeView extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: SizeConfig.padding24),
-                    child: ReactivePositiveAppButton(
-                      btnText: 'Play',
-                      onPressed: () async {
-                        Haptic.vibrate();
-                        if (await model.setupGame()) model.launchGame();
+                  child: Container(
+                    height: SizeConfig.screenHeight * 0.105,
+                    decoration:
+                        BoxDecoration(color: UiConstants.gameCardColor),
+                    width: SizeConfig.screenWidth,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding24,
+                          vertical: SizeConfig.padding16),
+                      child: ReactivePositiveAppButton(
+                        btnText: 'Play',
+                        onPressed: () async {
+                          Haptic.vibrate();
+                          if (await model.setupGame()) model.launchGame();
 
-                        // model.pageController.jumpToPage(1);
-                      },
+                          // model.pageController.jumpToPage(1);
+                        },
+                      ),
                     ),
                   ),
                 ),
