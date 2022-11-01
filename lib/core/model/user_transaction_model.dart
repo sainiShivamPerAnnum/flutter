@@ -351,8 +351,8 @@ class UserTransaction {
       fldTicketUpCount: _ticketUpCount,
       fldUserId: _userId,
       fldTranStatus: _tranStatus,
-      fldIciciMap: _icici,
       fldCouponCode: _couponCode,
+      fldIciciMap: _icici,
       fldRzpMap: _rzp,
       fldAugmontMap: _augmnt,
       fldTimestamp: _timestamp,
@@ -376,7 +376,7 @@ class UserTransaction {
   }
 
   String get couponCode => _couponCode;
-  
+
   set couponCode(String value) {
     _couponCode = value;
   }
