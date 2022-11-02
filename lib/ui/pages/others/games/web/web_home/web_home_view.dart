@@ -562,11 +562,11 @@ class RechargeBox extends StatelessWidget {
                 children: [
                   Text(
                     "+  ",
-                    style: TextStyles.sourceSansSB.body1.bold,
+                    style: TextStyles.sourceSansSB.body2.bold,
                   ),
                   SvgPicture.asset(
                     Assets.token,
-                    height: SizeConfig.padding20,
+                    height: SizeConfig.padding14,
                   ),
                   SizedBox(width: SizeConfig.padding4),
                   Text(

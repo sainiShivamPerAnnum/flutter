@@ -56,11 +56,6 @@ class RewardView extends StatelessWidget {
                       height: SizeConfig.screenHeight * 0.0897,
                       child: Center(
                         child: ListTile(
-                          leading: SvgPicture.asset(
-                            Assets.medal,
-                            width: SizeConfig.iconSize5,
-                            height: SizeConfig.iconSize5,
-                          ),
                           title: Text(
                             model.prizesA[index + 3].displayName.replaceFirst(
                               ' Prize',
