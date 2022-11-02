@@ -35,7 +35,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _txnService.currentTransactionState = TransactionState.ongoing;
+      _txnService.currentTransactionState = TransactionState.idle;
     });
     WidgetsBinding.instance.addObserver(this);
   }
