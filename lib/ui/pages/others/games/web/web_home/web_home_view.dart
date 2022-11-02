@@ -777,7 +777,7 @@ class PastWeekWinners extends StatelessWidget {
                                                     Text(
                                                       "${i + 1}",
                                                       style: TextStyles
-                                                          .rajdhani.body3
+                                                          .sourceSans.body3
                                                           .colour(Colors.white),
                                                     ),
                                                     SizedBox(
@@ -857,7 +857,7 @@ class PastWeekWinners extends StatelessWidget {
                                                                           '.') ??
                                                                   "username",
                                                               style: TextStyles
-                                                                  .rajdhani
+                                                                  .sourceSans
                                                                   .body3
                                                                   .colour(Colors
                                                                       .white)),
@@ -867,7 +867,7 @@ class PastWeekWinners extends StatelessWidget {
                                                     Text(
                                                       "${model.pastWeekParticipants[i].score.toInt().toString() ?? "00"} points",
                                                       style: TextStyles
-                                                          .rajdhani.body3
+                                                          .sourceSans.body3
                                                           .colour(Colors.white),
                                                     )
                                                   ],
@@ -926,7 +926,7 @@ class PastWeekWinners extends StatelessWidget {
                                               ),
                                               child: Text('See All',
                                                   style: TextStyles
-                                                      .rajdhaniSB.body2),
+                                                      .sourceSans.body2),
                                             ),
                                             SvgPicture.asset(
                                                 Assets.chevRonRightArrow,
