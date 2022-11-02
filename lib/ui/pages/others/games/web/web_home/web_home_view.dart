@@ -137,12 +137,10 @@ class WebHomeView extends StatelessWidget {
                                                       .last,
                                                   style: TextStyles
                                                       .rajdhaniSB.title3),
-
                                               SizedBox(
                                                   height: SizeConfig.padding16),
                                             ]),
                                         Spacer(),
-                                        
                                         SvgPicture.network(
                                             model.currentGameModel.thumbnailUri,
                                             fit: BoxFit.cover,
@@ -150,7 +148,6 @@ class WebHomeView extends StatelessWidget {
                                                 SizeConfig.screenWidth * 0.5,
                                             width:
                                                 SizeConfig.screenWidth * 0.5),
-                                        
                                       ],
                                     ),
                                   ),
@@ -162,7 +159,6 @@ class WebHomeView extends StatelessWidget {
                         );
                       },
                     ),
-
                     SliverList(
                       delegate: SliverChildListDelegate(
                         [
@@ -313,8 +309,7 @@ class WebHomeView extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: SizeConfig.screenHeight * 0.105,
-                    decoration:
-                        BoxDecoration(color: UiConstants.gameCardColor),
+                    decoration: BoxDecoration(color: UiConstants.gameCardColor),
                     width: SizeConfig.screenWidth,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -529,7 +524,7 @@ class RechargeBox extends StatelessWidget {
               return BaseUtil().openDepositOptionsModalSheet();
             },
             child: Padding(
-              padding:  EdgeInsets.all(SizeConfig.padding1),
+              padding: EdgeInsets.all(SizeConfig.padding1),
               child: Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.padding16,
