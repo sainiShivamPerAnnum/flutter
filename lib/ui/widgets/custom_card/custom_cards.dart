@@ -1,7 +1,9 @@
 import 'dart:ui' as ui;
 
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/autosave_status_text.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -16,9 +18,10 @@ class SaveCustomCard extends StatelessWidget {
   final String cardAssetName;
   final Function() onTap;
   final InvestmentType investmentType;
+  final ValueKey key;
 
   const SaveCustomCard({
-    Key key,
+    this.key,
     this.title,
     this.subtitle,
     this.cardBgColor,
@@ -26,7 +29,7 @@ class SaveCustomCard extends StatelessWidget {
     this.onTap,
     this.onCardTap,
     @required this.investmentType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +84,18 @@ class SaveCustomCard extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  title,
-                                  style: TextStyles.rajdhaniSB.title5,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (key.value ==
+                                        Constants.ASSET_TYPE_AUGMONT)
+                                      AutosaveStatusText(),
+                                    Text(
+                                      title,
+                                      style: TextStyles.rajdhaniSB.title5,
+                                    ),
+                                  ],
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios_rounded,

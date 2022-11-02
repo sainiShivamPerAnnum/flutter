@@ -184,8 +184,8 @@ class MyWinningsViewModel extends BaseViewModel {
             : Assets.augmontShare,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as Digital Gold?",
+            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as Digital Gold?",
         accept: "Yes",
         reject: "No",
         acceptColor: UiConstants.primaryColor,

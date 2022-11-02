@@ -7,14 +7,10 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
@@ -24,6 +20,7 @@ import 'package:felloapp/ui/widgets/carousal_widget.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -70,7 +67,7 @@ class Save extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   // -- Break --
-                  AutosaveCard(),
+                  AutosaveCard(locationKey: ValueKey('save')),
                   SizedBox(
                     height: SizeConfig.padding10,
                   ),
@@ -250,6 +247,7 @@ class SaveNetWorthSection extends StatelessWidget {
             SaveCustomCard(
               title: 'Digital Gold',
               subtitle: "You Own",
+              key: ValueKey(Constants.ASSET_TYPE_AUGMONT),
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,
@@ -268,6 +266,7 @@ class SaveNetWorthSection extends StatelessWidget {
             SaveCustomCard(
               title: 'Fello Flo',
               subtitle: "Current Value",
+              key: ValueKey(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,

@@ -89,7 +89,7 @@ class SharePriceScreen extends StatelessWidget {
                         : AppPositiveBtn(
                             btnText: "SHARE",
                             onPressed: () {
-                              model.sharePrizeDetails();
+                              model.sharePrizeDetails(prizeAmount);
                             },
                             width: SizeConfig.screenWidth * 0.5),
                     SizedBox(height: SizeConfig.padding24)

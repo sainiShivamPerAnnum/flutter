@@ -483,8 +483,8 @@ class WinViewModel extends BaseViewModel {
         },
         title: "Confirmation",
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${_userService.userFundWallet.unclaimedBalance} as Digital Gold?",
+            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as Digital Gold?",
         buttonText: "Yes",
         cancelBtnText: "No",
         cancelAction: AppState.backButtonDispatcher.didPopRoute,
@@ -540,7 +540,7 @@ class WinViewModel extends BaseViewModel {
     );
   }
 
-  sharePrizeDetails() async {
+  sharePrizeDetails(double prizeAmount) async {
     startShareLoading();
     try {
       String url;
@@ -552,7 +552,7 @@ class WinViewModel extends BaseViewModel {
 
       if (url != null)
         caputure(
-            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+            'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
     } catch (e) {
       _logger.e(e.toString());
       BaseUtil.showNegativeAlert("An error occured!", "Please try again");
