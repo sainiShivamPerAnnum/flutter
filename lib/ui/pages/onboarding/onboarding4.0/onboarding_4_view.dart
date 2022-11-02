@@ -234,7 +234,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                     style: TextStyles.sourceSans.body2,
                                   ),
                                   SizedBox(
-                                    height: SizeConfig.padding16,
+                                    height: SizeConfig.padding24,
                                   ),
                                   model.assetWidgets[index],
                                 ],
