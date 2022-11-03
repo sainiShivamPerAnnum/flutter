@@ -54,7 +54,7 @@ class Save extends StatelessWidget {
             backgroundColor: Colors.transparent,
             appBar: FAppBar(
               type: FaqsType.savings,
-              backgroundColor: UiConstants.kSecondaryBackgroundColor,
+              backgroundColor: UiConstants.accentColor,
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -222,7 +222,7 @@ class SaveNetWorthSection extends StatelessWidget {
             bottomLeft: Radius.circular(SizeConfig.roundness16),
             bottomRight: Radius.circular(SizeConfig.roundness16),
           ),
-          color: UiConstants.kSecondaryBackgroundColor,
+          color: UiConstants.accentColor,
         ),
         child: Column(
           children: [
@@ -231,15 +231,15 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Your Networth',
-                    style: TextStyles.rajdhaniSB.title5,
+                    style: TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
                   ),
                   NetWorthValue(
-                    style: TextStyles.rajdhaniSB.title5,
+                    style: TextStyles.sourceSans.title0.bold,
                   ),
                 ],
               ),
@@ -266,7 +266,7 @@ class SaveNetWorthSection extends StatelessWidget {
               },
             ),
             SaveCustomCard(
-              title: 'Fello Flo',
+              title: 'Fello Flo (10%)',
               subtitle: "Current Value",
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
@@ -759,7 +759,7 @@ class SaveInfoSection extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
         ),
         SizedBox(
-          height: SizeConfig.padding20,
+          height: SizeConfig.padding8,
         ),
         SizedBox(
             height: imageHeight,
