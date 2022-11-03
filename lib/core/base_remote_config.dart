@@ -11,7 +11,10 @@ class BaseRemoteConfig {
   static final _internalOpsService = locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
+
+  static const Map<String, String> _LOGIN_MESSAGE = {'login_message': 'Lorem ipsum coming from Remote Config'};
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
+
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
     'tambola_header_1': 'Today\'s picks'
   };
@@ -199,6 +202,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, dynamic> DEFAULTS = {
+    ..._LOGIN_MESSAGE,
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
@@ -293,6 +297,7 @@ class BaseRemoteConfig {
     }
   }
 
+  static String get LOGIN_MESSAGE => _LOGIN_MESSAGE.keys.first;
   static String get FORCE_MIN_BUILD_NUMBER_IOS =>
       _FORCE_MIN_BUILD_NUMBER_IOS.keys.first;
 
