@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -49,8 +50,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final _paytmRepo = locator<PaytmRepository>();
   final _getterRepo = locator<GetterRepository>();
 
-  final String devMid = "qpHRfp13374268724583";
-  final String prodMid = "CMTNKX90967647249644";
+  // final String devMid = "qpHRfp13374268724583";
+  // final String prodMid = "CMTNKX90967647249644";
   final String devPostPrefix = "https://securegw-stage.paytm.in/order/pay?";
   final String prodPostPrefix = "https://securegw.paytm.in/order/pay?";
 
@@ -126,11 +127,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   PaytmService() {
     final stage = FlavorConfig.instance.values.paytmStage;
     if (stage == PaytmStage.DEV) {
-      mid = devMid;
       isStaging = true;
       postPrefix = devPostPrefix;
     } else {
-      mid = prodMid;
       isStaging = false;
       postPrefix = prodPostPrefix;
     }
@@ -138,6 +137,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   //INIT
   Future init() async {
+    mid = BaseRemoteConfig.remoteConfig.getString(FlavorConfig.isDevelopment()
+        ? BaseRemoteConfig.PATYM_DEV_MID
+        : BaseRemoteConfig.PATYM_PROD_MID);
     await getActiveSubscriptionDetails();
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {

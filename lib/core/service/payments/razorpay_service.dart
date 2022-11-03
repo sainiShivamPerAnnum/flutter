@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
@@ -18,7 +19,6 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/razorpay_api_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -110,8 +110,11 @@ class RazorpayService extends ChangeNotifier {
       print(txnResponse.model.data.orderId);
       _txnService.currentTxnOrderId = txnResponse.model.data.txnId;
       _txnService.currentTxnAmount = amount;
-      String _keyId =
-          RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
+      String _keyId = BaseRemoteConfig.remoteConfig.getString(
+          FlavorConfig.isDevelopment()
+              ? BaseRemoteConfig.RZP_DEV_MID
+              : BaseRemoteConfig.RZP_PROD_MID);
+      // RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
       final options = {
         'key': _keyId,
         'amount': amount.toInt() * 100,
@@ -139,8 +142,8 @@ class RazorpayService extends ChangeNotifier {
 
         _txnService.currentTxnOrderId = txnResponse.model.data.txnId;
         _txnService.currentTxnAmount = amount;
-        String _keyId =
-            RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
+        // String _keyId =
+        //     RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
         final options = {
           'key': _keyId,
           'amount': amount.toInt() * 100,

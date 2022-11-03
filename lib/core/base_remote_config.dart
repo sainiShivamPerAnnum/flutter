@@ -198,6 +198,13 @@ class BaseRemoteConfig {
     'enabled_psp_apps': 'EGP'
   };
 
+  static const Map<String, String> _PAYTM_PROD_MID = {'paytm_prod_mid': 'ppm'};
+
+  static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
+
+  static const Map<String, String> _RZP_PROD_MID = {'rzp_prod_mid': 'rpm'};
+
+  static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -256,7 +263,11 @@ class BaseRemoteConfig {
     ..._CACHE_INVALIDATION,
     ..._ENABLED_PSP_APPS,
     ..._ACTIVE_PG_ANDROID,
-    ..._ACTIVE_PG_IOS
+    ..._ACTIVE_PG_IOS,
+    ..._PAYTM_PROD_MID,
+    ..._PAYTM_DEV_MID,
+    ..._RZP_PROD_MID,
+    ..._RZP_DEV_MID
   };
 
   static Future<bool> init() async {
@@ -425,6 +436,14 @@ class BaseRemoteConfig {
   static String get ACTIVE_PG_IOS => _ACTIVE_PG_IOS.keys.first;
 
   static String get ENABLED_PSP_APPS => _ENABLED_PSP_APPS.keys.first;
+
+  static String get PATYM_PROD_MID => _PAYTM_PROD_MID.keys.first;
+
+  static String get PATYM_DEV_MID => _PAYTM_DEV_MID.keys.first;
+
+  static String get RZP_PROD_MID => _RZP_PROD_MID.keys.first;
+
+  static String get RZP_DEV_MID => _RZP_DEV_MID.keys.first;
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);
