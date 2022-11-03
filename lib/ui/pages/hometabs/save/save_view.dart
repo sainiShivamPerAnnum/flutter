@@ -226,14 +226,17 @@ class SaveNetWorthSection extends StatelessWidget {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: SizeConfig.padding24,
+              SizedBox(
+              height: SizeConfig.padding12,
             ),
-            Padding(
+        model.userFundWallet.netWorth  != 0 &&  model.userFundWallet.netWorth != null ?   Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                   SizedBox(
+              height: SizeConfig.padding12,
+            ),
                   Text(
                     'Your Networth',
                     style: TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
@@ -243,7 +246,7 @@ class SaveNetWorthSection extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            ) : Container(),
             SizedBox(
               height: SizeConfig.padding10,
             ),
