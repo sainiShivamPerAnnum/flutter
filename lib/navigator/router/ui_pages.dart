@@ -440,7 +440,7 @@ PageConfiguration ReferralHistoryPageConfig = PageConfiguration(
   name: 'Refer History Screen',
 );
 
-PageConfiguration MyWinnigsPageConfig = PageConfiguration(
+PageConfiguration MyWinningsPageConfig = PageConfiguration(
   key: 'myWinnings',
   path: MyWinningsPath,
   uiPage: Pages.MyWinnings,

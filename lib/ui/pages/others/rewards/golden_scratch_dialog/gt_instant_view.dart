@@ -115,7 +115,12 @@ class _GTInstantViewState extends State<GTInstantView>
                           ),
                           FelloAppBarBackButton(),
                           Spacer(),
-                          FelloCoinBar(),
+                          CoinBar(
+                            child: AnimatedCount(
+                                count: model.coinsCount,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInCirc),
+                          ),
                           SizedBox(width: SizeConfig.padding20)
                         ],
                       ),
@@ -275,7 +280,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                       AppState.delegate.appState.currentAction =
                                           PageAction(
                                               state: PageState.addPage,
-                                              page: MyWinnigsPageConfig);
+                                              page: MyWinningsPageConfig);
                                     },
                                     child: Text(
                                       'My Winnings',

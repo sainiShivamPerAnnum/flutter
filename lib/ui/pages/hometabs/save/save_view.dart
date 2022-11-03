@@ -318,7 +318,7 @@ class CampaignCardSection extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   saveVm.trackChallangeTapped(event.type, index);
-                  AppState.delegate.openTopSaverScreen(event.type);
+                  AppState.delegate.parseRoute(Uri.parse(event.type));
                 },
                 child: Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding10),

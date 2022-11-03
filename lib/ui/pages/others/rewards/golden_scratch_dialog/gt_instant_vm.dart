@@ -42,8 +42,16 @@ class GTInstantViewModel extends BaseViewModel {
   bool isInvestmentAnimationInProgress = false;
   bool showMainContent = false;
   bool isAutosaveAlreadySetup = false;
+  int tokens = 0;
+  int _coinsCount = 0;
 
-  int coinsCount = 0;
+  get coinsCount => this._coinsCount;
+
+  set coinsCount(value) {
+    this._coinsCount = value;
+    notifyListeners();
+  }
+
   double coinScale = 1;
   bool _isShimmerEnabled = false;
   GoldenTicket _goldenTicket;
@@ -98,6 +106,7 @@ class GTInstantViewModel extends BaseViewModel {
 
   init() async {
     Haptic.vibrate();
+
     isAutosaveAlreadySetup = _paytmService.activeSubscription != null &&
         (_paytmService.activeSubscription.status ==
                 Constants.SUBSCRIPTION_ACTIVE ||
@@ -107,7 +116,12 @@ class GTInstantViewModel extends BaseViewModel {
                 _paytmService.activeSubscription.resumeDate.isNotEmpty));
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
-
+    if (goldenTicket.isRewarding &&
+        goldenTicket.rewardArr.any((element) => element.type == 'flc')) {
+      tokens = goldenTicket.rewardArr
+          .firstWhere((element) => element.type == 'flc')
+          .value;
+    }
     Future.delayed(Duration(seconds: 3), () {
       if (!isCardScratchStarted) {
         showScratchGuide = true;
@@ -124,6 +138,7 @@ class GTInstantViewModel extends BaseViewModel {
     Haptic.vibrate();
     buttonOpacity = 1.0;
     isCardScratched = true;
+    coinsCount = _userCoinService.flcBalance + tokens;
 
     try {
       _getBearerToken().then(
@@ -131,12 +146,7 @@ class GTInstantViewModel extends BaseViewModel {
           (_) {
             _gtService.updateUnscratchedGTCount();
             _userService.getUserFundWalletData();
-            _userCoinService.getUserCoinBalance().then(
-              (_) {
-                coinsCount = _userCoinService.flcBalance;
-                notifyListeners();
-              },
-            );
+            _userCoinService.getUserCoinBalance();
           },
         ),
       );
@@ -159,42 +169,10 @@ class GTInstantViewModel extends BaseViewModel {
     return token;
   }
 
-  // initDepositSuccessAnimation(double amount) async {
-  //   coinsCount = _coinService.flcBalance - amount.toInt();
-  //   isInvestmentAnimationInProgress = true;
-  //   notifyListeners();
-  //   Future.delayed(Duration(milliseconds: 2500), () {
-  //     isInvestmentAnimationInProgress = false;
-  //     notifyListeners();
-  //     initCoinAnimation(amount);
-  //   });
-  // }
-
-  // initCoinAnimation(double amount) async {
-  //   await Future.delayed(Duration(milliseconds: 100), () {
-  //     isCoinAnimationInProgress = true;
-  //     lottieAnimationController.forward();
-  //     coinsCount = _coinService.flcBalance;
-  //     notifyListeners();
-  //   });
-  //   // await Future.delayed(Duration(seconds: 2), () {
-  //   //   coinContentOpacity = 0;
-  //   //   notifyListeners();
-  //   // });
-  //   await Future.delayed(Duration(milliseconds: 2500), () {
-  //     isCoinAnimationInProgress = false;
-  //     notifyListeners();
-  //   });
-  //   await Future.delayed(Duration(milliseconds: 100), () {
-  //     initNormalFlow();
-  //   });
-  // }
-
   initNormalFlow() {
     Future.delayed(Duration(milliseconds: 500), () {
-      coinsCount = _coinService.flcBalance;
       showMainContent = true;
-      notifyListeners();
+      coinsCount = _coinService.flcBalance;
     });
   }
 }
@@ -224,9 +202,14 @@ class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
     return widget.count is int
         ? Text(
             _intCount.evaluate(animation).toString(),
-            style: TextStyles.body1.bold,
+            style: TextStyles.body1.bold.colour(Colors.white),
           )
-        : Text(_doubleCount.evaluate(animation).toStringAsFixed(1));
+        : Text(
+            _doubleCount.evaluate(animation).toStringAsFixed(1),
+            style: TextStyles.body1.bold.colour(
+              Colors.white,
+            ),
+          );
   }
 
   @override

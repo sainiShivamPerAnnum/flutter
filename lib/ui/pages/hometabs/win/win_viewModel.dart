@@ -459,7 +459,7 @@ class WinViewModel extends BaseViewModel {
 
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
-        page: MyWinnigsPageConfig,
+        page: MyWinningsPageConfig,
         widget: MyWinningsView());
   }
 
@@ -755,7 +755,7 @@ class WinViewModel extends BaseViewModel {
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
-      page: MyWinnigsPageConfig,
+      page: MyWinningsPageConfig,
     );
   }
 
