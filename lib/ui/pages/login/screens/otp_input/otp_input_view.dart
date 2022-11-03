@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
@@ -56,8 +57,30 @@ class LoginOtpViewState extends State<LoginOtpView> {
         return ListView(
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding54 + SizeConfig.padding4),
-            SignupHeroAsset(asset: Assets.flatFullFlagIsland),
+           SizedBox(height: SizeConfig.padding64),
+            Padding(
+                 padding: EdgeInsets.all(SizeConfig.padding12),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: UiConstants.kDarkBackgroundColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+                height: SizeConfig.screenHeight * 0.3,
+                child: Center(
+                    child: BaseRemoteConfig.remoteConfig
+                                .getString(BaseRemoteConfig.LOGIN_ASSET_URL) !=
+                            ''
+                        ? SvgPicture.network(
+                            BaseRemoteConfig.remoteConfig
+                                .getString(BaseRemoteConfig.LOGIN_ASSET_URL),
+                            height: SizeConfig.onboardingAssetsDimens,
+                            width: SizeConfig.onboardingAssetsDimens,
+                          )
+                        : Container()),
+              ),
+            ),
+            SizedBox(
+              child: Padding(padding: EdgeInsets.all(SizeConfig.padding4)),
+            ),
             Align(
               alignment: Alignment.center,
               child: Text(
@@ -65,7 +88,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
-            SizedBox(height: SizeConfig.padding32),
+            SizedBox(height: SizeConfig.padding20),
             //input
             Padding(
               padding: EdgeInsets.symmetric(

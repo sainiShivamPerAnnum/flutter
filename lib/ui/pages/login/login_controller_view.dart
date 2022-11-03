@@ -2,7 +2,6 @@ import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -78,7 +77,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: new NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -106,11 +104,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding38,
-                      horizontal: SizeConfig.padding14),
+                  padding:  EdgeInsets.symmetric(vertical:SizeConfig.padding38,horizontal: SizeConfig.padding14),
                   child: Container(
-                      child: FaqButtonRounded(type: FaqsType.gettingStarted)),
+                    child:  FaqButtonRounded(type: FaqsType.gettingStarted)
+                  ),
                 ),
               ),
               if (keyboardIsOpen)
@@ -168,25 +165,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           ],
                         )
                       : SizedBox(),
-                ),
-              ),
-              Positioned(
-                top: SizeConfig.padding34,
-                left: SizeConfig.padding8,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: UiConstants.kDarkBackgroundColor,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5)),
-                  height: SizeConfig.navBarHeight * 0.8,
-                  width: SizeConfig.navBarWidth * 0.94,
-                  child: Center(
-                      child: Text(
-                    BaseRemoteConfig.remoteConfig
-                        .getString(BaseRemoteConfig.LOGIN_MESSAGE),
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.titleTextColor),
-                  )),
                 ),
               ),
               if (model.currentPage == 0 &&

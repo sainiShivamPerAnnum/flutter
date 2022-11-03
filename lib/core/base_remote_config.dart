@@ -12,7 +12,7 @@ class BaseRemoteConfig {
 
   ///Each config is set as a map = {name, default value}
 
-  static const Map<String, String> _LOGIN_MESSAGE = {'login_message': 'Lorem ipsum coming from Remote Config'};
+  static const Map<String, String> _LOGIN_ASSET_URL = {'login_asset_url': 'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/games%2Fthumbnails%2Fcricketthumb.svg?alt=media&token=e3a8fcc4-4217-42a1-99b4-ada4bac35fad'};
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
 
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
@@ -202,7 +202,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, dynamic> DEFAULTS = {
-    ..._LOGIN_MESSAGE,
+    ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
@@ -297,7 +297,7 @@ class BaseRemoteConfig {
     }
   }
 
-  static String get LOGIN_MESSAGE => _LOGIN_MESSAGE.keys.first;
+  static String get LOGIN_ASSET_URL => _LOGIN_ASSET_URL.keys.first;
   static String get FORCE_MIN_BUILD_NUMBER_IOS =>
       _FORCE_MIN_BUILD_NUMBER_IOS.keys.first;
 

@@ -100,6 +100,7 @@ class LoginControllerViewModel extends BaseViewModel {
     _currentPage = page;
     notifyListeners();
   }
+  
 
   init(initPage, loginModelInstance) {
     _currentPage = (initPage != null) ? initPage : LoginMobileView.index;
