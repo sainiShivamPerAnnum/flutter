@@ -44,7 +44,7 @@ class OnboardingViewModel extends BaseViewModel {
   List<Widget> assetWidgets = [
     SvgPicture.asset(
       "assets/svg/partner_assets_frame.svg",
-      width: SizeConfig.screenWidth * 0.7,
+      width: SizeConfig.screenWidth * 0.9,
     ),
     Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
