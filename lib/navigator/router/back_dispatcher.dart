@@ -113,7 +113,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     // If the root tab is not 0 at the time of exit
 
-    else if (_userService.isUserOnborded &&
+    else if (_userService.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
         AppState.delegate.appState.rootIndex != 0) {
       logger.w("Checking if app can be closed");

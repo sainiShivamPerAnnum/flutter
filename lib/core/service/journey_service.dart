@@ -638,7 +638,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
     controller.reset();
     await scrollPageToAvatarPosition();
-    _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
+    await _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
     controller.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();

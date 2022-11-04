@@ -105,8 +105,8 @@ class LauncherViewModel extends BaseViewModel {
   initLogic() async {
     // final Trace trace = _performance.newTrace('Splash trace start');
     // await trace.start();
-    // trace.putAttribute('Spalsh', 'userservice init started');
-    // trace.putAttribute('Spalsh', 'userservice init ended');
+    // trace.putAttribute('Splash', 'userService init started');
+    // trace.putAttribute('Splash', 'userService init ended');
     try {
       startTime = DateTime.now().millisecondsSinceEpoch;
       await CacheService.initialize();
@@ -123,7 +123,7 @@ class LauncherViewModel extends BaseViewModel {
       await BaseRemoteConfig.init();
       log("Splash init remoteConfig: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
-      if (userService.isUserOnborded) {
+      if (userService.isUserOnboarded) {
         startTime = DateTime.now().millisecondsSinceEpoch;
         await _journeyRepo.init();
         log("Splash init journeyRepo: ${DateTime.now().millisecondsSinceEpoch - startTime}");
@@ -145,7 +145,7 @@ class LauncherViewModel extends BaseViewModel {
       }
       // test
       // await new CacheService().invalidateAll();
-      if (userService.isUserOnborded) _userCoinService.init();
+      if (userService.isUserOnboarded) _userCoinService.init();
       log("Splash usercoinservice: ${DateTime.now().millisecondsSinceEpoch}");
 
       _baseUtil.init();
@@ -154,16 +154,16 @@ class LauncherViewModel extends BaseViewModel {
       _fcmListener.setupFcm();
       log("Splash init fcm: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
-      if (userService.isUserOnborded)
+      if (userService.isUserOnboarded)
         userService.firebaseUser?.getIdToken()?.then(
               (token) =>
                   _userRepo.updateUserAppFlyer(userService.baseUser, token),
             );
       if (userService.baseUser != null) {
-        if (userService.isUserOnborded)
+        if (userService.isUserOnboarded)
           startTime = DateTime.now().millisecondsSinceEpoch;
         await _analyticsService.login(
-          isOnBoarded: userService?.isUserOnborded,
+          isOnBoarded: userService?.isUserOnboarded,
           baseUser: userService?.baseUser,
         );
         //To fetch the properties required to pass for the analytics
@@ -178,7 +178,7 @@ class LauncherViewModel extends BaseViewModel {
         {'error': "Splash Screen init : $e"},
       );
     }
-    if (userService.isUserOnborded) _tambolaService.init();
+    if (userService.isUserOnboarded) _tambolaService.init();
     _timer3.cancel();
     log("Splash init http: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
@@ -225,7 +225,7 @@ class LauncherViewModel extends BaseViewModel {
 
     ///check if user is onboarded
 
-    if (!userService.isUserOnborded) {
+    if (!userService.isUserOnboarded) {
       _logger.d("New user. Moving to Onboarding..");
       bool showOnboarding = PreferenceHelper.getBool(
           PreferenceHelper.CACHE_ONBOARDING_COMPLETION);

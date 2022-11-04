@@ -25,7 +25,7 @@ class OnboardingViewModel extends BaseViewModel {
   final JourneyService _journeyService = locator<JourneyService>();
   PageController _pageController;
   int _currentPage = 0;
-  double dragStartPosition, dragUpdatePosition;
+  double dragStartPosition = 0, dragUpdatePosition = 0;
   List<List<String>> _onboardingData;
   bool _isWalkthroughRegistrationInProgress = false;
 

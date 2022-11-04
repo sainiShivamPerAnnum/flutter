@@ -43,7 +43,7 @@ class _CarousalWidgetState extends State<CarousalWidget> {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
