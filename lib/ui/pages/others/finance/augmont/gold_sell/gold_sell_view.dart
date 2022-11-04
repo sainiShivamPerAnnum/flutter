@@ -73,13 +73,13 @@ class GoldSellView extends StatelessWidget {
   Widget _getView(
       AugmontTransactionService txnService, GoldSellViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return GoldSellInputView(model: model, augTxnservice: txnService);
+      return GoldSellInputView(model: model, augTxnService: txnService);
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldSellLoadingView(model: model);
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return GoldSellSuccessView(model: model, augTxnservice: txnService);
     }
-    return GoldSellInputView(model: model, augTxnservice: txnService);
+    return GoldSellInputView(model: model, augTxnService: txnService);
   }
 
   double _getHeight(txnService) {

@@ -59,7 +59,7 @@ class PrizeClaimCard extends StatelessWidget {
                                         TextStyles.body1.colour(Colors.white),
                                   ),
                                   Text(
-                                    "₹ ${m.userFundWallet.unclaimedBalance ?? '-'}",
+                                    "₹ ${m.userFundWallet.unclaimedBalance.toInt() ?? '-'}",
                                     style: TextStyles.rajdhaniB.bold
                                         .colour(UiConstants
                                             .kcashBackAmountTextColor)

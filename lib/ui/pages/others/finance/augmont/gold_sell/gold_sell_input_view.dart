@@ -1,8 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -12,7 +10,6 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/service_elements/bank_details_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -21,15 +18,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class GoldSellInputView extends StatelessWidget {
   final GoldSellViewModel model;
-  final AugmontTransactionService augTxnservice;
+  final AugmontTransactionService augTxnService;
 
   const GoldSellInputView(
-      {Key key, @required this.model, @required this.augTxnservice})
+      {Key key, @required this.model, @required this.augTxnService})
       : super(key: key);
 
   @override
@@ -43,7 +38,7 @@ class GoldSellInputView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            RechargeModalSheetAppBar(txnService: augTxnservice),
+            RechargeModalSheetAppBar(txnService: augTxnService),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -89,7 +84,12 @@ class GoldSellInputView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: model.sellFieldNode.requestFocus,
+                      onTap: () {
+                        model.sellFieldNode.unfocus();
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          model.sellFieldNode.requestFocus();
+                        });
+                      },
                       child: Container(
                         height: SizeConfig.screenWidth * 0.5,
                         // width: SizeConfig.screenWidth * 0.6,
@@ -109,7 +109,7 @@ class GoldSellInputView extends StatelessWidget {
                               width: model.fieldWidth,
                               child: TextField(
                                 focusNode: model.sellFieldNode,
-                                enabled: !augTxnservice.isGoldSellInProgress,
+                                enabled: !augTxnService.isGoldSellInProgress,
                                 controller: model.goldAmountController,
                                 // enableInteractiveSelection: false,
                                 textAlign: TextAlign.center,
@@ -208,7 +208,7 @@ class GoldSellInputView extends StatelessWidget {
                 ),
               ),
             Spacer(),
-            augTxnservice.isGoldSellInProgress
+            augTxnService.isGoldSellInProgress
                 ? Center(
                     child: Container(
                       height: SizeConfig.screenWidth * 0.1556,
@@ -225,7 +225,7 @@ class GoldSellInputView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: 'SELL',
                       onPressed: () async {
-                        if (!augTxnservice.isGoldSellInProgress &&
+                        if (!augTxnService.isGoldSellInProgress &&
                             !model.isQntFetching) {
                           FocusScope.of(context).unfocus();
                           bool isDetailComplete =
