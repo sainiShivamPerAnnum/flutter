@@ -4,7 +4,6 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -23,8 +22,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:shimmer/shimmer.dart';
 
 List<Color> randomColors = [
   Color(0xffF79780),
@@ -233,144 +230,183 @@ class Win extends StatelessWidget {
                                   color: UiConstants.kSecondaryBackgroundColor,
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(SizeConfig.roundness12))),
-                              child: Container(
-                                padding: EdgeInsets.all(
-                                  SizeConfig.padding24,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      child: SvgPicture.asset(
-                                          Assets.referAndEarn,
-                                          height: SizeConfig.padding90 +
-                                              SizeConfig.padding10),
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding28,
-                                    ),
-                                    RichText(
-                                      textAlign: TextAlign.center,
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                              text:
-                                                  'Earn upto ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      UiConstants.kTextColor3)),
-                                          WidgetSpan(
-                                              child: Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    SizeConfig.padding4),
-                                            height: 17,
-                                            width: 17,
-                                            child: SvgPicture.asset(
-                                              Assets.token,
-                                            ),
-                                          )),
-                                          TextSpan(
-                                              text:
-                                                  '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} from every Golden Ticket. Highest referrer wins an iPad every month.',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      UiConstants.kTextColor3)),
-                                        ],
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          top: SizeConfig.padding24),
+                                      child: Opacity(
+                                        opacity: 0.3,
+                                        child: Image.asset(
+                                          Assets.iPadPNG,
+                                          width: SizeConfig.screenWidth * 0.3,
+                                        ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: SizeConfig.padding28,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(
+                                      SizeConfig.padding24,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    child: Column(
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding12,
-                                              vertical: SizeConfig.padding6),
-                                          decoration: BoxDecoration(
-                                            color: UiConstants
-                                                .kArowButtonBackgroundColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    SizeConfig.roundness8)),
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                          child: SvgPicture.asset(
+                                              Assets.referAndEarn,
+                                              height: SizeConfig.padding90 +
+                                                  SizeConfig.padding10),
+                                        ),
+                                        SizedBox(
+                                          height: SizeConfig.padding20,
+                                        ),
+                                        RichText(
+                                          textAlign: TextAlign.center,
+                                          text: TextSpan(
                                             children: [
-                                              Text(
-                                                model.loadingRefCode
-                                                    ? '-'
-                                                    : model.refCode,
-                                                style: TextStyles
-                                                    .rajdhaniEB.title2
-                                                    .colour(Colors.white),
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding24,
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  model.copyReferCode();
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Text("COPY",
-                                                        style: TextStyles
-                                                            .sourceSans.body3
-                                                            .colour(UiConstants
-                                                                .kTextColor3
-                                                                .withOpacity(
-                                                                    0.7))),
-                                                    SizedBox(
-                                                      width:
-                                                          SizeConfig.padding6,
-                                                    ),
-                                                    Icon(
-                                                      Icons.copy,
-                                                      color: UiConstants
-                                                          .kTextColor3
-                                                          .withOpacity(0.7),
-                                                      size:
-                                                          SizeConfig.padding24,
-                                                    ),
-                                                  ],
+                                              TextSpan(
+                                                  text: 'Earn upto ',
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor3)),
+                                              TextSpan(
+                                                  text:
+                                                      '₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and',
+                                                  style: TextStyles
+                                                      .sourceSansB.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor)),
+                                              WidgetSpan(
+                                                  child: Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        SizeConfig.padding4),
+                                                height: 17,
+                                                width: 17,
+                                                child: SvgPicture.asset(
+                                                  Assets.token,
                                                 ),
-                                              ),
+                                              )),
+                                              TextSpan(
+                                                  text:
+                                                      '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)}',
+                                                  style: TextStyles
+                                                      .sourceSansB.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor)),
+                                              TextSpan(
+                                                  text:
+                                                      ' from every Golden Ticket. Highest referrer wins an iPad every month.',
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor3)),
                                             ],
                                           ),
                                         ),
                                         SizedBox(
-                                          width: SizeConfig.padding20,
+                                          height: SizeConfig.padding28,
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding12,
-                                              vertical: SizeConfig.padding12),
-                                          decoration: BoxDecoration(
-                                            color: UiConstants
-                                                .kArowButtonBackgroundColor,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              if (model.isShareAlreadyClicked ==
-                                                  false) model.shareLink();
-                                            },
-                                            child: Icon(
-                                              Icons.share,
-                                              color:
-                                                  UiConstants.kTabBorderColor,
-                                              size: SizeConfig.padding28,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      SizeConfig.padding12,
+                                                  vertical:
+                                                      SizeConfig.padding6),
+                                              decoration: BoxDecoration(
+                                                color: UiConstants
+                                                    .kArowButtonBackgroundColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(
+                                                        SizeConfig.roundness8)),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    model.loadingRefCode
+                                                        ? '-'
+                                                        : model.refCode,
+                                                    style: TextStyles
+                                                        .rajdhaniEB.title2
+                                                        .colour(Colors.white),
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig.padding24,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      model.copyReferCode();
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text("COPY",
+                                                            style: TextStyles
+                                                                .sourceSans
+                                                                .body3
+                                                                .colour(UiConstants
+                                                                    .kTextColor3
+                                                                    .withOpacity(
+                                                                        0.7))),
+                                                        SizedBox(
+                                                          width: SizeConfig
+                                                              .padding6,
+                                                        ),
+                                                        Icon(
+                                                          Icons.copy,
+                                                          color: UiConstants
+                                                              .kTextColor3
+                                                              .withOpacity(0.7),
+                                                          size: SizeConfig
+                                                              .padding24,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
+                                            SizedBox(
+                                              width: SizeConfig.padding20,
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      SizeConfig.padding12,
+                                                  vertical:
+                                                      SizeConfig.padding12),
+                                              decoration: BoxDecoration(
+                                                color: UiConstants
+                                                    .kArowButtonBackgroundColor,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (model
+                                                          .isShareAlreadyClicked ==
+                                                      false) model.shareLink();
+                                                },
+                                                child: Icon(
+                                                  Icons.share,
+                                                  color: UiConstants
+                                                      .kTabBorderColor,
+                                                  size: SizeConfig.padding28,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

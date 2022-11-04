@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/widgets/counter_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -78,10 +79,6 @@ class _GTInstantViewState extends State<GTInstantView>
       onModelReady: (model) {
         model.lottieAnimationController = AnimationController(vsync: this);
         model.init();
-
-        // if (widget.source == GTSOURCE.deposit)
-        //   model.initDepositSuccessAnimation(widget.amount);
-        // else
         model.initNormalFlow();
       },
       builder: (ctx, model, child) {
@@ -250,24 +247,6 @@ class _GTInstantViewState extends State<GTInstantView>
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  // AnimatedOpacity(
-                                  //   duration: Duration(milliseconds: 300),
-                                  //   curve: Curves.easeInCirc,
-                                  //   opacity: model.buttonOpacity,
-                                  //   child: AppPositiveBtn(
-                                  //     width: SizeConfig.screenWidth / 2,
-                                  //     btnText:
-                                  //         getButtonText(model, widget.source) ??
-                                  //             "Continue",
-                                  //     onPressed: getButtonAction(
-                                  //             model, widget.source) ??
-                                  //         () {
-                                  //           if (!model.isCardScratched) return;
-                                  //           AppState.backButtonDispatcher
-                                  //               .didPopRoute();
-                                  //         },
-                                  //   ),
-                                  // ),
                                   SizedBox(height: 12),
                                   TextButton(
                                     onPressed: () {

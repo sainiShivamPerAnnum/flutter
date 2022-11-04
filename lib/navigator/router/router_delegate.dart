@@ -49,6 +49,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
@@ -298,14 +299,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AllTambolaTicketsView:
           _addPageData(AllTambolaTickets(), AllTambolaTicketsPageConfig);
           break;
-        // case Pages.WebHomeView:
-        //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
-        //   break;
-        // case Pages.WebGameView:
-        //   _addPageData(WebGameView(), WebGameViewPageConfig);
-        //   break;
-        // case Pages.PoolView:
-        //   _addPageData(PoolView(), PoolViewPageConfig);
         case Pages.WebHomeView:
           _addPageData(WebHomeView(), WebHomeViewPageConfig);
           break;
@@ -625,6 +618,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.InfoStoriesView:
         InfoStoriesViewPageConfig.currentPageAction = action;
         break;
+      case Pages.WebView:
+        WebViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -681,7 +677,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void parseRoute(Uri uri) {
     _logger.d("Url: ${uri.toString()}");
     if (uri.scheme == "http" || uri.scheme == "https") {
-      launchUrl(uri);
+      AppState.delegate.appState.currentAction = PageAction(
+        page: WebViewPageConfig,
+        state: PageState.addWidget,
+        widget: WebViewScreen(
+          url: uri.toString(),
+        ),
+      );
       return;
     }
     if (uri.pathSegments.isEmpty) {
