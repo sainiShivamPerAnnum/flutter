@@ -118,17 +118,18 @@ class SellCardView extends StatelessWidget {
                   title: 'Add Bank Details',
                   onTap: navigateToBankDetailsScreen,
                 ),
-              SizedBox(height: SizeConfig.padding12),
-              if (sellService.sellNotice != null)
-                SellCardInfoStrips(
-                  leadingIcon: Icon(
-                    Icons.warning_amber_rounded,
-                    color: UiConstants.tertiarySolid.withOpacity(0.5),
-                  ),
-                  content: "sellService.sellNotice",
-                  textColor: Colors.amber,
-                  backgroundColor: Colors.amber.withOpacity(0.16),
-                ),
+              // SizedBox(height: SizeConfig.padding12),
+              // if (sellService.sellNotice != null &&
+              //     sellService.sellNotice.isNotEmpty)
+              //   SellCardInfoStrips(
+              //     leadingIcon: Icon(
+              //       Icons.warning_amber_rounded,
+              //       color: UiConstants.tertiarySolid.withOpacity(0.5),
+              //     ),
+              //     content: sellService.sellNotice,
+              //     textColor: Colors.amber,
+              //     backgroundColor: Colors.amber.withOpacity(0.16),
+              //   ),
               SizedBox(
                 height: SizeConfig.padding24,
               ),

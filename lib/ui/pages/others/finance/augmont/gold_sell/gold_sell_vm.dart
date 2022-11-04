@@ -117,17 +117,17 @@ class GoldSellViewModel extends BaseViewModel {
     deductedTokensCount = 0;
     setState(ViewState.Busy);
     goldAmountController = TextEditingController();
-    await _userService.fetchUserAugmontDetail();
-    setUpNoticeIfAny();
+    // await _userService.fetchUserAugmontDetail();
+    // setUpNoticeIfAny();
     fetchGoldRates();
     await fetchLockedGoldQnt();
     // FocusScope.of(AppState.delegate.navigatorKey.currentContext).requestFocus();
     setState(ViewState.Idle);
   }
 
-  setUpNoticeIfAny() {
-    sellNotice = _userService.userAugmontDetails.sellNotice;
-  }
+  // setUpNoticeIfAny() {
+  //   sellNotice = _userService.userAugmontDetails.sellNotice;
+  // }
 
   // Widget amoutChip(double amt) {
   //   return GestureDetector(
@@ -247,13 +247,13 @@ class GoldSellViewModel extends BaseViewModel {
           "No Amount Entered", "Please enter some amount");
       return false;
     }
-    if (!_userService.baseUser.isAugmontOnboarded) {
-      BaseUtil.showNegativeAlert(
-        'Not registered',
-        'You have not registered for digital gold yet',
-      );
-      return false;
-    }
+    // if (!_userService.baseUser.isAugmontOnboarded) {
+    //   BaseUtil.showNegativeAlert(
+    //     'Not registered',
+    //     'You have not registered for digital gold yet',
+    //   );
+    //   return false;
+    // }
     if (sellGramAmount < 0.0001) {
       BaseUtil.showNegativeAlert(
           "Amount too low", "Please enter a greater amount");
@@ -286,16 +286,16 @@ class GoldSellViewModel extends BaseViewModel {
     //   return false;
     // }
 
-    if (_userService.userAugmontDetails == null) {
-      await _userService.fetchUserAugmontDetail();
-    }
-    if (_userService.userAugmontDetails == null) {
-      BaseUtil.showNegativeAlert(
-        'Sell Failed',
-        'Please try again in sometime or contact us',
-      );
-      return false;
-    }
+    // if (_userService.userAugmontDetails == null) {
+    //   await _userService.fetchUserAugmontDetail();
+    // }
+    // if (_userService.userAugmontDetails == null) {
+    //   BaseUtil.showNegativeAlert(
+    //     'Sell Failed',
+    //     'Please try again in sometime or contact us',
+    //   );
+    //   return false;
+    // }
     List<String> fractionalPart = sellGramAmount.toString().split('.');
     if (fractionalPart != null &&
         fractionalPart.length > 1 &&
@@ -307,13 +307,13 @@ class GoldSellViewModel extends BaseViewModel {
       );
       return false;
     }
-    if (_userService.userAugmontDetails.isSellLocked) {
-      BaseUtil.showNegativeAlert(
-        'Sell Failed',
-        "${sellNotice ?? 'Gold sell is currently on hold. Please try again after sometime.'}",
-      );
-      return false;
-    }
+    // if (_userService.userAugmontDetails.isSellLocked) {
+    //   BaseUtil.showNegativeAlert(
+    //     'Sell Failed',
+    //     "${sellNotice ?? 'Gold sell is currently on hold. Please try again after sometime.'}",
+    //   );
+    //   return false;
+    // }
     bool _disabled = await _dbModel.isAugmontSellDisabled();
     if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(

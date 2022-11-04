@@ -257,34 +257,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               )
                             ],
                           )
-                        : SizedBox()
-                    // : Container(
-                    //     width: SizeConfig.screenWidth,
-                    //     alignment: Alignment.center,
-                    //     child: AppPositiveCustomChildBtn(
-                    //       child: model.state == ViewState.Idle
-                    //           ? Text(
-                    //               model.currentPage ==
-                    //                       LoginNameInputView.index
-                    //                   ? 'FINISH'
-                    //                   : 'NEXT',
-                    //               style: TextStyles.rajdhaniB.title5,
-                    //             )
-                    //           : SpinKitThreeBounce(
-                    //               color: UiConstants.spinnerColor2,
-                    //               size: 18.0,
-                    //             ),
-                    //       width: SizeConfig.screenWidth * 0.78,
-                    //       onPressed: () {
-                    //         print("tapped me");
-                    //         if (model.state == ViewState.Idle)
-                    //           model.processScreenInput(
-                    //             model.currentPage,
-                    //           );
-                    //       },
-                    //     ),
-                    //   ),
-                    ),
+                        : SizedBox()),
               ),
               if (FlavorConfig.isDevelopment())
                 Container(

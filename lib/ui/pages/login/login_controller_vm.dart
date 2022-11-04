@@ -462,12 +462,15 @@ class LoginControllerViewModel extends BaseViewModel {
       if (baseProvider.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
 
-        _controller.animateToPage(
+        _controller
+            .animateToPage(
           LoginOtpView.index,
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
-        );
-        setState(ViewState.Idle);
+        )
+            .then((_) {
+          setState(ViewState.Idle);
+        });
         Future.delayed(Duration(seconds: 1), () {
           _otpScreenKey.currentState.model.otpFocusNode.requestFocus();
         });

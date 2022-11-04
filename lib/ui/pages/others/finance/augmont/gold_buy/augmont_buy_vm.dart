@@ -192,28 +192,28 @@ class GoldBuyViewModel extends BaseViewModel {
     _paytmService.getActiveSubscriptionDetails();
     getAvailableCoupons();
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    await _userService.fetchUserAugmontDetail();
-    delayedAugmontCall();
-    checkIfDepositIsLocked();
+    // await _userService.fetchUserAugmontDetail();
+    // delayedAugmontCall();
+    // checkIfDepositIsLocked();
     setState(ViewState.Idle);
   }
 
   //INIT CHECKS
-  checkIfDepositIsLocked() {
-    if (_userService.userAugmontDetails != null &&
-        _userService.userAugmontDetails.depNotice != null &&
-        _userService.userAugmontDetails.depNotice.isNotEmpty)
-      buyNotice = _userService.userAugmontDetails.depNotice;
-  }
+  // checkIfDepositIsLocked() {
+  //   if (_userService.userAugmontDetails != null &&
+  //       _userService.userAugmontDetails.depNotice != null &&
+  //       _userService.userAugmontDetails.depNotice.isNotEmpty)
+  //     buyNotice = _userService.userAugmontDetails.depNotice;
+  // }
 
-  delayedAugmontCall() async {
-    if (_userService.userAugmontDetails == null && !_augmontSecondFetchDone) {
-      await Future.delayed(Duration(seconds: 2));
-      await _userService.fetchUserAugmontDetail();
-      _augmontSecondFetchDone = true;
-      notifyListeners();
-    }
-  }
+  // delayedAugmontCall() async {
+  //   if (_userService.userAugmontDetails == null && !_augmontSecondFetchDone) {
+  //     await Future.delayed(Duration(seconds: 2));
+  //     // await _userService.fetchUserAugmontDetail();
+  //     _augmontSecondFetchDone = true;
+  //     notifyListeners();
+  //   }
+  // }
 
   fetchNotices() async {
     buyNotice = await _dbModel.showAugmontBuyNotice();
@@ -268,26 +268,16 @@ class GoldBuyViewModel extends BaseViewModel {
       return false;
     }
 
-    if (_userService.userAugmontDetails == null) {
-      BaseUtil.showNegativeAlert(
-        'Deposit Failed',
-        'Please try again in sometime or contact us',
-      );
-      trackCheckOOutEvent("Deposit Failed");
+    // if (_userService.userAugmontDetails.isDepLocked) {
+    //   BaseUtil.showNegativeAlert(
+    //     'Purchase Failed',
+    //     "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
+    //   );
+    //   trackCheckOOutEvent(
+    //       "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
 
-      return false;
-    }
-
-    if (_userService.userAugmontDetails.isDepLocked) {
-      BaseUtil.showNegativeAlert(
-        'Purchase Failed',
-        "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-      );
-      trackCheckOOutEvent(
-          "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
-
-      return false;
-    }
+    //   return false;
+    // }
 
     bool _disabled = await _dbModel.isAugmontBuyDisabled();
     if (_disabled != null && _disabled) {

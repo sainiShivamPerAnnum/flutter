@@ -82,7 +82,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
-  UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
+  // UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
 
   set baseUser(baseUser) {
     _baseUser = baseUser;
@@ -511,14 +511,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
-  Future<void> fetchUserAugmontDetail() async {
-    if (userAugmontDetails == null) {
-      ApiResponse<UserAugmontDetail> augmontDetailResponse =
-          await _userRepo.getUserAugmontDetails();
-      if (augmontDetailResponse.isSuccess())
-        setUserAugmontDetails(augmontDetailResponse.model);
-    }
-  }
+  // Future<void> fetchUserAugmontDetail() async {
+  //   if (userAugmontDetails == null) {
+  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
+  //         await _userRepo.getUserAugmontDetails();
+  //     if (augmontDetailResponse.isSuccess())
+  //       setUserAugmontDetails(augmontDetailResponse.model);
+  //   }
+  // }
   // Future<bool> completeOnboarding() async {
   //   ApiResponse response = await _userRepo.completeOnboarding();
   //   return response.model;

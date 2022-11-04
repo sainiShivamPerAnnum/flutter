@@ -95,7 +95,10 @@ class RazorpayService extends ChangeNotifier {
     @required InvestmentType investmentType,
   }) async {
     if (!init(investmentType)) return null; //initialise razorpay
-
+    final mid = BaseRemoteConfig.remoteConfig.getString(
+        FlavorConfig.isDevelopment()
+            ? BaseRemoteConfig.RZP_DEV_MID
+            : BaseRemoteConfig.RZP_PROD_MID);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo.createTransaction(
       amount,
@@ -103,6 +106,7 @@ class RazorpayService extends ChangeNotifier {
       lbMap,
       couponCode,
       skipMl,
+      mid,
       investmentType,
     );
     if (txnResponse.isSuccess()) {

@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
@@ -390,8 +391,9 @@ class UserProfileForm extends StatelessWidget {
                     textEditingController: model.usernameController,
                     isEnabled: model.inEditMode,
                     inputFormatters: [
+                      LowerCaseTextFormatter(),
                       FilteringTextInputFormatter.allow(
-                        RegExp(r'[a-z0-9.]'),
+                        RegExp(r'[A-Za-z0-9.]'),
                       )
                     ],
                     validator: (val) {

@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
@@ -301,7 +302,10 @@ class AugmontTransactionService extends BaseTransactionService {
       return null;
 
     double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
-
+    final mid = BaseRemoteConfig.remoteConfig.getString(
+        FlavorConfig.isDevelopment()
+            ? BaseRemoteConfig.PATYM_DEV_MID
+            : BaseRemoteConfig.PATYM_PROD_MID);
     final Map<String, dynamic> augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,
@@ -320,6 +324,7 @@ class AugmontTransactionService extends BaseTransactionService {
       null,
       couponCode ?? '',
       skipMl ?? false,
+      mid,
       InvestmentType.AUGGOLD99,
     );
 

@@ -34,6 +34,7 @@ class PaytmRepository extends BaseRepo {
     Map<String, dynamic> lbMap,
     String couponCode,
     bool skipMl,
+    String mid,
     InvestmentType investmentType,
   ) async {
     try {
@@ -63,7 +64,7 @@ class PaytmRepository extends BaseRepo {
         body: _body,
         token: _token,
         cBaseUrl: _baseUrl,
-        headers: {'pg-mode': paymentMode},
+        headers: {'pg-mode': paymentMode, "mid": mid ?? ''},
       );
 
       CreatePaytmTransactionModel _responseModel =

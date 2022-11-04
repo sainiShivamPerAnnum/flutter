@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
@@ -105,7 +106,10 @@ class LendboxTransactionService extends BaseTransactionService {
 
   Future<CreatePaytmTransactionModel> createPaytmTransaction() async {
     if (this.currentTxnAmount == null) return null;
-
+    final mid = BaseRemoteConfig.remoteConfig.getString(
+        FlavorConfig.isDevelopment()
+            ? BaseRemoteConfig.PATYM_DEV_MID
+            : BaseRemoteConfig.PATYM_PROD_MID);
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
       this.currentTxnAmount.toDouble(),
@@ -113,6 +117,7 @@ class LendboxTransactionService extends BaseTransactionService {
       {},
       null,
       this.skipMl ?? false,
+      mid,
       InvestmentType.LENDBOXP2P,
     );
 

@@ -85,7 +85,7 @@ class BankAndPanService
   }
 
   init() async {
-    await _userService.fetchUserAugmontDetail();
+    // await _userService.fetchUserAugmontDetail();
     await checkForUserBankAccountDetails();
     await checkForUserPanDetails();
     verifyKYCStatus();
@@ -135,17 +135,21 @@ class BankAndPanService
   }
 
   checkForSellNotice() {
-    if (_userService.userAugmontDetails != null &&
-        _userService.userAugmontDetails.sellNotice != null &&
-        _userService.userAugmontDetails.sellNotice.isNotEmpty)
-      sellNotice = _userService.userAugmontDetails.sellNotice;
+    // if (_userService.userAugmontDetails != null &&
+    //     _userService.userAugmontDetails.sellNotice != null &&
+    //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
+    sellNotice = _userService.userBootUp?.data?.banMap?.investments?.withdrawal
+            ?.augmont?.reason ??
+        '';
   }
 
   checkIfSellIsLocked() {
-    if (_userService.userAugmontDetails != null &&
-        _userService.userAugmontDetails.sellNotice != null &&
-        _userService.userAugmontDetails.sellNotice.isNotEmpty)
-      sellNotice = _userService.userAugmontDetails.sellNotice;
+    // if (_userService.userAugmontDetails != null &&
+    //     _userService.userAugmontDetails.sellNotice != null &&
+    //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
+    isSellLocked = _userService.userBootUp?.data?.banMap?.investments
+            ?.withdrawal?.augmont?.isBanned ??
+        false;
   }
 
   bool getButtonAvailibility() {
