@@ -141,6 +141,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         ? BaseRemoteConfig.PATYM_DEV_MID
         : BaseRemoteConfig.PATYM_PROD_MID);
     await getActiveSubscriptionDetails();
+    autosaveVisible = BaseRemoteConfig.AUTOSAVE_ACTIVE;
+
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
       isFirstTime = await CacheManager.readCache(
@@ -155,7 +157,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     activeSubscription = null;
     currentSubscriptionId = null;
     isFirstTime = true;
-    autosaveVisible = true;
+    autosaveVisible = false;
     nextDebitString = "";
     fraction = 0;
     isOnSubscriptionFlow = false;
@@ -206,6 +208,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       activeSubscription = response.model;
     else
       activeSubscription = null;
+
+    if (activeSubscription != null &&
+        (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE ||
+            (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE &&
+                activeSubscription.resumeDate.isNotEmpty))) {
+      autosaveVisible = true;
+    }
     if (activeSubscription != null &&
         activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE) {
       final ApiResponse<String> nextDebitResponse =
