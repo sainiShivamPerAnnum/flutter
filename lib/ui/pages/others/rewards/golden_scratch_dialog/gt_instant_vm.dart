@@ -11,6 +11,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:scratcher/widgets.dart';
 
 class GTInstantViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
@@ -19,6 +20,11 @@ class GTInstantViewModel extends BaseViewModel {
   final _gtService = locator<GoldenTicketService>();
   final _coinService = locator<UserCoinService>();
   final _gtRepo = locator<GoldenTicketRepository>();
+  final PageController pageController = PageController(
+    viewportFraction: 0.7,
+  );
+
+  List<GlobalKey<ScratcherState>> scratchKeys = [];
   List<GoldenTicket> unscratchedGtList = [];
   AnimationController lottieAnimationController;
   double coinContentOpacity = 1;
@@ -32,6 +38,8 @@ class GTInstantViewModel extends BaseViewModel {
   bool _isShimmerEnabled = false;
   GoldenTicket _goldenTicket;
   double _buttonOpacity = 0;
+  double _pageScrollFraction = 0;
+
   bool _showScratchGuide = false;
   bool _isCardScratchStarted = false;
   bool _isCardScratched = false;
@@ -42,6 +50,7 @@ class GTInstantViewModel extends BaseViewModel {
   bool get showScratchGuide => this._showScratchGuide;
   bool get isCardScratched => this._isCardScratched;
   bool get isCardScratchStarted => this._isCardScratchStarted;
+  double get pageScrollFraction => this._pageScrollFraction;
 
   set coinsCount(value) {
     this._coinsCount = value;
@@ -78,9 +87,25 @@ class GTInstantViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  set pageScrollFraction(double value) {
+    this._pageScrollFraction = value;
+
+    notifyListeners();
+    print(_pageScrollFraction);
+  }
+
   init() async {
     Haptic.vibrate();
     goldenTicket = GoldenTicketService.currentGT;
+    unscratchedGtList = _gtService.unscratchedGoldenTickets;
+    if (unscratchedGtList == null || unscratchedGtList.isEmpty)
+      unscratchedGtList = [goldenTicket];
+    pageController.addListener(
+      () {
+        pageScrollFraction = pageController.offset;
+      },
+    );
+    fillScratchKeyList();
     GoldenTicketService.currentGT = null;
     if (goldenTicket.isRewarding &&
         goldenTicket.rewardArr.any((element) => element.type == 'flc')) {
@@ -93,6 +118,12 @@ class GTInstantViewModel extends BaseViewModel {
         showScratchGuide = true;
       }
     });
+  }
+
+  fillScratchKeyList() {
+    for (int i = 0; i < unscratchedGtList.length; i++) {
+      scratchKeys.add(GlobalKey<ScratcherState>());
+    }
   }
 
   showAutosavePrompt() {

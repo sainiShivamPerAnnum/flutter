@@ -383,7 +383,7 @@ class LoginControllerViewModel extends BaseViewModel {
       _userRepo.updateUserAppFlyer(
           userService.baseUser, await userService.firebaseUser.getIdToken());
       await _analyticsService.login(
-          isOnBoarded: userService.isUserOnborded,
+          isOnBoarded: userService.isUserOnboarded,
           baseUser: userService.baseUser);
 
       BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
@@ -402,12 +402,12 @@ class LoginControllerViewModel extends BaseViewModel {
     _userCoinService.init();
     await baseProvider.init();
     userService.userBootUpEE();
-    if (userService.isUserOnborded) await _journeyService.init();
-    if (userService.isUserOnborded) await _journeyRepo.init();
+    if (userService.isUserOnboarded) await _journeyService.init();
+    if (userService.isUserOnboarded) await _journeyRepo.init();
     fcmListener.setupFcm();
     logger.i("Calling analytics init for new onborded user");
     await _analyticsService.login(
-      isOnBoarded: userService.isUserOnborded,
+      isOnBoarded: userService.isUserOnboarded,
       baseUser: userService.baseUser,
     );
     AppState.isOnboardingInProgress = false;

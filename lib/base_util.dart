@@ -200,7 +200,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///fetch on-boarding status and User details
       firebaseUser = _userService.firebaseUser;
-      isUserOnboarded = _userService.isUserOnborded;
+      isUserOnboarded = _userService.isUserOnboarded;
 
       if (isUserOnboarded) {
         //set current user

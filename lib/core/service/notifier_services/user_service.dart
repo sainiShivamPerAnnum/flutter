@@ -198,7 +198,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         "AgmontDetails :User augmontDetails updated, property listeners notified");
   }
 
-  bool get isUserOnborded {
+  bool get isUserOnboarded {
     try {
       if (_firebaseUser != null &&
           _baseUser != null &&

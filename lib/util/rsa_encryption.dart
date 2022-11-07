@@ -78,7 +78,7 @@ class RSAEncryption {
       return true;
     } catch (e) {
       _logger.e(e.toString());
-      if (_userService.isUserOnborded)
+      if (_userService.isUserOnboarded)
         _internalOpsService.logFailure(
             _userService.baseUser.uid, FailType.RSAEncryterInitFailed, {
           "err_message":
@@ -101,7 +101,7 @@ class RSAEncryption {
       return true;
     } catch (e) {
       _logger.e(e.toString());
-      if (_userService.isUserOnborded)
+      if (_userService.isUserOnboarded)
         _internalOpsService.logFailure(
             _userService.baseUser.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
