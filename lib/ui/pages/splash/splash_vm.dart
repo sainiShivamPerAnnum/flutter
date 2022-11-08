@@ -29,7 +29,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -223,24 +225,61 @@ class LauncherViewModel extends BaseViewModel {
 
     ///Check if app needs to be open securely
     ///NOTE: CHECK APP LOCK
-    bool _unlocked = true;
-    if (userService.baseUser.userPreferences != null &&
-        userService.baseUser.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
-
-    if (_unlocked) {
-      return navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    final LocalAuthentication auth = LocalAuthentication();
+    // ···
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final bool canAuthenticate =
+        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    final List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+    if (canAuthenticate && availableBiometrics.isNotEmpty) {
+      // Some biometrics are enrolled.
+      try {
+        final bool didAuthenticate = await auth.authenticate(
+          localizedReason: 'Please authenticate to continue',
+        );
+        if (didAuthenticate) {
+          _logger.d("Auth success");
+        } else {
+          _logger.d("Auth failed");
+        }
+        // ···
+      } on PlatformException catch (e) {
+        if (e.code == passcodeNotSet) {
+          _logger.d("Passcode not set");
+        } else if (e.code == notEnrolled) {
+          _logger.d("Not enrolled for biometrics");
+        } else if (e.code == notAvailable) {
+          _logger.d("No hardware support for biometrics");
+        } else if (e.code == lockedOut) {
+          _logger.d("Incorrect biometrics, try pin/pattern");
+        } else if (e.code == permanentlyLockedOut) {
+          _logger.d("Maximum no of tries exceeded");
+        } else {
+          _logger.d("Something went wrong, please restart the application");
+        }
+      }
     } else {
-      BaseUtil.showNegativeAlert(
-        'Authentication Failed',
-        'Please reopen and try again',
-      );
+      _logger.d("No Security lock found, logging in directly");
     }
+    // bool _unlocked = true;
+    // if (userService.baseUser.userPreferences != null &&
+    //     userService.baseUser.userPreferences
+    //             .getPreference(Preferences.APPLOCK) ==
+    //         1 &&
+    //     deviceUnlock != null) {
+    //   _unlocked = await authenticateDevice();
+    // }
+
+    // if (_unlocked) {
+    //   return navigator.currentAction =
+    //       PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    // } else {
+    //   BaseUtil.showNegativeAlert(
+    //     'Authentication Failed',
+    //     'Please reopen and try again',
+    //   );
+    // }
   }
 
   Future<void> _togglePerformanceCollection() async {
@@ -261,8 +300,9 @@ class LauncherViewModel extends BaseViewModel {
     bool _res = false;
     try {
       _res = await deviceUnlock.request(
-          localizedReason:
-              'Confirm your phone screen lock pattern,PIN or password');
+        localizedReason:
+            'Confirm your phone screen lock pattern,PIN or password',
+      );
     } on DeviceUnlockUnavailable {
       BaseUtil.showPositiveAlert('No Device Authentication Found',
           'Logging in, please enable device security to add lock');
@@ -301,3 +341,26 @@ class LauncherViewModel extends BaseViewModel {
     }
   }
 }
+
+/// Indicates that the user has not yet configured a passcode (iOS) or
+/// PIN/pattern/password (Android) on the device.
+const String passcodeNotSet = 'PasscodeNotSet';
+
+/// Indicates the user has not enrolled any biometrics on the device.
+const String notEnrolled = 'NotEnrolled';
+
+/// Indicates the device does not have hardware support for biometrics.
+const String notAvailable = 'NotAvailable';
+
+/// Indicates the device operating system is unsupported.
+const String otherOperatingSystem = 'OtherOperatingSystem';
+
+/// Indicates the API is temporarily locked out due to too many attempts.
+const String lockedOut = 'LockedOut';
+
+/// Indicates the API is locked out more persistently than [lockedOut].
+/// Strong authentication like PIN/Pattern/Password is required to unlock.
+const String permanentlyLockedOut = 'PermanentlyLockedOut';
+
+/// Indicates that the biometricOnly parameter can't be true on Windows
+const String biometricOnlyNotSupported = 'biometricOnlyNotSupported';
