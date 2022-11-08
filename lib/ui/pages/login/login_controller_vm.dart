@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -400,7 +401,8 @@ class LoginControllerViewModel extends BaseViewModel {
     BaseAnalytics.logUserProfile(userService.baseUser);
     await userService.init();
     _userCoinService.init();
-    await baseProvider.init();
+    baseProvider.init();
+    AnalyticsProperties().init();
     userService.userBootUpEE();
     if (userService.isUserOnboarded) await _journeyService.init();
     if (userService.isUserOnboarded) await _journeyRepo.init();
