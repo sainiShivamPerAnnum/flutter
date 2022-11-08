@@ -59,7 +59,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   int _fraction = 0;
   bool isOnSubscriptionFlow = false;
   bool _isFirstTime = true;
-  bool _autosaveVisible = true;
+  bool _autosaveVisible = false;
   bool isStaging;
   String _nextDebitString;
   String _processText = "processing";
