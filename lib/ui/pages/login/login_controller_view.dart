@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
@@ -65,7 +66,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               NewSquareBackground(
                   backgroundColor: UiConstants
                       .kRechargeModalSheetAmountSectionBackgroundColor),
-
               SingleChildScrollView(
                 reverse: true,
                 child: Column(
@@ -77,7 +77,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: new NeverScrollableScrollPhysics(),
+                               physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -101,15 +101,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   ],
                 ),
               ),
-
               Align(
                 alignment: Alignment.topRight,
-                child: Padding(
-                  padding:  EdgeInsets.symmetric(vertical:SizeConfig.padding38,horizontal: SizeConfig.padding14),
-                  child: Container(
-                    child:  FaqButtonRounded(type: FaqsType.gettingStarted)
-                  ),
-                ),
+                child: LoginFab(),
               ),
               if (keyboardIsOpen)
                 Positioned(

@@ -1,6 +1,7 @@
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -95,27 +96,10 @@ class LoginMobileViewState extends State<LoginMobileView> {
       onModelDispose: (model) {},
       builder: (ctx, model, child) {
         return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start, 
           children: [
             SizedBox(height: SizeConfig.screenHeight*0.12),
-            Container(
-              decoration: BoxDecoration(
-                  color: UiConstants.kDarkBackgroundColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
-              height: SizeConfig.screenHeight * 0.3,
-              width: SizeConfig.navBarWidth,
-              child: Center(
-                  child: BaseRemoteConfig.remoteConfig
-                              .getString(BaseRemoteConfig.LOGIN_ASSET_URL) !=
-                          ''
-                      ? SvgPicture.network(
-                          BaseRemoteConfig.remoteConfig
-                              .getString(BaseRemoteConfig.LOGIN_ASSET_URL),
-                          height: SizeConfig.onboardingAssetsDimens,
-                          width: SizeConfig.onboardingAssetsDimens,
-                        )
-                      : Container()),
-            ),
+            LoginImage(),
             SizedBox(
               child: Padding(padding: EdgeInsets.all(SizeConfig.padding8)),
             ),
