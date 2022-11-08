@@ -831,6 +831,7 @@ class ButTicketsComponent extends StatelessWidget {
                               AnalyticsProperties.getTabolaTicketCount(),
                           "Number of Tickets":
                               model.ticketCountController.text ?? "",
+                          //TODO : amount not coming
                           "Amount": model.ticketSavedAmount,
                         }));
                     BaseUtil().openDepositOptionsModalSheet(

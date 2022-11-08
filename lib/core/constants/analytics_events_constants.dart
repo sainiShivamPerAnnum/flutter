@@ -107,6 +107,7 @@ class AnalyticsEvents {
 
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";
+  //TODO change name
   static const proceedToSignUp = "Proceed to Signup";
   static const splashScrenProceed = "Proceed to Signup";
   static const journeyHelpTapped = "Journey Help Tapped";

@@ -15,6 +15,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HelpFab extends StatefulWidget {
@@ -107,6 +108,7 @@ class _HelpFabState extends State<HelpFab> {
             onTap: () {
               isOpen ? collapseFab() : expandFab();
               AppState.screenStack.add(ScreenItem.dialog);
+              trackHelpTappedEvent();
               Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, anotherAnimation) {

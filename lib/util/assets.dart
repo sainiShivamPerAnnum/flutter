@@ -70,6 +70,7 @@ class Assets {
   static final String scoreIcon = "assets/vectors/icons/score.svg";
   static final String completeCheck =
       'assets/images/congratulation_dialog_logo.png';
+  static final String securityCheck = "assets/svg/safety_asset.svg";
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
   static final String moneyIcon = "assets/images/icons/money.png";

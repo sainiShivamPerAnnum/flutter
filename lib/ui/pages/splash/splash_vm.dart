@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:device_unlock/device_unlock.dart';
+// import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -23,13 +23,18 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:package_info/package_info.dart';
@@ -40,7 +45,7 @@ class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   Stopwatch _logoWatch;
-  DeviceUnlock deviceUnlock;
+  // DeviceUnlock deviceUnlock;
   bool _isPerformanceCollectionEnabled = false, _isFetchingData = false;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
@@ -182,16 +187,16 @@ class LauncherViewModel extends BaseViewModel {
       new Duration(milliseconds: 820),
     );
 
-    try {
-      deviceUnlock = DeviceUnlock();
-    } catch (e) {
-      _logger.e(e.toString());
-      _internalOpsService.logFailure(
-        userService.baseUser?.uid ?? '',
-        FailType.Splash,
-        {'error': "device unlock : $e"},
-      );
-    }
+    // try {
+    //   deviceUnlock = DeviceUnlock();
+    // } catch (e) {
+    //   _logger.e(e.toString());
+    //   _internalOpsService.logFailure(
+    //     userService.baseUser?.uid ?? '',
+    //     FailType.Splash,
+    //     {'error': "device unlock : $e"},
+    //   );
+    // }
 
     ///check for breaking update (TESTING)
     // if (await checkBreakingUpdateTest()) {
@@ -224,62 +229,7 @@ class LauncherViewModel extends BaseViewModel {
     }
 
     ///Check if app needs to be open securely
-    ///NOTE: CHECK APP LOCK
-    final LocalAuthentication auth = LocalAuthentication();
-    // ···
-    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-    final List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
-    if (canAuthenticate && availableBiometrics.isNotEmpty) {
-      // Some biometrics are enrolled.
-      try {
-        final bool didAuthenticate = await auth.authenticate(
-          localizedReason: 'Please authenticate to continue',
-        );
-        if (didAuthenticate) {
-          _logger.d("Auth success");
-        } else {
-          _logger.d("Auth failed");
-        }
-        // ···
-      } on PlatformException catch (e) {
-        if (e.code == passcodeNotSet) {
-          _logger.d("Passcode not set");
-        } else if (e.code == notEnrolled) {
-          _logger.d("Not enrolled for biometrics");
-        } else if (e.code == notAvailable) {
-          _logger.d("No hardware support for biometrics");
-        } else if (e.code == lockedOut) {
-          _logger.d("Incorrect biometrics, try pin/pattern");
-        } else if (e.code == permanentlyLockedOut) {
-          _logger.d("Maximum no of tries exceeded");
-        } else {
-          _logger.d("Something went wrong, please restart the application");
-        }
-      }
-    } else {
-      _logger.d("No Security lock found, logging in directly");
-    }
-    // bool _unlocked = true;
-    // if (userService.baseUser.userPreferences != null &&
-    //     userService.baseUser.userPreferences
-    //             .getPreference(Preferences.APPLOCK) ==
-    //         1 &&
-    //     deviceUnlock != null) {
-    //   _unlocked = await authenticateDevice();
-    // }
-
-    // if (_unlocked) {
-    //   return navigator.currentAction =
-    //       PageAction(state: PageState.replaceAll, page: RootPageConfig);
-    // } else {
-    //   BaseUtil.showNegativeAlert(
-    //     'Authentication Failed',
-    //     'Please reopen and try again',
-    //   );
-    // }
+    userService.authenticateDevice();
   }
 
   Future<void> _togglePerformanceCollection() async {
@@ -296,28 +246,28 @@ class LauncherViewModel extends BaseViewModel {
         : 'Performance collection is disabled.';
   }
 
-  Future<bool> authenticateDevice() async {
-    bool _res = false;
-    try {
-      _res = await deviceUnlock.request(
-        localizedReason:
-            'Confirm your phone screen lock pattern,PIN or password',
-      );
-    } on DeviceUnlockUnavailable {
-      BaseUtil.showPositiveAlert('No Device Authentication Found',
-          'Logging in, please enable device security to add lock');
-      return true;
-    } on RequestInProgress {
-      _res = false;
-      print('Request in progress');
-    } catch (e) {
-      _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
-    }
-    return _res;
-    // return true;
-  }
+  // Future<bool> authenticateDevice() async {
+  //   bool _res = false;
+  //   try {
+  //     _res = await deviceUnlock.request(
+  //       localizedReason:
+  //           'Confirm your phone screen lock pattern,PIN or password',
+  //     );
+  //   } on DeviceUnlockUnavailable {
+  //     BaseUtil.showPositiveAlert('No Device Authentication Found',
+  //         'Logging in, please enable device security to add lock');
+  //     return true;
+  //   } on RequestInProgress {
+  //     _res = false;
+  //     print('Request in progress');
+  //   } catch (e) {
+  //     _logger.e("error", [e]);
+  //     BaseUtil.showNegativeAlert(
+  //         'Authentication Failed', 'Please restart and try again');
+  //   }
+  //   return _res;
+  //   // return true;
+  // }
 
   Future<bool> checkBreakingUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

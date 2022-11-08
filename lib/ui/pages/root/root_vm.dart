@@ -37,6 +37,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 
+//TODO : analytics for promos, challenges and blogs
 class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
@@ -143,6 +144,7 @@ class RootViewModel extends BaseViewModel {
               eventName: AnalyticsEvents.playSection,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                //TODO : time left not coming
                 "Time left for draw Tambola (mins)":
                     AnalyticsProperties.getTimeLeftForTambolaDraw(),
                 "Tambola Tickets Owned":

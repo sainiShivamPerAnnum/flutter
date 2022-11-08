@@ -472,6 +472,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
+    //TODO fields empty for winredeemWinningsTapped
     _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
     BaseUtil.openDialog(
       addToScreenStack: true,

@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
@@ -16,18 +18,29 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:local_auth/error_codes.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -583,6 +596,106 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
       print('$e');
       return false;
+    }
+  }
+
+  authenticateDevice() async {
+    try {
+      if (baseUser.userPreferences != null &&
+          baseUser.userPreferences.getPreference(Preferences.APPLOCK) == 1) {
+        final LocalAuthentication auth = LocalAuthentication();
+        final bool canAuthenticateWithBiometrics =
+            await auth.canCheckBiometrics;
+        final bool canAuthenticate =
+            canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+        final List<BiometricType> availableBiometrics =
+            await auth.getAvailableBiometrics();
+        if (canAuthenticate && availableBiometrics.isNotEmpty) {
+          // Some biometrics are enrolled.
+          try {
+            final bool didAuthenticate = await auth.authenticate(
+              localizedReason:
+                  'Confirm your phone screen lock pattern,PIN or password',
+            );
+            if (didAuthenticate) {
+              _logger.d("Auth: success");
+              return AppState.delegate.appState.currentAction =
+                  PageAction(state: PageState.replaceAll, page: RootPageConfig);
+            } else {
+              _logger.d("Auth: failed");
+              return BaseUtil.openDialog(
+                  hapticVibrate: true,
+                  isBarrierDismissable: false,
+                  content: Platform.isAndroid
+                      ? ConfirmationDialog(
+                          title: "Please Authenticate",
+                          asset: SvgPicture.asset(Assets.securityCheck,
+                              width: SizeConfig.screenWidth * 0.3),
+                          description:
+                              "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue.",
+                          buttonText: "Unlock",
+                          confirmAction: () {
+                            Navigator.of(AppState
+                                    .delegate.navigatorKey.currentContext)
+                                .pop();
+                            authenticateDevice();
+                          },
+                          cancelAction: () {
+                            SystemNavigator.pop();
+                          })
+                      : CupertinoAlertDialog(
+                          title: Column(
+                            children: [
+                              Text("Please Authenticate"),
+                              SizedBox(height: SizeConfig.padding8),
+                              SvgPicture.asset(Assets.securityCheck,
+                                  width: SizeConfig.screenWidth * 0.16),
+                            ],
+                          ),
+                          content: Text(
+                              "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue."),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: Text("Unlock"),
+                              onPressed: () {
+                                Navigator.of(AppState
+                                        .delegate.navigatorKey.currentContext)
+                                    .pop();
+                                authenticateDevice();
+                              },
+                            ),
+                          ],
+                        ));
+            }
+          } on PlatformException catch (e) {
+            if (e.code == passcodeNotSet) {
+              _logger.d("Auth: Passcode not set");
+            } else if (e.code == notEnrolled) {
+              _logger.d("Auth: Not enrolled for biometrics");
+            } else if (e.code == notAvailable) {
+              _logger.d("Auth: No hardware support for biometrics");
+            } else if (e.code == lockedOut) {
+              _logger.d("Auth: Incorrect biometrics, try pin/pattern");
+            } else if (e.code == permanentlyLockedOut) {
+              _logger.d("Auth: Maximum no of tries exceeded");
+            } else {
+              return BaseUtil.showNegativeAlert(
+                  'Authentication Failed', 'Please restart and try again');
+            }
+          }
+        } else {
+          BaseUtil.showPositiveAlert('No Device Authentication Found',
+              'Logging in, please enable device security to add lock');
+          return AppState.delegate.appState.currentAction =
+              PageAction(state: PageState.replaceAll, page: RootPageConfig);
+        }
+      } else {
+        return AppState.delegate.appState.currentAction =
+            PageAction(state: PageState.replaceAll, page: RootPageConfig);
+      }
+    } catch (e) {
+      return BaseUtil.showNegativeAlert(
+          'Authentication Failed', 'Please restart and try again');
     }
   }
 }

@@ -75,6 +75,7 @@ class RazorpayService extends ChangeNotifier {
     _currentTxn.rzp[UserTransaction.subFldRzpStatus] =
         UserTransaction.RZP_TRAN_STATUS_FAILED;
     if (_txnUpdateListener != null) _txnUpdateListener(_currentTxn);
+    //TODO : add transaction cancelled or failed
     cleanListeners();
     return;
   }

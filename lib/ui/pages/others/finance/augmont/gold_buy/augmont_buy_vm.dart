@@ -29,6 +29,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
+//TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
 class GoldBuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_OPEN = 2;

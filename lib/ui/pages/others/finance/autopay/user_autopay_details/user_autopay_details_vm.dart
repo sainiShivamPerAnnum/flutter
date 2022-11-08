@@ -23,6 +23,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
+//TODO Pause autosave analytics not showing up
 class UserAutosaveDetailsViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();

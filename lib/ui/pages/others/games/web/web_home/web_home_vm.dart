@@ -166,6 +166,7 @@ class WebHomeViewModel extends BaseViewModel {
         eventName: AnalyticsEvents.playGameTapped,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          //TODO : add location [Trending, gow,others, etc]
           'Game name': _currentGameModel.gameName,
           "Entry fee": _currentGameModel.playCost,
           "Win upto": _currentGameModel.prizeAmount,
