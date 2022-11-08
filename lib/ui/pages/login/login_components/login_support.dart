@@ -11,8 +11,8 @@ class LoginFab extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: SizeConfig.padding44, horizontal: SizeConfig.padding14),
       child: Container(
-          height: SizeConfig.navBarHeight * 0.55,
-          width: SizeConfig.navBarWidth * 0.32,
+          height: SizeConfig.navBarHeight * 0.45,
+          width: SizeConfig.navBarWidth * 0.28,
           decoration: BoxDecoration(
             color: UiConstants.kDarkBackgroundColor,
             borderRadius:
@@ -23,15 +23,15 @@ class LoginFab extends StatelessWidget {
             children: [
               Text(
                 "Support",
-                style: TextStyles.body3.colour(UiConstants.kTextColor),
+                style: TextStyles.body4.colour(UiConstants.kTextColor),
               ),
               Padding(
-                padding: EdgeInsets.only(left: SizeConfig.padding12),
+                padding: EdgeInsets.only(left: SizeConfig.padding8),
                 child: Image.asset(
                   Assets.support,
                   color: UiConstants.kTextColor,
-                  height: SizeConfig.iconSize1,
-                  width: SizeConfig.iconSize1,
+                  height: SizeConfig.iconSize2,
+                  width: SizeConfig.iconSize2,
                 ),
               )
             ],

@@ -98,7 +98,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.start, 
           children: [
-            SizedBox(height: SizeConfig.screenHeight*0.12),
+            SizedBox(height: SizeConfig.screenHeight*0.10),
             LoginImage(),
             SizedBox(
               child: Padding(padding: EdgeInsets.all(SizeConfig.padding8)),

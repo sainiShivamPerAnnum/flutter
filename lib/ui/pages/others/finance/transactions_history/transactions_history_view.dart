@@ -307,40 +307,58 @@ class TransactionTile extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding26),
-      onTap: () {
-        Haptic.vibrate();
-        BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          isBarrierDismissable: true,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          content: TransactionDetailsBottomSheet(
-            transaction: txn,
+    return Column(
+      children: [
+        ListTile(
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
+          onTap: () {
+            Haptic.vibrate();
+            BaseUtil.openModalBottomSheet(
+              addToScreenStack: true,
+              isBarrierDismissable: true,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              content: TransactionDetailsBottomSheet(
+                transaction: txn,
+              ),
+            );
+          },
+          dense: true,
+          title: Text(
+              txnHistoryservice.getTileSubtitle(
+                txn.type.toString(),
+              ),
+              style:
+                  TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
+          subtitle: Text(
+            txnHistoryservice.getFormattedDate(txn.timestamp),
+            style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
           ),
-        );
-      },
-      dense: true,
-      title: Text(
-          txnHistoryservice.getTileSubtitle(
-            txn.type.toString(),
+          trailing: Wrap(
+            children: [
+              TransactionStatusChip(
+                color: txnHistoryservice.getTileColor(txn.tranStatus),
+                status: txn.tranStatus,
+              ),
+              Text(txnHistoryservice.getFormattedTxnAmount(txn.amount),
+                  style: TextStyles.sourceSansSB.body2),
+
+              Padding(
+                padding: EdgeInsets.all(SizeConfig.padding6),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: SizeConfig.iconSize2,
+                  color: UiConstants.kTextColor,
+                ),
+              )
+            ],
           ),
-          style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
-      subtitle: Text(
-        txnHistoryservice.getFormattedDate(txn.timestamp),
-        style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
-      ),
-      trailing: Wrap(
-        children: [
-          TransactionStatusChip(
-            color: txnHistoryservice.getTileColor(txn.tranStatus),
-            status: txn.tranStatus,
-          ),
-          Text(txnHistoryservice.getFormattedTxnAmount(txn.amount),
-              style: TextStyles.sourceSansSB.body2),
-        ],
-      ),
+        ),
+        SizedBox(
+          width: SizeConfig.screenWidth*0.9,
+          child: Divider(color: UiConstants.kTextColor2))
+      ],
     );
   }
 }
@@ -404,6 +422,14 @@ class TransactionSIPTile extends StatelessWidget {
             _txnHistoryService.getFormattedTxnAmount(txn.amount),
             style: TextStyles.sourceSansM.body3,
           ),
+          Padding(
+            padding: EdgeInsets.all(SizeConfig.padding6),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: SizeConfig.iconSize3,
+              color: UiConstants.kTextColor,
+            ),
+          )
         ],
       ),
     );
