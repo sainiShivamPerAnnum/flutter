@@ -148,7 +148,7 @@ class RootViewModel extends BaseViewModel {
                 "Time left for draw Tambola (mins)":
                     AnalyticsProperties.getTimeLeftForTambolaDraw(),
                 "Tambola Tickets Owned":
-                    AnalyticsProperties.getTabolaTicketCount(),
+                    AnalyticsProperties.getTambolaTicketCount(),
               }));
         }
         break;

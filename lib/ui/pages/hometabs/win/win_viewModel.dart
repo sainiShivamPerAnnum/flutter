@@ -473,7 +473,15 @@ class WinViewModel extends BaseViewModel {
 
   showConfirmDialog(PrizeClaimChoice choice) {
     //TODO fields empty for winredeemWinningsTapped
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.winRedeemWinningsTapped,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "Total Winnings Amount":
+              _userService.userFundWallet.prizeLifetimeWin ?? 0
+        },
+      ),
+    );
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissable: false,
@@ -577,7 +585,15 @@ class WinViewModel extends BaseViewModel {
       });
     });
 
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.winRedeemWinnings,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "Total Winnings Amount":
+              _userService.userFundWallet.prizeLifetimeWin ?? 0
+        },
+      ),
+    );
   }
 
 // SET AND GET CLAIM CHOICE

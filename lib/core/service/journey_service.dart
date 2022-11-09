@@ -656,7 +656,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   checkIfUserIsOldAndNeedsStoryView() {
-    //TODO
     Future.delayed(
       Duration(seconds: 2),
       () {

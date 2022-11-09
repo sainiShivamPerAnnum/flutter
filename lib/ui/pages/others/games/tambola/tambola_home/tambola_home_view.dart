@@ -719,7 +719,7 @@ class ButTicketsComponent extends StatelessWidget {
                             "Time left for draw Tambola (mins)":
                                 AnalyticsProperties.getTimeLeftForTambolaDraw(),
                             "Tambola Tickets Owned":
-                                AnalyticsProperties.getTabolaTicketCount(),
+                                AnalyticsProperties.getTambolaTicketCount(),
                           }));
                   Navigator.of(AppState.delegate.navigatorKey.currentContext)
                       .push(
@@ -828,7 +828,7 @@ class ButTicketsComponent extends StatelessWidget {
                           "Time left for draw Tambola (mins)":
                               AnalyticsProperties.getTimeLeftForTambolaDraw(),
                           "Tambola Tickets Owned":
-                              AnalyticsProperties.getTabolaTicketCount(),
+                              AnalyticsProperties.getTambolaTicketCount(),
                           "Number of Tickets":
                               model.ticketCountController.text ?? "",
                           //TODO : amount not coming

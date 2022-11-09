@@ -138,10 +138,9 @@ class _FocusRingState extends State<FocusRing>
                             curve: Curves.bounceOut,
                             child: GestureDetector(
                               onTap: () {
-                                //TODO : Replace with journey milestone start
                                 _analyticsService.track(
                                     eventName:
-                                        AnalyticsEvents.buildProfileTapped);
+                                        AnalyticsEvents.journeyMileStarted);
                                 return BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
                                   isBarrierDismissable: true,

@@ -307,21 +307,21 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   trackCheckOOutEvent(String errorMessage) {
+    _augTxnService.currentTransactionAnalyticsDetails = {
+      "Asset": "Gold",
+      "Coupon Code": appliedCoupon != null ? appliedCoupon.code : "Not Applied",
+      "Amount Entered": goldAmountController.text,
+      "Gold Weight": goldAmountInGrams,
+      "Per gram rate": goldRates.goldBuyPrice,
+      "Best flag": goldAmountController.text == chipAmountList[2].toString()
+          ? true
+          : false,
+      "Error message": errorMessage,
+    };
     _analyticsService.track(
         eventName: AnalyticsEvents.saveCheckout,
-        properties:
-            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-          "Asset": "Gold",
-          "Coupon Code":
-              appliedCoupon != null ? appliedCoupon.code : "Not Applied",
-          "Amount Entered": goldAmountController.text,
-          "Gold Weight": goldAmountInGrams,
-          "Per gram rate": goldRates.goldBuyPrice,
-          "Best flag": goldAmountController.text == chipAmountList[2].toString()
-              ? true
-              : false,
-          "Error message": errorMessage,
-        }));
+        properties: AnalyticsProperties.getDefaultPropertiesMap(
+            extraValuesMap: _augTxnService.currentTransactionAnalyticsDetails));
   }
 
   // UI ESSENTIALS

@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -30,16 +32,23 @@ class RazorpayService extends ChangeNotifier {
   Razorpay _razorpay;
   PaytmService _paytmService;
   PaytmRepository _paytmRepo;
+  AugmontTransactionService _augTxnService;
   BaseTransactionService _txnService;
+
+  AnalyticsService _analyticsService;
+  InvestmentType currentInvestmentType;
 
   bool init(InvestmentType investmentType) {
     _razorpay = Razorpay();
     _logger = locator<CustomLogger>();
     _paytmService = locator<PaytmService>();
+    _analyticsService = locator<AnalyticsService>();
     _paytmRepo = locator<PaytmRepository>();
+    _augTxnService = locator<AugmontTransactionService>();
     _txnService = investmentType == InvestmentType.LENDBOXP2P
         ? locator<LendboxTransactionService>()
         : locator<AugmontTransactionService>();
+    currentInvestmentType = investmentType;
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
@@ -72,10 +81,18 @@ class RazorpayService extends ChangeNotifier {
       'Your transaction was unsuccessful. Please try again',
     );
     log.debug("ERROR: " + response.code.toString() + " - " + response.message);
+    Map<String, dynamic> currentTxnDetails =
+        _augTxnService.currentTransactionAnalyticsDetails;
+
+    currentTxnDetails["Error message"] = response.message;
+    _analyticsService.track(
+        eventName: AnalyticsEvents.paymentCancelled,
+        properties: currentTxnDetails);
+
     _currentTxn.rzp[UserTransaction.subFldRzpStatus] =
         UserTransaction.RZP_TRAN_STATUS_FAILED;
     if (_txnUpdateListener != null) _txnUpdateListener(_currentTxn);
-    //TODO : add transaction cancelled or failed
+
     cleanListeners();
     return;
   }

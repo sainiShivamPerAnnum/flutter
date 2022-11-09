@@ -161,7 +161,7 @@ class WebHomeViewModel extends BaseViewModel {
     currentGame = game;
   }
 
-  trackPlayTappedAnalytics() {
+  trackGameStart() {
     _analyticsService.track(
         eventName: AnalyticsEvents.playGameTapped,
         properties:
@@ -172,7 +172,7 @@ class WebHomeViewModel extends BaseViewModel {
           "Win upto": _currentGameModel.prizeAmount,
           "Time left for draw Tambola (mins)":
               AnalyticsProperties.getTimeLeftForTambolaDraw(),
-          "Tambola Tickets Owned": AnalyticsProperties.getTabolaTicketCount(),
+          "Tambola Tickets Owned": AnalyticsProperties.getTambolaTicketCount(),
         }));
   }
 
@@ -316,8 +316,7 @@ class WebHomeViewModel extends BaseViewModel {
   launchGame() {
     String initialUrl;
     viewpage(1);
-    trackPlayTappedAnalytics();
-
+    trackGameStart();
     initialUrl = generateGameUrl();
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(

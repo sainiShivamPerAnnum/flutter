@@ -8,7 +8,6 @@ import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -30,7 +29,6 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -43,9 +41,6 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vie
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -53,7 +48,6 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -403,7 +397,7 @@ class BaseUtil extends ChangeNotifier {
           isBarrierDismissable: true,
           hapticVibrate: false,
           content: CompleteProfileDialog());
-
+    _analyticsService.track(eventName: AnalyticsEvents.challengeCtaTapped);
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,

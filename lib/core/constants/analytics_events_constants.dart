@@ -11,6 +11,8 @@ class AnalyticsEvents {
   static const saveBuyCoupon = "Coupon Applied";
   static const buyGoldInvestMore = "Investing more through pop up";
   static const saveBalance = "Selecting Gold Balance";
+  static const paymentCancelled = "Payment Cancelled";
+  static const sellReason = "Reason to sell";
 
   // play section
   static const earnMoreTokens = "Select Earn more tokens";
@@ -107,9 +109,8 @@ class AnalyticsEvents {
 
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";
-  //TODO change name
   static const proceedToSignUp = "Proceed to Signup";
-  static const splashScrenProceed = "Proceed to Signup";
+  static const splashScrenProceed = "Splash Screen Proceed";
   static const journeyHelpTapped = "Journey Help Tapped";
   static const journeyMileStoneTapped = "Journey Milestone Tapped";
   static const journeyMileStarted = "Journey Milestone Start";
@@ -132,7 +133,8 @@ class AnalyticsEvents {
   static const autosavePauseModal = "SIP - Pause Autosave Tapped";
   static const completeKYCTapped = "Complete KYC Tapped";
   static const bannerClick = "Banner Click";
-  static const challangeTapped = "Challange Tapped";
+  static const challengeTapped = "Challenge Tapped";
+  static const challengeCtaTapped = "Challenge CTA Tapped";
   static const notificationsClicked = "Notifications Click";
   static const sellInitiate = "Sell Initiate";
   static const playSection = "Play Tab Tapped";

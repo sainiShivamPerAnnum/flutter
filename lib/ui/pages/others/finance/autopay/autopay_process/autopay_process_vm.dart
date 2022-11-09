@@ -40,6 +40,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   AnimationController lottieAnimationController;
   String _androidPackageName = "";
   String _iosUrlScheme = "";
+  int lastTappedChipAmount = 0;
 
   int _minValue = 25;
   int maxAmount = 5000;
@@ -285,6 +286,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           AnalyticsProperties.getFelloFloAmount(),
       "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
       "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Selected Chip Amount": lastTappedChipAmount,
     });
   }
 

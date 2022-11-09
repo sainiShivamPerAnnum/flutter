@@ -313,7 +313,7 @@ class SaveViewModel extends BaseViewModel {
 
   trackChallangeTapped(String name, int order) {
     _analyticsService.track(
-        eventName: AnalyticsEvents.challangeTapped,
+        eventName: AnalyticsEvents.challengeTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {
               "Challlaneg Name": name,

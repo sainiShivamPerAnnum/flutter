@@ -190,7 +190,7 @@ class AnalyticsProperties {
     }
   }
 
-  static int getTabolaTicketCount() {
+  static int getTambolaTicketCount() {
     return _tambolaService.ticketCount ?? 0;
   }
 
