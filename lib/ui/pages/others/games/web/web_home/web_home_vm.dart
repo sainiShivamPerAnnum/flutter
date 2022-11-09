@@ -231,12 +231,12 @@ class WebHomeViewModel extends BaseViewModel {
 
   Future<bool> checkIfDeviceIsNotAnEmulator() async {
     //TODO
-    final bool isReal = await _internalOps.checkIfDeviceIsReal();
-    if (isReal != null && !isReal) {
-      BaseUtil.showNegativeAlert(
-          "Simulators not allowed", "Please use the app on a real device");
-      return false;
-    }
+    // final bool isReal = await _internalOps.checkIfDeviceIsReal();
+    // if (isReal != null && !isReal) {
+    //   BaseUtil.showNegativeAlert(
+    //       "Simulators not allowed", "Please use the app on a real device");
+    //   return false;
+    // }
     return true;
   }
 

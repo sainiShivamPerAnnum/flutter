@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
@@ -42,6 +43,11 @@ class JourneyPageViewModel extends BaseViewModel {
       _journeyService.currentMilestoneList;
   List<JourneyPathModel> get journeyPathItemsList =>
       _journeyService.journeyPathItemsList;
+
+  List<MilestoneModel> get completedMilestoneList =>
+      _journeyService.completedMilestoneList;
+  List<GoldenTicket> get completedMilestonePrizeList =>
+      _journeyService.completedMilestonesPrizeList;
   ScrollController get mainController => _journeyService.mainController;
 
   // set avatarAnimation(value) => this._avatarAnimation = value;
@@ -129,7 +135,8 @@ class JourneyPageViewModel extends BaseViewModel {
         );
       } else
         await _journeyService.scrollPageToAvatarPosition();
-      _journeyService.animateAvatar();
+      await _journeyService.animateAvatar();
+      _journeyService.updatePrizeToolTips();
       _journeyService.mainController.addListener(() {
         if (_journeyService.mainController.offset >
             _journeyService.mainController.position.maxScrollExtent) {

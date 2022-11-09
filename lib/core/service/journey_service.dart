@@ -5,12 +5,15 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -38,6 +41,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final UserService _userService = locator<UserService>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _gtRepo = locator<GoldenTicketRepository>();
 
   //Local Variables
   List<JourneyLevel> _levels = [];
@@ -57,6 +61,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
   List<AvatarPathModel> customPathDataList = [];
+  List<MilestoneModel> completedMilestoneList = [];
+  List<GoldenTicket> completedMilestonesPrizeList = [];
   Path _avatarPath;
   Offset _avatarPosition;
   List<JourneyPage> _pages;
@@ -438,6 +444,22 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     });
   }
 
+  Future<void> updatePrizeToolTips() async {
+    completedMilestonesPrizeList.clear();
+    await Future.forEach(completedMilestoneList, (milestone) async {
+      final res = await _gtRepo.getGTByPrizeSubtype(milestone.prizeSubType);
+      if (res.isSuccess())
+        completedMilestonesPrizeList.add(res.model);
+      else
+        completedMilestonesPrizeList.add(null);
+    });
+
+    notifyListeners(JourneyServiceProperties.Prizes);
+    _logger.d("Prizes List Updated ${completedMilestoneList.length} ");
+    _logger.d("Prizes List Updated");
+    _logger.d("Prizes List Updated ${completedMilestonesPrizeList.toString()}");
+  }
+
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
 
   userIsAtJourneyScreen() => (AppState.screenStack.length == 1 &&
@@ -468,6 +490,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     setCurrentMilestones();
     setCustomPathItems();
     setJourneyPathItems();
+    setCompletedMilestonesList();
     notifyListeners(JourneyServiceProperties.JourneyAssets);
   }
 
@@ -497,6 +520,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     journeyPathItemsList.clear();
     pages.forEach((page) {
       journeyPathItemsList.addAll(page.paths);
+    });
+  }
+
+  setCompletedMilestonesList() {
+    completedMilestoneList.clear();
+    currentMilestoneList.forEach((milestone) {
+      if (milestone.index < avatarRemoteMlIndex)
+        completedMilestoneList.add(milestone);
     });
   }
 
@@ -639,6 +670,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     controller.reset();
     await scrollPageToAvatarPosition();
     _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
+    updatePrizeToolTips();
+
     controller.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();

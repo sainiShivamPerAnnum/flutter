@@ -9,7 +9,6 @@ import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
-import 'package:felloapp/ui/widgets/counter_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -79,23 +78,14 @@ class _GTInstantViewState extends State<GTInstantView>
       onModelReady: (model) {
         model.lottieAnimationController = AnimationController(vsync: this);
         model.init();
+
+        // if (widget.source == GTSOURCE.deposit)
+        //   model.initDepositSuccessAnimation(widget.amount);
+        // else
         model.initNormalFlow();
       },
       builder: (ctx, model, child) {
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            actions: [
-              CoinBar(
-                child: AnimatedCount(
-                    count: model.coinsCount,
-                    duration: Duration(seconds: 1),
-                    curve: Curves.easeInCirc),
-              ),
-              SizedBox(width: SizeConfig.padding20)
-            ],
-          ),
           backgroundColor: Colors.black.withOpacity(0.7),
           body: Container(
             width: SizeConfig.screenWidth,
@@ -114,304 +104,191 @@ class _GTInstantViewState extends State<GTInstantView>
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // SafeArea(
-                    // child:
-                    // Container(
-                    //   height: kToolbarHeight,
-                    //   child: Row(
-                    //     children: [
-                    //       SizedBox(
-                    //         width: SizeConfig.pageHorizontalMargins,
-                    //       ),
-                    //       FelloAppBarBackButton(),
-                    //       Spacer(),
-                    //       CoinBar(
-                    //         child: AnimatedCount(
-                    //             count: model.coinsCount,
-                    //             duration: Duration(seconds: 1),
-                    //             curve: Curves.easeInCirc),
-                    //       ),
-                    //       SizedBox(width: SizeConfig.padding20)
-                    //     ],
-                    //   ),
-                    // ),
-                    // ),
-                    // Spacer(),
-
-                    AnimatedOpacity(
-                      opacity: model.showMainContent ? 1 : 0,
-                      duration: Duration(milliseconds: 100),
-                      curve: Curves.easeInCubic,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    SafeArea(
+                        child: Container(
+                      height: kToolbarHeight,
+                      child: Row(
                         children: [
-                          Container(
-                            width: SizeConfig.screenWidth,
-                            height: SizeConfig.screenWidth * 0.5,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  width: SizeConfig.screenWidth,
-                                  height: SizeConfig.screenWidth * 0.5,
-                                  child: PageView.builder(
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      controller: model.pageController,
-                                      itemCount: model.unscratchedGtList.length,
-                                      itemBuilder: (context, i) {
-                                        return
-                                            // i == 0
-                                            //     ?
-                                            Transform.scale(
-                                          scale: 1,
-                                          child: Container(
-                                            height:
-                                                SizeConfig.screenWidth * 0.5,
-                                            width: SizeConfig.screenWidth * 0.6,
-                                            alignment: Alignment.center,
-                                            child: AnimatedRotation(
-                                              duration:
-                                                  Duration(milliseconds: 300),
-                                              curve: Curves.easeInCubic,
-                                              turns: model.showMainContent
-                                                  ? 0.0
-                                                  : -0.1,
-                                              child: AnimatedContainer(
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                curve: Curves.easeInCubic,
-                                                width: model.showMainContent
-                                                    ? SizeConfig.screenWidth *
-                                                        0.6
-                                                    : 0,
-                                                height: model.showMainContent
-                                                    ? SizeConfig.screenWidth *
-                                                        0.5
-                                                    : 0,
-                                                child: FittedBox(
-                                                  fit: BoxFit.fitWidth,
-                                                  child: Transform.scale(
-                                                    scale: i == 0
-                                                        ? 1 - _controller.value
-                                                        : 1,
-                                                    child: Scratcher(
-                                                        color:
-                                                            Colors.transparent,
-                                                        accuracy:
-                                                            ScratchAccuracy.low,
-                                                        brushSize: 50,
-                                                        enabled: model.state ==
-                                                                ViewState.Idle
-                                                            ? true
-                                                            : false,
-                                                        threshold: 40,
-                                                        key: model
-                                                            .scratchKeys[i],
-                                                        onScratchStart: () {
-                                                          model.isCardScratchStarted =
-                                                              true;
-                                                          model.showScratchGuide =
-                                                              false;
-                                                        },
-                                                        onThreshold: () {
-                                                          if (model.goldenTicket
-                                                              .isRewarding) {
-                                                            model.isShimmerEnabled =
-                                                                true;
+                          SizedBox(
+                            width: SizeConfig.pageHorizontalMargins,
+                          ),
+                          FelloAppBarBackButton(),
+                          Spacer(),
+                          FelloCoinBar(),
+                          SizedBox(width: SizeConfig.padding20)
+                        ],
+                      ),
+                    )),
+                    //if (model.showMainContent)
+                    Expanded(
+                      child: AnimatedOpacity(
+                        opacity: model.showMainContent ? 1 : 0,
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.easeInCubic,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: SizeConfig.padding80),
+                            Container(
+                              height: SizeConfig.screenWidth * 0.5,
+                              width: SizeConfig.screenWidth * 0.6,
+                              alignment: Alignment.center,
+                              child: AnimatedRotation(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeInCubic,
+                                turns: model.showMainContent ? 0.0 : -0.1,
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeInCubic,
+                                  width: model.showMainContent
+                                      ? SizeConfig.screenWidth * 0.6
+                                      : 0,
+                                  height: model.showMainContent
+                                      ? SizeConfig.screenWidth * 0.5
+                                      : 0,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Transform.scale(
+                                      scale: 1 - _controller.value,
+                                      child: Scratcher(
+                                        color: Colors.transparent,
+                                        accuracy: ScratchAccuracy.low,
+                                        brushSize: 50,
+                                        enabled: model.state == ViewState.Idle
+                                            ? true
+                                            : false,
+                                        threshold: 40,
+                                        key: scratchKey,
+                                        onScratchStart: () {
+                                          model.isCardScratchStarted = true;
+                                          model.showScratchGuide = false;
+                                        },
+                                        onThreshold: () {
+                                          if (model.goldenTicket.isRewarding) {
+                                            model.isShimmerEnabled = true;
 
-                                                            Future.delayed(
-                                                                Duration(
-                                                                  seconds: 3,
-                                                                ), () {
-                                                              model.isShimmerEnabled =
-                                                                  false;
-                                                            });
-                                                            if (i == 0)
-                                                              _controller
-                                                                  .forward()
-                                                                  .then((value) =>
-                                                                      _controller
-                                                                          .reverse());
-                                                          }
+                                            Future.delayed(
+                                                Duration(
+                                                  seconds: 3,
+                                                ), () {
+                                              model.isShimmerEnabled = false;
+                                            });
+                                            _controller.forward().then(
+                                                (value) =>
+                                                    _controller.reverse());
+                                          }
 
-                                                          model.redeemTicket();
-                                                        },
-                                                        image: Image.asset(
-                                                          model
-                                                                  .unscratchedGtList[
-                                                                      i]
-                                                                  .isLevelChange
-                                                              ? Assets
-                                                                  .levelUpUnredeemedGoldenTicketBGPNG
-                                                              : Assets
-                                                                  .unredeemedGoldenTicketBG_png,
-                                                          fit: BoxFit.contain,
-                                                          height: SizeConfig
-                                                                  .screenWidth *
-                                                              0.6,
-                                                          width: SizeConfig
-                                                                  .screenWidth *
-                                                              0.6,
-                                                        ),
-                                                        child: Container(
-                                                          width: SizeConfig
-                                                                  .screenWidth *
-                                                              0.6,
-                                                          height: SizeConfig
-                                                                  .screenWidth *
-                                                              0.5,
-                                                          child: model.state ==
-                                                                  ViewState.Busy
-                                                              ? Container(
-                                                                  width: SizeConfig
-                                                                          .screenWidth *
-                                                                      0.6,
-                                                                  height: SizeConfig
-                                                                          .screenWidth *
-                                                                      0.5,
-                                                                )
-                                                              : RedeemedGoldenScratchCard(
-                                                                  ticket: model
-                                                                      .goldenTicket,
-                                                                  width: SizeConfig
-                                                                          .screenWidth *
-                                                                      0.6,
-                                                                ),
-                                                        )),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                            // :
-                                            // Container(
-                                            //     height: SizeConfig.screenWidth *
-                                            //         0.5,
-                                            //     width: SizeConfig.screenWidth *
-                                            //         0.6,
-                                            //     child: AnimatedContainer(
-                                            //       duration: Duration(
-                                            //           milliseconds: 300),
-                                            //       curve: Curves.easeInCubic,
-                                            //       width: model.showMainContent
-                                            //           ? SizeConfig.screenWidth *
-                                            //               0.6
-                                            //           : 0,
-                                            //       height: model.showMainContent
-                                            //           ? SizeConfig.screenWidth *
-                                            //               0.5
-                                            //           : 0,
-                                            //       child: FittedBox(
-                                            //         fit: BoxFit.fitWidth,
-                                            //         child: model.state ==
-                                            //                 ViewState.Busy
-                                            //             ? Container(
-                                            //                 width: SizeConfig
-                                            //                         .screenWidth *
-                                            //                     0.6,
-                                            //                 height: SizeConfig
-                                            //                         .screenWidth *
-                                            //                     0.5,
-                                            //               )
-                                            //             : RedeemedGoldenScratchCard(
-                                            //                 ticket: model
-                                            //                     .goldenTicket,
-                                            //                 width: SizeConfig
-                                            //                         .screenWidth *
-                                            //                     0.6,
-                                            //               ),
-                                            //       ),
-                                            //     ),
-                                            //   )
-                                            ;
-                                      }),
-                                ),
-                                if (model.showScratchGuide &&
-                                    !model.isCardScratchStarted)
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Transform.translate(
-                                      offset: Offset(
-                                          0, -SizeConfig.screenWidth / 4),
-                                      child: IgnorePointer(
-                                        ignoring: true,
-                                        child: Lottie.asset(
-                                          Assets.gtScratch,
-                                          width: SizeConfig.screenWidth,
-                                          fit: BoxFit.fitWidth,
+                                          model.redeemTicket();
+                                        },
+                                        image: Image.asset(
+                                          model.goldenTicket.isLevelChange
+                                              ? Assets
+                                                  .levelUpUnredeemedGoldenTicketBGPNG
+                                              : Assets
+                                                  .unredeemedGoldenTicketBG_png,
+                                          fit: BoxFit.contain,
+                                          height: SizeConfig.screenWidth * 0.6,
+                                          width: SizeConfig.screenWidth * 0.6,
                                         ),
+                                        child: model.state == ViewState.Busy
+                                            ? Container(
+                                                width: SizeConfig.screenWidth *
+                                                    0.6,
+                                                height: SizeConfig.screenWidth *
+                                                    0.5,
+                                              )
+                                            : RedeemedGoldenScratchCard(
+                                                ticket: model.goldenTicket,
+                                                width: SizeConfig.screenWidth *
+                                                    0.6,
+                                              ),
                                       ),
                                     ),
                                   ),
-                              ],
+                                ),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: SizeConfig.padding24),
-                          AnimatedContainer(
-                            decoration: BoxDecoration(),
-                            duration: Duration(seconds: 1),
-                            curve: Curves.easeIn,
-                            width: SizeConfig.screenWidth,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            child: Text(getGTTitle(),
-                                style: TextStyles.rajdhaniB.title2
-                                    .colour(Colors.white),
-                                textAlign: TextAlign.center),
-                          ),
-                          AnimatedContainer(
-                            decoration: BoxDecoration(),
-                            duration: Duration(seconds: 1),
-                            curve: Curves.easeIn,
-                            width: SizeConfig.screenWidth,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
-                                horizontal:
-                                    SizeConfig.pageHorizontalMargins * 2),
-                            child: Text(
-                                model.goldenTicket.note ??
-                                    "You won a golden ticket",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(Colors.grey),
-                                textAlign: TextAlign.center),
-                          ),
-                          SizedBox(
-                            height: kToolbarHeight + SizeConfig.viewInsets.top,
-                          )
-                          // Container(
-                          //   margin: EdgeInsets.symmetric(
-                          //       vertical: SizeConfig.padding64,
-                          //       horizontal: SizeConfig.pageHorizontalMargins),
-                          //   child: Column(
-                          //     children: [
-                          //       SizedBox(height: 12),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           while (AppState.screenStack.length > 1) {
-                          //             AppState.backButtonDispatcher
-                          //                 .didPopRoute();
-                          //           }
-                          //           AppState.delegate.appState
-                          //               .setCurrentTabIndex = 2;
-                          //           AppState.delegate.appState.currentAction =
-                          //               PageAction(
-                          //                   state: PageState.addPage,
-                          //                   page: MyWinningsPageConfig);
-                          //         },
-                          //         child: Text(
-                          //           'My Winnings',
-                          //           style: TextStyles.body3
-                          //               .colour(Colors.white)
-                          //               .underline,
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
+                            SizedBox(height: SizeConfig.padding24),
+                            AnimatedContainer(
+                              decoration: BoxDecoration(),
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeIn,
+                              width: SizeConfig.screenWidth,
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              child: Text(getGTTitle(),
+                                  style: TextStyles.rajdhaniB.title2
+                                      .colour(Colors.white),
+                                  textAlign: TextAlign.center),
+                            ),
+                            AnimatedContainer(
+                              decoration: BoxDecoration(),
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeIn,
+                              width: SizeConfig.screenWidth,
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal:
+                                      SizeConfig.pageHorizontalMargins * 2),
+                              child: Text(
+                                  model.goldenTicket.note ??
+                                      "You won a golden ticket",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.grey),
+                                  textAlign: TextAlign.center),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding64,
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              child: Column(
+                                children: [
+                                  // AnimatedOpacity(
+                                  //   duration: Duration(milliseconds: 300),
+                                  //   curve: Curves.easeInCirc,
+                                  //   opacity: model.buttonOpacity,
+                                  //   child: AppPositiveBtn(
+                                  //     width: SizeConfig.screenWidth / 2,
+                                  //     btnText:
+                                  //         getButtonText(model, widget.source) ??
+                                  //             "Continue",
+                                  //     onPressed: getButtonAction(
+                                  //             model, widget.source) ??
+                                  //         () {
+                                  //           if (!model.isCardScratched) return;
+                                  //           AppState.backButtonDispatcher
+                                  //               .didPopRoute();
+                                  //         },
+                                  //   ),
+                                  // ),
+                                  SizedBox(height: 12),
+                                  TextButton(
+                                    onPressed: () {
+                                      while (AppState.screenStack.length > 1) {
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
+                                      }
+                                      AppState.delegate.appState
+                                          .setCurrentTabIndex = 2;
+                                      AppState.delegate.appState.currentAction =
+                                          PageAction(
+                                              state: PageState.addPage,
+                                              page: MyWinningsPageConfig);
+                                    },
+                                    child: Text(
+                                      'My Winnings',
+                                      style: TextStyles.body3
+                                          .colour(Colors.white)
+                                          .underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -427,6 +304,21 @@ class _GTInstantViewState extends State<GTInstantView>
                         alignment: Alignment.center,
                         height: SizeConfig.screenHeight,
                         width: SizeConfig.screenWidth,
+                      ),
+                    ),
+                  ),
+                if (model.showScratchGuide && !model.isCardScratchStarted)
+                  Align(
+                    alignment: Alignment.center,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            bottom: SizeConfig.screenHeight * 0.14),
+                        child: Lottie.asset(Assets.gtScratch,
+                            fit: BoxFit.contain,
+                            height: SizeConfig.screenWidth,
+                            width: SizeConfig.screenWidth),
                       ),
                     ),
                   ),
