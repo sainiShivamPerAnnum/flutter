@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -11,18 +12,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomRectTween extends RectTween {
   CustomRectTween({
-    @required Rect begin,
-    @required Rect end,
+    required Rect? begin,
+    required Rect? end,
   }) : super(begin: begin, end: end);
 
   @override
   Rect lerp(double t) {
     final elasticCurveValue = Curves.easeOut.transform(t);
     return Rect.fromLTRB(
-      lerpDouble(begin.left, end.left, elasticCurveValue),
-      lerpDouble(begin.top, end.top, elasticCurveValue),
-      lerpDouble(begin.right, end.right, elasticCurveValue),
-      lerpDouble(begin.bottom, end.bottom, elasticCurveValue),
+      lerpDouble(begin!.left, end!.left, elasticCurveValue)!,
+      lerpDouble(begin!.top, end!.top, elasticCurveValue)!,
+      lerpDouble(begin!.right, end!.right, elasticCurveValue)!,
+      lerpDouble(begin!.bottom, end!.bottom, elasticCurveValue)!,
     );
   }
 }
@@ -32,11 +33,11 @@ class GoldenTicketGridItemCard extends StatelessWidget {
   final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
   GoldenTicketGridItemCard({
-    @required this.ticket,
-    @required this.titleStyle,
-    @required this.subtitleStyle,
-    @required this.titleStyle2,
-    @required this.width,
+    required this.ticket,
+    required this.titleStyle,
+    required this.subtitleStyle,
+    required this.titleStyle2,
+    required this.width,
   });
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class GoldenTicketGridItemCard extends StatelessWidget {
 class UnRedeemedGoldenScratchCard extends StatelessWidget {
   final GoldenTicket ticket;
   final double width;
-  UnRedeemedGoldenScratchCard({@required this.ticket, @required this.width});
+  UnRedeemedGoldenScratchCard({required this.ticket, required this.width});
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -73,7 +74,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
       height: width,
       width: width,
       child: SvgPicture.asset(
-        ticket.isLevelChange
+        ticket.isLevelChange!
             ? Assets.levelUpUnRedeemedGoldenTicketBG
             : Assets.unredemmedGoldenTicketBG,
         width: double.maxFinite,
@@ -85,15 +86,15 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
 }
 
 class RedeemedGoldenScratchCard extends StatelessWidget {
-  final GoldenTicket ticket;
+  final GoldenTicket? ticket;
   // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
   RedeemedGoldenScratchCard(
-      {@required this.ticket,
+      {required this.ticket,
       // @required this.titleStyle,
       // @required this.subtitleStyle,
       // @required this.titleStyle2,
-      @required this.width});
+      required this.width});
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -109,7 +110,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             child: Stack(
               children: [
                 SvgPicture.asset(
-                  getGTBackground(ticket),
+                  getGTBackground(ticket!),
                   width: double.maxFinite,
                   height: double.maxFinite,
                   fit: BoxFit.contain,
@@ -118,20 +119,20 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: (constraint.maxWidth >= SizeConfig.screenWidth * 0.5
+                      left: (constraint.maxWidth >= SizeConfig.screenWidth! * 0.5
                           ? SizeConfig.padding32
                           : 0),
                     ),
                     child: AnimatedScale(
                       scale:
-                          (constraint.maxWidth >= SizeConfig.screenWidth * 0.5
+                          (constraint.maxWidth >= SizeConfig.screenWidth! * 0.5
                               ? 1
                               : 0.7),
                       duration: Duration(milliseconds: 100),
                       curve: Curves.easeIn,
                       child: Material(
                         color: Colors.transparent,
-                        child: getGTContent(ticket, constraint.maxWidth),
+                        child: getGTContent(ticket!, constraint.maxWidth),
                       ),
                     ),
                   ),
@@ -145,16 +146,16 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   }
 
   String getGTBackground(GoldenTicket ticket) {
-    if (ticket.isRewarding) {
+    if (ticket.isRewarding!) {
       //CHECK FOR REWARDS
-      if (ticket.rewardArr.length == 1) {
+      if (ticket.rewardArr!.length == 1) {
         //Has a single reward
 
-        if (ticket.rewardArr[0].type == 'flc')
+        if (ticket.rewardArr![0].type == 'flc')
           return Assets.gt_token;
         else
           return Assets.gt_cashback;
-      } else if (ticket.rewardArr.length == 2) {
+      } else if (ticket.rewardArr!.length == 2) {
         //Both flc and cash
         return Assets.gt_token_cashback;
       } else {
@@ -168,30 +169,30 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   }
 
   Widget getGTContent(GoldenTicket ticket, double maxWidth) {
-    if (ticket.isRewarding) {
+    if (ticket.isRewarding!) {
       //CHECK FOR REWARDS
-      if (ticket.rewardArr.length == 1) {
+      if (ticket.rewardArr!.length == 1) {
         //Has a single reward
-        return singleRewardWidget(ticket.rewardArr[0], maxWidth);
-      } else if (ticket.rewardArr.length == 2) {
+        return singleRewardWidget(ticket.rewardArr![0], maxWidth);
+      } else if (ticket.rewardArr!.length == 2) {
         //Both flc and cash
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            doubleRewardWidget(ticket.rewardArr),
+            doubleRewardWidget(ticket.rewardArr!),
           ],
         );
       } else {
         //we ran out of predictions
         return Wrap(
           children: List.generate(
-            ticket.rewardArr.length,
+            ticket.rewardArr!.length,
             (i) => Container(
               padding: EdgeInsets.all(SizeConfig.padding2),
               margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
               child: bulletTiles(
-                  '${ticket.rewardArr[i].type}: ${ticket.rewardArr[i].value}'),
+                  '${ticket.rewardArr![i].type}: ${ticket.rewardArr![i].value}'),
             ),
           ),
         );
@@ -249,7 +250,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             ],
           ),
           Text(
-            reward.value > 1 ? "Tokens won!" : "Token won!",
+            reward.value! > 1 ? "Tokens won!" : "Token won!",
             style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12),
           )
         ],
@@ -303,12 +304,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     List<Reward> rewards,
   ) {
     int rupee = rewards
-            .firstWhere((e) => e.type == 'rupee' || e.type == 'amt',
-                orElse: () => null)
+            .firstWhereOrNull((e) => e.type == 'rupee' || e.type == 'amt')!
             .value ??
         0;
     int flc =
-        rewards.firstWhere((e) => e.type == 'flc', orElse: () => null).value ??
+        rewards.firstWhereOrNull((e) => e.type == 'flc')!.value ??
             0;
     return Column(
       mainAxisSize: MainAxisSize.max,

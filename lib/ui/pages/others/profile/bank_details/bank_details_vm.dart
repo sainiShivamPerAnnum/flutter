@@ -15,26 +15,26 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsViewModel extends BaseViewModel {
-  final BaseAnalyticsService _analyticsService = locator<AnalyticsService>();
-  final BankAndPanService _sellService = locator<BankAndPanService>();
-  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final BaseAnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final BankAndPanService? _sellService = locator<BankAndPanService>();
+  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final formKey = GlobalKey<FormState>();
   bool _isDetailsUpdating = false;
   bool _inEditMode = false;
 
   FocusNode nameFocusNode = FocusNode();
 
-  BankAccountDetailsModel activeBankDetails;
+  BankAccountDetailsModel? activeBankDetails;
   // UserAugmontDetail augmontDetails;
-  TextEditingController bankHolderNameController;
-  TextEditingController bankAccNoController;
-  TextEditingController bankIfscController;
-  TextEditingController bankAccNoConfirmController;
+  TextEditingController? bankHolderNameController;
+  TextEditingController? bankAccNoController;
+  TextEditingController? bankIfscController;
+  TextEditingController? bankAccNoConfirmController;
 
-  String bankHoldername;
-  String bankAccNo;
-  String cnfBankAccNo;
-  String ifscCode;
+  String? bankHoldername;
+  String? bankAccNo;
+  String? cnfBankAccNo;
+  String? ifscCode;
 
   get isDetailsUpdating => this._isDetailsUpdating;
 
@@ -60,14 +60,14 @@ class BankDetailsViewModel extends BaseViewModel {
 
   checkForBankDetailsExistence() async {
     setState(ViewState.Busy);
-    await _sellService.checkForUserBankAccountDetails();
+    await _sellService!.checkForUserBankAccountDetails();
     // augmontDetails = _userService.userAugmontDetails;
-    activeBankDetails = _sellService.activeBankAccountDetails;
+    activeBankDetails = _sellService!.activeBankAccountDetails;
     if (hasPastBankDetails()) {
-      bankHolderNameController.text = activeBankDetails.name;
-      bankAccNoController.text = activeBankDetails.account;
-      bankAccNoConfirmController.text = activeBankDetails.account;
-      bankIfscController.text = activeBankDetails.ifsc;
+      bankHolderNameController!.text = activeBankDetails!.name!;
+      bankAccNoController!.text = activeBankDetails!.account!;
+      bankAccNoConfirmController!.text = activeBankDetails!.account!;
+      bankIfscController!.text = activeBankDetails!.ifsc!;
     } else {
       inEditMode = true;
     }
@@ -88,18 +88,18 @@ class BankDetailsViewModel extends BaseViewModel {
           'Fields mismatch', 'Bank account numbers do not match');
     isDetailsUpdating = true;
 
-    final ApiResponse<bool> response = await _paymentRepo.addBankDetails(
+    final ApiResponse<bool> response = await _paymentRepo!.addBankDetails(
         bankAccno: bankAccNo,
         bankHolderName: bankHoldername,
         bankIfsc: ifscCode);
 
     if (response.isSuccess()) {
-      await _sellService.checkForUserBankAccountDetails();
-      _sellService.isBankDetailsAdded = true;
-      _analyticsService.track(eventName: AnalyticsEvents.bankDetailsUpdated);
+      await _sellService!.checkForUserBankAccountDetails();
+      _sellService!.isBankDetailsAdded = true;
+      _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
       BaseUtil.showPositiveAlert('Complete', 'Your details have been updated');
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       isDetailsUpdating = false;
     } else {
       BaseUtil.showNegativeAlert(
@@ -109,16 +109,16 @@ class BankDetailsViewModel extends BaseViewModel {
   }
 
   checkIfDetailsAreSame() => (activeBankDetails != null &&
-      bankAccNoController.text == activeBankDetails.account &&
-      bankHolderNameController.text == activeBankDetails.name &&
-      bankAccNoConfirmController.text == activeBankDetails.account &&
-      bankIfscController.text == activeBankDetails.ifsc);
+      bankAccNoController!.text == activeBankDetails!.account &&
+      bankHolderNameController!.text == activeBankDetails!.name &&
+      bankAccNoConfirmController!.text == activeBankDetails!.account &&
+      bankIfscController!.text == activeBankDetails!.ifsc);
 
   setUpDataValues() {
-    bankHoldername = bankHolderNameController.text.trim().toUpperCase();
-    bankAccNo = bankAccNoController.text.trim();
-    cnfBankAccNo = bankAccNoConfirmController.text.trim();
-    ifscCode = bankIfscController.text.trim();
+    bankHoldername = bankHolderNameController!.text.trim().toUpperCase();
+    bankAccNo = bankAccNoController!.text.trim();
+    cnfBankAccNo = bankAccNoConfirmController!.text.trim();
+    ifscCode = bankIfscController!.text.trim();
   }
 
   confirmBankAccountNumber() {

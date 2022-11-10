@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UPIAppsBottomSheet extends StatelessWidget {
-  final BaseTransactionService txnServiceInstance;
+  final BaseTransactionService? txnServiceInstance;
 
-  const UPIAppsBottomSheet({Key key, this.txnServiceInstance})
+  const UPIAppsBottomSheet({Key? key, this.txnServiceInstance})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 0.5,
+      height: SizeConfig.screenWidth! * 0.5,
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -36,14 +36,14 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      txnServiceInstance.appMetaList.length > 0
+                      txnServiceInstance!.appMetaList.length > 0
                           ? 'Please select a UPI App'
                           : "No UPI apps available",
                       style: TextStyles.title5.bold,
                     ),
                     GestureDetector(
                       onTap: () {
-                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher!.didPopRoute();
                       },
                       child: Icon(Icons.close),
                     )
@@ -51,7 +51,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              txnServiceInstance.appMetaList.length <= 0
+              txnServiceInstance!.appMetaList.length <= 0
                   ? Container(
                       width: SizeConfig.screenWidth,
                       child: Column(
@@ -59,7 +59,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SvgPicture.asset(Assets.noTickets,
-                              height: SizeConfig.screenWidth * 0.16),
+                              height: SizeConfig.screenWidth! * 0.16),
                           SizedBox(height: SizeConfig.padding12),
                           Text('Could not find any installed UPI applications.',
                               style: TextStyles.body1.colour(Colors.grey)),
@@ -69,18 +69,18 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   : Expanded(
                       child: GridView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: txnServiceInstance.appMetaList.length,
+                        itemCount: txnServiceInstance!.appMetaList.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              txnServiceInstance.upiApplication =
-                                  txnServiceInstance
+                              txnServiceInstance!.upiApplication =
+                                  txnServiceInstance!
                                       .appMetaList[index].upiApplication;
-                              txnServiceInstance.selectedUpiApplicationName =
-                                  txnServiceInstance.appMetaList[index]
+                              txnServiceInstance!.selectedUpiApplicationName =
+                                  txnServiceInstance!.appMetaList[index]
                                       .upiApplication.appName;
-                              AppState.backButtonDispatcher.didPopRoute();
-                              txnServiceInstance.processUpiTransaction();
+                              AppState.backButtonDispatcher!.didPopRoute();
+                              txnServiceInstance!.processUpiTransaction();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(10),
@@ -91,14 +91,14 @@ class UPIAppsBottomSheet extends StatelessWidget {
                                       ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(5),
-                                          child: txnServiceInstance
+                                          child: txnServiceInstance!
                                               .appMetaList[index]
                                               .iconImage(40)),
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Text(
-                                        txnServiceInstance.appMetaList[index]
+                                        txnServiceInstance!.appMetaList[index]
                                             .upiApplication.appName,
                                         style: TextStyles.body4,
                                       ),

@@ -6,7 +6,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
-  const SaveAssetsFooter({Key key}) : super(key: key);
+  const SaveAssetsFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class SaveAssetsFooter extends StatelessWidget {
                   SaveInfoSection(
                     title: 'Govt. Accredited',
                     imageAsset: Assets.augmontLogo,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
+                    imageHeight: SizeConfig.screenWidth! * 0.07,
+                    imageWidth: SizeConfig.screenWidth! * 0.16,
                   ),
                   VerticalDivider(
                     color: Colors.white,
@@ -37,8 +37,8 @@ class SaveAssetsFooter extends StatelessWidget {
                   SaveInfoSection(
                     title: 'RBI Certified',
                     imageAsset: Assets.lendboxLogo,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
+                    imageHeight: SizeConfig.screenWidth! * 0.07,
+                    imageWidth: SizeConfig.screenWidth! * 0.16,
                   ),
                   VerticalDivider(
                     color: Colors.white,
@@ -50,8 +50,8 @@ class SaveAssetsFooter extends StatelessWidget {
                   SaveInfoSection(
                     title: 'Gold Insurer',
                     imageAsset: Assets.idbiTrustee,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
+                    imageHeight: SizeConfig.screenWidth! * 0.07,
+                    imageWidth: SizeConfig.screenWidth! * 0.16,
                   ),
                 ],
               ),

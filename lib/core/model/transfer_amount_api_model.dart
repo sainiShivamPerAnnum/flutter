@@ -1,9 +1,9 @@
 class TransferAmountApiResponseModel {
-  bool flag;
-  bool active;
-  bool nameMatch;
-  String signzyReferenceId;
-  String message;
+  bool? flag;
+  bool? active;
+  bool? nameMatch;
+  String? signzyReferenceId;
+  String? message;
 
   TransferAmountApiResponseModel(
       {this.flag,

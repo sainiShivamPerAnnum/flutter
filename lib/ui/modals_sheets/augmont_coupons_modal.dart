@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AugmontCouponsModalSheet extends StatelessWidget {
-  final GoldBuyViewModel model;
+  final GoldBuyViewModel? model;
   final _formKey = GlobalKey<FormState>();
   AugmontCouponsModalSheet({this.model});
   final TextEditingController couponCodeController =
@@ -17,7 +17,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenHeight * 0.54,
+      height: SizeConfig.screenHeight! * 0.54,
       decoration: BoxDecoration(),
       padding: EdgeInsets.all(
         SizeConfig.blockSizeHorizontal * 5,
@@ -42,7 +42,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                 backgroundColor: Colors.black,
                 child: IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                   icon: Icon(
                     Icons.close,
@@ -76,20 +76,20 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                                 .colour(UiConstants.primaryColor),
                           ),
                           onTap: () {
-                            if (_formKey.currentState.validate()) {
-                              model.applyCoupon(
+                            if (_formKey.currentState!.validate()) {
+                              model!.applyCoupon(
                                   couponCodeController.text
                                       .trim()
                                       .toUpperCase(),
                                   true);
-                              AppState.backButtonDispatcher.didPopRoute();
+                              AppState.backButtonDispatcher!.didPopRoute();
                             }
                           },
                         ),
                       ),
                       // textCapitalization: TextCapitalization.characters,
                       validator: (val) {
-                        if (val.trim().length == 0 || val == null)
+                        if (val!.trim().length == 0 || val == null)
                           return "Please enter a code to continue";
                         if (val.trim().length < 3 || val.trim().length > 10)
                           return "Invalid Coupon code";
@@ -111,16 +111,16 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                 physics: BouncingScrollPhysics(),
                 children: List.generate(
-                  model.couponList.length,
+                  model!.couponList!.length,
                   (i) => Container(
                     margin: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: CouponItem(
                       model: model,
-                      couponCode: model.couponList[i].code,
-                      desc: model.couponList[i].description,
+                      couponCode: model!.couponList![i].code,
+                      desc: model!.couponList![i].description,
                       onTap: () {
-                        model.applyCoupon(model.couponList[i].code, false);
-                        AppState.backButtonDispatcher.didPopRoute();
+                        model!.applyCoupon(model!.couponList![i].code, false);
+                        AppState.backButtonDispatcher!.didPopRoute();
                       },
                     ),
                   ),
@@ -136,26 +136,26 @@ class AugmontCouponsModalSheet extends StatelessWidget {
 
 class CouponItem extends StatelessWidget {
   const CouponItem({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
     this.trailingWidget,
     this.onTap,
     this.couponCode,
     this.desc,
     // this.coupon,
   }) : super(key: key);
-  final Widget trailingWidget;
+  final Widget? trailingWidget;
 
-  final GoldBuyViewModel model;
-  final Function onTap;
-  final String couponCode;
-  final String desc;
+  final GoldBuyViewModel? model;
+  final Function? onTap;
+  final String? couponCode;
+  final String? desc;
   // final CouponModel coupon;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
         // height: SizeConfig.padding54,
         width: SizeConfig.screenWidth,
@@ -199,18 +199,18 @@ class CouponItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    couponCode,
+                    couponCode!,
                     style: TextStyles.body4.bold.colour(UiConstants.felloBlue),
                   ),
                   SizedBox(height: SizeConfig.padding2),
                   Text(
-                    desc,
+                    desc!,
                     style: TextStyles.body4,
                   )
                 ],
               ),
             ),
-            if (trailingWidget != null) trailingWidget
+            if (trailingWidget != null) trailingWidget!
           ],
         ),
       ),

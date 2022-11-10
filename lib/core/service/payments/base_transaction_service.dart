@@ -16,7 +16,7 @@ import 'package:upi_pay/upi_pay.dart';
 
 abstract class BaseTransactionService
     extends PropertyChangeNotifier<TransactionServiceProperties> {
-  final _gtService = locator<GoldenTicketService>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
 
   TransactionState _currentTransactionState = TransactionState.idle;
   TransactionState get currentTransactionState => _currentTransactionState;
@@ -26,12 +26,12 @@ abstract class BaseTransactionService
   }
 
   List<ApplicationMeta> appMetaList = [];
-  UpiApplication upiApplication;
-  String selectedUpiApplicationName;
+  UpiApplication? upiApplication;
+  String? selectedUpiApplicationName;
 
-  Timer pollingPeriodicTimer;
-  double currentTxnAmount = 0;
-  String currentTxnOrderId;
+  Timer? pollingPeriodicTimer;
+  double? currentTxnAmount = 0;
+  String? currentTxnOrderId;
   int currentTxnTambolaTicketsCount = 0;
   bool isIOSTxnInProgress = false;
 
@@ -114,11 +114,11 @@ abstract class BaseTransactionService
 
   void showGtIfAvailable() {
     Future.delayed(Duration(milliseconds: 500), () {
-      _gtService.showInstantGoldenTicketView(
+      _gtService!.showInstantGoldenTicketView(
         amount: this.currentTxnAmount,
         showAutoSavePrompt: true,
         title:
-            "You have successfully saved ₹${this.getAmount(this.currentTxnAmount)}",
+            "You have successfully saved ₹${this.getAmount(this.currentTxnAmount!)}",
         source: GTSOURCE.deposit,
       );
     });

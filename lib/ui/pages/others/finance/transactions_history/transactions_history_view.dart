@@ -21,11 +21,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TransactionsHistory extends StatelessWidget {
-  final InvestmentType investmentType;
+  final InvestmentType? investmentType;
   final bool showAutosave;
 
   const TransactionsHistory(
-      {Key key, this.investmentType, this.showAutosave = false})
+      {Key? key, this.investmentType, this.showAutosave = false})
       : super(key: key);
 
   @override
@@ -85,9 +85,9 @@ class TransactionsHistory extends StatelessWidget {
 }
 
 class SingleTransactionView extends StatelessWidget {
-  final TransactionsHistoryViewModel model;
+  final TransactionsHistoryViewModel? model;
 
-  const SingleTransactionView({Key key, this.model}) : super(key: key);
+  const SingleTransactionView({Key? key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class SingleTransactionView extends StatelessWidget {
           padding: EdgeInsets.only(left: SizeConfig.padding24),
           child: Container(
             height: SizeConfig.padding40,
-            width: SizeConfig.screenWidth / 3.8,
+            width: SizeConfig.screenWidth! / 3.8,
             child: DropdownButtonFormField<String>(
               dropdownColor: UiConstants.kSecondaryBackgroundColor,
               iconSize: SizeConfig.padding20,
@@ -125,37 +125,37 @@ class SingleTransactionView extends StatelessWidget {
                 style:
                     TextStyles.sourceSans.body4.colour(UiConstants.kTextColor),
               ),
-              value: model.filterValue ?? "Type",
-              items: model.tranTypeFilterItems
+              value: model!.filterValue ?? "Type",
+              items: model!.tranTypeFilterItems
                   .map((e) => DropdownMenuItem(
                       value: e,
                       child: Text(
-                        e,
+                        e!,
                         style: TextStyles.sourceSans.body4,
                       )))
                   .toList(),
               onChanged: (val) {
-                model.filterValue = val;
-                model.filter =
-                    model.tranTypeFilterItems.indexOf(model.filterValue) + 1;
-                model.filterTransactions(update: true);
+                model!.filterValue = val;
+                model!.filter =
+                    model!.tranTypeFilterItems.indexOf(model!.filterValue) + 1;
+                model!.filterTransactions(update: true);
               },
             ),
           ),
         ),
         Expanded(
-          child: model.state == ViewState.Busy
+          child: model!.state == ViewState.Busy
               ? Center(
                   child: FullScreenLoader(),
                 )
               : Column(
                   children: [
                     Expanded(
-                      child: (model.filteredList.length == 0
+                      child: (model!.filteredList!.length == 0
                           ? Column(
                               children: [
                                 SizedBox(
-                                    height: SizeConfig.screenHeight * 0.16),
+                                    height: SizeConfig.screenHeight! * 0.16),
                                 SvgPicture.asset(Assets.noTransactionAsset),
                                 SizedBox(height: SizeConfig.padding16),
                                 Text(
@@ -168,16 +168,16 @@ class SingleTransactionView extends StatelessWidget {
                             )
                           : ListView(
                               physics: BouncingScrollPhysics(),
-                              controller: model.tranListController,
+                              controller: model!.tranListController,
                               children: List.generate(
-                                model.filteredList.length,
+                                model!.filteredList!.length,
                                 (index) => TransactionTile(
-                                  txn: model.filteredList[index],
+                                  txn: model!.filteredList![index],
                                 ),
                               ),
                             )),
                     ),
-                    if (model.isMoreTxnsBeingFetched)
+                    if (model!.isMoreTxnsBeingFetched)
                       Container(
                         width: SizeConfig.screenWidth,
                         padding: EdgeInsets.all(SizeConfig.padding12),
@@ -205,20 +205,20 @@ class SingleTransactionView extends StatelessWidget {
 }
 
 class SIPTransactionHistoryView extends StatelessWidget {
-  final TransactionsHistoryViewModel model;
+  final TransactionsHistoryViewModel? model;
 
-  const SIPTransactionHistoryView({Key key, this.model}) : super(key: key);
+  const SIPTransactionHistoryView({Key? key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return model.state == ViewState.Busy
+    return model!.state == ViewState.Busy
         ? Center(
             child: FullScreenLoader(),
           )
         : Column(
             children: [
               Expanded(
-                  child: (model.filteredSIPList.length == 0)
+                  child: (model!.filteredSIPList!.length == 0)
                       ? Column(
                           children: [
                             SizedBox(height: SizeConfig.padding54),
@@ -234,16 +234,16 @@ class SIPTransactionHistoryView extends StatelessWidget {
                         )
                       : ListView(
                           physics: BouncingScrollPhysics(),
-                          controller: model.sipScrollController,
+                          controller: model!.sipScrollController,
                           children: List.generate(
-                            model.filteredSIPList.length,
+                            model!.filteredSIPList!.length,
                             (index) => TransactionSIPTile(
                               model: model,
-                              txn: model.filteredSIPList[index],
+                              txn: model!.filteredSIPList![index],
                             ),
                           ),
                         )),
-              if (model.isMoreTxnsBeingFetched)
+              if (model!.isMoreTxnsBeingFetched)
                 Container(
                   width: SizeConfig.screenWidth,
                   padding: EdgeInsets.all(SizeConfig.padding12),
@@ -268,18 +268,18 @@ class SIPTransactionHistoryView extends StatelessWidget {
 }
 
 class NoTransactionsContent extends StatelessWidget {
-  final double width;
+  final double? width;
   NoTransactionsContent({this.width});
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = S.of(context)!;
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
             Assets.noTransaction,
-            width: width ?? SizeConfig.screenWidth * 0.8,
+            width: width ?? SizeConfig.screenWidth! * 0.8,
           ),
           SizedBox(
             height: 20,
@@ -299,8 +299,8 @@ class NoTransactionsContent extends StatelessWidget {
 
 class TransactionTile extends StatelessWidget {
   // final TransactionsHistoryViewModel model;
-  final UserTransaction txn;
-  final txnHistoryservice = locator<TransactionHistoryService>();
+  final UserTransaction? txn;
+  final TransactionHistoryService? txnHistoryservice = locator<TransactionHistoryService>();
   TransactionTile({
     // @required this.model,
     this.txn,
@@ -323,21 +323,21 @@ class TransactionTile extends StatelessWidget {
       },
       dense: true,
       title: Text(
-          txnHistoryservice.getTileSubtitle(
-            txn.type.toString(),
+          txnHistoryservice!.getTileSubtitle(
+            txn!.type.toString(),
           ),
           style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
       subtitle: Text(
-        txnHistoryservice.getFormattedDate(txn.timestamp),
+        txnHistoryservice!.getFormattedDate(txn!.timestamp!),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(
         children: [
           TransactionStatusChip(
-            color: txnHistoryservice.getTileColor(txn.tranStatus),
-            status: txn.tranStatus,
+            color: txnHistoryservice!.getTileColor(txn!.tranStatus),
+            status: txn!.tranStatus,
           ),
-          Text(txnHistoryservice.getFormattedTxnAmount(txn.amount),
+          Text(txnHistoryservice!.getFormattedTxnAmount(txn!.amount),
               style: TextStyles.sourceSansSB.body2),
         ],
       ),
@@ -347,7 +347,7 @@ class TransactionTile extends StatelessWidget {
 
 class TransactionStatusChip extends StatelessWidget {
   final Color color;
-  final String status;
+  final String? status;
 
   TransactionStatusChip({this.color = Colors.white, this.status = "NA"});
 
@@ -359,7 +359,7 @@ class TransactionStatusChip extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 color: color.withOpacity(0.2)),
             child: Text(
-              status,
+              status!,
               style: TextStyles.sourceSans.body5.colour(color),
             ),
             padding: EdgeInsets.symmetric(
@@ -373,11 +373,11 @@ class TransactionStatusChip extends StatelessWidget {
 }
 
 class TransactionSIPTile extends StatelessWidget {
-  final TransactionsHistoryViewModel model;
-  final AutosaveTransactionModel txn;
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final TransactionsHistoryViewModel? model;
+  final AutosaveTransactionModel? txn;
+  final TransactionHistoryService? _txnHistoryService = locator<TransactionHistoryService>();
   TransactionSIPTile({
-    @required this.model,
+    required this.model,
     this.txn,
   });
   @override
@@ -391,17 +391,17 @@ class TransactionSIPTile extends StatelessWidget {
       dense: true,
       title: Text('DEPOSIT', style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        _txnHistoryService.getFormattedSIPDate(DateTime.parse(txn.txnDateTime)),
+        _txnHistoryService!.getFormattedSIPDate(DateTime.parse(txn!.txnDateTime)),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(
         children: [
           TransactionStatusChip(
-            color: _txnHistoryService.getTileColor(txn.status),
-            status: txn.status,
+            color: _txnHistoryService!.getTileColor(txn!.status),
+            status: txn!.status,
           ),
           Text(
-            _txnHistoryService.getFormattedTxnAmount(txn.amount),
+            _txnHistoryService!.getFormattedTxnAmount(txn!.amount),
             style: TextStyles.sourceSansM.body3,
           ),
         ],
@@ -411,15 +411,15 @@ class TransactionSIPTile extends StatelessWidget {
 }
 
 class TransactionChoiceSelectionTab extends StatelessWidget {
-  final TransactionsHistoryViewModel model;
+  final TransactionsHistoryViewModel? model;
 
-  const TransactionChoiceSelectionTab({Key key, this.model}) : super(key: key);
+  const TransactionChoiceSelectionTab({Key? key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: SizeConfig.screenWidth * 0.09,
-        width: SizeConfig.screenWidth * 0.6,
+        height: SizeConfig.screenWidth! * 0.09,
+        width: SizeConfig.screenWidth! * 0.6,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -429,8 +429,8 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
               children: [
                 GestureDetector(
                     onTap: () {
-                      model.tabIndex = 0;
-                      model.pageController.animateToPage(0,
+                      model!.tabIndex = 0;
+                      model!.pageController!.animateToPage(0,
                           duration: Duration(milliseconds: 200),
                           curve: Curves.linear);
                     },
@@ -445,8 +445,8 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    model.tabIndex = 1;
-                    model.pageController.animateToPage(1,
+                    model!.tabIndex = 1;
+                    model!.pageController!.animateToPage(1,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.linear);
                   },
@@ -466,7 +466,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                 Expanded(
                   child: Divider(
                     height: 2,
-                    color: model.tabIndex == 0
+                    color: model!.tabIndex == 0
                         ? UiConstants.kPrimaryColor
                         : UiConstants.kSecondaryBackgroundColor,
                     thickness: 3,
@@ -476,7 +476,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                 Expanded(
                   child: Divider(
                     height: 2,
-                    color: model.tabIndex == 1
+                    color: model!.tabIndex == 1
                         ? UiConstants.kPrimaryColor
                         : UiConstants.kSecondaryBackgroundColor,
                     thickness: 3,
@@ -491,7 +491,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
 }
 
 class TransactionTypeChoiceSelector extends StatelessWidget {
-  const TransactionTypeChoiceSelector({Key key}) : super(key: key);
+  const TransactionTypeChoiceSelector({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

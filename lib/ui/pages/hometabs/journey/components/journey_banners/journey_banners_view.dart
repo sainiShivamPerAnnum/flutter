@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class JourneyBannersView extends StatelessWidget {
-  const JourneyBannersView({Key key}) : super(key: key);
+  const JourneyBannersView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +22,16 @@ class JourneyBannersView extends StatelessWidget {
           child: Container(
             width: SizeConfig.screenWidth,
             height: kBottomNavigationBarHeight,
-            child: !model.isOfferListLoading && model.offerList.isNotEmpty
+            child: !model.isOfferListLoading && model.offerList!.isNotEmpty
                 ? PageView.builder(
                     controller: model.promoPageController,
-                    itemCount: model.offerList.length,
+                    itemCount: model.offerList!.length,
                     itemBuilder: (cntx, i) {
                       return InkWell(
                         onTap: () {
                           model.trackJourneyBannerClickEvent(i);
-                          AppState.delegate.parseRoute(
-                              Uri.parse(model.offerList[i].actionUri));
+                          AppState.delegate!.parseRoute(
+                              Uri.parse(model.offerList![i].actionUri!));
                         },
                         child: Container(
                           padding: EdgeInsets.only(left: SizeConfig.padding16),
@@ -40,7 +40,7 @@ class JourneyBannersView extends StatelessWidget {
                           width: SizeConfig.screenWidth,
                           child: Row(
                             children: [
-                              model.offerList[i].bgImage != null
+                              model.offerList![i].bgImage != null
                                   ? Container(
                                       width: kBottomNavigationBarHeight * 0.8,
                                       height: kBottomNavigationBarHeight * 0.8,
@@ -49,7 +49,7 @@ class JourneyBannersView extends StatelessWidget {
                                             SizeConfig.roundness12),
                                         image: DecorationImage(
                                             image: CachedNetworkImageProvider(
-                                                model.offerList[i].bgImage),
+                                                model.offerList![i].bgImage!),
                                             fit: BoxFit.cover),
                                       ),
                                     )
@@ -61,12 +61,12 @@ class JourneyBannersView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      model.offerList[i].title ?? "Hello World",
+                                      model.offerList![i].title ?? "Hello World",
                                       style: TextStyles.rajdhaniEB.body0.bold
                                           .colour(Colors.white),
                                     ),
                                     Text(
-                                      model.offerList[i].subtitle ??
+                                      model.offerList![i].subtitle ??
                                           "Welcome to this Universe and win ",
                                       style: TextStyles.sourceSans.body4
                                           .colour(Colors.white),
@@ -76,8 +76,8 @@ class JourneyBannersView extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  AppState.delegate.parseRoute(
-                                      Uri.parse(model.offerList[i].actionUri));
+                                  AppState.delegate!.parseRoute(
+                                      Uri.parse(model.offerList![i].actionUri!));
                                 },
                                 icon: Icon(Icons.arrow_right_rounded,
                                     color: Colors.white),

@@ -1,6 +1,6 @@
 class SubscriptionResponseModel {
-  bool success;
-  Data data;
+  bool? success;
+  Data? data;
 
   SubscriptionResponseModel({this.success, this.data});
 
@@ -13,35 +13,35 @@ class SubscriptionResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  ResultInfo resultInfo;
-  String subsId;
-  String status;
-  String subStatus;
-  String orderId;
-  String upfrontTxnId;
-  SubsPaymentInstDetails subsPaymentInstDetails;
-  String lastOrderId;
-  String lastOrderStatus;
-  String lastOrderCreationDate;
-  String lastOrderAmount;
-  String amountType;
-  String maxAmount;
-  String mid;
-  String frequencyUnit;
-  String frequency;
-  String merchantName;
-  String expiryDate;
-  String createdDate;
-  String updatedDate;
-  String custId;
-  String upfrontTxnAmount;
+  ResultInfo? resultInfo;
+  String? subsId;
+  String? status;
+  String? subStatus;
+  String? orderId;
+  String? upfrontTxnId;
+  SubsPaymentInstDetails? subsPaymentInstDetails;
+  String? lastOrderId;
+  String? lastOrderStatus;
+  String? lastOrderCreationDate;
+  String? lastOrderAmount;
+  String? amountType;
+  String? maxAmount;
+  String? mid;
+  String? frequencyUnit;
+  String? frequency;
+  String? merchantName;
+  String? expiryDate;
+  String? createdDate;
+  String? updatedDate;
+  String? custId;
+  String? upfrontTxnAmount;
 
   Data(
       {this.resultInfo,
@@ -99,7 +99,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.resultInfo != null) {
-      data['resultInfo'] = this.resultInfo.toJson();
+      data['resultInfo'] = this.resultInfo!.toJson();
     }
     data['subsId'] = this.subsId;
     data['status'] = this.status;
@@ -107,7 +107,7 @@ class Data {
     data['orderId'] = this.orderId;
     data['upfrontTxnId'] = this.upfrontTxnId;
     if (this.subsPaymentInstDetails != null) {
-      data['subsPaymentInstDetails'] = this.subsPaymentInstDetails.toJson();
+      data['subsPaymentInstDetails'] = this.subsPaymentInstDetails!.toJson();
     }
     data['lastOrderId'] = this.lastOrderId;
     data['lastOrderStatus'] = this.lastOrderStatus;
@@ -129,9 +129,9 @@ class Data {
 }
 
 class ResultInfo {
-  String code;
-  String message;
-  String status;
+  String? code;
+  String? message;
+  String? status;
 
   ResultInfo({this.code, this.message, this.status});
 
@@ -151,7 +151,7 @@ class ResultInfo {
 }
 
 class SubsPaymentInstDetails {
-  String paymentMode;
+  String? paymentMode;
 
   SubsPaymentInstDetails({this.paymentMode});
 

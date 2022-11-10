@@ -11,7 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ViewAllBlogsView extends StatelessWidget {
-  const ViewAllBlogsView({Key key}) : super(key: key);
+  const ViewAllBlogsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ViewAllBlogsView extends StatelessWidget {
                         )
                       : Expanded(
                           child: ListView.builder(
-                            itemCount: model.blogPostsByCategory.length,
+                            itemCount: model.blogPostsByCategory!.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: EdgeInsets.only(
@@ -53,15 +53,15 @@ class ViewAllBlogsView extends StatelessWidget {
                                         bottom: SizeConfig.padding16,
                                       ),
                                       child: Text(
-                                        '${model.blogPostsByCategory[index].category}',
+                                        '${model.blogPostsByCategory![index].category}',
                                         style: TextStyles.rajdhaniM.body2,
                                       ),
                                     ),
                                     Container(
-                                      height: SizeConfig.screenWidth * 0.4,
+                                      height: SizeConfig.screenWidth! * 0.4,
                                       child: ListView.builder(
                                         itemCount: model
-                                            .blogPostsByCategory[index]
+                                            .blogPostsByCategory![index]
                                             .blogs
                                             .length,
                                         scrollDirection: Axis.horizontal,
@@ -73,24 +73,24 @@ class ViewAllBlogsView extends StatelessWidget {
                                           child: SaveBlogTile(
                                             onTap: () {
                                               model.navigateToBlogWebView(
-                                                model.blogPostsByCategory[index]
+                                                model.blogPostsByCategory![index]
                                                     .blogs[j].slug,
-                                                model.blogPostsByCategory[index]
+                                                model.blogPostsByCategory![index]
                                                     .category,
                                               );
                                             },
                                             title: model
-                                                .blogPostsByCategory[index]
+                                                .blogPostsByCategory![index]
                                                 .blogs[j]
-                                                .acf
+                                                .acf!
                                                 .categories,
                                             description: model
-                                                .blogPostsByCategory[index]
+                                                .blogPostsByCategory![index]
                                                 .blogs[j]
-                                                .title
+                                                .title!
                                                 .rendered,
                                             imageUrl: model
-                                                .blogPostsByCategory[index]
+                                                .blogPostsByCategory![index]
                                                 .blogs[j]
                                                 .yoastHeadJson,
                                           ),
@@ -115,9 +115,9 @@ class ViewAllBlogsView extends StatelessWidget {
 }
 
 class BlogsLoadingShimmerWidget extends StatelessWidget {
-  final SaveViewModel model;
+  final SaveViewModel? model;
 
-  const BlogsLoadingShimmerWidget({Key key, this.model}) : super(key: key);
+  const BlogsLoadingShimmerWidget({Key? key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +153,7 @@ class BlogsLoadingShimmerWidget extends StatelessWidget {
                           baseColor: UiConstants.kUserRankBackgroundColor,
                           highlightColor: UiConstants.kBackgroundColor,
                           child: Container(
-                            height: SizeConfig.screenWidth * 0.4,
+                            height: SizeConfig.screenWidth! * 0.4,
                             width: SizeConfig.screenWidth,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(

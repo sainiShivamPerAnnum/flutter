@@ -14,15 +14,15 @@ import 'package:flutter_svg/svg.dart';
 
 class HelpFab extends StatefulWidget {
   final String topic;
-  const HelpFab({Key key, @required this.topic}) : super(key: key);
+  const HelpFab({Key? key, required this.topic}) : super(key: key);
 
   @override
   State<HelpFab> createState() => _HelpFabState();
 }
 
 class _HelpFabState extends State<HelpFab> {
-  final _userService = locator<UserService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   double width = SizeConfig.avatarRadius * 2.4;
   bool isOpen = false;
@@ -53,7 +53,7 @@ class _HelpFabState extends State<HelpFab> {
   }
 
   trackHelpTappedEvent() {
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.journeyHelpTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap());
   }
@@ -69,7 +69,7 @@ class _HelpFabState extends State<HelpFab> {
         onTap: () {
           isOpen ? collapseFab() : expandFab();
           AppState.screenStack.add(ScreenItem.dialog);
-          Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+          Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
             PageRouteBuilder(
               pageBuilder: (context, animation, anotherAnimation) {
                 return InfoStories(

@@ -9,53 +9,53 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AllParticipantsView extends StatelessWidget {
-  final TopSaverViewModel model;
+  final TopSaverViewModel? model;
   final bool forPastWinners;
 
   AllParticipantsView({
-    @required this.model,
-    @required this.forPastWinners,
+    required this.model,
+    required this.forPastWinners,
   });
   bool isInteger(num value) => value is int || value == value.roundToDouble();
 
   getItemCountCurrentWinners() {
-    if (model.campaignType == Constants.HS_DAILY_SAVER) {
-      if (model.currentParticipants.length < 30)
-        return model.currentParticipants.length;
+    if (model!.campaignType == Constants.HS_DAILY_SAVER) {
+      if (model!.currentParticipants!.length < 30)
+        return model!.currentParticipants!.length;
       else
         return 30;
-    } else if (model.campaignType == Constants.HS_WEEKLY_SAVER) {
-      if (model.currentParticipants.length < 50)
-        return model.currentParticipants.length;
+    } else if (model!.campaignType == Constants.HS_WEEKLY_SAVER) {
+      if (model!.currentParticipants!.length < 50)
+        return model!.currentParticipants!.length;
       else
         return 50;
-    } else if (model.campaignType == Constants.HS_MONTHLY_SAVER) {
-      if (model.currentParticipants.length < 80)
-        return model.currentParticipants.length;
+    } else if (model!.campaignType == Constants.HS_MONTHLY_SAVER) {
+      if (model!.currentParticipants!.length < 80)
+        return model!.currentParticipants!.length;
       else
         return 80;
     } else
-      return model.currentParticipants.length;
+      return model!.currentParticipants!.length;
   }
 
   getItemCountPastWinners() {
-    if (model.campaignType == Constants.HS_DAILY_SAVER) {
-      if (model.pastWinners.length < 30)
-        return model.pastWinners.length;
+    if (model!.campaignType == Constants.HS_DAILY_SAVER) {
+      if (model!.pastWinners!.length < 30)
+        return model!.pastWinners!.length;
       else
         return 30;
-    } else if (model.campaignType == Constants.HS_WEEKLY_SAVER) {
-      if (model.pastWinners.length < 50)
-        return model.pastWinners.length;
+    } else if (model!.campaignType == Constants.HS_WEEKLY_SAVER) {
+      if (model!.pastWinners!.length < 50)
+        return model!.pastWinners!.length;
       else
         return 50;
-    } else if (model.campaignType == Constants.HS_MONTHLY_SAVER) {
-      if (model.pastWinners.length < 80)
-        return model.pastWinners.length;
+    } else if (model!.campaignType == Constants.HS_MONTHLY_SAVER) {
+      if (model!.pastWinners!.length < 80)
+        return model!.pastWinners!.length;
       else
         return 80;
     } else
-      return model.pastWinners.length;
+      return model!.pastWinners!.length;
   }
 
   @override
@@ -72,7 +72,7 @@ class AllParticipantsView extends StatelessWidget {
           ),
           leading: IconButton(
               onPressed: () {
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
               },
               icon: Icon(Icons.arrow_back_ios)),
         ),
@@ -114,8 +114,8 @@ class AllParticipantsView extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          model.currentParticipants[index]
-                                              .username,
+                                          model!.currentParticipants![index]
+                                              .username!,
                                           style: TextStyles.sourceSans.body3
                                               .setOpecity(0.8),
                                           overflow: TextOverflow.ellipsis,
@@ -126,7 +126,7 @@ class AllParticipantsView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  model.currentParticipants[index]
+                                  model!.currentParticipants![index]
                                           ?.displayScore ??
                                       ''.toString(),
                                   style: TextStyles.rajdhaniM.body3,
@@ -167,7 +167,7 @@ class AllParticipantsView extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          model.pastWinners[index].username,
+                                          model!.pastWinners![index].username!,
                                           style: TextStyles.sourceSans.body3
                                               .setOpecity(0.8),
                                           overflow: TextOverflow.ellipsis,
@@ -178,7 +178,7 @@ class AllParticipantsView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "${model.pastWinners[index].score.truncateToDecimalPlaces(3)} gm"
+                                  "${model!.pastWinners![index].score!.truncateToDecimalPlaces(3)} gm"
                                       .toString(),
                                   style: TextStyles.rajdhaniM.body3,
                                 ),

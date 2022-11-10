@@ -2,11 +2,11 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class AlertModel {
-  String id;
-  String actionUri;
-  TimestampModel createdTime;
-  String subtitle;
-  String title;
+  String? id;
+  String? actionUri;
+  TimestampModel? createdTime;
+  String? subtitle;
+  String? title;
   bool isHighlighted = false;
 
   static final helper =
@@ -27,7 +27,7 @@ class AlertModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['actionUri'] = this.actionUri;
-    data['created_time'] = this.createdTime.toMap();
+    data['created_time'] = this.createdTime!.toMap();
     data['subtitile'] = this.subtitle;
     data['title'] = this.title;
     return data;
@@ -37,7 +37,7 @@ class AlertModel {
     return {
       'id': id,
       'actionUri': actionUri,
-      'createdTime': createdTime.toMap(),
+      'createdTime': createdTime!.toMap(),
       'subtitile': subtitle,
       'title': title,
     };

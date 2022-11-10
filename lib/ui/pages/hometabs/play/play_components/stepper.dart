@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class GameStepper extends StatelessWidget {
   const GameStepper({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

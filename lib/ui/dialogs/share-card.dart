@@ -6,9 +6,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class ShareCard extends StatelessWidget {
-  final String dpUrl;
-  final double prizeAmount;
-  final PrizeClaimChoice claimChoice;
+  final String? dpUrl;
+  final double? prizeAmount;
+  final PrizeClaimChoice? claimChoice;
 
   ShareCard({
     this.claimChoice,
@@ -35,7 +35,7 @@ class ShareCard extends StatelessWidget {
         return "You've won an Amazon Gift Voucher\n worth";
         break;
       case PrizeClaimChoice.GOLD_CREDIT:
-        return "I've won ₹${prizeAmount.toInt()} as\nDigital Gold on Fello!";
+        return "I've won ₹${prizeAmount!.toInt()} as\nDigital Gold on Fello!";
         break;
       default:
         return "You've won Fello Rewards\n worth";

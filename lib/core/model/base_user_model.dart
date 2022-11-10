@@ -5,30 +5,30 @@ import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
   static Log log = new Log("User");
-  String uid;
-  String mobile;
-  String name;
-  String email;
-  String dob;
-  String gender; // 0: Male | 1: Female | -1: Rather Not to say
-  String username;
-  String verifiedName;
-  String client_token; //fetched from a subcollection
+  String? uid;
+  String? mobile;
+  String? name;
+  String? email;
+  String? dob;
+  String? gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String? username;
+  String? verifiedName;
+  String? client_token; //fetched from a subcollection
   bool isInvested;
-  bool isIciciOnboarded;
+  bool? isIciciOnboarded;
   bool isAugmontOnboarded;
-  bool isSimpleKycVerified;
+  bool? isSimpleKycVerified;
   bool isBlocked;
-  int isKycVerified;
-  String kycName;
-  String pendingTxnId;
-  bool isIciciEnabled;
-  bool isAugmontEnabled;
+  int? isKycVerified;
+  String? kycName;
+  String? pendingTxnId;
+  bool? isIciciEnabled;
+  bool? isAugmontEnabled;
   bool isEmailVerified;
   UserPreferences userPreferences;
   TimestampModel createdOn;
-  String appFlyerId;
-  String avatarId;
+  String? appFlyerId;
+  String? avatarId;
   bool isOldUser;
 
   static final String fldId = "mID";
@@ -89,7 +89,7 @@ class BaseUser {
     this.isOldUser,
   );
 
-  BaseUser.newUser(String id, String mobile)
+  BaseUser.newUser(String id, String? mobile)
       : this(
           id,
           mobile,
@@ -117,7 +117,7 @@ class BaseUser {
           false,
         );
 
-  BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
+  BaseUser.fromMap(Map<String, dynamic> data, String? id, [String? client_token])
       : this(
             id,
             data[fldMobile]?.toString(),
@@ -201,12 +201,12 @@ class UserPreferences {
   };
 
   //current values
-  Map<String, int> _activePrefs = {};
+  Map<String?, int?> _activePrefs = {};
 
-  UserPreferences(Map<dynamic, dynamic> remValues) {
+  UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {
-      String _fKey = _index[p];
-      int _defValue = _defValues[p];
+      String? _fKey = _index[p];
+      int? _defValue = _defValues[p];
       _activePrefs[_fKey] = (remValues != null &&
               remValues[_fKey] != null &&
               remValues[_fKey] is int)
@@ -215,7 +215,7 @@ class UserPreferences {
     }
   }
 
-  int getPreference(Preferences p) => _activePrefs[_index[p]];
+  int? getPreference(Preferences p) => _activePrefs[_index[p]];
 
   setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 

@@ -20,18 +20,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class TambolaCard extends StatelessWidget {
-  const TambolaCard({Key key}) : super(key: key);
+  const TambolaCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     return BaseView<TambolaCardModel>(onModelReady: (model) {
       model.init();
     }, builder: (ctx, model, child) {
       return GestureDetector(
         onTap: () {
           Haptic.vibrate();
-          _analyticsService.track(
+          _analyticsService!.track(
               eventName: AnalyticsEvents.tambolaGameCard,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -40,12 +40,12 @@ class TambolaCard extends StatelessWidget {
                 "Tambola Tickets Owned":
                     AnalyticsProperties.getTabolaTicketCount(),
               }));
-          AppState.delegate.parseRoute(
-            Uri.parse(model.game.route),
+          AppState.delegate!.parseRoute(
+            Uri.parse(model.game!.route!),
           );
         },
         child: Container(
-          height: SizeConfig.screenWidth * 0.94,
+          height: SizeConfig.screenWidth! * 0.94,
           margin: EdgeInsets.only(
               right: SizeConfig.pageHorizontalMargins,
               top: SizeConfig.pageHorizontalMargins / 2,
@@ -67,7 +67,7 @@ class TambolaCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       Assets.tambolaCardAsset,
-                      width: SizeConfig.screenWidth * 0.5,
+                      width: SizeConfig.screenWidth! * 0.5,
                     ),
                     Stack(
                       children: [
@@ -145,9 +145,9 @@ class TambolaCard extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {
                           Haptic.vibrate();
-                          print(model.game.route);
-                          AppState.delegate.parseRoute(
-                            Uri.parse(model.game.route),
+                          print(model.game!.route);
+                          AppState.delegate!.parseRoute(
+                            Uri.parse(model.game!.route!),
                           );
                         },
                         child: SvgPicture.asset(

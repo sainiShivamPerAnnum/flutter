@@ -19,17 +19,17 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class GTInstantViewModel extends BaseViewModel {
-  final _userService = locator<UserService>();
-  final _userCoinService = locator<UserCoinService>();
-  final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
-  final _gtService = locator<GoldenTicketService>();
-  final _paytmService = locator<PaytmService>();
+  final UserService? _userService = locator<UserService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
 
   final _rsaEncryption = new RSAEncryption();
-  final _coinService = locator<UserCoinService>();
-  final _gtRepo = locator<GoldenTicketRepository>();
-  AnimationController lottieAnimationController;
+  final UserCoinService? _coinService = locator<UserCoinService>();
+  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  AnimationController? lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
   //     SizeConfig.padding12 +
@@ -43,10 +43,10 @@ class GTInstantViewModel extends BaseViewModel {
   bool showMainContent = false;
   bool isAutosaveAlreadySetup = false;
 
-  int coinsCount = 0;
+  int? coinsCount = 0;
   double coinScale = 1;
   bool _isShimmerEnabled = false;
-  GoldenTicket _goldenTicket;
+  GoldenTicket? _goldenTicket;
   double _buttonOpacity = 0;
 
   double get buttonOpacity => this._buttonOpacity;
@@ -56,7 +56,7 @@ class GTInstantViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  GoldenTicket get goldenTicket => this._goldenTicket;
+  GoldenTicket? get goldenTicket => this._goldenTicket;
 
   set goldenTicket(value) {
     this._goldenTicket = value;
@@ -98,13 +98,13 @@ class GTInstantViewModel extends BaseViewModel {
 
   init() async {
     Haptic.vibrate();
-    isAutosaveAlreadySetup = _paytmService.activeSubscription != null &&
-        (_paytmService.activeSubscription.status ==
+    isAutosaveAlreadySetup = _paytmService!.activeSubscription != null &&
+        (_paytmService!.activeSubscription!.status ==
                 Constants.SUBSCRIPTION_ACTIVE ||
-            (_paytmService.activeSubscription.status ==
+            (_paytmService!.activeSubscription!.status ==
                     Constants.SUBSCRIPTION_INACTIVE &&
-                _paytmService.activeSubscription.resumeDate != null &&
-                _paytmService.activeSubscription.resumeDate.isNotEmpty));
+                _paytmService!.activeSubscription!.resumeDate != null &&
+                _paytmService!.activeSubscription!.resumeDate!.isNotEmpty));
     goldenTicket = GoldenTicketService.currentGT;
     GoldenTicketService.currentGT = null;
 
@@ -116,24 +116,24 @@ class GTInstantViewModel extends BaseViewModel {
   }
 
   showAutosavePrompt() {
-    _gtService.showAutosavePrompt();
+    _gtService!.showAutosavePrompt();
   }
 
   Future<void> redeemTicket() async {
-    scratchKey.currentState.reveal();
+    scratchKey.currentState!.reveal();
     Haptic.vibrate();
     buttonOpacity = 1.0;
     isCardScratched = true;
 
     try {
       _getBearerToken().then(
-        (String token) => _gtRepo.redeemReward(goldenTicket.gtId).then(
+        (String token) => _gtRepo!.redeemReward(goldenTicket!.gtId).then(
           (_) {
-            _gtService.updateUnscratchedGTCount();
-            _userService.getUserFundWalletData();
-            _userCoinService.getUserCoinBalance().then(
+            _gtService!.updateUnscratchedGTCount();
+            _userService!.getUserFundWalletData();
+            _userCoinService!.getUserCoinBalance().then(
               (_) {
-                coinsCount = _userCoinService.flcBalance;
+                coinsCount = _userCoinService!.flcBalance;
                 notifyListeners();
               },
             );
@@ -141,20 +141,20 @@ class GTInstantViewModel extends BaseViewModel {
         ),
       );
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
       BaseUtil.showNegativeAlert(
           "An error occured while redeeming your golden ticket",
           "Please try again in your winnings section");
     }
 
     Future.delayed(Duration(seconds: 3), () {
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
     });
   }
 
   Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
+    String token = await _userService!.firebaseUser!.getIdToken();
+    _logger!.d(token);
 
     return token;
   }
@@ -192,57 +192,45 @@ class GTInstantViewModel extends BaseViewModel {
 
   initNormalFlow() {
     Future.delayed(Duration(milliseconds: 500), () {
-      coinsCount = _coinService.flcBalance;
+      coinsCount = _coinService!.flcBalance;
       showMainContent = true;
       notifyListeners();
     });
   }
 }
 
-class AnimatedCount extends ImplicitlyAnimatedWidget {
-  AnimatedCount({
-    Key key,
-    @required this.count,
-    @required Duration duration,
-    Curve curve = Curves.linear,
-  }) : super(duration: duration, curve: curve, key: key);
+// class AnimatedCount extends ImplicitlyAnimatedWidget {
+//   AnimatedCount({
+//     Key? key,
+//     required this.count,
+//     required Duration duration,
+//     Curve curve = Curves.linear,
+//   }) : super(duration: duration, curve: curve, key: key);
 
-  final num count;
+//   final num count;
 
-  @override
-  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
-    return _AnimatedCountState();
-  }
-}
+//   @override
+//   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
+//     return _AnimatedCountState();
+//   }
+// }
 
-class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
-  IntTween _intCount;
-  Tween<double> _doubleCount;
+// class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
+//   IntTween? _intCount;
+//   Tween<double?>? _doubleCount;
 
-  @override
-  Widget build(BuildContext context) {
-    return widget.count is int
-        ? Text(
-            _intCount.evaluate(animation).toString(),
-            style: TextStyles.body1.bold,
-          )
-        : Text(_doubleCount.evaluate(animation).toStringAsFixed(1));
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return widget.count is int
+//         ? Text(
+//             _intCount!.evaluate(animation).toString(),
+//             style: TextStyles.body1.bold,
+//           )
+//         : Text(_doubleCount!.evaluate(animation)!.toStringAsFixed(1));
+//   }
 
-  @override
-  void forEachTween(TweenVisitor visitor) {
-    if (widget.count is int) {
-      _intCount = visitor(
-        _intCount,
-        widget.count,
-        (dynamic value) => IntTween(begin: value),
-      );
-    } else {
-      _doubleCount = visitor(
-        _doubleCount,
-        widget.count,
-        (dynamic value) => Tween<double>(begin: value),
-      );
-    }
-  }
-}
+//   @override
+//   void forEachTween(TweenVisitor visitor) {
+//     // TODO: implement forEachTween
+//   }
+// }

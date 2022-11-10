@@ -11,14 +11,14 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class SaveCustomCard extends StatelessWidget {
-  final String title;
-  final Function() onCardTap;
-  final Color cardBgColor;
-  final String subtitle;
-  final String cardAssetName;
-  final Function() onTap;
+  final String? title;
+  final Function()? onCardTap;
+  final Color? cardBgColor;
+  final String? subtitle;
+  final String? cardAssetName;
+  final Function()? onTap;
   final InvestmentType investmentType;
-  final ValueKey key;
+  final ValueKey? key;
 
   const SaveCustomCard({
     this.key,
@@ -28,7 +28,7 @@ class SaveCustomCard extends StatelessWidget {
     this.cardAssetName,
     this.onTap,
     this.onCardTap,
-    @required this.investmentType,
+    required this.investmentType,
   });
 
   @override
@@ -43,7 +43,7 @@ class SaveCustomCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onCardTap,
         child: Container(
-          height: SizeConfig.screenWidth * 0.351,
+          height: SizeConfig.screenWidth! * 0.351,
           width: SizeConfig.screenWidth,
           child: Stack(
             fit: StackFit.loose,
@@ -52,14 +52,14 @@ class SaveCustomCard extends StatelessWidget {
                 padding: EdgeInsets.only(left: SizeConfig.padding16),
                 child: CustomPaint(
                   size: Size(
-                    SizeConfig.screenWidth,
-                    SizeConfig.screenWidth * 0.351,
+                    SizeConfig.screenWidth!,
+                    SizeConfig.screenWidth! * 0.351,
                   ),
                   painter: CustomSaveCardPainter(cardBgColor),
                 ),
               ),
               Container(
-                height: SizeConfig.screenWidth * 0.351,
+                height: SizeConfig.screenWidth! * 0.351,
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(color: Colors.transparent),
                 child: Row(
@@ -67,9 +67,9 @@ class SaveCustomCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Image.asset(
-                      cardAssetName,
-                      height: SizeConfig.screenWidth * 0.28,
-                      width: SizeConfig.screenWidth * 0.28,
+                      cardAssetName!,
+                      height: SizeConfig.screenWidth! * 0.28,
+                      width: SizeConfig.screenWidth! * 0.28,
                     ),
                     Expanded(
                       child: Padding(
@@ -88,11 +88,11 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    if (key.value ==
+                                    if (key!.value ==
                                         Constants.ASSET_TYPE_AUGMONT)
                                       AutosaveStatusText(),
                                     Text(
-                                      title,
+                                      title!,
                                       style: TextStyles.rajdhaniSB.title5,
                                     ),
                                   ],
@@ -124,8 +124,8 @@ class SaveCustomCard extends StatelessWidget {
                                 CustomSaveButton(
                                   onTap: onTap,
                                   title: 'Save',
-                                  width: SizeConfig.screenWidth * 0.2,
-                                  height: SizeConfig.screenWidth * 0.11,
+                                  width: SizeConfig.screenWidth! * 0.2,
+                                  height: SizeConfig.screenWidth! * 0.11,
                                 )
                               ],
                             )
@@ -145,7 +145,7 @@ class SaveCustomCard extends StatelessWidget {
 }
 
 class CustomSaveCardPainter extends CustomPainter {
-  final Color containerColor;
+  final Color? containerColor;
 
   CustomSaveCardPainter(this.containerColor);
 
@@ -188,7 +188,7 @@ class CustomSaveCardPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = containerColor;
+    paint0Fill.color = containerColor!;
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -238,7 +238,7 @@ class CustomSaveCardPainter extends CustomPainter {
     canvas.drawPath(path_1, paint1Stroke);
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = containerColor;
+    paint1Fill.color = containerColor!;
     canvas.drawPath(path_1, paint1Fill);
   }
 
@@ -249,19 +249,19 @@ class CustomSaveCardPainter extends CustomPainter {
 }
 
 class CustomSaveButton extends StatelessWidget {
-  final Function() onTap;
-  final String title;
-  final double width;
-  final double height;
+  final Function()? onTap;
+  final String? title;
+  final double? width;
+  final double? height;
 
   const CustomSaveButton(
-      {Key key, this.onTap, this.height, this.title, this.width})
+      {Key? key, this.onTap, this.height, this.title, this.width})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height ?? SizeConfig.screenWidth * 0.13,
+      height: height ?? SizeConfig.screenWidth! * 0.13,
       width: width ?? SizeConfig.screenWidth,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -275,7 +275,7 @@ class CustomSaveButton extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                title,
+                title!,
                 style: TextStyles.rajdhaniB.body1,
               ),
             ),

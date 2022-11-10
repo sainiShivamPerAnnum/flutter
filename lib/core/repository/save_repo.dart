@@ -15,10 +15,10 @@ class SaveRepo extends BaseRepo {
     try {
       var token =
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsIm5hbWUiOiJzaG91cnlhIiwiaWF0IjoxNjU5NzgwMDkyLCJleHAiOjE4MTc0NjAwOTJ9.J6fUbS_lqi-4fldnA2lDQWPjrAI19czO5C6cwRecjwo';
-      List responseData = await APIService.instance.getData(
+      List responseData = await (APIService.instance.getData(
           ApiPath.getBlogs(noOfBlogs),
           token: token,
-          cBaseUrl: _blogUrl);
+          cBaseUrl: _blogUrl) as Future<List<dynamic>>);
       responseData.forEach((e) {
         blogs.add(BlogPostModel.fromMap(e));
       });

@@ -1,6 +1,6 @@
 class TxnResultModel {
-  String message;
-  Data data;
+  String? message;
+  Data? data;
 
   TxnResultModel({this.message, this.data});
 
@@ -13,15 +13,15 @@ class TxnResultModel {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  bool isUpdating;
-  Gt gt;
+  bool? isUpdating;
+  Gt? gt;
 
   Data({this.isUpdating = true, this.gt});
 
@@ -34,24 +34,24 @@ class Data {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['isUpdating'] = this.isUpdating;
     if (this.gt != null) {
-      data['gt'] = this.gt.toJson();
+      data['gt'] = this.gt!.toJson();
     }
     return data;
   }
 }
 
 class Gt {
-  bool canTransfer;
-  Timestamp timestamp;
-  Timestamp redeemedTimestamp;
-  String eventType;
-  String gtType;
-  bool isRewarding;
-  String version;
-  String note;
-  String prizeSubtype;
-  String userId;
-  List<RewardArr> rewardArr;
+  bool? canTransfer;
+  Timestamp? timestamp;
+  Timestamp? redeemedTimestamp;
+  String? eventType;
+  String? gtType;
+  bool? isRewarding;
+  String? version;
+  String? note;
+  String? prizeSubtype;
+  String? userId;
+  List<RewardArr>? rewardArr;
 
   Gt(
       {this.canTransfer,
@@ -84,7 +84,7 @@ class Gt {
     if (json['rewardArr'] != null) {
       rewardArr = <RewardArr>[];
       json['rewardArr'].forEach((v) {
-        rewardArr.add(new RewardArr.fromJson(v));
+        rewardArr!.add(new RewardArr.fromJson(v));
       });
     }
   }
@@ -93,10 +93,10 @@ class Gt {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['canTransfer'] = this.canTransfer;
     if (this.timestamp != null) {
-      data['timestamp'] = this.timestamp.toJson();
+      data['timestamp'] = this.timestamp!.toJson();
     }
     if (this.redeemedTimestamp != null) {
-      data['redeemedTimestamp'] = this.redeemedTimestamp.toJson();
+      data['redeemedTimestamp'] = this.redeemedTimestamp!.toJson();
     }
     data['eventType'] = this.eventType;
     data['gtType'] = this.gtType;
@@ -106,15 +106,15 @@ class Gt {
     data['prizeSubtype'] = this.prizeSubtype;
     data['userId'] = this.userId;
     if (this.rewardArr != null) {
-      data['rewardArr'] = this.rewardArr.map((v) => v.toJson()).toList();
+      data['rewardArr'] = this.rewardArr!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Timestamp {
-  int iSeconds;
-  int iNanoseconds;
+  int? iSeconds;
+  int? iNanoseconds;
 
   Timestamp({this.iSeconds, this.iNanoseconds});
 
@@ -132,8 +132,8 @@ class Timestamp {
 }
 
 class RewardArr {
-  int value;
-  String type;
+  int? value;
+  String? type;
 
   RewardArr({this.value, this.type});
 

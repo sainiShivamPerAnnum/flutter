@@ -19,7 +19,7 @@ class TambolaRepo extends BaseRepo {
 
   Future<ApiResponse<List<TambolaModel>>> getTickets() async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final token = await getBearerToken();
 
       // cache till end of week only
@@ -51,7 +51,7 @@ class TambolaRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e('get all tambola tickets $e');
+      logger!.e('get all tambola tickets $e');
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch tambola tickets", 400);
     }
@@ -94,7 +94,7 @@ class TambolaRepo extends BaseRepo {
       final now = DateTime.now();
       final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
 
-      return await _cacheService.cachedApi(
+      return await (_cacheService.cachedApi(
           CacheKeys.TAMBOLA_PICKS,
           0,
           () => APIService.instance.getData(
@@ -110,16 +110,16 @@ class TambolaRepo extends BaseRepo {
           );
         else
           return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
-      });
+      }) as Future<ApiResponse<DailyPick>>);
     } catch (e) {
-      logger.e('daily pick $e');
+      logger!.e('daily pick $e');
       return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
     }
   }
 
   Future<ApiResponse<int>> getTicketCount() async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(
@@ -129,11 +129,11 @@ class TambolaRepo extends BaseRepo {
       );
 
       final data = response['data'];
-      logger.d('tambola repo $data');
+      logger!.d('tambola repo $data');
 
       return ApiResponse(model: data['count'], code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

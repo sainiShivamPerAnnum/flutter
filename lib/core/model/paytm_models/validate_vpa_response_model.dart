@@ -1,6 +1,6 @@
 class ValidateVpaResponseModel {
-  String message;
-  Data data;
+  String? message;
+  Data? data;
 
   ValidateVpaResponseModel({this.message, this.data});
 
@@ -13,17 +13,17 @@ class ValidateVpaResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  bool status;
-  bool valid;
-  bool pspSupportedRecurring;
-  bool bankSupportedRecurring;
+  bool? status;
+  bool? valid;
+  bool? pspSupportedRecurring;
+  bool? bankSupportedRecurring;
 
   Data({this.valid, this.pspSupportedRecurring, this.bankSupportedRecurring});
 

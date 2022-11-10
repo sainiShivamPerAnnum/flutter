@@ -25,19 +25,19 @@ import 'package:flutter/material.dart';
 // enum STATUS { Pending, Complete, Cancel }
 
 class AutosaveProcessViewModel extends BaseViewModel {
-  final _paytmService = locator<PaytmService>();
-  final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final GoldenTicketService _gtService = GoldenTicketService();
-  final _analyticService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticService = locator<AnalyticsService>();
 
   FocusNode sipAmountNode = FocusNode();
   bool _showSetAmountView = false;
   bool _isDaily = true;
   bool _showProgressIndicator = false;
   bool _showConfetti = false;
-  AnimationController lottieAnimationController;
+  AnimationController? lottieAnimationController;
   String _androidPackageName = "";
   String _iosUrlScheme = "";
 
@@ -49,10 +49,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
   int counter = 0;
   int _currentPage = 0;
   bool _showMinAlert = false;
-  Timer _timer;
+  Timer? _timer;
 
-  List<AmountChipsModel> _dailyChips = [];
-  List<AmountChipsModel> _weeklyChips = [];
+  List<AmountChipsModel>? _dailyChips = [];
+  List<AmountChipsModel>? _weeklyChips = [];
 
   get dailyChips => this._dailyChips;
 
@@ -130,7 +130,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       new TextEditingController(text: '500');
 
   PageController get pageController =>
-      _paytmService.subscriptionFlowPageController;
+      _paytmService!.subscriptionFlowPageController;
   // get subId => _paytmService.currentSubscriptionId;
 
   // set subId(value) {
@@ -193,24 +193,24 @@ class AutosaveProcessViewModel extends BaseViewModel {
   init(int page) async {
     getChipAmounts();
     pageController.addListener(() {
-      currentPage = pageController.page.round();
+      currentPage = pageController.page!.round();
     });
     counter = 0;
-    _paytmService.isOnSubscriptionFlow = true;
+    _paytmService!.isOnSubscriptionFlow = true;
     showProgressIndicator = true;
     if (FlavorConfig.isDevelopment()) vpaController.text = "7777777777@paytm";
-    if (_paytmService.activeSubscription != null)
-      vpaController.text = _paytmService.activeSubscription.vpa;
+    if (_paytmService!.activeSubscription != null)
+      vpaController.text = _paytmService!.activeSubscription!.vpa!;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _paytmService.jumpToSubPage(page);
-      _paytmService.fraction = page;
+      _paytmService!.jumpToSubPage(page);
+      _paytmService!.fraction = page;
       if (page == 1) {
         checkForUPIAppExistence(vpaController.text.trim().split("@").last);
       }
       // getTitle();
       print(pageController.page);
       showProgressIndicator = true;
-      _paytmService.processText = "processing";
+      _paytmService!.processText = "processing";
     });
     onAmountValueChanged(amountFieldController.text);
   }
@@ -223,19 +223,19 @@ class AutosaveProcessViewModel extends BaseViewModel {
   onAmountValueChanged(String val) {
     if (val == "00000") amountFieldController.text = '0';
     if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val) < minValue)
+      if (int.tryParse(val)! < minValue)
         showMinAlert = true;
       else
         showMinAlert = false;
-      if (int.tryParse(val) > maxAmount) {
+      if (int.tryParse(val)! > maxAmount) {
         amountFieldController.text = maxAmount.toString();
         val = maxAmount.toString();
-        FocusManager.instance.primaryFocus.unfocus();
+        FocusManager.instance.primaryFocus!.unfocus();
       }
     } else {
       val = '0';
     }
-    saveAmount = calculateSaveAmount(int.tryParse(val ?? '0'));
+    saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
     notifyListeners();
   }
 
@@ -249,15 +249,15 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   checkTransactionStatus() {
     _timer = Timer.periodic(Duration(seconds: 15), (timer) async {
-      if (_paytmService.subscriptionFlowPageController.page == 1.0) {
-        _logger.d("Fetching Autosave details");
-        await _paytmService.getActiveSubscriptionDetails();
-        if (_paytmService.activeSubscription != null &&
-            _paytmService.activeSubscription.status ==
+      if (_paytmService!.subscriptionFlowPageController.page == 1.0) {
+        _logger!.d("Fetching Autosave details");
+        await _paytmService!.getActiveSubscriptionDetails();
+        if (_paytmService!.activeSubscription != null &&
+            _paytmService!.activeSubscription!.status ==
                 Constants.SUBSCRIPTION_INACTIVE &&
             pageController.page == 1.0) {
-          _paytmService.jumpToSubPage(2);
-          _paytmService.fraction = 2;
+          _paytmService!.jumpToSubPage(2);
+          _paytmService!.fraction = 2;
           showProgressIndicator = false;
         }
       }
@@ -272,13 +272,13 @@ class AutosaveProcessViewModel extends BaseViewModel {
         break;
       }
     }
-    _analyticService
+    _analyticService!
         .track(eventName: AnalyticsEvents.autoSaveUpdateTapped, properties: {
-      "Previous Amount": _paytmService.activeSubscription != null
-          ? _paytmService.activeSubscription.autoAmount.toString()
+      "Previous Amount": _paytmService!.activeSubscription != null
+          ? _paytmService!.activeSubscription!.autoAmount.toString()
           : "Not fetched",
       "New Amount": amountFieldController.text,
-      "Previous Frequency": _paytmService.activeSubscription.autoFrequency,
+      "Previous Frequency": _paytmService!.activeSubscription!.autoFrequency,
       "New Frequency": isDaily ? "DAILY" : "MONTHLY",
       "Auto Suggest": isSuggested,
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -289,7 +289,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   trackSIPSetUpEvent() {
-    _analyticService.track(
+    _analyticService!.track(
         eventName: AnalyticsEvents.enterAmountSetup,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -322,66 +322,66 @@ class AutosaveProcessViewModel extends BaseViewModel {
   // }
 
   getChipAmounts() async {
-    dailyChips = await _paytmService.getAmountChips(
+    dailyChips = await _paytmService!.getAmountChips(
       freq: Constants.DOC_IAR_DAILY_CHIPS,
     );
-    weeklyChips = await _paytmService.getAmountChips(
+    weeklyChips = await _paytmService!.getAmountChips(
       freq: Constants.DOC_IAR_WEEKLY_CHIPS,
     );
   }
 
   tryAgain() {
-    _paytmService.jumpToSubPage(0);
+    _paytmService!.jumpToSubPage(0);
     showProgressIndicator = true;
-    _paytmService.fraction = 0;
+    _paytmService!.fraction = 0;
   }
 
   onCompleteClose() {
-    _analyticsService.track(
-        eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
-    AppState.backButtonDispatcher.didPopRoute();
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
+    AppState.backButtonDispatcher!.didPopRoute();
     _gtService.fetchAndVerifyGoldenTicketByID();
   }
 
   initiateCustomSubscription() async {
-    _analyticsService.track(eventName: AnalyticsEvents.autosaveSetupInitiated);
-    _analyticsService.track(eventName: AnalyticsEvents.autosaveUpiEntered);
+    _analyticsService!.track(eventName: AnalyticsEvents.autosaveSetupInitiated);
+    _analyticsService!.track(eventName: AnalyticsEvents.autosaveUpiEntered);
 
     if (counter > 4) {
       return BaseUtil.showNegativeAlert(
           "Too many attempts", "Please try again later");
     }
-    if (!_userService.baseUser.isAugmontOnboarded) {
+    if (!_userService!.baseUser!.isAugmontOnboarded) {
       return BaseUtil.showNegativeAlert("You are not onboarded to augmont yet",
           "Please finish augmont onboarding first");
     }
     isSubscriptionInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);
     PaytmResponse response =
-        await _paytmService.initiateCustomSubscription(vpaController.text);
+        await _paytmService!.initiateCustomSubscription(vpaController.text);
     isSubscriptionInProgress = false;
     if (AppState.screenStack.last == ScreenItem.loader) {
       AppState.screenStack.removeLast();
     }
-    if (response.status) {
-      _analyticsService
+    if (response.status!) {
+      _analyticsService!
           .track(eventName: AnalyticsEvents.upiSubmitTappped, properties: {
         "verification status": "Sucess",
         "UPI Id": vpaController.text,
       });
       checkForUPIAppExistence(vpaController.text.trim().split("@").last);
       checkTransactionStatus();
-      _paytmService.jumpToSubPage(1);
-      _paytmService.fraction = 1;
+      _paytmService!.jumpToSubPage(1);
+      _paytmService!.fraction = 1;
       Future.delayed(Duration(minutes: 8), () {
-        if (_paytmService.fraction == 1) {
-          _paytmService.fraction = 0;
-          _analyticsService
+        if (_paytmService!.fraction == 1) {
+          _paytmService!.fraction = 0;
+          _analyticsService!
               .track(eventName: AnalyticsEvents.upiSubmitTappped, properties: {
             "verification status": "Pending",
             "UPI Id": vpaController.text,
           });
-          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher!.didPopRoute();
           showAutosavePendingDialog();
         }
       });
@@ -404,15 +404,15 @@ class AutosaveProcessViewModel extends BaseViewModel {
         'Please enter a minimum amount of ₹ $minValue',
       );
     }
-    if (_paytmService.activeSubscription != null) {
+    if (_paytmService!.activeSubscription != null) {
       isSubscriptionAmountUpdateInProgress = true;
-      final res = await _paytmService.updateDailySubscriptionAmount(
-          amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
+      final res = await (_paytmService!.updateDailySubscriptionAmount(
+          amount: amount, freq: isDaily ? "DAILY" : "WEEKLY") as Future<bool>);
       isSubscriptionAmountUpdateInProgress = false;
       if (res) {
-        _paytmService.jumpToSubPage(3);
-        _paytmService.fraction = 0;
-        _paytmService.getActiveSubscriptionDetails();
+        _paytmService!.jumpToSubPage(3);
+        _paytmService!.fraction = 0;
+        _paytmService!.getActiveSubscriptionDetails();
         showProgressIndicator = false;
         // Future.delayed(Duration(milliseconds: 1000), () {
         //   lottieAnimationController.forward();
@@ -432,13 +432,13 @@ class AutosaveProcessViewModel extends BaseViewModel {
     if (res != null && res['status'] != null && res['status'] == true) {
       // subId = res['subId'] ?? "";
       if (res['gtId'] != null && res['gtId'].toString().isNotEmpty) {
-        _logger.d(res.toString());
+        _logger!.d(res.toString());
         GoldenTicketService.goldenTicketId = res['gtId'];
       }
-      if (_paytmService.subscriptionFlowPageController.page == 1.0) {
-        _paytmService.getActiveSubscriptionDetails();
-        _paytmService.jumpToSubPage(2);
-        _paytmService.fraction = 2;
+      if (_paytmService!.subscriptionFlowPageController.page == 1.0) {
+        _paytmService!.getActiveSubscriptionDetails();
+        _paytmService!.jumpToSubPage(2);
+        _paytmService!.fraction = 2;
         showProgressIndicator = false;
       }
       // onAmountValueChanged(amountFieldController.text);

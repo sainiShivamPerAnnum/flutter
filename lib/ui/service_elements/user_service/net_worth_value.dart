@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class NetWorthValue extends StatelessWidget {
-  final TextStyle style;
+  final TextStyle? style;
 
   NetWorthValue({
     this.style,
   });
 
-  String getQuantity(UserFundWallet fund) {
+  String getQuantity(UserFundWallet? fund) {
     final quantity = fund?.netWorth;
     final prefix = "₹";
 
@@ -34,7 +34,7 @@ class NetWorthValue extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "${getQuantity(model.userFundWallet)}",
+        "${getQuantity(model!.userFundWallet)}",
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

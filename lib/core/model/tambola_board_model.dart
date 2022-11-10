@@ -9,8 +9,8 @@ import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
   static Log log = new Log('TambolaBoard');
-  final _baseUtil = locator<BaseUtil>(); //required to fetch client token
-  final _tambolaService = locator<TambolaService>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  final TambolaService? _tambolaService = locator<TambolaService>();
 
   final TimestampModel assigned_time;
   final String val;
@@ -23,9 +23,9 @@ class TambolaBoard {
 
   static final int boardHeight = 3;
   static final int boardLength = 9;
-  List<String> encodedTambolaList;
-  List<List<int>> tambolaBoard =
-      new List.generate(boardHeight, (_) => new List(boardLength));
+  late List<String> encodedTambolaList;
+  List<List<int?>> tambolaBoard =
+      new List.generate(boardHeight, (_) => new List.generate(boardLength,(_)=> 0));
   Map<int, int> indexValueMap = new HashMap();
 
   TambolaBoard(this.assigned_time, this.val, this.id, this.week_code) {
@@ -36,7 +36,7 @@ class TambolaBoard {
     return TambolaBoard(
       TimestampModel.fromMap(map['createdOn']),
       map['tval'] ?? '',
-      map['tid'] ?? 0,
+      map['tid'] ?? 0 as String,
       map['week_code'] ?? 0,
     );
   }
@@ -67,7 +67,7 @@ class TambolaBoard {
     return map;
   }
 
-  List<List<int>> compileBoardMap() {
+  List<List<int?>> compileBoardMap() {
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         int key = i * boardLength + j;
@@ -78,7 +78,7 @@ class TambolaBoard {
     return tambolaBoard;
   }
 
-  List<List<int>> decodeBoard(String boardCde) {
+  List<List<int?>> decodeBoard(String boardCde) {
     encodedTambolaList = encodedStringToArray(boardCde);
     log.debug(encodedTambolaList.toString());
     if (encodedTambolaList.isNotEmpty && encodedTambolaList.length == 15) {
@@ -145,10 +145,10 @@ class TambolaBoard {
         tambolaBoard.isEmpty ||
         calledDigits == null ||
         calledDigits.isEmpty) return 4;
-    int cornerA = 0;
-    int cornerB = 0;
-    int cornerC = 0;
-    int cornerD = 0;
+    int? cornerA = 0;
+    int? cornerB = 0;
+    int? cornerC = 0;
+    int? cornerD = 0;
     int cornerCount = 0;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class PromoCardModel {
   static Log log = new Log('PromoCard');
 
-  int _position;
-  final String _title;
-  final String _subtitle;
-  final String _buttonText;
-  final String _actionUri;
-  final int _bgColor;
-  final String _bgImage;
+  int? _position;
+  final String? _title;
+  final String? _subtitle;
+  final String? _buttonText;
+  final String? _actionUri;
+  final int? _bgColor;
+  final String? _bgImage;
   final int _gridX;
   final int minVersion;
   get position => this._position;
@@ -43,16 +43,16 @@ class PromoCardModel {
 
   set position(value) => this.position = value;
 
-  String get title => this._title;
+  String? get title => this._title;
 
-  String get subtitle => this._subtitle;
+  String? get subtitle => this._subtitle;
 
-  String get buttonText => this._buttonText;
+  String? get buttonText => this._buttonText;
 
-  String get actionUri => this._actionUri;
+  String? get actionUri => this._actionUri;
 
-  int get bgColor => this._bgColor;
+  int? get bgColor => this._bgColor;
 
-  String get bgImage => _bgImage;
+  String? get bgImage => _bgImage;
   int get gridX => _gridX;
 }

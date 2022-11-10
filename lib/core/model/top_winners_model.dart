@@ -1,5 +1,5 @@
 class TopWinnersModel {
-  List<String> currentTopWinners;
+  List<String>? currentTopWinners;
 
   TopWinnersModel({this.currentTopWinners});
 

@@ -13,10 +13,10 @@ class FelloColorPalette {
 // COLOR PALETTE MODELS
 
 class FundPalette {
-  final Color primaryColor;
-  final Color primaryColor2;
-  final Color secondaryColor;
-  final Color tertiaryColor;
+  final Color? primaryColor;
+  final Color? primaryColor2;
+  final Color? secondaryColor;
+  final Color? tertiaryColor;
 
   const FundPalette(
       {this.primaryColor,

@@ -19,20 +19,20 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class KYCDetailsViewModel extends BaseViewModel {
-  String stateChosenValue;
-  TextEditingController nameController, panController;
+  String? stateChosenValue;
+  TextEditingController? nameController, panController;
   bool inEditMode = true;
   bool isUpadtingKycDetails = false;
   bool _hasDetails = false;
 
-  final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _bankingRepo = locator<BankingRepository>();
-  final _gtService = locator<GoldenTicketService>();
-  final _sellService = locator<BankAndPanService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final BankingRepository? _bankingRepo = locator<BankingRepository>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final BankAndPanService? _sellService = locator<BankAndPanService>();
   final _cacheService = new CacheService();
-  bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
+  bool get isConfirmDialogInView => _userService!.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
 
@@ -93,13 +93,13 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   checkForKycExistence() async {
     setState(ViewState.Busy);
-    if (_userService.baseUser.isSimpleKycVerified != null &&
-        _sellService.userPan != null &&
-        _sellService.userPan.isNotEmpty) {
-      if (_userService.baseUser.isSimpleKycVerified) {
+    if (_userService!.baseUser!.isSimpleKycVerified != null &&
+        _sellService!.userPan != null &&
+        _sellService!.userPan.isNotEmpty) {
+      if (_userService!.baseUser!.isSimpleKycVerified!) {
         hasDetails = true;
-        panController.text = _sellService.userPan;
-        nameController.text = _userService.baseUser.kycName;
+        panController!.text = _sellService!.userPan;
+        nameController!.text = _userService!.baseUser!.kycName!;
         inEditMode = false;
       }
     }
@@ -111,16 +111,16 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   bool _preVerifyInputs() {
     RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
-    if (panController.text.isEmpty) {
+    if (panController!.text.isEmpty) {
       BaseUtil.showNegativeAlert(
           'Invalid Pan', 'Kindly enter a valid PAN Number');
       return false;
-    } else if (!panCheck.hasMatch(panController.text) ||
-        panController.text.length != 10) {
+    } else if (!panCheck.hasMatch(panController!.text) ||
+        panController!.text.length != 10) {
       BaseUtil.showNegativeAlert(
           'Invalid Pan', 'Kindly enter a valid PAN Number');
       return false;
-    } else if (nameController.text.isEmpty) {
+    } else if (nameController!.text.isEmpty) {
       BaseUtil.showNegativeAlert(
           'Name missing', 'Kindly enter your name as per your pan card');
       return false;
@@ -128,7 +128,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     return true;
   }
 
-  Future<void> onSubmit(context) async {
+  Future onSubmit(context) async {
     isUpadtingKycDetails = true;
     if (!_preVerifyInputs()) {
       isUpadtingKycDetails = false;
@@ -137,26 +137,26 @@ class KYCDetailsViewModel extends BaseViewModel {
 
     FocusScope.of(context).unfocus();
 
-    _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
+    _analyticsService!.track(eventName: AnalyticsEvents.openKYCSection);
 
     ///next get all details required for registration
 
     try {
       ApiResponse<VerifyPanResponseModel> response =
-          await _bankingRepo.verifyPan(
-              uid: _userService.baseUser.uid,
-              panNumber: panController.text.trim(),
-              panName: nameController.text.trim().toUpperCase());
+          await _bankingRepo!.verifyPan(
+              uid: _userService!.baseUser!.uid,
+              panNumber: panController!.text.trim(),
+              panName: nameController!.text.trim().toUpperCase());
 
       if (response.code == 200) {
-        if (response.model.flag) {
+        if (response.model!.flag!) {
           await _cacheService.invalidateByKey(CacheKeys.USER);
-          await _userService.setBaseUser();
-          _sellService.checkForUserPanDetails();
-          _sellService.isKYCVerified = true;
-          _analyticsService.track(
+          await _userService!.setBaseUser();
+          _sellService!.checkForUserPanDetails();
+          _sellService!.isKYCVerified = true;
+          _analyticsService!.track(
             eventName: AnalyticsEvents.panVerified,
-            properties: {'userId': _userService.baseUser.uid},
+            properties: {'userId': _userService!.baseUser!.uid},
           );
 
           isUpadtingKycDetails = false;
@@ -165,9 +165,9 @@ class KYCDetailsViewModel extends BaseViewModel {
               'Verification Successful', 'You are successfully verified!');
           // isKycInProgress = false;
 
-          _gtService.fetchAndVerifyGoldenTicketByID();
+          _gtService!.fetchAndVerifyGoldenTicketByID();
 
-          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher!.didPopRoute();
         }
       } else {
         isUpadtingKycDetails = false;
@@ -175,19 +175,19 @@ class KYCDetailsViewModel extends BaseViewModel {
         BaseUtil.showNegativeAlert(
             'Registration failed', response.errorMessage ?? 'Please try again');
 
-        _analyticsService.track(
+        _analyticsService!.track(
           eventName: AnalyticsEvents.kycVerificationFailed,
-          properties: {'userId': _userService.baseUser.uid},
+          properties: {'userId': _userService!.baseUser!.uid},
         );
       }
     } on BadRequestException catch (e) {
-      return ApiResponse(
+       return ApiResponse(
         model: false,
         code: 400,
         errorMessage: e.toString(),
       );
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
     }
   }
 }

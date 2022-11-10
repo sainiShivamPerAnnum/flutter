@@ -8,11 +8,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 
 class PrizeProcessing extends StatelessWidget {
-  const PrizeProcessing({Key key}) : super(key: key);
+  const PrizeProcessing({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = S.of(context)!;
     return SafeArea(
       child: Container(
         padding:

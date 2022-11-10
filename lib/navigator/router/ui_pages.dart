@@ -151,16 +151,16 @@ class PageConfiguration {
   final String key;
   final String path;
   final Pages uiPage;
-  final String name;
+  final String? name;
 
-  PageAction currentPageAction;
+  PageAction? currentPageAction;
   var returnValue;
 
   PageConfiguration({
-    @required this.key,
-    @required this.path,
-    @required this.uiPage,
-    @required this.name,
+    required this.key,
+    required this.path,
+    required this.uiPage,
+     this.name,
     this.currentPageAction,
   });
 
@@ -195,6 +195,7 @@ PageConfiguration RootPageConfig = PageConfiguration(
   key: 'Root',
   path: RootPath,
   uiPage: Pages.Root,
+  name: 'Root',
 );
 
 PageConfiguration OnboardPageConfig = PageConfiguration(

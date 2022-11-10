@@ -10,9 +10,9 @@ import 'package:flutter_svg/svg.dart';
 
 class UserAvatarSelectionDialog extends StatefulWidget {
   const UserAvatarSelectionDialog(
-      {Key key,
-      @required this.onCustomAvatarSelection,
-      @required this.onPresetAvatarSelection,
+      {Key? key,
+      required this.onCustomAvatarSelection,
+      required this.onPresetAvatarSelection,
       this.itemCount = 6})
       : super(key: key);
   final Function onCustomAvatarSelection;
@@ -63,13 +63,13 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
             itemCount: widget.itemCount,
             itemBuilder: (ctx, i) => i == widget.itemCount - 1
                 ? InkWell(
-                    onTap: widget.onCustomAvatarSelection,
+                    onTap: widget.onCustomAvatarSelection as void Function()?,
                     child: CircleAvatar(
                       backgroundColor: UiConstants.kBackgroundColor,
                       child: Icon(
                         Icons.add_rounded,
                         color: Colors.white,
-                        size: SizeConfig.screenWidth * 0.16,
+                        size: SizeConfig.screenWidth! * 0.16,
                       ),
                     ))
                 : GestureDetector(
@@ -97,7 +97,7 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
               Expanded(
                 child: AppNegativeBtn(
                   btnText: "Cancel",
-                  onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+                  onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
                 ),
               ),
               SizedBox(width: SizeConfig.padding12),

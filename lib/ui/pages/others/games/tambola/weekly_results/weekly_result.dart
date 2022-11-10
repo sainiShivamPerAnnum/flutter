@@ -14,9 +14,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyResult extends StatefulWidget {
-  final Map<String, int> winningsmap;
-  final bool isEligible;
-  const WeeklyResult({Key key, this.isEligible, this.winningsmap})
+  final Map<String, int>? winningsmap;
+  final bool? isEligible;
+  const WeeklyResult({Key? key, this.isEligible, this.winningsmap})
       : super(key: key);
 
   @override
@@ -24,19 +24,19 @@ class WeeklyResult extends StatefulWidget {
 }
 
 class _WeeklyResultState extends State<WeeklyResult> {
-  PageController _pageController;
+  PageController? _pageController;
   bool showBack = false;
 
-  final _prizeService = locator<PrizeService>();
+  final PrizeService? _prizeService = locator<PrizeService>();
 
-  PrizesModel tPrizes;
+  PrizesModel? tPrizes;
 
   @override
   void initState() {
     print(widget.isEligible);
     print(widget.winningsmap);
     _pageController = PageController();
-    tPrizes = _prizeService.tambolaPrizes;
+    tPrizes = _prizeService!.tambolaPrizes;
     super.initState();
   }
 
@@ -49,10 +49,10 @@ class _WeeklyResultState extends State<WeeklyResult> {
         });
         // if (!widget.isEligible && widget.winningsmap.isNotEmpty)
         //   _pageController.jumpToPage(3);
-        if (widget.winningsmap.isNotEmpty)
-          _pageController.jumpToPage(2);
+        if (widget.winningsmap!.isNotEmpty)
+          _pageController!.jumpToPage(2);
         else
-          _pageController.jumpToPage(1);
+          _pageController!.jumpToPage(1);
       }
     });
     super.didChangeDependencies();
@@ -70,7 +70,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
             actions: [
               IconButton(
                 onPressed: showBack == true
-                    ? () => AppState.backButtonDispatcher.didPopRoute()
+                    ? () => AppState.backButtonDispatcher!.didPopRoute()
                     : () {},
                 icon: Icon(
                   Icons.close,

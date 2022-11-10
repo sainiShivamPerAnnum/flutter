@@ -4,19 +4,19 @@ import 'dart:convert';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class GoldenTicket {
-  String gtId;
-  bool canTransfer;
-  String eventType;
-  String gtType;
-  bool isRewarding;
-  bool isLevelChange;
-  String note;
-  String prizeSubtype;
-  TimestampModel redeemedTimestamp;
-  List<Reward> rewardArr;
-  TimestampModel timestamp;
-  String userId;
-  String version;
+  String? gtId;
+  bool? canTransfer;
+  String? eventType;
+  String? gtType;
+  bool? isRewarding;
+  bool? isLevelChange;
+  String? note;
+  String? prizeSubtype;
+  TimestampModel? redeemedTimestamp;
+  List<Reward>? rewardArr;
+  TimestampModel? timestamp;
+  String? userId;
+  String? version;
 
   GoldenTicket({
     this.gtId,
@@ -34,7 +34,7 @@ class GoldenTicket {
     this.version,
   });
 
-  GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
+  GoldenTicket.fromJson(Map<String, dynamic> json, String? docId) {
     gtId = json['id'] ?? docId;
     userId = json['userId'];
     timestamp = TimestampModel.fromMap(json['timestamp']);
@@ -53,8 +53,8 @@ class GoldenTicket {
 }
 
 class Reward {
-  String type;
-  int value;
+  String? type;
+  int? value;
   Reward({
     this.type,
     this.value,
@@ -69,8 +69,8 @@ class Reward {
   }
 
   Reward copyWith({
-    String type,
-    int value,
+    String? type,
+    int? value,
   }) {
     return Reward(
       type: type ?? this.type,
@@ -87,8 +87,8 @@ class Reward {
 
   factory Reward.fromMap(Map<String, dynamic> map) {
     return Reward(
-      type: map['type'] as String,
-      value: map['value'] as int,
+      type: map['type'] as String?,
+      value: map['value'] as int?,
     );
   }
 

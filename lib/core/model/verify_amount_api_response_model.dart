@@ -1,6 +1,6 @@
 class VerifyAmountApiResponseModel {
-  bool flag;
-  String message;
+  bool? flag;
+  String? message;
 
   VerifyAmountApiResponseModel({this.flag, this.message});
 

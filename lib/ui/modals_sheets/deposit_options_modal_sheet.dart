@@ -8,15 +8,15 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class DepositOptionModalSheet extends StatelessWidget {
-  final int amount;
-  final bool isSkipMl;
+  final int? amount;
+  final bool? isSkipMl;
   DepositOptionModalSheet({this.amount, this.isSkipMl});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: Container(
@@ -55,7 +55,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                           .colour(UiConstants.kTextColor2),
                     ),
                     onTap: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
                         amt: amount,
                         isSkipMl: isSkipMl,
@@ -83,7 +83,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                           .colour(UiConstants.kTextColor2),
                     ),
                     onTap: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                       BaseUtil().openRechargeModalSheet(
                         amt: amount,
                         isSkipMl: isSkipMl,

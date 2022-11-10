@@ -6,12 +6,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class FelloTile extends StatelessWidget {
-  final String leadingAsset;
-  final IconData leadingIcon;
-  final String title;
-  final String subtitle;
-  final IconData trailingIcon;
-  final Function onTap;
+  final String? leadingAsset;
+  final IconData? leadingIcon;
+  final String? title;
+  final String? subtitle;
+  final IconData? trailingIcon;
+  final Function? onTap;
   final bool showTrailingIcon;
 
   FelloTile(
@@ -25,9 +25,9 @@ class FelloTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
-        height: SizeConfig.screenWidth * 0.25,
+        height: SizeConfig.screenWidth! * 0.25,
         decoration: BoxDecoration(
           color: Color(0xff464649),
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),
@@ -37,7 +37,7 @@ class FelloTile extends StatelessWidget {
           children: [
             CircleAvatar(
               backgroundColor: Color(0xff464649),
-              radius: SizeConfig.screenWidth * 0.067,
+              radius: SizeConfig.screenWidth! * 0.067,
               child: leadingIcon != null
                   ? Icon(
                       leadingIcon,
@@ -83,12 +83,12 @@ class FelloTile extends StatelessWidget {
 }
 
 class FelloBriefTile extends StatelessWidget {
-  final String leadingAsset;
-  final IconData leadingIcon;
-  final String title;
-  final String subtitle;
-  final IconData trailingIcon;
-  final Function onTap;
+  final String? leadingAsset;
+  final IconData? leadingIcon;
+  final String? title;
+  final String? subtitle;
+  final IconData? trailingIcon;
+  final Function? onTap;
   final bool coloredIcon;
 
   FelloBriefTile(
@@ -102,10 +102,10 @@ class FelloBriefTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
-        height: SizeConfig.screenWidth * 0.193,
+        height: SizeConfig.screenWidth! * 0.193,
         decoration: BoxDecoration(
           color: Color(0xffF6F9FF),
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),
@@ -149,12 +149,12 @@ class FelloBriefTile extends StatelessWidget {
                   maxLines: 2,
                   style: TextStyles.body2.bold,
                 ),
-                if (subtitle != null && subtitle.isNotEmpty)
+                if (subtitle != null && subtitle!.isNotEmpty)
                   Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                     Column(
                       children: [
                         Text(
-                          subtitle,
+                          subtitle!,
                           style: TextStyles.body4.bold.italic
                               .colour(UiConstants.primaryColor),
                         ),

@@ -9,8 +9,8 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class ScoreRejectedDialog extends StatelessWidget {
-  final String contentText;
-  ScoreRejectedDialog({@required this.contentText});
+  final String? contentText;
+  ScoreRejectedDialog({required this.contentText});
   @override
   Widget build(BuildContext context) {
     return MoreInfoDialog(

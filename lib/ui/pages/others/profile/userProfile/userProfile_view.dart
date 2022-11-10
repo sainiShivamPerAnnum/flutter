@@ -25,11 +25,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserProfileDetails extends StatelessWidget {
-  const UserProfileDetails({Key key, this.isNewUser = false}) : super(key: key);
+  const UserProfileDetails({Key? key, this.isNewUser = false}) : super(key: key);
   final bool isNewUser;
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     log(isNewUser.toString());
     return BaseView<UserProfileVM>(
       onModelReady: (model) {
@@ -63,12 +63,12 @@ class UserProfileDetails extends StatelessWidget {
 
 class UserProfileForm extends StatelessWidget {
   const UserProfileForm({
-    Key key,
-    @required this.locale,
-    @required this.model,
+    Key? key,
+    required this.locale,
+    required this.model,
   }) : super(key: key);
 
-  final S locale;
+  final S? locale;
   final UserProfileVM model;
 
   @override
@@ -82,7 +82,7 @@ class UserProfileForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             AppTextFieldLabel(
-              locale.obNameLabel,
+              locale!.obNameLabel,
             ),
             AppTextField(
               textEditingController: model.nameController,
@@ -116,7 +116,7 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
-              locale.obEmailLabel,
+              locale!.obEmailLabel,
             ),
             model.inEditMode && !model.isEmailVerified
                 ? (model.isEmailEnabled
@@ -126,7 +126,7 @@ class UserProfileForm extends StatelessWidget {
                         autoFocus: true,
                         isEnabled: true,
                         focusNode: model.emailFocusNode,
-                        hintText: locale.obEmailHint,
+                        hintText: locale!.obEmailHint,
                         // suffixIcon: UserEmailVerificationButton(),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
@@ -180,34 +180,34 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
-              locale.obGenderLabel,
+              locale!.obGenderLabel,
             ),
             AppDropDownField(
               onChanged: (value) {
                 model.gen = value;
-                model.genderController.text = model.setGenderField();
+                model.genderController!.text = model.setGenderField();
               },
               value: model.gen,
-              disabledHintText: model.genderController.text,
-              hintText: locale.obGenderHint,
+              disabledHintText: model.genderController!.text,
+              hintText: locale!.obGenderHint,
               isEnabled: model.inEditMode,
               items: model.inEditMode
                   ? [
                       DropdownMenuItem(
                         child: Text(
-                          locale.obGenderMale,
+                          locale!.obGenderMale,
                         ),
                         value: 1,
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          locale.obGenderFemale,
+                          locale!.obGenderFemale,
                         ),
                         value: 0,
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          locale.obGenderOthers,
+                          locale!.obGenderOthers,
                           style: TextStyle(),
                         ),
                         value: -1,
@@ -219,7 +219,7 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
-              locale.obDobLabel,
+              locale!.obDobLabel,
             ),
             // AppDatePickerField(
             //   isEnabled: model.inEditMode,
@@ -256,7 +256,7 @@ class UserProfileForm extends StatelessWidget {
                         ),
                         AppDateField(
                           controller: model.dateFieldController,
-                          fieldWidth: SizeConfig.screenWidth * 0.12,
+                          fieldWidth: SizeConfig.screenWidth! * 0.12,
                           labelText: "dd",
                           maxlength: 2,
                           validate: (String val) {
@@ -265,8 +265,8 @@ class UserProfileForm extends StatelessWidget {
                               model.dateInputError =
                                   "Date field cannot be empty";
                               // });
-                            } else if (int.tryParse(val) > 31 ||
-                                int.tryParse(val) < 1) {
+                            } else if (int.tryParse(val)! > 31 ||
+                                int.tryParse(val)! < 1) {
                               // setState(() {
                               model.dateInputError = "Invalid date";
                               // });
@@ -284,7 +284,7 @@ class UserProfileForm extends StatelessWidget {
                         ),
                         AppDateField(
                           controller: model.monthFieldController,
-                          fieldWidth: SizeConfig.screenWidth * 0.12,
+                          fieldWidth: SizeConfig.screenWidth! * 0.12,
                           labelText: "mm",
                           maxlength: 2,
                           validate: (String val) {
@@ -294,8 +294,8 @@ class UserProfileForm extends StatelessWidget {
                                   "Date field cannot be empty";
                               // });
                             } else if (int.tryParse(val) != null &&
-                                (int.tryParse(val) > 13 ||
-                                    int.tryParse(val) < 1)) {
+                                (int.tryParse(val)! > 13 ||
+                                    int.tryParse(val)! < 1)) {
                               // setState(() {
                               model.dateInputError = "Invalid date";
                               // });
@@ -313,7 +313,7 @@ class UserProfileForm extends StatelessWidget {
                         ),
                         AppDateField(
                           controller: model.yearFieldController,
-                          fieldWidth: SizeConfig.screenWidth * 0.16,
+                          fieldWidth: SizeConfig.screenWidth! * 0.16,
                           labelText: "yyyy",
                           maxlength: 4,
                           validate: (String val) {
@@ -322,9 +322,9 @@ class UserProfileForm extends StatelessWidget {
                               model.dateInputError =
                                   "Date field cannot be empty";
                               // });
-                            } else if (int.tryParse(val) >
+                            } else if (int.tryParse(val)! >
                                     DateTime.now().year ||
-                                int.tryParse(val) < 1950) {
+                                int.tryParse(val)! < 1950) {
                               // setState(() {
                               model.dateInputError = "Invalid date";
                               // });
@@ -424,7 +424,7 @@ class UserProfileForm extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppTextFieldLabel(
-                    locale.obMobileLabel,
+                    locale!.obMobileLabel,
                   ),
                   AppTextField(
                     isEnabled: false,
@@ -489,9 +489,9 @@ class UserProfileForm extends StatelessWidget {
                                   model.onAppLockPreferenceChanged(val),
                               value: model.applock,
                               isLoading: model.isApplockLoading,
-                              height: SizeConfig.screenWidth * 0.059,
-                              width: SizeConfig.screenWidth * 0.087,
-                              toggleSize: SizeConfig.screenWidth * 0.032,
+                              height: SizeConfig.screenWidth! * 0.059,
+                              width: SizeConfig.screenWidth! * 0.087,
+                              toggleSize: SizeConfig.screenWidth! * 0.032,
                             ),
                           ],
                         ),
@@ -504,7 +504,7 @@ class UserProfileForm extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Haptic.vibrate();
-                          AppState.delegate.appState.currentAction = PageAction(
+                          AppState.delegate!.appState.currentAction = PageAction(
                             state: PageState.addPage,
                             page: FreshDeskHelpPageConfig,
                           );

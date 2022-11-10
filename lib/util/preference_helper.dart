@@ -15,9 +15,9 @@ class PreferenceHelper {
   static const FCM_TOKEN = "fcm_token";
   static const CACHE_SHOW_SECURITY_MODALSHEET = "showSecurityModalSheet";
   static const CACHE_IS_USER_JOURNEY_ONBOARDED = "isUserJourneyOnboarded";
-  static SharedPreferences _prefs;
+  static SharedPreferences? _prefs;
 
-  static Future<SharedPreferences> initiate() async {
+  static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {
       _prefs = await SharedPreferences.getInstance();
     }
@@ -25,66 +25,66 @@ class PreferenceHelper {
   }
 
   static Future<bool> setString(String key, String value) async {
-    return _prefs.setString(key, value);
+    return _prefs!.setString(key, value);
   }
 
   static Future<bool> setInt(String key, int value) async {
-    return _prefs.setInt(key, value);
+    return _prefs!.setInt(key, value);
   }
 
   static Future<bool> setDouble(String key, double value) async {
-    return _prefs.setDouble(key, value);
+    return _prefs!.setDouble(key, value);
   }
 
   static Future<bool> setBool(String key, bool value) async {
-    return _prefs.setBool(key, value);
+    return _prefs!.setBool(key, value);
   }
 
-  static String getString(String key, {String def}) {
-    String val = _prefs.getString(key);
+  static String getString(String key, {String? def}) {
+    String? val = _prefs!.getString(key);
     if (val == null) {
       val = def;
     }
-    return val;
+    return val!;
   }
 
-  static int getInt(String key, {int def}) {
-    int val = _prefs.getInt(key);
+  static int getInt(String key, {int? def}) {
+    int? val = _prefs!.getInt(key);
     if (val == null) {
       val = def;
     }
-    return val;
+    return val!;
   }
 
-  static double getDouble(String key, {double def}) {
-    double val = _prefs.getDouble(key);
+  static double getDouble(String key, {double? def}) {
+    double? val = _prefs!.getDouble(key);
     if (val == null) {
       val = def;
     }
-    return val;
+    return val!;
   }
 
-  static bool getBool(String key, {bool def}) {
-    bool val = _prefs.getBool(key);
-    if (val == null) {
+  static bool getBool(String key, {bool? def}) {
+    bool? val = _prefs!.getBool(key);
+    if (val == false) {
       val = def;
     }
-    return val;
+    return val!;
   }
 
   static Future<bool> remove(String key) async {
-    return _prefs.remove(key);
+    return _prefs!.remove(key);
   }
 
   static bool exists(String key) {
-    return _prefs.containsKey(key);
+    return _prefs!.containsKey(key);
   }
 
   static void clear() {
-    _prefs.clear();
+    _prefs!.clear();
   }
 
   static void reload() {
-    _prefs.reload();
+    _prefs!.reload();
   }
 }

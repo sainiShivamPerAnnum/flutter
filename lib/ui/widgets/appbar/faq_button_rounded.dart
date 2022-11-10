@@ -11,12 +11,12 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class FaqButtonRounded extends StatelessWidget {
-  final FaqsType type;
-  const FaqButtonRounded({Key key, @required this.type}) : super(key: key);
+  final FaqsType? type;
+  const FaqButtonRounded({Key? key, required this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
     return CircleAvatar(
       backgroundColor: Colors.black,
@@ -29,10 +29,10 @@ class FaqButtonRounded extends StatelessWidget {
         ),
         onPressed: () {
           Haptic.vibrate();
-          _analyticsService.track(
+          _analyticsService!.track(
               eventName: AnalyticsEvents.questionMarkTaoped,
               properties: {"Location": getQuestionMarkTapLocation(type)});
-          AppState.delegate.appState.currentAction = PageAction(
+          AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: FaqPageConfig,
             widget: FAQPage(
@@ -44,7 +44,7 @@ class FaqButtonRounded extends StatelessWidget {
     );
   }
 
-  getQuestionMarkTapLocation(FaqsType type) {
+  getQuestionMarkTapLocation(FaqsType? type) {
     if (type == FaqsType.gettingStarted)
       return "Getting Started Screen";
     else if (type == FaqsType.yourAccount)

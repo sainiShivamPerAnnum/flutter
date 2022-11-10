@@ -4,16 +4,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class WithdrawableGoldResponseModel {
-  String message;
+  String? message;
   WithdrawableGoldDetails data;
   WithdrawableGoldResponseModel({
-    @required this.message,
-    @required this.data,
+    required this.message,
+    required this.data,
   });
 
   WithdrawableGoldResponseModel copyWith({
-    String message,
-    WithdrawableGoldDetails data,
+    String? message,
+    WithdrawableGoldDetails? data,
   }) {
     return WithdrawableGoldResponseModel(
       message: message ?? this.message,
@@ -30,7 +30,7 @@ class WithdrawableGoldResponseModel {
 
   factory WithdrawableGoldResponseModel.fromMap(Map<String, dynamic> map) {
     return WithdrawableGoldResponseModel(
-      message: map['message'] as String,
+      message: map['message'] as String?,
       data:
           WithdrawableGoldDetails.fromMap(map['data'] as Map<String, dynamic>),
     );
@@ -58,19 +58,19 @@ class WithdrawableGoldResponseModel {
 }
 
 class WithdrawableGoldDetails {
-  double quantity;
-  double lockedQuantity;
-  double balance;
+  double? quantity;
+  double? lockedQuantity;
+  double? balance;
   WithdrawableGoldDetails({
-    @required this.quantity,
-    @required this.lockedQuantity,
-    @required this.balance,
+    required this.quantity,
+    required this.lockedQuantity,
+    required this.balance,
   });
 
   WithdrawableGoldDetails copyWith({
-    double quantity,
-    double lockedQuantity,
-    double balance,
+    double? quantity,
+    double? lockedQuantity,
+    double? balance,
   }) {
     return WithdrawableGoldDetails(
       quantity: quantity ?? this.quantity,

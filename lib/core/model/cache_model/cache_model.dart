@@ -1,19 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+
 import 'package:isar/isar.dart';
 
 part 'cache_model.g.dart';
+
+
 
 @Collection()
 class CacheModel {
   @Id()
   int id = Isar.autoIncrement;
 
-  final String key;
-  final int ttl;
-  final int expireAfterTimestamp;
-  final String data;
+
+  final String? key;
+  final int ?ttl;
+  final int ?expireAfterTimestamp;
+  final String? data;
 
   CacheModel({
     @required this.key,
@@ -23,10 +27,10 @@ class CacheModel {
   });
 
   CacheModel copyWith({
-    String key,
-    int ttl,
-    int expireAfterTimestamp,
-    String data,
+    String? key,
+    int ?ttl,
+    int ?expireAfterTimestamp,
+    String ? data,
   }) {
     return CacheModel(
       key: key ?? this.key,

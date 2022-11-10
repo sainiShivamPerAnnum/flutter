@@ -13,10 +13,10 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 
 class MiniTransactionCardViewModel extends BaseViewModel {
-  final _logger = locator<CustomLogger>();
+  final CustomLogger? _logger = locator<CustomLogger>();
 
-  final _txnHistoryService = locator<TransactionHistoryService>();
-  AppState appState;
+  final TransactionHistoryService? _txnHistoryService = locator<TransactionHistoryService>();
+  AppState? appState;
   bool _isRefreshing = false;
   bool get isRefreshing => this._isRefreshing;
 
@@ -25,21 +25,21 @@ class MiniTransactionCardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<UserTransaction> get txnList => _txnHistoryService.txnList;
+  List<UserTransaction>? get txnList => _txnHistoryService!.txnList;
 
-  TransactionHistoryService get txnHistoryService => _txnHistoryService;
+  TransactionHistoryService? get txnHistoryService => _txnHistoryService;
 
   getMiniTransactions(InvestmentType investmentType) async {
-    _logger.d("Getting mini transactions");
+    _logger!.d("Getting mini transactions");
     setState(ViewState.Busy);
-    await _txnHistoryService.updateTransactions(investmentType);
+    await _txnHistoryService!.updateTransactions(investmentType);
 
     setState(ViewState.Idle);
   }
 
   viewAllTransaction(InvestmentType investmentType) async {
     Haptic.vibrate();
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: TransactionsHistoryPageConfig,
       widget: TransactionsHistory(

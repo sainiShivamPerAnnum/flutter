@@ -22,11 +22,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SubscriptionCardViewModel extends BaseViewModel {
-  final _paytmService = locator<PaytmService>();
-  final _userService = locator<UserService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final UserService? _userService = locator<UserService>();
   bool _isResumingInProgress = false;
   bool _isLoading = false;
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   bool get isResumingInProcess => _isResumingInProgress;
   bool get isLoading => _isLoading;
@@ -37,11 +37,11 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   init() async {
-    await _paytmService.getActiveSubscriptionDetails();
+    await _paytmService!.getActiveSubscriptionDetails();
   }
 
   isUserProfileComplete() {
-    return _userService.userJourneyStats.mlIndex > 1;
+    return _userService!.userJourneyStats!.mlIndex! > 1;
   }
 
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {
@@ -54,13 +54,13 @@ class SubscriptionCardViewModel extends BaseViewModel {
       return "in Progress";
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "₹${subscription.autoAmount.toInt()}${getFreq(subscription.autoFrequency)}";
+        return "₹${subscription.autoAmount!.toInt()}${getFreq(subscription.autoFrequency)}";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         if (subscription.autoAmount == 0.0)
           return "Start saving now";
         else {
-          if (subscription.resumeDate.isEmpty)
+          if (subscription.resumeDate!.isEmpty)
             return "Fello Autosave";
           else
             return "till ${getResumeDate()}";
@@ -86,7 +86,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
         if (subscription.autoAmount == 0.0)
           return "Set amount";
         else {
-          if (subscription.resumeDate.isEmpty)
+          if (subscription.resumeDate!.isEmpty)
             return "Restart";
           else
             return "Resume";
@@ -98,7 +98,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
 
   getActiveButtonAction() async {
     Haptic.vibrate();
-    if (_userService.userJourneyStats.mlIndex < 2)
+    if (_userService!.userJourneyStats!.mlIndex! < 2)
       return BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissable: true,
@@ -107,42 +107,42 @@ class SubscriptionCardViewModel extends BaseViewModel {
             subtitle:
                 'Please complete your profile to win your first reward and to start autosaving',
           ));
-    await _paytmService.getActiveSubscriptionDetails();
-    if (_paytmService.activeSubscription == null ||
-        (_paytmService.activeSubscription.status ==
+    await _paytmService!.getActiveSubscriptionDetails();
+    if (_paytmService!.activeSubscription == null ||
+        (_paytmService!.activeSubscription!.status ==
                 Constants.SUBSCRIPTION_INIT ||
-            _paytmService.activeSubscription.status ==
+            _paytmService!.activeSubscription!.status ==
                 Constants.SUBSCRIPTION_CANCELLED)) {
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
           page: AutosaveDetailsViewPageConfig, state: PageState.addPage);
       // _paytmService.initiateSubscription();
-    } else if (_paytmService.activeSubscription.status ==
+    } else if (_paytmService!.activeSubscription!.status ==
         Constants.SUBSCRIPTION_PROCESSING) {
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
           page: AutosaveProcessViewPageConfig,
           widget: AutosaveProcessView(page: 1),
           state: PageState.addWidget);
     } else {
-      if (_paytmService.activeSubscription.status ==
+      if (_paytmService!.activeSubscription!.status ==
           Constants.SUBSCRIPTION_ACTIVE) {
-        AppState.delegate.appState.currentAction = PageAction(
+        AppState.delegate!.appState.currentAction = PageAction(
             page: UserAutosaveDetailsViewPageConfig, state: PageState.addPage);
       }
-      if (_paytmService.activeSubscription.status ==
+      if (_paytmService!.activeSubscription!.status ==
           Constants.SUBSCRIPTION_INACTIVE) {
-        if (_paytmService.activeSubscription.autoAmount == 0.0) {
-          AppState.delegate.appState.currentAction = PageAction(
+        if (_paytmService!.activeSubscription!.autoAmount == 0.0) {
+          AppState.delegate!.appState.currentAction = PageAction(
               page: AutosaveProcessViewPageConfig,
               widget: AutosaveProcessView(page: 2),
               state: PageState.addWidget);
         } else {
-          if (_paytmService.activeSubscription.resumeDate.isEmpty) {
-            AppState.delegate.appState.currentAction = PageAction(
+          if (_paytmService!.activeSubscription!.resumeDate!.isEmpty) {
+            AppState.delegate!.appState.currentAction = PageAction(
                 page: AutosaveProcessViewPageConfig,
                 widget: AutosaveProcessView(page: 2),
                 state: PageState.addWidget);
           } else {
-            AppState.delegate.appState.currentAction = PageAction(
+            AppState.delegate!.appState.currentAction = PageAction(
                 page: UserAutosaveDetailsViewPageConfig,
                 state: PageState.addPage);
             // }
@@ -151,24 +151,24 @@ class SubscriptionCardViewModel extends BaseViewModel {
       }
     }
 
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.sipStartTapped,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
           "location":
-              AppState.delegate.appState.currentAction.widget == SaveAssetView()
+              AppState.delegate!.appState.currentAction.widget == SaveAssetView()
                   ? "Save Asset View"
                   : "Save Section",
         }));
   }
 
   String getResumeDate() {
-    if (_paytmService.activeSubscription.resumeDate != null) {
+    if (_paytmService!.activeSubscription!.resumeDate != null) {
       List<String> dateSplitList =
-          _paytmService.activeSubscription.resumeDate.split('-');
-      int day = int.tryParse(dateSplitList[0]);
-      int month = int.tryParse(dateSplitList[1]);
-      int year = int.tryParse(dateSplitList[2]);
+          _paytmService!.activeSubscription!.resumeDate!.split('-');
+      int day = int.tryParse(dateSplitList[0])!;
+      int month = int.tryParse(dateSplitList[1])!;
+      int year = int.tryParse(dateSplitList[2])!;
       final resumeDate = DateTime(year, month, day);
       return DateFormat("dd MMM yyyy").format(resumeDate);
     } else {
@@ -176,13 +176,13 @@ class SubscriptionCardViewModel extends BaseViewModel {
     }
   }
 
-  getFreq(String freq) {
+  getFreq(String? freq) {
     if (freq == "DAILY") return "/day";
     if (freq == "WEEKLY") return "/week";
     return "";
   }
 
-  String getActiveTitle(ActiveSubscriptionModel subscription) {
+  String getActiveTitle(ActiveSubscriptionModel? subscription) {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
@@ -198,7 +198,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
         if (subscription.autoAmount == 0.0)
           return "Your Autosave setup is complete";
         else {
-          if (subscription.resumeDate.isEmpty)
+          if (subscription.resumeDate!.isEmpty)
             return "Savings on autopilot with";
           else
             return "Paused";
@@ -224,7 +224,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
         if (subscription.autoAmount == 0.0)
           return "Paused";
         else {
-          if (subscription.resumeDate.isEmpty)
+          if (subscription.resumeDate!.isEmpty)
             return "";
           else
             return "";
@@ -235,17 +235,17 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   navigateToAutoSave() {
-    if (_paytmService.activeSubscription != null &&
-        _paytmService.activeSubscription.status !=
+    if (_paytmService!.activeSubscription != null &&
+        _paytmService!.activeSubscription!.status !=
             Constants.SUBSCRIPTION_INIT &&
-        _paytmService.activeSubscription.status !=
+        _paytmService!.activeSubscription!.status !=
             Constants.SUBSCRIPTION_CANCELLED)
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: UserAutosaveDetailsViewPageConfig,
       );
     else
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: AutosaveDetailsViewPageConfig,
       );

@@ -10,10 +10,10 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LendboxWithdrawalInputView extends StatelessWidget {
-  final LendboxWithdrawalViewModel model;
+  final LendboxWithdrawalViewModel? model;
 
   const LendboxWithdrawalInputView({
-    Key key,
+    Key? key,
     this.model,
   }) : super(key: key);
 
@@ -28,28 +28,28 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           children: [
             SizedBox(height: SizeConfig.padding16),
             LendboxAppBar(
-              isEnabled: !model.inProgress,
+              isEnabled: !model!.inProgress,
             ),
             SizedBox(height: SizeConfig.padding32),
-            if (model.state == ViewState.Idle &&
-                model.withdrawableQuantity.lockedAmount > 0)
+            if (model!.state == ViewState.Idle &&
+                model!.withdrawableQuantity!.lockedAmount > 0)
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                 child: SellCardInfoStrips(
-                  content: model.withdrawableQuantity.lockedMessage,
+                  content: model!.withdrawableQuantity!.lockedMessage,
                 ),
               ),
             SizedBox(height: SizeConfig.padding32),
             AmountInputView(
-              amountController: model.amountController,
-              focusNode: model.fieldNode,
+              amountController: model!.amountController,
+              focusNode: model!.fieldNode,
               chipAmounts: [],
-              isEnabled: !model.inProgress,
-              maxAmount: model.withdrawableQuantity?.amount ?? 2,
+              isEnabled: !model!.inProgress,
+              maxAmount: model!.withdrawableQuantity?.amount ?? 2,
               maxAmountMsg: "You can't withdraw more than available balance",
-              minAmount: model.minAmount,
+              minAmount: model!.minAmount,
               minAmountMsg: "how are you gonna withdraw less than 1?",
-              notice: model.buyNotice,
+              notice: model!.buyNotice,
               bestChipIndex: 1,
               onAmountChange: (int amount) {},
             ),
@@ -65,7 +65,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                         .colour(UiConstants.kTextColor2),
                   ),
                   Text(
-                    '₹ ${model.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
+                    '₹ ${model!.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
                     style: TextStyles.sourceSansSB.body0.colour(
                       UiConstants.kTextColor,
                     ),
@@ -76,11 +76,11 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding32,
             ),
-            model.state == ViewState.Busy || model.inProgress
+            model!.state == ViewState.Busy || model!.inProgress
                 ? Container(
-                    height: SizeConfig.screenWidth * 0.1556,
+                    height: SizeConfig.screenWidth! * 0.1556,
                     alignment: Alignment.center,
-                    width: SizeConfig.screenWidth * 0.7,
+                    width: SizeConfig.screenWidth! * 0.7,
                     child: LinearProgressIndicator(
                       color: UiConstants.primaryColor,
                       backgroundColor: UiConstants.kDarkBackgroundColor,
@@ -89,12 +89,12 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                 : AppPositiveBtn(
                     btnText: 'WITHDRAW',
                     onPressed: () async {
-                      if (!model.inProgress) {
+                      if (!model!.inProgress) {
                         FocusScope.of(context).unfocus();
-                        model.initiateWithdraw();
+                        model!.initiateWithdraw();
                       }
                     },
-                    width: SizeConfig.screenWidth * 0.813,
+                    width: SizeConfig.screenWidth! * 0.813,
                   ),
             SizedBox(
               height: SizeConfig.padding32,
@@ -102,7 +102,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           ],
         ),
         CustomKeyboardSubmitButton(
-          onSubmit: () => model.fieldNode.unfocus(),
+          onSubmit: () => model!.fieldNode.unfocus(),
         )
       ],
     );

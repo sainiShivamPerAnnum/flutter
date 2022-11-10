@@ -9,7 +9,7 @@ class NetworkBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(seconds: 2),
-      height: SizeConfig.screenHeight * 0.04,
+      height: SizeConfig.screenHeight! * 0.04,
       color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -24,11 +24,11 @@ class NetworkBar extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: SizeConfig.screenWidth * 0.01,
+            width: SizeConfig.screenWidth! * 0.01,
           ),
           CircleAvatar(
             backgroundColor: Colors.red,
-            radius: SizeConfig.screenWidth * 0.012,
+            radius: SizeConfig.screenWidth! * 0.012,
           ),
         ],
       ),

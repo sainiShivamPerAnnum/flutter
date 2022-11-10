@@ -4,13 +4,13 @@ import 'package:felloapp/util/logger.dart';
 
 class UserMiniTransaction {
   static Log log = new Log('UserMiniTransaction');
-  double _amount;
-  int _closingBalance;
-  String _type;
-  String _subType;
-  String _tranStatus;
-  Timestamp _timestamp;
-  String _note;
+  double? _amount;
+  int? _closingBalance;
+  String? _type;
+  String? _subType;
+  String? _tranStatus;
+  Timestamp? _timestamp;
+  String? _note;
 
   UserMiniTransaction(this._amount, this._closingBalance, this._type,
       this._subType, this._tranStatus, this._timestamp, this._note);
@@ -26,8 +26,8 @@ class UserMiniTransaction {
           data[UserTransaction.fldNote],
         );
 
-  static double toDouble(dynamic fld) {
-    double res = 0;
+  static double? toDouble(dynamic fld) {
+    double? res = 0;
     try {
       res = fld;
       return res;
@@ -41,17 +41,17 @@ class UserMiniTransaction {
     return res;
   }
 
-  String get note => _note;
+  String? get note => _note;
 
-  Timestamp get timestamp => _timestamp;
+  Timestamp? get timestamp => _timestamp;
 
-  String get tranStatus => _tranStatus;
+  String? get tranStatus => _tranStatus;
 
-  String get subType => _subType;
+  String? get subType => _subType;
 
-  String get type => _type;
+  String? get type => _type;
 
-  int get closingBalance => _closingBalance;
+  int? get closingBalance => _closingBalance;
 
-  double get amount => _amount;
+  double? get amount => _amount;
 }

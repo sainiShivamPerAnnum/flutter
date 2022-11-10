@@ -19,7 +19,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
 class FocusRing extends StatefulWidget {
-  const FocusRing({Key key}) : super(key: key);
+  const FocusRing({Key? key}) : super(key: key);
 
   @override
   State<FocusRing> createState() => _FocusRingState();
@@ -27,10 +27,10 @@ class FocusRing extends StatefulWidget {
 
 class _FocusRingState extends State<FocusRing>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  AnimationController? _animationController;
 
-  Animation<double> endingAnimation;
-  final _analyticsService = locator<AnalyticsService>();
+  Animation<double>? endingAnimation;
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   bool _showButton = false;
 
@@ -47,7 +47,7 @@ class _FocusRingState extends State<FocusRing>
     _animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
     endingAnimation = CurvedAnimation(
-        parent: _animationController,
+        parent: _animationController!,
         curve: const Interval(0, 1.0, curve: Curves.decelerate));
 
     super.initState();
@@ -56,9 +56,9 @@ class _FocusRingState extends State<FocusRing>
   animateRing() {
     if (isAnimationComplete) return;
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration(seconds: 2), () {
-        _animationController.forward().then((value) => showButton = true);
+        _animationController!.forward().then((value) => showButton = true);
       });
     });
     isAnimationComplete = true;
@@ -81,15 +81,15 @@ class _FocusRingState extends State<FocusRing>
         ],
         builder: (context, m, properties) {
           log("Focus Ring build called");
-          if (m.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded)
+          if (m!.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded)
             animateRing();
           return m.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded
               ? Positioned(
-                  bottom: m.pageHeight * 0.22,
-                  left: SizeConfig.screenWidth * 0.4,
+                  bottom: m.pageHeight! * 0.22,
+                  left: SizeConfig.screenWidth! * 0.4,
                   child: Container(
-                    height: SizeConfig.screenWidth * 0.52,
-                    width: SizeConfig.screenWidth * 0.48,
+                    height: SizeConfig.screenWidth! * 0.52,
+                    width: SizeConfig.screenWidth! * 0.48,
                     child: Stack(
                       children: [
                         Align(
@@ -124,8 +124,8 @@ class _FocusRingState extends State<FocusRing>
                                           ],
                                   ),
                                 ),
-                                height: SizeConfig.screenWidth * 0.48,
-                                width: SizeConfig.screenWidth * 0.48,
+                                height: SizeConfig.screenWidth! * 0.48,
+                                width: SizeConfig.screenWidth! * 0.48,
                               ),
                             ),
                           ),
@@ -138,7 +138,7 @@ class _FocusRingState extends State<FocusRing>
                             curve: Curves.bounceOut,
                             child: GestureDetector(
                               onTap: () {
-                                _analyticsService.track(
+                                _analyticsService!.track(
                                     eventName:
                                         AnalyticsEvents.buildProfileTapped);
                                 return BaseUtil.openModalBottomSheet(
@@ -191,7 +191,7 @@ class _FocusRingState extends State<FocusRing>
 class _DataBackupCompletedPainter extends CustomPainter {
   _DataBackupCompletedPainter({this.animation}) : super(repaint: animation);
 
-  Animation<double> animation;
+  Animation<double>? animation;
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -206,7 +206,7 @@ class _DataBackupCompletedPainter extends CustomPainter {
             width: size.width,
             height: size.height),
         vector.radians(-90.0),
-        vector.radians(360.0 * animation.value));
+        vector.radians(360.0 * animation!.value));
 
     canvas.save();
 

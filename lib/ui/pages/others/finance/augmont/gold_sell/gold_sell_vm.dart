@@ -28,26 +28,26 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class GoldSellViewModel extends BaseViewModel {
-  final _logger = locator<CustomLogger>();
-  BaseUtil _baseUtil = locator<BaseUtil>();
-  DBModel _dbModel = locator<DBModel>();
-  AugmontService _augmontModel = locator<AugmontService>();
-  UserService _userService = locator<UserService>();
-  UserCoinService _userCoinService = locator<UserCoinService>();
-  AugmontTransactionService _augTxnService =
+  final CustomLogger? _logger = locator<CustomLogger>();
+  BaseUtil? _baseUtil = locator<BaseUtil>();
+  DBModel? _dbModel = locator<DBModel>();
+  AugmontService? _augmontModel = locator<AugmontService>();
+  UserService? _userService = locator<UserService>();
+  UserCoinService? _userCoinService = locator<UserCoinService>();
+  AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  BankAndPanService _sellService = locator<BankAndPanService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _transactionHistoryService = locator<TransactionHistoryService>();
-  final _paymentRepo = locator<PaymentRepository>();
-  final _tambolaService = locator<TambolaService>();
+  BankAndPanService? _sellService = locator<BankAndPanService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final TransactionHistoryService? _transactionHistoryService = locator<TransactionHistoryService>();
+  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
+  final TambolaService? _tambolaService = locator<TambolaService>();
   bool isGoldRateFetching = false;
   bool _isQntFetching = false;
   double _fieldWidth = 2;
-  int _deductedTokensCount = 0;
-  int get deductedTokensCount => this._deductedTokensCount;
+  int? _deductedTokensCount = 0;
+  int? get deductedTokensCount => this._deductedTokensCount;
 
-  set deductedTokensCount(int value) {
+  set deductedTokensCount(int? value) {
     this._deductedTokensCount = value;
     notifyListeners();
   }
@@ -82,9 +82,9 @@ class GoldSellViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  AugmontRates goldRates;
+  AugmontRates? goldRates;
   FocusNode sellFieldNode = FocusNode();
-  String _sellNotice;
+  String? _sellNotice;
 
   get sellNotice => this._sellNotice;
 
@@ -93,18 +93,18 @@ class GoldSellViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  double goldSellGrams = 0;
+  double? goldSellGrams = 0;
   double _goldAmountFromGrams = 0.0;
 
-  double nonWithdrawableQnt = 0.0;
-  double withdrawableQnt = 0.0;
-  String withdrawableQtyMessage = "";
-  TextEditingController goldAmountController;
+  double? nonWithdrawableQnt = 0.0;
+  double? withdrawableQnt = 0.0;
+  String? withdrawableQtyMessage = "";
+  TextEditingController? goldAmountController;
   List<double> chipAmountList = [25, 50, 100];
 
-  double get goldSellPrice => goldRates != null ? goldRates.goldSellPrice : 0.0;
+  double? get goldSellPrice => goldRates != null ? goldRates!.goldSellPrice : 0.0;
 
-  UserFundWallet get userFundWallet => _userService.userFundWallet;
+  UserFundWallet? get userFundWallet => _userService!.userFundWallet;
 
   get goldAmountFromGrams => this._goldAmountFromGrams;
 
@@ -173,21 +173,21 @@ class GoldSellViewModel extends BaseViewModel {
     if (val.isNotEmpty) {
       if (val.contains('.')) {
         if (val.split('.').last.length > 4) {
-          goldAmountController.text = val.substring(0, val.length - 1);
-          val = goldAmountController.text;
+          goldAmountController!.text = val.substring(0, val.length - 1);
+          val = goldAmountController!.text;
           sellFieldNode.unfocus();
         }
       } else {
         if (val.length > 2) {
-          goldAmountController.text = val.substring(0, val.length - 1);
-          val = goldAmountController.text;
+          goldAmountController!.text = val.substring(0, val.length - 1);
+          val = goldAmountController!.text;
           sellFieldNode.unfocus();
         }
       }
       goldSellGrams = double.tryParse(val);
       if (goldSellPrice != 0.0) {
         _goldAmountFromGrams =
-            BaseUtil.digitPrecision(goldSellGrams * goldSellPrice, 4, false);
+            BaseUtil.digitPrecision(goldSellGrams! * goldSellPrice!, 4, false);
         if (_goldAmountFromGrams < 10) showMinCap = true;
         if (_goldAmountFromGrams > 50000) showMaxCap = true;
       } else
@@ -202,16 +202,16 @@ class GoldSellViewModel extends BaseViewModel {
   fetchLockedGoldQnt() async {
     isQntFetching = true;
     refresh();
-    await _userService.getUserFundWalletData();
+    await _userService!.getUserFundWalletData();
     ApiResponse<WithdrawableGoldResponseModel> quantityApiResponse =
-        await _paymentRepo.getWithdrawableAugGoldQuantity();
+        await _paymentRepo!.getWithdrawableAugGoldQuantity();
     if (quantityApiResponse.isSuccess()) {
-      withdrawableQnt = quantityApiResponse.model.data.quantity;
-      withdrawableQtyMessage = quantityApiResponse.model.message;
-      nonWithdrawableQnt = quantityApiResponse.model.data.lockedQuantity;
+      withdrawableQnt = quantityApiResponse.model!.data.quantity;
+      withdrawableQtyMessage = quantityApiResponse.model!.message;
+      nonWithdrawableQnt = quantityApiResponse.model!.data.lockedQuantity;
     } else {
       nonWithdrawableQnt = 0.0;
-      withdrawableQnt = _userService.userFundWallet.augGoldQuantity;
+      withdrawableQnt = _userService!.userFundWallet!.augGoldQuantity;
       // return BaseUtil.showNegativeAlert("", quantityApiResponse.errorMessage);
     }
     isQntFetching = false;
@@ -221,7 +221,7 @@ class GoldSellViewModel extends BaseViewModel {
   fetchGoldRates() async {
     isGoldRateFetching = true;
     refresh();
-    goldRates = await _augmontModel.getRates();
+    goldRates = await _augmontModel!.getRates();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
         'Portal unavailable',
@@ -233,7 +233,7 @@ class GoldSellViewModel extends BaseViewModel {
   }
 
   Future<bool> verifyGoldSaleDetails() async {
-    double sellGramAmount = double.tryParse(goldAmountController.text.trim());
+    double? sellGramAmount = double.tryParse(goldAmountController!.text.trim());
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         'Portal unavailable',
@@ -260,7 +260,7 @@ class GoldSellViewModel extends BaseViewModel {
       return false;
     }
 
-    if (sellGramAmount > withdrawableQnt) {
+    if (sellGramAmount > withdrawableQnt!) {
       BaseUtil.showNegativeAlert(
           "Please try a low amount", "Some of your gold is locked for now");
       return false;
@@ -275,7 +275,7 @@ class GoldSellViewModel extends BaseViewModel {
           "A minimum of ₹10 can be sold in one go");
       return false;
     }
-    if (sellGramAmount > userFundWallet.augGoldQuantity) {
+    if (sellGramAmount > userFundWallet!.augGoldQuantity) {
       BaseUtil.showNegativeAlert(
           "Insufficient balance", "Please enter a lower amount");
       return false;
@@ -314,7 +314,7 @@ class GoldSellViewModel extends BaseViewModel {
     //   );
     //   return false;
     // }
-    bool _disabled = await _dbModel.isAugmontSellDisabled();
+    bool _disabled = await _dbModel!.isAugmontSellDisabled();
     if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(
         'Sell Failed',
@@ -326,51 +326,51 @@ class GoldSellViewModel extends BaseViewModel {
   }
 
   initiateSell() async {
-    double sellGramAmount = double.tryParse(goldAmountController.text.trim());
-    _augTxnService.currentTxnAmount = goldAmountFromGrams;
-    _augTxnService.currentTxnGms = sellGramAmount;
-    _augTxnService.isGoldSellInProgress = true;
+    double sellGramAmount = double.tryParse(goldAmountController!.text.trim())!;
+    _augTxnService!.currentTxnAmount = goldAmountFromGrams;
+    _augTxnService!.currentTxnGms = sellGramAmount;
+    _augTxnService!.isGoldSellInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);
     final res =
-        await _augmontModel.initiateWithdrawal(goldRates, sellGramAmount);
-    _augTxnService.isGoldSellInProgress = false;
+        await _augmontModel!.initiateWithdrawal(goldRates!, sellGramAmount);
+    _augTxnService!.isGoldSellInProgress = false;
 
     if (res)
-      _augTxnService.currentTransactionState = TransactionState.ongoing;
+      _augTxnService!.currentTransactionState = TransactionState.ongoing;
     else
-      _augTxnService.currentTransactionState = TransactionState.idle;
+      _augTxnService!.currentTransactionState = TransactionState.idle;
     // _augmontModel.setAugmontTxnProcessListener(_onSellTransactionComplete);
 
     final totalSellAmount =
-        BaseUtil.digitPrecision(sellGramAmount * goldRates.goldSellPrice);
-    _analyticsService.track(
+        BaseUtil.digitPrecision(sellGramAmount * goldRates!.goldSellPrice!);
+    _analyticsService!.track(
       eventName: AnalyticsEvents.sellInitiate,
       properties: {
         'Amount to be sold': totalSellAmount,
-        "Weight (Gold)": goldAmountController.text,
+        "Weight (Gold)": goldAmountController!.text,
         "Asset": "Gold"
       },
     );
   }
 
   handleWithdrawalFcmResponse(String data) {
-    _userCoinService.getUserCoinBalance();
-    _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
-    _userService.getUserFundWalletData();
+    _userCoinService!.getUserCoinBalance();
+    _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
+    _userService!.getUserFundWalletData();
     final response = json.decode(data);
-    _tambolaService.weeklyTicksFetched = false;
+    _tambolaService!.weeklyTicksFetched = false;
     AppState.unblockNavigation();
     print(response['status']);
-    if (_augTxnService.currentTransactionState == TransactionState.ongoing) {
+    if (_augTxnService!.currentTransactionState == TransactionState.ongoing) {
       if (response['status'] != null) {
         if (response['tickets'] != null) {
           deductedTokensCount = response['tickets'];
         }
         if (response['status'])
-          _augTxnService.currentTransactionState = TransactionState.success;
+          _augTxnService!.currentTransactionState = TransactionState.success;
         else {
-          _augTxnService.currentTransactionState = TransactionState.idle;
-          AppState.backButtonDispatcher.didPopRoute();
+          _augTxnService!.currentTransactionState = TransactionState.idle;
+          AppState.backButtonDispatcher!.didPopRoute();
           BaseUtil.showNegativeAlert(
             'Sell did not complete',
             response["message"] ??

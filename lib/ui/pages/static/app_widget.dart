@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class AppTextFieldLabel extends StatelessWidget {
   final String text;
-  final double leftPadding;
+  final double? leftPadding;
   AppTextFieldLabel(this.text, {this.leftPadding});
 
   @override
@@ -32,10 +32,10 @@ class AppTextFieldLabel extends StatelessWidget {
 
 class AppTextField extends StatelessWidget {
   AppTextField({
-    Key key,
-    @required this.textEditingController,
-    @required this.isEnabled,
-    @required this.validator,
+    Key? key,
+    required this.textEditingController,
+    required this.isEnabled,
+    required this.validator,
     this.onTap,
     //NOTE: Pass [] If inputformatters are not required
     this.inputFormatters,
@@ -69,39 +69,39 @@ class AppTextField extends StatelessWidget {
     this.onSubmit,
   }) : super(key: key);
 
-  final TextEditingController textEditingController;
+  final TextEditingController? textEditingController;
   final bool isEnabled;
   final FormFieldValidator<String> validator;
   final String hintText;
-  final List<TextInputFormatter> inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputType keyboardType;
   final bool autoFocus;
   final bool obscure;
-  final BorderRadius borderRadius;
-  final Widget suffixIcon;
-  final Widget prefixIcon;
-  final String prefixText;
-  final TextStyle prefixTextStyle;
-  final String suffixText;
-  final TextStyle suffixTextStyle;
+  final BorderRadius? borderRadius;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final String? prefixText;
+  final TextStyle? prefixTextStyle;
+  final String? suffixText;
+  final TextStyle? suffixTextStyle;
   //executes on every change
-  final AutovalidateMode autovalidateMode;
+  final AutovalidateMode? autovalidateMode;
   final int maxLines;
-  final Function onChanged;
-  final Function onTap;
-  final Function onSubmit;
+  final Function? onChanged;
+  final Function? onTap;
+  final Function? onSubmit;
   final TextAlign textAlign;
-  final TextStyle textStyle;
-  final Widget suffix;
-  final EdgeInsets scrollPadding;
-  final int maxLength;
-  final EdgeInsets contentPadding;
-  final InputDecoration inputDecoration;
-  final Color fillColor;
-  final FocusNode focusNode;
+  final TextStyle? textStyle;
+  final Widget? suffix;
+  final EdgeInsets? scrollPadding;
+  final int? maxLength;
+  final EdgeInsets? contentPadding;
+  final InputDecoration? inputDecoration;
+  final Color? fillColor;
+  final FocusNode? focusNode;
   final TextCapitalization textCapitalization;
-  final BoxConstraints suffixIconConstraints;
-  final EdgeInsets margin;
+  final BoxConstraints? suffixIconConstraints;
+  final EdgeInsets? margin;
   final bool readOnly;
 
   @override
@@ -125,7 +125,7 @@ class AppTextField extends StatelessWidget {
         scrollPadding: EdgeInsets.zero,
         controller: textEditingController,
         cursorColor: UiConstants.kTextColor,
-        onFieldSubmitted: onSubmit,
+        onFieldSubmitted: onSubmit as void Function(String)?,
         inputFormatters: inputFormatters ??
             [
               FilteringTextInputFormatter.allow(
@@ -144,9 +144,9 @@ class AppTextField extends StatelessWidget {
         maxLength: maxLength,
         autofocus: autoFocus,
         keyboardType: keyboardType,
-        onChanged: onChanged,
+        onChanged: onChanged as void Function(String)?,
         obscureText: obscure,
-        onTap: onTap ?? () {},
+        onTap: onTap as void Function()? ?? () {},
         readOnly: readOnly,
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
@@ -234,13 +234,13 @@ class AppTextField extends StatelessWidget {
 
 class AppDropDownField extends StatelessWidget {
   const AppDropDownField({
-    Key key,
-    @required this.onChanged,
-    @required this.value,
-    @required this.disabledHintText,
-    @required this.hintText,
-    @required this.items,
-    @required this.isEnabled,
+    Key? key,
+    required this.onChanged,
+    required this.value,
+    required this.disabledHintText,
+    required this.hintText,
+    required this.items,
+    required this.isEnabled,
   }) : super(key: key);
 
   final ValueChanged<dynamic> onChanged;
@@ -299,10 +299,10 @@ class AppDropDownField extends StatelessWidget {
 
 class AppDatePickerField extends StatelessWidget {
   const AppDatePickerField({
-    Key key,
-    @required this.child,
-    @required this.onTap,
-    @required this.isEnabled,
+    Key? key,
+    required this.child,
+    required this.onTap,
+    required this.isEnabled,
   }) : super(key: key);
   final GestureTapCallback onTap;
   final Widget child;
@@ -313,7 +313,7 @@ class AppDatePickerField extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: SizeConfig.screenWidth * 0.1377,
+        height: SizeConfig.screenWidth! * 0.1377,
         padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.padding16,
         ),
@@ -336,21 +336,21 @@ class AppDatePickerField extends StatelessWidget {
 
 class AppPositiveBtn extends StatelessWidget {
   const AppPositiveBtn({
-    Key key,
-    @required this.btnText,
-    @required this.onPressed,
+    Key? key,
+    required this.btnText,
+    required this.onPressed,
     this.width,
     this.height,
   }) : super(key: key);
-  final String btnText;
+  final String? btnText;
   final VoidCallback onPressed;
-  final double width, height;
+  final double? width, height;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          height: height ?? SizeConfig.screenWidth * 0.1556,
+          height: height ?? SizeConfig.screenWidth! * 0.1556,
           width: width ?? SizeConfig.screenWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
@@ -369,14 +369,14 @@ class AppPositiveBtn extends StatelessWidget {
             // padding: EdgeInsets.zero,
             onPressed: onPressed,
             child: Text(
-              btnText.toUpperCase(),
+              btnText!.toUpperCase(),
               style: TextStyles.rajdhaniB.title5,
             ),
           ),
         ),
         Container(
           height: SizeConfig.padding2,
-          width: (width ?? SizeConfig.screenWidth) - SizeConfig.padding4,
+          width: (width ?? SizeConfig.screenWidth)! - SizeConfig.padding4,
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding2,
           ),
@@ -397,14 +397,14 @@ class AppPositiveBtn extends StatelessWidget {
 
 class AppPositiveCustomChildBtn extends StatelessWidget {
   const AppPositiveCustomChildBtn({
-    Key key,
-    @required this.child,
-    @required this.onPressed,
+    Key? key,
+    required this.child,
+    required this.onPressed,
     this.width,
   }) : super(key: key);
   final Widget child;
   final VoidCallback onPressed;
-  final double width;
+  final double? width;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -412,7 +412,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            height: SizeConfig.screenWidth * 0.1556,
+            height: SizeConfig.screenWidth! * 0.1556,
             width: width ?? SizeConfig.screenWidth,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
@@ -433,7 +433,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
           ),
           Container(
             height: SizeConfig.padding2,
-            width: (width ?? SizeConfig.screenWidth) - SizeConfig.padding4,
+            width: (width ?? SizeConfig.screenWidth)! - SizeConfig.padding4,
             margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding2,
             ),
@@ -455,14 +455,14 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
 
 class ReactivePositiveAppButton extends StatefulWidget {
   const ReactivePositiveAppButton({
-    Key key,
-    @required this.btnText,
-    @required this.onPressed,
+    Key? key,
+    required this.btnText,
+    required this.onPressed,
     this.width,
   }) : super(key: key);
   final String btnText;
   final Function onPressed;
-  final double width;
+  final double? width;
   @override
   State<ReactivePositiveAppButton> createState() =>
       _ReactivePositiveAppButtonState();
@@ -482,9 +482,9 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
   Widget build(BuildContext context) {
     return Consumer<ConnectivityStatus>(
         builder: (ctx, model, child) => Container(
-              height: SizeConfig.screenWidth * 0.1556,
+              height: SizeConfig.screenWidth! * 0.1556,
               width: widget.width ??
-                  SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+                  SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(
                   SizeConfig.buttonBorderRadius,
@@ -532,19 +532,19 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
 
 class AppNegativeBtn extends StatelessWidget {
   const AppNegativeBtn({
-    Key key,
-    @required this.btnText,
-    @required this.onPressed,
+    Key? key,
+    required this.btnText,
+    required this.onPressed,
     this.width,
   }) : super(key: key);
   final String btnText;
   final VoidCallback onPressed;
-  final double width;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 0.1556,
+      height: SizeConfig.screenWidth! * 0.1556,
       width: width,
       child: OutlinedButton(
         onPressed: onPressed,
@@ -567,11 +567,11 @@ class AppNegativeBtn extends StatelessWidget {
 }
 
 class AppDateField extends StatelessWidget {
-  final String labelText;
-  final TextEditingController controller;
+  final String? labelText;
+  final TextEditingController? controller;
   final maxlength;
-  final double fieldWidth;
-  final Function validate;
+  final double? fieldWidth;
+  final Function? validate;
 
   AppDateField(
       {this.controller,
@@ -587,7 +587,7 @@ class AppDateField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         maxLength: maxlength,
-        validator: validate,
+        validator: validate as String? Function(String?)?,
         cursorColor: UiConstants.primaryColor,
         cursorWidth: 1,
         textAlign: TextAlign.center,
@@ -616,7 +616,7 @@ class AppDateField extends StatelessWidget {
           ),
           hintText: labelText,
           hintStyle: TextStyle(
-            color: Colors.grey[400].withOpacity(0.5),
+            color: Colors.grey[400]!.withOpacity(0.5),
             letterSpacing: 2,
           ),
         ),
@@ -627,9 +627,9 @@ class AppDateField extends StatelessWidget {
 
 class AppSwitch extends StatelessWidget {
   const AppSwitch({
-    Key key,
-    @required this.onToggle,
-    @required this.value,
+    Key? key,
+    required this.onToggle,
+    required this.value,
     this.isLoading = false,
     this.height = 22,
     this.width = 32,
@@ -704,7 +704,7 @@ class AppSwitch extends StatelessWidget {
 }
 
 class CustomKeyboardSubmitButton extends StatelessWidget {
-  final Function onSubmit;
+  final Function? onSubmit;
 
   CustomKeyboardSubmitButton({this.onSubmit});
 
@@ -726,7 +726,7 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
               ),
               alignment: Alignment.centerRight,
               child: InkWell(
-                onTap: onSubmit,
+                onTap: onSubmit as void Function()?,
                 child: Text(
                   'DONE',
                   style: TextStyles.rajdhaniB.body1

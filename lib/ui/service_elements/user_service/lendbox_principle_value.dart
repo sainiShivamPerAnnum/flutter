@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxPrincipleValue extends StatelessWidget {
-  final String prefix;
-  final TextStyle style;
+  final String? prefix;
+  final TextStyle? style;
 
   LendboxPrincipleValue({
     this.prefix,
     this.style,
   });
 
-  String getQuantity(UserFundWallet fund) {
+  String getQuantity(UserFundWallet? fund) {
     final quantity = fund?.wLbPrinciple;
 
     if (quantity != null) {
@@ -37,7 +37,7 @@ class LendboxPrincipleValue extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "${getQuantity(model.userFundWallet)}",
+        "${getQuantity(model!.userFundWallet)}",
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

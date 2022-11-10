@@ -19,8 +19,8 @@ import 'package:open_filex/open_filex.dart';
 
 // ignore: must_be_immutable
 class TransactionDetailsBottomSheet extends StatefulWidget {
-  final UserTransaction transaction;
-  TransactionDetailsBottomSheet({Key key, this.transaction}) : super(key: key);
+  final UserTransaction? transaction;
+  TransactionDetailsBottomSheet({Key? key, this.transaction}) : super(key: key);
 
   @override
   State<TransactionDetailsBottomSheet> createState() =>
@@ -30,18 +30,18 @@ class TransactionDetailsBottomSheet extends StatefulWidget {
 class _TransactionDetailsBottomSheetState
     extends State<TransactionDetailsBottomSheet> {
   bool _showInvoiceButton = false;
-  final AugmontService augmontProvider = locator<AugmontService>();
-  final TransactionHistoryService _txnHistoryService =
+  final AugmontService? augmontProvider = locator<AugmontService>();
+  final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
-  final BaseUtil baseProvider = locator<BaseUtil>();
+  final BaseUtil? baseProvider = locator<BaseUtil>();
   bool _isInvoiceLoading = false;
 
   @override
   void initState() {
-    if (widget.transaction.subType ==
+    if (widget.transaction!.subType ==
             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-        widget.transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
-        widget.transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
+        widget.transaction!.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+        widget.transaction!.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
       _showInvoiceButton = true;
     super.initState();
   }
@@ -56,7 +56,7 @@ class _TransactionDetailsBottomSheetState
 
   Widget dialogContent(BuildContext context) {
     final isGold =
-        widget.transaction.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
+        widget.transaction!.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
     return WillPopScope(
       onWillPop: () async {
         AppState.screenStack.removeLast();
@@ -92,7 +92,7 @@ class _TransactionDetailsBottomSheetState
                       ),
                       GestureDetector(
                         onTap: () {
-                          AppState.backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher!.didPopRoute();
                         },
                         child: Icon(
                           Icons.close,
@@ -109,8 +109,8 @@ class _TransactionDetailsBottomSheetState
                   children: [
                     Image.asset(
                       isGold ? Assets.digitalGoldBar : Assets.felloFlo,
-                      height: SizeConfig.screenWidth * 0.12,
-                      width: SizeConfig.screenWidth * 0.12,
+                      height: SizeConfig.screenWidth! * 0.12,
+                      width: SizeConfig.screenWidth! * 0.12,
                     ),
                     SizedBox(
                       width: SizeConfig.padding16,
@@ -138,8 +138,8 @@ class _TransactionDetailsBottomSheetState
                   height: SizeConfig.padding24,
                 ),
                 Text(
-                  _txnHistoryService
-                      .getFormattedTxnAmount(widget.transaction.amount),
+                  _txnHistoryService!
+                      .getFormattedTxnAmount(widget.transaction!.amount),
                   style: TextStyles.rajdhaniB.title0
                       .colour(UiConstants.kTextColor),
                 ),
@@ -153,78 +153,78 @@ class _TransactionDetailsBottomSheetState
                     children: [
                       Icon(Icons.brightness_1_rounded,
                           size: SizeConfig.padding12,
-                          color: _txnHistoryService
-                              .getTileColor(widget.transaction.tranStatus)),
+                          color: _txnHistoryService!
+                              .getTileColor(widget.transaction!.tranStatus)),
                       SizedBox(
                         width: SizeConfig.padding2,
                       ),
                       Text(
-                        widget.transaction.tranStatus,
+                        widget.transaction!.tranStatus!,
                         style: TextStyles.sourceSans.body3.colour(
-                            _txnHistoryService
-                                .getTileColor(widget.transaction.tranStatus)),
+                            _txnHistoryService!
+                                .getTileColor(widget.transaction!.tranStatus)),
                       ),
                     ],
                   ),
                 ),
-                if (widget.transaction.subType ==
+                if (widget.transaction!.subType ==
                         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                    widget.transaction.type ==
+                    widget.transaction!.type ==
                         UserTransaction.TRAN_TYPE_DEPOSIT)
                   Row(
                     children: [
                       referralTile(
                           'Purchase Rate:',
-                          widget.transaction.augmnt[
+                          widget.transaction!.augmnt![
                                       UserTransaction.subFldAugLockPrice] !=
                                   null
-                              ? '₹ ${widget.transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm'
+                              ? '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice]}/gm'
                               : "Unavailable",
                           UiConstants.primaryColor),
                       referralTile(
                           'Gold Purchased:',
-                          '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                          '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction!.augmnt![UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A' as double)} grams',
                           UiConstants.primaryColor)
                     ],
                   ),
-                if (widget.transaction.subType ==
+                if (widget.transaction!.subType ==
                         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                    widget.transaction.type ==
+                    widget.transaction!.type ==
                         UserTransaction.TRAN_TYPE_WITHDRAW)
                   Row(
                     children: [
                       referralTile(
                         'Sell Rate:',
-                        '₹ ${widget.transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
                         'Gold Sold:',
-                        '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                        '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction!.augmnt![UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A' as double)} grams',
                         Colors.redAccent.withOpacity(0.6),
                       )
                     ],
                   ),
-                if (widget.transaction.subType ==
+                if (widget.transaction!.subType ==
                         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                    widget.transaction.type ==
+                    widget.transaction!.type ==
                         UserTransaction.TRAN_STATUS_PROCESSING)
                   Row(
                     children: [
                       referralTile(
                         'Sell Rate:',
-                        '₹ ${widget.transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
                         'Gold Sold:',
-                        '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A')} grams',
+                        '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction!.augmnt![UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A' as double)} grams',
                         Colors.redAccent.withOpacity(0.6),
                       )
                     ],
                   ),
-                if (widget.transaction.transactionUpdatesMap != null &&
-                    widget.transaction.transactionUpdatesMap.isNotEmpty)
+                if (widget.transaction!.transactionUpdatesMap != null &&
+                    widget.transaction!.transactionUpdatesMap!.isNotEmpty)
                   Container(
                     width: SizeConfig.screenWidth,
                     margin: EdgeInsets.symmetric(
@@ -244,7 +244,7 @@ class _TransactionDetailsBottomSheetState
                           ),
                         ),
                         TransactionSummary(
-                            summary: widget.transaction.transactionUpdatesMap)
+                            summary: widget.transaction!.transactionUpdatesMap)
                       ],
                     ),
                   ),
@@ -267,15 +267,15 @@ class _TransactionDetailsBottomSheetState
                               : Text('Download Invoice'.toUpperCase(),
                                   style: TextStyles.rajdhaniSB.body1),
                           onPressed: () async {
-                            if (widget.transaction
-                                    .augmnt[UserTransaction.subFldAugTranId] !=
+                            if (widget.transaction!
+                                    .augmnt![UserTransaction.subFldAugTranId] !=
                                 null) {
                               setState(() {
                                 _isInvoiceLoading = true;
                               });
-                              String trnId = widget.transaction
-                                  .augmnt[UserTransaction.subFldAugTranId];
-                              augmontProvider
+                              String? trnId = widget.transaction!
+                                  .augmnt![UserTransaction.subFldAugTranId];
+                              augmontProvider!
                                   .generatePurchaseInvoicePdf(trnId, null)
                                   .then((generatedPdfFilePath) {
                                 _isInvoiceLoading = false;
@@ -294,7 +294,7 @@ class _TransactionDetailsBottomSheetState
                                   'Please try again in some time');
                             }
                           },
-                          width: SizeConfig.screenWidth / 2,
+                          width: SizeConfig.screenWidth! / 2,
                         ),
                       ],
                     ),
@@ -324,7 +324,7 @@ class _TransactionDetailsBottomSheetState
   Duration getOfferDuration(int totalMins) {
     Duration difference;
     DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
-            widget.transaction.timestamp.millisecondsSinceEpoch)
+            widget.transaction!.timestamp!.millisecondsSinceEpoch)
         .add(Duration(minutes: totalMins));
     difference = tTime.difference(DateTime.now());
     return difference;
@@ -368,19 +368,19 @@ class _TransactionDetailsBottomSheetState
 }
 
 class TransactionSummary extends StatelessWidget {
-  final List<TransactionStatusMapItemModel> summary;
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final List<TransactionStatusMapItemModel>? summary;
+  final TransactionHistoryService? _txnHistoryService = locator<TransactionHistoryService>();
   TransactionSummary({this.summary});
   bool isTBD = false;
   int naPoint = 0;
   @override
   Widget build(BuildContext context) {
-    summary.forEach((sum) {
+    summary!.forEach((sum) {
       print("${sum.toString()}");
     });
-    naPoint = summary.length;
-    for (int i = 0; i < summary.length; i++) {
-      if (summary[i].value != null && summary[i].value == 'NA') {
+    naPoint = summary!.length;
+    for (int i = 0; i < summary!.length; i++) {
+      if (summary![i].value != null && summary![i].value == 'NA') {
         naPoint = i;
       }
     }
@@ -395,11 +395,11 @@ class TransactionSummary extends StatelessWidget {
   }
 
   Widget leadWidget(
-      List<TransactionStatusMapItemModel> summary, int index, int length) {
+      List<TransactionStatusMapItemModel>? summary, int index, int length) {
     Widget mainWidget = SizedBox();
     Color leadColor = Colors.white;
     bool showThread = true;
-    String subtitle;
+    String? subtitle;
     if (isTBD) {
       mainWidget = Container(
         height: SizeConfig.padding28,
@@ -412,7 +412,7 @@ class TransactionSummary extends StatelessWidget {
       );
       subtitle = '-';
       leadColor = UiConstants.gameCardColor;
-    } else if (summary[index].timestamp != null) {
+    } else if (summary![index].timestamp != null) {
       mainWidget = Container(
         height: SizeConfig.padding28,
         width: SizeConfig.padding28,
@@ -474,14 +474,14 @@ class TransactionSummary extends StatelessWidget {
               height: SizeConfig.padding70,
               child: ListTile(
                 title: Text(
-                  summary[index].title,
+                  summary![index].title,
                   style: TextStyles.sourceSans.body2,
                 ),
                 subtitle: Text(
                   subtitle ??
                       (summary[index].timestamp != null
-                          ? "${_txnHistoryService.getFormattedDateAndTime(summary[index].timestamp)}"
-                          : summary[index].value),
+                          ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
+                          : summary[index].value!),
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kTextColor2),
                 ),

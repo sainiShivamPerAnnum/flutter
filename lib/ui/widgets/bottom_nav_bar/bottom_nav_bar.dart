@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
   final RootViewModel parentModel;
-  BottomNavBar({@required this.parentModel});
+  BottomNavBar({required this.parentModel});
 
   final List<NavBarItemModel> navbarItems = [
     NavBarItemModel('Journey', Assets.navJourneyLottie),
@@ -81,7 +81,7 @@ class NavBarIcon extends StatelessWidget {
   final NavBarItemModel item;
   final TextStyle style;
   NavBarIcon(
-      {@required this.animate, @required this.item, @required this.style});
+      {required this.animate, required this.item, required this.style});
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -2,13 +2,13 @@ import 'package:felloapp/util/logger.dart';
 
 class AugmontRates {
   static Log log = new Log('AugmontRates');
-  String _blockId;
-  double _goldBuyPrice;
-  double _goldSellPrice;
-  double _silverBuyPrice;
-  double _silverSellPrice;
-  double _cgstPercent;
-  double _sgstPercent;
+  String? _blockId;
+  double? _goldBuyPrice;
+  double? _goldSellPrice;
+  double? _silverBuyPrice;
+  double? _silverSellPrice;
+  double? _cgstPercent;
+  double? _sgstPercent;
 
   AugmontRates(
       this._blockId,
@@ -29,7 +29,7 @@ class AugmontRates {
             getDouble(data['taxes'][0]['taxPerc']),
             getDouble(data['taxes'][1]['taxPerc']));
 
-  static double getDouble(dynamic s) {
+  static double? getDouble(dynamic s) {
     if (s == null) {
       return null;
     }
@@ -38,17 +38,17 @@ class AugmontRates {
     return double.tryParse(s);
   }
 
-  double get sgstPercent => _sgstPercent;
+  double? get sgstPercent => _sgstPercent;
 
-  double get cgstPercent => _cgstPercent;
+  double? get cgstPercent => _cgstPercent;
 
-  double get silverSellPrice => _silverSellPrice;
+  double? get silverSellPrice => _silverSellPrice;
 
-  double get silverBuyPrice => _silverBuyPrice;
+  double? get silverBuyPrice => _silverBuyPrice;
 
-  double get goldSellPrice => _goldSellPrice;
+  double? get goldSellPrice => _goldSellPrice;
 
-  double get goldBuyPrice => _goldBuyPrice;
+  double? get goldBuyPrice => _goldBuyPrice;
 
-  String get blockId => _blockId;
+  String? get blockId => _blockId;
 }

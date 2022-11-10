@@ -22,11 +22,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralLeaderboard extends StatelessWidget {
-  final int count;
+  final int? count;
   ReferralLeaderboard({this.count});
   getLength(int listLength) {
     if (count != null) {
-      if (listLength < count)
+      if (listLength < count!)
         return listLength;
       else
         return count;
@@ -66,7 +66,7 @@ class ReferralLeaderboard extends StatelessWidget {
                               UiConstants.kSecondaryLeaderBoardTextColor),
                         ),
                         Text(
-                          model.getDateRange(),
+                          model!.getDateRange(),
                           style: TextStyles.sourceSans.body4
                               .colour(UiConstants.kTextFieldTextColor),
                         )
@@ -78,12 +78,12 @@ class ReferralLeaderboard extends StatelessWidget {
                     //       .colour(UiConstants.kTextFieldTextColor),
                     //   textAlign: TextAlign.end,
                     // )
-                    if (model.referralLeaderBoard.length >
-                        getLength(model.referralLeaderBoard.length))
+                    if (model.referralLeaderBoard!.length >
+                        getLength(model.referralLeaderBoard!.length))
                       GestureDetector(
                         onTap: () {
                           Haptic.vibrate();
-                          AppState.delegate.appState.currentAction = PageAction(
+                          AppState.delegate!.appState.currentAction = PageAction(
                             state: PageState.addWidget,
                             widget: AllParticipantsWinnersTopReferers(
                               isForTopReferers: true,
@@ -136,7 +136,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                   size: SizeConfig.padding40,
                                 ),
                               )
-                            : (model.referralLeaderBoard.isEmpty
+                            : (model.referralLeaderBoard!.isEmpty
                                 ? Container(
                                     width: SizeConfig.screenWidth,
                                     color: Colors.transparent,
@@ -195,7 +195,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                       Column(
                                         children: List.generate(
                                           getLength(
-                                              model.referralLeaderBoard.length),
+                                              model.referralLeaderBoard!.length),
                                           (i) {
                                             return Container(
                                               width: SizeConfig.screenWidth,
@@ -220,7 +220,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                         future: model
                                                             .getProfileDpWithUid(
                                                                 model
-                                                                    .referralLeaderBoard[
+                                                                    .referralLeaderBoard![
                                                                         i]
                                                                     .userid),
                                                         builder: (context,
@@ -285,9 +285,9 @@ class ReferralLeaderboard extends StatelessWidget {
                                                           children: [
                                                             Text(
                                                                 model
-                                                                        .referralLeaderBoard[
+                                                                        .referralLeaderBoard![
                                                                             i]
-                                                                        .username
+                                                                        .username!
                                                                         .replaceAll(
                                                                             '@',
                                                                             '.') ??
@@ -301,7 +301,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                         ),
                                                       ),
                                                       Text(
-                                                        model.referralLeaderBoard[i]
+                                                        model.referralLeaderBoard![i]
                                                                 .refCount
                                                                 .toString() ??
                                                             "00",
@@ -318,7 +318,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                   ),
                                                   if (i + 1 <
                                                       getLength(model
-                                                          .referralLeaderBoard
+                                                          .referralLeaderBoard!
                                                           .length))
                                                     Divider(
                                                       color: Colors.white,

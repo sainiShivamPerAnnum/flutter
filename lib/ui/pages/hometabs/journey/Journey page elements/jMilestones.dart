@@ -18,8 +18,8 @@ String generateAssetUrl(String name) {
 }
 
 class Milestones extends StatelessWidget {
-  final JourneyPageViewModel model;
-  const Milestones({Key key, this.model}) : super(key: key);
+  final JourneyPageViewModel? model;
+  const Milestones({Key? key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +31,20 @@ class Milestones extends StatelessWidget {
         ],
         builder: (context, serviceModel, properties) {
           return SizedBox(
-            width: model.pageWidth,
-            height: model.currentFullViewHeight,
+            width: model!.pageWidth,
+            height: model!.currentFullViewHeight,
             child: Stack(
-              children: List.generate(model.currentMilestoneList.length, (i) {
-                if (model.currentMilestoneList[i].asset.uri == null ||
-                    model.currentMilestoneList[i].asset.uri.isEmpty)
+              children: List.generate(model!.currentMilestoneList.length, (i) {
+                if (model!.currentMilestoneList[i].asset.uri == null ||
+                    model!.currentMilestoneList[i].asset.uri.isEmpty)
                   return SizedBox();
-                else if (model.currentMilestoneList[i].index ==
-                    model.avatarActiveMilestoneLevel) {
+                else if (model!.currentMilestoneList[i].index ==
+                    model!.avatarActiveMilestoneLevel) {
                   return ActiveFloatingMilestone(
-                      milestone: model.currentMilestoneList[i], model: model);
+                      milestone: model!.currentMilestoneList[i], model: model);
                 } else
                   return StaticMilestone(
-                    milestone: model.currentMilestoneList[i],
+                    milestone: model!.currentMilestoneList[i],
                     model: model,
                   );
               }),
@@ -60,9 +60,9 @@ class Milestones extends StatelessWidget {
 
 class ActiveFloatingMilestone extends StatefulWidget {
   final MilestoneModel milestone;
-  final JourneyPageViewModel model;
+  final JourneyPageViewModel? model;
 
-  const ActiveFloatingMilestone({Key key, @required this.milestone, this.model})
+  const ActiveFloatingMilestone({Key? key, required this.milestone, this.model})
       : super(key: key);
   @override
   _ActiveFloatingMilestoneState createState() =>
@@ -71,9 +71,9 @@ class ActiveFloatingMilestone extends StatefulWidget {
 
 class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
     with SingleTickerProviderStateMixin {
-  AnimationController _floatAnimationController;
-  Animation<Offset> _floatAnimation;
-  Animation<double> _scaleAnimation;
+  late AnimationController _floatAnimationController;
+  late Animation<Offset> _floatAnimation;
+  late Animation<double> _scaleAnimation;
   @override
   void initState() {
     _floatAnimationController = AnimationController(
@@ -117,36 +117,36 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
       children: [
         if (widget.milestone.shadow != null)
           Positioned(
-            left: widget.model.pageWidth * widget.milestone.shadow.x,
-            bottom:
-                widget.model.pageHeight * (widget.milestone.shadow.page - 1) +
-                    widget.model.pageHeight * widget.milestone.shadow.y,
+            left: widget.model!.pageWidth! * widget.milestone.shadow!.x!,
+            bottom: widget.model!.pageHeight! *
+                    (widget.milestone.shadow!.page - 1) +
+                widget.model!.pageHeight! * widget.milestone.shadow!.y!,
             child: ScaleTransition(
               scale: _scaleAnimation,
               alignment: Alignment.center,
               child: Transform(
                 alignment: Alignment.center,
                 transform:
-                    Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
+                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
                 child: SourceAdaptiveAssetView(
-                  asset: widget.milestone.shadow.asset,
+                  asset: widget.milestone.shadow!.asset,
                 ),
               ),
             ),
           ),
         Positioned(
-          left: widget.model.pageWidth * widget.milestone.x,
-          bottom: widget.model.pageHeight * (widget.milestone.page - 1) +
-              widget.model.pageHeight * widget.milestone.y,
+          left: widget.model!.pageWidth! * widget.milestone.x!,
+          bottom: widget.model!.pageHeight! * (widget.milestone.page - 1) +
+              widget.model!.pageHeight! * widget.milestone.y!,
           child: SlideTransition(
             position: _floatAnimation,
             child: GestureDetector(
-              onTap: () => widget.model
+              onTap: () => widget.model!
                   .showMilestoneDetailsModalSheet(widget.milestone, context),
               child: Transform(
                 alignment: Alignment.center,
                 transform:
-                    Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
+                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
                 child: SourceAdaptiveAssetView(asset: widget.milestone.asset),
               ),
             ),
@@ -159,8 +159,8 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
 
 class ActiveRotatingMilestone extends StatefulWidget {
   final MilestoneModel milestone;
-  final JourneyPageViewModel model;
-  const ActiveRotatingMilestone({Key key, @required this.milestone, this.model})
+  final JourneyPageViewModel? model;
+  const ActiveRotatingMilestone({Key? key, required this.milestone, this.model})
       : super(key: key);
   @override
   _ActiveRotatingMilestoneState createState() =>
@@ -169,7 +169,7 @@ class ActiveRotatingMilestone extends StatefulWidget {
 
 class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
     with SingleTickerProviderStateMixin {
-  AnimationController _floatAnimationController;
+  late AnimationController _floatAnimationController;
   // Animation<Offset> _floatAnimation;
   @override
   void initState() {
@@ -200,26 +200,26 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
       children: [
         if (widget.milestone.shadow != null)
           Positioned(
-            left: widget.model.pageWidth * widget.milestone.shadow.x,
-            bottom:
-                widget.model.pageHeight * (widget.milestone.shadow.page - 1) +
-                    widget.model.pageHeight * widget.milestone.shadow.y,
+            left: widget.model!.pageWidth! * widget.milestone.shadow!.x!,
+            bottom: widget.model!.pageHeight! *
+                    (widget.milestone.shadow!.page - 1) +
+                widget.model!.pageHeight! * widget.milestone.shadow!.y!,
             child: Transform(
                 alignment: Alignment.center,
                 transform:
-                    Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
+                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
                 child: SourceAdaptiveAssetView(
-                  asset: widget.milestone.shadow.asset,
+                  asset: widget.milestone.shadow!.asset,
                 )),
           ),
         Positioned(
-          left: widget.model.pageWidth * widget.milestone.x,
-          bottom: widget.model.pageHeight * (widget.milestone.page - 1) +
-              widget.model.pageHeight * widget.milestone.y,
+          left: widget.model!.pageWidth! * widget.milestone.x!,
+          bottom: widget.model!.pageHeight! * (widget.milestone.page - 1) +
+              widget.model!.pageHeight! * widget.milestone.y!,
           child: RotationTransition(
             turns: _floatAnimationController,
             child: GestureDetector(
-              onTap: () => widget.model
+              onTap: () => widget.model!
                   .showMilestoneDetailsModalSheet(widget.milestone, context),
               //() {
               //   ScaffoldMessenger.of(context).showSnackBar(
@@ -232,7 +232,7 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
               child: Transform(
                 alignment: Alignment.center,
                 transform:
-                    Matrix4.rotationY(widget.milestone.hFlip ? math.pi : 0),
+                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
                 child: SourceAdaptiveAssetView(asset: widget.milestone.asset),
               ),
             ),
@@ -254,8 +254,8 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
 
 class StaticMilestone extends StatelessWidget {
   final MilestoneModel milestone;
-  final JourneyPageViewModel model;
-  const StaticMilestone({Key key, @required this.milestone, this.model})
+  final JourneyPageViewModel? model;
+  const StaticMilestone({Key? key, required this.milestone, this.model})
       : super(key: key);
 
   @override
@@ -264,13 +264,13 @@ class StaticMilestone extends StatelessWidget {
       children: [
         if (milestone.shadow != null)
           Positioned(
-            left: model.pageWidth * milestone.shadow.x,
-            bottom: model.pageHeight * (milestone.shadow.page - 1) +
-                model.pageHeight * milestone.shadow.y,
+            left: model!.pageWidth! * milestone.shadow!.x!,
+            bottom: model!.pageHeight! * (milestone.shadow!.page - 1) +
+                model!.pageHeight! * milestone.shadow!.y!,
             child: Transform(
                 alignment: Alignment.center,
-                transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
-                child: SourceAdaptiveAssetView(asset: milestone.shadow.asset)
+                transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
+                child: SourceAdaptiveAssetView(asset: milestone.shadow!.asset)
                 // SvgPicture.network(
                 //   generateAssetUrl(milestone.shadow.asset.name),
                 //   width: model.pageWidth * milestone.shadow.asset.width,
@@ -279,15 +279,15 @@ class StaticMilestone extends StatelessWidget {
                 // ),
                 ),
           ),
-        if (milestone.tooltip != null && milestone.tooltip.isNotEmpty)
+        if (milestone.tooltip != null && milestone.tooltip!.isNotEmpty)
           Positioned(
-            left: model.pageWidth * milestone.x,
-            bottom: model.pageHeight * (milestone.page - 1) +
-                model.pageHeight * milestone.y,
+            left: model!.pageWidth! * milestone.x!,
+            bottom: model!.pageHeight! * (milestone.page - 1) +
+                model!.pageHeight! * milestone.y!,
             child: Transform(
               alignment: Alignment.center,
-              transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
-              child: model.isInComplete(milestone.index)
+              transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
+              child: model!.isInComplete(milestone.index)
                   ? Tooltip(
                       // message: "Hello World!!",
                       triggerMode: TooltipTriggerMode.tap,
@@ -338,18 +338,18 @@ class StaticMilestone extends StatelessWidget {
                       child: SourceAdaptiveAssetView(asset: milestone.asset),
                     )
                   : GestureDetector(
-                      onTap: () => model.showMilestoneDetailsModalSheet(
-                          milestone, context),
+                      onTap: () => model!
+                          .showMilestoneDetailsModalSheet(milestone, context),
                       child: SourceAdaptiveAssetView(asset: milestone.asset),
                     ),
             ),
           ),
-        if (milestone.index < model.avatarActiveMilestoneLevel)
+        if (milestone.index! < model!.avatarActiveMilestoneLevel!)
           Positioned(
-              left: model.pageWidth * milestone.x,
-              bottom: ((model.pageHeight * (milestone.page - 1)) +
-                      model.pageHeight * milestone.y) -
-                  model.pageHeight * 0.02,
+              left: model!.pageWidth! * milestone.x!,
+              bottom: ((model!.pageHeight! * (milestone.page - 1)) +
+                      model!.pageHeight! * milestone.y!) -
+                  model!.pageHeight! * 0.02,
               child: MileStoneCheck())
       ],
     );
@@ -373,10 +373,7 @@ class TooltipShapeBorder extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => EdgeInsets.only(bottom: arrowHeight);
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) => null;
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     rect = Rect.fromPoints(
         rect.topLeft, rect.bottomRight - Offset(0, arrowHeight));
     double x = arrowWidth, y = arrowHeight, r = 1 - arrowArc;
@@ -390,8 +387,14 @@ class TooltipShapeBorder extends ShapeBorder {
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {}
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
 
   @override
   ShapeBorder scale(double t) => this;
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+    // TODO: implement getInnerPath
+    throw UnimplementedError();
+  }
 }

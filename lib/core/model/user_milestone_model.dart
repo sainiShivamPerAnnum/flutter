@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:felloapp/core/model/helper_model.dart';
 
 class UserMilestone {
-  final String id;
-  final String actionUri;
-  final String prizeSubtype;
-  final String title;
-  final int flc;
-  final int amt;
-  bool isCompleted;
+  final String? id;
+  final String? actionUri;
+  final String? prizeSubtype;
+  final String? title;
+  final int? flc;
+  final int? amt;
+  bool? isCompleted;
   static final helper = HelperModel<UserMilestone>(
     (map) => UserMilestone.fromMap(map),
   );
@@ -37,7 +37,7 @@ class UserMilestone {
 
   factory UserMilestone.fromMap(Map<String, dynamic> map) {
     return UserMilestone(
-      id: map['id'] ?? 0,
+      id: map['id'] ?? 0 as String?,
       actionUri: map['actionUri'] ?? '',
       prizeSubtype: map['prizeSubtype'] ?? '',
       title: map['title'],

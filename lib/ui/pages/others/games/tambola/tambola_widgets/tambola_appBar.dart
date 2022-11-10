@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class TambolaAppBar extends StatefulWidget {
   const TambolaAppBar({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class _TambolaAppBarState extends State<TambolaAppBar> {
       });
     }
     return Container(
-      height: SizeConfig.screenWidth * 0.14,
+      height: SizeConfig.screenWidth! * 0.14,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,7 +60,7 @@ class _TambolaAppBarState extends State<TambolaAppBar> {
               Center(
                   child: IconButton(
                 onPressed: () {
-                  AppState.delegate.appState.currentAction = PageAction(
+                  AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage, page: TWalkthroughPageConfig);
                   lclDbModel.setShowTambolaTutorial = false;
                 },

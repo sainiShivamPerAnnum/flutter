@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SaveAssetView extends StatelessWidget {
-  const SaveAssetView({Key key}) : super(key: key);
+  const SaveAssetView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,7 @@ class SaveAssetView extends StatelessWidget {
                               investmentType: InvestmentType.AUGGOLD99,
                             ),
                       SizedBox(
-                        height: SizeConfig.screenWidth * 0.4,
+                        height: SizeConfig.screenWidth! * 0.4,
                       )
                     ],
                   ),
@@ -110,7 +110,7 @@ class SaveAssetView extends StatelessWidget {
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
                       btnText: "SAVE",
-                      width: SizeConfig.screenWidth -
+                      width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () => BaseUtil().openRechargeModalSheet(
                           investmentType: InvestmentType.AUGGOLD99),
@@ -127,7 +127,7 @@ class SaveAssetView extends StatelessWidget {
 }
 
 class GoldAssetCard extends StatelessWidget {
-  const GoldAssetCard({Key key}) : super(key: key);
+  const GoldAssetCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +151,15 @@ class GoldAssetCard extends StatelessWidget {
             transform: Matrix4.rotationY(math.pi),
             child: Image.asset(
               Assets.digitalGoldBar,
-              height: SizeConfig.screenWidth * 0.32,
-              width: SizeConfig.screenWidth * 0.32,
+              height: SizeConfig.screenWidth! * 0.32,
+              width: SizeConfig.screenWidth! * 0.32,
             ),
           ),
           Column(
             children: [
               Row(
                 children: [
-                  SizedBox(width: SizeConfig.screenWidth * 0.35),
+                  SizedBox(width: SizeConfig.screenWidth! * 0.35),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

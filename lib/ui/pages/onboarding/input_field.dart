@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
   InputField({this.child});
 
@@ -44,20 +44,20 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: FelloColorPalette.augmontFundPalette().secondaryColor,
+          color: FelloColorPalette.augmontFundPalette().secondaryColor!,
         ),
       ),
       // labelStyle: GoogleFonts.montserrat(color:  FelloColorPalette.augmontFundPalette().primaryColor2),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: FelloColorPalette.augmontFundPalette().primaryColor,
+          color: FelloColorPalette.augmontFundPalette().primaryColor!,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: FelloColorPalette.augmontFundPalette().primaryColor,
+          color: FelloColorPalette.augmontFundPalette().primaryColor!,
         ),
       ),
       errorBorder: OutlineInputBorder(
@@ -78,20 +78,20 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: FelloColorPalette.augmontFundPalette().secondaryColor,
+        color: FelloColorPalette.augmontFundPalette().secondaryColor!,
       ),
     ),
     // labelStyle: GoogleFonts.montserrat(color:  FelloColorPalette.augmontFundPalette().primaryColor2),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: FelloColorPalette.augmontFundPalette().primaryColor,
+        color: FelloColorPalette.augmontFundPalette().primaryColor!,
       ),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: FelloColorPalette.augmontFundPalette().primaryColor,
+        color: FelloColorPalette.augmontFundPalette().primaryColor!,
       ),
     ),
     errorBorder: OutlineInputBorder(

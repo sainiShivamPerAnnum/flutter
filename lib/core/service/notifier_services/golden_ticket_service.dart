@@ -33,12 +33,12 @@ import 'package:share_plus/share_plus.dart';
 final GlobalKey ticketImageKey = GlobalKey();
 
 class GoldenTicketService extends ChangeNotifier {
-  final _logger = locator<CustomLogger>();
-  final _gtRepo = locator<GoldenTicketRepository>();
-  final _userService = locator<UserService>();
-  final _paytmService = locator<PaytmService>();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _appFlyer = locator<AppFlyerAnalytics>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  final UserService? _userService = locator<UserService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
 
   // static bool hasGoldenTicket = false;
   int _unscratchedTicketsCount = 0;
@@ -49,10 +49,10 @@ class GoldenTicketService extends ChangeNotifier {
     // notifyListeners(GoldenTicketServiceProperties.UnscratchedCount);
   }
 
-  static String goldenTicketId;
-  static String gameEndMsgText;
-  static GoldenTicket currentGT;
-  static String lastGoldenTicketId;
+  static String? goldenTicketId;
+  static String? gameEndMsgText;
+  static GoldenTicket? currentGT;
+  static String? lastGoldenTicketId;
   static String previousPrizeSubtype = '';
 
   static dump() {
@@ -63,24 +63,24 @@ class GoldenTicketService extends ChangeNotifier {
     previousPrizeSubtype = '';
   }
 
-  List<GoldenTicket> _activeGoldenTickets;
+  List<GoldenTicket>? _activeGoldenTickets;
 
   List<GoldenTicket> get activeGoldenTickets => this._activeGoldenTickets ?? [];
 
-  set activeGoldenTickets(List<GoldenTicket> value) {
+  set activeGoldenTickets(List<GoldenTicket>? value) {
     this._activeGoldenTickets = value;
     notifyListeners();
     log("GoldenTicket list updated");
   }
 
   Future<bool> fetchAndVerifyGoldenTicketByID() async {
-    if (goldenTicketId != null && goldenTicketId.isNotEmpty) {
+    if (goldenTicketId != null && goldenTicketId!.isNotEmpty) {
       ApiResponse<GoldenTicket> ticketResponse =
-          await _gtRepo.getGoldenTicketById(
+          await _gtRepo!.getGoldenTicketById(
         goldenTicketId: goldenTicketId,
       );
 
-      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model)) {
+      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model!)) {
         currentGT = ticketResponse.model;
         goldenTicketId = null;
         return true;
@@ -96,11 +96,11 @@ class GoldenTicketService extends ChangeNotifier {
   Future<bool> fetchAndVerifyGoldenTicketByPrizeSubtype() async {
     if (previousPrizeSubtype != null && previousPrizeSubtype.isNotEmpty) {
       ApiResponse<GoldenTicket> ticketResponse =
-          await _gtRepo.getGTByPrizeSubtype(
+          await _gtRepo!.getGTByPrizeSubtype(
         previousPrizeSubtype,
       );
 
-      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model)) {
+      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model!)) {
         currentGT = ticketResponse.model;
         return true;
       } else {
@@ -112,21 +112,21 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   showInstantGoldenTicketView(
-      {@required GTSOURCE source,
-      String title,
-      double amount = 0,
+      {required GTSOURCE source,
+      String? title,
+      double? amount = 0,
       bool onJourney = false,
       bool showAutoSavePrompt = false}) {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
-      log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${GoldenTicketService.currentGT.prizeSubtype} ");
-      if (previousPrizeSubtype == GoldenTicketService.currentGT.prizeSubtype &&
+      log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${GoldenTicketService.currentGT!.prizeSubtype} ");
+      if (previousPrizeSubtype == GoldenTicketService.currentGT!.prizeSubtype &&
           !onJourney) return;
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
 
-        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+        Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) => GTInstantView(
@@ -142,9 +142,9 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   Future<void> updateUnscratchedGTCount() async {
-    final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
+    final res = await _gtRepo!.getGTByPrizeType("UNSCRATCHED");
     if (res.isSuccess())
-      unscratchedTicketsCount = res.model.length;
+      unscratchedTicketsCount = res.model!.length;
     else
       unscratchedTicketsCount = 0;
   }
@@ -162,8 +162,8 @@ class GoldenTicketService extends ChangeNotifier {
   Future shareGoldenTicket(GoldenTicket ticket) async {
     {
       try {
-        String url;
-        final link = await _appFlyer.inviteLink();
+        String? url;
+        final link = await _appFlyer!.inviteLink();
         if (link['status'] == 'success') {
           url = link['payload']['userInviteUrl'];
           if (url == null) url = link['payload']['userInviteURL'];
@@ -171,9 +171,9 @@ class GoldenTicketService extends ChangeNotifier {
 
         if (url != null)
           caputure(
-              'Hey, I won ${ticket.rewardArr.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
+              'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
       } catch (e) {
-        _logger.e(e.toString());
+        _logger!.e(e.toString());
         BaseUtil.showNegativeAlert("An error occured!", "Please try again");
       }
     }
@@ -188,56 +188,56 @@ class GoldenTicketService extends ChangeNotifier {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService.baseUser.uid != null) {
+                if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger.e(onError);
+                _logger!.e(onError);
               });
             } else {
               FlutterShareMe()
                   .shareToSystem(msg: shareMessage)
                   .catchError((onError) {
-                if (_userService.baseUser.uid != null) {
+                if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger.e(onError);
+                _logger!.e(onError);
               });
             }
           } catch (e) {
-            _logger.e(e.toString());
+            _logger!.e(e.toString());
           }
         }
       });
     });
   }
 
-  Future<Uint8List> captureCard() async {
+  Future<Uint8List?> captureCard() async {
     try {
       RenderRepaintBoundary imageObject =
-          ticketImageKey.currentContext.findRenderObject();
+          ticketImageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png) as Future<ByteData>);
       final pngBytes = byteData.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
-      if (_userService.baseUser.uid != null) {
+      if (_userService!.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService.logFailure(_userService.baseUser.uid,
+        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to capture the card at the moment");
@@ -248,7 +248,7 @@ class GoldenTicketService extends ChangeNotifier {
   shareCard(Uint8List image, String shareMessage) async {
     try {
       if (Platform.isAndroid) {
-        final directory = (await getExternalStorageDirectory()).path;
+        final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
         File imgg = new File('$directory/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
@@ -257,11 +257,11 @@ class GoldenTicketService extends ChangeNotifier {
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService.baseUser.uid != null) {
+          if (_userService!.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService.logFailure(_userService.baseUser.uid,
+            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -276,18 +276,18 @@ class GoldenTicketService extends ChangeNotifier {
             await new File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
 
-        _logger.d("Image file created and sharing, ${imgg.path}");
+        _logger!.d("Image file created and sharing, ${imgg.path}");
 
         Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService.baseUser.uid != null) {
+          if (_userService!.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService.logFailure(_userService.baseUser.uid,
+            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -315,7 +315,7 @@ class GoldenTicketService extends ChangeNotifier {
         action: AppPositiveBtn(
           btnText: "Setup Autosave",
           onPressed: () {
-            AppState.backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher!.didPopRoute();
             openAutosave();
           },
         ),
@@ -326,13 +326,13 @@ class GoldenTicketService extends ChangeNotifier {
   openAutosave() {
     if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) return;
 
-    if (_paytmService.activeSubscription != null) {
-      AppState.delegate.appState.currentAction = PageAction(
+    if (_paytmService!.activeSubscription != null) {
+      AppState.delegate!.appState.currentAction = PageAction(
           page: AutosaveProcessViewPageConfig,
           widget: AutosaveProcessView(page: 2),
           state: PageState.addWidget);
     } else {
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         page: AutosaveDetailsViewPageConfig,
         state: PageState.addPage,
       );

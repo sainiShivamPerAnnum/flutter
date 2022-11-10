@@ -5,20 +5,20 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class WebEngageAnalytics extends BaseAnalyticsService {
-  final _logger = locator<CustomLogger>();
+  final CustomLogger? _logger = locator<CustomLogger>();
 
   WebEngageAnalytics() {
     new WebEngagePlugin();
   }
 
-  Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
+  Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
-      _logger.d(baseUser);
+      _logger!.d(baseUser);
 
       final nameParts = (baseUser.name ?? '').split(' ');
       final len = nameParts.length;
 
-      WebEngagePlugin.userLogin(baseUser.uid);
+      WebEngagePlugin.userLogin(baseUser.uid!);
       WebEngagePlugin.setUserPhone(baseUser.mobile ?? '');
 
       if (len > 0) WebEngagePlugin.setUserFirstName(nameParts[0] ?? '');
@@ -32,11 +32,11 @@ class WebEngageAnalytics extends BaseAnalyticsService {
       WebEngagePlugin.setUserAttribute(
           "KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
-      _logger.d("Analytics SERVICE :: User identify properties added.");
+      _logger!.d("Analytics SERVICE :: User identify properties added.");
     }
   }
 
-  String _getGender(String s) {
+  String _getGender(String? s) {
     if (s == 'M') return 'male';
     if (s == 'F') return 'female';
 
@@ -47,32 +47,32 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     try {
       WebEngagePlugin.userLogout();
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
     }
   }
 
-  void track({String eventName, Map<String, dynamic> properties}) {
+  void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
       if (properties != null && properties.isNotEmpty) {
-        WebEngagePlugin.trackEvent(eventName, properties);
-        _logger.i(
+        WebEngagePlugin.trackEvent(eventName!, properties);
+        _logger!.i(
             "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
       } else {
-        WebEngagePlugin.trackEvent(eventName);
+        WebEngagePlugin.trackEvent(eventName!);
       }
     } catch (e) {
-      String error = e ?? "Unable to track event: $eventName";
-      _logger.e(error);
+      String error = e as String ?? "Unable to track event: $eventName";
+      _logger!.e(error);
     }
   }
 
-  void trackScreen({String screen, Map<String, dynamic> properties}) {
+  void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
-      _logger.d('analytics : $screen');
-      WebEngagePlugin.trackScreen(screen, properties);
+      _logger!.d('analytics : $screen');
+      WebEngagePlugin.trackScreen(screen!, properties);
     } catch (e) {
-      String error = e ?? "Unable to track screen event: $screen";
-      _logger.e(error);
+      String error = e as String ?? "Unable to track screen event: $screen";
+      _logger!.e(error);
     }
   }
 }

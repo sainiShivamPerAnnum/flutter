@@ -14,13 +14,13 @@ import 'package:flutter_svg/svg.dart';
 
 class WinnerWidgets extends StatelessWidget {
   const WinnerWidgets({
-    Key key,
-    @required this.scoreboard,
-    @required this.userProfilePicUrl,
+    Key? key,
+    required this.scoreboard,
+    required this.userProfilePicUrl,
     this.isSpotLightVisible = true,
   }) : super(key: key);
-  final List<ScoreBoard> scoreboard;
-  final List<String> userProfilePicUrl;
+  final List<ScoreBoard>? scoreboard;
+  final List<String?> userProfilePicUrl;
   final bool isSpotLightVisible;
 
   @override
@@ -28,23 +28,23 @@ class WinnerWidgets extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        scoreboard.length >= 2
+        scoreboard!.length >= 2
             ? _buildTopThreeWinner(
                 rank: 1,
                 context: context,
               )
-            : SizedBox(width: SizeConfig.screenWidth * 0.194),
-        if (scoreboard.isNotEmpty)
+            : SizedBox(width: SizeConfig.screenWidth! * 0.194),
+        if (scoreboard!.isNotEmpty)
           _buildTopThreeWinner(
             rank: 0,
             context: context,
           ),
-        scoreboard.length >= 3
+        scoreboard!.length >= 3
             ? _buildTopThreeWinner(
                 rank: 2,
                 context: context,
               )
-            : SizedBox(width: SizeConfig.screenWidth * 0.194),
+            : SizedBox(width: SizeConfig.screenWidth! * 0.194),
       ],
     );
   }
@@ -63,8 +63,8 @@ class WinnerWidgets extends StatelessWidget {
   }
 
   Widget _buildTopThreeWinner({
-    int rank,
-    BuildContext context,
+    required int rank,
+    BuildContext? context,
   }) {
     return Stack(
       children: [
@@ -75,25 +75,25 @@ class WinnerWidgets extends StatelessWidget {
               isSpotLightVisible: isSpotLightVisible,
             ),
             size: Size(
-              SizeConfig.screenWidth * 0.3333, // 120
-              SizeConfig.screenWidth * 0.6666, // 240
+              SizeConfig.screenWidth! * 0.3333, // 120
+              SizeConfig.screenWidth! * 0.6666, // 240
             ),
           ),
         Padding(
           padding: EdgeInsets.only(
-            left: rank == 0 ? SizeConfig.screenWidth * 0.0400 : 0,
+            left: rank == 0 ? SizeConfig.screenWidth! * 0.0400 : 0,
           ),
           child: Column(
             children: [
               Container(
                 margin: EdgeInsets.only(
                   top: rank == 0
-                      ? SizeConfig.screenWidth * 0.130
-                      : SizeConfig.screenWidth * 0.194,
+                      ? SizeConfig.screenWidth! * 0.130
+                      : SizeConfig.screenWidth! * 0.194,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(
-                    SizeConfig.screenWidth * 0.125,
+                    SizeConfig.screenWidth! * 0.125,
                   ),
                   border: Border.all(
                     color: rank == 0
@@ -104,50 +104,50 @@ class WinnerWidgets extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(
                   rank == 0
-                      ? SizeConfig.screenWidth * 0.0055
-                      : SizeConfig.screenWidth * 0.0083,
+                      ? SizeConfig.screenWidth! * 0.0055
+                      : SizeConfig.screenWidth! * 0.0083,
                 ),
                 child: userProfilePicUrl[rank] == null ||
-                        userProfilePicUrl[rank].isEmpty
+                        userProfilePicUrl[rank]!.isEmpty
                     ? SvgPicture.asset(
                         getDefaultProfilePicture(rank),
                         width: rank == 0
-                            ? SizeConfig.screenWidth * 0.2344
-                            : SizeConfig.screenWidth * 0.2083,
+                            ? SizeConfig.screenWidth! * 0.2344
+                            : SizeConfig.screenWidth! * 0.2083,
                         height: rank == 0
-                            ? SizeConfig.screenWidth * 0.2344
-                            : SizeConfig.screenWidth * 0.2083,
+                            ? SizeConfig.screenWidth! * 0.2344
+                            : SizeConfig.screenWidth! * 0.2083,
                         fit: BoxFit.cover,
                       )
                     : ClipOval(
                         child: CachedNetworkImage(
-                            imageUrl: userProfilePicUrl[rank],
+                            imageUrl: userProfilePicUrl[rank]!,
                             errorWidget: (a, b, c) => DefaultAvatar(
                                   size: Size(
                                     rank == 0
-                                        ? SizeConfig.screenWidth * 0.2344
-                                        : SizeConfig.screenWidth * 0.2083,
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
                                     rank == 0
-                                        ? SizeConfig.screenWidth * 0.2344
-                                        : SizeConfig.screenWidth * 0.2083,
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
                                   ),
                                 ),
                             placeholder: (ctx, a) => DefaultAvatar(
                                   size: Size(
                                     rank == 0
-                                        ? SizeConfig.screenWidth * 0.2344
-                                        : SizeConfig.screenWidth * 0.2083,
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
                                     rank == 0
-                                        ? SizeConfig.screenWidth * 0.2344
-                                        : SizeConfig.screenWidth * 0.2083,
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
                                   ),
                                 ),
                             width: rank == 0
-                                ? SizeConfig.screenWidth * 0.2344
-                                : SizeConfig.screenWidth * 0.2083,
+                                ? SizeConfig.screenWidth! * 0.2344
+                                : SizeConfig.screenWidth! * 0.2083,
                             height: rank == 0
-                                ? SizeConfig.screenWidth * 0.2344
-                                : SizeConfig.screenWidth * 0.2083,
+                                ? SizeConfig.screenWidth! * 0.2344
+                                : SizeConfig.screenWidth! * 0.2083,
                             fit: BoxFit.cover),
                       ),
               ),
@@ -167,11 +167,11 @@ class WinnerWidgets extends StatelessWidget {
               ),
               Text(
                 locator<UserService>()
-                    .diplayUsername(scoreboard[rank].username),
+                    .diplayUsername(scoreboard![rank].username!),
                 style: TextStyles.rajdhaniM.body4,
               ),
               Text(
-                '(${(scoreboard[rank].score).toInt()})',
+                '(${scoreboard![rank].score!.toInt()})',
                 style: TextStyles.rajdhani.body4.setOpecity(0.6),
               ),
             ],
@@ -183,8 +183,8 @@ class WinnerWidgets extends StatelessWidget {
 }
 
 class WinnerBackGroundPainter extends CustomPainter {
-  BuildContext context;
-  bool isSpotLightVisible;
+  BuildContext? context;
+  bool? isSpotLightVisible;
   WinnerBackGroundPainter({this.context, this.isSpotLightVisible});
   @override
   void paint(Canvas canvas, Size size) {
@@ -203,7 +203,7 @@ class WinnerBackGroundPainter extends CustomPainter {
     );
 
     /// Drawing the Spotlight
-    if (isSpotLightVisible) {
+    if (isSpotLightVisible!) {
       Path path0 = Path();
       path0.moveTo(w * 0.5 - 30, 0);
       path0.lineTo(0, h * 0.5);
@@ -241,7 +241,7 @@ class WinnerBackGroundPainter extends CustomPainter {
     );
 
     /// Drawing the Crown
-    if (isSpotLightVisible) {
+    if (isSpotLightVisible!) {
       canvas.translate(w * -0.1416, h * 0.175); // -17, 42
       canvas.rotate(-0.6); // -0.6
 
@@ -257,7 +257,7 @@ class WinnerBackGroundPainter extends CustomPainter {
       canvas.drawPath(
         path1,
         Paint()
-          ..strokeWidth = SizeConfig.screenWidth * 0.0083
+          ..strokeWidth = SizeConfig.screenWidth! * 0.0083
           ..color = UiConstants.kWinnerPlayerPrimaryColor
           ..style = PaintingStyle.stroke
           ..strokeJoin = StrokeJoin.round,

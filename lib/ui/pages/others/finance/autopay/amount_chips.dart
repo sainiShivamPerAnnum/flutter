@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class AmountChips extends StatelessWidget {
   final model;
-  final int amount;
-  final bool isBestSeller;
+  final int? amount;
+  final bool? isBestSeller;
   AmountChips({
     this.model,
     this.amount,
@@ -45,11 +45,11 @@ class AmountChips extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Text(
-                " ₹ ${amount.toInt()} ",
+                " ₹ ${amount!.toInt()} ",
                 style: TextStyles.sourceSansL.body2,
               ),
             ),
-            if (isBestSeller)
+            if (isBestSeller!)
               Transform.translate(
                 offset: Offset(0, -SizeConfig.padding8),
                 child: Container(

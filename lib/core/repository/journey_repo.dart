@@ -24,7 +24,7 @@ class JourneyRepository extends BaseRepo {
   static const String PAGE_DIRECTION_UP = "up";
   static const String PAGE_DIRECTION_DOWN = "down";
   static const String LOCAL_ASSET_DATABASE = "localAssetDatabase";
-  String _filePathDirectory;
+  String? _filePathDirectory;
 
   final _baseUrlJourney = FlavorConfig.isDevelopment()
       ? 'https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev'
@@ -50,8 +50,8 @@ class JourneyRepository extends BaseRepo {
   }
 
   void dump() {
-    if (Directory(_filePathDirectory).existsSync()) {
-      Directory(_filePathDirectory).deleteSync(recursive: true);
+    if (Directory(_filePathDirectory!).existsSync()) {
+      Directory(_filePathDirectory!).deleteSync(recursive: true);
     }
   }
 
@@ -75,7 +75,7 @@ class JourneyRepository extends BaseRepo {
         return false;
       }
     } catch (ex) {
-      logger.e(ex.toString());
+      logger!.e(ex.toString());
       filePath = '';
       return false;
     }
@@ -98,11 +98,11 @@ class JourneyRepository extends BaseRepo {
         filePath = '$_filePathDirectory$fileName';
         File file = await new File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
-        logger.d(
+        logger!.d(
             "JOURNEYREPO:: Android asset file successfully saved to local directory with path: ${file.path}");
       } catch (e) {
         filePath = '';
-        logger.e(
+        logger!.e(
             "JOURNEYREPO:: Android asset file failed to save into local directory with error $e");
       }
     } else if (Platform.isIOS) {
@@ -113,11 +113,11 @@ class JourneyRepository extends BaseRepo {
         filePath = '$_filePathDirectory$fileName';
         File file = await new File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
-        logger.d(
+        logger!.d(
             "JOURNEYREPO:: IOS asset file successfully saved to local directory with path: ${file.path}");
       } catch (e) {
         filePath = '';
-        logger.e(
+        logger!.e(
             "JOURNEYREPO:: IOS asset file failed to save into local directory with error $e");
       }
     }
@@ -165,7 +165,7 @@ class JourneyRepository extends BaseRepo {
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
-      return await _cacheService.paginatedCachedApi(
+      return await (_cacheService.paginatedCachedApi(
           CacheKeys.JOURNEY_PAGE,
           startPage,
           endPage,
@@ -179,17 +179,17 @@ class JourneyRepository extends BaseRepo {
         // parser
         final start = responseData["start"];
         final end = responseData["end"];
-        List<dynamic> items = responseData["items"];
+        List<dynamic>? items = responseData["items"];
 
         List<JourneyPage> journeyPages = [];
         for (int i = start; i <= end; i++) {
-          journeyPages.add(JourneyPage.fromMap(items[i - start], i));
+          journeyPages.add(JourneyPage.fromMap(items![i - start as int], i));
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
-      });
+      }) as Future<ApiResponse<List<JourneyPage>>>);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to journey pages", 400);
     }
@@ -199,7 +199,7 @@ class JourneyRepository extends BaseRepo {
   // refer UserJourneyStatsModel for the response
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
     try {
-      final String _uid = userService.baseUser.uid;
+      final String? _uid = userService!.baseUser!.uid;
       final _token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.journeyStats(_uid),
@@ -208,11 +208,11 @@ class JourneyRepository extends BaseRepo {
       );
 
       final responseData = response["data"];
-      logger.d("Response from get Journey stats: $response");
+      logger!.d("Response from get Journey stats: $response");
       return ApiResponse(
           model: UserJourneyStatsModel.fromMap(responseData), code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch user stats", 400);
     }
@@ -254,10 +254,10 @@ class JourneyRepository extends BaseRepo {
       responseData.forEach((level, levelDetails) {
         journeylevels.add(JourneyLevel.fromMap(levelDetails));
       });
-      logger.d("Response from get Journey Level: $response");
+      logger!.d("Response from get Journey Level: $response");
       return ApiResponse(model: journeylevels, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch user levels", 400);
     }

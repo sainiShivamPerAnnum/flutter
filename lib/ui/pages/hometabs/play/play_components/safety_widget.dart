@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SafetyWidget extends StatelessWidget {
   const SafetyWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class SafetyWidget extends StatelessWidget {
           children: [
             SvgPicture.asset(
               "assets/svg/safety_asset.svg",
-              width: SizeConfig.screenWidth * 0.15,
+              width: SizeConfig.screenWidth! * 0.15,
             ),
             SizedBox(
               width: SizeConfig.padding14,

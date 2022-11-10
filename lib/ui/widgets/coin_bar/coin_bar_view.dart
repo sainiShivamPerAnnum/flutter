@@ -20,12 +20,12 @@ import '../../../core/service/analytics/analytics_service.dart';
 import '../../../util/locator.dart';
 
 class FelloCoinBar extends StatelessWidget {
-  final _analytics = locator<AnalyticsService>();
+  final AnalyticsService? _analytics = locator<AnalyticsService>();
 
-  final String svgAsset;
-  final Color borderColor;
-  final TextStyle style;
-  final double size;
+  final String? svgAsset;
+  final Color? borderColor;
+  final TextStyle? style;
+  final double? size;
 
   FelloCoinBar({
     this.svgAsset,
@@ -47,7 +47,7 @@ class FelloCoinBar extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 if (JourneyService.isAvatarAnimationInProgress) return;
-                _analytics.track(
+                _analytics!.track(
                     eventName: AnalyticsEvents.addFLCTokensTopRight);
                 BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
@@ -84,7 +84,7 @@ class FelloCoinBar extends StatelessWidget {
                       width: size ?? SizeConfig.padding20,
                     ),
                     SizedBox(width: SizeConfig.padding4),
-                    model.flcBalance == null
+                    model!.flcBalance == null
                         ? SpinKitThreeBounce(
                             size: SizeConfig.padding16,
                             color: Colors.white,

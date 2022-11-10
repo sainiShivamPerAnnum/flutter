@@ -21,7 +21,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                   icon: Icon(
                     Icons.close,
@@ -55,7 +55,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
           SizedBox(height: SizeConfig.padding24),
           TextButton(
             onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher!.didPopRoute();
             },
             child: Text(
               "Done",

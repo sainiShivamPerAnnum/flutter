@@ -10,11 +10,11 @@ import '../../../../../util/styles/ui_constants.dart';
 
 class InfoComponent extends StatefulWidget {
   InfoComponent({
-    @required this.heading,
-    @required this.assetList,
-    @required this.titleList,
-    @required this.onStateChanged,
-    Key key,
+    required this.heading,
+    required this.assetList,
+    required this.titleList,
+    required this.onStateChanged,
+    Key? key,
   }) : super(key: key);
 
   String heading;
@@ -31,7 +31,7 @@ class _InfoComponentState extends State<InfoComponent> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {
         setState(() {
           isBoxOpen = true;
@@ -117,11 +117,11 @@ class _InfoComponentState extends State<InfoComponent> {
 
 class InfoComponent2 extends StatefulWidget {
   InfoComponent2({
-    @required this.heading,
-    @required this.assetList,
-    @required this.titleList,
-    @required this.height,
-    Key key,
+    required this.heading,
+    required this.assetList,
+    required this.titleList,
+    required this.height,
+    Key? key,
   }) : super(key: key);
 
   String heading;
@@ -134,7 +134,7 @@ class InfoComponent2 extends StatefulWidget {
 }
 
 class _InfoComponent2State extends State<InfoComponent2> {
-  double heightOfObject = SizeConfig.screenWidth * 0.3;
+  double heightOfObject = SizeConfig.screenWidth! * 0.3;
 
   bool isOpen = true;
 
@@ -256,13 +256,13 @@ class _InfoComponent2State extends State<InfoComponent2> {
 
 class InfoComponent3 extends StatefulWidget {
   const InfoComponent3(
-      {Key key,
-      @required this.mainTitle,
-      @required this.subTitle,
-      @required this.secondaryTitle,
-      @required this.boxAssets,
-      @required this.boxTitlles,
-      @required this.isBoxOpen})
+      {Key? key,
+      required this.mainTitle,
+      required this.subTitle,
+      required this.secondaryTitle,
+      required this.boxAssets,
+      required this.boxTitlles,
+      required this.isBoxOpen})
       : super(key: key);
 
   final String mainTitle;
@@ -277,7 +277,7 @@ class InfoComponent3 extends StatefulWidget {
 }
 
 class _InfoComponent3State extends State<InfoComponent3> {
-  bool isBoxOpen;
+  late bool isBoxOpen;
 
   @override
   void initState() {

@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m4(quantity, formattedNumber) => "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
 
-  final messages = _notInlinedMessages(_notInlinedMessages);
+  final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "onboardText1" : MessageLookupByLibrary.simpleMessage("Economize ou invista \$ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras"),
     "onboardText2" : MessageLookupByLibrary.simpleMessage("Use os ingressos para participar de jogos semanais emocionantes"),

@@ -15,7 +15,7 @@ class TutorialOverlay extends ModalRoute<void> {
   Color get barrierColor => Colors.black.withOpacity(0.5);
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool get maintainState => true;
@@ -34,7 +34,7 @@ class TutorialOverlay extends ModalRoute<void> {
         child: Container(
           color: Colors.red,
           width: SizeConfig.screenWidth,
-          height: SizeConfig.screenHeight * 0.3,
+          height: SizeConfig.screenHeight! * 0.3,
           alignment: Alignment.bottomCenter,
         ),
       ),

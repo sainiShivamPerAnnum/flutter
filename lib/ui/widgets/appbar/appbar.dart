@@ -9,16 +9,16 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class FAppBar extends StatelessWidget with PreferredSizeWidget {
-  final FaqsType type;
-  final String title;
+  final FaqsType? type;
+  final String? title;
   final bool showCoinBar;
   final bool showAvatar;
   final bool showHelpButton;
-  final Color backgroundColor;
-  final Widget action;
+  final Color? backgroundColor;
+  final Widget? action;
 
   const FAppBar({
-    Key key,
+    Key? key,
     this.type,
     this.title,
     this.showCoinBar = true,
@@ -51,7 +51,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
           children: [
             if (showCoinBar) FelloCoinBar(svgAsset: Assets.token),
             if (type != null) FaqButtonRounded(type: type),
-            if (action != null) action,
+            if (action != null) action!,
             SizedBox(width: SizeConfig.padding20)
           ],
         )

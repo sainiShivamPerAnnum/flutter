@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:felloapp/util/constants.dart';
 
 class TransactionResponseModel {
-  String message;
+  String? message;
   Data data;
   TransactionResponseModel({
-    @required this.message,
-    @required this.data,
+    required this.message,
+    required this.data,
   });
 
   TransactionResponseModel copyWith({
-    String message,
-    Data data,
+    String? message,
+    Data? data,
   }) {
     return TransactionResponseModel(
       message: message ?? this.message,
@@ -32,7 +32,7 @@ class TransactionResponseModel {
 
   factory TransactionResponseModel.fromMap(Map<String, dynamic> map) {
     return TransactionResponseModel(
-      message: map['message'] as String,
+      message: map['message'] as String?,
       data: Data.fromMap(map['data'] as Map<String, dynamic>),
     );
   }
@@ -62,17 +62,17 @@ class Data {
   String status;
   bool isUpdating;
   int tickets;
-  double goldInTxnBought;
+  double? goldInTxnBought;
   Data(
-      {@required this.status,
-      @required this.isUpdating,
-      @required this.tickets,
+      {required this.status,
+      required this.isUpdating,
+      required this.tickets,
       this.goldInTxnBought});
 
   Data copyWith(
-      {bool status, bool isUpdating, int tickets, double goldInTxnBought}) {
+      {bool? status, bool? isUpdating, int? tickets, double? goldInTxnBought}) {
     return Data(
-        status: status ?? this.status,
+        status: status as String? ?? this.status,
         isUpdating: isUpdating ?? this.isUpdating,
         tickets: tickets ?? this.tickets,
         goldInTxnBought: goldInTxnBought ?? this.goldInTxnBought);
@@ -89,9 +89,9 @@ class Data {
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
         status:
-            map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
-        isUpdating: map['isUpdating'] as bool ?? true,
-        tickets: map['tickets'] as int ?? 0,
+            map['status'] as String? ?? Constants.TXN_STATUS_RESPONSE_PENDING,
+        isUpdating: map['isUpdating'] as bool? ?? true,
+        tickets: map['tickets'] as int? ?? 0,
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble());
   }
 

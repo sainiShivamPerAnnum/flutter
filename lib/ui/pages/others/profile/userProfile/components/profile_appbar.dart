@@ -8,9 +8,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
   const ProfileAppBar({
-    Key key,
-    @required this.isNewUser,
-    @required this.model,
+    Key? key,
+    required this.isNewUser,
+    required this.model,
   }) : super(key: key);
   final UserProfileVM model;
   final bool isNewUser;
@@ -35,7 +35,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
           Icons.arrow_back_ios_rounded,
           color: UiConstants.kTextColor,
         ),
-        onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+        onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
       ),
       actions: [
         if (!isNewUser)

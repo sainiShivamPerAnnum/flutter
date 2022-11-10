@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class FelloRichText extends RichText {
   final String paragraph;
 
-  FelloRichText({Key key, @required this.paragraph})
+  FelloRichText({Key? key, required this.paragraph})
       : super(
           key: key,
           text: renderedWidget(paragraph),

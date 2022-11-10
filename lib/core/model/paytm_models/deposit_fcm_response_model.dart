@@ -1,16 +1,16 @@
 class DepositFcmResponseModel {
-  String goldBalance;
-  bool didWalletUpdate;
-  bool isWalletCreated;
-  bool didFLCUpdate;
-  double augmontPrinciple;
-  double augmontGoldQty;
-  double amount;
-  int flcBalance;
-  String gtId;
-  String error;
-  bool status;
-  bool autosavePrompt;
+  String? goldBalance;
+  bool? didWalletUpdate;
+  bool? isWalletCreated;
+  bool? didFLCUpdate;
+  double? augmontPrinciple;
+  double? augmontGoldQty;
+  double? amount;
+  int? flcBalance;
+  String? gtId;
+  String? error;
+  bool? status;
+  bool? autosavePrompt;
 
   DepositFcmResponseModel({
     this.goldBalance,

@@ -12,7 +12,7 @@ class CacheManager {
   static const CACHE_LAST_UGT_CHECK_TIME = "lastUGTCheckTime";
 
   static Future readCache(
-      {@required String key, CacheType type = CacheType.string}) async {
+      {required String key, CacheType type = CacheType.string}) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
 
@@ -40,9 +40,9 @@ class CacheManager {
   }
 
   static Future writeCache({
-    @required String key,
-    @required var value,
-    @required CacheType type,
+    required String key,
+    required var value,
+    required CacheType type,
   }) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
@@ -67,7 +67,7 @@ class CacheManager {
     }
   }
 
-  static Future deleteCache({@required String key}) async {
+  static Future deleteCache({required String key}) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     await sharedPreferences.remove(key);

@@ -16,7 +16,7 @@ class PrizingRepo extends BaseRepo {
     PrizeClaimChoice claimChoice,
   ) async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       final response = await APIService.instance.postData(
@@ -33,7 +33,7 @@ class PrizingRepo extends BaseRepo {
       final data = response['data'];
       return ApiResponse(model: data['txnId'], code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

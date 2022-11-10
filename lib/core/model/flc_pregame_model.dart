@@ -1,15 +1,15 @@
 class FlcModel {
-  String message;
-  bool status;
-  int ticketCount;
-  int flcBalance;
-  String sessionId;
-  bool isValidUser;
-  bool canUserPlay;
-  bool isWalletInitalized;
-  String ticketFieldName;
-  String gameEndpoint;
-  bool isGtRewarded;
+  String? message;
+  bool? status;
+  int? ticketCount;
+  int? flcBalance;
+  String? sessionId;
+  bool? isValidUser;
+  bool? canUserPlay;
+  bool? isWalletInitalized;
+  String? ticketFieldName;
+  String? gameEndpoint;
+  bool? isGtRewarded;
 
   FlcModel(
       {this.message,

@@ -21,9 +21,9 @@ class SellingReasonBottomSheet extends StatelessWidget {
   ];
 
   String selectedReasonForSelling = '';
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
-  SellingReasonBottomSheet({Key key, @required this.investmentType})
+  SellingReasonBottomSheet({Key? key, required this.investmentType})
       : super(key: key);
 
   @override
@@ -57,10 +57,10 @@ class SellingReasonBottomSheet extends StatelessWidget {
                       selected: true,
                       value: x,
                       groupValue: selectedReasonForSelling,
-                      onChanged: (value) {
+                      onChanged: (dynamic value) {
                         selectedReasonForSelling = x;
 
-                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher!.didPopRoute();
                         BaseUtil()
                             .openSellModalSheet(investmentType: investmentType);
                       },

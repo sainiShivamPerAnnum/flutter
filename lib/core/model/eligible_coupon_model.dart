@@ -1,8 +1,8 @@
 class EligibleCouponResponseModel {
-  bool flag;
-  String message;
-  String code;
-  String desc;
+  bool? flag;
+  String? message;
+  String? code;
+  String? desc;
 
   EligibleCouponResponseModel({this.flag, this.message, this.code, this.desc});
 

@@ -39,24 +39,24 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
-  final _userService = locator<UserService>();
-  final _logger = locator<CustomLogger>();
-  final _userCoinService = locator<UserCoinService>();
-  final _paytmRepo = locator<PaytmRepository>();
+  final UserService? _userService = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
   final _gtService = GoldenTicketService();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _txnHistoryService = locator<TransactionHistoryService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _paytmService = locator<PaytmService>();
-  final _razorpayService = locator<RazorpayService>();
-  final _tambolaService = locator<TambolaService>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final TransactionHistoryService? _txnHistoryService = locator<TransactionHistoryService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final RazorpayService? _razorpayService = locator<RazorpayService>();
+  final TambolaService? _tambolaService = locator<TambolaService>();
 
-  double currentTxnGms = 0.0;
-  DepositFcmResponseModel depositFcmResponseModel;
+  double? currentTxnGms = 0.0;
+  DepositFcmResponseModel? depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
   bool _isGoldSellInProgress = false;
 
-  GoldPurchaseDetails currentGoldPurchaseDetails;
+  late GoldPurchaseDetails currentGoldPurchaseDetails;
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
@@ -71,8 +71,8 @@ class AugmontTransactionService extends BaseTransactionService {
     notifyListeners(TransactionServiceProperties.transactionStatus);
   }
 
-  Future<void> initateAugmontTransaction(
-      {@required GoldPurchaseDetails details}) {
+  Future<void>? initateAugmontTransaction(
+      {required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
     String paymentMode = this.getPaymentMode();
 
@@ -95,7 +95,7 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processUpiTransaction() async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
-    CreatePaytmTransactionModel createdPaytmTransactionData =
+    CreatePaytmTransactionModel? createdPaytmTransactionData =
         await this.createPaytmTransaction(
       PaymentMode.UPI,
       currentGoldPurchaseDetails.goldBuyAmount,
@@ -106,12 +106,12 @@ class AugmontTransactionService extends BaseTransactionService {
     if (createdPaytmTransactionData != null) {
       currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
-      final deepUri = await _paytmService.generateUpiTransactionDeepUri(
+      final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
           selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
       if (deepUri != null && deepUri.isNotEmpty) {
-        final res = await _paytmService.initiateUpiTransaction(
+        final res = await _paytmService!.initiateUpiTransaction(
           amount: currentGoldPurchaseDetails.goldBuyAmount,
-          orderId: createdPaytmTransactionData.data.orderId,
+          orderId: createdPaytmTransactionData.data!.orderId,
           upiApplication: upiApplication,
           url: deepUri,
           investmentType: InvestmentType.AUGGOLD99,
@@ -140,9 +140,9 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processRazorpayTransaction() async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
-    final amount = currentGoldPurchaseDetails.goldBuyAmount;
-    final augmontRates = currentGoldPurchaseDetails.goldRates;
-    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+    final amount = currentGoldPurchaseDetails.goldBuyAmount!;
+    final augmontRates = currentGoldPurchaseDetails.goldRates!;
+    double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
     final augMap = {
@@ -151,20 +151,20 @@ class AugmontTransactionService extends BaseTransactionService {
       "aPaymode": 'RZP',
       "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice),
+          augmontRates.goldBuyPrice!),
       "aTaxedGoldBalance":
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
     log("AUGMAP : $augMap");
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
-    await _razorpayService.initiateRazorpayTxn(
+    await _razorpayService!.initiateRazorpayTxn(
       amount: currentGoldPurchaseDetails.goldBuyAmount,
       augMap: augMap,
       lbMap: {},
       couponCode: currentGoldPurchaseDetails.couponCode,
-      email: _userService.baseUser.email,
-      mobile: _userService.baseUser.mobile,
+      email: _userService!.baseUser!.email,
+      mobile: _userService!.baseUser!.mobile,
       skipMl: currentGoldPurchaseDetails.skipMl,
       investmentType: InvestmentType.AUGGOLD99,
     );
@@ -176,7 +176,7 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processPaytmTransaction() async {
     AppState.blockNavigation();
     isGoldBuyInProgress = true;
-    CreatePaytmTransactionModel createdPaytmTransactionData =
+    CreatePaytmTransactionModel? createdPaytmTransactionData =
         await this.createPaytmTransaction(
       PaymentMode.PAYTM,
       currentGoldPurchaseDetails.goldBuyAmount,
@@ -187,7 +187,7 @@ class AugmontTransactionService extends BaseTransactionService {
     if (createdPaytmTransactionData != null) {
       currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
-      bool _status = await _paytmService.initiatePaytmPGTransaction(
+      bool _status = await _paytmService!.initiatePaytmPGTransaction(
         paytmSubscriptionModel: createdPaytmTransactionData,
         restrictAppInvoke: FlavorConfig.isDevelopment(),
         investmentType: InvestmentType.AUGGOLD99,
@@ -196,7 +196,7 @@ class AugmontTransactionService extends BaseTransactionService {
       if (_status) {
         currentTransactionState = TransactionState.ongoing;
         AppState.blockNavigation();
-        _logger
+        _logger!
             .d("Txn Timer Function reinitialised and set with 30 secs delay");
         initiatePolling();
       } else {
@@ -220,8 +220,8 @@ class AugmontTransactionService extends BaseTransactionService {
     }
   }
 
-  transactionResponseUpdate({String gtId}) async {
-    _logger.d("Polling response processing");
+  transactionResponseUpdate({String? gtId}) async {
+    _logger!.d("Polling response processing");
     try {
       if (gtId != null) {
         print("Hey a new fcm recived with gtId: $gtId");
@@ -237,39 +237,39 @@ class AugmontTransactionService extends BaseTransactionService {
       }
 
       //add this to augmontBuyVM
-      _userCoinService.getUserCoinBalance();
-      _userService.getUserFundWalletData();
+      _userCoinService!.getUserCoinBalance();
+      _userService!.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
         GoldenTicketService.goldenTicketId = gtId;
         await _gtService.fetchAndVerifyGoldenTicketByID();
-        await _userService.getUserJourneyStats();
+        await _userService!.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
-      _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+      _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
     } catch (e) {
-      _logger.e(e);
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+      _logger!.e(e);
+      _internalOpsService!.logFailure(
+          _userService!.baseUser!.uid, FailType.DepositPayloadError, e as Map<String,dynamic>);
     }
   }
 
-  Future<void> processPolling(Timer timer) async {
-    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
+  Future<void> processPolling(Timer? timer) async {
+    final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
-      TransactionResponseModel txnStatus = res.model;
+      TransactionResponseModel txnStatus = res.model!;
       switch (txnStatus.data.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data.isUpdating) {
-            _tambolaService.weeklyTicksFetched = false;
-            currentTxnTambolaTicketsCount = res.model.data.tickets;
-            if (res.model.data != null &&
-                res.model.data.goldInTxnBought != null &&
-                res.model.data.goldInTxnBought > 0)
-              currentTxnGms = res.model.data.goldInTxnBought;
-            timer.cancel();
+            _tambolaService!.weeklyTicksFetched = false;
+            currentTxnTambolaTicketsCount = res.model!.data.tickets;
+            if (res.model!.data != null &&
+                res.model!.data.goldInTxnBought != null &&
+                res.model!.data.goldInTxnBought! > 0)
+              currentTxnGms = res.model!.data.goldInTxnBought;
+            timer!.cancel();
             return transactionResponseUpdate(
               gtId: currentTxnOrderId,
             );
@@ -278,7 +278,7 @@ class AugmontTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_PENDING:
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
-          timer.cancel();
+          timer!.cancel();
           AppState.unblockNavigation();
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.idle;
@@ -291,17 +291,17 @@ class AugmontTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<CreatePaytmTransactionModel> createPaytmTransaction(
+  Future<CreatePaytmTransactionModel?> createPaytmTransaction(
     PaymentMode mode,
-    double amount,
-    AugmontRates augmontRates,
+    double? amount,
+    AugmontRates? augmontRates,
     String couponCode,
     bool skipMl,
   ) async {
     if (augmontRates == null || amount == null || augmontRates == null)
       return null;
 
-    double netTax = augmontRates.cgstPercent + augmontRates.sgstPercent;
+    double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
     final mid = BaseRemoteConfig.remoteConfig.getString(
         FlavorConfig.isDevelopment()
             ? BaseRemoteConfig.PATYM_DEV_MID
@@ -312,13 +312,13 @@ class AugmontTransactionService extends BaseTransactionService {
       "aPaymode": 'PYTM',
       "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
-          augmontRates.goldBuyPrice),
+          augmontRates.goldBuyPrice!),
       "aTaxedGoldBalance":
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
 
     final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
+        paytmSubscriptionApiResponse = await _paytmRepo!.createTransaction(
       amount,
       augMap,
       null,
@@ -334,7 +334,7 @@ class AugmontTransactionService extends BaseTransactionService {
           paytmSubscriptionApiResponse.errorMessage, "");
     }
 
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
+    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
     this.currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;
   }
@@ -349,17 +349,17 @@ class AugmontTransactionService extends BaseTransactionService {
 }
 
 class GoldPurchaseDetails {
-  double goldBuyAmount;
-  AugmontRates goldRates;
+  double? goldBuyAmount;
+  AugmontRates? goldRates;
   String couponCode;
   bool skipMl;
   double goldInGrams;
 
   GoldPurchaseDetails({
-    @required this.goldBuyAmount,
-    @required this.goldRates,
-    @required this.couponCode,
-    @required this.skipMl,
-    @required this.goldInGrams,
+    required this.goldBuyAmount,
+    required this.goldRates,
+    required this.couponCode,
+    required this.skipMl,
+    required this.goldInGrams,
   });
 }

@@ -10,8 +10,8 @@ import 'package:flutter/widgets.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final UserProfileVM model;
@@ -40,7 +40,7 @@ class ProfileHeader extends StatelessWidget {
             isNewUser: model.isNewUser,
             updateProfilePicture: model.showCustomAvatarsDialog,
             image: ProfileImageSE(
-              radius: SizeConfig.screenWidth * 0.25,
+              radius: SizeConfig.screenWidth! * 0.25,
             ),
           ),
           SizedBox(height: SizeConfig.padding6),

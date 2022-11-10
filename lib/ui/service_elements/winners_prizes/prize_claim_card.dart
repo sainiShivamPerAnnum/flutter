@@ -29,7 +29,7 @@ class PrizeClaimCard extends StatelessWidget {
         properties: [UserServiceProperties.myUserFund],
         builder: (context, m, property) => Column(
               children: [
-                (m.userFundWallet.isPrizeBalanceUnclaimed())
+                (m!.userFundWallet!.isPrizeBalanceUnclaimed())
                     ? Container(
                         width: SizeConfig.screenWidth,
                         margin: EdgeInsets.only(
@@ -59,7 +59,7 @@ class PrizeClaimCard extends StatelessWidget {
                                         TextStyles.body1.colour(Colors.white),
                                   ),
                                   Text(
-                                    "₹ ${m.userFundWallet.unclaimedBalance.toInt() ?? '-'}",
+                                    "₹ ${m.userFundWallet!.unclaimedBalance.toInt() ?? '-'}",
                                     style: TextStyles.rajdhaniB.bold
                                         .colour(UiConstants
                                             .kcashBackAmountTextColor)
@@ -107,7 +107,7 @@ class PrizeClaimCard extends StatelessWidget {
                             //       ],
                             //     ),
                             //   ),
-                            if (m.userFundWallet.unclaimedBalance <
+                            if (m.userFundWallet!.unclaimedBalance <
                                 minWithdrawPrizeAmt)
                               Container(
                                 margin:
@@ -129,7 +129,7 @@ class PrizeClaimCard extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            else if (m.userFundWallet.augGoldPrinciple <
+                            else if (m.userFundWallet!.augGoldPrinciple <
                                 refUnlockAmt)
                               Container(
                                 margin:
@@ -163,7 +163,7 @@ class PrizeClaimCard extends StatelessWidget {
     String option = BaseRemoteConfig.remoteConfig
             .getString(BaseRemoteConfig.AMZ_VOUCHER_REDEMPTION) ??
         '1';
-    int op = int.tryParse(option);
+    int? op = int.tryParse(option);
     return (op == null || op == 1);
   }
 }
@@ -175,10 +175,10 @@ class ClaimButton extends StatelessWidget {
   final Function onTap;
 
   ClaimButton({
-    @required this.color,
-    @required this.image,
-    @required this.onTap,
-    @required this.text,
+    required this.color,
+    required this.image,
+    required this.onTap,
+    required this.text,
   });
 
   @override
@@ -187,7 +187,7 @@ class ClaimButton extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: SizeConfig.padding16),
         child: AppPositiveBtn(
-          onPressed: onTap,
+          onPressed: onTap as void Function(),
           btnText: text ?? "Redeem for amazon pay",
           width: double.maxFinite,
         ),

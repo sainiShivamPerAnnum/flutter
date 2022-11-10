@@ -19,8 +19,8 @@ class TrendingGamesSection extends StatelessWidget {
   final PlayViewModel model;
 
   const TrendingGamesSection({
-    @required this.model,
-    Key key,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class TrendingGamesSection extends StatelessWidget {
             title: "All games",
             subTitle: "New games are added regularly. Keep checking out!"),
         Container(
-          height: SizeConfig.screenWidth * 0.6,
+          height: SizeConfig.screenWidth! * 0.6,
           width: SizeConfig.screenWidth,
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
@@ -58,37 +58,37 @@ class TrendingGamesSection extends StatelessWidget {
 }
 
 class TrendingGames extends StatelessWidget {
-  final GameModel game;
+  final GameModel? game;
   const TrendingGames({
     this.game,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     return GestureDetector(
       onTap: () {
-        _analyticsService.track(
+        _analyticsService!.track(
             eventName: AnalyticsEvents.gameTapped,
             properties:
                 AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-              'Game name': game.gameName,
-              "Entry fee": game.playCost,
-              "Win upto": game.prizeAmount,
+              'Game name': game!.gameName,
+              "Entry fee": game!.playCost,
+              "Win upto": game!.prizeAmount,
               "Time left for draw Tambola (mins)":
                   AnalyticsProperties.getTimeLeftForTambolaDraw(),
               "Tambola Tickets Owned":
                   AnalyticsProperties.getTabolaTicketCount(),
             }));
         Haptic.vibrate();
-        AppState.delegate.parseRoute(
-          Uri.parse(game.route),
+        AppState.delegate!.parseRoute(
+          Uri.parse(game!.route!),
         );
       },
       child: Container(
         margin: EdgeInsets.only(right: SizeConfig.padding20),
-        width: SizeConfig.screenWidth * 0.32,
+        width: SizeConfig.screenWidth! * 0.32,
         padding: EdgeInsets.all(SizeConfig.padding12),
         decoration: BoxDecoration(
             color: UiConstants.kSecondaryBackgroundColor,
@@ -98,12 +98,12 @@ class TrendingGames extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.network(
-              game.icon,
+              game!.icon!,
               fit: BoxFit.cover,
-              width: SizeConfig.screenWidth * 0.32,
+              width: SizeConfig.screenWidth! * 0.32,
             ),
             Text(
-              game.gameName.split(' ').first,
+              game!.gameName!.split(' ').first,
               textAlign: TextAlign.center,
               style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
@@ -117,7 +117,7 @@ class TrendingGames extends StatelessWidget {
                 ),
                 SizedBox(width: SizeConfig.padding6),
                 Text(
-                  game.playCost.toString(),
+                  game!.playCost.toString(),
                   style: TextStyles.sourceSans.body2.colour(Colors.white),
                 )
               ],
@@ -131,14 +131,14 @@ class TrendingGames extends StatelessWidget {
 
 class TrendingGamesShimmer extends StatelessWidget {
   const TrendingGamesShimmer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding20),
-      width: SizeConfig.screenWidth * 0.32,
+      width: SizeConfig.screenWidth! * 0.32,
       padding: EdgeInsets.all(SizeConfig.padding12),
       decoration: BoxDecoration(
           color: UiConstants.kSecondaryBackgroundColor,
@@ -153,8 +153,8 @@ class TrendingGamesShimmer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                height: SizeConfig.screenWidth * 0.23,
-                width: SizeConfig.screenWidth * 0.23,
+                height: SizeConfig.screenWidth! * 0.23,
+                width: SizeConfig.screenWidth! * 0.23,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.grey.shade600,

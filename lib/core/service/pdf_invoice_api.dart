@@ -91,8 +91,8 @@ class PdfInvoiceApi {
             ),
           ),
           SizedBox(height: 3 * PdfPageFormat.mm),
-          Text(customer.name, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(customer.address),
+          Text(customer.name!, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(customer.address!),
         ],
       );
 
@@ -271,8 +271,8 @@ class PdfInvoiceApi {
       ));
 
   static buildSimpleText({
-    String title,
-    String value,
+    required String title,
+    required String value,
   }) {
     final style = TextStyle(fontWeight: FontWeight.bold);
 
@@ -288,10 +288,10 @@ class PdfInvoiceApi {
   }
 
   static buildText({
-    String title,
-    String value,
+    required String title,
+    required String value,
     double width = double.infinity,
-    TextStyle titleStyle,
+    TextStyle? titleStyle,
     bool unite = false,
   }) {
     final style = titleStyle ?? TextStyle(fontWeight: FontWeight.bold);

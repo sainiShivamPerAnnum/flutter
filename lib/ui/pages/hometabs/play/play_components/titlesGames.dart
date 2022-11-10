@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class TitlesGames extends StatelessWidget {
-  final Widget icon, richText;
+  final Widget? icon, richText;
   final bool isLast;
   final bool startPaddingAvilable;
   final bool endPaddingAvailble;
@@ -22,22 +22,22 @@ class TitlesGames extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         startPaddingAvilable
-            ? SizedBox(width: SizeConfig.screenWidth * 0.1)
+            ? SizedBox(width: SizeConfig.screenWidth! * 0.1)
             : SizedBox.shrink(),
         Column(
           children: [
-            SizedBox(width: SizeConfig.screenWidth * 0),
-            icon,
+            SizedBox(width: SizeConfig.screenWidth! * 0),
+            icon!,
             isLast ? SizedBox(height: SizeConfig.padding12) : GameStepper(),
           ],
         ),
         SizedBox(
           width: SizeConfig.padding20,
         ),
-        Flexible(child: richText),
+        Flexible(child: richText!),
         // if (endPaddingAvailble)
         startPaddingAvilable
-            ? SizedBox(width: SizeConfig.screenWidth * 0.1)
+            ? SizedBox(width: SizeConfig.screenWidth! * 0.1)
             : SizedBox.shrink(),
       ],
     );

@@ -24,12 +24,12 @@ class GoldSellInputView extends StatelessWidget {
   final AugmontTransactionService augTxnService;
 
   const GoldSellInputView(
-      {Key key, @required this.model, @required this.augTxnService})
+      {Key? key, required this.model, required this.augTxnService})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return Stack(
       children: [
         Column(
@@ -69,7 +69,7 @@ class GoldSellInputView extends StatelessWidget {
               height: SizeConfig.padding6,
             ),
             Container(
-              height: SizeConfig.screenWidth * 0.22,
+              height: SizeConfig.screenWidth! * 0.22,
               width: SizeConfig.screenWidth,
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
@@ -91,7 +91,7 @@ class GoldSellInputView extends StatelessWidget {
                         });
                       },
                       child: Container(
-                        height: SizeConfig.screenWidth * 0.5,
+                        height: SizeConfig.screenWidth! * 0.5,
                         // width: SizeConfig.screenWidth * 0.6,
                         decoration: BoxDecoration(
                           color: UiConstants.kFAQDividerColor.withOpacity(0.5),
@@ -148,8 +148,8 @@ class GoldSellInputView extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: SizeConfig.screenWidth * 0.36,
-                    height: SizeConfig.screenWidth * 0.5,
+                    width: SizeConfig.screenWidth! * 0.36,
+                    height: SizeConfig.screenWidth! * 0.5,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(SizeConfig.roundness12),
@@ -211,9 +211,9 @@ class GoldSellInputView extends StatelessWidget {
             augTxnService.isGoldSellInProgress
                 ? Center(
                     child: Container(
-                      height: SizeConfig.screenWidth * 0.1556,
+                      height: SizeConfig.screenWidth! * 0.1556,
                       alignment: Alignment.center,
-                      width: SizeConfig.screenWidth * 0.7,
+                      width: SizeConfig.screenWidth! * 0.7,
                       child: LinearProgressIndicator(
                         color: UiConstants.primaryColor,
                         backgroundColor: UiConstants.kDarkBackgroundColor,
@@ -243,11 +243,11 @@ class GoldSellInputView extends StatelessWidget {
                                     '₹${BaseUtil.digitPrecision(model.goldAmountFromGrams, 2)} will be credited to your linked bank account instantly',
                                 buttonText: 'SELL',
                                 confirmAction: () async {
-                                  AppState.backButtonDispatcher.didPopRoute();
+                                  AppState.backButtonDispatcher!.didPopRoute();
                                   await model.initiateSell();
                                 },
                                 cancelAction: () {
-                                  AppState.backButtonDispatcher.didPopRoute();
+                                  AppState.backButtonDispatcher!.didPopRoute();
                                 },
                               ),
                             );

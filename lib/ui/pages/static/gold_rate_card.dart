@@ -8,9 +8,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class CurrentPriceWidget extends StatefulWidget {
   // final AugmontGoldBuyViewModel model;
   // CurrentPriceWidget({this.model});
-  final Function fetchGoldRates;
-  final double goldprice;
-  final bool isFetching;
+  final Function? fetchGoldRates;
+  final double? goldprice;
+  final bool? isFetching;
   final bool mini;
 
   CurrentPriceWidget({
@@ -26,8 +26,8 @@ class CurrentPriceWidget extends StatefulWidget {
 
 class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
     with SingleTickerProviderStateMixin {
-  Animation<Duration> animation;
-  AnimationController controller;
+  late Animation<Duration> animation;
+  late AnimationController controller;
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
         (status) {
           print(status.toString());
           if (status == AnimationStatus.completed) {
-            widget.fetchGoldRates();
+            widget.fetchGoldRates!();
             controller.reset();
             controller.forward();
           } else if (status == AnimationStatus.dismissed) {
@@ -68,13 +68,13 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              widget.isFetching
+              widget.isFetching!
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.primaryColor,
                     )
                   : // SizedBox(height: SizeConfig.padding4),
-                  Text(" ₹${widget.goldprice.toStringAsFixed(2)}/gm",
+                  Text(" ₹${widget.goldprice!.toStringAsFixed(2)}/gm",
                       style: TextStyles.sourceSans.body4.colour(
                           UiConstants.kModalSheetMutedTextBackgroundColor)),
               Text(
@@ -85,7 +85,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
             ],
           )
         : Container(
-            height: SizeConfig.screenWidth * 0.246,
+            height: SizeConfig.screenWidth! * 0.246,
             width: SizeConfig.screenWidth,
             decoration: BoxDecoration(
               color: UiConstants.primaryColor.withOpacity(0.1),
@@ -106,13 +106,13 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                       style: TextStyles.body1.colour(UiConstants.primaryColor),
                     ),
                     Spacer(),
-                    widget.isFetching
+                    widget.isFetching!
                         ? SpinKitThreeBounce(
                             size: SizeConfig.body2,
                             color: UiConstants.primaryColor,
                           )
                         : Text(
-                            "₹ ${widget.goldprice.toStringAsFixed(1)}/gm",
+                            "₹ ${widget.goldprice!.toStringAsFixed(1)}/gm",
                             style: TextStyles.body1
                                 .colour(UiConstants.primaryColor)
                                 .bold,
@@ -150,11 +150,11 @@ class NewCurrentGoldPriceWidget extends StatefulWidget {
     this.goldprice,
     this.isFetching,
     this.mini = false,
-    Key key,
+    Key? key,
   });
-  final Function fetchGoldRates;
-  final double goldprice;
-  final bool isFetching;
+  final Function? fetchGoldRates;
+  final double? goldprice;
+  final bool? isFetching;
   final bool mini;
 
   @override
@@ -164,8 +164,8 @@ class NewCurrentGoldPriceWidget extends StatefulWidget {
 
 class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
     with SingleTickerProviderStateMixin {
-  Animation<Duration> animation;
-  AnimationController controller;
+  late Animation<Duration> animation;
+  late AnimationController controller;
 
   @override
   void initState() {
@@ -180,7 +180,7 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
         (status) {
           print(status.toString());
           if (status == AnimationStatus.completed) {
-            widget.fetchGoldRates();
+            widget.fetchGoldRates!();
             controller.reset();
             controller.forward();
           } else if (status == AnimationStatus.dismissed) {
@@ -207,13 +207,13 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              widget.isFetching
+              widget.isFetching!
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.primaryColor,
                     )
                   : Text(
-                      "₹ ${widget.goldprice.toStringAsFixed(2)}/gm",
+                      "₹ ${widget.goldprice!.toStringAsFixed(2)}/gm",
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kPrimaryColor),
                     ),

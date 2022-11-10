@@ -63,14 +63,14 @@ import 'package:flutter/material.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  final _analytics = locator<AnalyticsService>();
-  final JourneyService _journeyService = locator<JourneyService>();
+  final AnalyticsService? _analytics = locator<AnalyticsService>();
+  final JourneyService? _journeyService = locator<JourneyService>();
 
   final List<Page> _pages = [];
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
@@ -85,8 +85,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   int numPages() => _pages.length;
 
   @override
-  PageConfiguration get currentConfiguration =>
-      _pages.last.arguments as PageConfiguration;
+  PageConfiguration? get currentConfiguration =>
+      _pages.last.arguments as PageConfiguration?;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void pop() {
     if (canPop()) {
-      _removePage(_pages.last);
+      _removePage(_pages.last as MaterialPage<dynamic>);
     }
   }
 
@@ -125,10 +125,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   @override
   Future<bool> popRoute() {
     if (canPop()) {
-      _removePage(_pages.last);
+      _removePage(_pages.last as MaterialPage<dynamic>);
       print("Current Stack: ${AppState.screenStack}");
       if (AppState.screenStack.length == 1)
-        _journeyService.checkForMilestoneLevelChange();
+        _journeyService!.checkForMilestoneLevelChange();
       notifyListeners();
 
       return Future.value(true);
@@ -147,7 +147,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
     return MaterialPage(
       child: child,
-      key: Key(pageConfig.key),
+      key: Key(pageConfig.key) as LocalKey?,
       name: pageConfig.path,
       arguments: pageConfig,
     );
@@ -156,19 +156,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   MaterialPage _insertPage(Widget child, PageConfiguration pageConfig) {
     return MaterialPage(
       child: child,
-      key: Key(pageConfig.key),
+      key: Key(pageConfig.key) as LocalKey?,
       name: pageConfig.path,
       arguments: pageConfig,
     );
   }
 
   void _insertPageData(Widget child, PageConfiguration pageConfig,
-      {int index}) {
+      {int? index}) {
     AppState.screenStack
         .insert(index ?? AppState.screenStack.length, ScreenItem.page);
     print("Inseted a page ${pageConfig.key} to Index $index");
     log("Current Stack: ${AppState.screenStack}");
-    _analytics.trackScreen(screen: pageConfig.name);
+    _analytics!.trackScreen(screen: pageConfig.name);
     _pages.insert(
       index ?? _pages.length - 1,
       _insertPage(child, pageConfig),
@@ -180,8 +180,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     AppState.screenStack.add(ScreenItem.page);
     print("Added a page ${pageConfig.key}");
     log("Current Stack: ${AppState.screenStack}");
-    if (pageConfig.name != null && pageConfig.name.isNotEmpty) {
-      _analytics.trackScreen(screen: pageConfig.name);
+    if (pageConfig.name != null && pageConfig.name!.isNotEmpty) {
+      _analytics!.trackScreen(screen: pageConfig.name);
     }
     _pages.add(
       _createPage(child, pageConfig),
@@ -189,13 +189,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     //notifyListeners();
   }
 
-  void addPage(PageConfiguration pageConfig) {
+  void addPage(PageConfiguration? pageConfig) {
     final shouldAddPage = _pages.isEmpty ||
         (_pages.last.arguments as PageConfiguration).uiPage !=
-            pageConfig.uiPage;
+            pageConfig!.uiPage;
 
     if (shouldAddPage) {
-      switch (pageConfig.uiPage) {
+      switch (pageConfig!.uiPage) {
         case Pages.Splash:
           _addPageData(LauncherView(), SplashPageConfig);
           break;
@@ -218,10 +218,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BankDetails:
           _addPageData(BankDetailsView(), BankDetailsPageConfig);
           break;
-        case Pages.Faq:
-          _addPageData(FAQPage(), FaqPageConfig);
-          break;
-
+        
         case Pages.UpdateRequired:
           _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
           break;
@@ -273,30 +270,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.FreshDeskHelp:
           _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
-        case Pages.GoldenTicketView:
-          _addPageData(GTDetailedView(), GoldenTicketViewPageConfig);
-          break;
+        
         case Pages.GoldenTicketsView:
           _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
           break;
 
-        case Pages.AllParticipantsView:
-          _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
-          break;
-        case Pages.AllParticipantsWinnersTopReferersView:
-          _addPageData(AllParticipantsWinnersTopReferers(),
-              AllParticipantsWinnersTopReferersConfig);
-          break;
-        case Pages.RedeemSucessfulScreenView:
-          _addPageData(
-              RedeemSucessfulScreen(), RedeemSucessfulScreenPageConfig);
-          break;
-        case Pages.SharePriceScreenView:
-          _addPageData(SharePriceScreen(), SharePriceScreenPageConfig);
-          break;
-        case Pages.AllTambolaTicketsView:
-          _addPageData(AllTambolaTickets(), AllTambolaTicketsPageConfig);
-          break;
+       
         // case Pages.WebHomeView:
         //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
         //   break;
@@ -305,13 +284,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         //   break;
         // case Pages.PoolView:
         //   _addPageData(PoolView(), PoolViewPageConfig);
-        case Pages.WebHomeView:
-          _addPageData(WebHomeView(), WebHomeViewPageConfig);
-          break;
-        case Pages.WebGameView:
-          _addPageData(WebGameView(), WebGameViewPageConfig);
-          break;
-
+       
         case Pages.AutosaveDetailsView:
           _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
@@ -345,9 +318,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SaveAssetView:
           _addPageData(SaveAssetView(), SaveAssetsViewConfig);
           break;
-        case Pages.InfoStoriesView:
-          _addPageData(InfoStories(), InfoStoriesViewPageConfig);
-          break;
+      
         default:
           break;
       }
@@ -355,7 +326,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
 // 1
-  void replace(PageConfiguration newRoute) {
+  void replace(PageConfiguration? newRoute) {
     if (_pages.isNotEmpty) {
       AppState.screenStack.removeLast();
       _pages.removeLast();
@@ -372,7 +343,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
 // 3
-  void replaceAll(PageConfiguration newRoute) {
+  void replaceAll(PageConfiguration? newRoute) {
     setNewRoutePath(newRoute);
   }
 
@@ -393,7 +364,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     });
   }
 
-  void pushBelow(Widget child, PageConfiguration newRoute, {int index}) {
+  void pushBelow(Widget child, PageConfiguration newRoute, {int? index}) {
     _insertPageData(child, newRoute, index: index);
   }
 
@@ -407,10 +378,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   @override
-  Future<void> setNewRoutePath(PageConfiguration configuration) {
+  Future<void> setNewRoutePath(PageConfiguration? configuration) {
     final shouldAddPage = _pages.isEmpty ||
         (_pages.last.arguments as PageConfiguration).uiPage !=
-            configuration.uiPage;
+            configuration!.uiPage;
     if (shouldAddPage) {
       _pages.clear();
       AppState.screenStack.clear();
@@ -420,7 +391,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void _setPageAction(PageAction action) {
-    switch (action.page.uiPage) {
+    switch (action.page!.uiPage) {
       case Pages.Splash:
         SplashPageConfig.currentPageAction = action;
         break;
@@ -656,20 +627,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case PageState.addWidget:
         // 8
         _setPageAction(appState.currentAction);
-        pushWidget(appState.currentAction.widget, appState.currentAction.page);
+        pushWidget(appState.currentAction.widget!, appState.currentAction.page!);
         break;
       case PageState.addBelow:
         _setPageAction(appState.currentAction);
-        pushBelow(appState.currentAction.widget, appState.currentAction.page);
+        pushBelow(appState.currentAction.widget!, appState.currentAction.page!);
 
         break;
       case PageState.addAll:
         // 9
-        addAll(appState.currentAction.pages);
+        addAll(appState.currentAction.pages!);
         break;
       case PageState.replaceWidget:
         replaceWidget(
-            appState.currentAction.widget, appState.currentAction.page);
+            appState.currentAction.widget!, appState.currentAction.page!);
         break;
     }
     // 10
@@ -687,7 +658,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
         } else if (segment.startsWith('c-', 0)) {
-          appState.scrollHome(num.tryParse(segment.split('-').last));
+          appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else {
           screenCheck(segment);
         }
@@ -697,7 +668,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void dialogCheck(String dialogKey) {
-    Widget dialogWidget;
+    Widget? dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
       case "panInfo":
@@ -713,23 +684,23 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
       showDialog(
-        context: navigatorKey.currentContext,
+        context: navigatorKey.currentContext!,
         barrierDismissible: barrierDismissable,
         builder: (ctx) {
           return WillPopScope(
               onWillPop: () {
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
                 print("Popped the dialog");
                 return Future.value(true);
               },
-              child: dialogWidget);
+              child: dialogWidget!);
         },
       );
     }
   }
 
   void screenCheck(String screenKey) {
-    PageConfiguration pageConfiguration;
+    PageConfiguration? pageConfiguration;
     switch (screenKey) {
       case 'journey':
         appState.setCurrentTabIndex = 0;
@@ -840,7 +811,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       //   break;
 
       case 'pop':
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         break;
       // case 'goldDetails':
       //   pageConfiguration = SaveAssetsViewConfig;
@@ -893,7 +864,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openTopSaverScreen(String eventType) {
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       page: CampaignViewPageConfig,
       state: PageState.addWidget,
       widget: CampaignView(eventType: eventType),
@@ -901,7 +872,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openWebGame(String game) {
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: WebHomeView(game: game),
       page: WebHomeViewPageConfig,
@@ -909,7 +880,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openAppWalkthrough() {
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
       page: OnBoardingViewPageConfig,
@@ -917,7 +888,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openTransactions(InvestmentType investmentType) {
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: TransactionsHistory(investmentType: investmentType),
       page: TransactionsHistoryPageConfig,

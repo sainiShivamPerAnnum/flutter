@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Loser extends StatelessWidget {
-  const Loser({Key key}) : super(key: key);
+  const Loser({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return SafeArea(
       child: Container(
         padding:
@@ -24,7 +24,7 @@ class Loser extends StatelessWidget {
           children: [
             SvgPicture.asset(
               Assets.noWinnersAsset,
-              width: SizeConfig.screenWidth * 0.4,
+              width: SizeConfig.screenWidth! * 0.4,
             ),
             SizedBox(
               height: SizeConfig.padding54,
@@ -51,10 +51,10 @@ class Loser extends StatelessWidget {
               child: AppPositiveBtn(
                   btnText: "SAVE MORE",
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.delegate.appState.setCurrentTabIndex = 0;
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.delegate!.appState.setCurrentTabIndex = 0;
                   }),
             ),
           ],

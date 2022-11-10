@@ -51,7 +51,7 @@ class Play extends StatelessWidget {
                   heading: model.boxHeading,
                   assetList: model.boxAssets,
                   titleList: model.boxTitlles,
-                  height: SizeConfig.screenWidth * 0.3,
+                  height: SizeConfig.screenWidth! * 0.3,
                 ),
                 GOWCard(
                   model: model,

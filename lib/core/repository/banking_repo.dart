@@ -10,8 +10,8 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 
 class BankingRepository extends BaseRepo {
-  final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
   final _cacheService = new CacheService();
 
   final _baseUrl = FlavorConfig.isDevelopment()
@@ -19,7 +19,7 @@ class BankingRepository extends BaseRepo {
       : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
-      {String uid, String panName, String panNumber}) async {
+      {String? uid, String? panName, String? panNumber}) async {
     final Map<String, dynamic> body = {
       "uid": uid,
       "panName": panName,
@@ -29,17 +29,17 @@ class BankingRepository extends BaseRepo {
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.postData(
-        _apiPaths.kVerifyPan,
+        _apiPaths!.kVerifyPan,
         body: body,
         token: token,
         cBaseUrl: _baseUrl,
       );
 
-      _logger.d(response);
+      _logger!.d(response);
       VerifyPanResponseModel _verifyPanApiResponse =
           VerifyPanResponseModel.fromMap(response["data"]);
 
-      if (_verifyPanApiResponse.flag) {
+      if (_verifyPanApiResponse.flag!) {
         await _cacheService.invalidateByKey(CacheKeys.USER);
         return ApiResponse(model: _verifyPanApiResponse, code: 200);
       } else {
@@ -50,7 +50,7 @@ class BankingRepository extends BaseRepo {
         );
       }
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to verify pan", 400);
     }

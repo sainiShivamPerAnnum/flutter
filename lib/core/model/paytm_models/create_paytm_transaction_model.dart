@@ -1,6 +1,6 @@
 class CreatePaytmTransactionModel {
-  bool success;
-  Data data;
+  bool? success;
+  Data? data;
 
   CreatePaytmTransactionModel({this.success, this.data});
 
@@ -13,7 +13,7 @@ class CreatePaytmTransactionModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
@@ -21,7 +21,7 @@ class CreatePaytmTransactionModel {
   Map<String, dynamic> toMap() {
     return {
       'success': success,
-      'data': data.toMap(),
+      'data': data!.toMap(),
     };
   }
 
@@ -33,8 +33,8 @@ class CreatePaytmTransactionModel {
   }
 
   CreatePaytmTransactionModel copyWith({
-    bool success,
-    Data data,
+    bool? success,
+    Data? data,
   }) {
     return CreatePaytmTransactionModel(
       success: success ?? this.success,
@@ -47,10 +47,10 @@ class CreatePaytmTransactionModel {
 }
 
 class Data {
-  String temptoken;
-  String orderId;
-  String callbackUrl;
-  String txnId;
+  String? temptoken;
+  String? orderId;
+  String? callbackUrl;
+  String? txnId;
 
   Data({this.temptoken, this.orderId, this.callbackUrl, this.txnId});
 
@@ -93,10 +93,10 @@ class Data {
       'Data(temptoken: $temptoken, orderId: $orderId, callbackUrl: $callbackUrl)';
 
   Data copyWith({
-    String temptoken,
-    String orderId,
-    String callbackUrl,
-    String txnId,
+    String? temptoken,
+    String? orderId,
+    String? callbackUrl,
+    String? txnId,
   }) {
     return Data(
       temptoken: temptoken ?? this.temptoken,

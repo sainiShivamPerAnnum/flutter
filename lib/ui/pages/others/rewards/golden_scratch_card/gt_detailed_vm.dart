@@ -25,14 +25,14 @@ class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
   bool _isShareLoading = false;
-  final _userService = locator<UserService>();
-  final _userCoinService = locator<UserCoinService>();
-  final _gtService = locator<GoldenTicketService>();
-  final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
+  final UserService? _userService = locator<UserService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
 
   final _rsaEncryption = new RSAEncryption();
-  final _gtRepo = locator<GoldenTicketRepository>();
+  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
 
   // bool _isTicketRedeemedSuccessfully = true;
 
@@ -76,7 +76,7 @@ class GTDetailedViewModel extends BaseViewModel {
 
   changeToUnlockedUI() {
     _bottompadding = false;
-    _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    _detailsModalHeight = SizeConfig.screenHeight! * 0.5;
     isCardScratched = true;
     //isTicketRedeemedSuccessfully = true;
     _viewScratchedCard = true;
@@ -84,7 +84,7 @@ class GTDetailedViewModel extends BaseViewModel {
   }
 
   redeemCard(GoldenTicket ticket) async {
-    scratchKey.currentState.reveal();
+    scratchKey.currentState!.reveal();
     // showDetailsModal(ticket.isRewarding);
     isCardScratched = true;
     setState(ViewState.Busy);
@@ -95,14 +95,14 @@ class GTDetailedViewModel extends BaseViewModel {
 
   Future<bool> redeemTicket(GoldenTicket ticket) async {
     try {
-      await _gtRepo.redeemReward(ticket.gtId);
+      await _gtRepo!.redeemReward(ticket.gtId);
 
-      _gtService.updateUnscratchedGTCount();
-      _userService.getUserFundWalletData();
-      _userCoinService.getUserCoinBalance();
+      _gtService!.updateUnscratchedGTCount();
+      _userService!.getUserFundWalletData();
+      _userCoinService!.getUserCoinBalance();
       return true;
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
       return false;
     }
   }
@@ -114,7 +114,7 @@ class GTDetailedViewModel extends BaseViewModel {
       //Redeemed ticket
       changeToUnlockedUI();
     } else {
-      if (ticket.isRewarding) {
+      if (ticket.isRewarding!) {
         //ticket has some reward
       } else {
         //Pity ticket
@@ -127,8 +127,8 @@ class GTDetailedViewModel extends BaseViewModel {
   }
 
   Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
+    String token = await _userService!.firebaseUser!.getIdToken();
+    _logger!.d(token);
 
     return token;
   }

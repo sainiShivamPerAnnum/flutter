@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActiveSubscriptionModel {
-  String amountType;
-  double autoAmount;
-  String autoFrequency;
-  Timestamp createdOn;
-  Timestamp expiryDate;
-  int frequency;
-  String frequencyUnit;
-  double maxAmount;
-  Timestamp startDate;
-  String status;
-  String resumeDate;
-  String resumeEnum;
-  String subscriptionId;
-  String vpa;
-  Timestamp updatedOn;
+  String? amountType;
+  double? autoAmount;
+  String? autoFrequency;
+  Timestamp? createdOn;
+  Timestamp? expiryDate;
+  int? frequency;
+  String? frequencyUnit;
+  double? maxAmount;
+  Timestamp? startDate;
+  String? status;
+  String? resumeDate;
+  String? resumeEnum;
+  String? subscriptionId;
+  String? vpa;
+  Timestamp? updatedOn;
 
   ActiveSubscriptionModel(
       {this.subscriptionId,

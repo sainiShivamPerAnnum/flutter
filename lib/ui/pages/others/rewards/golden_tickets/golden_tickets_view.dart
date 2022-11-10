@@ -52,11 +52,11 @@ class GoldenTicketsView extends StatelessWidget {
                     child: FullScreenLoader(),
                   );
                 default:
-                  log("Items: " + snapshot.data.length.toString());
-                  model.arrangeGoldenTickets(snapshot.data, openFirst);
+                  log("Items: " + snapshot.data!.length.toString());
+                  model.arrangeGoldenTickets(snapshot.data!, openFirst);
 
                   return model.arrangedGoldenTicketList == null ||
-                          model.arrangedGoldenTicketList.length == 0
+                          model.arrangedGoldenTicketList!.length == 0
                       ? ListView(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -69,7 +69,7 @@ class GoldenTicketsView extends StatelessWidget {
                         )
                       : GridView.builder(
                           physics: BouncingScrollPhysics(),
-                          itemCount: model.arrangedGoldenTicketList.length,
+                          itemCount: model.arrangedGoldenTicketList!.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisSpacing: SizeConfig.padding8,
@@ -84,23 +84,23 @@ class GoldenTicketsView extends StatelessWidget {
                               onTap: () {
                                 AppState.screenStack.add(ScreenItem.dialog);
                                 Navigator.of(AppState
-                                        .delegate.navigatorKey.currentContext)
+                                        .delegate!.navigatorKey.currentContext!)
                                     .push(
                                   HeroDialogRoute(
                                     builder: (context) {
                                       return GTDetailedView(
                                         ticket:
-                                            model.arrangedGoldenTicketList[i],
+                                            model.arrangedGoldenTicketList![i],
                                       );
                                     },
                                   ),
                                 );
                               },
                               child: GoldenTicketGridItemCard(
-                                ticket: model.arrangedGoldenTicketList[i],
+                                ticket: model.arrangedGoldenTicketList![i],
                                 titleStyle: TextStyles.body2,
                                 titleStyle2: TextStyles.body3,
-                                width: SizeConfig.screenWidth * 0.36,
+                                width: SizeConfig.screenWidth! * 0.36,
                                 subtitleStyle: TextStyles.body4,
                               ),
                             );

@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FelloInfoDialog extends StatelessWidget {
-  final String title, subtitle, asset, png;
-  final Widget action;
+  final String? title, subtitle, asset, png;
+  final Widget? action;
 
-  final Widget customContent;
+  final Widget? customContent;
   final bool isAddedToScreenStack;
   final bool defaultPadding;
   FelloInfoDialog({
@@ -35,40 +35,40 @@ class FelloInfoDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (asset != null)
-                    SizedBox(height: SizeConfig.screenHeight * 0.04),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.04),
                   if (asset != null)
                     SvgPicture.asset(
-                      asset,
-                      height: SizeConfig.screenHeight * 0.16,
+                      asset!,
+                      height: SizeConfig.screenHeight! * 0.16,
                     ),
                   if (asset != null)
                     SizedBox(
-                      height: SizeConfig.screenHeight * 0.04,
+                      height: SizeConfig.screenHeight! * 0.04,
                     ),
                   if (png != null)
-                    SizedBox(height: SizeConfig.screenHeight * 0.04),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.04),
                   if (asset != null)
                     Image.asset(
-                      png,
-                      height: SizeConfig.screenHeight * 0.16,
+                      png!,
+                      height: SizeConfig.screenHeight! * 0.16,
                     ),
                   if (png != null)
                     SizedBox(
-                      height: SizeConfig.screenHeight * 0.04,
+                      height: SizeConfig.screenHeight! * 0.04,
                     ),
                   Text(
-                    title,
+                    title!,
                     style: TextStyles.title3.bold,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                    subtitle,
+                    subtitle!,
                     textAlign: TextAlign.center,
                     style: TextStyles.body2.colour(Colors.grey),
                   ),
-                  SizedBox(height: SizeConfig.screenHeight * 0.02),
-                  action
+                  SizedBox(height: SizeConfig.screenHeight! * 0.02),
+                  action!
                 ],
               ),
             ),

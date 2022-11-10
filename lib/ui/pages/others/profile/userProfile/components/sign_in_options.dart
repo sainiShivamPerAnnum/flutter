@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SignInOptions extends StatefulWidget {
-  final Function onGoogleSignIn, onEmailSignIn;
+  final Function? onGoogleSignIn, onEmailSignIn;
   SignInOptions({this.onEmailSignIn, this.onGoogleSignIn});
   @override
   _SignInOptionsState createState() => _SignInOptionsState();
@@ -31,7 +31,7 @@ class _SignInOptionsState extends State<SignInOptions> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         return true;
       },
       child: Wrap(
@@ -69,7 +69,7 @@ class _SignInOptionsState extends State<SignInOptions> {
                     BaseUtil.showNoInternetAlert();
                     if (isGoogleSigningInProgress) return;
                     isGoogleSigningInProgress = true;
-                    await widget.onGoogleSignIn();
+                    await widget.onGoogleSignIn!();
                     isGoogleSigningInProgress = false;
                   },
                 ),
@@ -83,7 +83,7 @@ class _SignInOptionsState extends State<SignInOptions> {
                         style: TextStyles.sourceSans.body2),
                     onTap: () {
                       if (!isGoogleSigningInProgress) {
-                        widget.onEmailSignIn();
+                        widget.onEmailSignIn!();
                       }
                     }),
                 SizedBox(

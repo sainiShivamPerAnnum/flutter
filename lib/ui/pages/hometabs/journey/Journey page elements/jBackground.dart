@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Background extends StatefulWidget {
-  final JourneyPageViewModel model;
-  const Background({Key key, this.model}) : super(key: key);
+  final JourneyPageViewModel? model;
+  const Background({Key? key, this.model}) : super(key: key);
 
   @override
   State<Background> createState() => _BackgroundState();
@@ -34,10 +34,10 @@ class _BackgroundState extends State<Background> {
       curve: Curves.easeOutCubic,
       scale: bgZoom,
       child: SizedBox(
-        height: widget.model.currentFullViewHeight,
+        height: widget.model!.currentFullViewHeight,
         width: SizeConfig.screenWidth,
         child: ListView.builder(
-          itemCount: widget.model.pages.length, //widget.model.pages.length,
+          itemCount: widget.model!.pages!.length, //widget.model.pages.length,
           shrinkWrap: true,
           reverse: true,
           physics: NeverScrollableScrollPhysics(),
@@ -46,23 +46,23 @@ class _BackgroundState extends State<Background> {
             return Transform.translate(
               offset: Offset(0, i > 0 ? 0.1 * i : 0),
               child: Container(
-                width: widget.model.pageWidth,
-                height: widget.model.pageHeight,
+                width: widget.model!.pageWidth,
+                height: widget.model!.pageHeight,
                 decoration: BoxDecoration(
                   // backgroundBlendMode: BlendMode.dstATop,
-                  color: widget.model.pages[i].bgAsset.colors.last,
+                  color: widget.model!.pages![i].bgAsset.colors.last,
                   border: Border(
                     top: BorderSide(
-                        color: widget.model.pages[i].bgAsset.colors.first),
+                        color: widget.model!.pages![i].bgAsset.colors.first),
                   ),
                   gradient: LinearGradient(
-                      colors: widget.model.pages[i].bgAsset.colors,
-                      stops: widget.model.pages[i].bgAsset.stops,
+                      colors: widget.model!.pages![i].bgAsset.colors,
+                      stops: widget.model!.pages![i].bgAsset.stops,
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter),
                 ),
                 child: SourceAdaptiveAssetView(
-                  asset: widget.model.pages[i].bgAsset.asset,
+                  asset: widget.model!.pages![i].bgAsset.asset,
                 ),
               ),
             );

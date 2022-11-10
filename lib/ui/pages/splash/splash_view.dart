@@ -26,7 +26,7 @@ class _LauncherViewState extends State<LauncherView>
     SizeConfig().init(context);
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context, listen: true);
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return BaseView<LauncherViewModel>(
       onModelReady: (model) {
         model.loopOutlottieAnimationController =
@@ -37,7 +37,7 @@ class _LauncherViewState extends State<LauncherView>
         model.init();
       },
       onModelDispose: (model) {
-        model.loopOutlottieAnimationController.dispose();
+        model.loopOutlottieAnimationController!.dispose();
         model.exit();
       },
       builder: (ctx, model, child) {
@@ -71,7 +71,7 @@ class _LauncherViewState extends State<LauncherView>
                       fit: BoxFit.cover,
                       controller: model.loopOutlottieAnimationController,
                       onLoaded: (composition) {
-                        model.loopOutlottieAnimationController
+                        model.loopOutlottieAnimationController!
                           ..duration = composition.duration;
                       },
                     ),
@@ -100,11 +100,11 @@ class _LauncherViewState extends State<LauncherView>
                       visible: model.isSlowConnection,
                       child: connectivityStatus == ConnectivityStatus.Offline
                           ? Text(
-                              locale.splashNoInternet,
+                              locale!.splashNoInternet,
                               style: TextStyles.body3.bold,
                             )
                           : BreathingText(
-                              alertText: locale.splashSlowConnection,
+                              alertText: locale!.splashSlowConnection,
                               textStyle: TextStyles.sourceSans.body2,
                             ),
                     ),

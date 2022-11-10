@@ -1,9 +1,9 @@
 class FundBalanceModel {
-  double wAugBalance;
-  double wAugPrinciple;
-  double wAugQuantity;
-  int wLifeTimeWin;
-  int wPriBalance;
+  double? wAugBalance;
+  double? wAugPrinciple;
+  double? wAugQuantity;
+  int? wLifeTimeWin;
+  int? wPriBalance;
 
   FundBalanceModel(
       {this.wAugBalance,

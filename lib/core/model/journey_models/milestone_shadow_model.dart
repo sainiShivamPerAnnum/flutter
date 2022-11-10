@@ -6,41 +6,41 @@ class MilestoneShadowModel {
   final String id;
   final String name;
   final JourneyAssetModel asset;
-  final double x, y;
+  final double? x, y;
   final String animType;
   final bool isCompleted;
   final int page;
   final int index;
   final bool hFlip, vFlip;
   MilestoneShadowModel({
-    @required this.id,
-    @required this.name,
-    @required this.asset,
-    @required this.y,
-    @required this.x,
+    required this.id,
+    required this.name,
+    required this.asset,
+    required this.y,
+    required this.x,
     this.animType = "none",
     this.isCompleted = false,
-    @required this.page,
-    @required this.index,
+    required this.page,
+    required this.index,
     this.vFlip = false,
     this.hFlip = false,
   });
 
   MilestoneShadowModel copyWith({
-    String id,
-    JourneyAssetModel asset,
-    double dx,
-    String name,
+    String? id,
+    JourneyAssetModel? asset,
+    double? dx,
+    String? name,
     dy,
-    double width,
+    double? width,
     height,
-    String animType,
-    bool isCompleted,
-    int page,
-    int level,
-    bool aligment,
-    bool hFlip,
-    bool vFlip,
+    String? animType,
+    bool? isCompleted,
+    int? page,
+    int? level,
+    bool? aligment,
+    bool? hFlip,
+    bool? vFlip,
   }) {
     return MilestoneShadowModel(
       id: id ?? this.id,

@@ -52,7 +52,7 @@ class Root extends StatelessWidget {
                   child: Consumer<AppState>(
                     builder: (ctx, m, child) => IndexedStack(
                       children: pages,
-                      index: AppState.delegate.appState.getCurrentTabIndex,
+                      index: AppState.delegate!.appState.getCurrentTabIndex,
                     ),
                   ),
                 ),
@@ -67,7 +67,7 @@ class Root extends StatelessWidget {
                   child: Banner(
                     message: FlavorConfig.getStage(),
                     location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
+                    color: FlavorConfig.instance!.color,
                   ),
                 ),
               if (FlavorConfig.isQA())
@@ -76,7 +76,7 @@ class Root extends StatelessWidget {
                   child: Banner(
                     message: FlavorConfig.getStage(),
                     location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
+                    color: FlavorConfig.instance!.color,
                   ),
                 ),
             ],

@@ -15,20 +15,20 @@ class TambolaModel {
   final TambolaBoard board;
 
   TambolaModel({
-    @required this.id,
-    @required this.val,
-    @required this.weekCode,
-    @required this.assignedTime,
-    @required this.board,
+    required this.id,
+    required this.val,
+    required this.weekCode,
+    required this.assignedTime,
+    required this.board,
   });
 
   TambolaModel copyWith({
-    String id,
-    int matchCount,
-    String val,
-    int weekCode,
-    List<String> matches,
-    TimestampModel assignedTime,
+    String? id,
+    int? matchCount,
+    String? val,
+    int? weekCode,
+    List<String>? matches,
+    TimestampModel? assignedTime,
   }) {
     return TambolaModel(
       id: id ?? this.id,
@@ -50,7 +50,7 @@ class TambolaModel {
 
   factory TambolaModel.fromMap(Map<String, dynamic> map) {
     return TambolaModel(
-      id: map['tid'] ?? 0,
+      id: map['tid'] ?? 0 as String,
       val: map['tval'] ?? '',
       weekCode: map['week_code'] ?? 0,
       assignedTime: TimestampModel.fromMap(map['createdOn']),

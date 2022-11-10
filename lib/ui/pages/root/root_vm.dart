@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -38,29 +39,30 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 
 class RootViewModel extends BaseViewModel {
-  final BaseUtil _baseUtil = locator<BaseUtil>();
-  final FcmHandler _fcmListener = locator<FcmHandler>();
-  final UserService _userService = locator<UserService>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
-  final CustomLogger _logger = locator<CustomLogger>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  final UserRepository _userRepo = locator<UserRepository>();
-  final _tambolaService = locator<TambolaService>();
-  final _gtService = locator<GoldenTicketService>();
-  final _bankAndKycService = locator<BankAndPanService>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final FcmHandler? _fcmListener = locator<FcmHandler>();
+  final UserService? _userService = locator<UserService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  final TambolaService? _tambolaService = locator<TambolaService>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   int _bottomNavBarIndex = 1;
   static bool canExecuteStartupNotification = true;
 
-  final winnerService = locator<WinnerService>();
+  final WinnerService? winnerService = locator<WinnerService>();
 
-  final _txnHistoryService = locator<TransactionHistoryService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _paytmService = locator<PaytmService>();
+  final TransactionHistoryService? _txnHistoryService =
+      locator<TransactionHistoryService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
 
-  final _refRepo = locator<ReferralRepo>();
+  final ReferralRepo? _refRepo = locator<ReferralRepo>();
 
-  BuildContext rootContext;
+  BuildContext? rootContext;
   bool _isUploading = false;
 
   get isUploading => this._isUploading;
@@ -84,18 +86,18 @@ class RootViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String get myUserDpUrl => _userService.myUserDpUrl;
+  String? get myUserDpUrl => _userService!.myUserDpUrl;
   //int get currentTabIndex => _appState.rootIndex;
 
   Future<void> refresh() async {
-    await _userCoinService.getUserCoinBalance();
-    await _userService.getUserFundWalletData();
+    await _userCoinService!.getUserCoinBalance();
+    await _userService!.getUserFundWalletData();
 
-    _txnHistoryService.signOut();
-    _paytmService.getActiveSubscriptionDetails();
-    await _txnHistoryService.fetchTransactions();
-    await _journeyService.checkForMilestoneLevelChange();
-    await _gtService.updateUnscratchedGTCount();
+    _txnHistoryService!.signOut();
+    _paytmService!.getActiveSubscriptionDetails();
+    await _txnHistoryService!.fetchTransactions(subtype: InvestmentType.AUGGOLD99);
+    await _journeyService!.checkForMilestoneLevelChange();
+    await _gtService!.updateUnscratchedGTCount();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -107,20 +109,20 @@ class RootViewModel extends BaseViewModel {
     // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
-    _initDynamicLinks(AppState.delegate.navigatorKey.currentContext);
-    _verifyReferral(AppState.delegate.navigatorKey.currentContext);
+    _initDynamicLinks(AppState.delegate!.navigatorKey.currentContext);
+    _verifyReferral(AppState.delegate!.navigatorKey.currentContext);
     initialize();
   }
 
   onDispose() {
     // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
     AppState.isUserSignedIn = false;
-    _fcmListener.addIncomingMessageListener(null);
+    _fcmListener!.addIncomingMessageListener(null);
   }
 
   openAlertsScreen() {
     Haptic.vibrate();
-    AppState.delegate.appState.currentAction =
+    AppState.delegate!.appState.currentAction =
         PageAction(state: PageState.addPage, page: NotificationsConfig);
   }
 
@@ -128,18 +130,18 @@ class RootViewModel extends BaseViewModel {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
       case 0:
-        _analyticsService.track(
+        _analyticsService!.track(
             eventName: AnalyticsEvents.journeySection,
             properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 1:
-        _analyticsService.track(
+        _analyticsService!.track(
             eventName: AnalyticsEvents.saveSection,
             properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 2:
         {
-          _analyticsService.track(
+          _analyticsService!.track(
               eventName: AnalyticsEvents.playSection,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -152,15 +154,15 @@ class RootViewModel extends BaseViewModel {
         break;
       case 3:
         {
-          _analyticsService.track(
+          _analyticsService!.track(
               eventName: AnalyticsEvents.winSection,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
                 "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-                "Unscratched Ticket Count": _gtService.unscratchedTicketsCount,
+                "Unscratched Ticket Count": _gtService!.unscratchedTicketsCount,
                 "Scratched Ticket Count":
-                    (_gtService.activeGoldenTickets.length) -
-                        _gtService.unscratchedTicketsCount,
+                    (_gtService!.activeGoldenTickets.length) -
+                        _gtService!.unscratchedTicketsCount,
               }));
         }
         break;
@@ -168,15 +170,15 @@ class RootViewModel extends BaseViewModel {
       default:
     }
     bottomNavBarIndex = index;
-    AppState.delegate.appState.setCurrentTabIndex = index;
+    AppState.delegate!.appState.setCurrentTabIndex = index;
     Haptic.vibrate();
-    if (AppState.delegate.appState.getCurrentTabIndex == 0)
-      _journeyService.checkForMilestoneLevelChange();
+    if (AppState.delegate!.appState.getCurrentTabIndex == 0)
+      _journeyService!.checkForMilestoneLevelChange();
   }
 
   _initAdhocNotifications() {
     if (_fcmListener != null && _baseUtil != null) {
-      _fcmListener.addIncomingMessageListener((valueMap) {
+      _fcmListener!.addIncomingMessageListener((valueMap) {
         if (valueMap['title'] != null && valueMap['body'] != null) {
           BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
               seconds: 5);
@@ -190,11 +192,11 @@ class RootViewModel extends BaseViewModel {
   // }
 
   downloadJourneyPage() {
-    _journeyRepo.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+    _journeyRepo!.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
   }
 
   Future<void> openJourneyView() async {
-    AppState.delegate.appState.currentAction =
+    AppState.delegate!.appState.currentAction =
         PageAction(page: JourneyViewPageConfig, state: PageState.addPage);
   }
 
@@ -240,10 +242,10 @@ class RootViewModel extends BaseViewModel {
               // BaseUtil.showNegativeAlert(
               //     "Something went wrong", "Please try again");
             }
-            AppState.backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher!.didPopRoute();
           },
           cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher!.didPopRoute();
             return false;
           },
         ),
@@ -261,11 +263,11 @@ class RootViewModel extends BaseViewModel {
           buttonText: "Ok",
           cancelBtnText: "Cancel",
           confirmAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher!.didPopRoute();
             return true;
           },
           cancelAction: () {
-            AppState.backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher!.didPopRoute();
             return false;
           },
         ),
@@ -274,10 +276,10 @@ class RootViewModel extends BaseViewModel {
   }
 
   initialize() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await _userService.getUserFundWalletData();
-      _userService.checkForNewNotifications();
-      _userService.getProfilePicture();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await _userService!.getUserFundWalletData();
+      _userService!.checkForNewNotifications();
+      _userService!.getProfilePicture();
 
       _initAdhocNotifications();
       await verifyUserBootupDetails();
@@ -290,10 +292,10 @@ class RootViewModel extends BaseViewModel {
   handleStartUpNotificationData() {
     if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
       canExecuteStartupNotification = false;
-      _logger.d(
+      _logger!.d(
         "terminated startup message: ${AppState.startupNotifMessage}",
       );
-      _fcmListener.handleMessage(
+      _fcmListener!.handleMessage(
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
@@ -308,9 +310,9 @@ class RootViewModel extends BaseViewModel {
         PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
         def: true);
     if (showSecurityPrompt &&
-        _userService.baseUser.isAugmontOnboarded &&
-        _userService.userFundWallet.augGoldQuantity > 0 &&
-        _userService.baseUser.userPreferences
+        _userService!.baseUser!.isAugmontOnboarded &&
+        _userService!.userFundWallet!.augGoldQuantity > 0 &&
+        _userService!.baseUser!.userPreferences
                 .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
@@ -322,7 +324,7 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  Future<dynamic> _verifyReferral(BuildContext context) async {
+  Future<dynamic> _verifyReferral(BuildContext? context) async {
     if (BaseUtil.referrerUserId != null) {
       // when referrer id is fetched from one-link
       if (PreferenceHelper.getBool(
@@ -330,15 +332,15 @@ class RootViewModel extends BaseViewModel {
         def: false,
       )) return;
 
-      await _refRepo.createReferral(
-        _userService.baseUser.uid,
+      await _refRepo!.createReferral(
+        _userService!.baseUser!.uid,
         BaseUtil.referrerUserId,
       );
 
-      _logger.d('referral processed from link');
+      _logger!.d('referral processed from link');
       PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
     } else if (BaseUtil.manualReferralCode != null) {
-      if (BaseUtil.manualReferralCode.length == 4) {
+      if (BaseUtil.manualReferralCode!.length == 4) {
         _verifyFirebaseManualReferral(context);
       } else {
         _verifyOneLinkManualReferral();
@@ -347,12 +349,12 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<dynamic> _verifyOneLinkManualReferral() async {
-    final referrerId = await _refRepo
-        .getUserIdByRefCode(BaseUtil.manualReferralCode.toUpperCase());
+    final referrerId = await _refRepo!
+        .getUserIdByRefCode(BaseUtil.manualReferralCode!.toUpperCase());
 
     if (referrerId.code == 200) {
-      await _refRepo.createReferral(
-        _userService.baseUser.uid,
+      await _refRepo!.createReferral(
+        _userService!.baseUser!.uid,
         referrerId.model,
       );
     } else {
@@ -360,47 +362,50 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  Future<dynamic> _verifyFirebaseManualReferral(BuildContext context) async {
+  Future<dynamic> _verifyFirebaseManualReferral(BuildContext? context) async {
     try {
-      PendingDynamicLinkData dynamicLinkData =
+      PendingDynamicLinkData? dynamicLinkData =
           await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
-              '${FlavorConfig.instance.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
-      Uri deepLink = dynamicLinkData?.link;
-      _logger.d(deepLink.toString());
+              '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
+      Uri? deepLink = dynamicLinkData?.link;
+      _logger!.d(deepLink.toString());
       if (deepLink != null)
         return _processDynamicLink(
-          _userService.baseUser.uid,
+          _userService!.baseUser!.uid,
           deepLink,
           context,
         );
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
     }
   }
 
-  Future<dynamic> _initDynamicLinks(BuildContext context) async {
+  Future<dynamic> _initDynamicLinks(BuildContext? context) async {
     FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
+        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+      final Uri? deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
-      _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser.uid, deepLink, context);
+      _logger!.d('Received deep link. Process the referral');
+      return _processDynamicLink(
+          _userService!.baseUser!.uid, deepLink, context);
     }, onError: (OnLinkErrorException e) async {
-      _logger.e('Error in fetching deeplink');
-      _logger.e(e);
+      _logger!.e('Error in fetching deeplink');
+      _logger!.e(e);
       return null;
     });
 
-    final PendingDynamicLinkData data =
+    final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
+    final Uri? deepLink = data?.link;
     if (deepLink != null) {
-      _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser.uid, deepLink, context);
+      _logger!.d('Received deep link. Process the referral');
+      return _processDynamicLink(
+          _userService!.baseUser!.uid, deepLink, context);
     }
   }
 
-  _processDynamicLink(String userId, Uri deepLink, BuildContext context) async {
+  _processDynamicLink(
+      String? userId, Uri deepLink, BuildContext? context) async {
     String _uri = deepLink.toString();
 
     if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
@@ -409,9 +414,9 @@ class RootViewModel extends BaseViewModel {
       try {
         final path =
             _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
-        AppState.delegate.parseRoute(Uri.parse(path));
+        AppState.delegate!.parseRoute(Uri.parse(path));
       } catch (error) {
-        _logger.e(error);
+        _logger!.e(error);
       }
     } else {
       BaseUtil.manualReferralCode =
@@ -419,13 +424,13 @@ class RootViewModel extends BaseViewModel {
 
       //Referral dynamic link
       bool _flag = await _submitReferral(
-        _userService.baseUser.uid,
-        _userService.myUserName,
+        _userService!.baseUser!.uid,
+        _userService!.myUserName,
         _uri,
       );
 
       if (_flag) {
-        _logger.d('Rewards added');
+        _logger!.d('Rewards added');
         refresh();
       } else {
         // _logger.d('$addUserTicketCount tickets need to be added for the user');
@@ -439,85 +444,85 @@ class RootViewModel extends BaseViewModel {
       if (deepLink.startsWith(prefix)) {
         String campaignId = deepLink.replaceAll(prefix, '');
         if (campaignId.isNotEmpty || campaignId == null) {
-          _logger.d(campaignId);
-          _analyticsService.trackInstall(campaignId);
+          _logger!.d(campaignId);
+          _analyticsService!.trackInstall(campaignId);
           return true;
         }
       }
       return false;
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
       return false;
     }
   }
 
   Future<bool> _submitReferral(
-      String userId, String userName, String deepLink) async {
+      String? userId, String? userName, String deepLink) async {
     try {
       String prefix = 'https://fello.in/';
       if (deepLink.startsWith(prefix)) {
         String referee = deepLink.replaceAll(prefix, '');
-        _logger.d(referee);
+        _logger!.d(referee);
         if (prefix.length > 0 && prefix != userId) {
-          return _refRepo.createReferral(userId, referee).then((res) {
+          return _refRepo!.createReferral(userId, referee).then((res) {
             // _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return res.model;
+            return res.model!;
           });
         } else
           return false;
       } else
         return false;
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
       return false;
     }
   }
 
   Future<void> verifyUserBootupDetails() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (_userService.baseUser != null && _userService.userBootUp != null) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (_userService!.baseUser != null && _userService!.userBootUp != null) {
         //1.check if the account is blocked
-        if (_userService.userBootUp.data != null &&
-            _userService.userBootUp.data.isBlocked != null &&
-            _userService.userBootUp.data.isBlocked == true) {
+        if (_userService!.userBootUp!.data != null &&
+            _userService!.userBootUp!.data.isBlocked != null &&
+            _userService!.userBootUp!.data.isBlocked == true) {
           canExecuteStartupNotification = false;
           AppState.isUpdateScreen = true;
-          AppState.delegate.appState.currentAction = PageAction(
+          AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
             page: BlockedUserPageConfig,
           );
           return;
         }
         // //2.Checking for forced App Update
-        if (_userService.userBootUp.data.isAppForcedUpdateRequired != null &&
-            _userService.userBootUp.data.isAppForcedUpdateRequired == true) {
+        if (_userService!.userBootUp!.data.isAppForcedUpdateRequired != null &&
+            _userService!.userBootUp!.data.isAppForcedUpdateRequired == true) {
           AppState.isUpdateScreen = true;
           canExecuteStartupNotification = false;
-          AppState.delegate.appState.currentAction = PageAction(
+          AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceAll, page: UpdateRequiredConfig);
           return;
         }
 
         //3. Sign out the user automatically
-        if (_userService.userBootUp.data.signOutUser != null &&
-            _userService.userBootUp.data.signOutUser == true) {
+        if (_userService!.userBootUp!.data.signOutUser != null &&
+            _userService!.userBootUp!.data.signOutUser == true) {
           Haptic.vibrate();
           canExecuteStartupNotification = false;
-          _userService.signOut(() async {
-            _analyticsService.track(eventName: AnalyticsEvents.signOut);
-            _analyticsService.signOut();
-            await _userRepo.removeUserFCM(_userService.baseUser.uid);
+          _userService!.signOut(() async {
+            _analyticsService!.track(eventName: AnalyticsEvents.signOut);
+            _analyticsService!.signOut();
+            await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
           }).then((flag) async {
             if (flag) {
               //log.debug('Sign out process complete');
               await BaseUtil().signOut();
               // _journeyService.dump();
-              _tambolaService.signOut();
-              _analyticsService.signOut();
-              _paytmService.signout();
-              _bankAndKycService.dump();
+              _tambolaService!.signOut();
+              _analyticsService!.signOut();
+              _paytmService!.signout();
+              _bankAndKycService!.dump();
 
-              AppState.delegate.appState.currentAction = PageAction(
+              AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(
                 'Signed out automatically.',
@@ -528,41 +533,42 @@ class RootViewModel extends BaseViewModel {
         }
 
         //4. App update present (Not forced)
-        if (_userService.userBootUp.data.isAppUpdateRequired != null) {
+        if (_userService!.userBootUp!.data.isAppUpdateRequired != null) {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE,
-              _userService.userBootUp.data.isAppUpdateRequired);
+              _userService!.userBootUp!.data.isAppUpdateRequired);
         } else {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
         }
 
         //5. Clear all the caches
-        if (_userService.userBootUp.data.cache.keys != null) {
-          for (String id in _userService.userBootUp.data.cache.keys) {
+        if (_userService!.userBootUp!.data.cache!.keys != null) {
+          for (String id in _userService!.userBootUp!.data.cache!.keys
+              as Iterable<String>) {
             CacheService().invalidateByKey(id);
           }
         }
 
         //6. Notice
-        if (_userService.userBootUp.data.notice != null) {
-          if (_userService.userBootUp.data.notice.message != null &&
-              _userService.userBootUp.data.notice.message != "") {
+        if (_userService!.userBootUp!.data.notice != null) {
+          if (_userService!.userBootUp!.data.notice!.message != null &&
+              _userService!.userBootUp!.data.notice!.message != "") {
             PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
             PreferenceHelper.setString(Constants.MSG_NOTICE,
-                _userService.userBootUp.data.notice.message);
+                _userService!.userBootUp!.data.notice!.message!);
           } else {
             PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
           }
 
-          if (_userService.userBootUp.data.notice.url != null &&
-              _userService.userBootUp.data.notice.url != "") {
+          if (_userService!.userBootUp!.data.notice!.url != null &&
+              _userService!.userBootUp!.data.notice!.url != "") {
             canExecuteStartupNotification = false;
             try {
               if (Platform.isIOS)
-                BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
+                BaseUtil.launchUrl(_userService!.userBootUp!.data.notice!.url!);
               else if (Platform.isAndroid)
-                BaseUtil.launchUrl(_userService.userBootUp.data.notice.url);
+                BaseUtil.launchUrl(_userService!.userBootUp!.data.notice!.url!);
             } catch (e) {
-              _logger.d(e.toString());
+              _logger!.d(e.toString());
               // BaseUtil.showNegativeAlert(
               //     "Something went wrong", "Please try again");
             }

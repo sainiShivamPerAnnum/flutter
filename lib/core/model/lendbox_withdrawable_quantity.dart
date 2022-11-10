@@ -8,15 +8,15 @@ class LendboxWithdrawableQuantity {
   final String lockedMessage;
 
   LendboxWithdrawableQuantity({
-    @required this.amount,
-    @required this.lockedAmount,
-    @required this.lockedMessage,
+    required this.amount,
+    required this.lockedAmount,
+    required this.lockedMessage,
   });
 
   LendboxWithdrawableQuantity copyWith({
-    double amount,
-    double lockedAmount,
-    String lockedMessage,
+    double? amount,
+    double? lockedAmount,
+    String? lockedMessage,
   }) {
     return LendboxWithdrawableQuantity(
       amount: amount ?? this.amount,

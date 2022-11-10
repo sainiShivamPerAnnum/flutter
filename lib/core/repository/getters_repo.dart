@@ -23,8 +23,8 @@ class GetterRepository extends BaseRepo {
       : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
-    String type,
-    String freq,
+    String? type,
+    String? freq,
     bool isForPast = false,
   }) async {
     try {
@@ -47,15 +47,15 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
   Future<ApiResponse<WinnersModel>> getWinnerByFreqGameType({
-    String type,
-    String freq,
+    String? type,
+    String? freq,
   }) async {
     try {
       final token = await getBearerToken();
@@ -70,15 +70,15 @@ class GetterRepository extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
   Future<ApiResponse<List<WinnersModel>>> getPastWinners({
-    String type,
-    String freq,
+    String? type,
+    String? freq,
   }) async {
     try {
       final token = await getBearerToken();
@@ -93,13 +93,13 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: winnerModel, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
 
   Future<ApiResponse<List<AmountChipsModel>>> getAmountChips({
-    @required String freq,
+    required String freq,
   }) async {
     try {
       final token = await getBearerToken();
@@ -117,7 +117,7 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: amountChipsModel, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
@@ -129,7 +129,7 @@ class GetterRepository extends BaseRepo {
         ApiPath.kPromos,
         cBaseUrl: _baseUrl,
         queryParams: {
-          "uid": userService.baseUser.uid,
+          "uid": userService!.baseUser!.uid,
         },
         token: token,
       );
@@ -138,24 +138,24 @@ class GetterRepository extends BaseRepo {
 
       print("Test123 ${response.toString()}");
 
-      logger.d(responseData);
+      logger!.d(responseData);
       final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
 
       return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       print("Test123 ${e.toString()}");
       return ApiResponse.withError("Unable to fetch promos", 400);
     }
   }
 
   Future<ApiResponse<List<FAQDataModel>>> getFaqs({
-    FaqsType type,
+    required FaqsType type,
   }) async {
     try {
       final token = await getBearerToken();
 
-      return await _cacheService.cachedApi(
+      return await (_cacheService.cachedApi(
         '${CacheKeys.FAQS}/${type.name}',
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -168,15 +168,15 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      );
+      ) as Future<ApiResponse<List<FAQDataModel>>>);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
-  Future<ApiResponse<List<StoryItemModel>>> getStory({String topic}) async {
+  Future<ApiResponse<List<StoryItemModel>>> getStory({String? topic}) async {
     try {
       final token = await getBearerToken();
       final response = await APIService.instance.getData(
@@ -188,12 +188,12 @@ class GetterRepository extends BaseRepo {
 
       final responseData = response["data"];
 
-      logger.d(responseData);
+      logger!.d(responseData);
       final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
 
       return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }

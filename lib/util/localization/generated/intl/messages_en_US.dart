@@ -33,7 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m6(winningsAmout) => "₹ ${winningsAmout}";
 
-  final messages = _notInlinedMessages(_notInlinedMessages);
+  final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "abBuyDigitalGold" : MessageLookupByLibrary.simpleMessage("Buy Digital Gold"),
     "abCompleteYourProfile" : MessageLookupByLibrary.simpleMessage("Complete your profile"),

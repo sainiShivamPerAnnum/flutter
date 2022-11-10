@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class TitleSubtitleContainer extends StatelessWidget {
   final String title;
-  final String subTitle;
+  final String? subTitle;
 
-  const TitleSubtitleContainer({Key key, @required this.title, this.subTitle})
+  const TitleSubtitleContainer({Key? key, required this.title, this.subTitle})
       : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class TitleSubtitleContainer extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: SizeConfig.padding4),
               child: Text(
-                subTitle,
+                subTitle!,
                 style: TextStyles.sourceSans.body4.colour(
                   UiConstants.kTextColor2,
                 ),

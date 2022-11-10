@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 
 class LogInTextField extends StatelessWidget {
   const LogInTextField({
-    Key key,
-    @required this.controller,
+    Key? key,
+    required this.controller,
     this.hintText = '',
     this.textInputType = TextInputType.name,
     this.textAlign = TextAlign.start,
@@ -26,17 +26,17 @@ class LogInTextField extends StatelessWidget {
   final TextAlign textAlign;
   final String hintText;
   final TextInputType textInputType;
-  final List<TextInputFormatter> inputFormatter;
+  final List<TextInputFormatter>? inputFormatter;
   final int maxLength;
   final TextEditingController controller;
-  final VoidCallback onTap;
-  final FormFieldValidator<String> validator;
-  final ValueChanged<String> onFieldSubmitted;
-  final ValueChanged<String> onChanged;
-  final Key textFieldKey;
-  final bool enabled;
-  final FocusNode focusNode;
-  final Widget suffix;
+  final VoidCallback? onTap;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onFieldSubmitted;
+  final ValueChanged<String>? onChanged;
+  final Key? textFieldKey;
+  final bool? enabled;
+  final FocusNode? focusNode;
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {

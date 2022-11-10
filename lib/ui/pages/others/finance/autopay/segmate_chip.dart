@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class SegmentChips extends StatelessWidget {
   final model;
-  final String text;
+  final String? text;
 
   SegmentChips({this.model, this.text});
 
@@ -11,7 +11,7 @@ class SegmentChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        text,
+        text!,
         style: TextStyles.body3.bold.colour(
           getBorder(),
         ),

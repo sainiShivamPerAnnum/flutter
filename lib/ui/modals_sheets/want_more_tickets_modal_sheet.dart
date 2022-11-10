@@ -17,7 +17,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class WantMoreTicketsModalSheet extends StatelessWidget {
   WantMoreTicketsModalSheet({this.isInsufficientBalance = false});
   final isInsufficientBalance;
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   final referralBonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
@@ -29,11 +29,11 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isInsufficientBalance)
-      _analyticsService.track(eventName: AnalyticsEvents.flcTokensExhasuted);
+      _analyticsService!.track(eventName: AnalyticsEvents.flcTokensExhasuted);
 
     return WillPopScope(
       onWillPop: () {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: Column(
@@ -100,11 +100,11 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 subtitle: "Get 1 token for every Rupee saved",
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
-                  _analyticsService.track(
+                  _analyticsService!.track(
                       eventName: AnalyticsEvents.earnMoreSaveMoney);
                   while (AppState.screenStack.length > 1)
-                    AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.setCurrentTabIndex = 1;
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  AppState.delegate!.appState.setCurrentTabIndex = 1;
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -114,10 +114,10 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 subtitle: "Earn Golden Tickets for every referral",
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
-                  _analyticsService.track(
+                  _analyticsService!.track(
                       eventName: AnalyticsEvents.earnMoreRefer);
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.appState.currentAction = PageAction(
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage,
                       page: ReferralDetailsPageConfig);
                 },
@@ -130,10 +130,10 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   subtitle: "Set up Autosave & earn daily tokens ",
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                   onTap: () {
-                    _analyticsService.track(
+                    _analyticsService!.track(
                         eventName: AnalyticsEvents.earnMoreRefer);
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.delegate.parseRoute(Uri.parse("augDetails"));
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.delegate!.parseRoute(Uri.parse("augDetails"));
                   },
                 ),
               SizedBox(height: SizeConfig.padding24),

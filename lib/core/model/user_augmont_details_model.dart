@@ -4,18 +4,18 @@ import 'package:felloapp/util/logger.dart';
 
 class UserAugmontDetail {
   Log log = new Log('UserAugmontDetail');
-  String _hasIssue;
-  String _userId;
-  String _userName;
-  String _bankAccNo;
-  String _bankHolderName;
-  String _userStateId;
-  String _ifsc;
+  String? _hasIssue;
+  String? _userId;
+  String? _userName;
+  String? _bankAccNo;
+  String? _bankHolderName;
+  String? _userStateId;
+  String? _ifsc;
   bool _firstInvMade;
   bool _isDepLocked;
   bool _isSellLocked;
-  String _sellNotice;
-  String _depNotice;
+  String? _sellNotice;
+  String? _depNotice;
   TimestampModel _createdTime;
   TimestampModel _updatedTime;
 
@@ -105,7 +105,7 @@ class UserAugmontDetail {
   Timestamp get createdTime => _createdTime;
 
   set createdTime(Timestamp value) {
-    _createdTime = value;
+    _createdTime = value as TimestampModel;
   }
 
   bool get firstInvMade => _firstInvMade;
@@ -114,45 +114,45 @@ class UserAugmontDetail {
     _firstInvMade = value;
   }
 
-  String get userStateId => _userStateId;
+  String? get userStateId => _userStateId;
 
-  set userStateId(String value) {
+  set userStateId(String? value) {
     _userStateId = value;
   }
 
-  String get bankHolderName => _bankHolderName;
+  String? get bankHolderName => _bankHolderName;
 
-  set bankHolderName(String value) {
+  set bankHolderName(String? value) {
     _bankHolderName = value;
   }
 
-  String get bankAccNo => _bankAccNo;
+  String? get bankAccNo => _bankAccNo;
 
-  set bankAccNo(String value) {
+  set bankAccNo(String? value) {
     _bankAccNo = value;
   }
 
-  String get userName => _userName;
+  String? get userName => _userName;
 
-  set userName(String value) {
+  set userName(String? value) {
     _userName = value;
   }
 
-  String get userId => _userId;
+  String? get userId => _userId;
 
-  set userId(String value) {
+  set userId(String? value) {
     _userId = value;
   }
 
-  String get hasIssue => _hasIssue;
+  String? get hasIssue => _hasIssue;
 
-  set hasIssue(String value) {
+  set hasIssue(String? value) {
     _hasIssue = value;
   }
 
-  String get ifsc => _ifsc;
+  String? get ifsc => _ifsc;
 
-  set ifsc(String value) {
+  set ifsc(String? value) {
     _ifsc = value;
   }
 
@@ -160,7 +160,7 @@ class UserAugmontDetail {
 
   bool get isSellLocked => _isSellLocked;
 
-  String get sellNotice => _sellNotice;
+  String? get sellNotice => _sellNotice;
 
-  String get depNotice => _depNotice;
+  String? get depNotice => _depNotice;
 }

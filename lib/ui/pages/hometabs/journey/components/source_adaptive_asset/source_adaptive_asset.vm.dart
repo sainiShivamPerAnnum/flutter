@@ -6,15 +6,15 @@ import 'package:felloapp/util/locator.dart';
 import 'dart:developer';
 
 class SourceAdaptiveAssetViewModel extends BaseViewModel {
-  final _journeyRepo = locator<JourneyRepository>();
+  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
   String assetType = "NTWRK";
-  String _assetName;
-  String _assetUrl;
-  String get assetName => this._assetName;
+  String? _assetName;
+  String? _assetUrl;
+  String? get assetName => this._assetName;
 
-  set assetName(String value) => this._assetName = value;
+  set assetName(String? value) => this._assetName = value;
 
-  String get assetUrl => this._assetUrl;
+  String? get assetUrl => this._assetUrl;
 
   set assetUrl(value) {
     this._assetUrl = value;
@@ -22,20 +22,20 @@ class SourceAdaptiveAssetViewModel extends BaseViewModel {
 
   init(String value) {
     assetUrl = value;
-    assetName = assetUrl.split('/').last.split('.').first;
+    assetName = assetUrl!.split('/').last.split('.').first;
     completeNViewDownloadSaveLViewAsset();
   }
 
   dump() {}
 
   Future<void> completeNViewDownloadSaveLViewAsset() async {
-    if (_journeyRepo.checkIfAssetIsAvailableLocally(assetName)) {
+    if (_journeyRepo!.checkIfAssetIsAvailableLocally(assetName!)) {
       log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
-      assetUrl = _journeyRepo.getAssetLocalFilePath(assetName);
+      assetUrl = _journeyRepo!.getAssetLocalFilePath(assetName!);
     } else {
       // svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
       log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
-      final bool result = await _journeyRepo.downloadAndSaveFile(assetUrl);
+      final bool result = await _journeyRepo!.downloadAndSaveFile(assetUrl!);
       if (result) {
         log("ROOTVM: Asset downloading & caching completed successfully. will load it from local next start onwards");
         // assetUrl = _journeyRepo.getAssetLocalFilePath(assetName);

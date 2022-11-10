@@ -33,7 +33,7 @@ class KYCDetailsView extends StatelessWidget {
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
         SizeConfig.viewInsets.bottom;
 
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -59,7 +59,7 @@ class KYCDetailsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppTextFieldLabel(
-                      locale.pkPanLabel,
+                      locale!.pkPanLabel,
                     ),
                     AppTextField(
                       focusNode: model.panFocusNode,
@@ -76,7 +76,7 @@ class KYCDetailsView extends StatelessWidget {
                       },
                       isEnabled: model.inEditMode,
                       textEditingController: model.panController,
-                      validator: (String value) {
+                      validator: (String? value) {
                         return '';
                       },
                     ),
@@ -90,7 +90,7 @@ class KYCDetailsView extends StatelessWidget {
                       // textCapitalization: TextCapitalization.characters,
                       isEnabled: model.inEditMode,
                       textEditingController: model.nameController,
-                      validator: (String value) {
+                      validator: (String? value) {
                         return '';
                       },
                       keyboardType: TextInputType.name,

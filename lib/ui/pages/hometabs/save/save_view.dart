@@ -38,7 +38,7 @@ import '../../../../navigator/app_state.dart';
 const HtmlEscape htmlEscape = HtmlEscape();
 
 class Save extends StatelessWidget {
-  final CustomLogger logger = locator<CustomLogger>();
+  final CustomLogger? logger = locator<CustomLogger>();
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +134,7 @@ class Save extends StatelessWidget {
 
 class AppFooter extends StatelessWidget {
   const AppFooter({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -192,7 +192,7 @@ class AppFooter extends StatelessWidget {
 class SaveTitleContainer extends StatelessWidget {
   final String title;
 
-  const SaveTitleContainer({Key key, @required this.title}) : super(key: key);
+  const SaveTitleContainer({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -204,9 +204,9 @@ class SaveTitleContainer extends StatelessWidget {
 }
 
 class SaveNetWorthSection extends StatelessWidget {
-  final SaveViewModel saveViewModel;
+  final SaveViewModel? saveViewModel;
 
-  const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
+  const SaveNetWorthSection({Key? key, this.saveViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +252,7 @@ class SaveNetWorthSection extends StatelessWidget {
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,
               onCardTap: () {
-                saveViewModel.navigateToSaveAssetView(
+                saveViewModel!.navigateToSaveAssetView(
                   InvestmentType.AUGGOLD99,
                 );
               },
@@ -271,7 +271,7 @@ class SaveNetWorthSection extends StatelessWidget {
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,
               onCardTap: () {
-                saveViewModel.navigateToSaveAssetView(
+                saveViewModel!.navigateToSaveAssetView(
                   InvestmentType.LENDBOXP2P,
                 );
               },
@@ -293,7 +293,7 @@ class SaveNetWorthSection extends StatelessWidget {
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveVm;
 
-  const CampaignCardSection({Key key, @required this.saveVm}) : super(key: key);
+  const CampaignCardSection({Key? key, required this.saveVm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -304,21 +304,21 @@ class CampaignCardSection extends StatelessWidget {
         right: SizeConfig.padding16,
       ),
       child: Container(
-        height: SizeConfig.screenWidth * 0.57,
+        height: SizeConfig.screenWidth! * 0.57,
         child: CarousalWidget(
-          height: SizeConfig.screenWidth * 0.49,
+          height: SizeConfig.screenWidth! * 0.49,
           width: SizeConfig.screenWidth,
           widgets: List.generate(
-            saveVm.isChallengesLoading ? 3 : saveVm.ongoingEvents.length,
+            saveVm.isChallengesLoading ? 3 : saveVm.ongoingEvents!.length,
             (index) {
               final event = saveVm.isChallengesLoading
                   ? null
-                  : saveVm.ongoingEvents[index];
+                  : saveVm.ongoingEvents![index];
 
               return GestureDetector(
                 onTap: () {
-                  saveVm.trackChallangeTapped(event.type, index);
-                  AppState.delegate.openTopSaverScreen(event.type);
+                  saveVm.trackChallangeTapped(event!.type, index);
+                  AppState.delegate!.openTopSaverScreen(event.type);
                 },
                 child: Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding10),
@@ -330,7 +330,7 @@ class CampaignCardSection extends StatelessWidget {
                     subText: FittedBox(
                       fit: BoxFit.contain,
                       child: Container(
-                        width: SizeConfig.screenWidth * 0.4,
+                        width: SizeConfig.screenWidth! * 0.4,
                         padding: EdgeInsets.only(
                           top: SizeConfig.padding8,
                         ),
@@ -352,29 +352,29 @@ class CampaignCardSection extends StatelessWidget {
 }
 
 class IOSCampaignCard extends StatelessWidget {
-  final EventModel event;
+  final EventModel? event;
   final Widget subText;
   final bool isLoading;
   final double topPadding;
   final double leftPadding;
 
   const IOSCampaignCard(
-      {@required this.event,
-      @required this.subText,
-      @required this.isLoading,
-      @required this.topPadding,
-      @required this.leftPadding});
+      {required this.event,
+      required this.subText,
+      required this.isLoading,
+      required this.topPadding,
+      required this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
-    final i = isLoading ? 0 : event.title.lastIndexOf(' ');
-    final prefix = isLoading ? '' : event.title.substring(0, i);
-    final suffix = isLoading ? '' : event.title.substring(i + 1);
+    final i = isLoading ? 0 : event!.title.lastIndexOf(' ');
+    final prefix = isLoading ? '' : event!.title.substring(0, i);
+    final suffix = isLoading ? '' : event!.title.substring(i + 1);
     final asset = isLoading
         ? ''
-        : event.type == 'SAVER_MONTHLY'
+        : event!.type == 'SAVER_MONTHLY'
             ? Assets.monthlySaver
-            : event.type == 'SAVER_DAILY'
+            : event!.type == 'SAVER_DAILY'
                 ? Assets.dailySaver
                 : Assets.weeklySaver;
 
@@ -392,7 +392,7 @@ class IOSCampaignCard extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.padding16),
                   child: Container(
-                    height: SizeConfig.screenWidth * 0.18,
+                    height: SizeConfig.screenWidth! * 0.18,
                     decoration: BoxDecoration(
                       color: UiConstants.kSecondaryBackgroundColor,
                     ),
@@ -429,7 +429,7 @@ class IOSCampaignCard extends StatelessWidget {
                         style: TextStyles.sourceSansEB.title50
                             .letterSpace(0.6)
                             .colour(
-                              event.textColor.toColor(),
+                              event!.textColor.toColor(),
                             )
                             .setHeight(1),
                       ),
@@ -451,29 +451,29 @@ class IOSCampaignCard extends StatelessWidget {
 }
 
 class CampaignCard extends StatelessWidget {
-  final EventModel event;
+  final EventModel? event;
   final Widget subText;
   final bool isLoading;
   final double topPadding;
   final double leftPadding;
 
   const CampaignCard(
-      {@required this.event,
-      @required this.subText,
-      @required this.isLoading,
-      @required this.topPadding,
-      @required this.leftPadding});
+      {required this.event,
+      required this.subText,
+      required this.isLoading,
+      required this.topPadding,
+      required this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
-    final i = isLoading ? 0 : event.title.lastIndexOf(' ');
-    final prefix = isLoading ? '' : event.title.substring(0, i);
-    final suffix = isLoading ? '' : event.title.substring(i + 1);
+    final i = isLoading ? 0 : event!.title.lastIndexOf(' ');
+    final prefix = isLoading ? '' : event!.title.substring(0, i);
+    final suffix = isLoading ? '' : event!.title.substring(i + 1);
     final asset = isLoading
         ? ''
-        : event.type == 'SAVER_MONTHLY'
+        : event!.type == 'SAVER_MONTHLY'
             ? Assets.monthlySaver
-            : event.type == 'SAVER_DAILY'
+            : event!.type == 'SAVER_DAILY'
                 ? Assets.dailySaver
                 : Assets.weeklySaver;
 
@@ -488,7 +488,7 @@ class CampaignCard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(SizeConfig.padding16),
                 child: Container(
-                  height: SizeConfig.screenWidth * 0.18,
+                  height: SizeConfig.screenWidth! * 0.18,
                   decoration: BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
                   ),
@@ -525,7 +525,7 @@ class CampaignCard extends StatelessWidget {
                       style: TextStyles.sourceSansEB.title50
                           .letterSpace(0.6)
                           .colour(
-                            event.textColor.toColor(),
+                            event!.textColor.toColor(),
                           )
                           .setHeight(1),
                     ),
@@ -545,7 +545,7 @@ class CampaignCard extends StatelessWidget {
 }
 
 class SaveBlogSection extends StatelessWidget {
-  const SaveBlogSection({Key key}) : super(key: key);
+  const SaveBlogSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -555,7 +555,7 @@ class SaveBlogSection extends StatelessWidget {
       child: BaseView<SaveViewModel>(
         onModelReady: (model) => model.getSaveViewBlogs(),
         builder: (ctx, model, child) => Container(
-          height: SizeConfig.screenWidth * 0.4,
+          height: SizeConfig.screenWidth! * 0.4,
           child: model.isLoading
               ? ListView.builder(
                   itemCount: 2,
@@ -564,7 +564,7 @@ class SaveBlogSection extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.only(right: SizeConfig.padding10),
                       child: Container(
-                        width: SizeConfig.screenWidth - 80,
+                        width: SizeConfig.screenWidth! - 80,
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(SizeConfig.roundness12),
@@ -577,8 +577,8 @@ class SaveBlogSection extends StatelessWidget {
                                 baseColor: UiConstants.kUserRankBackgroundColor,
                                 highlightColor: UiConstants.kBackgroundColor,
                                 child: Container(
-                                  height: SizeConfig.screenWidth * 0.23,
-                                  width: SizeConfig.screenWidth * 0.25,
+                                  height: SizeConfig.screenWidth! * 0.23,
+                                  width: SizeConfig.screenWidth! * 0.25,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12),
@@ -592,11 +592,11 @@ class SaveBlogSection extends StatelessWidget {
                     );
                   },
                 )
-              : model.blogPosts == null || model.blogPosts.isEmpty
+              : model.blogPosts == null || model.blogPosts!.isEmpty
                   ? SizedBox()
                   : ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: model.blogPosts.length,
+                      itemCount: model.blogPosts!.length,
                       itemBuilder: (ctx, index) {
                         return Padding(
                           padding: EdgeInsets.only(right: SizeConfig.padding10),
@@ -605,12 +605,12 @@ class SaveBlogSection extends StatelessWidget {
                               model.trackBannerClickEvent(index);
 
                               model.navigateToBlogWebView(
-                                  model.blogPosts[index].slug,
-                                  model.blogPosts[index].acf.categories);
+                                  model.blogPosts![index].slug,
+                                  model.blogPosts![index].acf!.categories);
                             },
-                            title: model.blogPosts[index].acf.categories,
-                            description: model.blogPosts[index].title.rendered,
-                            imageUrl: model.blogPosts[index].yoastHeadJson,
+                            title: model.blogPosts![index].acf!.categories,
+                            description: model.blogPosts![index].title!.rendered,
+                            imageUrl: model.blogPosts![index].yoastHeadJson,
                           ),
                         );
                       },
@@ -622,9 +622,9 @@ class SaveBlogSection extends StatelessWidget {
 }
 
 class BlogWebView extends StatelessWidget {
-  final String initialUrl;
-  final String title;
-  const BlogWebView({Key key, this.initialUrl, this.title}) : super(key: key);
+  final String? initialUrl;
+  final String? title;
+  const BlogWebView({Key? key, this.initialUrl, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -646,13 +646,13 @@ class BlogWebView extends StatelessWidget {
 }
 
 class SaveBlogTile extends StatelessWidget {
-  final Function() onTap;
-  final String title;
-  final String description;
-  final String imageUrl;
+  final Function()? onTap;
+  final String? title;
+  final String? description;
+  final String? imageUrl;
 
   const SaveBlogTile({
-    Key key,
+    Key? key,
     this.onTap,
     this.title,
     this.description,
@@ -666,12 +666,12 @@ class SaveBlogTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: SizeConfig.screenWidth - 50,
+        width: SizeConfig.screenWidth! - 50,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
           child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            height: SizeConfig.screenWidth * 0.4,
+            imageUrl: imageUrl!,
+            height: SizeConfig.screenWidth! * 0.4,
             width: SizeConfig.screenWidth,
             fit: BoxFit.cover,
             alignment: Alignment.centerLeft,
@@ -683,23 +683,23 @@ class SaveBlogTile extends StatelessWidget {
 }
 
 class SaveInfoTile extends StatelessWidget {
-  final String svg, png;
-  final String title;
-  final Function onPressed;
+  final String? svg, png;
+  final String? title;
+  final Function? onPressed;
 
   SaveInfoTile({this.svg, this.png, this.onPressed, this.title});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed ?? () {},
+      onTap: onPressed as void Function()? ?? () {},
       splashColor: UiConstants.primaryColor,
       focusColor: UiConstants.primaryColor,
       highlightColor: UiConstants.primaryColor,
       hoverColor: UiConstants.primaryColor,
       child: Container(
-        width: SizeConfig.screenWidth * 0.603,
-        height: SizeConfig.screenWidth * 0.24,
+        width: SizeConfig.screenWidth! * 0.603,
+        height: SizeConfig.screenWidth! * 0.24,
         margin: EdgeInsets.only(
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.padding16),
@@ -739,13 +739,13 @@ class SaveInfoTile extends StatelessWidget {
 }
 
 class SaveInfoSection extends StatelessWidget {
-  final String title;
-  final String imageAsset;
-  final double imageHeight;
-  final double imageWidth;
+  final String? title;
+  final String? imageAsset;
+  final double? imageHeight;
+  final double? imageWidth;
 
   const SaveInfoSection(
-      {Key key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
+      {Key? key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
       : super(key: key);
 
   @override
@@ -754,7 +754,7 @@ class SaveInfoSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          title,
+          title!,
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
         ),
         SizedBox(
@@ -763,7 +763,7 @@ class SaveInfoSection extends StatelessWidget {
         SizedBox(
             height: imageHeight,
             width: imageWidth,
-            child: SvgPicture.asset(imageAsset)),
+            child: SvgPicture.asset(imageAsset!)),
       ],
     );
   }

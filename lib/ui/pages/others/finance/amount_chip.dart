@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 
 class AmountChip extends StatelessWidget {
   const AmountChip({
-    Key key,
+    Key? key,
     this.isBest = false,
-    @required this.isActive,
-    @required this.amt,
-    @required this.onClick,
+    required this.isActive,
+    required this.amt,
+    required this.onClick,
   }) : super(key: key);
 
   final bool isActive;

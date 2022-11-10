@@ -63,58 +63,58 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BaseUtil extends ChangeNotifier {
-  final CustomLogger logger = locator<CustomLogger>();
-  final DBModel _dbModel = locator<DBModel>();
-  final LocalDBModel _lModel = locator<LocalDBModel>();
-  final AppState _appState = locator<AppState>();
-  final UserService _userService = locator<UserService>();
-  final _userRepo = locator<UserRepository>();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final CustomLogger? logger = locator<CustomLogger>();
+  final DBModel? _dbModel = locator<DBModel>();
+  final LocalDBModel? _lModel = locator<LocalDBModel>();
+  final AppState? _appState = locator<AppState>();
+  final UserService? _userService = locator<UserService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
-  BaseUser _myUser;
-  UserFundWallet _userFundWallet;
-  int _ticketCount;
-  User firebaseUser;
-  FirebaseAnalytics baseAnalytics;
-  List<FeedCard> feedCards;
-  String userRegdPan;
+  BaseUser? _myUser;
+  UserFundWallet? _userFundWallet;
+  int? _ticketCount;
+  User? firebaseUser;
+  FirebaseAnalytics? baseAnalytics;
+  List<FeedCard>? feedCards;
+  String? userRegdPan;
 
   ///ICICI global objects
-  UserIciciDetail _iciciDetail;
-  UserTransaction _currentICICITxn;
-  UserTransaction _currentICICINonInstantWthrlTxn;
+  UserIciciDetail? _iciciDetail;
+  UserTransaction? _currentICICITxn;
+  UserTransaction? _currentICICINonInstantWthrlTxn;
 
   ///Augmont global objects
-  UserAugmontDetail _augmontDetail;
-  AugmontRates augmontGoldRates;
+  UserAugmontDetail? _augmontDetail;
+  AugmontRates? augmontGoldRates;
 
   ///KYC global object
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
-  String myUserDpUrl;
-  List<UserTransaction> userMiniTxnList;
-  List<ReferralDetail> userReferralsList;
-  ReferralDetail myReferralInfo;
-  static PackageInfo packageInfo;
-  Map<String, dynamic> freshchatKeys;
-  double activeGoldWithdrawalQuantity;
-  int withdrawFlowStackCount;
-  UserTransaction firstAugmontTransaction;
+  String? myUserDpUrl;
+  List<UserTransaction>? userMiniTxnList;
+  List<ReferralDetail>? userReferralsList;
+  ReferralDetail? myReferralInfo;
+  static PackageInfo? packageInfo;
+  Map<String, dynamic>? freshchatKeys;
+  double? activeGoldWithdrawalQuantity;
+  int? withdrawFlowStackCount;
+  UserTransaction? firstAugmontTransaction;
 
   /// Objects for Transaction list Pagination
-  DocumentSnapshot lastTransactionListDocument;
+  DocumentSnapshot? lastTransactionListDocument;
   bool hasMoreTransactionListDocuments = true;
 
-  DateTime _userCreationTimestamp;
+  DateTime? _userCreationTimestamp;
   int isOtpResendCount = 0;
-  String zeroBalanceAssetUri;
-  static String manualReferralCode;
-  static String referrerUserId;
-  static bool isNewUser, isFirstFetchDone; // = 'jdF1';
+  String? zeroBalanceAssetUri;
+  static String? manualReferralCode;
+  static String? referrerUserId;
+  static bool? isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
-  bool isUserOnboarded,
+  bool? isUserOnboarded,
       isLoginNextInProgress,
       isEditProfileNextInProgress,
       isRedemptionOtpInProgress,
@@ -143,8 +143,8 @@ class BaseUtil extends ChangeNotifier {
       show_game_tutorial,
       _isUpiInfoMissing,
       show_finance_tutorial;
-  static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest, infoSliderIndex;
+  static bool? isDeviceOffline, ticketRequestSent, playScreenFirst;
+  static int? ticketCountBeforeRequest, infoSliderIndex;
 
   _setRuntimeDefaults() {
     isNewUser = false;
@@ -189,34 +189,34 @@ class BaseUtil extends ChangeNotifier {
 
   void init() {
     try {
-      logger.i('inside init base util');
+      logger!.i('inside init base util');
       _setRuntimeDefaults();
 
       //Analytics logs app open state.
       BaseAnalytics.init();
-      BaseAnalytics.analytics.logAppOpen();
+      BaseAnalytics.analytics!.logAppOpen();
 
       setPackageInfo();
 
       ///fetch on-boarding status and User details
-      firebaseUser = _userService.firebaseUser;
-      isUserOnboarded = _userService.isUserOnboarded;
+      firebaseUser = _userService!.firebaseUser;
+      isUserOnboarded = _userService!.isUserOnboarded;
 
-      if (isUserOnboarded) {
+      if (isUserOnboarded!) {
         //set current user
-        myUser = _userService.baseUser;
+        myUser = _userService!.baseUser;
 
         ///get user creation time
-        _userCreationTimestamp = firebaseUser.metadata.creationTime;
+        _userCreationTimestamp = firebaseUser!.metadata.creationTime;
 
         ///pick zerobalance asset
         Random rnd = new Random();
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
       }
     } catch (e) {
-      logger.e(e.toString());
-      _internalOpsService.logFailure(
-        _userService.baseUser?.uid ?? '',
+      logger!.e(e.toString());
+      _internalOpsService!.logFailure(
+        _userService!.baseUser?.uid ?? '',
         FailType.Splash,
         {'error': "base util init : $e"},
       );
@@ -231,10 +231,10 @@ class BaseUtil extends ChangeNotifier {
   Future<void> refreshFunds() async {
     //TODO: ADD LOADER
     print("-----------------> I got called");
-    return _userRepo.getFundBalance().then((aValue) {
+    return _userRepo!.getFundBalance().then((aValue) {
       if (aValue.code == 200) {
         userFundWallet = aValue.model;
-        if (userFundWallet.augGoldQuantity > 0)
+        if (userFundWallet!.augGoldQuantity > 0)
           _updateAugmontBalance(); //setstate call in method
 
       }
@@ -244,8 +244,8 @@ class BaseUtil extends ChangeNotifier {
 
   openProfileDetailsScreen() {
     if (JourneyService.isAvatarAnimationInProgress) return;
-    if (_userService.userJourneyStats.mlIndex > 1)
-      AppState.delegate.parseRoute(Uri.parse("profile"));
+    if (_userService!.userJourneyStats!.mlIndex! > 1)
+      AppState.delegate!.parseRoute(Uri.parse("profile"));
     else {
       // print("Reachng");
 
@@ -254,21 +254,21 @@ class BaseUtil extends ChangeNotifier {
       //       "Test": "test"
       //     })}");
 
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         page: UserProfileDetailsConfig,
         state: PageState.addWidget,
         widget: UserProfileDetails(isNewUser: true),
       );
     }
 
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.profileClicked,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {"location": getLocationForCurrentTab()}));
   }
 
   getLocationForCurrentTab() {
-    int tab = AppState.delegate.appState.getCurrentTabIndex;
+    int tab = AppState.delegate!.appState.getCurrentTabIndex;
 
     switch (tab) {
       case 0:
@@ -290,26 +290,26 @@ class BaseUtil extends ChangeNotifier {
   }
 
   openRechargeModalSheet({
-    int amt,
-    bool isSkipMl,
-    @required InvestmentType investmentType,
+    int? amt,
+    bool? isSkipMl,
+    required InvestmentType investmentType,
   }) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (_userService.userJourneyStats?.mlIndex == 1)
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (_userService!.userJourneyStats?.mlIndex == 1)
         return BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissable: true,
           hapticVibrate: false,
           content: CompleteProfileDialog(),
         );
-      final bool isAugDepositBanned = _userService
-          ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.isBanned;
-      final String augDepositBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.deposit?.augmont?.reason;
-      final bool islBoxlDepositBanned = _userService
-          ?.userBootUp?.data?.banMap?.investments?.deposit?.lendBox?.isBanned;
-      final String lBoxDepositBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.deposit?.lendBox?.reason;
+      final bool? isAugDepositBanned = _userService
+          ?.userBootUp?.data.banMap?.investments?.deposit?.augmont?.isBanned;
+      final String? augDepositBanNotice = _userService
+          ?.userBootUp?.data.banMap?.investments?.deposit?.augmont?.reason;
+      final bool? islBoxlDepositBanned = _userService
+          ?.userBootUp?.data.banMap?.investments?.deposit?.lendBox?.isBanned;
+      final String? lBoxDepositBanNotice = _userService
+          ?.userBootUp?.data.banMap?.investments?.deposit?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugDepositBanned != null &&
           isAugDepositBanned) {
@@ -347,21 +347,21 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  openSellModalSheet({@required InvestmentType investmentType}) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (_userService.userJourneyStats.mlIndex == 1)
+ void openSellModalSheet({required InvestmentType investmentType}) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (_userService!.userJourneyStats!.mlIndex == 1)
         return BaseUtil.openDialog(
             addToScreenStack: true,
             isBarrierDismissable: true,
             hapticVibrate: false,
             content: CompleteProfileDialog());
-      final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
+      final bool? isAugSellLocked = _userService?.userBootUp?.data.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
-      final String augSellBanNotice = _userService
+      final String? augSellBanNotice = _userService
           ?.userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
-      final bool islBoxSellBanned = _userService?.userBootUp?.data?.banMap
+      final bool? islBoxSellBanned = _userService?.userBootUp?.data?.banMap
           ?.investments?.withdrawal?.lendBox?.isBanned;
-      final String lBoxSellBanNotice = _userService
+      final String? lBoxSellBanNotice = _userService
           ?.userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugSellLocked != null &&
@@ -377,7 +377,7 @@ class BaseUtil extends ChangeNotifier {
             lBoxSellBanNotice ?? "Asset not available at the moment",
             "Please try after some time");
       }
-      _analyticsService.track(
+      _analyticsService!.track(
           eventName: investmentType == InvestmentType.AUGGOLD99
               ? AnalyticsEvents.goldSellModalSheet
               : AnalyticsEvents.lBoxSellModalSheet);
@@ -396,8 +396,8 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  openDepositOptionsModalSheet({int amount, bool isSkipMl = false}) {
-    if (_userService.userJourneyStats.mlIndex == 1)
+  openDepositOptionsModalSheet({int? amount, bool isSkipMl = false}) {
+    if (_userService!.userJourneyStats!.mlIndex == 1)
       return BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissable: true,
@@ -421,25 +421,25 @@ class BaseUtil extends ChangeNotifier {
   }
 
   bool get checkKycMissing {
-    bool skFlag = (myUser.isSimpleKycVerified != null &&
-        myUser.isSimpleKycVerified == true);
+    bool skFlag = (myUser!.isSimpleKycVerified != null &&
+        myUser!.isSimpleKycVerified == true);
     bool augFlag = false;
-    if (myUser.isAugmontOnboarded) {
+    if (myUser!.isAugmontOnboarded) {
       final DateTime _dt = new DateTime(2021, 8, 28);
       //if the person regd for augmont before v2.5.4 release, then their kyc is complete
       augFlag = (augmontDetail != null &&
-          augmontDetail.createdTime != null &&
-          augmontDetail.createdTime.toDate().isBefore(_dt));
+          augmontDetail!.createdTime != null &&
+          augmontDetail!.createdTime.toDate().isBefore(_dt));
     }
     return (!skFlag && !augFlag);
   }
 
-  static showPositiveAlert(String title, String message, {int seconds = 2}) {
+  static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     if ((title != null && title.length > 200) ||
         (message != null && message.length > 200)) return;
     bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
                 .viewInsets
                 .bottom !=
             0;
@@ -461,30 +461,30 @@ class BaseUtil extends ChangeNotifier {
                 : SizeConfig.pageHorizontalMargins,
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.pageHorizontalMargins),
-        borderRadius: SizeConfig.roundness12,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         title: title,
         message: message,
         duration: Duration(seconds: seconds),
         backgroundColor: Colors.black,
         boxShadows: [
           BoxShadow(
-            color: UiConstants.positiveAlertColor,
+            color: UiConstants.positiveAlertColor!,
             offset: Offset(0.0, 2.0),
             blurRadius: 3.0,
           )
         ],
-      )..show(AppState.delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate!.navigatorKey.currentContext!);
     });
   }
 
-  static showNegativeAlert(String title, String message, {int seconds}) {
+  static showNegativeAlert(String? title, String? message, {int? seconds}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     if ((title != null && title.length > 200) ||
         (message != null && message.length > 200 ||
-            message.toUpperCase().contains('EXCEPTION') ||
+            message!.toUpperCase().contains('EXCEPTION') ||
             message.toUpperCase().contains('SOCKET'))) return;
     bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
                 .viewInsets
                 .bottom !=
             0;
@@ -504,7 +504,7 @@ class BaseUtil extends ChangeNotifier {
                 : SizeConfig.pageHorizontalMargins,
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.pageHorizontalMargins),
-        borderRadius: SizeConfig.roundness12,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         title: (title == null || title.isEmpty)
             ? "Please try again after sometime"
             : title,
@@ -520,13 +520,13 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(AppState.delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate!.navigatorKey.currentContext!);
     });
   }
 
   static showNoInternetAlert() {
     ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
-        AppState.delegate.navigatorKey.currentContext,
+        AppState.delegate!.navigatorKey.currentContext!,
         listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
@@ -539,67 +539,66 @@ class BaseUtil extends ChangeNotifier {
           color: Colors.white,
         ),
         margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        borderRadius: SizeConfig.roundness12,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         title: "No Internet",
         message: "Please check your network connection and try again",
         duration: Duration(seconds: 2),
         backgroundColor: Colors.red,
         boxShadows: [
           BoxShadow(
-            color: Colors.red[800],
+            color: Colors.red[800]!,
             offset: Offset(0.0, 2.0),
             blurRadius: 3.0,
           )
         ],
-      )..show(AppState.delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate!.navigatorKey.currentContext!);
       return true;
     }
     return false;
   }
 
   Future<bool> getDrawStatus() async {
-    if (DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay() &&
+    if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
         DateTime.now().hour >= 18 &&
         DateTime.now().hour < 24) return true;
 
     return false;
   }
 
-  static Future<void> openDialog({
-    Widget content,
-    bool addToScreenStack,
-    bool hapticVibrate,
-    bool isBarrierDismissable,
-    ValueChanged<dynamic> callback,
-  }) async {
+  static void openDialog({
+    Widget? content,
+    bool? addToScreenStack,
+    bool? hapticVibrate,
+    required bool isBarrierDismissable,
+    ValueChanged<dynamic>? callback,
+  })  {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     CustomLogger().d("Added a dialog");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    await showDialog(
-      context: AppState.delegate.navigatorKey.currentContext,
+    showDialog(
+      context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissable,
-      builder: (ctx) => content,
+      builder: (ctx) => content!,
       useSafeArea: true,
     );
   }
 
-  static Future openModalBottomSheet({
-    Widget content,
-    bool addToScreenStack,
-    bool hapticVibrate,
-    Color backgroundColor,
-    bool isBarrierDismissable,
-    BorderRadius borderRadius,
+  static void openModalBottomSheet({
+    Widget? content,
+    bool? addToScreenStack,
+    bool? hapticVibrate,
+    Color? backgroundColor,
+    required bool isBarrierDismissable,
+    BorderRadius? borderRadius,
     bool isScrollControlled = false,
-    BoxConstraints boxContraints,
+    BoxConstraints? boxContraints,
     bool enableDrag = false,
   }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-
-    return showModalBottomSheet(
+    showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
       shape: RoundedRectangleBorder(
@@ -608,20 +607,20 @@ class BaseUtil extends ChangeNotifier {
       isScrollControlled: isScrollControlled ?? false,
       backgroundColor: backgroundColor != null ? backgroundColor : Colors.white,
       isDismissible: isBarrierDismissable,
-      context: AppState.delegate.navigatorKey.currentContext,
-      builder: (ctx) => content,
+      context: AppState.delegate!.navigatorKey.currentContext!,
+      builder: (ctx) => content!,
     );
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    logger.d("Verification credetials: " + credential.toString());
+    logger!.d("Verification credetials: " + credential.toString());
     // FirebaseAuth.instance.signInWithCustomToken(token)
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
-      logger.i("New Firebase User: ${res.additionalUserInfo.isNewUser}");
+      logger!.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
       return true;
     }).catchError((e) {
-      logger.e(
+      logger!.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -629,9 +628,9 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await _lModel.deleteLocalAppData();
-      logger.d('Cleared local cache');
-      _appState.setCurrentTabIndex = 0;
+      await _lModel!.deleteLocalAppData();
+      logger!.d('Cleared local cache');
+      _appState!.setCurrentTabIndex = 0;
 
       //remove  token from remote
       //await _dbModel.updateClientToken(myUser, '');
@@ -673,14 +672,14 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
 
-      AppState.delegate.appState.setCurrentTabIndex = 0;
+      AppState.delegate!.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
 
       return true;
     } catch (e) {
-      logger.e('Failed to clear data/sign out user: ' + e.toString());
+      logger!.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
@@ -695,24 +694,24 @@ class BaseUtil extends ChangeNotifier {
 
   void openTambolaGame() async {
     if (await getDrawStatus()) {
-      await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+      await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
                 print("Daily Picks Draw Animation Save Status Code: $value"),
           );
-      AppState.delegate.appState.currentAction =
+      AppState.delegate!.appState.currentAction =
           PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
     } else
-      AppState.delegate.appState.currentAction =
+      AppState.delegate!.appState.currentAction =
           PageAction(state: PageState.addPage, page: TGamePageConfig);
   }
 
   bool isOldCustomer() {
     //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
-    return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
+    return (userCreationTimestamp!.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }
 
-  static int getWeekNumber({DateTime currentDate}) {
+  static int getWeekNumber({DateTime? currentDate}) {
     DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
@@ -734,29 +733,29 @@ class BaseUtil extends ChangeNotifier {
   }
 
   double getUpdatedWithdrawalClosingBalance(double investment) =>
-      (toDouble(_userFundWallet.iciciBalance) +
-          toDouble(_userFundWallet.augGoldBalance) +
-          toDouble(_userFundWallet.prizeBalance) +
-          toDouble(_userFundWallet.lockedPrizeBalance) -
+      (toDouble(_userFundWallet!.iciciBalance) +
+          toDouble(_userFundWallet!.augGoldBalance) +
+          toDouble(_userFundWallet!.prizeBalance) +
+          toDouble(_userFundWallet!.lockedPrizeBalance) -
           investment);
 
   double getCurrentTotalClosingBalance() =>
-      (toDouble(_userFundWallet.iciciBalance) +
-          toDouble(_userFundWallet.augGoldBalance) +
-          toDouble(_userFundWallet.prizeBalance) +
-          toDouble(_userFundWallet.lockedPrizeBalance));
+      (toDouble(_userFundWallet!.iciciBalance) +
+          toDouble(_userFundWallet!.augGoldBalance) +
+          toDouble(_userFundWallet!.prizeBalance) +
+          toDouble(_userFundWallet!.lockedPrizeBalance));
 
-  static T _cast<T>(x) => x is T ? x : null;
+  static T? _cast<T>(x) => x is T ? x : null;
 
   static double toDouble(dynamic x) {
     if (x == null) return 0.0;
     try {
-      int y = _cast<int>(x);
+      int? y = _cast<int>(x);
       if (y != null) return y + .0;
     } catch (e) {}
 
     try {
-      double z = _cast<double>(x);
+      double? z = _cast<double>(x);
       if (z != null) return z;
     } catch (e) {}
 
@@ -766,12 +765,12 @@ class BaseUtil extends ChangeNotifier {
   static int toInt(dynamic x) {
     if (x == null) return 0;
     try {
-      int y = _cast<int>(x);
+      int? y = _cast<int>(x);
       if (y != null) return y;
     } catch (e) {}
 
     try {
-      String z = _cast<String>(x);
+      String? z = _cast<String>(x);
       if (z != null) return int.parse(z);
     } catch (e) {}
 
@@ -800,35 +799,35 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setName(String newName) {
-    myUser.name = newName;
+    myUser!.name = newName;
     notifyListeners();
   }
 
   void setKycVerified(bool val) {
-    myUser.isSimpleKycVerified = val;
+    myUser!.isSimpleKycVerified = val;
     notifyListeners();
   }
 
   void setUsername(String userName) {
-    myUser.username = userName;
+    myUser!.username = userName;
     notifyListeners();
   }
 
   void setEmailVerified() {
-    myUser.isEmailVerified = true;
+    myUser!.isEmailVerified = true;
     notifyListeners();
   }
 
   void setEmail(String email) {
-    myUser.email = email;
+    myUser!.email = email;
     notifyListeners();
   }
 
   void refreshAugmontBalance() async {
-    _userRepo.getFundBalance().then((aValue) {
+    _userRepo!.getFundBalance().then((aValue) {
       if (aValue.code == 200) {
         userFundWallet = aValue.model;
-        if (userFundWallet.augGoldQuantity > 0) _updateAugmontBalance();
+        if (userFundWallet!.augGoldQuantity > 0) _updateAugmontBalance();
       }
     });
   }
@@ -844,23 +843,23 @@ class BaseUtil extends ChangeNotifier {
 
   Future<void> _updateAugmontBalance() async {
     if (augmontDetail == null ||
-        (userFundWallet.augGoldQuantity == 0 &&
-            userFundWallet.augGoldBalance == 0)) return;
+        (userFundWallet!.augGoldQuantity == 0 &&
+            userFundWallet!.augGoldBalance == 0)) return;
     AugmontService().getRates().then((currRates) {
       if (currRates == null ||
           currRates.goldSellPrice == null ||
-          userFundWallet.augGoldQuantity == 0) return;
+          userFundWallet!.augGoldQuantity == 0) return;
 
       augmontGoldRates = currRates;
-      double gSellRate = augmontGoldRates.goldSellPrice;
-      userFundWallet.augGoldBalance =
-          BaseUtil.digitPrecision(userFundWallet.augGoldQuantity * gSellRate);
+      double gSellRate = augmontGoldRates!.goldSellPrice!;
+      userFundWallet!.augGoldBalance =
+          BaseUtil.digitPrecision(userFundWallet!.augGoldQuantity * gSellRate);
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
-      if (_myUser.uid != null) {
+      if (_myUser!.uid != null) {
         var errorDetails = {'error_msg': err.toString()};
-        _internalOpsService.logFailure(
-            _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
+        _internalOpsService!.logFailure(
+            _myUser!.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
       print('$err');
     });
@@ -868,23 +867,23 @@ class BaseUtil extends ChangeNotifier {
 
   void updateAugmontDetails(
       String holderName, String accountNumber, String ifscode) {
-    _augmontDetail.bankHolderName = holderName;
-    _augmontDetail.bankAccNo = accountNumber;
-    _augmontDetail.ifsc = ifscode;
+    _augmontDetail!.bankHolderName = holderName;
+    _augmontDetail!.bankAccNo = accountNumber;
+    _augmontDetail!.ifsc = ifscode;
     notifyListeners();
   }
 
   void updateAugmontOnboarded(bool newValue) {
-    _myUser.isAugmontOnboarded = newValue;
+    _myUser!.isAugmontOnboarded = newValue;
     notifyListeners();
   }
 
   void flipSecurityValue(bool value) {
-    _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
+    _myUser!.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
     notifyListeners();
   }
 
-  static String getMonthName({@required int monthNum, bool trim = true}) {
+  static String getMonthName({required int monthNum, bool trim = true}) {
     String res = "January";
     switch (monthNum) {
       case 1:
@@ -930,53 +929,53 @@ class BaseUtil extends ChangeNotifier {
     return res;
   }
 
-  BaseUser get myUser => _myUser;
+  BaseUser? get myUser => _myUser;
 
-  set myUser(BaseUser value) {
+  set myUser(BaseUser? value) {
     _myUser = value;
   }
 
-  UserFundWallet get userFundWallet => _userFundWallet;
+  UserFundWallet? get userFundWallet => _userFundWallet;
 
-  set userFundWallet(UserFundWallet value) {
+  set userFundWallet(UserFundWallet? value) {
     _userFundWallet = value;
   }
 
-  UserIciciDetail get iciciDetail => _iciciDetail;
+  UserIciciDetail? get iciciDetail => _iciciDetail;
 
-  set iciciDetail(UserIciciDetail value) {
+  set iciciDetail(UserIciciDetail? value) {
     _iciciDetail = value;
   }
 
-  UserTransaction get currentICICITxn => _currentICICITxn;
+  UserTransaction? get currentICICITxn => _currentICICITxn;
 
-  set currentICICITxn(UserTransaction value) {
+  set currentICICITxn(UserTransaction? value) {
     _currentICICITxn = value;
   }
 
-  UserTransaction get currentICICINonInstantWthrlTxn =>
+  UserTransaction? get currentICICINonInstantWthrlTxn =>
       _currentICICINonInstantWthrlTxn;
 
-  set currentICICINonInstantWthrlTxn(UserTransaction value) {
+  set currentICICINonInstantWthrlTxn(UserTransaction? value) {
     _currentICICINonInstantWthrlTxn = value;
   }
 
-  UserAugmontDetail get augmontDetail => _augmontDetail;
+  UserAugmontDetail? get augmontDetail => _augmontDetail;
 
-  set augmontDetail(UserAugmontDetail value) {
+  set augmontDetail(UserAugmontDetail? value) {
     _augmontDetail = value;
     notifyListeners();
   }
 
-  bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
+  bool isSignedIn() => (firebaseUser != null && firebaseUser!.uid != null);
 
-  bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
+  bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
 
-  DateTime get userCreationTimestamp => _userCreationTimestamp;
+  DateTime? get userCreationTimestamp => _userCreationTimestamp;
 
-  int get ticketCount => _ticketCount;
+  int? get ticketCount => _ticketCount;
 
-  set ticketCount(int value) {
+  set ticketCount(int? value) {
     _ticketCount = value;
     notifyListeners();
   }
@@ -995,23 +994,23 @@ class BaseUtil extends ChangeNotifier {
     return "$y$m$d";
   }
 
-  bool get isUpiInfoMissing => this._isUpiInfoMissing;
+  bool? get isUpiInfoMissing => this._isUpiInfoMissing;
 
-  set isUpiInfoMissing(bool value) {
+  set isUpiInfoMissing(bool? value) {
     this._isUpiInfoMissing = value;
     notifyListeners();
   }
 }
 
 class CompleteProfileDialog extends StatelessWidget {
-  final String title, subtitle;
+  final String? title, subtitle;
   CompleteProfileDialog({this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: MoreInfoDialog(
@@ -1022,8 +1021,8 @@ class CompleteProfileDialog extends StatelessWidget {
         btnText: "COMPLETE",
         onPressed: () {
           while (AppState.screenStack.length > 1)
-            AppState.backButtonDispatcher.didPopRoute();
-          AppState.delegate.appState.setCurrentTabIndex = 0;
+            AppState.backButtonDispatcher!.didPopRoute();
+          AppState.delegate!.appState.setCurrentTabIndex = 0;
         },
       ),
     );

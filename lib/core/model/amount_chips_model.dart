@@ -12,9 +12,9 @@ class AmountChipsModel {
   );
 
   AmountChipsModel({
-    @required this.order,
-    @required this.value,
-    @required this.best,
+    required this.order,
+    required this.value,
+    required this.best,
   });
 
   factory AmountChipsModel.fromMap(Map<String, dynamic> map) {

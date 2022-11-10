@@ -20,7 +20,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 // import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class TopPlayerLeaderboardView extends StatelessWidget {
-  const TopPlayerLeaderboardView({Key key}) : super(key: key);
+  const TopPlayerLeaderboardView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class TopPlayerLeaderboardView extends StatelessWidget {
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
         return TopPlayer(
-          model: m.WebGameLeaderBoard,
+          model: m!.WebGameLeaderBoard,
           userProfilePicUrl: m.userProfilePicUrl,
           currentUserRank: m.currentUserRank,
           isUserInTopThree: m.isUserInTopThree,
@@ -41,14 +41,14 @@ class TopPlayerLeaderboardView extends StatelessWidget {
 
 class TopPlayer extends StatelessWidget {
   TopPlayer({
-    @required this.model,
-    @required this.userProfilePicUrl,
-    @required this.currentUserRank,
-    @required this.isUserInTopThree,
+    required this.model,
+    required this.userProfilePicUrl,
+    required this.currentUserRank,
+    required this.isUserInTopThree,
   });
 
-  final LeaderboardModel model;
-  final List<String> userProfilePicUrl;
+  final LeaderboardModel? model;
+  final List<String?> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
   // final PanelController panelController = PanelController();
@@ -68,9 +68,9 @@ class TopPlayer extends StatelessWidget {
                   "Leaderboard",
                   style: TextStyles.rajdhaniSB.title3,
                 ),
-                if (model.lastupdated != null)
+                if (model!.lastupdated != null)
                   Text(
-                    "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())} ${model.scoreboard.length}",
+                    "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())} ${model!.scoreboard!.length}",
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
@@ -83,14 +83,14 @@ class TopPlayer extends StatelessWidget {
         children: [
           NewSquareBackground(),
           Container(
-            height: SizeConfig.screenHeight -
+            height: SizeConfig.screenHeight! -
                 SizeConfig.viewInsets.top -
                 kToolbarHeight,
             width: SizeConfig.screenWidth,
             child: Column(
               children: [
                 WinnerWidgets(
-                  scoreboard: model.scoreboard,
+                  scoreboard: model!.scoreboard,
                   userProfilePicUrl: userProfilePicUrl,
                   isSpotLightVisible: false,
                 ),
@@ -121,11 +121,11 @@ class TopPlayer extends StatelessWidget {
       child: Column(
         children: [
           // _buildLeaderBoardHeader(),
-          if (model.scoreboard.length >= 7 &&
+          if (model!.scoreboard!.length >= 7 &&
               !isUserInTopThree &&
               currentUserRank != 0)
             UserRank(
-              currentUserScore: model.scoreboard[currentUserRank - 1],
+              currentUserScore: model!.scoreboard![currentUserRank - 1],
               currentUserRank: currentUserRank,
             ),
           Expanded(
@@ -135,7 +135,7 @@ class TopPlayer extends StatelessWidget {
               child: ListView.builder(
                 controller: _scrollController,
                 shrinkWrap: true,
-                itemCount: model.scoreboard.length - 3,
+                itemCount: model!.scoreboard!.length - 3,
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   int countedIndex = index + 3;
@@ -171,7 +171,7 @@ class TopPlayer extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    '${locator<UserService>().diplayUsername(model.scoreboard[countedIndex].username)}',
+                    '${locator<UserService>().diplayUsername(model!.scoreboard![countedIndex].username!)}',
                     style: TextStyles.sourceSans.body3.setOpecity(0.8),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -181,7 +181,7 @@ class TopPlayer extends StatelessWidget {
             ),
           ),
           Text(
-            '${(model.scoreboard[countedIndex].score).toInt()} points',
+            '${model!.scoreboard![countedIndex].score!.toInt()} points',
             style: TextStyles.rajdhaniM.body3,
           ),
         ],
@@ -201,7 +201,7 @@ class TopPlayer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "${model.scoreboard.length} Players",
+            "${model!.scoreboard!.length} Players",
             style: TextStyles.sourceSansSB.body3,
           ),
           Text(

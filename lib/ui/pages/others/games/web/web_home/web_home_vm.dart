@@ -37,8 +37,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class RechargeOption {
-  final Color color;
-  final int amount;
+  final Color? color;
+  final int? amount;
   final bool isCustom;
 
   RechargeOption({this.color, this.amount, this.isCustom = false});
@@ -46,17 +46,17 @@ class RechargeOption {
 
 class WebHomeViewModel extends BaseViewModel {
   //Dependency Injection
-  final _userService = locator<UserService>();
-  final _lbService = locator<LeaderboardService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _prizeService = locator<PrizeService>();
-  final _userRepo = locator<UserRepository>();
-  final _logger = locator<CustomLogger>();
-  final _coinService = locator<UserCoinService>();
-  final GameRepo _gamesRepo = locator<GameRepo>();
-  final _getterRepo = locator<GetterRepository>();
-  final _dbModel = locator<DBModel>();
-  final _internalOps = locator<InternalOpsService>();
+  final UserService? _userService = locator<UserService>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final PrizeService? _prizeService = locator<PrizeService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserCoinService? _coinService = locator<UserCoinService>();
+  final GameRepo? _gamesRepo = locator<GameRepo>();
+  final GetterRepository? _getterRepo = locator<GetterRepository>();
+  final DBModel? _dbModel = locator<DBModel>();
+  final InternalOpsService? _internalOps = locator<InternalOpsService>();
 
   //Local Variables
 
@@ -65,17 +65,17 @@ class WebHomeViewModel extends BaseViewModel {
   double cardOpacity = 1;
   bool _isPrizesLoading = false;
   bool _isGameLoading = false;
-  String _currentGame;
-  PageController pageController;
-  ScrollController scrollController;
-  PrizesModel _prizes;
-  String _message;
-  String _sessionId;
-  String _gameEndpoint;
+  String? _currentGame;
+  PageController? pageController;
+  late ScrollController scrollController;
+  PrizesModel? _prizes;
+  String? _message;
+  String? _sessionId;
+  String? _gameEndpoint;
   String token = "";
-  bool _isLoading;
-  String gameCode;
-  GameModel _currentGameModel;
+  bool? _isLoading;
+  String? gameCode;
+  GameModel? _currentGameModel;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
       color: Color(0xff5948B2),
@@ -95,21 +95,21 @@ class WebHomeViewModel extends BaseViewModel {
       amount: 0,
     )
   ];
-  String gameToken;
-  int _currentCoinValue;
-  List<ScoreBoard> _pastWeekParticipants;
+  String? gameToken;
+  int? _currentCoinValue;
+  List<ScoreBoard>? _pastWeekParticipants;
 
   //Getters
-  List<ScoreBoard> get pastWeekParticipants => _pastWeekParticipants;
-  String get currentGame => this._currentGame;
-  PrizesModel get prizes => _prizes;
+  List<ScoreBoard>? get pastWeekParticipants => _pastWeekParticipants;
+  String? get currentGame => this._currentGame;
+  PrizesModel? get prizes => _prizes;
   bool get isPrizesLoading => this._isPrizesLoading;
   int get getGameIndex => this.gameIndex;
-  String get message => _message;
-  String get sessionID => _sessionId;
+  String? get message => _message;
+  String? get sessionID => _sessionId;
   get isLoading => this._isLoading;
-  GameModel get currentGameModel => _currentGameModel;
-  int get currentCoinValue => _currentCoinValue;
+  GameModel? get currentGameModel => _currentGameModel;
+  int? get currentCoinValue => _currentCoinValue;
 
   set isLoading(value) {
     this._isLoading = value;
@@ -122,12 +122,12 @@ class WebHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set prizes(PrizesModel value) {
+  set prizes(PrizesModel? value) {
     this._prizes = value;
     notifyListeners();
   }
 
-  set currentGameModel(GameModel value) {
+  set currentGameModel(GameModel? value) {
     this._currentGameModel = value;
     notifyListeners();
   }
@@ -162,13 +162,13 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   trackPlayTappedAnalytics() {
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.playGameTapped,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-          'Game name': _currentGameModel.gameName,
-          "Entry fee": _currentGameModel.playCost,
-          "Win upto": _currentGameModel.prizeAmount,
+          'Game name': _currentGameModel!.gameName,
+          "Entry fee": _currentGameModel!.playCost,
+          "Win upto": _currentGameModel!.prizeAmount,
           "Time left for draw Tambola (mins)":
               AnalyticsProperties.getTimeLeftForTambolaDraw(),
           "Tambola Tickets Owned": AnalyticsProperties.getTabolaTicketCount(),
@@ -230,7 +230,7 @@ class WebHomeViewModel extends BaseViewModel {
 
   Future<bool> checkIfDeviceIsNotAnEmulator() async {
     //TODO
-    final bool isReal = await _internalOps.checkIfDeviceIsReal();
+    final bool isReal = await _internalOps!.checkIfDeviceIsReal();
     if (isReal != null && !isReal) {
       BaseUtil.showNegativeAlert(
           "Simulators not allowed", "Please use the app on a real device");
@@ -239,21 +239,21 @@ class WebHomeViewModel extends BaseViewModel {
     return true;
   }
 
-  Stream<DatabaseEvent> getRealTimePlayingStream(String game) {
+  Stream<DatabaseEvent>? getRealTimePlayingStream(String game) {
     return Api().fetchRealTimePlayingStats(game);
   }
 
   fetchUsersCurrentCoins() {
-    _currentCoinValue = _coinService.flcBalance;
+    _currentCoinValue = _coinService!.flcBalance;
     notifyListeners();
   }
 
-  Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid);
+  Future getProfileDpWithUid(String? uid) async {
+    return await _dbModel!.getUserDP(uid);
   }
 
   fetchTopSaversPastWeek(String game) async {
-    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
       freq: "weekly",
       type: game,
       isForPast: true,
@@ -271,35 +271,35 @@ class WebHomeViewModel extends BaseViewModel {
     String userBannedNotice = '';
     switch (currentGame) {
       case Constants.GAME_TYPE_CRICKET:
-        isUserBannedForThisGame = _userService
+        isUserBannedForThisGame = _userService!
                 .userBootUp?.data?.banMap?.games?.cricketMap?.isBanned ??
             false;
         userBannedNotice =
-            _userService.userBootUp?.data?.banMap?.games?.cricketMap?.reason ??
+            _userService!.userBootUp?.data?.banMap?.games?.cricketMap?.reason ??
                 '';
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
-        isUserBannedForThisGame = _userService
+        isUserBannedForThisGame = _userService!
                 .userBootUp?.data?.banMap?.games?.candyFiestaMap?.isBanned ??
             false;
-        userBannedNotice = _userService
+        userBannedNotice = _userService!
                 .userBootUp?.data?.banMap?.games?.candyFiestaMap?.reason ??
             '';
         break;
       case Constants.GAME_TYPE_FOOTBALL:
-        isUserBannedForThisGame = _userService
+        isUserBannedForThisGame = _userService!
                 .userBootUp?.data?.banMap?.games?.footballMap?.isBanned ??
             false;
         userBannedNotice =
-            _userService.userBootUp?.data?.banMap?.games?.footballMap?.reason ??
+            _userService!.userBootUp?.data?.banMap?.games?.footballMap?.reason ??
                 '';
         break;
       case Constants.GAME_TYPE_POOLCLUB:
-        isUserBannedForThisGame = _userService
+        isUserBannedForThisGame = _userService!
                 .userBootUp?.data?.banMap?.games?.poolClubMap?.isBanned ??
             false;
         userBannedNotice =
-            _userService.userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
+            _userService!.userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
                 '';
         break;
     }
@@ -318,8 +318,8 @@ class WebHomeViewModel extends BaseViewModel {
     trackPlayTappedAnalytics();
 
     initialUrl = generateGameUrl();
-    _logger.d("Game Url: $initialUrl");
-    AppState.delegate.appState.currentAction = PageAction(
+    _logger!.d("Game Url: $initialUrl");
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: WebGameViewPageConfig,
       widget: WebGameView(
@@ -333,14 +333,14 @@ class WebHomeViewModel extends BaseViewModel {
 
   Future<bool> _setupCurrentGame() async {
     setState(ViewState.Busy);
-    int _playCost = _currentGameModel.playCost;
-    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
+    int? _playCost = _currentGameModel!.playCost;
+    ApiResponse<FlcModel> _flcResponse = await _userRepo!.getCoinBalance();
     final response =
-        _gamesRepo.getGameToken(gameName: currentGameModel.gameCode);
+        _gamesRepo!.getGameToken(gameName: currentGameModel!.gameCode);
     if (response.isSuccess()) gameToken = response.model;
     setState(ViewState.Idle);
-    if (_flcResponse.model.flcBalance != null &&
-        _flcResponse.model.flcBalance >= _playCost)
+    if (_flcResponse.model!.flcBalance != null &&
+        _flcResponse.model!.flcBalance! >= _playCost!)
       return true;
     else {
       earnMoreTokens();
@@ -349,9 +349,9 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   generateGameUrl() {
-    String _uri = currentGameModel.gameUri;
+    String? _uri = currentGameModel!.gameUri;
     String _loadUri =
-        "$_uri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}&token=$gameToken";
+        "$_uri?user=${_userService!.baseUser!.uid}&name=${_userService!.baseUser!.username}&token=$gameToken";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
   }
@@ -394,12 +394,12 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   Future<void> getBearerToken() async {
-    token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
+    token = await _userService!.firebaseUser!.getIdToken();
+    _logger!.d(token);
   }
 
   void earnMoreTokens() {
-    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
+    _analyticsService!.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       backgroundColor: UiConstants.gameCardColor,
@@ -423,18 +423,18 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   refreshLeaderboard() async {
-    await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+    await _lbService!.fetchWebGameLeaderBoard(game: currentGame);
   }
 
   fetchGame(String game) async {
     isGameLoading = true;
     final GameModel gameData =
-        _gamesRepo.allgames.firstWhere((g) => g.gameCode == game, orElse: null);
+        _gamesRepo!.allgames!.firstWhere((g) => g.gameCode == game, orElse: null);
     if (gameData != null) {
       currentGameModel = gameData;
       return;
     }
-    final response = await _gamesRepo.getGameByCode(gameCode: game);
+    final response = await _gamesRepo!.getGameByCode(gameCode: game);
     if (response.isSuccess()) {
       currentGameModel = response.model;
       isGameLoading = false;

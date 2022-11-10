@@ -21,22 +21,22 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldBuyInputView extends StatelessWidget {
-  final int amount;
-  final bool skipMl;
+  final int? amount;
+  final bool? skipMl;
   final AugmontTransactionService augTxnService;
-  final GoldBuyViewModel model;
+  final GoldBuyViewModel? model;
 
   const GoldBuyInputView({
-    Key key,
+    Key? key,
     this.amount,
     this.skipMl,
     this.model,
-    @required this.augTxnService,
+    required this.augTxnService,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
     return Stack(
       children: [
@@ -49,14 +49,14 @@ class GoldBuyInputView extends StatelessWidget {
             RechargeModalSheetAppBar(
               txnService: augTxnService,
               trackCloseTapped: () {
-                _analyticsService.track(
+                _analyticsService!.track(
                     eventName: AnalyticsEvents.savePageClosed,
                     properties: {
-                      "Amount entered": model.goldAmountController.text,
-                      "Grams of gold": model.goldAmountInGrams,
+                      "Amount entered": model!.goldAmountController!.text,
+                      "Grams of gold": model!.goldAmountInGrams,
                       "Asset": 'Gold',
-                      "Coupon Applied": model.appliedCoupon != null
-                          ? model.appliedCoupon.code
+                      "Coupon Applied": model!.appliedCoupon != null
+                          ? model!.appliedCoupon!.code
                           : "Not Applied",
                     });
               },
@@ -67,13 +67,13 @@ class GoldBuyInputView extends StatelessWidget {
               txnService: augTxnService,
             ),
             Spacer(),
-            if (model.showCoupons)
-              model.couponApplyInProgress
+            if (model!.showCoupons)
+              model!.couponApplyInProgress
                   ? SpinKitThreeBounce(
                       size: SizeConfig.body2,
                       color: UiConstants.kTabBorderColor,
                     )
-                  : model.appliedCoupon != null
+                  : model!.appliedCoupon != null
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -88,7 +88,7 @@ class GoldBuyInputView extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding8),
                               child: Text(
-                                model.appliedCoupon.code,
+                                model!.appliedCoupon!.code!,
                                 style: TextStyles.sourceSansSB.body2,
                               ),
                             ),
@@ -104,7 +104,7 @@ class GoldBuyInputView extends StatelessWidget {
                             InkWell(
                               onTap: () {
                                 if (augTxnService.isGoldBuyInProgress) return;
-                                model.appliedCoupon = null;
+                                model!.appliedCoupon = null;
                               },
                               child: Icon(Icons.cancel,
                                   color: Colors.grey,
@@ -116,9 +116,9 @@ class GoldBuyInputView extends StatelessWidget {
                           ? SizedBox()
                           : GestureDetector(
                               onTap: () {
-                                model.buyFieldNode.unfocus();
+                                model!.buyFieldNode.unfocus();
 
-                                model.showOfferModal(model);
+                                model!.showOfferModal(model);
                               },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,23 +145,23 @@ class GoldBuyInputView extends StatelessWidget {
             ),
             augTxnService.isGoldBuyInProgress
                 ? Container(
-                    height: SizeConfig.screenWidth * 0.1556,
+                    height: SizeConfig.screenWidth! * 0.1556,
                     alignment: Alignment.center,
-                    width: SizeConfig.screenWidth * 0.7,
+                    width: SizeConfig.screenWidth! * 0.7,
                     child: LinearProgressIndicator(
                       color: UiConstants.primaryColor,
                       backgroundColor: UiConstants.kDarkBackgroundColor,
                     ),
                   )
                 : AppPositiveBtn(
-                    btnText: model.status == 2 ? 'Save' : "UNAVAILABLE",
+                    btnText: model!.status == 2 ? 'Save' : "UNAVAILABLE",
                     onPressed: () async {
                       if (!augTxnService.isGoldBuyInProgress) {
                         FocusScope.of(context).unfocus();
-                        model.initiateBuy();
+                        model!.initiateBuy();
                       }
                     },
-                    width: SizeConfig.screenWidth * 0.813,
+                    width: SizeConfig.screenWidth! * 0.813,
                   ),
             SizedBox(
               height: SizeConfig.padding24,
@@ -169,7 +169,7 @@ class GoldBuyInputView extends StatelessWidget {
           ],
         ),
         CustomKeyboardSubmitButton(
-            onSubmit: () => model.buyFieldNode.unfocus()),
+            onSubmit: () => model!.buyFieldNode.unfocus()),
       ],
     );
   }
@@ -177,14 +177,14 @@ class GoldBuyInputView extends StatelessWidget {
 
 class RechargeModalSheetAppBar extends StatelessWidget {
   final AugmontTransactionService txnService;
-  final Function trackCloseTapped;
-  RechargeModalSheetAppBar({@required this.txnService, this.trackCloseTapped});
+  final Function? trackCloseTapped;
+  RechargeModalSheetAppBar({required this.txnService, this.trackCloseTapped});
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Container(
-        width: SizeConfig.screenWidth * 0.168,
-        height: SizeConfig.screenWidth * 0.168,
+        width: SizeConfig.screenWidth! * 0.168,
+        height: SizeConfig.screenWidth! * 0.168,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
@@ -202,8 +202,8 @@ class RechargeModalSheetAppBar extends StatelessWidget {
           transform: Matrix4.rotationY(math.pi),
           child: Image.asset(
             Assets.digitalGoldBar,
-            width: SizeConfig.screenWidth * 0.12,
-            height: SizeConfig.screenWidth * 0.12,
+            width: SizeConfig.screenWidth! * 0.12,
+            height: SizeConfig.screenWidth! * 0.12,
           ),
         ),
       ),
@@ -218,8 +218,8 @@ class RechargeModalSheetAppBar extends StatelessWidget {
               : IconButton(
                   icon: Icon(Icons.close, color: Colors.white),
                   onPressed: () {
-                    if (trackCloseTapped != null) trackCloseTapped();
-                    AppState.backButtonDispatcher.didPopRoute();
+                    if (trackCloseTapped != null) trackCloseTapped!();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                 ),
     );
@@ -227,9 +227,9 @@ class RechargeModalSheetAppBar extends StatelessWidget {
 }
 
 class EnterAmountView extends StatelessWidget {
-  EnterAmountView({Key key, @required this.model, @required this.txnService})
+  EnterAmountView({Key? key, required this.model, required this.txnService})
       : super(key: key);
-  final GoldBuyViewModel model;
+  final GoldBuyViewModel? model;
   final AugmontTransactionService txnService;
   @override
   Widget build(BuildContext context) {
@@ -262,7 +262,7 @@ class EnterAmountView extends StatelessWidget {
                 //     ),
                 //   ],
                 // ),
-                if (model.buyNotice != null && model.buyNotice.isNotEmpty)
+                if (model!.buyNotice != null && model!.buyNotice!.isNotEmpty)
                   Container(
                     margin: EdgeInsets.only(bottom: SizeConfig.padding16),
                     decoration: BoxDecoration(
@@ -273,7 +273,7 @@ class EnterAmountView extends StatelessWidget {
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.all(SizeConfig.padding16),
                     child: Text(
-                      model.buyNotice,
+                      model!.buyNotice!,
                       textAlign: TextAlign.center,
                       style: TextStyles.body3.light,
                     ),
@@ -285,7 +285,7 @@ class EnterAmountView extends StatelessWidget {
                     Text(
                       "₹",
                       style: TextStyles.rajdhaniB.title0.colour(
-                          model.goldAmountController.text == "0"
+                          model!.goldAmountController!.text == "0"
                               ? UiConstants.kTextColor2
                               : UiConstants.kTextColor),
                     ),
@@ -293,18 +293,18 @@ class EnterAmountView extends StatelessWidget {
                     AnimatedContainer(
                       duration: Duration(seconds: 0),
                       curve: Curves.easeIn,
-                      width: model.fieldWidth,
+                      width: model!.fieldWidth,
                       child: TextFormField(
                         autofocus: true,
-                        controller: model.goldAmountController,
-                        focusNode: model.buyFieldNode,
+                        controller: model!.goldAmountController,
+                        focusNode: model!.buyFieldNode,
                         enabled: !txnService.isGoldBuyInProgress &&
-                            !model.couponApplyInProgress,
+                            !model!.couponApplyInProgress,
                         validator: (val) {
                           return null;
                         },
                         onChanged: (val) {
-                          model.onBuyValueChanged(val);
+                          model!.onBuyValueChanged(val);
                         },
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
@@ -321,7 +321,7 @@ class EnterAmountView extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                         style: TextStyles.rajdhaniB.title68.colour(
-                          model.goldAmountController.text == "0"
+                          model!.goldAmountController!.text == "0"
                               ? UiConstants.kTextColor2
                               : UiConstants.kTextColor,
                         ),
@@ -329,7 +329,7 @@ class EnterAmountView extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (model.showMaxCapText)
+                if (model!.showMaxCapText)
                   Padding(
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
@@ -339,7 +339,7 @@ class EnterAmountView extends StatelessWidget {
                           .colour(UiConstants.primaryColor),
                     ),
                   ),
-                if (model.showMinCapText)
+                if (model!.showMinCapText)
                   Padding(
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
@@ -356,17 +356,17 @@ class EnterAmountView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              model.amountChip(0),
-              model.amountChip(1),
-              model.amountChip(2),
-              model.amountChip(3),
+              model!.amountChip(0),
+              model!.amountChip(1),
+              model!.amountChip(2),
+              model!.amountChip(3),
             ],
           ),
           SizedBox(
             height: SizeConfig.padding24,
           ),
           Container(
-            width: SizeConfig.screenWidth * 0.72,
+            width: SizeConfig.screenWidth! * 0.72,
             decoration: BoxDecoration(
               color: UiConstants.darkPrimaryColor,
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -380,7 +380,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                     child: Text(
-                      "${model.goldAmountInGrams} gm",
+                      "${model!.goldAmountInGrams} gm",
                       style: TextStyles.sourceSansSB.body1,
                     ),
                   ),
@@ -393,11 +393,11 @@ class EnterAmountView extends StatelessWidget {
                 Expanded(
                   child: Center(
                     child: NewCurrentGoldPriceWidget(
-                      fetchGoldRates: model.fetchGoldRates,
-                      goldprice: model.goldRates != null
-                          ? model.goldRates.goldBuyPrice
+                      fetchGoldRates: model!.fetchGoldRates,
+                      goldprice: model!.goldRates != null
+                          ? model!.goldRates!.goldBuyPrice
                           : 0.0,
-                      isFetching: model.isGoldRateFetching,
+                      isFetching: model!.isGoldRateFetching,
                       mini: true,
                     ),
                   ),

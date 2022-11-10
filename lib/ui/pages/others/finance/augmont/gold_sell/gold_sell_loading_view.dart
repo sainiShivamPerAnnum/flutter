@@ -22,11 +22,11 @@ import 'package:lottie/lottie.dart';
 class GoldSellLoadingView extends StatelessWidget {
   final GoldSellViewModel model;
 
-  final _augTxnService = locator<AugmontTransactionService>();
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
+  final TransactionHistoryService? _txnHistoryService = locator<TransactionHistoryService>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView({Key key, @required this.model}) : super(key: key);
+  GoldSellLoadingView({Key? key, required this.model}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,7 +44,7 @@ class GoldSellLoadingView extends StatelessWidget {
         ),
         Expanded(
           child: Lottie.asset(Assets.goldDepostLoadingLottie,
-              height: SizeConfig.screenHeight * 0.7),
+              height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(
           children: [
@@ -61,10 +61,10 @@ class GoldSellLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () {},
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final seconds = value.inSeconds % 60;
                 return Container(
-                  width: SizeConfig.screenWidth * 0.7,
+                  width: SizeConfig.screenWidth! * 0.7,
                   child: LinearProgressIndicator(
                     value: 1 - (seconds / waitTimeInSec),
                     color: UiConstants.primaryColor,
@@ -87,21 +87,21 @@ class GoldSellLoadingView extends StatelessWidget {
                 //     TransactionState.ongoing) return;
 
                 // _augTxnService.pollingPeriodicTimer?.cancel();
-                _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
-                _augTxnService.currentTransactionState = TransactionState.idle;
+                _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
+                _augTxnService!.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
                   AppState.screenStack.removeLast();
                 }
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
                 showTransactionPendingDialog();
                 log("Screen Stack:${AppState.screenStack.toString()}");
               },
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final minutes = value.inMinutes;
                 final seconds = value.inSeconds % 60;
                 return Text(

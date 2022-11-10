@@ -14,7 +14,7 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 // import 'story';
 class InfoStoriesViewModel extends BaseViewModel {
   final controller = StoryController();
-  final _getterRepo = locator<GetterRepository>();
+  final GetterRepository? _getterRepo = locator<GetterRepository>();
   BoxDecoration backgroundDecoration = BoxDecoration(
     gradient: LinearGradient(
         colors: [Color(0xFF009D91), Color(0xFF032A2E)],
@@ -22,30 +22,30 @@ class InfoStoriesViewModel extends BaseViewModel {
         end: Alignment.bottomCenter),
   );
   TextStyle captionTextStyle = TextStyles.sourceSans.body2;
-  List<StoryItemModel> storyItemData;
-  List<StoryItem> storyItems;
+  List<StoryItemModel>? storyItemData;
+  late List<StoryItem> storyItems;
 
   _loadAssetsAndData(String topic) async {
     setState(ViewState.Busy);
-    final response = await _getterRepo.getStory(topic: topic ?? 'onboarding');
+    final response = await _getterRepo!.getStory(topic: topic ?? 'onboarding');
     if (response.isSuccess()) {
       storyItemData = response.model;
       storyItems = [];
-      storyItemData.forEach((StoryItemModel element) {
+      storyItemData!.forEach((StoryItemModel element) {
         storyItems.add(StoryItem.pageImage(
             controller: controller,
             duration: Duration(seconds: 5),
-            url: element.assetUri,
+            url: element.assetUri!,
             captionWidget: Wrap(
               children: [
                 Container(
                     width: SizeConfig.navBarWidth,
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.pageHorizontalMargins,
-                      vertical: SizeConfig.screenHeight * 0.16,
+                      vertical: SizeConfig.screenHeight! * 0.16,
                     ),
                     alignment: Alignment.center,
-                    child: FelloRichText(paragraph: element.richText)),
+                    child: FelloRichText(paragraph: element.richText!)),
               ],
             ),
             textStyle: captionTextStyle,

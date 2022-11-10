@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class UnscratchedGTCountChip extends StatelessWidget {
   final WinViewModel model;
-  UnscratchedGTCountChip({@required this.model});
+  UnscratchedGTCountChip({required this.model});
   @override
   Widget build(BuildContext context) {
     return model.showUnscratchedCount && model.unscratchedGTCount != 0

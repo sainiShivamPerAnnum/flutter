@@ -25,8 +25,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAppBar extends StatelessWidget {
-  JourneyAppBar({Key key}) : super(key: key);
-  final _baseUtil = locator<BaseUtil>();
+  JourneyAppBar({Key? key}) : super(key: key);
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
@@ -37,8 +37,8 @@ class JourneyAppBar extends StatelessWidget {
           left: SizeConfig.padding10,
           child: SafeArea(
               child: Container(
-            width: SizeConfig.screenWidth - SizeConfig.padding20,
-            height: SizeConfig.screenWidth * 0.28,
+            width: SizeConfig.screenWidth! - SizeConfig.padding20,
+            height: SizeConfig.screenWidth! * 0.28,
             child: Stack(
               children: [
                 ClipRRect(
@@ -80,9 +80,9 @@ class JourneyAppBar extends StatelessWidget {
                                 builder: (context, model, properties) {
                                   return GestureDetector(
                                     onTap: () =>
-                                        _baseUtil.openProfileDetailsScreen(),
+                                        _baseUtil!.openProfileDetailsScreen(),
                                     child: Text(
-                                      "Level ${model.userJourneyStats?.level}",
+                                      "Level ${model!.userJourneyStats?.level}",
                                       style: TextStyles.rajdhaniSB.title5
                                           .colour(UiConstants.kTextColor),
                                     ),
@@ -148,9 +148,9 @@ class JourneyAppBar extends StatelessWidget {
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
   final String asset;
   final Widget value;
-  final InvestmentType investmentType;
+  final InvestmentType? investmentType;
   JourneyAppBarAssetDetailsTile(
-      {@required this.asset, @required this.value, this.investmentType});
+      {required this.asset, required this.value, this.investmentType});
 
   @override
   Widget build(BuildContext context) {
@@ -161,12 +161,12 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
 
           Haptic.vibrate();
           if (investmentType == InvestmentType.AUGGOLD99)
-            AppState.delegate.appState.currentAction = PageAction(
+            AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.addPage,
               page: SaveAssetsViewConfig,
             );
           else
-            AppState.delegate.appState.currentAction = PageAction(
+            AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.addPage,
               page: LendboxDetailsPageConfig,
             );

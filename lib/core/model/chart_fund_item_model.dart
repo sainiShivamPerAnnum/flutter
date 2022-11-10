@@ -9,11 +9,11 @@ class ChartFundItem {
   final bool isHighlighted;
 
   ChartFundItem({
-    @required this.fundName,
-    @required this.color,
-    @required this.description,
-    @required this.fundAmount,
-    @required this.logo,
-    @required this.isHighlighted,
+    required this.fundName,
+    required this.color,
+    required this.description,
+    required this.fundAmount,
+    required this.logo,
+    required this.isHighlighted,
   });
 }

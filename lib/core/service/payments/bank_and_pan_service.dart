@@ -9,11 +9,12 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class BankAndPanService
     extends PropertyChangeNotifier<BankAndPanServiceProperties> {
-  final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
-  final _paymentRepo = locator<PaymentRepository>();
-  final _userRepo = locator<UserRepository>();
-  String _userPan;
+
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
+  final UserRepository _userRep = locator<UserRepository>();
+  String? _userPan;
 
   get userPan => this._userPan;
 
@@ -22,9 +23,9 @@ class BankAndPanService
     notifyListeners(BankAndPanServiceProperties.kycVerified);
   }
 
-  BankAccountDetailsModel _activeBankAccountDetails;
+  BankAccountDetailsModel? _activeBankAccountDetails;
 
-  BankAccountDetailsModel get activeBankAccountDetails =>
+  BankAccountDetailsModel? get activeBankAccountDetails =>
       this._activeBankAccountDetails;
 
   set activeBankAccountDetails(value) {
@@ -37,7 +38,7 @@ class BankAndPanService
   bool _isSellButtonVisible = false;
   bool _isLockInReached = false;
   bool _isSellLocked = false;
-  String _sellNotice;
+  String? _sellNotice;
 
   double _withdrawableQnt = 0.0;
   double _nonWithdrawableQnt = 0.0;
@@ -45,7 +46,7 @@ class BankAndPanService
   get withdrawableQnt => this._withdrawableQnt;
   get nonWithdrawableQnt => this._nonWithdrawableQnt;
   get isLockInReached => this._isLockInReached;
-  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
+  bool get isSimpleKycVerified => _userService!.isSimpleKycVerified;
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
   bool get isSellButtonVisible => _isSellButtonVisible;
@@ -104,41 +105,44 @@ class BankAndPanService
     activeBankAccountDetails = null;
   }
 
-  checkForUserBankAccountDetails() async {
-    if (activeBankAccountDetails != null) return;
-    final res = await _paymentRepo.getActiveBankAccountDetails();
-    if (res.isSuccess()) {
-      activeBankAccountDetails = res.model;
-      isBankDetailsAdded = true;
-    }
-  }
 
   checkForUserPanDetails() async {
-    final res = await _userRepo.getUserPan();
+    final res = await _userRep.getUserPan();
     if (res.isSuccess()) {
       userPan = res.model;
     }
   }
 
+  checkForUserBankAccountDetails() async {
+    if (activeBankAccountDetails != null) return;
+    final res = await _paymentRepo!.getActiveBankAccountDetails();
+    if (res.isSuccess()) 
+      activeBankAccountDetails = res.model;
+      isBankDetailsAdded = true;
+    }
+  
+
+
+
   verifyBankDetails() async {
     if (activeBankAccountDetails != null &&
-        activeBankAccountDetails.account != null &&
-        activeBankAccountDetails.account.isNotEmpty) {
+        activeBankAccountDetails!.account != null &&
+        activeBankAccountDetails!.account!.isNotEmpty) {
       isBankDetailsAdded = true;
     }
   }
 
   verifyKYCStatus() {
-    isKYCVerified = _userService.baseUser?.isSimpleKycVerified ?? false;
+    isKYCVerified = _userService!.baseUser?.isSimpleKycVerified ?? false;
     print(_isKYCVerified);
-    _logger.d('kyc verified! $isKYCVerified');
+    _logger!.d('kyc verified! $isKYCVerified');
   }
 
   checkForSellNotice() {
     // if (_userService.userAugmontDetails != null &&
     //     _userService.userAugmontDetails.sellNotice != null &&
     //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
-    sellNotice = _userService.userBootUp?.data?.banMap?.investments?.withdrawal
+    sellNotice = _userService!.userBootUp?.data?.banMap?.investments?.withdrawal
             ?.augmont?.reason ??
         '';
   }
@@ -147,7 +151,7 @@ class BankAndPanService
     // if (_userService.userAugmontDetails != null &&
     //     _userService.userAugmontDetails.sellNotice != null &&
     //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
-    isSellLocked = _userService.userBootUp?.data?.banMap?.investments
+    isSellLocked = _userService!.userBootUp?.data?.banMap?.investments
             ?.withdrawal?.augmont?.isBanned ??
         false;
   }

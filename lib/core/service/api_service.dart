@@ -16,23 +16,23 @@ abstract class API {
   dynamic returnResponse(http.Response response);
 
   Future<dynamic> getData(String url);
-  Future<dynamic> postData(String url, {Map<String, dynamic> body});
-  Future<dynamic> deleteData(String url, {Map<String, dynamic> body});
-  Future<dynamic> patchData(String url, {Map<String, dynamic> body});
+  Future<dynamic> postData(String url, {Map<String, dynamic>? body});
+  Future<dynamic> deleteData(String url, {Map<String, dynamic>? body});
+  Future<dynamic> patchData(String url, {Map<String, dynamic>? body});
   Future<dynamic> putData(String url);
   Future<dynamic> paytmSubscriptionPostRequest(
-      {String orderId,
-      String vpa,
-      String txnToken,
-      String subId,
-      String postPrefix,
-      String mid});
+      {String? orderId,
+      String? vpa,
+      String? txnToken,
+      String? subId,
+      String? postPrefix,
+      String? mid});
 }
 
 class APIService implements API {
-  String _baseUrl = 'https://' + FlavorConfig.instance.values.baseUriAsia;
-  final logger = locator<CustomLogger>();
-  final userService = locator<UserService>();
+  String _baseUrl = 'https://' + FlavorConfig.instance!.values.baseUriAsia;
+  final CustomLogger? logger = locator<CustomLogger>();
+  final UserService? userService = locator<UserService>();
   String _versionString = "";
 
   APIService._();
@@ -41,10 +41,10 @@ class APIService implements API {
   @override
   Future<dynamic> getData(
     String url, {
-    String token,
-    Map<String, dynamic> queryParams,
+    String? token,
+    Map<String, dynamic>? queryParams,
     // Map<String, dynamic> headers,
-    String cBaseUrl,
+    String? cBaseUrl,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
@@ -68,13 +68,13 @@ class APIService implements API {
         'platform': Platform.isAndroid ? 'android' : 'iOS',
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.firebaseUser?.uid,
+        'uid': userService?.firebaseUser?.uid as String,
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      logger.d("response from $finalPath");
-      logger.d("Full url: $finalPath");
-      logger.d("Get Response: ${response.statusCode}");
-      logger.d("Get Response: ${response.body}");
+      logger!.d("response from $finalPath");
+      logger!.d("Full url: $finalPath");
+      logger!.d("Get Response: ${response.statusCode}");
+      logger!.d("Get Response: ${response.body}");
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -89,11 +89,11 @@ class APIService implements API {
   @override
   Future<dynamic> postData(
     String url, {
-    Map<String, dynamic> body,
-    String cBaseUrl,
-    String token,
-    Map<String, String> headers,
-    Map<String, dynamic> queryParams,
+    Map<String, dynamic>? body,
+    String? cBaseUrl,
+    String? token,
+    Map<String, String>? headers,
+    Map<String, dynamic>? queryParams,
     bool isAuthTokenAvailable = true,
   }) async {
     final HttpMetric metric =
@@ -109,19 +109,19 @@ class APIService implements API {
         'platform': Platform.isAndroid ? 'android' : 'iOS',
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.baseUser?.uid,
+        'uid': userService?.baseUser?.uid as String,
       };
       if (headers != null) _headers.addAll(headers);
       if (token != null)
         _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      logger.d(_headers);
+      logger!.d(_headers);
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
 
       String _url = _baseUrl + url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
-      logger.d("response from $_url");
+      logger!.d("response from $_url");
       if (queryParams != null) {
         queryString = Uri(queryParameters: queryParams).query;
         _url += '?$queryString';
@@ -147,9 +147,9 @@ class APIService implements API {
   @override
   Future<dynamic> putData(
     String url, {
-    Map<String, dynamic> body,
-    String cBaseUrl,
-    String token,
+    Map<String, dynamic>? body,
+    String? cBaseUrl,
+    String? token,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
@@ -161,7 +161,7 @@ class APIService implements API {
       String _url = _baseUrl + url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
-      logger.d("response from $_url");
+      logger!.d("response from $_url");
 
       final response = await http.put(
         Uri.parse(
@@ -173,7 +173,7 @@ class APIService implements API {
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid,
+          'uid': userService?.baseUser?.uid as String,
         },
         body: body == null ? null : jsonEncode(body),
       );
@@ -189,8 +189,8 @@ class APIService implements API {
   @override
   Future<dynamic> deleteData(
     String url, {
-    Map<String, dynamic> body,
-    String token,
+    Map<String, dynamic>? body,
+    String? token,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
@@ -198,7 +198,7 @@ class APIService implements API {
 
     dynamic responseJson;
     try {
-      logger.d("response from $url");
+      logger!.d("response from $url");
       final response = await http.delete(
         Uri.parse('$_baseUrl$url'),
         headers: <String, String>{
@@ -207,7 +207,7 @@ class APIService implements API {
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid,
+          'uid': userService?.baseUser?.uid as String,
         },
       );
       responseJson = returnResponse(response);
@@ -222,8 +222,8 @@ class APIService implements API {
   @override
   Future<dynamic> patchData(
     String url, {
-    Map<String, dynamic> body,
-    String token,
+    Map<String, dynamic>? body,
+    String? token,
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
@@ -240,7 +240,7 @@ class APIService implements API {
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid,
+          'uid': userService?.baseUser?.uid as String,
         },
         body: body == null ? null : jsonEncode(body),
       );
@@ -254,12 +254,12 @@ class APIService implements API {
   }
 
   Future<dynamic> paytmSubscriptionPostRequest(
-      {String orderId,
-      String vpa,
-      String txnToken,
-      String subId,
-      String postPrefix,
-      String mid}) async {
+      {String? orderId,
+      String? vpa,
+      String? txnToken,
+      String? subId,
+      String? postPrefix,
+      String? mid}) async {
     try {
       String responseString = "";
       var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
@@ -278,12 +278,12 @@ class APIService implements API {
 
       if (response.statusCode == 200) {
         responseString = await response.stream.bytesToString();
-        logger.d(responseString);
+        logger!.d(responseString);
         String identifierString =
             "Check pending requests and approve payment by entering UPI PIN";
         if (responseString.contains(identifierString)) return true;
       } else {
-        logger.d(response.reasonPhrase);
+        logger!.d(response.reasonPhrase);
         return false;
       }
     } catch (e) {
@@ -295,12 +295,12 @@ class APIService implements API {
   @override
   dynamic returnResponse(http.Response response) {
     var responseJson = json.decode(response.body);
-    logger.d("$responseJson with code  ${response.statusCode}");
+    logger!.d("$responseJson with code  ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
         return responseJson;
       case 400:
-        logger.d(response.body);
+        logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
       case 401:
       case 403:

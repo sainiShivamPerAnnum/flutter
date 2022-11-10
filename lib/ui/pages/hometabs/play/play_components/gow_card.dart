@@ -19,13 +19,13 @@ import 'package:shimmer/shimmer.dart';
 class GOWCard extends StatelessWidget {
   final PlayViewModel model;
   const GOWCard({
-    @required this.model,
-    Key key,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
     return (model.isGamesListDataLoading)
         ? GameCardShimmer()
@@ -42,25 +42,25 @@ class GOWCard extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Haptic.vibrate();
-                      _analyticsService.track(
+                      _analyticsService!.track(
                           eventName: AnalyticsEvents.gameTapped,
                           properties: AnalyticsProperties
                               .getDefaultPropertiesMap(extraValuesMap: {
-                            'Game name': model.gow.gameName,
-                            "Entry fee": model.gow.playCost,
-                            "Win upto": model.gow.prizeAmount,
+                            'Game name': model.gow!.gameName,
+                            "Entry fee": model.gow!.playCost,
+                            "Win upto": model.gow!.prizeAmount,
                             "Time left for draw Tambola (mins)":
                                 AnalyticsProperties.getTimeLeftForTambolaDraw(),
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTabolaTicketCount(),
                           }));
-                      AppState.delegate.parseRoute(
-                        Uri.parse(model.gow.route),
+                      AppState.delegate!.parseRoute(
+                        Uri.parse(model.gow!.route!),
                       );
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: model.gow.shadowColor,
+                          color: model.gow!.shadowColor,
                           borderRadius:
                               BorderRadius.circular(SizeConfig.roundness12)),
                       margin: EdgeInsets.symmetric(
@@ -69,7 +69,7 @@ class GOWCard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins),
                       width: double.infinity,
-                      height: SizeConfig.screenWidth * 0.456,
+                      height: SizeConfig.screenWidth! * 0.456,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -77,9 +77,9 @@ class GOWCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(model.gow.gameName.split(' ').first,
+                                Text(model.gow!.gameName!.split(' ').first,
                                     style: TextStyles.rajdhaniB.title1),
-                                Text(model.gow.gameName.split(' ').last,
+                                Text(model.gow!.gameName!.split(' ').last,
                                     style: TextStyles.rajdhaniSB.title3),
                                 SizedBox(height: SizeConfig.padding16),
                                 Row(
@@ -91,29 +91,29 @@ class GOWCard extends StatelessWidget {
                                       width: SizeConfig.padding20,
                                     ),
                                     SizedBox(width: SizeConfig.padding4),
-                                    Text(model.gow.playCost.toString(),
+                                    Text(model.gow!.playCost.toString(),
                                         style: TextStyles.sourceSans.body1),
                                   ],
                                 ),
                               ]),
                           Expanded(
-                            child: SvgPicture.network(model.gow.icon,
+                            child: SvgPicture.network(model.gow!.icon!,
                                 fit: BoxFit.cover,
-                                height: SizeConfig.screenWidth * 0.5,
-                                width: SizeConfig.screenWidth * 0.5),
+                                height: SizeConfig.screenWidth! * 0.5,
+                                width: SizeConfig.screenWidth! * 0.5),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              ));
+              )) as Widget;
   }
 }
 
 class GameCardShimmer extends StatelessWidget {
   const GameCardShimmer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -126,7 +126,7 @@ class GameCardShimmer extends StatelessWidget {
           horizontal: SizeConfig.padding24,
           vertical: SizeConfig.padding12,
         ),
-        height: SizeConfig.screenWidth * 0.456,
+        height: SizeConfig.screenWidth! * 0.456,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
           color: UiConstants.gameCardColor,

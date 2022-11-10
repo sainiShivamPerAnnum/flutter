@@ -57,35 +57,36 @@ import 'package:share_plus/share_plus.dart';
 // import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class WinViewModel extends BaseViewModel {
-  final _userService = locator<UserService>();
-  final _logger = locator<CustomLogger>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _journeyRepo = locator<JourneyRepository>();
-  final _baseUtil = locator<BaseUtil>();
-  final _refRepo = locator<ReferralRepo>();
-  final _appFlyer = locator<AppFlyerAnalytics>();
-  final _winnerService = locator<WinnerService>();
-  final _lbService = locator<LeaderboardService>();
-  final userRepo = locator<UserRepository>();
-  final _transactionHistoryService = locator<TransactionHistoryService>();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _prizingRepo = locator<PrizingRepo>();
-  final _campaignRepo = locator<CampaignRepo>();
-  final _gtRepo = locator<GoldenTicketRepository>();
+  final UserService? _userService = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final ReferralRepo? _refRepo = locator<ReferralRepo>();
+  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final WinnerService? _winnerService = locator<WinnerService>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final UserRepository? userRepo = locator<UserRepository>();
+  final TransactionHistoryService? _transactionHistoryService =
+      locator<TransactionHistoryService>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
+  final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
+  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
   int _unscratchedGTCount = 0;
   bool _showUnscratchedCount = true;
 
-  Timer _timer;
+  Timer? _timer;
   bool _showOldView = false;
   bool get showOldView => this._showOldView;
-  String _refCode = "";
+  String? _refCode = "";
   final GlobalKey imageKey = GlobalKey();
 
   bool _isShareAlreadyClicked = false;
 
   bool get isShareAlreadyClicked => _isShareAlreadyClicked;
 
-  PrizeClaimChoice _choice;
+  PrizeClaimChoice? _choice;
   get choice => this._choice;
 
   set choice(value) {
@@ -93,22 +94,22 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String _shareMsg;
+  late String _shareMsg;
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
   bool _isWinningHistoryLoading = false;
   bool _isShareLoading = false;
 
-  List<UserTransaction> _winningHistory;
+  List<UserTransaction>? _winningHistory;
 
-  List<UserTransaction> get winningHistory => this._winningHistory;
-  set winningHistory(List<UserTransaction> value) {
+  List<UserTransaction>? get winningHistory => this._winningHistory;
+  set winningHistory(List<UserTransaction>? value) {
     this._winningHistory = value;
     notifyListeners();
   }
 
-  List<FelloFactsModel> fellofacts = [];
+  List<FelloFactsModel>? fellofacts = [];
 
   bool _isFelloFactsLoading = false;
   get isFelloFactsLoading => this._isFelloFactsLoading;
@@ -120,17 +121,17 @@ class WinViewModel extends BaseViewModel {
 
   String appShareMessage =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
-  final _fcmListener = locator<FcmListener>();
-  PageController _pageController;
+  final FcmListener? _fcmListener = locator<FcmListener>();
+  PageController? _pageController;
 
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
 
   int _tabNo = 0;
 
-  String _minWithdrawPrize;
-  String _refUnlock;
-  int _refUnlockAmt;
-  int _minWithdrawPrizeAmt;
+  String? _minWithdrawPrize;
+  String? _refUnlock;
+  int? _refUnlockAmt;
+  int? _minWithdrawPrizeAmt;
 
   //GETTERS SETTERS
   bool get isShareLoading => _isShareLoading;
@@ -141,11 +142,11 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String get minWithdrawPrize => _minWithdrawPrize;
-  String get refUnlock => _refUnlock;
-  int get refUnlockAmt => _refUnlockAmt;
+  String? get minWithdrawPrize => _minWithdrawPrize;
+  String? get refUnlock => _refUnlock;
+  int? get refUnlockAmt => _refUnlockAmt;
 
-  int get minWithdrawPrizeAmt => _minWithdrawPrizeAmt;
+  int? get minWithdrawPrizeAmt => _minWithdrawPrizeAmt;
 
   double get tabPosWidthFactor => _tabPosWidthFactor;
   set tabPosWidthFactor(value) {
@@ -153,7 +154,7 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  PageController get pageController => _pageController;
+  PageController? get pageController => _pageController;
 
   String _refUrl = "";
 
@@ -171,20 +172,20 @@ class WinViewModel extends BaseViewModel {
   get refCode => _refCode;
   get refUrl => _refUrl;
 
-  LocalDBModel _localDBModel = locator<LocalDBModel>();
+  LocalDBModel? _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
-  WinnersModel _winners;
+  WinnersModel? _winners;
   int _currentPage = 0;
   int get getCurrentPage => this._currentPage;
   final ScrollController eventScrollController = new ScrollController();
 
-  List<EventModel> _ongoingEvents;
+  List<EventModel>? _ongoingEvents;
 
   // static PanelController _panelController = PanelController();
 
-  List<EventModel> get ongoingEvents => this._ongoingEvents;
+  List<EventModel>? get ongoingEvents => this._ongoingEvents;
 
-  set ongoingEvents(List<EventModel> value) {
+  set ongoingEvents(List<EventModel>? value) {
     this._ongoingEvents = value;
     notifyListeners();
   }
@@ -201,16 +202,16 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  WinnersModel get winners => _winners;
+  WinnersModel? get winners => _winners;
 
-  double get winnings => _userService.userFundWallet.prizeBalance;
+  double get winnings => _userService!.userFundWallet!.prizeBalance;
 
   set winners(val) {
     _winners = val;
     notifyListeners();
   }
 
-  get unscratchedGTCount => this._unscratchedGTCount;
+  int get unscratchedGTCount => this._unscratchedGTCount;
 
   set unscratchedGTCount(int count) {
     this._unscratchedGTCount = count;
@@ -226,7 +227,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   double get getUnclaimedPrizeBalance =>
-      _userService.userFundWallet.unclaimedBalance;
+      _userService!.userFundWallet!.unclaimedBalance;
 
   init() {
     // setupAutoEventScroll();
@@ -237,9 +238,9 @@ class WinViewModel extends BaseViewModel {
     getUnscratchedGTCount();
     // _baseUtil.fetchUserAugmontDetail();
     getFelloFacts();
-    _lbService.fetchReferralLeaderBoard();
+    _lbService!.fetchReferralLeaderBoard();
 
-    _winnerService.fetchWinners();
+    _winnerService!.fetchWinners();
   }
 
   Future<void> shareLink() async {
@@ -251,14 +252,14 @@ class WinViewModel extends BaseViewModel {
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
-    _fcmListener.addSubscription(FcmTopic.REFERRER);
-    BaseAnalytics.analytics.logShare(
+    _fcmListener!.addSubscription(FcmTopic.REFERRER);
+    BaseAnalytics.analytics!.logShare(
       contentType: 'referral',
-      itemId: _userService.baseUser.uid,
+      itemId: _userService!.baseUser!.uid!,
       method: 'message',
     );
 
-    _analyticsService
+    _analyticsService!
         .track(eventName: AnalyticsEvents.shareReferalCode, properties: {
       "Referrred Count Success": AnalyticsProperties.getSucessReferalCount(),
       "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
@@ -267,7 +268,7 @@ class WinViewModel extends BaseViewModel {
     shareLinkInProgress = true;
     refresh();
 
-    String url = await this.generateLink();
+    String? url = await this.generateLink();
 
     shareLinkInProgress = false;
     refresh();
@@ -282,7 +283,7 @@ class WinViewModel extends BaseViewModel {
         Share.share(_shareMsg + url);
       } else {
         FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
-          _logger.d(flag);
+          _logger!.d(flag);
         });
       }
     }
@@ -313,12 +314,12 @@ class WinViewModel extends BaseViewModel {
   }
 
   cleanJourneyAssetsFiles() {
-    _journeyRepo.dump();
+    _journeyRepo!.dump();
   }
 
   void copyReferCode() {
     Haptic.vibrate();
-    _analyticsService
+    _analyticsService!
         .track(eventName: AnalyticsEvents.copyReferalCode, properties: {
       "Referrred Count Success": AnalyticsProperties.getSucessReferalCount(),
       "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
@@ -331,16 +332,16 @@ class WinViewModel extends BaseViewModel {
 
   Future<void> shareWhatsApp() async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    _fcmListener.addSubscription(FcmTopic.REFERRER);
-    BaseAnalytics.analytics.logShare(
+    _fcmListener!.addSubscription(FcmTopic.REFERRER);
+    BaseAnalytics.analytics!.logShare(
       contentType: 'referral',
-      itemId: _userService.baseUser.uid,
+      itemId: _userService!.baseUser!.uid!,
       method: 'whatsapp',
     );
     shareWhatsappInProgress = true;
     refresh();
 
-    String url = await this.generateLink();
+    String? url = await this.generateLink();
     shareWhatsappInProgress = false;
     refresh();
 
@@ -351,15 +352,15 @@ class WinViewModel extends BaseViewModel {
       );
       return;
     } else
-      _logger.d(url);
+      _logger!.d(url);
     try {
-      _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
+      _analyticsService!.track(eventName: AnalyticsEvents.whatsappShare);
       FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
         if (flag == "false") {
           FlutterShareMe()
               .shareToWhatsApp4Biz(msg: _shareMsg + url)
               .then((flag) {
-            _logger.d(flag);
+            _logger!.d(flag);
             if (flag == "false") {
               BaseUtil.showNegativeAlert(
                   "Whatsapp not detected", "Please use other option to share.");
@@ -368,29 +369,29 @@ class WinViewModel extends BaseViewModel {
         }
       });
     } catch (e) {
-      _logger.d(e.toString());
+      _logger!.d(e.toString());
     }
   }
 
-  Future<String> generateLink() async {
+  Future<String?> generateLink() async {
     if (_refUrl != "") return _refUrl;
 
-    String url;
+    String? url;
     try {
-      final link = await _appFlyer.inviteLink();
+      final link = await _appFlyer!.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
         if (url == null) url = link['payload']['userInviteURL'];
       }
-      _logger.d('appflyer invite link as $url');
+      _logger!.d('appflyer invite link as $url');
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
     }
     return url;
   }
 
   Future<void> fetchReferralCode() async {
-    final ApiResponse res = await _refRepo.getReferralCode();
+    final ApiResponse res = await _refRepo!.getReferralCode();
     if (res.code == 200) {
       _refCode = res.model;
     }
@@ -406,10 +407,10 @@ class WinViewModel extends BaseViewModel {
     if (tab == tabNo) return;
 
     tabPosWidthFactor = tabNo == 0
-        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        ? SizeConfig.screenWidth! / 2 + SizeConfig.pageHorizontalMargins
         : SizeConfig.pageHorizontalMargins;
 
-    _pageController.animateToPage(
+    _pageController!.animateToPage(
       tab,
       duration: Duration(milliseconds: 300),
       curve: Curves.linear,
@@ -425,7 +426,7 @@ class WinViewModel extends BaseViewModel {
               eventScrollController.position.maxScrollExtent) {
             eventScrollController.animateTo(
                 eventScrollController.position.pixels +
-                    SizeConfig.screenWidth * 0.64,
+                    SizeConfig.screenWidth! * 0.64,
                 duration: Duration(seconds: 1),
                 curve: Curves.decelerate);
           } else {
@@ -435,7 +436,7 @@ class WinViewModel extends BaseViewModel {
         });
       });
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
     }
   }
 
@@ -444,67 +445,68 @@ class WinViewModel extends BaseViewModel {
   }
 
   String getWinningsButtonText() {
-    if (_userService.userFundWallet.isPrizeBalanceUnclaimed())
+    if (_userService!.userFundWallet!.isPrizeBalanceUnclaimed())
       return "Redeem";
     else
       return "Share";
   }
 
   Future<PrizeClaimChoice> getClaimChoice() async {
-    return await _localDBModel.getPrizeClaimChoice();
+    return await _localDBModel!.getPrizeClaimChoice();
   }
 
   void navigateToMyWinnings(WinViewModel model) {
     showUnscratchedCount = false;
 
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MyWinnigsPageConfig,
         widget: MyWinningsView());
   }
 
   void navigateToRefer() {
-    _analyticsService.track(eventName: AnalyticsEvents.winReferral);
-    AppState.delegate.appState.currentAction = PageAction(
+    _analyticsService!.track(eventName: AnalyticsEvents.winReferral);
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: ReferralDetailsPageConfig,
     );
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissable: false,
       hapticVibrate: true,
       content: ConfirmationDialog(
         confirmAction: () async {
-          await claim(choice, _userService.userFundWallet.unclaimedBalance);
+          await claim(choice, _userService!.userFundWallet!.unclaimedBalance);
         },
         title: "Confirmation",
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as Digital Gold?",
+            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
         buttonText: "Yes",
         cancelBtnText: "No",
-        cancelAction: AppState.backButtonDispatcher.didPopRoute,
+        cancelAction: AppState.backButtonDispatcher!.didPopRoute,
       ),
     );
   }
 
   getUnscratchedGTCount() async {
     final ApiResponse<List<GoldenTicket>> res =
-        await _gtRepo.getUnscratchedGoldenTickets();
+        await _gtRepo!.getUnscratchedGoldenTickets();
     if (res.isSuccess()) {
-      unscratchedGTCount = res.model.length;
+      unscratchedGTCount = res.model!.length;
     }
   }
 
   getWinningHistory() async {
     isWinningHistoryLoading = true;
     ApiResponse<List<UserTransaction>> temp =
-        await userRepo.getWinningHistory(_userService.baseUser.uid);
-    temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        await userRepo!.getWinningHistory(_userService!.baseUser!.uid);
+    temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
     isWinningHistoryLoading = false;
     if (temp != null)
       winningHistory = temp.model;
@@ -514,12 +516,12 @@ class WinViewModel extends BaseViewModel {
   }
 
   Future<String> getGramsWon(double amount) async {
-    AugmontService augmontService = locator<AugmontService>();
+    AugmontService? augmontService = locator<AugmontService>();
     if (augmontService == null) return '0.0gm';
-    AugmontRates goldRates = await augmontService.getRates();
+    AugmontRates? goldRates = await augmontService.getRates();
 
     if (goldRates != null && goldRates.goldSellPrice != 0.0)
-      return '${BaseUtil.digitPrecision(amount / goldRates.goldSellPrice, 4, false)}gm';
+      return '${BaseUtil.digitPrecision(amount / goldRates.goldSellPrice!, 4, false)}gm';
     else
       return '0.0gm';
   }
@@ -527,12 +529,12 @@ class WinViewModel extends BaseViewModel {
   showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice, String subtitle,
       double claimPrize, String gramsWon) async {
     //Starting the redemption sucessfull screen
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: RedeemSucessfulScreen(
           subTitleWidget: getSubtitleWidget(subtitle),
           claimPrize: claimPrize,
-          dpUrl: _userService.myUserDpUrl,
+          dpUrl: _userService!.myUserDpUrl,
           choice: choice,
           wonGrams: gramsWon //await getGramsWon(claimPrize),
           ),
@@ -543,8 +545,8 @@ class WinViewModel extends BaseViewModel {
   sharePrizeDetails(double prizeAmount) async {
     startShareLoading();
     try {
-      String url;
-      final link = await _appFlyer.inviteLink();
+      String? url;
+      final link = await _appFlyer!.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
         if (url == null) url = link['payload']['userInviteURL'];
@@ -554,7 +556,7 @@ class WinViewModel extends BaseViewModel {
         caputure(
             'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
       BaseUtil.showNegativeAlert("An error occured!", "Please try again");
     }
     stopShareLoading();
@@ -564,7 +566,7 @@ class WinViewModel extends BaseViewModel {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
       getGramsWon(claimPrize).then((value) {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         if (flag) {
           getWinningHistory();
           showSuccessPrizeWithdrawalDialog(
@@ -576,22 +578,22 @@ class WinViewModel extends BaseViewModel {
       });
     });
 
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
+    _analyticsService!.track(eventName: AnalyticsEvents.winRedeemWinnings);
   }
 
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    final response = await _prizingRepo.claimPrize(
-      _userService.userFundWallet.unclaimedBalance,
+    final response = await _prizingRepo!.claimPrize(
+      _userService!.userFundWallet!.unclaimedBalance,
       choice,
     );
 
     if (response.isSuccess()) {
-      _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+      _userService!.getUserFundWalletData();
+      _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
-      await _localDBModel.savePrizeClaimChoice(choice);
+      await _localDBModel!.savePrizeClaimChoice(choice);
 
       return true;
     } else {
@@ -631,63 +633,64 @@ class WinViewModel extends BaseViewModel {
   caputure(String shareMessage) {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         if (image != null)
           shareCard(image, shareMessage);
         else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService.baseUser.uid != null) {
+                if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger.e(onError);
+                _logger!.e(onError);
               });
             } else {
               FlutterShareMe()
                   .shareToSystem(msg: shareMessage)
                   .catchError((onError) {
-                if (_userService.baseUser.uid != null) {
+                if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger.e(onError);
+                _logger!.e(onError);
               });
             }
           } catch (e) {
-            _logger.e(e.toString());
+            _logger!.e(e.toString());
           }
         }
       });
     });
   }
 
-  Future<Uint8List> captureCard() async {
+  Future<Uint8List?> captureCard() async {
     try {
       RenderRepaintBoundary imageObject =
-          imageKey.currentContext.findRenderObject();
+          imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
+          as Future<ByteData>);
       final pngBytes = byteData.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
-      if (_userService.baseUser.uid != null) {
+      if (_userService!.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService.logFailure(_userService.baseUser.uid,
+        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to capture the card at the moment");
@@ -698,7 +701,7 @@ class WinViewModel extends BaseViewModel {
   shareCard(Uint8List image, String shareMessage) async {
     try {
       if (Platform.isAndroid) {
-        final directory = (await getExternalStorageDirectory()).path;
+        final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
         File imgg = new File('$directory/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
@@ -707,11 +710,11 @@ class WinViewModel extends BaseViewModel {
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService.baseUser.uid != null) {
+          if (_userService!.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService.logFailure(_userService.baseUser.uid,
+            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -726,18 +729,18 @@ class WinViewModel extends BaseViewModel {
             await new File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
 
-        _logger.d("Image file created and sharing, ${imgg.path}");
+        _logger!.d("Image file created and sharing, ${imgg.path}");
 
         Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService.baseUser.uid != null) {
+          if (_userService!.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService.logFailure(_userService.baseUser.uid,
+            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -752,15 +755,15 @@ class WinViewModel extends BaseViewModel {
   }
 
   void navigateToWinnings() {
-    _analyticsService.track(eventName: AnalyticsEvents.winReferral);
-    AppState.delegate.appState.currentAction = PageAction(
+    _analyticsService!.track(eventName: AnalyticsEvents.winReferral);
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: MyWinnigsPageConfig,
     );
   }
 
   openProfile() {
-    _baseUtil.openProfileDetailsScreen();
+    _baseUtil!.openProfileDetailsScreen();
   }
 
   double calculateFillHeight(
@@ -773,14 +776,14 @@ class WinViewModel extends BaseViewModel {
 
   getFelloFacts() async {
     isFelloFactsLoading = true;
-    final res = await _campaignRepo.getFelloFacts();
+    final res = await _campaignRepo!.getFelloFacts();
     if (res.isSuccess()) {
       fellofacts = res.model;
-      _logger.d("Fello Facts Fetched Length: ${fellofacts.length}");
+      _logger!.d("Fello Facts Fetched Length: ${fellofacts!.length}");
     } else {
       fellofacts = [];
     }
-    _logger.d("Fello Facts Length: ${fellofacts.length}");
+    _logger!.d("Fello Facts Length: ${fellofacts!.length}");
     isFelloFactsLoading = false;
   }
 
@@ -799,9 +802,9 @@ class WinViewModel extends BaseViewModel {
       return Assets.prizeClaimAssets[5];
     } else if (walletBalnce > 50 && walletBalnce <= 100) {
       return Assets.prizeClaimAssets[6];
-    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt - 1) {
+    } else if (walletBalnce > 100 && walletBalnce <= minWithdrawPrizeAmt! - 1) {
       return Assets.prizeClaimAssets[7];
-    } else if (walletBalnce >= minWithdrawPrizeAmt) {
+    } else if (walletBalnce >= minWithdrawPrizeAmt!) {
       return Assets.prizeClaimAssets[8];
     }
   }
