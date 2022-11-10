@@ -444,8 +444,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     });
   }
 
-  Future<void> updatePrizeToolTips() async {
+  Future<void> updateRewardSTooltips() async {
     completedMilestonesPrizeList.clear();
+    setCompletedMilestonesList();
     await Future.forEach(completedMilestoneList, (milestone) async {
       final res = await _gtRepo.getGTByPrizeSubtype(milestone.prizeSubType);
       if (res.isSuccess())
@@ -458,6 +459,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("Prizes List Updated ${completedMilestoneList.length} ");
     _logger.d("Prizes List Updated");
     _logger.d("Prizes List Updated ${completedMilestonesPrizeList.toString()}");
+  }
+
+  void updateRewardStatus(String prizeSubtype) {
+    int activeRewardIndex = completedMilestonesPrizeList
+        .indexWhere((reward) => reward.prizeSubtype == prizeSubtype);
+    if (activeRewardIndex != -1) {
+      completedMilestonesPrizeList[activeRewardIndex] = null;
+      notifyListeners(JourneyServiceProperties.Prizes);
+      _logger.d("Prizes List Updated for prize $prizeSubtype ");
+    }
   }
 
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
@@ -670,14 +681,13 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     controller.reset();
     await scrollPageToAvatarPosition();
     _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
-    updatePrizeToolTips();
-
     controller.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();
       // if (gameLevelChangeResult != 0)
       // BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
       //     "New Milestones on your way!");
+      updateRewardSTooltips();
       checkIfUserIsOldAndNeedsStoryView();
       updateAvatarLocalLevel();
       baseGlow = 1;

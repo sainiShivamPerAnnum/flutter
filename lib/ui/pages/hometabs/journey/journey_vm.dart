@@ -136,7 +136,7 @@ class JourneyPageViewModel extends BaseViewModel {
       } else
         await _journeyService.scrollPageToAvatarPosition();
       await _journeyService.animateAvatar();
-      _journeyService.updatePrizeToolTips();
+      _journeyService.updateRewardSTooltips();
       _journeyService.mainController.addListener(() {
         if (_journeyService.mainController.offset >
             _journeyService.mainController.position.maxScrollExtent) {
