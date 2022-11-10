@@ -140,9 +140,8 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
 }
 
 class FelloUserAvatar extends StatelessWidget {
-  const FelloUserAvatar({
-    Key key,
-  }) : super(key: key);
+  final Widget child;
+  const FelloUserAvatar({Key key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -212,14 +211,12 @@ class FelloUserAvatar extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: SizeConfig.padding8),
-          child: SvgPicture.asset(
-            Assets.cvtar2,
-            height: SizeConfig.screenWidth * 0.3067,
-            width: SizeConfig.screenWidth * 0.3067,
-          ),
-        ),
+        child ??
+            SvgPicture.asset(
+              Assets.cvtar2,
+              height: SizeConfig.screenWidth * 0.3067,
+              width: SizeConfig.screenWidth * 0.3067,
+            ),
       ],
     );
   }

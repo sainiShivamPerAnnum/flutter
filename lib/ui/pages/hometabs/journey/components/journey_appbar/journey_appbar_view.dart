@@ -163,6 +163,7 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: SizeConfig.padding6),
             value,
             Text(
               title,

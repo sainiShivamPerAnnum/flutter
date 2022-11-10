@@ -75,6 +75,7 @@ const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
 const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 const String InfoStoriesViewPath = "/inforStoriesViewPath";
 const String WebViewScreenPath = "/webViewScreenPath";
+const String SettingsScreenPath = '/settingsScreenPath';
 
 enum Pages {
   Splash,
@@ -147,6 +148,7 @@ enum Pages {
   UserUpiDetailsView,
   InfoStoriesView,
   WebView,
+  SettingsView,
 }
 
 class PageConfiguration {
@@ -639,3 +641,9 @@ PageConfiguration WebViewPageConfig = PageConfiguration(
     path: WebViewScreenPath,
     uiPage: Pages.WebView,
     name: "Web browser Screen");
+
+PageConfiguration SettingsViewPageConfig = PageConfiguration(
+    key: 'SettingsView',
+    path: SettingsScreenPath,
+    uiPage: Pages.SettingsView,
+    name: "Settings Screen");

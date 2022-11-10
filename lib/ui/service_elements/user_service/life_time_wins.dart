@@ -20,7 +20,7 @@ class LifeTimeWin extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "₹ ${BaseUtil.getIntOrDouble(model.userFundWallet.prizeLifetimeWin ?? 0) ?? '-'}",
+        "₹ ${BaseUtil.getIntOrDouble(model?.userFundWallet?.prizeLifetimeWin ?? 0) ?? '-'}",
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

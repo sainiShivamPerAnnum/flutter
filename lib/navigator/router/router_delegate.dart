@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/help_and_support/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
@@ -43,6 +44,7 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
@@ -342,6 +344,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.InfoStoriesView:
           _addPageData(InfoStories(), InfoStoriesViewPageConfig);
           break;
+        case Pages.SettingsView:
+          _addPageData(SettingsView(), SettingsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -621,6 +626,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WebView:
         WebViewPageConfig.currentPageAction = action;
         break;
+      case Pages.SettingsView:
+        SettingsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -849,6 +857,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'AppWalkthrough':
         openAppWalkthrough();
+        break;
+      case 'settings':
+        pageConfiguration = SettingsViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

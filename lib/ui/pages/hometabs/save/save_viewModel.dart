@@ -20,14 +20,20 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/static/app_footer.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -57,13 +63,13 @@ class SaveViewModel extends BaseViewModel {
   List<EventModel> _ongoingEvents;
   List<BlogPostModel> _blogPosts;
   List<BlogPostModelByCategory> _blogPostsByCategory;
+
   bool _isLoading = true;
-  bool _isChallenegsLoading = false;
+  bool _isChallenegsLoading = true;
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
   Map<String, dynamic> _filteredList = {};
-  bool _isKYCVerified = false;
-  bool _isVPAVerified = false;
+
   bool _isGoldSaleActive = false;
   bool _isongoing = false;
   bool _isLockInReached = false;
@@ -142,15 +148,14 @@ class SaveViewModel extends BaseViewModel {
 
   init() {
     // _baseUtil.fetchUserAugmontDetail();
-    baseProvider = BaseUtil();
-    getCampaignEvents();
+    print("ABC: save init called");
+    // setupSaveViewItemsOrder();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // fetchLockedGoldQnt();
+      getCampaignEvents();
       _sellService.init();
-      // _sellService.updateSellButtonDetails();
+      getSaveViewBlogs();
     });
-    getSaveViewBlogs();
-    notifyListeners();
   }
 
   void updateIsLoading(bool value) {
@@ -158,8 +163,9 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateIsChallengesLoading(bool value) {
+  set isChallengesLoading(bool value) {
     _isChallenegsLoading = value;
+    print("ROOT: Challenges loading : $value");
     notifyListeners();
   }
 
@@ -167,19 +173,38 @@ class SaveViewModel extends BaseViewModel {
     _baseUtil.openProfileDetailsScreen();
   }
 
+  getSaveViewItems(SaveViewModel smodel) {
+    List<Widget> saveViewItems = [];
+    _baseUtil.saveViewOrder.forEach((key) {
+      switch (key) {
+        case 'GF':
+          saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
+          break;
+        case 'AS':
+          saveViewItems.add(AutosaveCard(locationKey: ValueKey('save')));
+          break;
+        case 'CM':
+          saveViewItems.add(Campaigns(model: smodel));
+          break;
+        case 'BL':
+          saveViewItems.add(Blogs(model: smodel));
+          break;
+      }
+    });
+    saveViewItems.add(AppFooter(bottomPad: SizeConfig.navBarHeight));
+    return saveViewItems;
+  }
+
   getCampaignEvents() async {
-    updateIsChallengesLoading(true);
     final response = await _campaignRepo.getOngoingEvents();
-    if (response.code == 200) {
+    if (response.isSuccess()) {
       ongoingEvents = response.model;
       ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
-      ongoingEvents.forEach((element) {
-        print(element.toString());
-      });
     } else {
       ongoingEvents = [];
     }
-    updateIsChallengesLoading(false);
+
+    isChallengesLoading = false;
   }
 
   getSaveViewBlogs() async {

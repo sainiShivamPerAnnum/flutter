@@ -18,6 +18,7 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/settings_items_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
@@ -73,6 +74,8 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
   String userRegdPan;
+  List<SettingsListItemModel> settingsItemList;
+  List<String> saveViewOrder = ['GF', 'BL', 'AS', 'CM'];
 
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
@@ -239,15 +242,8 @@ class BaseUtil extends ChangeNotifier {
   openProfileDetailsScreen() {
     if (JourneyService.isAvatarAnimationInProgress) return;
     if (_userService.userJourneyStats.mlIndex > 1)
-      AppState.delegate.parseRoute(Uri.parse("profile"));
+      AppState.delegate.parseRoute(Uri.parse("settings"));
     else {
-      // print("Reachng");
-
-      // print(
-      //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-      //       "Test": "test"
-      //     })}");
-
       AppState.delegate.appState.currentAction = PageAction(
         page: UserProfileDetailsConfig,
         state: PageState.addWidget,
