@@ -475,7 +475,7 @@ class BlurFilter extends StatelessWidget {
               sigmaY: sigmaY,
             ),
             child: Opacity(
-              opacity: 0.01,
+              opacity: 0.6,
               child: child,
             ),
           ),

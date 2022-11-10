@@ -1,27 +1,21 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/ui/service_elements/user_service/life_time_wins.dart';
+import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAppBar extends StatelessWidget {
@@ -38,24 +32,25 @@ class JourneyAppBar extends StatelessWidget {
           child: SafeArea(
               child: Container(
             width: SizeConfig.screenWidth - SizeConfig.padding20,
-            height: SizeConfig.screenWidth * 0.28,
+            height: SizeConfig.screenWidth * 0.30,
             child: Stack(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                   child: BlurFilter(
-                    sigmaX: 6,
-                    sigmaY: 8,
+                    sigmaX: 30,
+                    sigmaY: 30,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.5),
                       ),
                     ),
                   ),
                 ),
                 Container(
                   child: Column(children: [
-                    Expanded(
+                    Container(
+                      height: SizeConfig.screenWidth * 0.14,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding16),
@@ -106,15 +101,15 @@ class JourneyAppBar extends StatelessWidget {
                         color: Colors.white.withOpacity(0.5),
                         thickness: 0.5,
                         height: 0.5),
-                    Expanded(
+                    Container(
+                      height: SizeConfig.screenWidth * 0.14,
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
-                            investmentType: InvestmentType.AUGGOLD99,
-                            asset: Assets.digitalGoldBar,
-                            value: UserFundQuantitySE(
-                              investmentType: InvestmentType.AUGGOLD99,
-                              style: TextStyles.sourceSansSB.body1
+                            actionUri: '/save',
+                            title: "Total Savings",
+                            value: NetWorthValue(
+                              style: TextStyles.rajdhaniSB.body0
                                   .colour(Colors.white),
                             ),
                           ),
@@ -123,11 +118,10 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
-                            asset: Assets.felloFlo,
-                            investmentType: InvestmentType.LENDBOXP2P,
-                            value: UserFundQuantitySE(
-                              investmentType: InvestmentType.LENDBOXP2P,
-                              style: TextStyles.sourceSansSB.body1
+                            actionUri: '/win',
+                            title: "Total Winnings",
+                            value: LifeTimeWin(
+                              style: TextStyles.rajdhaniSB.body0
                                   .colour(Colors.white),
                             ),
                           )
@@ -146,11 +140,14 @@ class JourneyAppBar extends StatelessWidget {
 }
 
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
-  final String asset;
+  final String title;
   final Widget value;
-  final InvestmentType investmentType;
-  JourneyAppBarAssetDetailsTile(
-      {@required this.asset, @required this.value, this.investmentType});
+  final String actionUri;
+  JourneyAppBarAssetDetailsTile({
+    @required this.title,
+    @required this.value,
+    @required this.actionUri,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -160,28 +157,18 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
           if (JourneyService.isAvatarAnimationInProgress) return;
 
           Haptic.vibrate();
-          if (investmentType == InvestmentType.AUGGOLD99)
-            AppState.delegate.appState.currentAction = PageAction(
-              state: PageState.addPage,
-              page: SaveAssetsViewConfig,
-            );
-          else
-            AppState.delegate.appState.currentAction = PageAction(
-              state: PageState.addPage,
-              page: LendboxDetailsPageConfig,
-            );
+          AppState.delegate.parseRoute(Uri.parse(actionUri));
         },
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              asset,
-              height: asset == Assets.digitalGoldBar
-                  ? SizeConfig.padding32
-                  : SizeConfig.padding40,
-            ),
             value,
+            Text(
+              title,
+              style:
+                  TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
+            )
           ],
         ),
       ),
