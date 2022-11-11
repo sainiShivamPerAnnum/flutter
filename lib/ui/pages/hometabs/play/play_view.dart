@@ -61,7 +61,6 @@ class Play extends StatelessWidget {
                   titleList: model.boxTitlles,
                   height: SizeConfig.screenWidth * 0.3,
                 ),
-
                 SafetyWidget(),
                 // MoreGamesSection(model: model),
                 // if (!model.showSecurityMessageAtTop) SafetyWidget(),

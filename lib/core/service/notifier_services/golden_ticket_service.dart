@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -301,6 +302,7 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   showAutosavePrompt() {
+    if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) return;
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissable: false,
@@ -322,6 +324,8 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   openAutosave() {
+    if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) return;
+
     if (_paytmService.activeSubscription != null) {
       AppState.delegate.appState.currentAction = PageAction(
           page: AutosaveProcessViewPageConfig,

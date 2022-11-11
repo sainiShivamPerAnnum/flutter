@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -218,7 +219,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(BankDetailsView(), BankDetailsPageConfig);
           break;
         case Pages.Faq:
-          _addPageData(FaqPageConfig.currentPageAction.widget, FaqPageConfig);
+          _addPageData(FAQPage(), FaqPageConfig);
           break;
 
         case Pages.UpdateRequired:
@@ -845,6 +846,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       //   pageConfiguration = SaveAssetsViewConfig;
       //   break;
       case 'autosaveDetails':
+        if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       // case 'autosaveProcess':

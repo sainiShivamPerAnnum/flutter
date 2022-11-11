@@ -167,7 +167,7 @@ class LauncherViewModel extends BaseViewModel {
           baseUser: userService?.baseUser,
         );
         //To fetch the properties required to pass for the analytics
-        await AnalyticsProperties().init();
+        AnalyticsProperties().init();
         log("Splash init analytics: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
     } catch (e) {

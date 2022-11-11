@@ -96,7 +96,6 @@ class _PrizePWinState extends State<PrizePWin> {
                     AppState.backButtonDispatcher.didPopRoute();
                     AppState.backButtonDispatcher.didPopRoute();
                     AppState.backButtonDispatcher.didPopRoute();
-
                     AppState.delegate.appState.setCurrentTabIndex = 0;
                   }),
             ),

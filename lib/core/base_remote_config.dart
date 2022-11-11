@@ -205,6 +205,8 @@ class BaseRemoteConfig {
   static const Map<String, String> _RZP_PROD_MID = {'rzp_prod_mid': 'rpm'};
 
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
+
+  static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosave_active': true};
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -267,7 +269,8 @@ class BaseRemoteConfig {
     ..._PAYTM_PROD_MID,
     ..._PAYTM_DEV_MID,
     ..._RZP_PROD_MID,
-    ..._RZP_DEV_MID
+    ..._RZP_DEV_MID,
+    ..._AUTOSAVE_ACTIVE
   };
 
   static Future<bool> init() async {
@@ -444,6 +447,9 @@ class BaseRemoteConfig {
   static String get RZP_PROD_MID => _RZP_PROD_MID.keys.first;
 
   static String get RZP_DEV_MID => _RZP_DEV_MID.keys.first;
+
+  static bool get AUTOSAVE_ACTIVE =>
+      remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

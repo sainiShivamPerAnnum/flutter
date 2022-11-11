@@ -123,18 +123,19 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
-              FelloTile(
-                leadingAsset: Assets.repeat,
-                title: "Set up Autosave",
-                subtitle: "Set up Autosave & earn daily tokens ",
-                trailingIcon: Icons.arrow_forward_ios_rounded,
-                onTap: () {
-                  _analyticsService.track(
-                      eventName: AnalyticsEvents.earnMoreRefer);
-                  AppState.backButtonDispatcher.didPopRoute();
-                  AppState.delegate.parseRoute(Uri.parse("augDetails"));
-                },
-              ),
+              if (BaseRemoteConfig.AUTOSAVE_ACTIVE)
+                FelloTile(
+                  leadingAsset: Assets.repeat,
+                  title: "Set up Autosave",
+                  subtitle: "Set up Autosave & earn daily tokens ",
+                  trailingIcon: Icons.arrow_forward_ios_rounded,
+                  onTap: () {
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.earnMoreRefer);
+                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.delegate.parseRoute(Uri.parse("augDetails"));
+                  },
+                ),
               SizedBox(height: SizeConfig.padding24),
             ]),
           ),

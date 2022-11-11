@@ -18,9 +18,7 @@ class ConnectivityService extends ChangeNotifier {
 
   ConnectivityService() {
     try {
-      connectivity.onConnectivityChanged
-          .distinct()
-          .listen((ConnectivityResult result) {
+      connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
         var connectivityStatus = _getStatusFromResult(result);
         connectionStatusController.add(connectivityStatus);
       });

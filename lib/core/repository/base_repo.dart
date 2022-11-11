@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:flutter/material.dart';

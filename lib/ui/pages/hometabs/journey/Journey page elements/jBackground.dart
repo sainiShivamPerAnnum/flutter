@@ -32,7 +32,7 @@ class _BackgroundState extends State<Background> {
       alignment: Alignment.center,
       duration: const Duration(seconds: 3),
       curve: Curves.easeOutCubic,
-      scale: 0,
+      scale: bgZoom,
       child: SizedBox(
         height: widget.model.currentFullViewHeight,
         width: SizeConfig.screenWidth,

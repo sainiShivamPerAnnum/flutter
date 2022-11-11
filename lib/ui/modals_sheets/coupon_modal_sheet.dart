@@ -215,11 +215,11 @@ class CouponModalSheet extends StatelessWidget {
               Spacer(),
               TextButton(
                 onPressed: onTap,
-                // : Text(
-                //   'APPLY',
-                //   style: TextStyles.sourceSans.body3
-                //       .colour(UiConstants.kTabBorderColor),
-                // ),
+                child: Text(
+                  'APPLY',
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTabBorderColor),
+                ),
               ),
             ],
           ),

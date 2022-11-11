@@ -156,6 +156,7 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   set ticketsBeingGenerated(value) {
     this._ticketsBeingGenerated = value;
+    notifyListeners();
   }
 
   get weeklyDrawFetched => this._weeklyDrawFetched;
@@ -200,13 +201,13 @@ class TambolaHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> init() async {
+  init() async {
     setState(ViewState.Busy);
     await getGameDetails();
-    await getLeaderboard();
+    getLeaderboard();
 
-    await fetchWinners();
-    if (tPrizes == null) await getPrizes();
+    fetchWinners();
+    if (tPrizes == null) getPrizes();
 
     //Tambola services
     ticketCountController =
@@ -221,7 +222,7 @@ class TambolaHomeViewModel extends BaseViewModel {
       await tambolaService.fetchWeeklyPicks();
       weeklyDrawFetched = true;
     } else
-      weeklyDrawFetched = false;
+      weeklyDrawFetched = true;
 
     ///next get the tambola tickets of this week
     if (!tambolaService.weeklyTicksFetched) {
@@ -239,13 +240,16 @@ class TambolaHomeViewModel extends BaseViewModel {
         _logger.d(tickets.errorMessage);
       }
 
-      await _examineTicketsForWins();
+      _examineTicketsForWins();
+
+      notifyListeners();
     }
 
     ///check whether to show summary cards or not
     DateTime today = DateTime.now();
     if (today.weekday == 7 && today.hour > 18) {
       showSummaryCards = false;
+      notifyListeners();
     }
 
     setState(ViewState.Idle);
@@ -310,9 +314,10 @@ class TambolaHomeViewModel extends BaseViewModel {
   Future<void> refreshTambolaTickets() async {
     _logger.i('Refreshing..');
     _topFiveTambolaBoards = [];
-    ticketsBeingGenerated = false;
+    ticketsBeingGenerated = true;
     tambolaService.weeklyTicksFetched = false;
-    await init();
+    init();
+    notifyListeners();
   }
 
   int get activeTambolaCardCount {

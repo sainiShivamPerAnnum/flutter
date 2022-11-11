@@ -59,7 +59,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   int _fraction = 0;
   bool isOnSubscriptionFlow = false;
   bool _isFirstTime = true;
-  bool _autosaveVisible = true;
+  bool _autosaveVisible = false;
   bool isStaging;
   String _nextDebitString;
   String _processText = "processing";
@@ -140,7 +140,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     mid = BaseRemoteConfig.remoteConfig.getString(FlavorConfig.isDevelopment()
         ? BaseRemoteConfig.PATYM_DEV_MID
         : BaseRemoteConfig.PATYM_PROD_MID);
+    autosaveVisible = BaseRemoteConfig.AUTOSAVE_ACTIVE;
     await getActiveSubscriptionDetails();
+
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
       isFirstTime = await CacheManager.readCache(
@@ -155,7 +157,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     activeSubscription = null;
     currentSubscriptionId = null;
     isFirstTime = true;
-    autosaveVisible = true;
+    autosaveVisible = false;
     nextDebitString = "";
     fraction = 0;
     isOnSubscriptionFlow = false;
@@ -206,6 +208,13 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       activeSubscription = response.model;
     else
       activeSubscription = null;
+
+    if (activeSubscription != null &&
+        (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE ||
+            (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE &&
+                activeSubscription.resumeDate.isNotEmpty))) {
+      autosaveVisible = true;
+    }
     if (activeSubscription != null &&
         activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE) {
       final ApiResponse<String> nextDebitResponse =

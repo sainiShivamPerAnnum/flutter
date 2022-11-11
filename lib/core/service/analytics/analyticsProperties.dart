@@ -25,10 +25,10 @@ class AnalyticsProperties {
   static final _baseUtil = locator<BaseUtil>();
   final _referralRepo = locator<ReferralRepo>();
 
-  init() async {
-    await _paytmService.init();
-    await _tambolaService.init();
-    await _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+  init() {
+    _paytmService.init();
+    _tambolaService.init();
+    _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
 
     if (!_baseUtil.referralsFetched) {
       _referralRepo.getReferralHistory().then((refHisModel) {
