@@ -323,12 +323,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _userFundWallet = null;
       _firebaseUser = null;
       _baseUser = null;
-      _myUserDpUrl = null;
-      _myUserName = null;
-      _idToken = null;
+      _myUserDpUrl = '';
+      _myUserName = '';
+      _idToken = '';
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
-      showSecurityPrompt = null;
+      showSecurityPrompt = false;
       _userAugmontDetails = null;
       // _myUpiId = null;
       return true;
@@ -349,7 +349,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _logger!.d("Base user initialized, UID: ${_baseUser?.uid}");
 
       _idToken =
-          await (CacheManager.readCache(key: 'token') as Future<String?>);
+          await CacheManager.readCache(key: 'token') ;
       _idToken == null
           ? _logger!.d("No FCM token in pref")
           : _logger!.d("FCM token from pref: $_idToken");

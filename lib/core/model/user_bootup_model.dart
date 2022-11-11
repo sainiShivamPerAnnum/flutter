@@ -257,9 +257,9 @@ class Notice {
 
   factory Notice.fromMap(Map<String, dynamic> map) {
     return Notice(
-      message: map['message'] as String,
-      url: map['url'] as String,
-      isFullScreen: map['isFullScreen'] as bool,
+      message: map['message'] as String? ?? '',
+      url: map['url'] as String? ?? '',
+      isFullScreen: map['isFullScreen'] as bool? ?? false,
     );
   }
 

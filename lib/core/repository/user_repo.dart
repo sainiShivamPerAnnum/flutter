@@ -91,7 +91,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<BaseUser>> getUserById({required String? id}) async {
+  Future<ApiResponse<dynamic>> getUserById({required String? id}) async {
     try {
       final token = await getBearerToken();
 
@@ -118,7 +118,7 @@ class UserRepository extends BaseRepo {
           );
           return ApiResponse.withError("User data corrupted", 400);
         }
-      }) as Future<ApiResponse<BaseUser>>);
+      }));
     } catch (e) {
       logger!.d(e.toString());
       return ApiResponse.withError("Unable to get user", 400);

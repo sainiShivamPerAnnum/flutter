@@ -156,7 +156,7 @@ BaseUser.base()
             data[fldIsIciciOnboarded],
             data[fldIsAugmontOnboarded] ?? false,
             data[fldIsSimpleKycVerified] ?? false,
-            data[fldIsKycVerified] ?? false,
+            data[fldIsKycVerified] ?? 0,
             data[fldKycName] ?? '',
             data[fldPendingTxnId] ?? '',
             data[fldIsIciciEnabled] ?? false,

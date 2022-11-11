@@ -64,7 +64,7 @@ class DBModel extends ChangeNotifier {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
         keyIndex = int.parse(_awsKeyIndex);
@@ -77,7 +77,7 @@ class DBModel extends ChangeNotifier {
           'aws-augmont',
           FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      if (querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
         Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&
@@ -97,7 +97,7 @@ class DBModel extends ChangeNotifier {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
         keyIndex = int.parse(_awsKeyIndex);
@@ -110,7 +110,7 @@ class DBModel extends ChangeNotifier {
           'aws-augmont',
           FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      if ( querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
         Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&
@@ -131,7 +131,7 @@ class DBModel extends ChangeNotifier {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
         keyIndex = int.parse(_awsKeyIndex);
@@ -144,7 +144,7 @@ class DBModel extends ChangeNotifier {
           'aws-augmont',
           FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      if ( querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
         Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&

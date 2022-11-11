@@ -47,9 +47,10 @@ class AnalyticsService extends BaseAnalyticsService {
 
   void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
-      String uid = FirebaseAuth.instance.currentUser!.uid;
+      String? uid = FirebaseAuth.instance.currentUser!.uid ;
       String? phone = FirebaseAuth.instance.currentUser!.phoneNumber;
-      if (uid != null && uid.isNotEmpty) properties!['uid'] = uid;
+      if (uid != '' && uid.isNotEmpty)
+       properties!['uid'] = uid;
       if (phone != null && phone.isNotEmpty) properties!['mobile'] = phone;
     } catch (e) {}
     try {
@@ -91,9 +92,9 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void trackInstall(String campaignId) async {
-    if (campaignId == null) return;
+    if (campaignId == '') return;
     try {
-      if (campaignId != null)
+
         PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
 
       // for installation event

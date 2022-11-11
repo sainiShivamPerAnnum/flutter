@@ -508,7 +508,7 @@ class BaseUtil extends ChangeNotifier {
         title: (title == null || title.isEmpty)
             ? "Please try again after sometime"
             : title,
-        message: (message == null || message.isEmpty)
+        message: (message.isEmpty)
             ? "Something went wrong"
             : message,
         duration: Duration(seconds: seconds ?? 2),

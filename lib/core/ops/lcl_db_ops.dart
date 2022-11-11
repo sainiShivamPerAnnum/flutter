@@ -47,7 +47,7 @@ class LocalDBModel extends ChangeNotifier {
       final file = await _api!.tambolaTutorialFile;
       if (file == null) return true;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return true;
+      if (contents == '' || contents.isEmpty) return true;
 
       int flag = int.parse(contents);
       return (flag == 1);
@@ -68,7 +68,7 @@ class LocalDBModel extends ChangeNotifier {
       final file = await _api!.homeTutorialFile;
       if (file == null) return true;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return true; //default to true
+      if (contents == '' || contents.isEmpty) return true; //default to true
 
       int flag = int.parse(contents);
       return (flag == 1);

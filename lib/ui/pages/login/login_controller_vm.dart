@@ -322,7 +322,7 @@ class LoginControllerViewModel extends BaseViewModel {
     logger!.d("User is set: " + userService!.firebaseUser!.uid);
     _otpScreenKey?.currentState?.model?.otpFocusNode?.requestFocus();
 
-    ApiResponse<BaseUser> user =
+    ApiResponse user =
         await _userRepo!.getUserById(id: userService!.firebaseUser!.uid);
     logger!.d("User data found: ${user.model}");
     if (user.code == 400) {
