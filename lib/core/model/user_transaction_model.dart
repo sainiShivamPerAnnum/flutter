@@ -45,7 +45,7 @@ parseTransactionStatusSummary(Map? summary) {
 
 class UserTransaction {
   static Log log = new Log('UserTransaction');
-  String? _docKey;
+ String? _docKey;
   double _amount;
   double _closingBalance;
   String? _type;
@@ -165,28 +165,28 @@ class UserTransaction {
     this.transactionUpdatesMap,
   );
 
-  UserTransaction.fromMap(Map<String, dynamic> data, String? documentID)
+  UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
       : this(
           documentID,
-          BaseUtil.toDouble(data[fldAmount]),
-          BaseUtil.toDouble(data[fldClosingBalance]),
-          data[fldNote],
-          data[fldSubType],
-          data[fldType],
-          data[fldRedeemType],
-          data[fldTicketUpCount],
-          data[fldUserId],
-          data[fldTranStatus],
-          data[fldIciciMap],
-          data[fldRzpMap],
-          data[fldAugmontMap],
-          parseTimeStamp(data[fldTimestamp]),
-          data[fldPaytmMap],
-          parseTimeStamp(data[fldUpdatedTime]),
-          parseTransactionStatusSummary(data[fldtransactionUpdatesMap]),
+          BaseUtil.toDouble(data[fldAmount]) ?? 0.0,
+          BaseUtil.toDouble(data[fldClosingBalance]) ?? 0.0,
+          data[fldNote] ?? '',
+          data[fldSubType] ?? '',
+          data[fldType] ?? '',
+          data[fldRedeemType] ?? '',
+          data[fldTicketUpCount] ?? '',
+          data[fldUserId] ?? '',
+          data[fldTranStatus] ?? '',
+          data[fldIciciMap] ?? '',
+          data[fldRzpMap] ?? '',
+          data[fldAugmontMap] ?? '',
+          parseTimeStamp(data[fldTimestamp]) ?? Timestamp(0, 0),
+          data[fldPaytmMap] ?? '',
+          parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
+          parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
         );
 
-  UserTransaction.fromJSON(Map<String, dynamic> data, String? documentID)
+  UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
       : this(
             documentID,
             BaseUtil.toDouble(data[fldAmount]),
@@ -201,9 +201,9 @@ class UserTransaction {
             data[fldIciciMap],
             data[fldRzpMap],
             data[fldAugmontMap],
-            null,
+            Timestamp(0, 0),
             data[fldPaytmMap],
-            null,
+            Timestamp(0, 0),
             data[fldtransactionUpdatesMap]);
   //TODO JSON response received as HashMap for Timestamps
 
@@ -283,18 +283,18 @@ class UserTransaction {
   UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
       double lockPrice, double quantity, String paymode, String userId)
       : this(
-            null,
+            '',
             amount,
             0,
             'NA',
             TRAN_SUBTYPE_AUGMONT_GOLD,
             TRAN_TYPE_DEPOSIT,
-            null,
+            '',
             0,
             userId,
             TRAN_STATUS_PENDING,
-            null,
-            null,
+            {},
+            {},
             {
               subFldAugBlockId: blockId,
               subFldAugLockPrice: lockPrice,
@@ -303,7 +303,7 @@ class UserTransaction {
               subFldAugPostTaxTotal: postTax
             },
             Timestamp.now(),
-            null,
+            {},
             Timestamp.now(),
             []);
 
@@ -311,25 +311,25 @@ class UserTransaction {
   UserTransaction.newGoldWithdrawal(double amount, String blockId,
       double lockPrice, double quantity, String userId)
       : this(
-            null,
+            '',
             amount,
             0,
             'NA',
             TRAN_SUBTYPE_AUGMONT_GOLD,
             TRAN_TYPE_WITHDRAW,
-            null,
+            '',
             0,
             userId,
             TRAN_STATUS_PENDING,
-            null,
-            null,
+            {},
+            {},
             {
               subFldAugBlockId: blockId,
               subFldAugLockPrice: lockPrice,
               subFldAugCurrentGoldGm: quantity
             },
             Timestamp.now(),
-            null,
+            {},
             Timestamp.now(),
             []);
 
@@ -352,7 +352,9 @@ class UserTransaction {
     };
   }
 
-  bool isExpired() {
+  static toBase() => null;
+
+   bool isExpired() {
     DateTime txnTime = _updatedTime!.toDate();
     DateTime nowTime = DateTime.now();
     DateTime txnExpireTime = txnTime.add(new Duration(hours: 1));
@@ -402,6 +404,8 @@ class UserTransaction {
     _note = value;
   }
 
+
+
   double get closingBalance => _closingBalance;
 
   set closingBalance(double value) {
@@ -414,7 +418,7 @@ class UserTransaction {
     _amount = value;
   }
 
-  Map<String, dynamic>? get icici => _icici;
+   Map<String, dynamic>? get icici => _icici;
 
   set icici(Map<String, dynamic>? value) {
     _icici = value;
@@ -447,11 +451,11 @@ class UserTransaction {
 }
 
 class TransactionStatusMapItemModel {
-  String title;
+  String? title;
   TimestampModel? timestamp;
   String? value;
   TransactionStatusMapItemModel({
-    required this.title,
+    @required this.title,
     this.timestamp,
     this.value,
   });
@@ -481,8 +485,8 @@ class TransactionStatusMapItemModel {
       title: map.keys.first,
       timestamp: map.values.first.runtimeType == Map
           ? TimestampModel.fromMap(map.values.first as Map<String, dynamic>)
-          : null,
-      value: map.values.first.runtimeType == String ? map.values.first : null,
+          : TimestampModel(nanoseconds: 0, seconds: 0),
+      value: map.values.first.runtimeType == String ? map.values.first : '',
     );
   }
 
@@ -508,3 +512,4 @@ class TransactionStatusMapItemModel {
   @override
   int get hashCode => title.hashCode ^ timestamp.hashCode ^ value.hashCode;
 }
+

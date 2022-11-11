@@ -37,7 +37,7 @@ class UserMilestone {
 
   factory UserMilestone.fromMap(Map<String, dynamic> map) {
     return UserMilestone(
-      id: map['id'] ?? 0 as String?,
+      id: map['id'] ?? 0 as String,
       actionUri: map['actionUri'] ?? '',
       prizeSubtype: map['prizeSubtype'] ?? '',
       title: map['title'],

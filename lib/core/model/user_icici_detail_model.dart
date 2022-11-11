@@ -83,17 +83,17 @@ class UserIciciDetail {
             appMode,
             '',
             NO_ISSUES,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
             fatcaFlag,
             false,
             Timestamp.now(),
@@ -149,7 +149,7 @@ class UserIciciDetail {
     };
   }
 
-  String? get hasIssue => _hasIssue;
+  String? get hasIssue => _hasIssue!;
 
   set hasIssue(String? value) {
     _hasIssue = value;

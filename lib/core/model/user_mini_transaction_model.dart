@@ -18,12 +18,12 @@ class UserMiniTransaction {
   UserMiniTransaction.fromMap(Map<String, dynamic> data)
       : this(
           toDouble(data[UserTransaction.fldAmount]),
-          data[UserTransaction.fldClosingBalance],
-          data[UserTransaction.fldType],
-          data[UserTransaction.fldSubType],
-          data[UserTransaction.fldTranStatus],
-          data[UserTransaction.fldTimestamp],
-          data[UserTransaction.fldNote],
+          data[UserTransaction.fldClosingBalance] ?? 0.0,
+          data[UserTransaction.fldType] ?? '',
+          data[UserTransaction.fldSubType] ?? '',
+          data[UserTransaction.fldTranStatus] ?? '',
+          data[UserTransaction.fldTimestamp] ?? Timestamp(0, 0),
+          data[UserTransaction.fldNote] ?? '',
         );
 
   static double? toDouble(dynamic fld) {

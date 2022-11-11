@@ -9,10 +9,10 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 
 class UserBootUpDetailsModel {
   final String? message;
-  final Data data;
+  final Data? data;
   UserBootUpDetailsModel({
-    required this.message,
-    required this.data,
+    @required this.message,
+    @required this.data,
   });
 
   UserBootUpDetailsModel copyWith({
@@ -28,13 +28,13 @@ class UserBootUpDetailsModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'message': message,
-      'data': data.toMap(),
+      'data': data!.toMap(),
     };
   }
 
   factory UserBootUpDetailsModel.fromMap(Map<String, dynamic> map) {
     return UserBootUpDetailsModel(
-      message: map['message'] as String?,
+      message: map['message'] as String,
       data: Data.fromMap(map['data'] as Map<String, dynamic>),
     );
   }
@@ -61,20 +61,20 @@ class UserBootUpDetailsModel {
 
 class Data {
   final Cache? cache;
-  final bool isBlocked;
-  final bool isAppUpdateRequired;
-  final bool isAppForcedUpdateRequired;
+  final bool? isBlocked;
+  final bool? isAppUpdateRequired;
+  final bool? isAppForcedUpdateRequired;
   final Notice? notice;
-  final bool signOutUser;
+  final bool? signOutUser;
   final BanMap? banMap;
   Data({
-    required this.cache,
-    required this.isBlocked,
-    required this.isAppUpdateRequired,
-    required this.isAppForcedUpdateRequired,
-    required this.notice,
-    required this.signOutUser,
-    required this.banMap,
+    @required this.cache,
+    @required this.isBlocked,
+    @required this.isAppUpdateRequired,
+    @required this.isAppForcedUpdateRequired,
+    @required this.notice,
+    @required this.signOutUser,
+    @required this.banMap,
   });
 
   Data copyWith({
@@ -100,13 +100,13 @@ class Data {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'cache': cache!.toMap(),
+      'cache': cache?.toMap(),
       'isBlocked': isBlocked,
       'isAppUpdateRequired': isAppUpdateRequired,
       'isAppForcedUpdateRequired': isAppForcedUpdateRequired,
-      'notice': notice!.toMap(),
+      'notice': notice?.toMap(),
       'signOutUser': signOutUser,
-      'banMap': banMap!.toMap(),
+      'banMap': banMap?.toMap(),
     };
   }
 
@@ -114,17 +114,17 @@ class Data {
     return Data(
       cache: map['cache'] != null
           ? Cache.fromMap(map['cache'] as Map<String, dynamic>)
-          : null,
+          : Cache.base(),
       isBlocked: map['isBlocked'] ?? false,
       isAppUpdateRequired: map['isAppUpdateRequired'] ?? false,
       isAppForcedUpdateRequired: map['isAppForcedUpdateRequired'] ?? false,
       notice: map['notice'] != null
           ? Notice.fromMap(map['notice'] as Map<String, dynamic>)
-          : null,
+          : Notice.base(),
       signOutUser: map['signOutUser'] ?? false,
       banMap: map['banMap'] != null
           ? BanMap.fromMap(map['banMap'] as Map<String, dynamic>)
-          : null,
+          : BanMap.base(),
     );
   }
 
@@ -164,11 +164,11 @@ class Data {
 }
 
 class Cache {
-  TimestampModel before;
-  List<dynamic> keys;
+  TimestampModel? before;
+  List<dynamic>? keys;
   Cache({
-    required this.before,
-    required this.keys,
+    @required this.before,
+    @required this.keys,
   });
 
   Cache copyWith({
@@ -183,17 +183,22 @@ class Cache {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'before': before.toMap(),
+      'before': before!.toMap(),
       'keys': keys,
     };
   }
 
   factory Cache.fromMap(Map<String, dynamic> map) {
     return Cache(
-        before: TimestampModel.fromMap(map['before'] as Map<String, dynamic>?),
+        before: TimestampModel.fromMap(map['before'] as Map<String, dynamic>),
         keys: List<dynamic>.from(
           (map['keys'] as List<dynamic>),
         ));
+  }
+
+  Cache.base() {
+    before = TimestampModel(nanoseconds: 0, seconds: 0);
+    keys = [];
   }
 
   String toJson() => json.encode(toMap());
@@ -220,11 +225,16 @@ class Notice {
   String? url;
   bool? isFullScreen;
   Notice({
-    required this.message,
-    required this.url,
-    required this.isFullScreen,
+    @required this.message,
+    @required this.url,
+    @required this.isFullScreen,
   });
 
+  Notice.base() {
+    message = '';
+    url = '';
+    isFullScreen = false;
+  }
   Notice copyWith({
     String? message,
     String? url,
@@ -247,9 +257,9 @@ class Notice {
 
   factory Notice.fromMap(Map<String, dynamic> map) {
     return Notice(
-      message: map['message'] as String?,
-      url: map['url'] as String?,
-      isFullScreen: map['isFullScreen'] as bool?,
+      message: map['message'] as String,
+      url: map['url'] as String,
+      isFullScreen: map['isFullScreen'] as bool,
     );
   }
 
@@ -276,12 +286,17 @@ class Notice {
 }
 
 class BanMap {
-  final GamesBanMap? games;
-  final InvestmentsBanMap? investments;
+  GamesBanMap? games;
+  InvestmentsBanMap? investments;
   BanMap({
-    required this.games,
-    required this.investments,
+    @required this.games,
+    @required this.investments,
   });
+
+  BanMap.base() {
+    games = GamesBanMap.base();
+    investments = InvestmentsBanMap.base();
+  }
 
   BanMap copyWith({
     GamesBanMap? games,
@@ -304,11 +319,11 @@ class BanMap {
     return BanMap(
       games: map['games'] != null
           ? GamesBanMap.fromMap(map['games'] as Map<String, dynamic>)
-          : null,
+          : GamesBanMap.base(),
       investments: map['investments'] != null
           ? InvestmentsBanMap.fromMap(
               map['investments'] as Map<String, dynamic>)
-          : null,
+          : InvestmentsBanMap.base(),
     );
   }
 
@@ -332,13 +347,17 @@ class BanMap {
 }
 
 class InvestmentsBanMap {
-  final InvestmentTypeBanMap? deposit;
-  final InvestmentTypeBanMap? withdrawal;
+  InvestmentTypeBanMap? deposit;
+  InvestmentTypeBanMap? withdrawal;
   InvestmentsBanMap({
-    required this.deposit,
-    required this.withdrawal,
+    @required this.deposit,
+    @required this.withdrawal,
   });
 
+  InvestmentsBanMap.base() {
+    deposit = InvestmentTypeBanMap.base();
+    withdrawal = InvestmentTypeBanMap.base();
+  }
   InvestmentsBanMap copyWith({
     InvestmentTypeBanMap? deposit,
     InvestmentTypeBanMap? withdrawal,
@@ -360,11 +379,11 @@ class InvestmentsBanMap {
     return InvestmentsBanMap(
       deposit: map['deposit'] != null
           ? InvestmentTypeBanMap.fromMap(map['deposit'] as Map<String, dynamic>)
-          : null,
+          : InvestmentTypeBanMap.base(),
       withdrawal: map['withdrawal'] != null
           ? InvestmentTypeBanMap.fromMap(
               map['withdrawal'] as Map<String, dynamic>)
-          : null,
+          : InvestmentTypeBanMap.base(),
     );
   }
 
@@ -389,11 +408,11 @@ class InvestmentsBanMap {
 }
 
 class InvestmentTypeBanMap {
-  final AssetBanMap? augmont;
-  final AssetBanMap? lendBox;
+  AssetBanMap? augmont;
+  AssetBanMap? lendBox;
   InvestmentTypeBanMap({
-    required this.augmont,
-    required this.lendBox,
+    @required this.augmont,
+    @required this.lendBox,
   });
 
   InvestmentTypeBanMap copyWith({
@@ -404,6 +423,11 @@ class InvestmentTypeBanMap {
       augmont: augmont ?? this.augmont,
       lendBox: lendBox ?? this.lendBox,
     );
+  }
+
+  InvestmentTypeBanMap.base() {
+    augmont = AssetBanMap.base();
+    lendBox = AssetBanMap.base();
   }
 
   Map<String, dynamic> toMap() {
@@ -419,12 +443,12 @@ class InvestmentTypeBanMap {
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_AUGMONT] as Map<String, dynamic>,
               Constants.ASSET_TYPE_AUGMONT)
-          : null,
+          : AssetBanMap.base(),
       lendBox: map[Constants.ASSET_TYPE_LENDBOX] != null
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_LENDBOX] as Map<String, dynamic>,
               Constants.ASSET_TYPE_LENDBOX)
-          : null,
+          : AssetBanMap.base(),
     );
   }
 
@@ -449,18 +473,26 @@ class InvestmentTypeBanMap {
 }
 
 class GamesBanMap {
-  final AssetBanMap? cricketMap;
-  final AssetBanMap? tambolaMap;
-  final AssetBanMap? poolClubMap;
-  final AssetBanMap? footballMap;
-  final AssetBanMap? candyFiestaMap;
+  AssetBanMap? cricketMap;
+  AssetBanMap? tambolaMap;
+  AssetBanMap? poolClubMap;
+  AssetBanMap? footballMap;
+  AssetBanMap? candyFiestaMap;
   GamesBanMap({
-    required this.cricketMap,
-    required this.tambolaMap,
-    required this.poolClubMap,
-    required this.footballMap,
-    required this.candyFiestaMap,
+    @required this.cricketMap,
+    @required this.tambolaMap,
+    @required this.poolClubMap,
+    @required this.footballMap,
+    @required this.candyFiestaMap,
   });
+
+  GamesBanMap.base() {
+    cricketMap = AssetBanMap.base();
+    tambolaMap = AssetBanMap.base();
+    poolClubMap = AssetBanMap.base();
+    footballMap = AssetBanMap.base();
+    candyFiestaMap = AssetBanMap.base();
+  }
 
   GamesBanMap copyWith({
     AssetBanMap? cricketMap,
@@ -494,7 +526,7 @@ class GamesBanMap {
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_CRICKET] as Map<String, dynamic>,
               Constants.GAME_TYPE_CRICKET)
-          : null,
+          : AssetBanMap.base(),
       tambolaMap: map[Constants.GAME_TYPE_TAMBOLA] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_TAMBOLA] as Map<String, dynamic>,
@@ -550,15 +582,20 @@ class GamesBanMap {
 }
 
 class AssetBanMap {
-  final String? reason;
-  final bool? isBanned;
-  final String asset;
+  String? reason;
+  bool? isBanned;
+  String? asset;
   AssetBanMap({
-    required this.reason,
-    required this.isBanned,
-    required this.asset,
+    @required this.reason,
+    @required this.isBanned,
+    @required this.asset,
   });
 
+  AssetBanMap.base() {
+    reason = '';
+    isBanned = false;
+    asset = '';
+  }
   AssetBanMap copyWith({
     String? reason,
     bool? isBanned,
