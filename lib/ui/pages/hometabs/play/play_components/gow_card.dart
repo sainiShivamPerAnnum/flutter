@@ -104,10 +104,8 @@ class GOWCard extends StatelessWidget {
                                 ),
                               ]),
                           Spacer(),
-                          Container(
-                            child: SvgPicture.network(model.gow.icon,
-                                height: SizeConfig.screenWidth * 0.5,
-                                width: SizeConfig.screenWidth * 0.5),
+                          SvgPicture.network(
+                            model.gow.thumbnailUri,
                           ),
                         ],
                       ),

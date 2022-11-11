@@ -1,8 +1,5 @@
 import 'dart:developer';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/navigator/app_state.dart';
-
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
@@ -10,21 +7,16 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.da
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-
 import '../../../widgets/appbar/appbar.dart';
-import 'play_components/more_games_section.dart';
 
 class Play extends StatelessWidget {
   ScrollController _controller = ScrollController();
-  final TambolaController _tambolaController = TambolaController();
+  final TambolaWidgetController _tambolaController = TambolaWidgetController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +33,8 @@ class Play extends StatelessWidget {
           appBar: FAppBar(
             type: FaqsType.play,
             backgroundColor: Colors.transparent,
+            showAvatar: false,
+            title: 'Play',
           ),
           body: SingleChildScrollView(
             controller: _controller,

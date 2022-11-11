@@ -57,6 +57,9 @@ class TambolaWidget extends StatelessWidget {
               ),
             ),
             child: Builder(builder: (_) {
+              if (model == null) {
+                return SizedBox.shrink();
+              }
               switch (tambolaController.tambolaWidgetType) {
                 case TambolaWidgetType.Banner:
                   return _BannerWidget(model.game.route);
@@ -163,7 +166,7 @@ class _TicketWidget extends StatelessWidget {
                   'Tambola',
                   style: TextStyles.rajdhaniSB.body1,
                 ),
-                Text('${model.dailyPicksCount * 7}',
+                Text('${model.dailyPicksCount * 7} Tickets',
                     style: TextStyles.sourceSans.body4.setOpecity(0.5)),
               ],
             ),
@@ -182,12 +185,12 @@ class _TicketWidget extends StatelessWidget {
           ),
         ),
         Spacer(),
-        if (tambolaWidgetType == TambolaWidgetType.Tickets)
+        if (tambolaWidgetType == TambolaWidgetType.Timer)
           Text(
             'Next draw at 6 PM',
             style: TextStyles.sourceSans.body4,
           ),
-        if (tambolaWidgetType == TambolaWidgetType.Timer)
+        if (tambolaWidgetType == TambolaWidgetType.Tickets)
           RichText(
             text: TextSpan(
               text: 'Today’s draw matches your',
