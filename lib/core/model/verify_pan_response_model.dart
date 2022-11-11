@@ -1,8 +1,8 @@
 class VerifyPanResponseModel {
   bool? flag;
-  String? upstreamName;
-  String? message;
-  String? gtId;
+  String ? upstreamName;
+  String ? message;
+  String ? gtId;
 
   VerifyPanResponseModel(
       {this.flag, this.upstreamName, this.message, this.gtId});
