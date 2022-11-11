@@ -6,20 +6,20 @@ import 'package:flutter/foundation.dart';
 import 'helper_model.dart';
 
 class TambolaModel {
-  final String id;
-  final String val;
-  final int weekCode;
-  final TimestampModel assignedTime;
+  final String? id;
+  final String? val;
+  final int? weekCode;
+  final TimestampModel? assignedTime;
   static final helper =
       HelperModel<TambolaModel>((map) => TambolaModel.fromMap(map));
-  final TambolaBoard board;
+  final TambolaBoard? board;
 
   TambolaModel({
-    required this.id,
-    required this.val,
-    required this.weekCode,
-    required this.assignedTime,
-    required this.board,
+    @required this.id,
+    @required this.val,
+    @required this.weekCode,
+    @required this.assignedTime,
+    @required this.board,
   });
 
   TambolaModel copyWith({
@@ -27,8 +27,8 @@ class TambolaModel {
     int? matchCount,
     String? val,
     int? weekCode,
-    List<String>? matches,
-    TimestampModel? assignedTime,
+    List<String> ?matches,
+    TimestampModel ?assignedTime,
   }) {
     return TambolaModel(
       id: id ?? this.id,
@@ -44,7 +44,7 @@ class TambolaModel {
       'id': id,
       'val': val,
       'weekCode': weekCode,
-      'assignedTime': assignedTime.toMap(),
+      'assignedTime': assignedTime!.toMap(),
     };
   }
 
@@ -53,7 +53,7 @@ class TambolaModel {
       id: map['tid'] ?? 0 as String,
       val: map['tval'] ?? '',
       weekCode: map['week_code'] ?? 0,
-      assignedTime: TimestampModel.fromMap(map['createdOn']),
+      assignedTime: TimestampModel.fromMap(map['createdOn']) ,
       board: TambolaBoard.fromMap(map),
     );
   }

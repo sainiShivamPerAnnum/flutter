@@ -35,7 +35,7 @@ class DailyPick {
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
     final Map<String, dynamic> data = picksData['picks'] ?? {};
-    if (data != null && data.isNotEmpty)
+    if (data != null && data!.isNotEmpty)
       return DailyPick(
         // weekCode: data[fldWeekCode],
         mon: (data[fldWeekDay[0]] != null)
@@ -118,7 +118,7 @@ class DailyPick {
 
   ///returns the picks after the daycode
   ///if dayCode = 4, return picks from thu,fri,sat,sun
-  List<int> getPicksPostDate(int dayCode) {
+  List<int> etPicksPostDate(int dayCode) {
     List<int> relevantDigits = [];
     if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday)
       relevantDigits.addAll(mon!);

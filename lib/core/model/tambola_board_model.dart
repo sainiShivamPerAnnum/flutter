@@ -1,3 +1,4 @@
+
 import 'dart:collection';
 import 'dart:math' as math;
 
@@ -9,13 +10,13 @@ import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
   static Log log = new Log('TambolaBoard');
-  final BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  final _tambolaService = locator<TambolaService>();
 
   final TimestampModel assigned_time;
-  final String val;
-  final String id;
-  final int week_code;
+  final String? val;
+  final String? id;
+  final int? week_code;
   static final String fldAssignedTime = 'assigned_time';
   static final String fldId = 'id';
   static final String fldBoardValue = 'val';
@@ -23,20 +24,21 @@ class TambolaBoard {
 
   static final int boardHeight = 3;
   static final int boardLength = 9;
-  late List<String> encodedTambolaList;
-  List<List<int?>> tambolaBoard =
-      new List.generate(boardHeight, (_) => new List.generate(boardLength,(_)=> 0));
+  List<String>? encodedTambolaList;
+  List<List<int>>? tambolaBoard = new List.generate(
+      boardHeight, (_) => new List.generate(boardLength, (i) => 0));
+
   Map<int, int> indexValueMap = new HashMap();
 
   TambolaBoard(this.assigned_time, this.val, this.id, this.week_code) {
-    if (this.val != null) decodeBoard(this.val);
+    if (this.val != null) decodeBoard(this.val!);
   }
 
   factory TambolaBoard.fromMap(Map<String, dynamic> map) {
     return TambolaBoard(
       TimestampModel.fromMap(map['createdOn']),
       map['tval'] ?? '',
-      map['tid'] ?? 0 as String,
+      map['tid'] ?? 0,
       map['week_code'] ?? 0,
     );
   }
@@ -55,7 +57,7 @@ class TambolaBoard {
 
   Map<int, int> compileEncodedArrayToMap() {
     Map<int, int> map = new HashMap();
-    encodedTambolaList.forEach((val) {
+    encodedTambolaList!.forEach((val) {
       TambolaValueObject obj = new TambolaValueObject(val);
       if (obj.index != TambolaValueObject.INVALID &&
           obj.value != TambolaValueObject.INVALID)
@@ -67,21 +69,21 @@ class TambolaBoard {
     return map;
   }
 
-  List<List<int?>> compileBoardMap() {
+  List<List<int>> compileBoardMap() {
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         int key = i * boardLength + j;
-        tambolaBoard[i][j] =
-            (indexValueMap.containsKey(key)) ? indexValueMap[key] : 0;
+        tambolaBoard![i][j] =
+            (indexValueMap.containsKey(key)) ? indexValueMap[key]! : 0;
       }
     }
-    return tambolaBoard;
+    return tambolaBoard!;
   }
 
-  List<List<int?>> decodeBoard(String boardCde) {
+  List<List<int>> decodeBoard(String boardCde) {
     encodedTambolaList = encodedStringToArray(boardCde);
     log.debug(encodedTambolaList.toString());
-    if (encodedTambolaList.isNotEmpty && encodedTambolaList.length == 15) {
+    if (encodedTambolaList!.isNotEmpty && encodedTambolaList!.length == 15) {
       indexValueMap = compileEncodedArrayToMap();
       if (indexValueMap.isNotEmpty) {
         tambolaBoard = compileBoardMap();
@@ -93,20 +95,20 @@ class TambolaBoard {
           'Invalid decomposition of boardCode: ${encodedTambolaList.toString()}');
     }
 
-    return tambolaBoard;
+    return tambolaBoard!;
   }
 
   int getRowOdds(int rowIndex, List<int> calledDigits) {
     if (tambolaBoard == null ||
-        tambolaBoard.isEmpty ||
-        calledDigits == null ||
+        tambolaBoard!.isEmpty ||
+        calledDigits == [] ||
         calledDigits.isEmpty) return 5;
     // int digitsLeftToBeAnnounced =
     //     _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     int rowCalledCount = 0;
     for (int i = 0; i < boardLength; i++) {
-      if (tambolaBoard[rowIndex][i] != 0 &&
-          calledDigits.contains(tambolaBoard[rowIndex][i])) rowCalledCount++;
+      if (tambolaBoard![rowIndex][i] != 0 &&
+          calledDigits.contains(tambolaBoard![rowIndex][i])) rowCalledCount++;
     }
     int rowLeftCount = 5 - rowCalledCount;
 
@@ -142,21 +144,21 @@ class TambolaBoard {
 
   int getCornerOdds(List<int> calledDigits) {
     if (tambolaBoard == null ||
-        tambolaBoard.isEmpty ||
-        calledDigits == null ||
+        tambolaBoard!.isEmpty ||
+        calledDigits == [] ||
         calledDigits.isEmpty) return 4;
-    int? cornerA = 0;
-    int? cornerB = 0;
-    int? cornerC = 0;
-    int? cornerD = 0;
+    int cornerA = 0;
+    int cornerB = 0;
+    int cornerC = 0;
+    int cornerD = 0;
     int cornerCount = 0;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
-        if (tambolaBoard[i][j] != 0) {
-          if (i == 0 && cornerA == 0) cornerA = tambolaBoard[i][j];
-          if (i == 0) cornerB = tambolaBoard[i][j];
-          if (i == 2 && cornerC == 0) cornerC = tambolaBoard[i][j];
-          if (i == 2) cornerD = tambolaBoard[i][j];
+        if (tambolaBoard![i][j] != 0) {
+          if (i == 0 && cornerA == 0) cornerA = tambolaBoard![i][j];
+          if (i == 0) cornerB = tambolaBoard![i][j];
+          if (i == 2 && cornerC == 0) cornerC = tambolaBoard![i][j];
+          if (i == 2) cornerD = tambolaBoard![i][j];
         }
       }
     }
@@ -176,16 +178,16 @@ class TambolaBoard {
 
   int getFullHouseOdds(List<int> calledDigits) {
     if (tambolaBoard == null ||
-        tambolaBoard.isEmpty ||
-        calledDigits == null ||
+        tambolaBoard!.isEmpty ||
+        calledDigits == [] ||
         calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
     // int digitsLeftToBeAnnounced =
     //     _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
-        if (tambolaBoard[i][j] != 0) {
-          if (calledDigits.contains(tambolaBoard[i][j])) fullHouseCount++;
+        if (tambolaBoard![i][j] != 0) {
+          if (calledDigits.contains(tambolaBoard![i][j])) fullHouseCount++;
         }
       }
     }

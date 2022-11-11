@@ -7,9 +7,9 @@ class InfoStoryItem {
   String? data;
   String? caption;
   InfoStoryItem({
-    required this.type,
-    required this.data,
-    required this.caption,
+    @required this.type,
+    @required this.data,
+    @required this.caption,
   });
 
   InfoStoryItem copyWith({
@@ -34,7 +34,7 @@ class InfoStoryItem {
 
   factory InfoStoryItem.fromMap(Map<String, dynamic> map) {
     return InfoStoryItem(
-      type: map['type'] as String?,
+      type: map['type'] as String? ,
       data: map['data'] as String?,
       caption: map['caption'] as String?,
     );
@@ -59,3 +59,4 @@ class InfoStoryItem {
   @override
   int get hashCode => type.hashCode ^ data.hashCode ^ caption.hashCode;
 }
+

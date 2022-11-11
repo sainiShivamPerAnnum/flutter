@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -34,14 +33,14 @@ class GoldenTicket {
     this.version,
   });
 
-  GoldenTicket.fromJson(Map<String, dynamic> json, String? docId) {
+  GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = json['id'] ?? docId;
-    userId = json['userId'];
+    userId = json['userId'] ?? '';
     timestamp = TimestampModel.fromMap(json['timestamp']);
-    eventType = json['eventType'];
-    gtType = json['gtType'];
+    eventType = json['eventType'] ?? '';
+    gtType = json['gtType'] ?? '';
     isLevelChange = json['isLevelChange'] ?? false;
-    prizeSubtype = json['prizeSubtype'];
+    prizeSubtype = json['prizeSubtype'] ?? '';
     note = json['note'] ?? '';
     canTransfer = json['canTransfer'] ?? false;
     isRewarding = json['isRewarding'] ?? false;

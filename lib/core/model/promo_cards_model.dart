@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class PromoCardModel {
   static Log log = new Log('PromoCard');
 
-  int? _position;
+int? _position;
   final String? _title;
   final String? _subtitle;
   final String? _buttonText;
@@ -31,19 +31,19 @@ class PromoCardModel {
 
   PromoCardModel.fromMap(Map<String, dynamic> cMap)
       : this(
-            cMap['position'],
-            cMap['title'],
-            cMap['subtitle'],
-            cMap['actionUri'],
-            cMap['btnText'],
-            cMap['color'],
-            cMap['bgImage'],
+            cMap['position'] ?? 0,
+            cMap['title'] ?? '',
+            cMap['subtitle'] ?? '',
+            cMap['actionUri'] ?? '',
+            cMap['btnText'] ?? '',
+            cMap['color'] ?? 0,
+            cMap['bgImage'] ?? '',
             cMap['gridX'] ?? 2,
             cMap['minVersion'] ?? 0);
 
   set position(value) => this.position = value;
 
-  String? get title => this._title;
+   String? get title => this._title;
 
   String? get subtitle => this._subtitle;
 
@@ -56,3 +56,4 @@ class PromoCardModel {
   String? get bgImage => _bgImage;
   int get gridX => _gridX;
 }
+

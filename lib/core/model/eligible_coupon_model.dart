@@ -4,6 +4,11 @@ class EligibleCouponResponseModel {
   String? code;
   String? desc;
 
+  EligibleCouponResponseModel.base() {
+    flag = false;
+    message = '';
+    desc = '';
+  }
   EligibleCouponResponseModel({this.flag, this.message, this.code, this.desc});
 
   EligibleCouponResponseModel.fromJson(Map<String, dynamic> json) {
@@ -40,3 +45,4 @@ class EligibleCouponResponseModel {
     );
   }
 }
+

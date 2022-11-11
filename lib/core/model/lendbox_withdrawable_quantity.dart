@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class LendboxWithdrawableQuantity {
   final double amount;
   final double lockedAmount;

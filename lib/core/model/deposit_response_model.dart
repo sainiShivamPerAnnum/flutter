@@ -16,8 +16,8 @@ class DepositResponseModel {
     augResponse = json['augResponse'] != null
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
-    note = json['note'] != null ? new Note.fromJson(json['note']) : null;
-    gtId = json['gtId'] != null ? json['gtId'] : false as String?;
+    note = json['note'] != null ? new Note.fromJson(json['note']) : Note.base();
+    gtId = json['gtId'] != null ? json['gtId'] : '';
   }
 
   Map<String, dynamic> toJson() {
@@ -79,8 +79,8 @@ class Response {
   });
 
   Response.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    didWalletUpdate = json['didWalletUpdate'];
+    status = json['status'] ?? false;
+    didWalletUpdate = json['didWalletUpdate'] ?? false;
     transactionDoc = json['transactionDoc'] != null
         ? new TransactionDoc.fromJson(json['transactionDoc'])
         : null;
@@ -148,11 +148,16 @@ class TransactionDoc {
     this.enqueuedTaskDetails,
   });
 
+  TransactionDoc.base() {
+    status = false;
+    transactionId = '';
+  }
+
   TransactionDoc.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    transactionId = json['transactionId'];
+    status = json['status'] ?? false;
+    transactionId = json['transactionId'] ?? '';
     transactionDetail =
-        UserTransaction.fromMap(json['transactionDetails'], transactionId);
+        UserTransaction.fromMap(json['transactionDetails'], transactionId!);
     enqueuedTaskDetails =
         EnqueuedTaskDetails.fromMap(json['enqueuedTaskDetails']);
   }
@@ -196,6 +201,11 @@ class EnqueuedTaskDetails {
   String? name;
   String? queuePath;
 
+  EnqueuedTaskDetails.base() {
+    name = '';
+    queuePath = '';
+  }
+
   EnqueuedTaskDetails({this.name, this.queuePath});
 
   EnqueuedTaskDetails.fromJson(Map<String, dynamic> json) {
@@ -233,6 +243,10 @@ class Note {
   String? title;
   String? body;
 
+  Note.base() {
+    title = '';
+    body = '';
+  }
   Note({this.title, this.body});
 
   Note.fromJson(Map<String, dynamic> json) {

@@ -4,17 +4,23 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:flutter/foundation.dart';
 
 class AmountChipsModel {
-  final int order;
-  final int value;
-  final bool best;
+  int? order;
+  int? value;
+  bool? best;
   static final helper = HelperModel<AmountChipsModel>(
     (map) => AmountChipsModel.fromMap(map),
   );
 
+  AmountChipsModel.base() {
+    order = 0;
+    value = 0;
+    best = false;
+  }
+
   AmountChipsModel({
-    required this.order,
-    required this.value,
-    required this.best,
+    @required this.order,
+    @required this.value,
+    @required this.best,
   });
 
   factory AmountChipsModel.fromMap(Map<String, dynamic> map) {

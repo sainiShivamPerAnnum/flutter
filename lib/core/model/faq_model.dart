@@ -27,20 +27,20 @@ class FAQModel {
 class FAQ {
   final String? header;
   final String? response;
-  final int? order;
+  final int ?order;
 
   FAQ({this.header, this.order, this.response});
 }
 
 class FAQDataModel {
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   static final helper =
       HelperModel<FAQDataModel>((map) => FAQDataModel.fromMap(map));
 
   FAQDataModel({
-    required this.title,
-    required this.description,
+    @required this.title,
+    @required this.description,
   });
 
   FAQDataModel copyWith({

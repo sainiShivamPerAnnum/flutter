@@ -2,12 +2,12 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class AlertModel {
-  String? id;
-  String? actionUri;
-  TimestampModel? createdTime;
-  String? subtitle;
-  String? title;
-  bool isHighlighted = false;
+  String?  id;
+  String?  actionUri;
+  TimestampModel?  createdTime;
+  String?  subtitle;
+  String?  title;
+  bool?  isHighlighted = false;
 
   static final helper =
       HelperModel<AlertModel>((map) => AlertModel.fromMap(map));
@@ -16,12 +16,14 @@ class AlertModel {
       {this.id, this.actionUri, this.createdTime, this.subtitle, this.title});
 
   AlertModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    actionUri = json['actionUri'];
-    createdTime = json['created_time'];
-    subtitle = json['subtitile'];
-    title = json['title'];
+    id = json['id'] ?? '';
+    actionUri = json['actionUri'] ?? '';
+    createdTime = json['created_time'] ?? TimestampModel(seconds: 0, nanoseconds: 0);
+    subtitle = json['subtitile'] ?? '';
+    title = json['title'] ?? '';
   }
+
+  
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -45,11 +47,11 @@ class AlertModel {
 
   factory AlertModel.fromMap(Map<String, dynamic> map) {
     return AlertModel(
-      id: map['id'],
-      actionUri: map['actionUri'],
-      createdTime: TimestampModel.fromMap(map["created_time"]),
-      subtitle: map['subtitle'],
-      title: map['title'],
+      id: map['id'] ?? '',
+      actionUri: map['actionUri']?? '',
+      createdTime: TimestampModel.fromMap(map["created_time"]) ,
+      subtitle: map['subtitle'] ?? '',
+      title: map['title'] ?? '',
     );
   }
 
