@@ -76,13 +76,7 @@ class BaseUtil extends ChangeNotifier {
   String userRegdPan;
   List<SettingsListItemModel> settingsItemList;
   List<String> saveViewOrder = ['GF', 'BL', 'AS', 'CM'];
-  List<String> playViewOrder = [
-    'TA',
-    'AG',
-    'HTP',
-    'GOW',
-    'ST',
-  ];
+  List<String> playViewOrder = ['TA', 'AG', 'HTP', 'GOW', 'ST'];
 
   ///ICICI global objects
   UserIciciDetail _iciciDetail;

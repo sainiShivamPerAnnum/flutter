@@ -34,6 +34,7 @@ class ApiPath {
   static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
+  static String get dynamicUi => '/ui/dynamic';
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";

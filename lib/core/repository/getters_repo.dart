@@ -198,6 +198,27 @@ class GetterRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<List>> getPageConfigs() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.dynamicUi,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      final responseData = response["data"];
+
+      logger.d(responseData);
+      final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
+
+      return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
   //TODO: Not working
   //Triggered on: Share button click on win view
   // Future<ApiResponse<List<GoldenTicket>>> getGoldenTickets() async {
