@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 enum TambolaWidgetType { Banner, Timer, Tickets }
 
-class TambolaController extends ChangeNotifier {
-  TambolaController({TambolaWidgetType tambolaWidgetType})
+class TambolaWidgetController extends ChangeNotifier {
+  TambolaWidgetController({TambolaWidgetType tambolaWidgetType})
       : _tambolaWidgetType = tambolaWidgetType ?? TambolaWidgetType.Banner,
         super() {
     setTambolaWidgetType();

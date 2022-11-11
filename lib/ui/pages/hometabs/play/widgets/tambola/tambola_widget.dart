@@ -22,7 +22,7 @@ import '../../../../../../util/styles/ui_constants.dart';
 class TambolaWidget extends StatelessWidget {
   const TambolaWidget(this.tambolaController, this.model, {Key key})
       : super(key: key);
-  final TambolaController tambolaController;
+  final TambolaWidgetController tambolaController;
   final TambolaCardModel model;
   @override
   Widget build(BuildContext context) {

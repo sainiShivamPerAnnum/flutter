@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 
 class TambolaCard extends StatelessWidget {
   const TambolaCard({Key key, this.tambolaController}) : super(key: key);
-  final TambolaController tambolaController;
+  final TambolaWidgetController tambolaController;
   @override
   Widget build(BuildContext context) {
     return BaseView<TambolaCardModel>(onModelReady: (model) {
