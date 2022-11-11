@@ -5,12 +5,12 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class WinnersModel {
-  final String? id;
-  final String? freq;
-  final List<Winners>? winners;
-  final String? code;
-  final TimestampModel? timestamp;
-  final String? gametype;
+  String? id;
+  String? freq;
+  List<Winners>? winners;
+  String? code;
+  TimestampModel? timestamp;
+  String? gametype;
   static final helper = HelperModel<WinnersModel>(
     (map) => WinnersModel.fromMap(map),
   );
@@ -42,6 +42,13 @@ class WinnersModel {
     );
   }
 
+  WinnersModel.base() {
+    id = '';
+    freq = '';
+    winners = [];
+    code = '';
+    gametype = '';
+  }
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id ?? '',
