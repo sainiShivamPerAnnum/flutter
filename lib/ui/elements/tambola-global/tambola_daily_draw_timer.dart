@@ -47,7 +47,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   Duration getDifferance() {
     DateTime currentTime = DateTime.now();
     DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 14, 6, 10);
+        DateTime.now().day, 18, 0, 10);
     Duration timeDiff = currentTime.difference(drawTime);
 
     return timeDiff;
