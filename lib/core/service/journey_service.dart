@@ -230,8 +230,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   checkIfJourneyOnboardingRequried() {
     _isUserJourneyOnboarded = PreferenceHelper.getBool(
-        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED,
-        def: false);
+        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, def: false);
   }
 
   //Fetching additional journeypages from Journey Repository

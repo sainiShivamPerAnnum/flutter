@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceHelper {
@@ -19,6 +20,7 @@ class PreferenceHelper {
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {
+      WidgetsFlutterBinding.ensureInitialized();
       _prefs = await SharedPreferences.getInstance();
     }
     return _prefs;
@@ -43,33 +45,33 @@ class PreferenceHelper {
   static String getString(String key, {String? def}) {
     String? val = _prefs!.getString(key);
     if (val == null) {
-      val = def;
+      val = def ?? '';
     }
-    return val!;
+    return val;
   }
 
   static int getInt(String key, {int? def}) {
     int? val = _prefs!.getInt(key);
     if (val == null) {
-      val = def;
+      val = def ?? 0;
     }
-    return val!;
+    return val;
   }
 
   static double getDouble(String key, {double? def}) {
     double? val = _prefs!.getDouble(key);
     if (val == null) {
-      val = def;
+      val = def ?? 0.0;
     }
-    return val!;
+    return val;
   }
 
   static bool getBool(String key, {bool? def}) {
     bool? val = _prefs!.getBool(key);
-    if (val == false) {
-      val = def;
+    if (val == null) {
+      val = def ??false;
     }
-    return val!;
+    return val;
   }
 
   static Future<bool> remove(String key) async {
