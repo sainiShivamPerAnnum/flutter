@@ -260,11 +260,11 @@ class AugmontTransactionService extends BaseTransactionService {
     final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
-      switch (txnStatus.data.status) {
+      switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data.isUpdating) {
             _tambolaService!.weeklyTicksFetched = false;
-            currentTxnTambolaTicketsCount = res.model!.data.tickets;
+            currentTxnTambolaTicketsCount = res.model!.data.tickets!;
             if (res.model!.data != null &&
                 res.model!.data.goldInTxnBought != null &&
                 res.model!.data.goldInTxnBought! > 0)

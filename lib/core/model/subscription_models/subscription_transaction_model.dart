@@ -6,38 +6,38 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:flutter/foundation.dart';
 
 class AutosaveTransactionModel {
-  String id;
-  double amount;
-  String status;
-  String txnId;
-  String txnDateTime;
-  String currency;
-  String paymentMode;
-  String bankTxnId;
-  String gatewayName;
-  String bankName;
-  String note;
-  AugmontDataModel augmontMap;
-  double closingBalance;
-  TimestampModel createdOn;
+  String? id;
+  double? amount;
+  String? status;
+  String? txnId;
+  String? txnDateTime;
+  String? currency;
+  String? paymentMode;
+  String? bankTxnId;
+  String? gatewayName;
+  String? bankName;
+  String? note;
+  AugmontDataModel? augmontMap;
+  double? closingBalance;
+  TimestampModel? createdOn;
   static final helper = HelperModel<AutosaveTransactionModel>(
     (map) => AutosaveTransactionModel.fromMap(map),
   );
   AutosaveTransactionModel({
-    required this.id,
-    required this.amount,
-    required this.status,
-    required this.txnId,
-    required this.txnDateTime,
-    required this.currency,
-    required this.paymentMode,
-    required this.bankTxnId,
-    required this.gatewayName,
-    required this.bankName,
-    required this.note,
-    required this.augmontMap,
-    required this.closingBalance,
-    required this.createdOn,
+    @required this.id,
+    @required this.amount,
+    @required this.status,
+    @required this.txnId,
+    @required this.txnDateTime,
+    @required this.currency,
+    @required this.paymentMode,
+    @required this.bankTxnId,
+    @required this.gatewayName,
+    @required this.bankName,
+    @required this.note,
+    @required this.augmontMap,
+    @required this.closingBalance,
+    @required this.createdOn,
   });
 
   AutosaveTransactionModel copyWith({
@@ -54,7 +54,7 @@ class AutosaveTransactionModel {
     String? note,
     AugmontDataModel? augmontMap,
     double? closingBalance,
-    Timestamp? createdOn,
+    TimestampModel? createdOn,
   }) {
     return AutosaveTransactionModel(
       id: id ?? this.id,
@@ -70,7 +70,7 @@ class AutosaveTransactionModel {
       note: note ?? this.note,
       augmontMap: augmontMap ?? this.augmontMap,
       closingBalance: closingBalance ?? this.closingBalance,
-      createdOn: createdOn as TimestampModel? ?? this.createdOn,
+      createdOn: createdOn?? this.createdOn,
     );
   }
 
@@ -87,7 +87,7 @@ class AutosaveTransactionModel {
       'gatewayName': gatewayName,
       'bankName': bankName,
       'note': note,
-      'augmontMap': augmontMap.toMap(),
+      'augmontMap': augmontMap!.toMap(),
       'closingBalance': closingBalance,
       'createdOn': createdOn,
     };
@@ -161,21 +161,21 @@ class AutosaveTransactionModel {
 }
 
 class AugmontDataModel {
-  String aAugTranId;
-  String aBlockId;
-  double aGoldBalance;
-  double aGoldInTxn;
-  double aLockPrice;
-  String aPaymode;
-  double aTaxedGoldBalance;
+  String? aAugTranId;
+  String? aBlockId;
+  double? aGoldBalance;
+  double? aGoldInTxn;
+  double? aLockPrice;
+  String? aPaymode;
+  double? aTaxedGoldBalance;
   AugmontDataModel({
-    required this.aAugTranId,
-    required this.aBlockId,
-    required this.aGoldBalance,
-    required this.aGoldInTxn,
-    required this.aLockPrice,
-    required this.aPaymode,
-    required this.aTaxedGoldBalance,
+    @required this.aAugTranId,
+    @required this.aBlockId,
+    @required this.aGoldBalance,
+    @required this.aGoldInTxn,
+    @required this.aLockPrice,
+    @required this.aPaymode,
+    @required this.aTaxedGoldBalance,
   });
 
   AugmontDataModel copyWith({
