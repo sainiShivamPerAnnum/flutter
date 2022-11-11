@@ -1,0 +1,219 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:provider/provider.dart';
+
+class AnalyticsProperties {
+  //Required depedencies
+  static final _userService = locator<UserService>();
+  static final _userCoinService = locator<UserCoinService>();
+  static final _paytmService = locator<PaytmService>();
+  static final _journeyService = locator<JourneyService>();
+  static final _tambolaService = locator<TambolaService>();
+  static final _txnHistoryService = locator<TransactionHistoryService>();
+  static final _baseUtil = locator<BaseUtil>();
+  final _referralRepo = locator<ReferralRepo>();
+
+  init() async {
+    await _paytmService.init();
+    await _tambolaService.init();
+    await _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+
+    if (!_baseUtil.referralsFetched) {
+      _referralRepo.getReferralHistory().then((refHisModel) {
+        if (refHisModel.isSuccess()) {
+          _baseUtil.referralsFetched = true;
+          _baseUtil.userReferralsList = refHisModel.model ?? [];
+        } else {
+          BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
+        }
+      });
+    }
+  }
+
+  static getTotalReferalCount() {
+    if (!_baseUtil.referralsFetched) {
+      return 0;
+    } else {
+      return _baseUtil.userReferralsList?.length;
+    }
+  }
+
+  static getSucessReferalCount() {
+    if (!_baseUtil.referralsFetched) {
+      return 0;
+    } else {
+      int counter = 0;
+      for (ReferralDetail r in _baseUtil.userReferralsList) {
+        if (r.isRefereeBonusUnlocked) counter++;
+      }
+      return counter;
+    }
+  }
+
+  static getPendingReferalCount() {
+    int pendingCount = 0;
+    if (getTotalReferalCount() >= getSucessReferalCount())
+      pendingCount = getTotalReferalCount() - getSucessReferalCount();
+    return pendingCount;
+  }
+
+  static int getSucessTxnCount() {
+    int count = 0;
+    for (UserTransaction ut in _txnHistoryService.txnList) {
+      if (ut.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) count++;
+    }
+
+    return count;
+  }
+
+  static int getPendingTxnCount() {
+    int count = 0;
+    for (UserTransaction ut in _txnHistoryService.txnList) {
+      if (ut.tranStatus == UserTransaction.TRAN_STATUS_PENDING) count++;
+    }
+
+    return count;
+  }
+
+  static int getFailedTxnCount() {
+    int count = 0;
+    for (UserTransaction ut in _txnHistoryService.txnList) {
+      if (ut.tranStatus == UserTransaction.TRAN_STATUS_FAILED) count++;
+    }
+
+    return count;
+  }
+
+  static double getGoldInvestedAmount() {
+    return _userService.userFundWallet.augGoldPrinciple ?? 0;
+  }
+
+  static double getGoldQuantityInGrams() {
+    return _userService.userFundWallet.augGoldQuantity ?? 0;
+  }
+
+  static double getFelloFloAmount() {
+    return _userService.userFundWallet.wLbPrinciple ?? 0;
+  }
+
+  static bool isKYCVerified() {
+    return _userService.baseUser.isSimpleKycVerified ?? false;
+  }
+
+  static int getCurrentLevel() {
+    return _userService.userJourneyStats.level ?? -1;
+  }
+
+  static int getCurrentMilestone() {
+    return _userService.userJourneyStats.mlIndex ?? -1;
+  }
+
+  static int getMileStonesCompleted() {
+    if (_userService.userJourneyStats.mlIndex > 1)
+      return (_userService.userJourneyStats.mlIndex) - 1;
+    else
+      return 0;
+  }
+
+  static int getTokens() {
+    return _userCoinService?.flcBalance ?? 0;
+  }
+
+  static double getUserCurrentWinnings() {
+    double currentWinning = _userService.userFundWallet?.unclaimedBalance ?? 0;
+    return currentWinning;
+  }
+
+  static bool isAutoSIPActive() {
+    if (_paytmService.activeSubscription == null) {
+      return false;
+    } else {
+      return _paytmService.activeSubscription.status ==
+              Constants.SUBSCRIPTION_ACTIVE
+          ? true
+          : false;
+    }
+  }
+
+  static double getAutoSIPAmount() {
+    if (_paytmService.activeSubscription == null)
+      return 0.0;
+    else
+      return _paytmService.activeSubscription.autoAmount ?? 0;
+  }
+
+  static String getJouneryCapsuleText() {
+    return _journeyService
+            .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+            .tooltip ??
+        "null";
+  }
+
+  static String getJourneyMileStoneText() {
+    return _journeyService
+            .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+            .steps[0]
+            .title ??
+        "null";
+  }
+
+  static String getJourneyMileStoneSubText() {
+    return _journeyService
+            .currentMilestoneList[_userService.userJourneyStats.mlIndex - 1]
+            .steps[0]
+            .subtitle ??
+        "null";
+  }
+
+  static String getTimeLeftForTambolaDraw() {
+    DateTime currentTime = DateTime.now();
+    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 18, 00, 10);
+    Duration timeDiff = drawTime.difference(currentTime);
+
+    if (timeDiff.inSeconds <= 0) {
+      return "Drawn";
+    } else {
+      return timeDiff.inMinutes.toString();
+    }
+  }
+
+  static int getTabolaTicketCount() {
+    return _tambolaService.ticketCount ?? 0;
+  }
+
+  static Map<String, dynamic> getDefaultPropertiesMap(
+      {Map<String, dynamic> extraValuesMap}) {
+    Map<String, dynamic> defaultProperties = {
+      "Total Invested Amount": getGoldInvestedAmount() + getFelloFloAmount(),
+      "Amount Invested in Gold": getGoldInvestedAmount(),
+      "Grams of Gold owned": getGoldQuantityInGrams(),
+      "Amount Invested in Flo": getFelloFloAmount(),
+      "Auto SIP done": isAutoSIPActive(),
+      "Auto SIP amount": getAutoSIPAmount(),
+      "KYC Verified": isKYCVerified(),
+      "Level": getCurrentLevel(),
+      "MileStones Completed": getMileStonesCompleted(),
+      "Current Milestone": getCurrentMilestone(),
+      "Token Balance": getTokens(),
+    };
+
+    if (extraValuesMap != null) {
+      defaultProperties.addAll(extraValuesMap);
+    }
+
+    return defaultProperties;
+  }
+}

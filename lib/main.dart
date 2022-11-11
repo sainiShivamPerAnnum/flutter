@@ -1,0 +1,201 @@
+// import 'package:device_preview/device_preview.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
+import 'package:felloapp/core/enums/transaction_service_enum.dart';
+import 'package:felloapp/core/enums/user_coin_service_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/enums/winner_service_enum.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/back_dispatcher.dart';
+import 'package:felloapp/navigator/router/route_parser.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/app_theme.dart';
+//Pub imports
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
+
+import 'core/service/notifier_services/user_coin_service.dart';
+
+// void main() async {
+//   FlavorConfig(
+//       flavor: Flavor.PROD,
+//       color: Colors.deepPurpleAccent,
+//       values: FlavorValues(
+//           awsAugmontStage: AWSAugmontStage.PROD,
+//           awsIciciStage: AWSIciciStage.PROD,
+//           freshchatStage: FreshchatStage.DEV,
+//           razorpayStage: RazorpayStage.PROD,
+//           signzyStage: SignzyStage.PROD,
+//           signzyPanStage: SignzyPanStage.PROD,
+//           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+//           mixpanelToken: MixpanelService.PROD_TOKEN,
+//           baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+//           dynamicLinkPrefix: 'https://fello.in'));
+//   await mainInit();
+//   runApp(MyApp());
+// }
+
+Future mainInit() async {
+  setupLocator();
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await PreferenceHelper.initiate();
+
+    await Firebase.initializeApp();
+  } catch (e) {
+    print('Firebase initialisation error: $e');
+  }
+  FirebaseMessaging.onBackgroundMessage(
+      BackgroundFcmHandler.myBackgroundMessageHandler);
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final appState = AppState();
+  final parser = FelloParser();
+  FelloRouterDelegate delegate;
+  FelloBackButtonDispatcher backButtonDispatcher;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  _MyAppState() {
+    delegate = FelloRouterDelegate(appState);
+    delegate.setNewRoutePath(SplashPageConfig);
+    backButtonDispatcher = FelloBackButtonDispatcher(delegate);
+    AppState.backButtonDispatcher = backButtonDispatcher;
+    AppState.delegate = delegate;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarColor: Colors.transparent),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => locator<DBModel>()),
+          ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
+          ChangeNotifierProvider(create: (_) => locator<AugmontService>()),
+          ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
+          ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
+          ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
+          ChangeNotifierProvider(
+              create: (_) => locator<AugmontTransactionService>()),
+          ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),
+          StreamProvider<ConnectivityStatus>(
+            create: (_) {
+              ConnectivityService connectivityService =
+                  locator<ConnectivityService>();
+              connectivityService.initialLoad();
+              return connectivityService.connectionStatusController.stream;
+            },
+            initialData: ConnectivityStatus.Offline,
+          ),
+          ChangeNotifierProvider(create: (_) => appState),
+        ],
+        child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
+          value: locator<JourneyService>(),
+          child: PropertyChangeProvider<LeaderboardService,
+              LeaderBoardServiceProperties>(
+            value: locator<LeaderboardService>(),
+            child: PropertyChangeProvider<TransactionHistoryService,
+                TransactionHistoryServiceProperties>(
+              value: locator<TransactionHistoryService>(),
+              child: PropertyChangeProvider<AugmontTransactionService,
+                  TransactionServiceProperties>(
+                value: locator<AugmontTransactionService>(),
+                child: PropertyChangeProvider<UserCoinService,
+                    UserCoinServiceProperties>(
+                  value: locator<UserCoinService>(),
+                  child: PropertyChangeProvider<UserService,
+                      UserServiceProperties>(
+                    value: locator<UserService>(),
+                    child: PropertyChangeProvider<WinnerService,
+                        WinnerServiceProperties>(
+                      value: locator<WinnerService>(),
+                      child: PropertyChangeProvider<PaytmService,
+                          PaytmServiceProperties>(
+                        value: locator<PaytmService>(),
+                        child: PropertyChangeProvider<BankAndPanService,
+                            BankAndPanServiceProperties>(
+                          value: locator<BankAndPanService>(),
+                          child: PropertyChangeProvider<
+                              LendboxTransactionService,
+                              TransactionServiceProperties>(
+                            value: locator<LendboxTransactionService>(),
+                            // child: PropertyChangeProvider<GoldenTicketService,
+                            //     GoldenTicketServiceProperties>(
+                            //   value: locator<GoldenTicketService>(),
+                            child: MaterialApp.router(
+                              // locale: DevicePreview.locale(context),
+                              // builder: DevicePreview.appBuilder,
+                              title: Constants.APP_NAME,
+                              theme: FelloTheme.darkMode(),
+                              useInheritedMediaQuery: true,
+                              debugShowCheckedModeBanner: false,
+                              backButtonDispatcher: backButtonDispatcher,
+                              routerDelegate: delegate,
+                              routeInformationParser: parser,
+                              localizationsDelegates: [
+                                S.delegate,
+                                GlobalMaterialLocalizations.delegate,
+                                GlobalWidgetsLocalizations.delegate,
+                                GlobalCupertinoLocalizations.delegate,
+                              ],
+                              supportedLocales: S.delegate.supportedLocales,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // ),
+      ),
+    );
+  }
+}

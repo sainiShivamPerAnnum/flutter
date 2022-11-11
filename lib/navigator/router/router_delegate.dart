@@ -1,0 +1,941 @@
+//Project Imports
+import 'dart:developer';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/pages/help_and_support/faq/faq_page.dart';
+import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
+import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
+import 'package:felloapp/ui/pages/help_and_support/support.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
+import 'package:felloapp/ui/pages/login/login_controller_view.dart';
+import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
+import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
+import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
+import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_view.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
+import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
+import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
+//Flutter Imports
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+  final _analytics = locator<AnalyticsService>();
+  final JourneyService _journeyService = locator<JourneyService>();
+
+  final List<Page> _pages = [];
+
+  @override
+  final GlobalKey<NavigatorState> navigatorKey;
+  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  final AppState appState;
+
+  FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
+    appState.addListener(() {
+      log(navigatorKey.currentState.toString());
+      notifyListeners();
+    });
+  }
+
+  List<MaterialPage> get pages => List.unmodifiable(_pages);
+
+  int numPages() => _pages.length;
+
+  @override
+  PageConfiguration get currentConfiguration =>
+      _pages.last.arguments as PageConfiguration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: navigatorKey,
+      onPopPage: _onPopPage,
+      pages: buildPages(),
+    );
+  }
+
+  bool _onPopPage(Route<dynamic> route, result) {
+    // 1
+    final didPop = route.didPop(result);
+    if (!didPop) {
+      return false;
+    }
+    // 2
+    if (canPop()) {
+      pop();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void pop() {
+    if (canPop()) {
+      _removePage(_pages.last);
+    }
+  }
+
+  bool canPop() {
+    return _pages.length > 1;
+  }
+
+  @override
+  Future<bool> popRoute() {
+    if (canPop()) {
+      _removePage(_pages.last);
+      print("Current Stack: ${AppState.screenStack}");
+      if (AppState.screenStack.length == 1)
+        _journeyService.checkForMilestoneLevelChange();
+      notifyListeners();
+
+      return Future.value(true);
+    }
+    notifyListeners();
+    return Future.value(false);
+  }
+
+  void _removePage(MaterialPage page) {
+    if (page != null) {
+      AppState.screenStack.removeLast();
+      _pages.remove(page);
+    }
+  }
+
+  MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
+    return MaterialPage(
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
+  }
+
+  MaterialPage _insertPage(Widget child, PageConfiguration pageConfig) {
+    return MaterialPage(
+      child: child,
+      key: Key(pageConfig.key),
+      name: pageConfig.path,
+      arguments: pageConfig,
+    );
+  }
+
+  void _insertPageData(Widget child, PageConfiguration pageConfig,
+      {int index}) {
+    AppState.screenStack
+        .insert(index ?? AppState.screenStack.length, ScreenItem.page);
+    print("Inseted a page ${pageConfig.key} to Index $index");
+    log("Current Stack: ${AppState.screenStack}");
+    _analytics.trackScreen(screen: pageConfig.name);
+    _pages.insert(
+      index ?? _pages.length - 1,
+      _insertPage(child, pageConfig),
+    );
+    //notifyListeners();
+  }
+
+  void _addPageData(Widget child, PageConfiguration pageConfig) {
+    AppState.screenStack.add(ScreenItem.page);
+    print("Added a page ${pageConfig.key}");
+    log("Current Stack: ${AppState.screenStack}");
+    if (pageConfig.name != null && pageConfig.name.isNotEmpty) {
+      _analytics.trackScreen(screen: pageConfig.name);
+    }
+    _pages.add(
+      _createPage(child, pageConfig),
+    );
+    //notifyListeners();
+  }
+
+  void addPage(PageConfiguration pageConfig) {
+    final shouldAddPage = _pages.isEmpty ||
+        (_pages.last.arguments as PageConfiguration).uiPage !=
+            pageConfig.uiPage;
+
+    if (shouldAddPage) {
+      switch (pageConfig.uiPage) {
+        case Pages.Splash:
+          _addPageData(LauncherView(), SplashPageConfig);
+          break;
+        case Pages.Login:
+          _addPageData(LoginControllerView(), LoginPageConfig);
+          break;
+        case Pages.Root:
+          _addPageData(Root(), RootPageConfig);
+          break;
+        case Pages.UserProfileDetails:
+          _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
+          break;
+
+        case Pages.TxnHistory:
+          _addPageData(TransactionsHistory(), TransactionsHistoryPageConfig);
+          break;
+        case Pages.KycDetails:
+          _addPageData(KYCDetailsView(), KycDetailsPageConfig);
+          break;
+        case Pages.BankDetails:
+          _addPageData(BankDetailsView(), BankDetailsPageConfig);
+          break;
+        case Pages.Faq:
+          _addPageData(FaqPageConfig.currentPageAction.widget, FaqPageConfig);
+          break;
+
+        case Pages.UpdateRequired:
+          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
+          break;
+        case Pages.RefPolicy:
+          _addPageData(ReferralPolicy(), RefPolicyPageConfig);
+          break;
+        case Pages.VerifyEmail:
+          _addPageData(VerifyEmail(), VerifyEmailPageConfig);
+          break;
+        case Pages.Support:
+          _addPageData(SupportPage(), SupportPageConfig);
+          break;
+
+        case Pages.THome:
+          _addPageData(TambolaHomeView(), THomePageConfig);
+          break;
+        // case Pages.TGame: //
+        //   _addPageData(TambolaGameView(), TGamePageConfig);
+        //   break;
+        case Pages.TPickDraw:
+          _addPageData(PicksDraw(), TPickDrawPageConfig);
+          break;
+        case Pages.TShowAllTickets:
+          _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
+          break;
+        // case Pages.TWalkthrough:
+        //   _addPageData(Walkthrough(), TWalkthroughPageConfig);
+        //   break;
+
+        case Pages.TWeeklyResult:
+          _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
+          break;
+        case Pages.Notifications:
+          _addPageData(NotficationsPage(), NotificationsConfig);
+          break;
+        case Pages.LendboxDetails:
+          _addPageData(LendboxDetailsView(), LendboxDetailsPageConfig);
+          break;
+        case Pages.ReferralDetails:
+          _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
+          break;
+
+        case Pages.MyWinnings:
+          _addPageData(MyWinningsView(), MyWinnigsPageConfig);
+          break;
+        case Pages.BlockedUser:
+          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          break;
+        case Pages.FreshDeskHelp:
+          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
+          break;
+        case Pages.GoldenTicketView:
+          _addPageData(GTDetailedView(), GoldenTicketViewPageConfig);
+          break;
+        case Pages.GoldenTicketsView:
+          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+          break;
+
+        case Pages.AllParticipantsView:
+          _addPageData(AllParticipantsView(), AllParticipantsViewPageConfig);
+          break;
+        case Pages.AllParticipantsWinnersTopReferersView:
+          _addPageData(AllParticipantsWinnersTopReferers(),
+              AllParticipantsWinnersTopReferersConfig);
+          break;
+        case Pages.RedeemSucessfulScreenView:
+          _addPageData(
+              RedeemSucessfulScreen(), RedeemSucessfulScreenPageConfig);
+          break;
+        case Pages.SharePriceScreenView:
+          _addPageData(SharePriceScreen(), SharePriceScreenPageConfig);
+          break;
+        case Pages.AllTambolaTicketsView:
+          _addPageData(AllTambolaTickets(), AllTambolaTicketsPageConfig);
+          break;
+        // case Pages.WebHomeView:
+        //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
+        //   break;
+        // case Pages.WebGameView:
+        //   _addPageData(WebGameView(), WebGameViewPageConfig);
+        //   break;
+        // case Pages.PoolView:
+        //   _addPageData(PoolView(), PoolViewPageConfig);
+        case Pages.WebHomeView:
+          _addPageData(WebHomeView(), WebHomeViewPageConfig);
+          break;
+        case Pages.WebGameView:
+          _addPageData(WebGameView(), WebGameViewPageConfig);
+          break;
+
+        case Pages.AutosaveDetailsView:
+          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
+          break;
+        case Pages.AutosaveProcessView:
+          _addPageData(AutosaveProcessView(), AutosaveProcessViewPageConfig);
+          break;
+        case Pages.UserAutosaveDetailsView:
+          _addPageData(
+              UserAutosaveDetailsView(), UserAutosaveDetailsViewPageConfig);
+          break;
+
+        case Pages.TopPlayerLeaderboard:
+          _addPageData(
+              TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
+          break;
+        case Pages.JourneyView:
+          _addPageData(JourneyView(), JourneyViewPageConfig);
+          break;
+        case Pages.OnBoardingView:
+          _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
+          break;
+        // case Pages.CompleteProfileView:
+        //   _addPageData(CompleteProfileView(), CompleteProfileViewPageConfig);
+        //   break;
+        case Pages.BlogPostWebView:
+          _addPageData(BlogWebView(), BlogPostWebViewConfig);
+          break;
+        case Pages.CampaignView:
+          _addPageData(CampaignView(), CampaignViewPageConfig);
+          break;
+        case Pages.SaveAssetView:
+          _addPageData(SaveAssetView(), SaveAssetsViewConfig);
+          break;
+        case Pages.InfoStoriesView:
+          _addPageData(InfoStories(), InfoStoriesViewPageConfig);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+// 1
+  void replace(PageConfiguration newRoute) {
+    if (_pages.isNotEmpty) {
+      AppState.screenStack.removeLast();
+      _pages.removeLast();
+    }
+    addPage(newRoute);
+  }
+
+// 2
+  void setPath(List<MaterialPage> path) {
+    _pages.clear();
+    AppState.screenStack.clear();
+    _pages.addAll(path);
+    notifyListeners();
+  }
+
+// 3
+  void replaceAll(PageConfiguration newRoute) {
+    setNewRoutePath(newRoute);
+  }
+
+// 4
+  void push(PageConfiguration newRoute) {
+    addPage(newRoute);
+  }
+
+// 5
+  void pushWidget(Widget child, PageConfiguration newRoute) {
+    _addPageData(child, newRoute);
+  }
+
+// 6
+  void addAll(List<PageConfiguration> routes) {
+    routes.forEach((route) {
+      addPage(route);
+    });
+  }
+
+  void pushBelow(Widget child, PageConfiguration newRoute, {int index}) {
+    _insertPageData(child, newRoute, index: index);
+  }
+
+  // 7
+  void replaceWidget(Widget child, PageConfiguration newRoute) {
+    if (_pages.isNotEmpty) {
+      AppState.screenStack.removeLast();
+      _pages.removeLast();
+    }
+    _addPageData(child, newRoute);
+  }
+
+  @override
+  Future<void> setNewRoutePath(PageConfiguration configuration) {
+    final shouldAddPage = _pages.isEmpty ||
+        (_pages.last.arguments as PageConfiguration).uiPage !=
+            configuration.uiPage;
+    if (shouldAddPage) {
+      _pages.clear();
+      AppState.screenStack.clear();
+      addPage(configuration);
+    }
+    return SynchronousFuture(null);
+  }
+
+  void _setPageAction(PageAction action) {
+    switch (action.page.uiPage) {
+      case Pages.Splash:
+        SplashPageConfig.currentPageAction = action;
+        break;
+      case Pages.Login:
+        LoginPageConfig.currentPageAction = action;
+        break;
+      case Pages.Onboard:
+        OnboardPageConfig.currentPageAction = action;
+        break;
+      case Pages.Root:
+        RootPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserProfileDetails:
+        UserProfileDetailsConfig.currentPageAction = action;
+        break;
+      case Pages.MfDetails:
+        MfDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugDetails:
+        AugDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.Transaction:
+        TransactionPageConfig.currentPageAction = action;
+        break;
+      case Pages.TxnHistory:
+        TransactionsHistoryPageConfig.currentPageAction = action;
+        break;
+      case Pages.KycDetails:
+        KycDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.BankDetails:
+        BankDetailsPageConfig.currentPageAction = action;
+        break;
+
+      case Pages.Referral:
+        ReferralPageConfig.currentPageAction = action;
+        break;
+      case Pages.Faq:
+        FaqPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugOnboard:
+        AugOnboardPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugWithdrawal:
+        AugWithdrawalPageConfig.currentPageAction = action;
+        break;
+      case Pages.EditAugBankDetails:
+        EditAugBankDetailsPageConfig.currentPageAction = action;
+        break;
+
+      case Pages.RefPolicy:
+        RefPolicyPageConfig.currentPageAction = action;
+        break;
+      case Pages.ChatSupport:
+        ChatSupportPageConfig.currentPageAction = action;
+        break;
+      case Pages.ClaimUsername:
+        ClaimUsernamePageConfig.currentPageAction = action;
+        break;
+      case Pages.VerifyEmail:
+        VerifyEmailPageConfig.currentPageAction = action;
+        break;
+      case Pages.Support:
+        SupportPageConfig.currentPageAction = action;
+        break;
+
+        break;
+      case Pages.YourFunds:
+        YourFundsConfig.currentPageAction = action;
+        break;
+      case Pages.THome:
+        THomePageConfig.currentPageAction = action;
+        break;
+      case Pages.TGame:
+        TGamePageConfig.currentPageAction = action;
+        break;
+      case Pages.TPickDraw:
+        TPickDrawPageConfig.currentPageAction = action;
+        break;
+      case Pages.TShowAllTickets:
+        TShowAllTicketsPageConfig.currentPageAction = action;
+        break;
+      case Pages.TWalkthrough:
+        TWalkthroughPageConfig.currentPageAction = action;
+        break;
+      case Pages.TWeeklyResult:
+        TWeeklyResultPageConfig.currentPageAction = action;
+        break;
+      case Pages.TSummaryDetails:
+        TSummaryDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.Notifications:
+        NotificationsConfig.currentPageAction = action;
+        break;
+      case Pages.AugGoldSell:
+        AugmontGoldSellPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugGoldDetails:
+        AugmontGoldDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.LendboxDetails:
+        LendboxDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReferralDetails:
+        ReferralDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.ReferralHistory:
+        ReferralHistoryPageConfig.currentPageAction = action;
+        break;
+      case Pages.MyWinnings:
+        MyWinnigsPageConfig.currentPageAction = action;
+        break;
+      case Pages.BlockedUser:
+        BlockedUserPageConfig.currentPageAction = action;
+        break;
+      case Pages.FreshDeskHelp:
+        FreshDeskHelpPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenTicketView:
+        GoldenTicketViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenTicketsView:
+        GoldenTicketsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldenMilestonesView:
+        GoldenMilestonesViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TopSaverView:
+        TopSaverViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsView:
+        AllParticipantsViewPageConfig.currentPageAction = action;
+        break;
+
+      case Pages.PoolView:
+        PoolViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.WebHomeView:
+        WebHomeViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.WebGameView:
+        WebGameViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveDetailsView:
+        AutosaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveProcessView:
+        AutosaveProcessViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserAutosaveDetailsView:
+        UserAutosaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveTransactionsView:
+        AutosaveTransactionsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveWalkthrough:
+        AutosaveWalkThroughConfig.currentPageAction = action;
+        break;
+      case Pages.NewWebHomeView:
+        NewWebHomeViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TopPlayerLeaderboard:
+        TopPlayerLeaderboardPageConfig.currentPageAction = action;
+        break;
+      case Pages.JourneyView:
+        JourneyViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.OnBoardingView:
+        OnBoardingViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.CompleteProfileView:
+        CompleteProfileViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.CampaignView:
+        CampaignViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SaveAssetView:
+        SaveAssetsViewConfig.currentPageAction = action;
+        break;
+      case Pages.SellConfirmationView:
+        SellConfirmationViewConfig.currentPageAction = action;
+        break;
+      case Pages.ViewAllBlogsView:
+        ViewAllBlogsViewConfig.currentPageAction = action;
+        break;
+      case Pages.AllParticipantsWinnersTopReferersView:
+        AllParticipantsWinnersTopReferersConfig.currentPageAction = action;
+        break;
+      case Pages.RedeemSucessfulScreenView:
+        RedeemSucessfulScreenPageConfig.currentPageAction = action;
+        break;
+      case Pages.SharePriceScreenView:
+        SharePriceScreenPageConfig.currentPageAction = action;
+        break;
+      case Pages.AllTambolaTicketsView:
+        AllTambolaTicketsPageConfig.currentPageAction = action;
+        break;
+      case Pages.UserUpiDetailsView:
+        UserUpiDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.InfoStoriesView:
+        InfoStoriesViewPageConfig.currentPageAction = action;
+        break;
+      default:
+        break;
+    }
+  }
+
+  List<Page> buildPages() {
+    switch (appState.currentAction.state) {
+      // 3
+      case PageState.none:
+        break;
+      case PageState.addPage:
+        // 4
+        _setPageAction(appState.currentAction);
+        addPage(appState.currentAction.page);
+        break;
+      case PageState.pop:
+        // 5
+        pop();
+        break;
+      case PageState.replace:
+        // 6
+        _setPageAction(appState.currentAction);
+        replace(appState.currentAction.page);
+        break;
+      case PageState.replaceAll:
+        // 7
+        _setPageAction(appState.currentAction);
+        replaceAll(appState.currentAction.page);
+        break;
+      case PageState.addWidget:
+        // 8
+        _setPageAction(appState.currentAction);
+        pushWidget(appState.currentAction.widget, appState.currentAction.page);
+        break;
+      case PageState.addBelow:
+        _setPageAction(appState.currentAction);
+        pushBelow(appState.currentAction.widget, appState.currentAction.page);
+
+        break;
+      case PageState.addAll:
+        // 9
+        addAll(appState.currentAction.pages);
+        break;
+      case PageState.replaceWidget:
+        replaceWidget(
+            appState.currentAction.widget, appState.currentAction.page);
+        break;
+    }
+    // 10
+    appState.resetCurrentAction();
+    return List.of(_pages);
+  }
+
+  void parseRoute(Uri uri) {
+    if (uri.pathSegments.isEmpty) {
+      setNewRoutePath(SplashPageConfig);
+      return;
+    } else {
+      for (int i = 0; i < uri.pathSegments.length; i++) {
+        final segment = uri.pathSegments[i];
+        if (segment.startsWith('d-', 0)) {
+          dialogCheck(segment.split('-').last);
+        } else if (segment.startsWith('c-', 0)) {
+          appState.scrollHome(num.tryParse(segment.split('-').last));
+        } else {
+          screenCheck(segment);
+        }
+      }
+    }
+    // for one segement [bottom]
+  }
+
+  void dialogCheck(String dialogKey) {
+    Widget dialogWidget;
+    bool barrierDismissable = true;
+    switch (dialogKey) {
+      case "panInfo":
+        dialogWidget = MoreInfoDialog(
+          text: Assets.infoWhyPan,
+          title: 'Where is my PAN Number used?',
+        );
+        break;
+      case "appRating":
+        if (checkForRatingDialog()) dialogWidget = FelloRatingDialog();
+        break;
+    }
+    if (dialogWidget != null) {
+      AppState.screenStack.add(ScreenItem.dialog);
+      showDialog(
+        context: navigatorKey.currentContext,
+        barrierDismissible: barrierDismissable,
+        builder: (ctx) {
+          return WillPopScope(
+              onWillPop: () {
+                AppState.backButtonDispatcher.didPopRoute();
+                print("Popped the dialog");
+                return Future.value(true);
+              },
+              child: dialogWidget);
+        },
+      );
+    }
+  }
+
+  void screenCheck(String screenKey) {
+    PageConfiguration pageConfiguration;
+    switch (screenKey) {
+      case 'journey':
+        appState.setCurrentTabIndex = 0;
+        break;
+      case 'save':
+        appState.setCurrentTabIndex = 1;
+        break;
+      case 'play':
+        appState.setCurrentTabIndex = 2;
+        break;
+      case 'win':
+        appState.setCurrentTabIndex = 3;
+        break;
+      case 'profile':
+        pageConfiguration = UserProfileDetailsConfig;
+        break;
+      case 'augDetails':
+        pageConfiguration = SaveAssetsViewConfig;
+        break;
+      case 'lboxDetails':
+        pageConfiguration = LendboxDetailsPageConfig;
+        break;
+      case 'lendboxDetails':
+        pageConfiguration = LendboxDetailsPageConfig;
+        break;
+      case 'kycVerify':
+        pageConfiguration = KycDetailsPageConfig;
+        break;
+      case 'augBuy':
+        BaseUtil()
+            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        break;
+      case 'augSell':
+        BaseUtil().openSellModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        break;
+      case 'lboxBuy':
+        BaseUtil()
+            .openRechargeModalSheet(investmentType: InvestmentType.LENDBOXP2P);
+        break;
+      case 'lboxSell':
+        BaseUtil()
+            .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);
+        break;
+      case 'augTxns':
+        openTransactions(InvestmentType.AUGGOLD99);
+        break;
+      case 'lboxTxns':
+        openTransactions(InvestmentType.LENDBOXP2P);
+        break;
+      case 'referrals':
+        pageConfiguration = ReferralDetailsPageConfig;
+        break;
+      case 'tambolaHome':
+        pageConfiguration = THomePageConfig;
+        break;
+
+      case 'myWinnings':
+        pageConfiguration = MyWinnigsPageConfig;
+        break;
+
+      case 'bankDetails':
+        pageConfiguration = BankDetailsPageConfig;
+        break;
+      // case 'chatSupport':
+      //   pageConfiguration = ChatSupportPageConfig;
+      //   break;
+      // case 'claimUsername':
+      //   pageConfiguration = ClaimUsernamePageConfig;
+      //   break;
+      case 'verifyEmail':
+        pageConfiguration = VerifyEmailPageConfig;
+        break;
+      case 'blocked':
+        pageConfiguration = BlockedUserPageConfig;
+        break;
+      case 'dailySaver':
+        openTopSaverScreen(Constants.HS_DAILY_SAVER);
+        break;
+      case 'weeklySaver':
+        openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
+        break;
+      case 'monthlySaver':
+        openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
+        break;
+      case 'bugBounty':
+        openTopSaverScreen(Constants.BUG_BOUNTY);
+        break;
+      case 'newFello':
+        openTopSaverScreen(Constants.NEW_FELLO_UI);
+        break;
+      case 'FPL':
+        openTopSaverScreen('FPL');
+        break;
+      case 'footballHome':
+        openWebGame(Constants.GAME_TYPE_FOOTBALL);
+        break;
+      case 'candyFiestaHome':
+        openWebGame(Constants.GAME_TYPE_CANDYFIESTA);
+        break;
+      case 'cricketHome':
+        openWebGame(Constants.GAME_TYPE_CRICKET);
+        break;
+      case 'poolHome':
+        openWebGame(Constants.GAME_TYPE_POOLCLUB);
+        break;
+      // case 'milestones':
+      //   pageConfiguration = GoldenMilestonesViewPageConfig;
+      //   break;
+
+      case 'pop':
+        AppState.backButtonDispatcher.didPopRoute();
+        break;
+      // case 'goldDetails':
+      //   pageConfiguration = SaveAssetsViewConfig;
+      //   break;
+      case 'autosaveDetails':
+        pageConfiguration = AutosaveDetailsViewPageConfig;
+        break;
+      // case 'autosaveProcess':
+      //   pageConfiguration = AutosaveProcessViewPageConfig;
+      //   break;
+      case 'userAutosaveDetails':
+        pageConfiguration = UserAutosaveDetailsViewPageConfig;
+        break;
+      case 'autosaveTxns':
+        openTransactions(InvestmentType.AUGGOLD99);
+        break;
+      case 'AppWalkthrough':
+        openAppWalkthrough();
+        break;
+
+      // case 'AutosaveWalkthrough':
+      //   pageConfiguration = AutosaveWalkThroughConfig;
+      //   break;
+      // case 'completeProfile':
+      //   pageConfiguration = CompleteProfileViewPageConfig;
+      //   break;
+      // case 'upiDetails':
+      //   pageConfiguration = UserUpiDetailsViewPageConfig;
+      //   break;
+      // case 'goldBuyModal':
+      //   BaseUtil()
+      //       .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+      //   break;
+      // case 'floBuyModal':
+      //   BaseUtil()
+      //       .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+      //   break;
+      // case 'goldDetailsView':
+      //   pageConfiguration = SaveAssetsViewConfig;
+      //   break;
+      // case 'floDetailsView':
+      //   pageConfiguration = LendboxDetailsPageConfig;
+      //   break;
+    }
+    if (pageConfiguration != null) {
+      addPage(pageConfiguration);
+      notifyListeners();
+    }
+  }
+
+  openTopSaverScreen(String eventType) {
+    AppState.delegate.appState.currentAction = PageAction(
+      page: CampaignViewPageConfig,
+      state: PageState.addWidget,
+      widget: CampaignView(eventType: eventType),
+    );
+  }
+
+  openWebGame(String game) {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      widget: WebHomeView(game: game),
+      page: WebHomeViewPageConfig,
+    );
+  }
+
+  openAppWalkthrough() {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
+      page: OnBoardingViewPageConfig,
+    );
+  }
+
+  openTransactions(InvestmentType investmentType) {
+    AppState.delegate.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      widget: TransactionsHistory(investmentType: investmentType),
+      page: TransactionsHistoryPageConfig,
+    );
+  }
+
+  bool checkForRatingDialog() {
+    bool isUserAlreadyRated =
+        PreferenceHelper.exists(PreferenceHelper.CACHE_RATING_IS_RATED);
+    if (isUserAlreadyRated) return false;
+
+    if (PreferenceHelper.exists(
+        PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
+      int expiryTimeStampInMSE = PreferenceHelper.getInt(
+          PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);
+      if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE)
+        return false;
+    }
+    PreferenceHelper.setInt(PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
+        DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch);
+    return true;
+  }
+}
