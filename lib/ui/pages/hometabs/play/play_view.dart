@@ -44,28 +44,8 @@ class Play extends StatelessWidget {
             controller: _controller,
             physics: BouncingScrollPhysics(),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TambolaCard(),
-                TrendingGamesSection(model: model),
-                InfoComponent2(
-                  heading: model.boxHeading,
-                  assetList: model.boxAssets,
-                  titleList: model.boxTitlles,
-                  height: SizeConfig.screenWidth * 0.3,
-                ),
-                GOWCard(
-                  model: model,
-                ),
-                SafetyWidget(),
-                // MoreGamesSection(model: model),
-                // if (!model.showSecurityMessageAtTop) SafetyWidget(),
-                AppFooter(),
-                SizedBox(
-                  height: SizeConfig.padding80,
-                ),
-              ],
-            ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: model.getOrderedPlayViewItems(model)),
           ),
         );
       },

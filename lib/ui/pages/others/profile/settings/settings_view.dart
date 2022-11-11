@@ -1,9 +1,11 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/others/profile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_name_text.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -68,6 +70,11 @@ class SettingsView extends StatelessWidget {
                       return SizedBox();
                   },
                   itemBuilder: (context, i) => ListTile(
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.delegate
+                          .parseRoute(Uri.parse(model.items[i].actionUri));
+                    },
                     contentPadding: EdgeInsets.symmetric(
                         vertical: SizeConfig.padding4,
                         horizontal: SizeConfig.pageHorizontalMargins),
