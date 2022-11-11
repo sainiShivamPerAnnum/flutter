@@ -310,7 +310,7 @@ class RootViewModel extends BaseViewModel {
         PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
         def: true);
     if (showSecurityPrompt &&
-        _userService!.baseUser!.isAugmontOnboarded &&
+        _userService!.baseUser!.isAugmontOnboarded! &&
         _userService!.userFundWallet!.augGoldQuantity > 0 &&
         _userService!.baseUser!.userPreferences
                 .getPreference(Preferences.APPLOCK) ==
@@ -483,8 +483,8 @@ class RootViewModel extends BaseViewModel {
       if (_userService!.baseUser != null && _userService!.userBootUp != null) {
         //1.check if the account is blocked
         if (_userService!.userBootUp!.data != null &&
-            _userService!.userBootUp!.data.isBlocked != null &&
-            _userService!.userBootUp!.data.isBlocked == true) {
+            _userService!.userBootUp!.data!.isBlocked != null &&
+            _userService!.userBootUp!.data!.isBlocked == true) {
           canExecuteStartupNotification = false;
           AppState.isUpdateScreen = true;
           AppState.delegate!.appState.currentAction = PageAction(
@@ -494,8 +494,8 @@ class RootViewModel extends BaseViewModel {
           return;
         }
         // //2.Checking for forced App Update
-        if (_userService!.userBootUp!.data.isAppForcedUpdateRequired != null &&
-            _userService!.userBootUp!.data.isAppForcedUpdateRequired == true) {
+        if (_userService!.userBootUp!.data!.isAppForcedUpdateRequired != null &&
+            _userService!.userBootUp!.data!.isAppForcedUpdateRequired == true) {
           AppState.isUpdateScreen = true;
           canExecuteStartupNotification = false;
           AppState.delegate!.appState.currentAction = PageAction(
@@ -504,8 +504,8 @@ class RootViewModel extends BaseViewModel {
         }
 
         //3. Sign out the user automatically
-        if (_userService!.userBootUp!.data.signOutUser != null &&
-            _userService!.userBootUp!.data.signOutUser == true) {
+        if (_userService!.userBootUp!.data!.signOutUser != null &&
+            _userService!.userBootUp!.data!.signOutUser == true) {
           Haptic.vibrate();
           canExecuteStartupNotification = false;
           _userService!.signOut(() async {
@@ -533,40 +533,40 @@ class RootViewModel extends BaseViewModel {
         }
 
         //4. App update present (Not forced)
-        if (_userService!.userBootUp!.data.isAppUpdateRequired != null) {
+        if (_userService!.userBootUp!.data!.isAppUpdateRequired != null) {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE,
-              _userService!.userBootUp!.data.isAppUpdateRequired);
+              _userService!.userBootUp!.data!.isAppUpdateRequired!);
         } else {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
         }
 
         //5. Clear all the caches
-        if (_userService!.userBootUp!.data.cache!.keys != null) {
-          for (String id in _userService!.userBootUp!.data.cache!.keys
+        if (_userService!.userBootUp!.data!.cache!.keys != null) {
+          for (String id in _userService!.userBootUp!.data!.cache!.keys
               as Iterable<String>) {
             CacheService().invalidateByKey(id);
           }
         }
 
         //6. Notice
-        if (_userService!.userBootUp!.data.notice != null) {
-          if (_userService!.userBootUp!.data.notice!.message != null &&
-              _userService!.userBootUp!.data.notice!.message != "") {
+        if (_userService!.userBootUp!.data!.notice != null) {
+          if (_userService!.userBootUp!.data!.notice!.message != null &&
+              _userService!.userBootUp!.data!.notice!.message != "") {
             PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
             PreferenceHelper.setString(Constants.MSG_NOTICE,
-                _userService!.userBootUp!.data.notice!.message!);
+                _userService!.userBootUp!.data!.notice!.message!);
           } else {
             PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
           }
 
-          if (_userService!.userBootUp!.data.notice!.url != null &&
-              _userService!.userBootUp!.data.notice!.url != "") {
+          if (_userService!.userBootUp!.data!.notice!.url != null &&
+              _userService!.userBootUp!.data!.notice!.url != "") {
             canExecuteStartupNotification = false;
             try {
               if (Platform.isIOS)
-                BaseUtil.launchUrl(_userService!.userBootUp!.data.notice!.url!);
+                BaseUtil.launchUrl(_userService!.userBootUp!.data!.notice!.url!);
               else if (Platform.isAndroid)
-                BaseUtil.launchUrl(_userService!.userBootUp!.data.notice!.url!);
+                BaseUtil.launchUrl(_userService!.userBootUp!.data!.notice!.url!);
             } catch (e) {
               _logger!.d(e.toString());
               // BaseUtil.showNegativeAlert(

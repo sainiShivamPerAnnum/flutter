@@ -230,7 +230,8 @@ class TambolaHomeViewModel extends BaseViewModel {
       ticketsLoaded = false;
       final tickets = await _tambolaRepo!.getTickets();
       if (tickets.code == 200) {
-        List<TambolaBoard> boards = tickets.model!.map((e) => e.board).toList();
+        List<TambolaBoard?> boards =
+            tickets.model!.map((e) => e.board).toList();
         tambolaService!.weeklyTicksFetched = true;
         tambolaService!.userWeeklyBoards = boards;
         _logger!.d(boards.length);

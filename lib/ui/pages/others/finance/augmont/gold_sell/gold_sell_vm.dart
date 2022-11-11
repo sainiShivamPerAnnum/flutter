@@ -206,9 +206,9 @@ class GoldSellViewModel extends BaseViewModel {
     ApiResponse<WithdrawableGoldResponseModel> quantityApiResponse =
         await _paymentRepo!.getWithdrawableAugGoldQuantity();
     if (quantityApiResponse.isSuccess()) {
-      withdrawableQnt = quantityApiResponse.model!.data.quantity;
+      withdrawableQnt = quantityApiResponse.model!.data!.quantity;
       withdrawableQtyMessage = quantityApiResponse.model!.message;
-      nonWithdrawableQnt = quantityApiResponse.model!.data.lockedQuantity;
+      nonWithdrawableQnt = quantityApiResponse.model!.data!.lockedQuantity;
     } else {
       nonWithdrawableQnt = 0.0;
       withdrawableQnt = _userService!.userFundWallet!.augGoldQuantity;

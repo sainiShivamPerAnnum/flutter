@@ -25,7 +25,7 @@ class BaseAnalytics {
     }
     await _analytics!.setUserProperty(name: 'user_gender', value: user.gender);
     await _analytics!.setUserProperty(
-        name: 'fresh_investor', value: (user.isInvested) ? 'N' : 'Y');
+        name: 'fresh_investor', value: (user.isInvested!) ? 'N' : 'Y');
   }
 
   static logProfilePictureAdded() {

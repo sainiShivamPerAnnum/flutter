@@ -474,7 +474,7 @@ class TransactionSummary extends StatelessWidget {
               height: SizeConfig.padding70,
               child: ListTile(
                 title: Text(
-                  summary![index].title,
+                  summary![index].title!,
                   style: TextStyles.sourceSans.body2,
                 ),
                 subtitle: Text(

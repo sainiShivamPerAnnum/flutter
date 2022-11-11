@@ -146,10 +146,10 @@ class LendboxTransactionService extends BaseTransactionService {
     final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
-      switch (txnStatus.data.status) {
+      switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
-          if (!txnStatus.data.isUpdating) {
-            currentTxnTambolaTicketsCount = res.model!.data.tickets;
+          if (!txnStatus.data!.isUpdating!) {
+            currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             _tambolaService!.weeklyTicksFetched = false;
 
             timer!.cancel();

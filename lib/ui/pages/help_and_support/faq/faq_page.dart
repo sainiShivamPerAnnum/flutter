@@ -74,7 +74,7 @@ class FAQPage extends StatelessWidget {
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins),
                       title: Text(
-                        model.list![index].title,
+                        model.list![index].title!,
                         style: TextStyles.sourceSans.body3,
                       ),
                       trailing: Container(
@@ -128,7 +128,7 @@ class FAQPage extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  data.title,
+                  data.title!,
                   style: TextStyles.sourceSans.body1.semiBold,
                 ),
                 contentPadding: EdgeInsets.symmetric(

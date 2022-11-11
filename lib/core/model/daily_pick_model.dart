@@ -118,7 +118,7 @@ class DailyPick {
 
   ///returns the picks after the daycode
   ///if dayCode = 4, return picks from thu,fri,sat,sun
-  List<int> etPicksPostDate(int dayCode) {
+  List<int> getPicksPostDate(int dayCode) {
     List<int> relevantDigits = [];
     if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday)
       relevantDigits.addAll(mon!);

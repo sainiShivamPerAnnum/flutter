@@ -63,7 +63,7 @@ class ViewAllBlogsView extends StatelessWidget {
                                         itemCount: model
                                             .blogPostsByCategory![index]
                                             .blogs
-                                            .length,
+                                          !.length,
                                         scrollDirection: Axis.horizontal,
                                         padding: EdgeInsets.zero,
                                         itemBuilder: (context, j) => Padding(
@@ -74,24 +74,24 @@ class ViewAllBlogsView extends StatelessWidget {
                                             onTap: () {
                                               model.navigateToBlogWebView(
                                                 model.blogPostsByCategory![index]
-                                                    .blogs[j].slug,
+                                                    .blogs![j].slug,
                                                 model.blogPostsByCategory![index]
                                                     .category,
                                               );
                                             },
                                             title: model
                                                 .blogPostsByCategory![index]
-                                                .blogs[j]
+                                                .blogs![j]
                                                 .acf!
                                                 .categories,
                                             description: model
                                                 .blogPostsByCategory![index]
-                                                .blogs[j]
+                                                .blogs![j]
                                                 .title!
                                                 .rendered,
                                             imageUrl: model
                                                 .blogPostsByCategory![index]
-                                                .blogs[j]
+                                                .blogs![j]
                                                 .yoastHeadJson,
                                           ),
                                         ),

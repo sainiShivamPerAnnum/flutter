@@ -77,7 +77,7 @@ class NotficationsPage extends StatelessWidget {
                               }
                             },
                             child: Container(
-                              color: model.notifications![index].isHighlighted
+                              color: model.notifications![index].isHighlighted!
                                   ? UiConstants.primaryLight.withOpacity(0.3)
                                   : UiConstants.kBackgroundColor,
                               padding: EdgeInsets.fromLTRB(

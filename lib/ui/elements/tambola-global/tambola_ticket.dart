@@ -74,7 +74,7 @@ class Ticket extends StatelessWidget {
   generateNumberList() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
-        ticketNumbers.add(board!.tambolaBoard[i][j]);
+        ticketNumbers.add(board!.tambolaBoard![i][j]);
       }
     }
   }

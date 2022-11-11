@@ -351,7 +351,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       return BaseUtil.showNegativeAlert(
           "Too many attempts", "Please try again later");
     }
-    if (!_userService!.baseUser!.isAugmontOnboarded) {
+    if (!_userService!.baseUser!.isAugmontOnboarded!) {
       return BaseUtil.showNegativeAlert("You are not onboarded to augmont yet",
           "Please finish augmont onboarding first");
     }

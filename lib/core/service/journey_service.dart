@@ -663,7 +663,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     Future.delayed(
       Duration(seconds: 2),
       () {
-        if (_userService!.baseUser!.isOldUser && avatarRemoteMlIndex == 2) {
+        if (_userService!.baseUser!.isOldUser! && avatarRemoteMlIndex == 2) {
           isJourneyOnboardingInView = true;
           PreferenceHelper.setBool(
               PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);

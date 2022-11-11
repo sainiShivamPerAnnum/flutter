@@ -28,7 +28,7 @@ class GoldenTicketRepository extends BaseRepo {
       );
 
       final ticket =
-          GoldenTicket.fromJson(goldenTicketRespone['data'], goldenTicketId);
+          GoldenTicket.fromJson(goldenTicketRespone['data'], goldenTicketId!);
       return ApiResponse<GoldenTicket>(model: ticket, code: 200);
     } catch (e) {
       logger!.e(e.toString());

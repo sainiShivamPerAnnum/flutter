@@ -105,7 +105,7 @@ class UserRepository extends BaseRepo {
               ), (dynamic res) {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final _user = BaseUser.fromMap(res["data"], id);
+            final _user = BaseUser.fromMap(res["data"], id!);
             logger!.d('asdasdasdsa $_user');
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else

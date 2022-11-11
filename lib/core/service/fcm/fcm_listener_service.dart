@@ -115,16 +115,16 @@ class FcmListener {
 
     if (_userService!.baseUser != null &&
         _userService!.baseUser!.isInvested != null &&
-        !_userService!.baseUser!.isInvested) {
+        !_userService!.baseUser!.isInvested!) {
       addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
 
     if (_userService!.baseUser != null &&
-        !_userService!.baseUser!.isAugmontOnboarded)
+        !_userService!.baseUser!.isAugmontOnboarded!)
       addSubscription(FcmTopic.MISSEDCONNECTION);
 
     if (_userService!.baseUser != null &&
-        _userService!.baseUser!.isAugmontOnboarded &&
+        _userService!.baseUser!.isAugmontOnboarded! &&
         _baseUtil!.userFundWallet != null &&
         _baseUtil!.userFundWallet!.augGoldBalance != null &&
         _baseUtil!.userFundWallet!.augGoldBalance > 300)

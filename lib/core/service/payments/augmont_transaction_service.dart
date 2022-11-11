@@ -262,13 +262,13 @@ class AugmontTransactionService extends BaseTransactionService {
       TransactionResponseModel txnStatus = res.model!;
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
-          if (!txnStatus.data.isUpdating) {
+          if (!txnStatus.data!.isUpdating!) {
             _tambolaService!.weeklyTicksFetched = false;
-            currentTxnTambolaTicketsCount = res.model!.data.tickets!;
+            currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             if (res.model!.data != null &&
-                res.model!.data.goldInTxnBought != null &&
-                res.model!.data.goldInTxnBought! > 0)
-              currentTxnGms = res.model!.data.goldInTxnBought;
+                res.model!.data!.goldInTxnBought != null &&
+                res.model!.data!.goldInTxnBought! > 0)
+              currentTxnGms = res.model!.data!.goldInTxnBought;
             timer!.cancel();
             return transactionResponseUpdate(
               gtId: currentTxnOrderId,

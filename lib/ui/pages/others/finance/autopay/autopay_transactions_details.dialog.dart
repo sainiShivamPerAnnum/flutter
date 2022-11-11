@@ -88,7 +88,7 @@ class AutosaveTransactionDetailsDialogState
                     padding: EdgeInsets.only(bottom: 8),
                     child: Text(
                       _txnHistoryService!
-                          .getFormattedTxnAmount(widget._transaction.amount),
+                          .getFormattedTxnAmount(widget._transaction.amount!),
                       // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -139,12 +139,12 @@ class AutosaveTransactionDetailsDialogState
                         children: [
                           referralTile(
                             'Purchase Rate:',
-                            '₹ ${widget._transaction.augmontMap.aLockPrice ?? 'N/A'}/gm',
+                            '₹ ${widget._transaction.augmontMap!.aLockPrice ?? 'N/A'}/gm',
                             Colors.redAccent.withOpacity(0.6),
                           ),
                           referralTile(
                             'Gold Purchased:',
-                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap.aGoldBalance) ?? 'N/A' as double)} grams',
+                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap!.aGoldBalance) ?? 'N/A' as double)} grams',
                             Colors.redAccent.withOpacity(0.6),
                           )
                         ],
@@ -152,7 +152,7 @@ class AutosaveTransactionDetailsDialogState
                     (widget._transaction.status != null)
                         ? referralTileWide(
                             'Transaction Status:',
-                            widget._transaction.status,
+                            widget._transaction.status!,
                             _txnHistoryService!
                                 .getTileColor(widget._transaction.status),
                           )
@@ -160,7 +160,7 @@ class AutosaveTransactionDetailsDialogState
                             UiConstants.primaryColor),
                     referralTileWide(
                         "Date & Time",
-                        "${_getFormattedDate(widget._transaction.createdOn)}, ${_getFormattedTime(widget._transaction.createdOn)}",
+                        "${_getFormattedDate(widget._transaction.createdOn!)}, ${_getFormattedTime(widget._transaction.createdOn!)}",
                         Colors.black)
                   ],
                 ),

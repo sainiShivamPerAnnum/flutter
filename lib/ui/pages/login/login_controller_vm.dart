@@ -221,7 +221,7 @@ class LoginControllerViewModel extends BaseViewModel {
               //firebase user should never be null at this point
               userService!.baseUser = BaseUser.newUser(
                   userService!.firebaseUser!.uid,
-                  _formatMobileNumber(LoginControllerView.mobileno));
+                  _formatMobileNumber(LoginControllerView.mobileno)!);
             }
             // logger.d(
             //     "Mobileno : ${_formatMobileNumber(LoginControllerView.mobileno)}");
@@ -336,7 +336,7 @@ class LoginControllerViewModel extends BaseViewModel {
       if (user.model == null) {
         logger!.d("New User, initializing BaseUser");
         userService!.baseUser =
-            BaseUser.newUser(userService!.firebaseUser!.uid, userMobile);
+            BaseUser.newUser(userService!.firebaseUser!.uid, userMobile!);
       }
       setState(ViewState.Idle);
 
@@ -420,7 +420,7 @@ class LoginControllerViewModel extends BaseViewModel {
     setState(ViewState.Idle);
 
     ///check if the account is blocked
-    if (userService!.baseUser != null && userService!.baseUser!.isBlocked) {
+    if (userService!.baseUser != null && userService!.baseUser!.isBlocked!) {
       AppState.isUpdateScreen = true;
       appStateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
@@ -429,7 +429,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     Map<String, dynamic> response = await _internalOpsService!.initDeviceInfo();
     logger!.d("Device Details: $response");
-    if (response != null) {
+    if (response != {}) {
       final String? deviceId = response["deviceId"];
       final String? platform = response["platform"];
       final String? model = response["model"];

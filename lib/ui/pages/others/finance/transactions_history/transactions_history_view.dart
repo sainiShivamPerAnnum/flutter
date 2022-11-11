@@ -391,7 +391,7 @@ class TransactionSIPTile extends StatelessWidget {
       dense: true,
       title: Text('DEPOSIT', style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        _txnHistoryService!.getFormattedSIPDate(DateTime.parse(txn!.txnDateTime)),
+        _txnHistoryService!.getFormattedSIPDate(DateTime.parse(txn!.txnDateTime!)),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(
@@ -401,7 +401,7 @@ class TransactionSIPTile extends StatelessWidget {
             status: txn!.status,
           ),
           Text(
-            _txnHistoryService!.getFormattedTxnAmount(txn!.amount),
+            _txnHistoryService!.getFormattedTxnAmount(txn!.amount!),
             style: TextStyles.sourceSansM.body3,
           ),
         ],

@@ -303,13 +303,13 @@ class BaseUtil extends ChangeNotifier {
           content: CompleteProfileDialog(),
         );
       final bool? isAugDepositBanned = _userService
-          ?.userBootUp?.data.banMap?.investments?.deposit?.augmont?.isBanned;
+          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
       final String? augDepositBanNotice = _userService
-          ?.userBootUp?.data.banMap?.investments?.deposit?.augmont?.reason;
+          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
       final bool? islBoxlDepositBanned = _userService
-          ?.userBootUp?.data.banMap?.investments?.deposit?.lendBox?.isBanned;
+          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
       final String? lBoxDepositBanNotice = _userService
-          ?.userBootUp?.data.banMap?.investments?.deposit?.lendBox?.reason;
+          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugDepositBanned != null &&
           isAugDepositBanned) {
@@ -355,7 +355,7 @@ class BaseUtil extends ChangeNotifier {
             isBarrierDismissable: true,
             hapticVibrate: false,
             content: CompleteProfileDialog());
-      final bool? isAugSellLocked = _userService?.userBootUp?.data.banMap
+      final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
           ?.userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
@@ -424,7 +424,7 @@ class BaseUtil extends ChangeNotifier {
     bool skFlag = (myUser!.isSimpleKycVerified != null &&
         myUser!.isSimpleKycVerified == true);
     bool augFlag = false;
-    if (myUser!.isAugmontOnboarded) {
+    if (myUser!.isAugmontOnboarded!) {
       final DateTime _dt = new DateTime(2021, 8, 28);
       //if the person regd for augmont before v2.5.4 release, then their kyc is complete
       augFlag = (augmontDetail != null &&

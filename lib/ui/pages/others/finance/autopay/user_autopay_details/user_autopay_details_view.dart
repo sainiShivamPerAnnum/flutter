@@ -525,7 +525,7 @@ class TransationTile extends StatelessWidget {
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    _txnHistoryService!.getFormattedTime(txn.createdOn),
+                    _txnHistoryService!.getFormattedTime(txn.createdOn!),
                     style: TextStyles.rajdhaniL.body3,
                   ),
                 ],
@@ -535,14 +535,14 @@ class TransationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _txnHistoryService!.getFormattedTxnAmount(txn.amount),
+                    _txnHistoryService!.getFormattedTxnAmount(txn.amount!),
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   SizedBox(
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    txn.status,
+                    txn.status!,
                     style: TextStyles.rajdhaniM.body3.colour(
                       _txnHistoryService!.getTileColor(txn.status),
                     ),
