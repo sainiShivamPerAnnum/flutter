@@ -95,7 +95,7 @@ class LoginControllerViewModel extends BaseViewModel {
   get controller => _controller;
   get pageNotifier => _pageNotifier;
   get pages => _pages;
-  int ? get currentPage => _currentPage;
+  int? get currentPage => _currentPage;
 
   set currentPage(int? page) {
     _currentPage = page;
@@ -381,8 +381,8 @@ class LoginControllerViewModel extends BaseViewModel {
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
-      _userRepo!.updateUserAppFlyer(
-          userService!.baseUser!, await userService!.firebaseUser!.getIdToken());
+      _userRepo!.updateUserAppFlyer(userService!.baseUser!,
+          await userService!.firebaseUser!.getIdToken());
       await _analyticsService!.login(
           isOnBoarded: userService!.isUserOnboarded,
           baseUser: userService!.baseUser);
@@ -585,8 +585,8 @@ class LoginControllerViewModel extends BaseViewModel {
           loginUsingTrueCaller = true;
           logger!.d("Truecaller no: $phNo");
 
-          _analyticsService!.track(
-              eventName: AnalyticsEvents.truecallerVerified);
+          _analyticsService!
+              .track(eventName: AnalyticsEvents.truecallerVerified);
           AppState.isOnboardingInProgress = true;
           _authenticateTrucallerUser(phNo);
           break;

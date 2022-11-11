@@ -28,17 +28,17 @@ class DepositFcmResponseModel {
   });
 
   DepositFcmResponseModel.fromJson(Map<String, dynamic> json) {
-    goldBalance = json['goldBalance'];
-    didWalletUpdate = json['didWalletUpdate'];
-    isWalletCreated = json['isWalletCreated'];
-    didFLCUpdate = json['didFLCUpdate'];
-    augmontPrinciple = json['augmontPrinciple']?.toDouble();
-    amount = json['amount']?.toDouble();
-    augmontGoldQty = json['augmontGoldQty'];
-    flcBalance = json['flcBalance'];
-    gtId = json['gtId'];
-    error = json['error'];
-    status = json['status'];
+    goldBalance = json['goldBalance'] ?? '';
+    didWalletUpdate = json['didWalletUpdate'] ?? false;
+    isWalletCreated = json['isWalletCreated'] ?? false;
+    didFLCUpdate = json['didFLCUpdate'] ?? false;
+    augmontPrinciple = json['augmontPrinciple']?.toDouble() ?? 0.0;
+    amount = json['amount']?.toDouble() ?? 0.0;
+    augmontGoldQty = json['augmontGoldQty'] ?? 0.0;
+    flcBalance = json['flcBalance'] ?? '0';
+    gtId = json['gtId'] ?? '';
+    error = json['error'] ?? '';
+    status = json['status'] ??  false;
     autosavePrompt = json['autosavePrompt'] ?? false;
   }
 
@@ -59,3 +59,4 @@ class DepositFcmResponseModel {
     return data;
   }
 }
+

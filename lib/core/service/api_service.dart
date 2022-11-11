@@ -68,7 +68,7 @@ class APIService implements API {
         'platform': Platform.isAndroid ? 'android' : 'iOS',
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.firebaseUser?.uid as String,
+        'uid': userService?.firebaseUser?.uid ??'',
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       logger!.d("response from $finalPath");
@@ -101,7 +101,11 @@ class APIService implements API {
     await metric.start();
     var responseJson;
     String queryString = '';
+
+
     int startTime = DateTime.now().millisecondsSinceEpoch;
+
+
 
     try {
       Map<String, String> _headers = {
@@ -109,7 +113,7 @@ class APIService implements API {
         'platform': Platform.isAndroid ? 'android' : 'iOS',
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.baseUser?.uid as String,
+        'uid': userService?.baseUser?.uid ?? '' ,
       };
       if (headers != null) _headers.addAll(headers);
       if (token != null)
@@ -143,6 +147,7 @@ class APIService implements API {
     }
     return responseJson;
   }
+
 
   @override
   Future<dynamic> putData(

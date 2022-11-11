@@ -1,3 +1,5 @@
+// ignore_for_file: unused_label
+
 class ProcessTransactionModel {
   String? message;
   Data? data;
@@ -5,8 +7,8 @@ class ProcessTransactionModel {
   ProcessTransactionModel({this.message, this.data});
 
   ProcessTransactionModel.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    message = json['message'] ?? '';
+    data = json['data'] != null ? Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -26,8 +28,13 @@ class Data {
   Data({this.head, this.body});
 
   Data.fromJson(Map<String, dynamic> json) {
-    head = json['head'] != null ? Head.fromJson(json['head']) : null;
-    body = json['body'] != null ? Body.fromJson(json['body']) : null;
+    head = Head.fromJson(json['head'] ?? '');
+    body = json['body'] != null ? Body.fromJson(json['body']) : Body.base();
+  }
+
+  Data.base() {
+    head = Head.base();
+    body = Body.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -48,9 +55,14 @@ class Head {
 
   Head({this.responseTimestamp, this.version});
 
+  Head.base() {
+    responseTimestamp = '';
+    version = '';
+  }
+
   Head.fromJson(Map<String, dynamic> json) {
-    responseTimestamp = json['responseTimestamp'];
-    version = json['version'];
+    responseTimestamp = json['responseTimestamp'] ?? '';
+    version = json['version'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -68,16 +80,22 @@ class Body {
 
   Body({this.resultInfo, this.deepLinkInfo, this.riskContent});
 
+  Body.base() {
+    resultInfo = ResultInfo.base();
+    deepLinkInfo = DeepLinkInfo.base();
+    riskContent = RiskContent.base();
+  }
+
   Body.fromJson(Map<String, dynamic> json) {
     resultInfo = json['resultInfo'] != null
         ? ResultInfo.fromJson(json['resultInfo'])
-        : null;
+        : ResultInfo.base();
     deepLinkInfo = json['deepLinkInfo'] != null
         ? DeepLinkInfo.fromJson(json['deepLinkInfo'])
-        : null;
+        : DeepLinkInfo.base();
     riskContent = json['riskContent'] != null
         ? RiskContent.fromJson(json['riskContent'])
-        : null;
+        : RiskContent.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -102,10 +120,15 @@ class ResultInfo {
 
   ResultInfo({this.resultStatus, this.resultCode, this.resultMsg});
 
+  ResultInfo.base() {
+    resultCode = '';
+    resultMsg = '';
+    resultStatus = '';
+  }
   ResultInfo.fromJson(Map<String, dynamic> json) {
-    resultStatus = json['resultStatus'];
-    resultCode = json['resultCode'];
-    resultMsg = json['resultMsg'];
+    resultStatus = json['resultStatus'] ?? '';
+    resultCode = json['resultCode'] ?? '';
+    resultMsg = json['resultMsg'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -126,11 +149,17 @@ class DeepLinkInfo {
   DeepLinkInfo(
       {this.deepLink, this.orderId, this.cashierRequestId, this.transId});
 
+  DeepLinkInfo.base() {
+    deepLink = '';
+    orderId = '';
+    cashierRequestId = '';
+    transId = '';
+  }
   DeepLinkInfo.fromJson(Map<String, dynamic> json) {
-    deepLink = json['deepLink'];
-    orderId = json['orderId'];
-    cashierRequestId = json['cashierRequestId'];
-    transId = json['transId'];
+    deepLink = json['deepLink'] ?? '';
+    orderId = json['orderId'] ?? '';
+    cashierRequestId = json['cashierRequestId'] ?? '';
+    transId = json['transId'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -148,8 +177,11 @@ class RiskContent {
 
   RiskContent({this.eventLinkId});
 
+  RiskContent.base() {
+    eventLinkId = '';
+  }
   RiskContent.fromJson(Map<String, dynamic> json) {
-    eventLinkId = json['eventLinkId'];
+    eventLinkId = json['eventLinkId'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -90,7 +90,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
         registerConversionDataCallback: true,
       );
 
-      id = await (_appsflyerSdk.getAppsFlyerUID() as Future<String>);
+      id = await (_appsflyerSdk.getAppsFlyerUID());
       _logger!.d('appflyer initialized');
     } catch (e) {
       _logger!.e('appflyer $e');

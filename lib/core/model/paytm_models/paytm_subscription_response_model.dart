@@ -6,7 +6,7 @@ class SubscriptionResponseModel {
 
   SubscriptionResponseModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -67,32 +67,56 @@ class Data {
       this.custId,
       this.upfrontTxnAmount});
 
+  Data.base() {
+    resultInfo = ResultInfo.base();
+    subsId = status = '';
+    subStatus = '';
+    orderId = '';
+    upfrontTxnId = '';
+    subsPaymentInstDetails = SubsPaymentInstDetails.base();
+    lastOrderId = '';
+    lastOrderStatus = '';
+    lastOrderCreationDate = '';
+    lastOrderAmount = '';
+    amountType = '';
+    maxAmount = '';
+    mid = '';
+    frequencyUnit = '';
+    frequency = '';
+    merchantName = '=';
+    expiryDate = '';
+    createdDate = '';
+    updatedDate = '';
+    custId = '';
+    upfrontTxnAmount = '';
+  }
+
   Data.fromJson(Map<String, dynamic> json) {
     resultInfo = json['resultInfo'] != null
         ? new ResultInfo.fromJson(json['resultInfo'])
-        : null;
-    subsId = json['subsId'];
-    status = json['status'];
-    subStatus = json['subStatus'];
-    orderId = json['orderId'];
-    upfrontTxnId = json['upfrontTxnId'];
+        : ResultInfo.base();
+    subsId = json['subsId'] ?? '';
+    status = json['status'] ?? '';
+    subStatus = json['subStatus'] ?? '';
+    orderId = json['orderId'] ?? '';
+    upfrontTxnId = json['upfrontTxnId'] ?? '';
     subsPaymentInstDetails = json['subsPaymentInstDetails'] != null
-        ? new SubsPaymentInstDetails.fromJson(json['subsPaymentInstDetails'])
-        : null;
-    lastOrderId = json['lastOrderId'];
-    lastOrderStatus = json['lastOrderStatus'];
-    lastOrderCreationDate = json['lastOrderCreationDate'];
-    lastOrderAmount = json['lastOrderAmount'];
-    amountType = json['amountType'];
-    maxAmount = json['maxAmount'];
-    mid = json['mid'];
-    frequencyUnit = json['frequencyUnit'];
-    frequency = json['frequency'];
-    merchantName = json['merchantName'];
-    expiryDate = json['expiryDate'];
-    createdDate = json['createdDate'];
-    updatedDate = json['updatedDate'];
-    custId = json['custId'];
+        ? SubsPaymentInstDetails.fromJson(json['subsPaymentInstDetails'])
+        : SubsPaymentInstDetails.base();
+    lastOrderId = json['lastOrderId'] ?? '';
+    lastOrderStatus = json['lastOrderStatus'] ?? '';
+    lastOrderCreationDate = json['lastOrderCreationDate'] ?? '';
+    lastOrderAmount = json['lastOrderAmount'] ?? '';
+    amountType = json['amountType'] ?? '';
+    maxAmount = json['maxAmount'] ?? '';
+    mid = json['mid'] ?? '';
+    frequencyUnit = json['frequencyUnit'] ?? '';
+    frequency = json['frequency'] ?? '';
+    merchantName = json['merchantName'] ?? '';
+    expiryDate = json['expiryDate'] ?? '';
+    createdDate = json['createdDate'] ?? '';
+    updatedDate = json['updatedDate'] ?? '';
+    custId = json['custId'] ?? '';
     upfrontTxnAmount = json['upfrontTxnAmount'];
   }
 
@@ -136,11 +160,15 @@ class ResultInfo {
   ResultInfo({this.code, this.message, this.status});
 
   ResultInfo.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    message = json['message'];
-    status = json['status'];
+    code = json['code'] ?? '';
+    message = json['message'] ?? '';
+    status = json['status'] ?? '';
   }
-
+  ResultInfo.base() {
+    code = '';
+    message = '';
+    status = '';
+  }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['code'] = this.code;
@@ -155,8 +183,12 @@ class SubsPaymentInstDetails {
 
   SubsPaymentInstDetails({this.paymentMode});
 
+  SubsPaymentInstDetails.base() {
+    paymentMode = '';
+  }
+
   SubsPaymentInstDetails.fromJson(Map<String, dynamic> json) {
-    paymentMode = json['paymentMode'];
+    paymentMode = json['paymentMode'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

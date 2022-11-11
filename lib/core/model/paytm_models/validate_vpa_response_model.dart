@@ -5,8 +5,8 @@ class ValidateVpaResponseModel {
   ValidateVpaResponseModel({this.message, this.data});
 
   ValidateVpaResponseModel.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    message = json['message'] ?? '';
+    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -26,12 +26,17 @@ class Data {
   bool? bankSupportedRecurring;
 
   Data({this.valid, this.pspSupportedRecurring, this.bankSupportedRecurring});
-
+  Data.base() {
+    status = false;
+    valid = false;
+    pspSupportedRecurring = false;
+    bankSupportedRecurring = false;
+  }
   Data.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    valid = json['valid'];
-    pspSupportedRecurring = json['pspSupportedRecurring'];
-    bankSupportedRecurring = json['bankSupportedRecurring'];
+    status = json['status'] ?? false;
+    valid = json['valid'] ?? false;
+    pspSupportedRecurring = json['pspSupportedRecurring'] ?? false;
+    bankSupportedRecurring = json['bankSupportedRecurring'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

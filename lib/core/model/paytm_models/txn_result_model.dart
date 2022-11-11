@@ -25,9 +25,14 @@ class Data {
 
   Data({this.isUpdating = true, this.gt});
 
+  Data.base() {
+    isUpdating = false;
+    gt = Gt.base();
+  }
+
   Data.fromJson(Map<String, dynamic> json) {
-    isUpdating = json['isUpdating'];
-    gt = json['gt'] != null ? Gt.fromJson(json['gt']) : null;
+    isUpdating = json['isUpdating'] ?? false;
+    gt = json['gt'] != null ? Gt.fromJson(json['gt']) : Gt.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -66,14 +71,28 @@ class Gt {
       this.userId,
       this.rewardArr});
 
+  Gt.base() {
+    canTransfer = false;
+    timestamp = Timestamp.base();
+    redeemedTimestamp = Timestamp.base();
+    eventType = '';
+    gtType = '';
+    isRewarding = false;
+    version = '';
+    note = '';
+    prizeSubtype = '';
+    userId = '';
+    rewardArr = [];
+  }
+
   Gt.fromJson(Map<String, dynamic> json) {
     canTransfer = json['canTransfer'];
     timestamp = json['timestamp'] != null
         ? new Timestamp.fromJson(json['timestamp'])
-        : null;
+        : Timestamp.base();
     redeemedTimestamp = json['redeemedTimestamp'] != null
         ? new Timestamp.fromJson(json['redeemedTimestamp'])
-        : null;
+        : Timestamp.base();
     eventType = json['eventType'];
     gtType = json['gtType'];
     isRewarding = json['isRewarding'];
@@ -118,6 +137,11 @@ class Timestamp {
 
   Timestamp({this.iSeconds, this.iNanoseconds});
 
+  Timestamp.base() {
+    iSeconds = 0;
+    iNanoseconds = 0;
+  }
+
   Timestamp.fromJson(Map<String, dynamic> json) {
     iSeconds = json['_seconds'];
     iNanoseconds = json['_nanoseconds'];
@@ -137,6 +161,11 @@ class RewardArr {
 
   RewardArr({this.value, this.type});
 
+  RewardArr.base() {
+    value = 0;
+    type = '';
+  }
+
   RewardArr.fromJson(Map<String, dynamic> json) {
     value = json['value'];
     type = json['type'];
@@ -149,3 +178,4 @@ class RewardArr {
     return data;
   }
 }
+

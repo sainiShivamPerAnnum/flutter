@@ -5,8 +5,12 @@ class CreatePaytmTransactionModel {
   CreatePaytmTransactionModel({this.success, this.data});
 
   CreatePaytmTransactionModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    success = json['success'] ?? false;
+    data = json['data'] != null ? json[data] : Data.base();
+  }
+  CreatePaytmTransactionModel.base() {
+    success = false;
+    data = Data.base();
   }
 
   Map<String, dynamic> toJson() {
@@ -28,7 +32,7 @@ class CreatePaytmTransactionModel {
   factory CreatePaytmTransactionModel.fromMap(Map<String, dynamic> map) {
     return CreatePaytmTransactionModel(
       success: map['success'] ?? false,
-      data: Data.fromMap(map['data']),
+      data: map['data'] != null ? Data.fromMap(map['data']) : Data.base(),
     );
   }
 
@@ -54,11 +58,17 @@ class Data {
 
   Data({this.temptoken, this.orderId, this.callbackUrl, this.txnId});
 
+  Data.base() {
+    temptoken = '';
+    orderId = '';
+    callbackUrl = '';
+    txnId = '';
+  }
   Data.fromJson(Map<String, dynamic> json) {
-    temptoken = json['temptoken'];
-    orderId = json['orderId'];
-    callbackUrl = json['callbackUrl'];
-    txnId = json['txnId'];
+    temptoken = json['temptoken'] ?? '';
+    orderId = json['orderId'] ?? '';
+    callbackUrl = json['callbackUrl'] ?? '';
+    txnId = json['txnId'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

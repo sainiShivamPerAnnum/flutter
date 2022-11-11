@@ -119,7 +119,7 @@ class BaseUser {
 
   BaseUser.fromMap(Map<String, dynamic> data, String? id, [String? client_token])
       : this(
-            id,
+            id ??'',
             data[fldMobile]?.toString(),
             data[fldEmail]?.toString(),
             data[fldName]?.toString(),

@@ -165,6 +165,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance
           .postData(ApiPath.sendOtp, body: body, cBaseUrl: _baseUrl);
 
+      logger!.d("reached");
       return ApiResponse(code: 200);
     } catch (e) {
       logger!.d(e);

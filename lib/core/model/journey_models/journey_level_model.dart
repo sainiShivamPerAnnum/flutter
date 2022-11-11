@@ -9,11 +9,11 @@ class JourneyLevel {
       {this.start, this.end, this.breakpoint, this.pageEnd, this.level});
 
   JourneyLevel.fromMap(Map<String, dynamic> map) {
-    start = map['start'];
-    end = map['end'];
+    start = map['start'] ?? 0;
+    end = map['end'] ?? 0;
     breakpoint = map['breakpoint'].toDouble();
-    pageEnd = map['pageEnd'];
-    level = map['level'];
+    pageEnd = map['pageEnd'] ?? 0;
+    level = map['level'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
