@@ -26,6 +26,8 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
 
+        <meta-data android:name="5e1ae054-84ac-481c-9efe-9b413ac2dcbe" android:value="in.fello.felloapp" />
+
         <meta-data android:name="com.truecaller.android.sdk.PartnerKey" android:value="@string/partnerKey"/>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
