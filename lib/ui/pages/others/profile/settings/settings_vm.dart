@@ -27,9 +27,10 @@ class SettingsViewModel extends BaseViewModel {
             asset: Assets.securityCheck,
             actionUri: '/profile'),
         SettingsListItemModel(
-            title: "KYC",
-            asset: Assets.securityCheck,
-            actionUri: '/kycDetails'),
+          title: "KYC",
+          asset: Assets.securityCheck,
+          actionUri: '/kycVerify',
+        ),
         SettingsListItemModel(
             title: "Feedback",
             asset: Assets.securityCheck,

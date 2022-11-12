@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -18,12 +19,31 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
+enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, INPROCESS }
+
 class KYCDetailsViewModel extends BaseViewModel {
   String stateChosenValue;
   TextEditingController nameController, panController;
   bool inEditMode = true;
   bool isUpadtingKycDetails = false;
   bool _hasDetails = false;
+  XFile _capturedImage;
+  KycVerificationStatus _kycVerificationStatus;
+
+  KycVerificationStatus get kycVerificationStatus =>
+      this._kycVerificationStatus;
+
+  set kycVerificationStatus(value) {
+    this._kycVerificationStatus = value;
+    notifyListeners();
+  }
+
+  XFile get capturedImage => this._capturedImage;
+
+  set capturedImage(value) {
+    this._capturedImage = value;
+    notifyListeners();
+  }
 
   final _logger = locator<CustomLogger>();
   final _userService = locator<UserService>();
@@ -61,9 +81,9 @@ class KYCDetailsViewModel extends BaseViewModel {
       panFocusNode.unfocus();
       panTextInputType = TextInputType.name;
       notifyListeners();
-      Future.delayed(Duration(milliseconds: 100), () {
-        panFocusNode.requestFocus();
-      });
+      // Future.delayed(Duration(milliseconds: 100), () {
+      //   panFocusNode.requestFocus();
+      // });
       return;
     }
     if (val.length >= 5 &&
