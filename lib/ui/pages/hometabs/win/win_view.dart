@@ -193,7 +193,7 @@ class Win extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        UnscratchedGTCountChip(model: model),
+                                        UnscratchedGTCountChip(),
                                         SizedBox(
                                           width: SizeConfig.padding10,
                                         ),

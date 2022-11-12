@@ -93,7 +93,7 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
-                    HelpFab(topic: 'onboarding'),
+                    HelpFab(),
                     JourneyAppBar(),
                     JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),

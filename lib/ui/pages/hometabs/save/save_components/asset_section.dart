@@ -8,6 +8,7 @@ import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -19,6 +20,63 @@ class SaveNetWorthSection extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
   const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
+
+  getAssetsOrder() {
+    List<Widget> orderedAssests = [];
+    DynamicUiUtils.saveViewOrder[0].forEach((key) {
+      switch (key) {
+        case 'LB':
+          orderedAssests.add(
+            SaveCustomCard(
+              title: 'Fello Flo',
+              subtitle: "Current Value",
+              key: ValueKey(Constants.ASSET_TYPE_LENDBOX),
+              cardBgColor: UiConstants.kSaveStableFelloCardBg,
+              cardAssetName: Assets.felloFlo,
+              investmentType: InvestmentType.LENDBOXP2P,
+              onCardTap: () {
+                saveViewModel.navigateToSaveAssetView(
+                  InvestmentType.LENDBOXP2P,
+                );
+              },
+              onTap: () {
+                Haptic.vibrate();
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.LENDBOXP2P,
+                );
+              },
+            ),
+          );
+          break;
+        case 'AG':
+          orderedAssests.add(
+            SaveCustomCard(
+              title: 'Digital Gold',
+              subtitle: "You Own",
+              key: ValueKey(Constants.ASSET_TYPE_AUGMONT),
+              cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
+              cardAssetName: Assets.digitalGoldBar,
+              investmentType: InvestmentType.AUGGOLD99,
+              onCardTap: () {
+                saveViewModel.navigateToSaveAssetView(
+                  InvestmentType.AUGGOLD99,
+                );
+              },
+              onTap: () {
+                Haptic.vibrate();
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.AUGGOLD99,
+                );
+              },
+            ),
+          );
+          break;
+      }
+    });
+    return Column(
+      children: orderedAssests,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,44 +114,7 @@ class SaveNetWorthSection extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding10,
             ),
-            SaveCustomCard(
-              title: 'Digital Gold',
-              subtitle: "You Own",
-              key: ValueKey(Constants.ASSET_TYPE_AUGMONT),
-              cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
-              cardAssetName: Assets.digitalGoldBar,
-              investmentType: InvestmentType.AUGGOLD99,
-              onCardTap: () {
-                saveViewModel.navigateToSaveAssetView(
-                  InvestmentType.AUGGOLD99,
-                );
-              },
-              onTap: () {
-                Haptic.vibrate();
-                return BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.AUGGOLD99,
-                );
-              },
-            ),
-            SaveCustomCard(
-              title: 'Fello Flo',
-              subtitle: "Current Value",
-              key: ValueKey(Constants.ASSET_TYPE_LENDBOX),
-              cardBgColor: UiConstants.kSaveStableFelloCardBg,
-              cardAssetName: Assets.felloFlo,
-              investmentType: InvestmentType.LENDBOXP2P,
-              onCardTap: () {
-                saveViewModel.navigateToSaveAssetView(
-                  InvestmentType.LENDBOXP2P,
-                );
-              },
-              onTap: () {
-                Haptic.vibrate();
-                return BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.LENDBOXP2P,
-                );
-              },
-            ),
+            getAssetsOrder(),
             SaveAssetsFooter(),
           ],
         ),

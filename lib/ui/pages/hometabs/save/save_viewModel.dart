@@ -31,6 +31,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.da
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -175,15 +176,13 @@ class SaveViewModel extends BaseViewModel {
 
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
-    _baseUtil.saveViewOrder.forEach((key) {
+    saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
+    DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        case 'GF':
-          saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
-          break;
         case 'AS':
           saveViewItems.add(AutosaveCard(locationKey: ValueKey('save')));
           break;
-        case 'CM':
+        case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
           break;
         case 'BL':
@@ -191,7 +190,8 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(AppFooter(bottomPad: SizeConfig.navBarHeight));
+    saveViewItems.add(
+        AppFooter(bottomPad: SizeConfig.padding80 + SizeConfig.navBarHeight));
     return saveViewItems;
   }
 

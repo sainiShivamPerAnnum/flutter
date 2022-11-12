@@ -74,6 +74,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool _showLevelUpAnimation = false;
   bool _isUserJourneyOnboarded = false;
   get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
+  List<GoldenTicket> unscratchedGTList;
 
   set isUserJourneyOnboarded(value) {
     this._isUserJourneyOnboarded = value;
@@ -274,6 +275,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
   }
 
+  getUnscratchedGT() async {
+    final ApiResponse<List<GoldenTicket>> res =
+        await _gtRepo.getUnscratchedGoldenTickets();
+    if (res.isSuccess()) {
+      unscratchedGTList = res.model;
+    }
+  }
+
   //Fetch Levels of Journey
   getJourneyLevels() async {
     final res = await _journeyRepo.getJourneyLevels();
@@ -447,12 +456,13 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> updateRewardSTooltips() async {
     completedMilestonesPrizeList.clear();
     setCompletedMilestonesList();
-    await Future.forEach(completedMilestoneList, (milestone) async {
-      final res = await _gtRepo.getGTByPrizeSubtype(milestone.prizeSubType);
-      if (res.isSuccess())
-        completedMilestonesPrizeList.add(res.model);
-      else
-        completedMilestonesPrizeList.add(null);
+    await getUnscratchedGT();
+    if (unscratchedGTList == null || unscratchedGTList.isEmpty) return;
+    completedMilestoneList.forEach((MilestoneModel milestone) {
+      GoldenTicket matchTicket = unscratchedGTList.firstWhere(
+          (ticket) => ticket.prizeSubtype == milestone.prizeSubType,
+          orElse: () => null);
+      completedMilestonesPrizeList.add(matchTicket);
     });
 
     notifyListeners(JourneyServiceProperties.Prizes);

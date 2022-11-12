@@ -18,6 +18,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.da
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -113,9 +114,9 @@ class PlayViewModel extends BaseViewModel {
   getOrderedPlayViewItems(PlayViewModel model) {
     List<Widget> playViewChildren = [];
 
-    _baseUtil.playViewOrder.forEach((key) {
+    DynamicUiUtils.playViewOrder.forEach((key) {
       switch (key) {
-        case 'TA':
+        case 'TM':
           playViewChildren.add(TambolaCard());
           break;
         case 'AG':

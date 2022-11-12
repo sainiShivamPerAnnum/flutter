@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -12,6 +15,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
@@ -28,7 +32,17 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool isUpadtingKycDetails = false;
   bool _hasDetails = false;
   XFile _capturedImage;
-  KycVerificationStatus _kycVerificationStatus;
+  double _fileSize;
+
+  get fileSize => this._fileSize;
+
+  set fileSize(value) {
+    this._fileSize = value;
+    notifyListeners();
+  }
+
+  KycVerificationStatus _kycVerificationStatus =
+      KycVerificationStatus.UNVERIFIED;
 
   KycVerificationStatus get kycVerificationStatus =>
       this._kycVerificationStatus;
@@ -111,6 +125,40 @@ class KYCDetailsViewModel extends BaseViewModel {
     return;
   }
 
+  void verifyImage() {
+    if (capturedImage == null) return;
+    final String ext = capturedImage.name.split('.').last.toLowerCase();
+
+    if (ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
+      File imageFile = File(capturedImage.path);
+      fileSize =
+          BaseUtil.digitPrecision(imageFile.lengthSync() / 1048576, 2, true);
+      print("File size: $fileSize");
+      if (fileSize > 5) {
+        capturedImage = null;
+        BaseUtil.openDialog(
+            addToScreenStack: true,
+            isBarrierDismissable: false,
+            hapticVibrate: true,
+            content: MoreInfoDialog(
+                title: 'Snap!',
+                text:
+                    'Selected file is too big, please add an image less than 5 MB'));
+      } else
+        return;
+    } else {
+      capturedImage = null;
+      BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissable: false,
+          hapticVibrate: true,
+          content: MoreInfoDialog(
+              title: 'Snap!',
+              text:
+                  'Selected file is invalid, please add a valid image (PNG, JPEG, JPG)'));
+    }
+  }
+
   checkForKycExistence() async {
     setState(ViewState.Busy);
     if (_userService.baseUser.isSimpleKycVerified != null &&
@@ -124,9 +172,9 @@ class KYCDetailsViewModel extends BaseViewModel {
       }
     }
     setState(ViewState.Idle);
-    Future.delayed(Duration(milliseconds: 500), () {
-      if (inEditMode) panFocusNode.requestFocus();
-    });
+    // Future.delayed(Duration(milliseconds: 500), () {
+    //   if (inEditMode) panFocusNode.requestFocus();
+    // });
   }
 
   bool _preVerifyInputs() {

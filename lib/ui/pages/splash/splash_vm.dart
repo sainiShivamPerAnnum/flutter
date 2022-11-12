@@ -150,6 +150,7 @@ class LauncherViewModel extends BaseViewModel {
             isOnBoarded: userService?.isUserOnboarded,
             baseUser: userService?.baseUser,
           );
+
         //To fetch the properties required to pass for the analytics
         await AnalyticsProperties().init();
       }

@@ -139,7 +139,10 @@ class GTInstantViewModel extends BaseViewModel {
                 notifyListeners();
               },
             );
-            _journeyService.updateRewardStatus(goldenTicket.prizeSubtype);
+
+            _journeyService.updateRewardSTooltips().then((_) {
+              _journeyService.updateRewardStatus(goldenTicket.prizeSubtype);
+            });
           },
         ),
       );

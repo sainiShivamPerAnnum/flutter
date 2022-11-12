@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -79,44 +80,44 @@ class KYCDetailsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppTextFieldLabel(
-                      locale.pkPanLabel,
-                    ),
-                    AppTextField(
-                      focusNode: model.panFocusNode,
-                      inputFormatters: [
-                        // UpperCaseTextFormatter(),
-                        FilteringTextInputFormatter.deny(RegExp(r'^0+(?!$)')),
-                        LengthLimitingTextInputFormatter(10)
-                      ],
-                      textCapitalization: TextCapitalization.characters,
-                      keyboardType: model.panTextInputType,
-                      onChanged: (val) {
-                        print("val changed");
-                        model.checkForKeyboardChange(val.trim());
-                      },
-                      isEnabled: model.inEditMode,
-                      textEditingController: model.panController,
-                      validator: (String value) {
-                        return '';
-                      },
-                    ),
-                    SizedBox(height: SizeConfig.padding24),
-                    AppTextFieldLabel(locale.kycNameLabel),
-                    AppTextField(
-                      focusNode: model.kycNameFocusNode,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
-                      ],
-                      // textCapitalization: TextCapitalization.characters,
-                      isEnabled: model.inEditMode,
-                      textEditingController: model.nameController,
-                      validator: (String value) {
-                        return '';
-                      },
-                      keyboardType: TextInputType.name,
-                    ),
-                    SizedBox(height: SizeConfig.padding24),
+                    // AppTextFieldLabel(
+                    //   locale.pkPanLabel,
+                    // ),
+                    // AppTextField(
+                    //   focusNode: model.panFocusNode,
+                    //   inputFormatters: [
+                    //     // UpperCaseTextFormatter(),
+                    //     FilteringTextInputFormatter.deny(RegExp(r'^0+(?!$)')),
+                    //     LengthLimitingTextInputFormatter(10)
+                    //   ],
+                    //   textCapitalization: TextCapitalization.characters,
+                    //   keyboardType: model.panTextInputType,
+                    //   onChanged: (val) {
+                    //     print("val changed");
+                    //     model.checkForKeyboardChange(val.trim());
+                    //   },
+                    //   isEnabled: model.inEditMode,
+                    //   textEditingController: model.panController,
+                    //   validator: (String value) {
+                    //     return '';
+                    //   },
+                    // ),
+                    // SizedBox(height: SizeConfig.padding24),
+                    // AppTextFieldLabel(locale.kycNameLabel),
+                    // AppTextField(
+                    //   focusNode: model.kycNameFocusNode,
+                    //   inputFormatters: [
+                    //     FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
+                    //   ],
+                    //   // textCapitalization: TextCapitalization.characters,
+                    //   isEnabled: model.inEditMode,
+                    //   textEditingController: model.nameController,
+                    //   validator: (String value) {
+                    //     return '';
+                    //   },
+                    //   keyboardType: TextInputType.name,
+                    // ),
+                    // SizedBox(height: SizeConfig.padding24),
                     getKycView(model),
                     !isKeyboardOpen
                         ? Spacer()
@@ -241,6 +242,7 @@ class KycUnVerifiedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         model.capturedImage != null
             ? KycBriefTile(
@@ -250,48 +252,58 @@ class KycUnVerifiedView extends StatelessWidget {
                   icon: Icon(Icons.delete_rounded),
                   color: Colors.red,
                   onPressed: () {
+                    Haptic.vibrate();
                     model.capturedImage = null;
                   },
                 ),
               )
-            : Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenWidth / 2.5,
-                child: Row(children: [
-                  FileCaptureOption(
-                    icon: Icon(Icons.camera_alt_rounded,
-                        color: UiConstants.tertiarySolid),
-                    desc: "Use Camera",
-                    func: () async {
-                      final cameras = await availableCameras();
-                      final firstCamera = cameras.first;
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        backgroundColor: UiConstants.kBackgroundColor,
-                        content: TakePictureScreen(
-                          camera: firstCamera,
-                          model: model,
-                        ),
-                        hapticVibrate: true,
-                        isBarrierDismissable: false,
-                      );
-                    },
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextFieldLabel("Upload your PAN Card"),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenWidth / 2.5,
+                    margin: EdgeInsets.only(top: SizeConfig.padding4),
+                    child: Row(children: [
+                      FileCaptureOption(
+                        icon: Icon(Icons.camera_alt_rounded,
+                            color: UiConstants.tertiarySolid),
+                        desc: "Use Camera",
+                        func: () async {
+                          final cameras = await availableCameras();
+                          final firstCamera = cameras.first;
+                          BaseUtil.openModalBottomSheet(
+                            addToScreenStack: true,
+                            backgroundColor: UiConstants.kBackgroundColor,
+                            content: TakePictureScreen(
+                              camera: firstCamera,
+                              model: model,
+                            ),
+                            hapticVibrate: true,
+                            isBarrierDismissable: false,
+                          );
+                        },
+                      ),
+                      SizedBox(width: SizeConfig.pageHorizontalMargins / 2),
+                      FileCaptureOption(
+                        icon: Icon(Icons.file_upload_outlined,
+                            color: UiConstants.primaryColor),
+                        desc: "Upload from device",
+                        func: () async {
+                          model.capturedImage = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                          model.verifyImage();
+                          if (model.capturedImage != null) {
+                            log(model.capturedImage.path);
+                          }
+                        },
+                      ),
+                    ]),
                   ),
-                  SizedBox(width: SizeConfig.pageHorizontalMargins / 2),
-                  FileCaptureOption(
-                    icon: Icon(Icons.file_upload_outlined,
-                        color: UiConstants.primaryColor),
-                    desc: "Upload from device",
-                    func: () async {
-                      model.capturedImage = await ImagePicker().pickImage(
-                          source: ImageSource.gallery, imageQuality: 45);
-                      if (model.capturedImage != null) {
-                        log(model.capturedImage.path);
-                      }
-                    },
-                  ),
-                ]),
+                ],
               ),
+        SizedBox(height: SizeConfig.padding10),
         AppTextFieldLabel("Max size: 5 MB"),
         AppTextFieldLabel("Formats: PNG, JPEG, JPG"),
       ],
@@ -314,14 +326,11 @@ class KycBriefTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTextFieldLabel(
-          title,
-          leftPadding: 0,
-        ),
+        AppTextFieldLabel(title),
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
             vertical: SizeConfig.padding20,
           ),
           decoration: BoxDecoration(
@@ -332,13 +341,17 @@ class KycBriefTile extends StatelessWidget {
               leading: Icon(
                 Icons.check_circle_outline_rounded,
                 color: UiConstants.primaryColor,
+                size: SizeConfig.avatarRadius * 1.6,
               ),
-              title: FittedBox(
-                child: Text(
-                  model.capturedImage.name,
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                ),
+              title: Text(
+                model.capturedImage.name,
+                maxLines: 2,
+                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
               ),
+              subtitle: model.fileSize != null
+                  ? Text('Size: ${model.fileSize}',
+                      style: TextStyles.body3.colour(UiConstants.kTextColor3))
+                  : SizedBox(),
               trailing: trailing),
         ),
       ],
@@ -373,11 +386,14 @@ class FileCaptureOption extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
                 shape: BoxShape.circle,
-                color: UiConstants.kBackgroundColor2,
+                color: Colors.black,
               ),
               child: IconButton(
                 icon: icon,
-                onPressed: () => func(),
+                onPressed: () {
+                  Haptic.vibrate();
+                  func();
+                },
               ),
             ),
             SizedBox(height: SizeConfig.padding8),
@@ -465,7 +481,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               // Attempt to take a picture and get the file `image`
               // where it was saved.
               widget.model.capturedImage = await _controller.takePicture();
-
+              widget.model.verifyImage();
               if (!mounted) return;
               AppState.backButtonDispatcher.didPopRoute();
             } catch (e) {

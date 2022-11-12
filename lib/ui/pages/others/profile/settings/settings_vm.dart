@@ -42,7 +42,7 @@ class SettingsViewModel extends BaseViewModel {
         SettingsListItemModel(
             title: "Contact Us",
             asset: Assets.securityCheck,
-            actionUri: '/kycDetails'),
+            actionUri: 'https://flutter.dev'),
       ];
     } else
       items = _baseUtil.settingsItemList;

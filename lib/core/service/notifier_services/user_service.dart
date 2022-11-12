@@ -7,10 +7,12 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/api_cache_manager.dart';
@@ -25,6 +27,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -53,6 +56,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _userRepo = locator<UserRepository>();
   final _internalOpsService = locator<InternalOpsService>();
   final _journeyRepo = locator<JourneyRepository>();
+  final _gettersRepo = locator<GetterRepository>();
 
   User _firebaseUser;
   BaseUser _baseUser;
@@ -70,6 +74,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserJourneyStatsModel _userJourneyStats;
   UserAugmontDetail _userAugmontDetails;
   UserBootUpDetailsModel userBootUp;
+  DynamicUI pageConfigs;
 
   bool _isEmailVerified;
   bool _isSimpleKycVerified;
@@ -313,7 +318,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
-      if (baseUser != null) await getUserJourneyStats();
+      if (baseUser != null) {
+        await getUserJourneyStats();
+        final res = await _gettersRepo.getPageConfigs();
+        if (res.isSuccess()) setPageConfigs(res.model);
+      }
     } catch (e) {
       _logger.e(e.toString());
       _internalOpsService
@@ -471,6 +480,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         if (value.model) hasNewNotifications = true;
       }
     });
+  }
+
+  setPageConfigs(DynamicUI dynamicUi) {
+    DynamicUiUtils.playViewOrder = dynamicUi.play;
+    DynamicUiUtils.saveViewOrder = [
+      dynamicUi.save.assets,
+      dynamicUi.save.sections
+    ];
+    DynamicUiUtils.helpFab = dynamicUi.journeyFab;
   }
 
   diplayUsername(String username) {
