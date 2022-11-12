@@ -332,7 +332,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         amount: amount, freq: isDaily ? "DAILY" : "WEEKLY") as Future<bool>);
     isSubscriptionAmountUpdateInProgress = false;
     if (res) {
-      _paytmService!.getActiveSubscriptionDetails();
+      // _paytmService!.getActiveSubscriptionDetails();
       AppState.backButtonDispatcher!.didPopRoute();
       // init();
       BaseUtil.showPositiveAlert("Autosave amount update successful",

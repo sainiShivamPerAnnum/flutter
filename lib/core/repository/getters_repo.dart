@@ -149,7 +149,7 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<FAQDataModel>>> getFaqs({
+  Future<ApiResponse<dynamic>> getFaqs({
     required FaqsType type,
   }) async {
     try {
@@ -168,7 +168,7 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      ) as Future<ApiResponse<List<FAQDataModel>>>);
+      ) );
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(

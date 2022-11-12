@@ -16,7 +16,7 @@ class CampaignRepo extends BaseRepo {
       ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<List<EventModel>>> getOngoingEvents() async {
+  Future<ApiResponse<dynamic> >getOngoingEvents() async {
     List<EventModel> events = [];
     try {
       final String? _uid = userService!.baseUser!.uid;
@@ -43,7 +43,7 @@ class CampaignRepo extends BaseRepo {
           print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
-      ) as Future<ApiResponse<List<EventModel>>>);
+      ));
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(

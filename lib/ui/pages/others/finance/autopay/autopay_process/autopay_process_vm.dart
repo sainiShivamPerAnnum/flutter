@@ -412,7 +412,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       if (res) {
         _paytmService!.jumpToSubPage(3);
         _paytmService!.fraction = 0;
-        _paytmService!.getActiveSubscriptionDetails();
+        // _paytmService!.getActiveSubscriptionDetails();
         showProgressIndicator = false;
         // Future.delayed(Duration(milliseconds: 1000), () {
         //   lottieAnimationController.forward();
@@ -436,7 +436,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
         GoldenTicketService.goldenTicketId = res['gtId'];
       }
       if (_paytmService!.subscriptionFlowPageController.page == 1.0) {
-        _paytmService!.getActiveSubscriptionDetails();
+        // _paytmService!.getActiveSubscriptionDetails();
         _paytmService!.jumpToSubPage(2);
         _paytmService!.fraction = 2;
         showProgressIndicator = false;

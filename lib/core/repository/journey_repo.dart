@@ -151,7 +151,7 @@ class JourneyRepository extends BaseRepo {
 
   //Fetch Journey pages from journey collection
   //params: start page and direction[up,down]
-  Future<ApiResponse<List<JourneyPage>>> fetchJourneyPages(
+  Future<ApiResponse<dynamic>> fetchJourneyPages(
     int page,
     String direction,
   ) async {
@@ -187,7 +187,7 @@ class JourneyRepository extends BaseRepo {
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
-      }) as Future<ApiResponse<List<JourneyPage>>>);
+      }));
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(

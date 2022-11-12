@@ -37,7 +37,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   init() async {
-    await _paytmService!.getActiveSubscriptionDetails();
+    // await _paytmService!.getActiveSubscriptionDetails();
   }
 
   isUserProfileComplete() {
@@ -107,7 +107,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
             subtitle:
                 'Please complete your profile to win your first reward and to start autosaving',
           ));
-    await _paytmService!.getActiveSubscriptionDetails();
+    // await _paytmService!.getActiveSubscriptionDetails();
     if (_paytmService!.activeSubscription == null ||
         (_paytmService!.activeSubscription!.status ==
                 Constants.SUBSCRIPTION_INIT ||

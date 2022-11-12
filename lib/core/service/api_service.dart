@@ -46,9 +46,9 @@ class APIService implements API {
     // Map<String, dynamic> headers,
     String? cBaseUrl,
   }) async {
-    final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
-    await metric.start();
+    // final HttpMetric metric =
+    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
+    // await metric.start();
     int startTime = DateTime.now().millisecondsSinceEpoch;
 
     var responseJson;
@@ -81,7 +81,7 @@ class APIService implements API {
     } on UnauthorisedException {
       throw UnauthorisedException("Token Expired, Signout current user");
     } finally {
-      await metric.stop();
+      // await metric.stop();
     }
     return responseJson;
   }
@@ -98,7 +98,7 @@ class APIService implements API {
   }) async {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
-    await metric.start();
+    // await metric.start();
     var responseJson;
     String queryString = '';
 
@@ -143,7 +143,7 @@ class APIService implements API {
         'Error communication with server: Please check your internet connectivity',
       );
     } finally {
-      await metric.stop();
+      // await metric.stop();
     }
     return responseJson;
   }
@@ -156,9 +156,9 @@ class APIService implements API {
     String? cBaseUrl,
     String? token,
   }) async {
-    final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
-    await metric.start();
+    // final HttpMetric metric =
+    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
+    // await metric.start();
 
     var responseJson;
     // token = Preference.getString('token');
@@ -186,7 +186,7 @@ class APIService implements API {
     } on SocketException {
       throw FetchDataException('No Internet connection');
     } finally {
-      await metric.stop();
+      // await metric.stop();
     }
     return responseJson;
   }
@@ -197,9 +197,9 @@ class APIService implements API {
     Map<String, dynamic>? body,
     String? token,
   }) async {
-    final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
-    await metric.start();
+    // final HttpMetric metric =
+    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
+    // await metric.start();
 
     dynamic responseJson;
     try {
@@ -219,7 +219,7 @@ class APIService implements API {
     } on SocketException {
       throw FetchDataException('No Internet connection');
     } finally {
-      await metric.stop();
+      // await metric.stop();
     }
     return responseJson;
   }
@@ -230,9 +230,9 @@ class APIService implements API {
     Map<String, dynamic>? body,
     String? token,
   }) async {
-    final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
-    await metric.start();
+    // final HttpMetric metric =
+    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
+    // await metric.start();
 
     var responseJson;
     try {
@@ -253,7 +253,7 @@ class APIService implements API {
     } on SocketException {
       throw FetchDataException('No Internet connection');
     } finally {
-      await metric.stop();
+      // await metric.stop();
     }
     return responseJson;
   }

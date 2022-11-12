@@ -209,9 +209,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     final int fetches = (currentLevel.pageEnd! / 2).ceil();
     for (int i = 0; i < fetches; i++) {
       //fetch all the pages till where user is currently on
-      ApiResponse<List<JourneyPage>> response = await _journeyRepo!
-          .fetchJourneyPages(
-              pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
+      ApiResponse response = await _journeyRepo!.fetchJourneyPages(
+          pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
       if (!response.isSuccess()) {
         _internalOpsService!.logFailure(
           _userService!.baseUser?.uid ?? '',
@@ -236,7 +235,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Fetching additional journeypages from Journey Repository
   Future<void> fetchMoreNetworkPages() async {
-    ApiResponse<List<JourneyPage>> response = await _journeyRepo!
+    ApiResponse response = await _journeyRepo!
         .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
     if (!response.isSuccess()) {
       _internalOpsService!.logFailure(

@@ -38,7 +38,7 @@ class ActiveSubscriptionModel {
 
        ActiveSubscriptionModel.base(
       {subscriptionId = '',
-      amountType = 0.0,
+      amountType = '',
       frequencyUnit = '',
       autoAmount = 0.0,
       vpa = '',
@@ -52,7 +52,7 @@ class ActiveSubscriptionModel {
 
   ActiveSubscriptionModel.fromJson(Map<String, dynamic> json) {
     subscriptionId = json['subscriptionId'] ?? '';
-    amountType = json['amountType'] ?? 0.0;
+    amountType = json['amountType'] ?? '';
     expiryDate = Timestamp(
         json['expiryDate']["_seconds"], json['expiryDate']["_nanoseconds"]);
     frequencyUnit = json['frequencyUnit'] ?? '';

@@ -47,11 +47,12 @@ class AnalyticsService extends BaseAnalyticsService {
 
   void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
-      String? uid = FirebaseAuth.instance.currentUser!.uid ;
-      String? phone = FirebaseAuth.instance.currentUser!.phoneNumber;
-      if (uid != '' && uid.isNotEmpty)
-       properties!['uid'] = uid;
-      if (phone != null && phone.isNotEmpty) properties!['mobile'] = phone;
+      if (FirebaseAuth.instance.currentUser != null) {
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        String? phone = FirebaseAuth.instance.currentUser!.phoneNumber;
+        if (uid != '' && uid.isNotEmpty) properties!['uid'] = uid;
+        if (phone != null && phone.isNotEmpty) properties!['mobile'] = phone;
+      }
     } catch (e) {}
     try {
       _logger!.d(eventName);
@@ -74,7 +75,7 @@ class AnalyticsService extends BaseAnalyticsService {
       final campaignId =
           PreferenceHelper.getString(PreferenceHelper.CAMPAIGN_ID);
 
-      if (campaignId == null) return;
+      if (campaignId.isEmpty) return;
 
       Map<String, dynamic> body = {
         "type": Constants.SIGNUP_TRACKING,
@@ -94,8 +95,7 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackInstall(String campaignId) async {
     if (campaignId == '') return;
     try {
-
-        PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
+      PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
 
       // for installation event
       DateTime now = DateTime.now();

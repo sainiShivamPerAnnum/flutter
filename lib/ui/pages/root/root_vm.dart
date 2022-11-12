@@ -94,7 +94,7 @@ class RootViewModel extends BaseViewModel {
     await _userService!.getUserFundWalletData();
 
     _txnHistoryService!.signOut();
-    _paytmService!.getActiveSubscriptionDetails();
+    // _paytmService!.getActiveSubscriptionDetails();
     await _txnHistoryService!.fetchTransactions(subtype: InvestmentType.AUGGOLD99);
     await _journeyService!.checkForMilestoneLevelChange();
     await _gtService!.updateUnscratchedGTCount();
@@ -542,8 +542,8 @@ class RootViewModel extends BaseViewModel {
 
         //5. Clear all the caches
         if (_userService!.userBootUp!.data!.cache!.keys != null) {
-          for (String id in _userService!.userBootUp!.data!.cache!.keys
-              as Iterable<String>) {
+          for (String id in _userService!.userBootUp!.data!.cache!.keys!
+              ) {
             CacheService().invalidateByKey(id);
           }
         }

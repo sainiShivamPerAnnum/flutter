@@ -66,15 +66,15 @@ class CouponModel {
 
   factory CouponModel.fromMap(Map<String, dynamic> map) {
     return CouponModel(
-      id: map['id'] as String,
-      code: map['code'] as String,
-      description: map['description'] as String,
+      id: map['id'] ?? '',
+      code: map['code'] ??  '',
+      description: map['description']?? '',
       expiresOn: TimestampModel.fromMap(map['expiresOn']),
       createdOn: TimestampModel.fromMap(map['createdOn']),
-      maxUse: map['maxUse'] as int,
-      priority: map['priority'] as int,
-      minPurchase: map['minPurchase'] as int,
-      highlight: map['highlight'] as String,
+      maxUse: map['maxUse'] ?? 0,
+      priority: map['priority'] ?? 0,
+      minPurchase: map['minPurchase'] ?? 0,
+      highlight: map['highlight']?? '',
     );
   }
 

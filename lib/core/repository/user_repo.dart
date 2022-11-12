@@ -341,7 +341,7 @@ class UserRepository extends BaseRepo {
       );
 
       String? latestNotifTime = await (CacheManager.readCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME) as Future<String?>);
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME));
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >

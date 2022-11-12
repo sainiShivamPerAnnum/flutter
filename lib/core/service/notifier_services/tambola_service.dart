@@ -79,10 +79,10 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  get userWeeklyBoards => _userWeeklyBoards;
+ get userWeeklyBoards => _userWeeklyBoards;
 
-  set userWeeklyBoards(value) {
-    _userWeeklyBoards = value;
+set userWeeklyBoards(value) {
+    _userWeeklyBoards = value as List<TambolaBoard>?;
     notifyListeners();
   }
 
@@ -141,37 +141,34 @@ class TambolaService extends ChangeNotifier {
     if (!weeklyDrawFetched) {
       try {
         _logger!.i('Requesting for weekly picks');
-        final ApiResponse<DailyPick> picksResponse =
-            await _tambolaRepo!.getWeeklyPicks();
+        final ApiResponse picksResponse = await _tambolaRepo!.getWeeklyPicks();
         if (picksResponse.isSuccess()) {
           final DailyPick _picks = picksResponse.model!;
           weeklyDrawFetched = true;
           _logger!.d("Weekly pickst: ${_picks.toList().toString()}");
-          if (_picks != null) {
-            weeklyDigits = _picks;
-            switch (DateTime.now().weekday) {
-              case 1:
-                todaysPicks = weeklyDigits.mon;
-                break;
-              case 2:
-                todaysPicks = weeklyDigits.tue;
-                break;
-              case 3:
-                todaysPicks = weeklyDigits.wed;
-                break;
-              case 4:
-                todaysPicks = weeklyDigits.thu;
-                break;
-              case 5:
-                todaysPicks = weeklyDigits.fri;
-                break;
-              case 6:
-                todaysPicks = weeklyDigits.sat;
-                break;
-              case 7:
-                todaysPicks = weeklyDigits.sun;
-                break;
-            }
+          weeklyDigits = _picks;
+          switch (DateTime.now().weekday) {
+            case 1:
+              todaysPicks = weeklyDigits.mon;
+              break;
+            case 2:
+              todaysPicks = weeklyDigits.tue;
+              break;
+            case 3:
+              todaysPicks = weeklyDigits.wed;
+              break;
+            case 4:
+              todaysPicks = weeklyDigits.thu;
+              break;
+            case 5:
+              todaysPicks = weeklyDigits.fri;
+              break;
+            case 6:
+              todaysPicks = weeklyDigits.sat;
+              break;
+            case 7:
+              todaysPicks = weeklyDigits.sun;
+              break;
           }
           if (todaysPicks == null) {
             _logger!.i("Today's picks are not generated yet");

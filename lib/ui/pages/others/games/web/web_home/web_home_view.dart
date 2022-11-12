@@ -123,15 +123,15 @@ class WebHomeView extends StatelessWidget {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                  model
-                                                      .currentGameModel!.gameName!
+                                                  model.currentGameModel!
+                                                      .gameName!
                                                       .split(' ')
                                                       .first,
                                                   style: TextStyles
                                                       .rajdhaniB.title1),
                                               Text(
-                                                  model
-                                                      .currentGameModel!.gameName!
+                                                  model.currentGameModel!
+                                                      .gameName!
                                                       .split(' ')
                                                       .last,
                                                   style: TextStyles
@@ -393,7 +393,8 @@ class PlayButtonOverlapper extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (JourneyService.isAvatarAnimationInProgress) return;
-              _analytics!.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+              _analytics!
+                  .track(eventName: AnalyticsEvents.addFLCTokensTopRight);
               BaseUtil.openModalBottomSheet(
                 addToScreenStack: true,
                 backgroundColor: UiConstants.gameCardColor,
@@ -474,12 +475,13 @@ class StreamView extends StatelessWidget {
         }
 
         if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
-          Map<Object, Object> fetchedData = Map<dynamic, dynamic>.from(
+          Map fetchedData = Map<dynamic, dynamic>.from(
               (snapshot.data as DatabaseEvent).snapshot.value
-                  as Map<dynamic, dynamic>) as Map<Object, Object>;
+                  as Map<dynamic, dynamic>);
           String? fieldToFetch = fetchedData['field'] as String?;
 
-          Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch!] as Map<Object, Object>;
+          Map<Object, Object> requiredTimeData =
+           Map<Object,Object>.from(fetchedData[fieldToFetch!]);
 
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),

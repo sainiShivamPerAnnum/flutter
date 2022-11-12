@@ -34,8 +34,8 @@ class DailyPick {
       this.sun});
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
-    final Map<String, dynamic> data = picksData['picks'] ?? {};
-    if (data != null && data!.isNotEmpty)
+    final Map<String, dynamic> data  = Map.from(picksData);
+    if (data.isNotEmpty)
       return DailyPick(
         // weekCode: data[fldWeekCode],
         mon: (data[fldWeekDay[0]] != null)

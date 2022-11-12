@@ -141,7 +141,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         ? BaseRemoteConfig.PATYM_DEV_MID
         : BaseRemoteConfig.PATYM_PROD_MID);
     autosaveVisible = BaseRemoteConfig.AUTOSAVE_ACTIVE;
-    await getActiveSubscriptionDetails();
+    // await getActiveSubscriptionDetails();
 
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
@@ -204,6 +204,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   Future<void> getActiveSubscriptionDetails() async {
     ApiResponse<ActiveSubscriptionModel> response =
         await _paytmRepo!.getActiveSubscription();
+    _logger!.d(response);
     if (response.code == 200)
       activeSubscription = response.model;
     else
@@ -281,6 +282,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     try {
       _logger!.d("Paytm order id: ${paytmSubscriptionModel.data!.orderId}");
       processText = "Connecting to your bank";
+
       bool postResponse = await (APIService.instance
               .paytmSubscriptionPostRequest(
                   mid: mid,
@@ -290,6 +292,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
                   txnToken: paytmSubscriptionModel.data!.temptoken,
                   subId: paytmSubscriptionModel.data!.subscriptionId)
           as Future<bool>);
+
       if (postResponse) {
         processText = "Sending payment request";
         bool processResponse = await (processSubscription() as Future<bool>);
