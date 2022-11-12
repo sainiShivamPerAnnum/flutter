@@ -131,7 +131,7 @@ class GoldenTicketsViewModel extends BaseViewModel {
             .limit(20)
             .get();
       }
-      if (querySnapshot != null) {
+      if (querySnapshot.size != 0) {
         int oldSize = _goldenTicketDocs.length;
         _goldenTicketDocs.addAll(querySnapshot.docs);
         int newSize = _goldenTicketDocs.length;
