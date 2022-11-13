@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -58,7 +59,7 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _isGoldBuyInProgress = false;
   bool _skipMl = false;
   double _fieldWidth = 0.0;
-
+  AnimationController animationController;
   get fieldWidth => this._fieldWidth;
 
   set fieldWidth(value) {
@@ -121,7 +122,6 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   get status => this._status;
-
   set status(value) {
     this._status = value;
     notifyListeners();
@@ -175,7 +175,7 @@ class GoldBuyViewModel extends BaseViewModel {
     this._skipMl = value;
   }
 
-  init(int amount, bool isSkipMilestone) async {
+  init(int amount, bool isSkipMilestone, TickerProvider vsync) async {
     // resetBuyOptions();
     setState(ViewState.Busy);
     skipMl = isSkipMilestone;
@@ -195,7 +195,16 @@ class GoldBuyViewModel extends BaseViewModel {
     // await _userService.fetchUserAugmontDetail();
     // delayedAugmontCall();
     // checkIfDepositIsLocked();
+    animationController = AnimationController(
+        vsync: vsync, duration: Duration(milliseconds: 500));
+
+    animationController.addListener(listnear);
     setState(ViewState.Idle);
+  }
+
+  void listnear() {
+    if (animationController.status == AnimationStatus.completed)
+      animationController.reset();
   }
 
   //INIT CHECKS
@@ -204,7 +213,7 @@ class GoldBuyViewModel extends BaseViewModel {
   //       _userService.userAugmontDetails.depNotice != null &&
   //       _userService.userAugmontDetails.depNotice.isNotEmpty)
   //     buyNotice = _userService.userAugmontDetails.depNotice;
-  // }
+  // }dis
 
   // delayedAugmontCall() async {
   //   if (_userService.userAugmontDetails == null && !_augmontSecondFetchDone) {
@@ -482,6 +491,7 @@ class GoldBuyViewModel extends BaseViewModel {
   getAvailableCoupons() async {
     final ApiResponse<List<CouponModel>> couponsRes =
         await _couponRepo.getCoupons();
+
     if (couponsRes.code == 200) {
       couponList = couponsRes.model;
       if (couponList[0].priority == 1) focusCoupon = couponList[0];
@@ -519,7 +529,17 @@ class GoldBuyViewModel extends BaseViewModel {
 
     if (response.code == 200) {
       if (response.model.flag == true) {
+        if (response.model.minAmountRequired != null &&
+            response.model.minAmountRequired.toString().isNotEmpty &&
+            response.model.minAmountRequired != 0) {
+          goldAmountController.text =
+              response.model.minAmountRequired.toInt().toString();
+          updateGoldAmount();
+          animationController.forward();
+        }
+
         appliedCoupon = response.model;
+
         BaseUtil.showPositiveAlert(
             "Coupon Applied Successfully", response?.model?.message);
       } else {

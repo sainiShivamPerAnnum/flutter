@@ -55,7 +55,7 @@ class _AmountInputViewState extends State<AmountInputView> {
 
   void updateFieldWidth() {
     int n = widget.amountController.text.length;
-    if (n == 0) n++;
+    if (n == 0) n++;  
     _fieldWidth = (SizeConfig.padding40 * n.toDouble());
   }
 
