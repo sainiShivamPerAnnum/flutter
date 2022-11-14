@@ -23,7 +23,7 @@ class GoldBuyView extends StatefulWidget {
   State<GoldBuyView> createState() => _GoldBuyViewState();
 }
 
-class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
+class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver,SingleTickerProviderStateMixin {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
   AppLifecycleState appLifecycleState;
@@ -97,7 +97,7 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
                 },
                 child: BaseView<GoldBuyViewModel>(
                   onModelReady: (model) =>
-                      model.init(widget.amount, widget.skipMl),
+                      model.init(widget.amount, widget.skipMl,this),
                   builder: (ctx, model, child) {
                     return _getView(txnService, model);
                   },
@@ -129,7 +129,7 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver {
 
   double _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight * 0.9;
+      return SizeConfig.screenHeight * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return SizeConfig.screenHeight * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.success) {
