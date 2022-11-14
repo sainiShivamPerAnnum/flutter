@@ -18,6 +18,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+           url "https://repo.apxor.com/artifactory/list/libs-release-android/"
+        }
     }
 }
 

@@ -294,7 +294,7 @@ class UserRepository extends BaseRepo {
         "isPhysicalDevice": isPhysicalDevice ?? true
       };
 
-      await APIService.instance.postData(
+       await APIService.instance.postData(
         ApiPath.kDeviceId,
         body: _body,
         cBaseUrl: _baseUrl,
