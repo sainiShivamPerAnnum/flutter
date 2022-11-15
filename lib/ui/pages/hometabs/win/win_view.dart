@@ -214,6 +214,7 @@ class Win extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(height: SizeConfig.padding24,),
 
                       //Refer and Earn
                       Stack(

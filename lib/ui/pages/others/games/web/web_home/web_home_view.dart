@@ -29,6 +29,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WebHomeView extends StatelessWidget {
@@ -141,16 +142,12 @@ class WebHomeView extends StatelessWidget {
                                             ]),
                                         Spacer(),
                                         SvgPicture.network(
-                                            model.currentGameModel.icon,
+                                            model.currentGameModel.thumbnailUri,
                                             fit: BoxFit.cover,
                                             height:
                                                 SizeConfig.screenWidth * 0.5,
                                             width:
                                                 SizeConfig.screenWidth * 0.5),
-                                        SizedBox(
-                                          width:
-                                              SizeConfig.pageHorizontalMargins,
-                                        )
                                       ],
                                     ),
                                   ),
@@ -291,8 +288,7 @@ class WebHomeView extends StatelessWidget {
                           Padding(
                               padding: EdgeInsets.only(
                                   left: SizeConfig.padding16,
-                                  top: SizeConfig.pageHorizontalMargins +
-                                      SizeConfig.pageHorizontalMargins),
+                                  top: SizeConfig.pageHorizontalMargins),
                               child: Text(
                                 "Past Week Winners",
                                 style: TextStyles.rajdhaniSB.title3,
@@ -311,16 +307,23 @@ class WebHomeView extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: SizeConfig.padding24),
-                    child: ReactivePositiveAppButton(
-                      btnText: 'Play',
-                      onPressed: () async {
-                        Haptic.vibrate();
-                        if (await model.setupGame()) model.launchGame();
+                  child: Container(
+                    height: SizeConfig.screenHeight * 0.105,
+                    decoration: BoxDecoration(color: UiConstants.gameCardColor),
+                    width: SizeConfig.screenWidth,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding24,
+                          vertical: SizeConfig.padding16),
+                      child: ReactivePositiveAppButton(
+                        btnText: 'Play',
+                        onPressed: () async {
+                          Haptic.vibrate();
+                          if (await model.setupGame()) model.launchGame();
 
-                        // model.pageController.jumpToPage(1);
-                      },
+                          // model.pageController.jumpToPage(1);
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -356,9 +359,9 @@ class RechargeOptions extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(
-            top: SizeConfig.padding24,
+            top: SizeConfig.padding16,
           ),
-          height: SizeConfig.screenWidth * 0.125,
+          height: SizeConfig.screenWidth * 0.10,
           width: SizeConfig.screenWidth,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -520,19 +523,22 @@ class RechargeBox extends StatelessWidget {
             onTap: () {
               return BaseUtil().openDepositOptionsModalSheet();
             },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
-                  vertical: SizeConfig.padding8),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.white, width: 0.4),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-              ),
-              child: Icon(
-                Icons.add,
-                size: SizeConfig.screenWidth * 0.08,
-                color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.padding1),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding6),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(color: Colors.white, width: 0.4),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                ),
+                child: Icon(
+                  Icons.add,
+                  size: SizeConfig.screenWidth * 0.05,
+                  color: Colors.white,
+                ),
               ),
             ),
           )
@@ -544,7 +550,7 @@ class RechargeBox extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
+                  horizontal: SizeConfig.padding16,
                   vertical: SizeConfig.padding8),
               decoration: BoxDecoration(
                 color: UiConstants.gameCardColor,
@@ -556,16 +562,16 @@ class RechargeBox extends StatelessWidget {
                 children: [
                   Text(
                     "+  ",
-                    style: TextStyles.sourceSansSB.body1.bold,
+                    style: TextStyles.sourceSansSB.body2.bold,
                   ),
                   SvgPicture.asset(
                     Assets.token,
-                    height: SizeConfig.padding24,
+                    height: SizeConfig.padding14,
                   ),
                   SizedBox(width: SizeConfig.padding4),
                   Text(
                     rechargeOption.amount.toString(),
-                    style: TextStyles.sourceSansSB.body1,
+                    style: TextStyles.sourceSansSB.body3,
                   ),
                 ],
               ),
@@ -766,7 +772,7 @@ class PastWeekWinners extends StatelessWidget {
                                                     Text(
                                                       "${i + 1}",
                                                       style: TextStyles
-                                                          .rajdhani.body3
+                                                          .sourceSans.body3
                                                           .colour(Colors.white),
                                                     ),
                                                     SizedBox(
@@ -846,7 +852,7 @@ class PastWeekWinners extends StatelessWidget {
                                                                           '.') ??
                                                                   "username",
                                                               style: TextStyles
-                                                                  .rajdhani
+                                                                  .sourceSans
                                                                   .body3
                                                                   .colour(Colors
                                                                       .white)),
@@ -856,7 +862,7 @@ class PastWeekWinners extends StatelessWidget {
                                                     Text(
                                                       "${model.pastWeekParticipants[i].score.toInt().toString() ?? "00"} points",
                                                       style: TextStyles
-                                                          .rajdhani.body3
+                                                          .sourceSans.body3
                                                           .colour(Colors.white),
                                                     )
                                                   ],
@@ -915,7 +921,7 @@ class PastWeekWinners extends StatelessWidget {
                                               ),
                                               child: Text('See All',
                                                   style: TextStyles
-                                                      .rajdhaniSB.body2),
+                                                      .sourceSans.body2),
                                             ),
                                             SvgPicture.asset(
                                                 Assets.chevRonRightArrow,

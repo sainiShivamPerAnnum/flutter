@@ -1,5 +1,7 @@
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -48,9 +50,14 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
           controller: widget.loginModel.nameViewScrollController,
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding44),
-
-            FelloUserAvatar(),
+          SizedBox(height: SizeConfig.padding64),
+           Padding(
+             padding: EdgeInsets.all(SizeConfig.padding12),
+             child: LoginImage(),
+           ),
+            SizedBox(
+              child: Padding(padding: EdgeInsets.all(SizeConfig.padding4)),
+            ),
             Align(
               alignment: Alignment.center,
               child: Text(
@@ -58,7 +65,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
-            SizedBox(height: SizeConfig.padding32),
+            SizedBox(height: SizeConfig.padding20),
 
             //input
             Form(
@@ -139,128 +146,3 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
   }
 }
 
-class FelloUserAvatar extends StatelessWidget {
-  const FelloUserAvatar({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: SizeConfig.screenWidth * 0.54,
-          height: SizeConfig.screenWidth * 0.54,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.screenWidth),
-            boxShadow: [
-              BoxShadow(
-                color: UiConstants.primaryColor.withOpacity(0.2),
-                blurRadius: 82,
-                spreadRadius: 0,
-                offset: Offset(
-                  0,
-                  SizeConfig.padding32,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          width: SizeConfig.screenWidth * 0.501,
-          height: SizeConfig.screenWidth * 0.501,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Color(0xff737373).withOpacity(0.5),
-              width: SizeConfig.border1,
-            ),
-          ),
-        ),
-        Container(
-          width: SizeConfig.screenWidth * 0.424, // 142
-          height: SizeConfig.screenWidth * 0.424,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.white.withOpacity(0.2),
-              width: SizeConfig.border1,
-            ),
-          ),
-        ),
-        Positioned(
-          top: SizeConfig.padding80,
-          right: SizeConfig.padding54,
-          child: Container(
-            height: SizeConfig.padding6,
-            width: SizeConfig.padding6,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: UiConstants.kTextColor,
-            ),
-          ),
-        ),
-        Container(
-          width: SizeConfig.screenWidth * 0.32,
-          height: SizeConfig.screenWidth * 0.32,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Color(0xffD9D9D9),
-              width: SizeConfig.border1,
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: SizeConfig.padding8),
-          child: SvgPicture.asset(
-            Assets.cvtar2,
-            height: SizeConfig.screenWidth * 0.3067,
-            width: SizeConfig.screenWidth * 0.3067,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class HeaderPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill
-      ..shader = ui.Gradient.linear(
-        Offset(0, 0),
-        Offset(0, size.height * 0.97),
-        [
-          Color(0xff135756),
-          UiConstants.kBackgroundColor,
-        ],
-      );
-
-    final path = new Path()
-      ..moveTo(
-        0,
-        0,
-      );
-    path.lineTo(0, size.height * 1.35);
-
-    path.quadraticBezierTo(
-      size.width * 0.5,
-      size.height * 0.35,
-      size.width,
-      size.height * 1.35,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-
-    canvas.drawShadow(path, Color(0xff135756), SizeConfig.padding32, true);
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}

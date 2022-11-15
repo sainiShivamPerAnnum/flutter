@@ -55,6 +55,7 @@ class UserTransaction {
   String _note;
   String _userId;
   String _tranStatus;
+  String _couponCode;
   Map<String, dynamic> _icici;
   Map<String, dynamic> _rzp;
   Map<String, dynamic> _augmnt;
@@ -72,6 +73,7 @@ class UserTransaction {
   static final String fldType = 'tType';
   static final String fldTicketUpCount = 'tTicketUpdCount';
   static final String fldTranStatus = 'tTranStatus';
+  static const String fldCouponCode = 'tCouponCode';
   static final String fldRzpMap = 'tRzpMap';
   static final String fldAugmontMap = 'tAugmontMap';
   static final String fldIciciMap = 'tIciciMap';
@@ -79,6 +81,7 @@ class UserTransaction {
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
   static const String fldtransactionUpdatesMap = "transactionUpdatesMap";
+
 
   ///paytm submap feilds
   static final String subFldPaytmBankName = 'bankName';
@@ -156,6 +159,7 @@ class UserTransaction {
     this._ticketUpCount,
     this._userId,
     this._tranStatus,
+    this._couponCode,
     this._icici,
     this._rzp,
     this._augmnt,
@@ -177,6 +181,7 @@ class UserTransaction {
           data[fldTicketUpCount],
           data[fldUserId],
           data[fldTranStatus],
+          data[fldCouponCode],
           data[fldIciciMap],
           data[fldRzpMap],
           data[fldAugmontMap],
@@ -198,6 +203,7 @@ class UserTransaction {
             data[fldTicketUpCount],
             data[fldUserId],
             data[fldTranStatus],
+            data[fldCouponCode],
             data[fldIciciMap],
             data[fldRzpMap],
             data[fldAugmontMap],
@@ -295,6 +301,7 @@ class UserTransaction {
             TRAN_STATUS_PENDING,
             null,
             null,
+            null,
             {
               subFldAugBlockId: blockId,
               subFldAugLockPrice: lockPrice,
@@ -323,6 +330,7 @@ class UserTransaction {
             TRAN_STATUS_PENDING,
             null,
             null,
+            null,
             {
               subFldAugBlockId: blockId,
               subFldAugLockPrice: lockPrice,
@@ -343,6 +351,7 @@ class UserTransaction {
       fldTicketUpCount: _ticketUpCount,
       fldUserId: _userId,
       fldTranStatus: _tranStatus,
+      fldCouponCode: _couponCode,
       fldIciciMap: _icici,
       fldRzpMap: _rzp,
       fldAugmontMap: _augmnt,
@@ -364,6 +373,11 @@ class UserTransaction {
 
   set tranStatus(String value) {
     _tranStatus = value;
+  }
+
+  String get couponCode => _couponCode;
+  set couponCode(String value) {
+    _couponCode = value;
   }
 
   String get userId => _userId;
