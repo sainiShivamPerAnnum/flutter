@@ -1,4 +1,5 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/util/list_utils.dart';
@@ -8,11 +9,10 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mixpanel_flutter/web/mixpanel_js_bindings.dart';
 
 class AmountInputView extends StatefulWidget {
   final TextEditingController amountController;
-  final List<int> chipAmounts;
+  final List<UserOption> chipAmounts;
   final int bestChipIndex;
   final String notice;
   final bool isEnabled;
@@ -49,7 +49,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.amountController.text == '501' ? 2 : -1;
+    _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
     updateFieldWidth();
   }
 
@@ -109,6 +109,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     width: _fieldWidth,
                     child: TextFormField(
                       autofocus: true,
+                      showCursor: true,
                       controller: widget.amountController,
                       focusNode: widget.focusNode,
                       enabled: widget.isEnabled,
@@ -173,19 +174,21 @@ class _AmountInputViewState extends State<AmountInputView> {
           children: widget.chipAmounts
               .mapIndexed((item, i) => AmountChip(
                   isActive: _selectedIndex == i,
-                  amt: item,
-                  isBest: widget.bestChipIndex == i,
+                  index: i,
+                  amt: item.value,
+                  isBest: item.best,
                   onClick: (amt) {
                     _analyticsService.track(
                         eventName: AnalyticsEvents.suggestedAmountTapped,
                         properties: {
                           'order': i,
                           'Amount': amt,
-                          'Best flag': i == 2
+                          'Best flag': item.best
                         });
                     setState(() {
                       _selectedIndex = i;
-                      widget.amountController.text = amt.toString();
+                      widget.amountController.text =
+                          widget.chipAmounts[i].value.toString();
                       this.updateFieldWidth();
                     });
                   }))

@@ -10,13 +10,14 @@ class AmountChip extends StatelessWidget {
     @required this.isActive,
     @required this.amt,
     @required this.onClick,
+    @required this.index
   }) : super(key: key);
 
   final bool isActive;
   final int amt;
   final bool isBest;
   final Function(int val) onClick;
-
+  final int index;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +28,7 @@ class AmountChip extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: GestureDetector(
               onTap: () {
-                onClick(amt);
+                onClick(index);
               },
               child: Container(
                 height: SizeConfig.padding40,

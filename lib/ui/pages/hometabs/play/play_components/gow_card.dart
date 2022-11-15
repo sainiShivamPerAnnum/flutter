@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -14,6 +15,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
@@ -36,8 +38,6 @@ class GOWCard extends StatelessWidget {
                 children: [
                   TitleSubtitleContainer(
                     title: "Game of the week",
-                    subTitle:
-                        "Don't miss out on playing this week's featured game",
                   ),
                   GestureDetector(
                     onTap: () {
@@ -66,41 +66,49 @@ class GOWCard extends StatelessWidget {
                       margin: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins,
                           vertical: SizeConfig.padding16),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.pageHorizontalMargins),
                       width: double.infinity,
-                      height: SizeConfig.screenWidth * 0.456,
+                      height: SizeConfig.screenHeight * 0.18,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(model.gow.gameName.split(' ').first,
-                                    style: TextStyles.rajdhaniB.title1),
-                                Text(model.gow.gameName.split(' ').last,
-                                    style: TextStyles.rajdhaniSB.title3),
+                                Text(model.gow.gameName,
+                                    style: TextStyles.rajdhaniB.title3),
+                                Text(
+                                    'Win upto ' +
+                                        '${NumberFormat.compact().format(model.gow.prizeAmount)}',
+                                    style: TextStyles.sourceSans.body4),
                                 SizedBox(height: SizeConfig.padding16),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SvgPicture.asset(
-                                      Assets.token,
-                                      height: SizeConfig.padding20,
-                                      width: SizeConfig.padding20,
-                                    ),
-                                    SizedBox(width: SizeConfig.padding4),
-                                    Text(model.gow.playCost.toString(),
-                                        style: TextStyles.sourceSans.body1),
-                                  ],
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff232326),
+                                    border:
+                                        Border.all(color: Color(0xff919193)),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        Assets.token,
+                                        height: SizeConfig.padding20,
+                                        width: SizeConfig.padding20,
+                                      ),
+                                      SizedBox(width: SizeConfig.padding4),
+                                      Text(model.gow.playCost.toString(),
+                                          style: TextStyles.sourceSans.body1),
+                                    ],
+                                  ),
                                 ),
                               ]),
-                          Expanded(
-                            child: SvgPicture.network(model.gow.icon,
-                                fit: BoxFit.cover,
-                                height: SizeConfig.screenWidth * 0.5,
-                                width: SizeConfig.screenWidth * 0.5),
+                          Spacer(),
+                          SvgPicture.network(
+                            model.gow.thumbnailUri,
                           ),
                         ],
                       ),

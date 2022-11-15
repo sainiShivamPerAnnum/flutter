@@ -1,8 +1,10 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_input_view.dart';
+import 'package:felloapp/ui/pages/others/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -28,7 +30,7 @@ class LendboxBuyInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _analyticsService = locator<AnalyticsService>();
-
+    if (model.state == ViewState.Busy) return SizedBox();
     return Stack(
       children: [
         Column(
@@ -49,10 +51,11 @@ class LendboxBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
+            BannerWidget(model: model.assetOptionsModel.data.banner),
             AmountInputView(
               amountController: model.amountController,
               focusNode: model.buyFieldNode,
-              chipAmounts: model.chipAmountList,
+              chipAmounts: model.assetOptionsModel.data.userOptions,
               isEnabled: !model.isBuyInProgress,
               maxAmount: model.maxAmount,
               maxAmountMsg: "Up to ₹50,000 can be invested at one go.",

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -5,7 +6,10 @@ import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/banner_widget.dart';
+import 'package:felloapp/ui/pages/others/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -62,87 +66,102 @@ class GoldBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
-            EnterAmountView(
-              model: model,
-              txnService: augTxnService,
+            if (model.assetOptionsModel != null)
+              BannerWidget(
+                model: model.assetOptionsModel.data.banner,
+              ),
+            if (model.animationController != null)
+              EnterAmountView(
+                model: model,
+                txnService: augTxnService,
+              ),
+            SizedBox(
+              height: 40,
+            ),
+            CouponWidget(
+              model.couponList,
+              model,
+              onTap: (coupon) {
+                model.applyCoupon(coupon.code, false);
+              },
             ),
             Spacer(),
-            if (model.showCoupons)
-              model.couponApplyInProgress
-                  ? SpinKitThreeBounce(
-                      size: SizeConfig.body2,
-                      color: UiConstants.kTabBorderColor,
-                    )
-                  : model.appliedCoupon != null
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              Assets.ticketTilted,
-                              width: SizeConfig.iconSize0,
-                              height: SizeConfig.iconSize0,
-                              color: UiConstants.kpurpleTicketColor,
-                            ),
-                            SizedBox(width: SizeConfig.padding10),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding8),
-                              child: Text(
-                                model.appliedCoupon.code,
-                                style: TextStyles.sourceSansSB.body2,
-                              ),
-                            ),
-                            SizedBox(width: SizeConfig.padding4),
-                            Text(
-                              "applied",
-                              style:
-                                  TextStyles.sourceSans.body3.setOpecity(0.6),
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding8,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                if (augTxnService.isGoldBuyInProgress) return;
-                                model.appliedCoupon = null;
-                              },
-                              child: Icon(Icons.cancel,
-                                  color: Colors.grey,
-                                  size: SizeConfig.iconSize1),
-                            ),
-                          ],
-                        )
-                      : augTxnService.isGoldBuyInProgress
-                          ? SizedBox()
-                          : GestureDetector(
-                              onTap: () {
-                                model.buyFieldNode.unfocus();
+            // if (model.showCoupons)
+            //   model.couponApplyInProgress
+            //       ? SpinKitThreeBounce(
+            //           size: SizeConfig.body2,
+            //           color: UiConstants.kTabBorderColor,
+            //         )
+            //       : model.appliedCoupon != null
+            //           ? Row(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               children: [
+            //                 SvgPicture.asset(
+            //                   Assets.ticketTilted,
+            //                   width: SizeConfig.iconSize0,
+            //                   height: SizeConfig.iconSize0,
+            //                   color: UiConstants.kpurpleTicketColor,
+            //                 ),
+            //                 SizedBox(width: SizeConfig.padding10),
+            //                 Padding(
+            //                   padding: EdgeInsets.symmetric(
+            //                       vertical: SizeConfig.padding8),
+            //                   child: Text(
+            //                     model.appliedCoupon.code,
+            //                     style: TextStyles.sourceSansSB.body2,
+            //                   ),
+            //                 ),
+            //                 SizedBox(width: SizeConfig.padding4),
+            //                 Text(
+            //                   "applied",
+            //                   style:
+            //                       TextStyles.sourceSans.body3.setOpecity(0.6),
+            //                 ),
+            //                 SizedBox(
+            //                   width: SizeConfig.padding8,
+            //                 ),
+            //                 InkWell(
+            //                   onTap: () {
+            //                     if (augTxnService.isGoldBuyInProgress) return;
+            //                     model.appliedCoupon = null;
+            //                   },
+            //                   child: Icon(Icons.cancel,
+            //                       color: Colors.grey,
+            //                       size: SizeConfig.iconSize1),
+            //                 ),
+            //               ],
+            //             )
+            //           : augTxnService.isGoldBuyInProgress
+            //               ? SizedBox()
+            //               : GestureDetector(
+            //                   onTap: () {
+            //                     model.buyFieldNode.unfocus();
 
-                                model.showOfferModal(model);
-                              },
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    Assets.ticketTilted,
-                                    width: SizeConfig.iconSize0,
-                                    height: SizeConfig.iconSize0,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding8,
-                                  ),
-                                  Text(
-                                    'Apply a coupon code',
-                                    style: TextStyles.sourceSans.body2
-                                        .colour(UiConstants.kPrimaryColor),
-                                  ),
-                                ],
-                              ),
-                            ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
+            //                     model.showOfferModal(model);
+            //                   },
+            //                   child: Row(
+            //                     crossAxisAlignment: CrossAxisAlignment.center,
+            //                     mainAxisAlignment: MainAxisAlignment.center,
+            //                     children: [
+            //                       SvgPicture.asset(
+            //                         Assets.ticketTilted,
+            //                         width: SizeConfig.iconSize0,
+            //                         height: SizeConfig.iconSize0,
+            //                       ),
+            //                       SizedBox(
+            //                         width: SizeConfig.padding8,
+            //                       ),
+            //                       Text(
+            //                         'Apply a coupon code',
+            //                         style: TextStyles.sourceSans.body2
+            //                             .colour(UiConstants.kPrimaryColor),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            // SizedBox(
+            //   height: SizeConfig.padding32,
+            // ),
             augTxnService.isGoldBuyInProgress
                 ? Container(
                     height: SizeConfig.screenWidth * 0.1556,
@@ -278,57 +297,66 @@ class EnterAmountView extends StatelessWidget {
                       style: TextStyles.body3.light,
                     ),
                   ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "₹",
-                      style: TextStyles.rajdhaniB.title0.colour(
-                          model.goldAmountController.text == "0"
-                              ? UiConstants.kTextColor2
-                              : UiConstants.kTextColor),
-                    ),
-                    SizedBox(width: SizeConfig.padding10),
-                    AnimatedContainer(
-                      duration: Duration(seconds: 0),
-                      curve: Curves.easeIn,
-                      width: model.fieldWidth,
-                      child: TextFormField(
-                        autofocus: true,
-                        controller: model.goldAmountController,
-                        focusNode: model.buyFieldNode,
-                        enabled: !txnService.isGoldBuyInProgress &&
-                            !model.couponApplyInProgress,
-                        validator: (val) {
-                          return null;
-                        },
-                        onChanged: (val) {
-                          model.onBuyValueChanged(val);
-                        },
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: InputDecoration(
-                          focusedBorder: InputBorder.none,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          // isCollapsed: true,
-                          disabledBorder: InputBorder.none,
-                          isDense: true,
+                AnimatedBuilder(
+                    animation: model.animationController,
+                    builder: (context, _) {
+                      final sineValue = math.sin(
+                          3 * 2 * math.pi * model.animationController.value);
+                      return Transform.translate(
+                        offset: Offset(sineValue * 10, 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "₹",
+                              style: TextStyles.rajdhaniB.title0.colour(
+                                  model.goldAmountController.text == "0"
+                                      ? UiConstants.kTextColor2
+                                      : UiConstants.kTextColor),
+                            ),
+                            SizedBox(width: SizeConfig.padding10),
+                            AnimatedContainer(
+                              duration: Duration(seconds: 0),
+                              curve: Curves.easeIn,
+                              width: model.fieldWidth,
+                              child: TextFormField(
+                                autofocus: true,
+                                controller: model.goldAmountController,
+                                focusNode: model.buyFieldNode,
+                                enabled: !txnService.isGoldBuyInProgress &&
+                                    !model.couponApplyInProgress,
+                                validator: (val) {
+                                  return null;
+                                },
+                                onChanged: (val) {
+                                  model.onBuyValueChanged(val);
+                                },
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                decoration: InputDecoration(
+                                  focusedBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  // isCollapsed: true,
+                                  disabledBorder: InputBorder.none,
+                                  isDense: true,
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyles.rajdhaniB.title68.colour(
+                                  model.goldAmountController.text == "0"
+                                      ? UiConstants.kTextColor2
+                                      : UiConstants.kTextColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                        style: TextStyles.rajdhaniB.title68.colour(
-                          model.goldAmountController.text == "0"
-                              ? UiConstants.kTextColor2
-                              : UiConstants.kTextColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                      );
+                    }),
                 if (model.showMaxCapText)
                   Padding(
                     padding:
@@ -352,16 +380,21 @@ class EnterAmountView extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              model.amountChip(0),
-              model.amountChip(1),
-              model.amountChip(2),
-              model.amountChip(3),
-            ],
-          ),
+          if (model.assetOptionsModel != null)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                model.assetOptionsModel.data.userOptions.length,
+                (index) => AmountChip(
+                  index: index,
+                  isActive: model.lastTappedChipIndex == index,
+                  amt: model.assetOptionsModel.data.userOptions[index].value,
+                  onClick: model.onChipClick,
+                  isBest: model.assetOptionsModel.data.userOptions[index].best,
+                ),
+              ),
+            ),
           SizedBox(
             height: SizeConfig.padding24,
           ),

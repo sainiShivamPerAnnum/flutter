@@ -154,7 +154,6 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   pauseSubscription(int pauseValue) async {
     bool response =
         await _paytmService.pauseSubscription(getResumeDate(pauseValue));
-
     isPausingInProgress = false;
     if (response) {
       BaseUtil.showPositiveAlert("Autosave paused successfully",

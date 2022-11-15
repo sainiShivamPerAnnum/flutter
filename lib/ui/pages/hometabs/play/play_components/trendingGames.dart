@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/util/locator.dart';
@@ -29,19 +30,18 @@ class TrendingGamesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-            title: "All games",
-            subTitle: "New games are added regularly. Keep checking out!"),
+          title: "All games",
+        ),
         Container(
-          height: SizeConfig.screenWidth * 0.6,
           width: SizeConfig.screenWidth,
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
+          child: GridView.builder(
             physics: BouncingScrollPhysics(),
             itemCount: model.isGamesListDataLoading
                 ? 3
                 : model.trendingGamesListData.length,
+            shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             itemBuilder: (ctx, index) {
               return model.isGamesListDataLoading
@@ -50,6 +50,11 @@ class TrendingGamesSection extends StatelessWidget {
                       game: model.trendingGamesListData[index],
                     );
             },
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: .68,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12),
           ),
         ),
       ],
@@ -87,40 +92,54 @@ class TrendingGames extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.only(right: SizeConfig.padding20),
-        width: SizeConfig.screenWidth * 0.32,
-        padding: EdgeInsets.all(SizeConfig.padding12),
         decoration: BoxDecoration(
-            color: UiConstants.kSecondaryBackgroundColor,
-            borderRadius:
-                BorderRadius.all(Radius.circular(SizeConfig.roundness112))),
+            color: Color(0xff39393C),
+            borderRadius: BorderRadius.all(Radius.circular(16))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.network(
-              game.icon,
+              game.thumbnailUri,
               fit: BoxFit.cover,
-              width: SizeConfig.screenWidth * 0.32,
+              width: SizeConfig.screenWidth * 0.2,
             ),
             Text(
-              game.gameName.split(' ').first,
+              game.gameName,
               textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
-            SizedBox(height: SizeConfig.padding12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  Assets.token,
-                  height: SizeConfig.padding20,
-                ),
-                SizedBox(width: SizeConfig.padding6),
-                Text(
-                  game.playCost.toString(),
-                  style: TextStyles.sourceSans.body2.colour(Colors.white),
-                )
-              ],
+            RichText(
+                text: TextSpan(
+                    text: 'Win upto ',
+                    style:
+                        TextStyles.sourceSans.body5.colour(Color(0xff919193)),
+                    children: [
+                  TextSpan(
+                      text:
+                          '${NumberFormat.compact().format(game.prizeAmount)}',
+                      style: TextStyles.sourceSans.colour(Color(0xffA9C6D6)))
+                ])),
+            SizedBox(height: SizeConfig.padding10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: Color(0xff232326),
+                border: Border.all(color: Color(0xff919193)),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    Assets.token,
+                    height: SizeConfig.padding16,
+                    width: SizeConfig.padding16,
+                  ),
+                  SizedBox(width: SizeConfig.padding4),
+                  Text(game.playCost.toString(),
+                      style: TextStyles.sourceSans.body3),
+                ],
+              ),
             ),
           ],
         ),

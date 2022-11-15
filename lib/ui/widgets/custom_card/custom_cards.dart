@@ -253,9 +253,17 @@ class CustomSaveButton extends StatelessWidget {
   final String title;
   final double width;
   final double height;
+  final Border border;
+  final Color color;
 
   const CustomSaveButton(
-      {Key key, this.onTap, this.height, this.title, this.width})
+      {Key key,
+      this.onTap,
+      this.height,
+      this.title,
+      this.width,
+      this.border,
+      this.color})
       : super(key: key);
 
   @override
@@ -270,9 +278,10 @@ class CustomSaveButton extends StatelessWidget {
           onPressed: onTap,
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-              color: UiConstants.kBackgroundDividerColor.withAlpha(200),
-            ),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                color:
+                    color ?? UiConstants.kBackgroundDividerColor.withAlpha(200),
+                border: border),
             child: Center(
               child: Text(
                 title,

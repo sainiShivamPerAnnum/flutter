@@ -174,7 +174,7 @@ class DBModel extends ChangeNotifier {
 //------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
-    logger.i("CALLING: checkUserNameAvailability");
+    logger.i("CALLING: checkUserNameAvailability $username");
     return await _api.checkUserNameAvailability(username);
   }
 

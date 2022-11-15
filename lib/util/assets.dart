@@ -71,6 +71,9 @@ class Assets {
   static final String scoreIcon = "assets/vectors/icons/score.svg";
   static final String completeCheck =
       'assets/images/congratulation_dialog_logo.png';
+  static final String tambola_1cr = 'assets/svg/1_cr_tambola.svg';
+  static final String tambola_1cr_ = 'assets/svg/1_cr_ticket.svg';
+  static final String tambola_title = 'assets/svg/tambola_title.svg';
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
   static final String moneyIcon = "assets/images/icons/money.png";

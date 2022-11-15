@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
@@ -33,46 +34,41 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
   @override
   void initState() {
-    if (calculateTime())
+    if (getDifferance().isNegative) {
+      duration = getDifferance().abs();
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
       });
-    else
+    } else
       showClock = false;
     super.initState();
   }
 
-  bool calculateTime() {
+  Duration getDifferance() {
     DateTime currentTime = DateTime.now();
     DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 00, 10);
+        DateTime.now().day, 18, 0, 10);
     Duration timeDiff = currentTime.difference(drawTime);
-    if (timeDiff.inSeconds < 0) {
-      duration = timeDiff.abs();
-      return true;
-    }
-    return false;
+
+    return timeDiff;
   }
 
   void addTime() async {
-    final addSeconds = countDown ? -1 : 1;
-    final seconds = duration.inSeconds + addSeconds;
-    if (seconds <= 0) {
+    if (!getDifferance().isNegative) {
       await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
         timer?.cancel();
       });
-    } else {
-      setState(() {
-        duration = Duration(seconds: seconds);
-      });
+      return;
     }
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+    final addSeconds = countDown ? -1 : 1;
+    final seconds = getDifferance().inSeconds.abs() + addSeconds;
+
+    setState(() {
+      duration = Duration(seconds: seconds);
+    });
   }
 
   @override
@@ -81,11 +77,12 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     super.dispose();
   }
 
+  String twoDigits(int n) => n.toString().padLeft(2, '0');
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     if (showClock) {
-      String twoDigits(int n) => n.toString().padLeft(2, '0');
       final hours = twoDigits(duration.inHours);
       final minutes = twoDigits(duration.inMinutes.remainder(60));
       final seconds = twoDigits(duration.inSeconds.remainder(60));

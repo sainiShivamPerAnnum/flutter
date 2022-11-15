@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -27,6 +30,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class GoldBuyViewModel extends BaseViewModel {
@@ -43,7 +47,7 @@ class GoldBuyViewModel extends BaseViewModel {
   final _analyticsService = locator<AnalyticsService>();
   final _couponRepo = locator<CouponRepository>();
   final _paytmService = locator<PaytmService>();
-
+  AssetOptionsModel assetOptionsModel;
   double incomingAmount;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication upiApplication;
@@ -58,13 +62,15 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _isGoldBuyInProgress = false;
   bool _skipMl = false;
   double _fieldWidth = 0.0;
-
+  AnimationController animationController;
   get fieldWidth => this._fieldWidth;
 
   set fieldWidth(value) {
     this._fieldWidth = value;
     notifyListeners();
   }
+
+  String couponCode;
 
   // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
@@ -84,6 +90,13 @@ class GoldBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> getAssetOptionsModel() async {
+    final res =
+        await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
+    if (res.code == 200) assetOptionsModel = res.model;
+    log(res.model.message);
+  }
+
   get goldAmountInGrams => this._goldAmountInGrams;
 
   set goldAmountInGrams(value) {
@@ -93,7 +106,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   TextEditingController goldAmountController;
   TextEditingController vpaController;
-  List<int> chipAmountList = [101, 201, 501, 1001];
+
   List<CouponModel> _couponList;
 
   bool get couponApplyInProgress => _couponApplyInProgress;
@@ -121,7 +134,6 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   get status => this._status;
-
   set status(value) {
     this._status = value;
     notifyListeners();
@@ -175,17 +187,24 @@ class GoldBuyViewModel extends BaseViewModel {
     this._skipMl = value;
   }
 
-  init(int amount, bool isSkipMilestone) async {
+  init(int amount, bool isSkipMilestone, TickerProvider vsync) async {
     // resetBuyOptions();
+
     setState(ViewState.Busy);
+    animationController = AnimationController(
+        vsync: vsync, duration: Duration(milliseconds: 500));
+    await getAssetOptionsModel();
+    animationController.addListener(listnear);
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
-    goldBuyAmount = amount.toDouble() ?? chipAmountList[2];
+    goldBuyAmount =
+        amount.toDouble() ?? assetOptionsModel.data.userOptions[1].value;
     goldAmountController = TextEditingController(
-        text: amount.toString() ?? chipAmountList[2].toInt().toString());
+        text: assetOptionsModel.data.userOptions[1].value.toString());
     fieldWidth =
         (SizeConfig.padding40 * goldAmountController.text.length.toDouble());
-    if (goldBuyAmount != chipAmountList[2]) lastTappedChipIndex = -1;
+    if (goldBuyAmount != assetOptionsModel.data.userOptions[1].value)
+      lastTappedChipIndex = -1;
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
@@ -195,7 +214,13 @@ class GoldBuyViewModel extends BaseViewModel {
     // await _userService.fetchUserAugmontDetail();
     // delayedAugmontCall();
     // checkIfDepositIsLocked();
+
     setState(ViewState.Idle);
+  }
+
+  void listnear() {
+    if (animationController.status == AnimationStatus.completed)
+      animationController.reset();
   }
 
   //INIT CHECKS
@@ -204,7 +229,7 @@ class GoldBuyViewModel extends BaseViewModel {
   //       _userService.userAugmontDetails.depNotice != null &&
   //       _userService.userAugmontDetails.depNotice.isNotEmpty)
   //     buyNotice = _userService.userAugmontDetails.depNotice;
-  // }
+  // }dis
 
   // delayedAugmontCall() async {
   //   if (_userService.userAugmontDetails == null && !_augmontSecondFetchDone) {
@@ -220,8 +245,9 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   resetBuyOptions() {
-    goldBuyAmount = chipAmountList[1].toDouble();
-    goldAmountController.text = chipAmountList[1].toInt().toString();
+    goldBuyAmount = assetOptionsModel.data.userOptions[1].value.toDouble();
+    goldAmountController.text =
+        assetOptionsModel.data.userOptions[1].value.toInt().toString();
     appliedCoupon = null;
     lastTappedChipIndex = 1;
     notifyListeners();
@@ -306,46 +332,74 @@ class GoldBuyViewModel extends BaseViewModel {
           "Amount Entered": goldAmountController.text,
           "Gold Weight": goldAmountInGrams,
           "Per gram rate": goldRates.goldBuyPrice,
-          "Best flag": goldAmountController.text == chipAmountList[2].toString()
-              ? true
-              : false,
+          "Best flag": assetOptionsModel.data.userOptions
+              .firstWhere(
+                  (element) =>
+                      element.value.toString() == goldAmountController.text,
+                  orElse: () => UserOption(best: false))
+              .best,
           "Error message": errorMessage,
         }));
   }
 
+  onChipClick(int index) {
+    if (couponApplyInProgress ||
+        isGoldBuyInProgress ||
+        _augTxnService.isGoldBuyInProgress) return;
+    showMaxCapText = false;
+    showMinCapText = false;
+    Haptic.vibrate();
+    lastTappedChipIndex = index;
+    // buyFieldNode.unfocus();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    goldBuyAmount = assetOptionsModel.data.userOptions[index].value.toDouble();
+    goldAmountController.text = goldBuyAmount.toInt().toString();
+    updateGoldAmount();
+    //checkIfCouponIsStillApplicable();
+    appliedCoupon = null;
+    _analyticsService
+        .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
+      'order': index,
+      'Amount': assetOptionsModel.data.userOptions[index].value,
+      'Best flag': assetOptionsModel.data.userOptions
+          .firstWhere((element) => element.best)
+    });
+    notifyListeners();
+  }
   // UI ESSENTIALS
 
-  Widget amountChip(int index) {
-    int amt = chipAmountList[index];
-    return AmountChip(
-      isActive: lastTappedChipIndex == index,
-      amt: amt,
-      isBest: index == 2,
-      onClick: (int amount) {
-        if (couponApplyInProgress ||
-            isGoldBuyInProgress ||
-            _augTxnService.isGoldBuyInProgress) return;
-        showMaxCapText = false;
-        showMinCapText = false;
-        Haptic.vibrate();
-        lastTappedChipIndex = index;
-        buyFieldNode.unfocus();
-        goldBuyAmount = chipAmountList[index].toDouble();
-        goldAmountController.text = goldBuyAmount.toInt().toString();
-        updateGoldAmount();
-        //checkIfCouponIsStillApplicable();
-        appliedCoupon = null;
-        _analyticsService.track(
-            eventName: AnalyticsEvents.suggestedAmountTapped,
-            properties: {
-              'order': index,
-              'Amount': amt,
-              'Best flag': index == 2
-            });
-        notifyListeners();
-      },
-    );
-  }
+  // Widget amountChip(int index) {
+
+  //   return AmountChip(
+  //     isActive: lastTappedChipIndex == index,
+  //     amt: amt,
+  //     isBest: index == 2,
+  //     onClick: (int amount) async {
+  //       if (couponApplyInProgress ||
+  //           isGoldBuyInProgress ||
+  //           _augTxnService.isGoldBuyInProgress) return;
+  //       showMaxCapText = false;
+  //       showMinCapText = false;
+  //       Haptic.vibrate();
+  //       lastTappedChipIndex = index;
+  //       // buyFieldNode.unfocus();
+  //       SystemChannels.textInput.invokeMethod('TextInput.hide');
+  //       goldBuyAmount = chipAmountList[index].toDouble();
+  //       goldAmountController.text = goldBuyAmount.toInt().toString();
+  //       updateGoldAmount();
+  //       //checkIfCouponIsStillApplicable();
+  //       appliedCoupon = null;
+  //       _analyticsService.track(
+  //           eventName: AnalyticsEvents.suggestedAmountTapped,
+  //           properties: {
+  //             'order': index,
+  //             'Amount': amt,
+  //             'Best flag': index == 2
+  //           });
+  //       notifyListeners();
+  //     },
+  //   );
+  // }
 
   updateGoldAmount() {
     if (goldAmountController.text == null ||
@@ -403,8 +457,8 @@ class GoldBuyViewModel extends BaseViewModel {
       } else {
         goldBuyAmount = double.tryParse(val);
         if (goldBuyAmount < 10.0) showMinCapText = true;
-        for (int i = 0; i < chipAmountList.length; i++) {
-          if (goldBuyAmount == chipAmountList[i]) {
+        for (int i = 0; i < assetOptionsModel.data.userOptions.length; i++) {
+          if (goldBuyAmount == assetOptionsModel.data.userOptions[i].value) {
             lastTappedChipIndex = i;
             break;
           }
@@ -482,6 +536,7 @@ class GoldBuyViewModel extends BaseViewModel {
   getAvailableCoupons() async {
     final ApiResponse<List<CouponModel>> couponsRes =
         await _couponRepo.getCoupons();
+
     if (couponsRes.code == 200) {
       couponList = couponsRes.model;
       if (couponList[0].priority == 1) focusCoupon = couponList[0];
@@ -505,7 +560,7 @@ class GoldBuyViewModel extends BaseViewModel {
     }
 
     buyFieldNode.unfocus();
-
+    this.couponCode = couponCode;
     couponApplyInProgress = true;
 
     ApiResponse<EligibleCouponResponseModel> response =
@@ -516,10 +571,21 @@ class GoldBuyViewModel extends BaseViewModel {
     );
 
     couponApplyInProgress = false;
-
+    this.couponCode = null;
     if (response.code == 200) {
       if (response.model.flag == true) {
+        if (response.model.minAmountRequired != null &&
+            response.model.minAmountRequired.toString().isNotEmpty &&
+            response.model.minAmountRequired != 0) {
+          goldAmountController.text =
+              response.model.minAmountRequired.toInt().toString();
+          goldBuyAmount = response.model.minAmountRequired;
+          updateGoldAmount();
+          animationController.forward();
+        }
+
         appliedCoupon = response.model;
+
         BaseUtil.showPositiveAlert(
             "Coupon Applied Successfully", response?.model?.message);
       } else {
@@ -561,3 +627,8 @@ class PendingDialog extends StatelessWidget {
     );
   }
 }
+
+
+
+//Remove 
+//Leaderboard and Prices
