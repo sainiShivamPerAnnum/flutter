@@ -46,12 +46,17 @@ class CurrentPicks extends StatelessWidget {
 }
 
 class TodayPicksBallsAnimation extends StatelessWidget {
-  const TodayPicksBallsAnimation({
-    Key key,
-    @required this.picksList,
-  }) : super(key: key);
+  const TodayPicksBallsAnimation(
+      {Key key,
+      @required this.picksList,
+      this.ballHeight,
+      this.ballWidth,
+      this.margin})
+      : super(key: key);
   final List<int> picksList;
-
+  final double ballHeight;
+  final double ballWidth;
+  final EdgeInsets margin;
   @override
   Widget build(BuildContext context) {
     List<int> animationDurations = [2500, 4000, 5000, 3500, 4500];
@@ -70,9 +75,12 @@ class TodayPicksBallsAnimation extends StatelessWidget {
           children: List.generate(
             picksList.length,
             (index) => Container(
-              height: SizeConfig.screenWidth * 0.14,
-              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+              height: ballHeight ?? SizeConfig.screenWidth * 0.14,
+              margin: margin ??
+                  EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
               child: AnimatedPicksDisplay(
+                ballHeight: ballHeight,
+                ballWidth: ballWidth,
                 number: picksList[index],
                 tabIndex: m.getCurrentTabIndex ?? 0,
                 animationDurationMilliseconds: animationDurations[index],
@@ -87,18 +95,22 @@ class TodayPicksBallsAnimation extends StatelessWidget {
 }
 
 class AnimatedPicksDisplay extends StatelessWidget {
-  AnimatedPicksDisplay({
-    Key key,
-    @required this.number,
-    @required this.tabIndex,
-    @required this.animationDurationMilliseconds,
-    @required this.ballColor,
-  }) : super(key: key);
+  AnimatedPicksDisplay(
+      {Key key,
+      @required this.number,
+      @required this.tabIndex,
+      @required this.animationDurationMilliseconds,
+      @required this.ballColor,
+      this.ballHeight,
+      this.ballWidth})
+      : super(key: key);
 
   final int number;
   final int tabIndex;
   final int animationDurationMilliseconds;
   final Color ballColor;
+  final double ballHeight;
+  final double ballWidth;
 
   Random random = new Random();
 
@@ -123,16 +135,16 @@ class AnimatedPicksDisplay extends StatelessWidget {
 
   Container _buildBalls(int nToShow, bool showEmpty, Color ballColor) {
     return Container(
-      width: SizeConfig.screenWidth * 0.14,
-      height: SizeConfig.screenWidth * 0.14,
+      width: ballWidth ?? SizeConfig.screenWidth * 0.14,
+      height: ballHeight ?? SizeConfig.screenWidth * 0.14,
       padding: EdgeInsets.all(SizeConfig.padding4),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
       ),
       child: Container(
-        padding: EdgeInsets.all(SizeConfig.padding8),
-        width: SizeConfig.screenWidth * 0.14,
-        height: SizeConfig.screenWidth * 0.14,
+        padding: EdgeInsets.all(SizeConfig.padding4),
+        width: ballWidth ?? SizeConfig.screenWidth * 0.14,
+        height: ballHeight ?? SizeConfig.screenWidth * 0.14,
         decoration: BoxDecoration(
           color: ballColor,
           shape: BoxShape.circle,

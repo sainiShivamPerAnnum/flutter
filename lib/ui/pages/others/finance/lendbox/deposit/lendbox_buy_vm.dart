@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
@@ -14,6 +15,8 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
+
+import '../../../../../../core/repository/getters_repo.dart';
 
 class LendboxBuyViewModel extends BaseViewModel {
   final _txnService = locator<LendboxTransactionService>();
@@ -34,33 +37,43 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   TextEditingController amountController;
   TextEditingController vpaController;
-  final List<int> chipAmountList = [101, 201, 501, 1001];
+
   final double minAmount = 100;
   final double maxAmount = 50000;
-
+  AssetOptionsModel assetOptionsModel;
   bool get skipMl => this._skipMl;
 
   set skipMl(bool value) {
     this._skipMl = value;
   }
 
-  init(int amount, bool isSkipMilestone) async {
+  init(
+    int amount,
+    bool isSkipMilestone,
+  ) async {
     setState(ViewState.Busy);
+    await getAssetOptionsModel();
     skipMl = isSkipMilestone;
     amountController = TextEditingController(
-      text: amount?.toString() ?? chipAmountList[2].toInt().toString(),
+      text: assetOptionsModel.data.userOptions[1].value.toString(),
     );
+
     setState(ViewState.Idle);
   }
 
   resetBuyOptions() {
-    amountController.text = chipAmountList[1].toInt().toString();
+    amountController.text = assetOptionsModel.data.userOptions[2].toString();
     lastTappedChipIndex = 2;
     notifyListeners();
   }
 
-  //BUY FLOW
-  //1
+  Future<void> getAssetOptionsModel() async {
+    final res =
+        await locator<GetterRepository>().getAssetOptions('weekly', 'flo');
+    if (res.code == 200) assetOptionsModel = res.model;
+    log(res.model.message);
+  }
+
   initiateBuy() async {
     _isBuyInProgress = true;
     notifyListeners();
@@ -111,9 +124,10 @@ class LendboxBuyViewModel extends BaseViewModel {
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
           "Asset": "Flo",
           "Amount Entered": amountController.text,
-          "Best flag": amountController.text == chipAmountList[2].toString()
-              ? true
-              : false,
+          "Best flag": assetOptionsModel.data.userOptions
+              .firstWhere((element) =>
+                  element.value.toString() == amountController.text)
+              .value
         }));
     return buyAmount;
   }

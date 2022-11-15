@@ -92,7 +92,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   Future<void> getAssetOptionsModel() async {
     final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'flo');
+        await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
     if (res.code == 200) assetOptionsModel = res.model;
     log(res.model.message);
   }
@@ -200,8 +200,7 @@ class GoldBuyViewModel extends BaseViewModel {
     goldBuyAmount =
         amount.toDouble() ?? assetOptionsModel.data.userOptions[1].value;
     goldAmountController = TextEditingController(
-        text: amount.toString() ??
-            assetOptionsModel.data.userOptions[1].value.toInt().toString());
+        text: assetOptionsModel.data.userOptions[1].value.toString());
     fieldWidth =
         (SizeConfig.padding40 * goldAmountController.text.length.toDouble());
     if (goldBuyAmount != assetOptionsModel.data.userOptions[1].value)
