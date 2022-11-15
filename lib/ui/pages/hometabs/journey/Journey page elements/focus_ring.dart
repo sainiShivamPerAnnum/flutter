@@ -140,7 +140,7 @@ class _FocusRingState extends State<FocusRing>
                               onTap: () {
                                 _analyticsService.track(
                                     eventName:
-                                        AnalyticsEvents.buildProfileTapped);
+                                        AnalyticsEvents.journeyMileStarted);
                                 return BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
                                   isBarrierDismissable: true,

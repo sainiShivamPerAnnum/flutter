@@ -24,6 +24,7 @@ class AmountChips extends StatelessWidget {
           Haptic.vibrate();
           model.amountFieldController.text = amount.toString();
           model.onAmountValueChanged(amount.toString());
+          model.lastTappedChipAmount = amount;
         },
         child: Column(
           children: [

@@ -12,11 +12,12 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/focus_ring.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jTooltip.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/unscratched_gt_tooltips.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
@@ -84,6 +85,7 @@ class _JourneyViewState extends State<JourneyView>
                               Milestones(model: model),
                               FocusRing(),
                               LevelBlurView(),
+                              PrizeToolTips(model: model),
                               MilestoneTooltip(model: model),
                               Avatar(model: model),
                             ],
@@ -91,9 +93,7 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
-                    HelpFab(
-                      topic: 'onboarding',
-                    ),
+                    HelpFab(),
                     JourneyAppBar(),
                     JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
@@ -475,7 +475,7 @@ class BlurFilter extends StatelessWidget {
               sigmaY: sigmaY,
             ),
             child: Opacity(
-              opacity: 0.01,
+              opacity: 0.6,
               child: child,
             ),
           ),

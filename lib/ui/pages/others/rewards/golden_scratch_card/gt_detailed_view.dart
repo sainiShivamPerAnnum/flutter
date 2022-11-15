@@ -76,8 +76,8 @@ class GTDetailedView extends StatelessWidget {
                             onThreshold: () => model.redeemCard(ticket),
                             image: Image.asset(
                               ticket.isLevelChange
-                                  ? Assets.levelUpUnredemmedGoldenTicketBGPNG
-                                  : Assets.unredemmedGoldenTicketBG_png,
+                                  ? Assets.levelUpUnredeemedGoldenTicketBGPNG
+                                  : Assets.unredeemedGoldenTicketBG_png,
                               fit: BoxFit.fitWidth,
                             ),
                             child: RepaintBoundary(

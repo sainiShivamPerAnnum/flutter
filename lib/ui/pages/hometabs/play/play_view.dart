@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.da
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -16,7 +17,6 @@ import '../../../widgets/appbar/appbar.dart';
 
 class Play extends StatelessWidget {
   ScrollController _controller = ScrollController();
-  final TambolaWidgetController _tambolaController = TambolaWidgetController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +40,8 @@ class Play extends StatelessWidget {
             controller: _controller,
             physics: BouncingScrollPhysics(),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TambolaCard(
-                  tambolaController: _tambolaController,
-                ),
-                GOWCard(
-                  model: model,
-                ),
-                TrendingGamesSection(model: model),
-                InfoComponent2(
-                  heading: model.boxHeading,
-                  assetList: model.boxAssets,
-                  titleList: model.boxTitlles,
-                  height: SizeConfig.screenWidth * 0.3,
-                ),
-                SafetyWidget(),
-                // MoreGamesSection(model: model),
-                // if (!model.showSecurityMessageAtTop) SafetyWidget(),
-                AppFooter(),
-                SizedBox(
-                  height: SizeConfig.padding80,
-                ),
-              ],
-            ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: model.getOrderedPlayViewItems(model)),
           ),
         );
       },

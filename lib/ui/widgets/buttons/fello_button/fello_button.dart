@@ -114,7 +114,7 @@ class _FelloButtonState extends State<FelloButton> {
                   if (_journeyService.avatarRemoteMlIndex < 2)
                     return BaseUtil.openDialog(
                         addToScreenStack: true,
-                        isBarrierDismissable: true,
+                        isBarrierDismissible: true,
                         hapticVibrate: false,
                         content: CompleteProfileDialog());
                   if (widget.onPressedAsync != null) {

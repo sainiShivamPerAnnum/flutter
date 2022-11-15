@@ -1,21 +1,7 @@
-import 'dart:math';
-
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_widget.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
-import 'package:felloapp/ui/pages/static/game_card_big.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
-import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

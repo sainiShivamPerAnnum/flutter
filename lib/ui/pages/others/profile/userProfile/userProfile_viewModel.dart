@@ -470,7 +470,7 @@ class UserProfileVM extends BaseViewModel {
   signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     BaseUtil.openDialog(
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       addToScreenStack: true,
       content: ConfirmationDialog(
           title: 'Confirm',
@@ -552,7 +552,7 @@ class UserProfileVM extends BaseViewModel {
     var _status = await Permission.photos.status;
     if (_status.isRestricted || _status.isLimited || _status.isDenied) {
       BaseUtil.openDialog(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         addToScreenStack: true,
         content: ConfirmationDialog(
           title: "Request Permission",
@@ -632,7 +632,7 @@ class UserProfileVM extends BaseViewModel {
   showCustomAvatarsDialog() {
     return BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: UserAvatarSelectionDialog(
         onCustomAvatarSelection: handleDPOperation,
@@ -664,7 +664,7 @@ class UserProfileVM extends BaseViewModel {
       Haptic.vibrate();
       await BaseUtil.openDialog(
         addToScreenStack: true,
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         content: ConfirmationDialog(
           asset: NewProfileImage(
             showAction: false,

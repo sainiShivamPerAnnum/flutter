@@ -171,7 +171,7 @@ class MyWinningsViewModel extends BaseViewModel {
   showConfirmDialog(PrizeClaimChoice choice) {
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: FelloConfirmationDialog(
         result: (res) async {

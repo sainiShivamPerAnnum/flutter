@@ -10,6 +10,7 @@ import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -97,6 +98,40 @@ class FelloCoinBar extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class CoinBar extends StatelessWidget {
+  final Widget child;
+  const CoinBar({Key key, @required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding8,
+      ),
+      padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding12, vertical: SizeConfig.padding6),
+      height: SizeConfig.avatarRadius * 2,
+      decoration: BoxDecoration(
+        color: UiConstants.kTextFieldColor.withOpacity(0.4),
+        border: Border.all(color: Colors.white10),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SvgPicture.asset(
+            Assets.token,
+            height: SizeConfig.padding20,
+            width: SizeConfig.padding20,
+          ),
+          SizedBox(width: SizeConfig.padding4),
+          child
+        ],
+      ),
     );
   }
 }

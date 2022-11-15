@@ -63,6 +63,17 @@ class GoldenTicketService extends ChangeNotifier {
     previousPrizeSubtype = '';
   }
 
+  List<GoldenTicket> _unscratchedGoldenTickets;
+
+  List<GoldenTicket> get unscratchedGoldenTickets =>
+      this._unscratchedGoldenTickets ?? [];
+
+  set unscratchedGoldenTickets(List<GoldenTicket> value) {
+    this._unscratchedGoldenTickets = value;
+    notifyListeners();
+    log("Unscratched GoldenTicket list updated");
+  }
+
   List<GoldenTicket> _activeGoldenTickets;
 
   List<GoldenTicket> get activeGoldenTickets => this._activeGoldenTickets ?? [];
@@ -305,7 +316,7 @@ class GoldenTicketService extends ChangeNotifier {
     if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) return;
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: FelloInfoDialog(
         title: "Put your savings on autopilot",

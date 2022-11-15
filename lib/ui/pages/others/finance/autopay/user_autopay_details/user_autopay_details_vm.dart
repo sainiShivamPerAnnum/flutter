@@ -24,6 +24,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
+//TODO Pause autosave analytics not showing up
 class UserAutosaveDetailsViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _paytmService = locator<PaytmService>();
@@ -33,6 +34,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
 
   ActiveSubscriptionModel _activeSubscription;
   List<AutosaveTransactionModel> _filteredList;
+  int lastTappedChipIndex = 1;
 
   List<AutosaveTransactionModel> get filteredList => this._filteredList;
 
@@ -152,6 +154,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   pauseSubscription(int pauseValue) async {
+    trackPauseAnalytics(pauseValue);
     bool response =
         await _paytmService.pauseSubscription(getResumeDate(pauseValue));
     isPausingInProgress = false;
@@ -396,5 +399,22 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         ),
       );
     }
+  }
+
+  trackPauseAnalytics(int value) {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
+      "frequency": activeSubscription.autoFrequency,
+      "amount": activeSubscription.autoAmount,
+      "SIP deducted Count": filteredList != null ? filteredList.length : 0,
+      "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
+          activeSubscription.createdOn.microsecondsSinceEpoch),
+      "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+          AnalyticsProperties.getFelloFloAmount(),
+      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Amount Chip Selected": lastTappedChipIndex,
+      "Pause Value": value,
+    });
   }
 }

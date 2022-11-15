@@ -17,7 +17,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
@@ -719,7 +718,7 @@ class ButTicketsComponent extends StatelessWidget {
                             "Time left for draw Tambola (mins)":
                                 AnalyticsProperties.getTimeLeftForTambolaDraw(),
                             "Tambola Tickets Owned":
-                                AnalyticsProperties.getTabolaTicketCount(),
+                                AnalyticsProperties.getTambolaTicketCount(),
                           }));
                   Navigator.of(AppState.delegate.navigatorKey.currentContext)
                       .push(
@@ -828,9 +827,10 @@ class ButTicketsComponent extends StatelessWidget {
                           "Time left for draw Tambola (mins)":
                               AnalyticsProperties.getTimeLeftForTambolaDraw(),
                           "Tambola Tickets Owned":
-                              AnalyticsProperties.getTabolaTicketCount(),
+                              AnalyticsProperties.getTambolaTicketCount(),
                           "Number of Tickets":
                               model.ticketCountController.text ?? "",
+                          //TODO : amount not coming
                           "Amount": model.ticketSavedAmount,
                         }));
                     BaseUtil().openDepositOptionsModalSheet(

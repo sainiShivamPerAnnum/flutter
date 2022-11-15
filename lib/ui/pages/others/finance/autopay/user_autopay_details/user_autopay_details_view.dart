@@ -641,7 +641,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               if (pauseValue == 4) {
                 BaseUtil.openDialog(
                   addToScreenStack: true,
-                  isBarrierDismissable: false,
+                  isBarrierDismissible: false,
                   hapticVibrate: true,
                   content: ConfirmationDialog(
                     title: "Are you sure ?",

@@ -153,7 +153,7 @@ class WebGameViewModel extends BaseViewModel {
       Future.delayed(duration ?? Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: false,
+          isBarrierDismissible: false,
           hapticVibrate: true,
           content: ScoreRejectedDialog(
               contentText: GoldenTicketService.gameEndMsgText),

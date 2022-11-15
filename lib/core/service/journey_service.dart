@@ -5,12 +5,15 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -38,6 +41,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final UserService _userService = locator<UserService>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final _internalOpsService = locator<InternalOpsService>();
+  final _gtRepo = locator<GoldenTicketRepository>();
 
   //Local Variables
   List<JourneyLevel> _levels = [];
@@ -57,6 +61,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   List<MilestoneModel> currentMilestoneList = [];
   List<JourneyPathModel> journeyPathItemsList = [];
   List<AvatarPathModel> customPathDataList = [];
+  List<MilestoneModel> completedMilestoneList = [];
+  List<GoldenTicket> completedMilestonesPrizeList = [];
   Path _avatarPath;
   Offset _avatarPosition;
   List<JourneyPage> _pages;
@@ -68,6 +74,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool _showLevelUpAnimation = false;
   bool _isUserJourneyOnboarded = false;
   get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
+  List<GoldenTicket> unscratchedGTList;
 
   set isUserJourneyOnboarded(value) {
     this._isUserJourneyOnboarded = value;
@@ -268,6 +275,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
   }
 
+  getUnscratchedGT() async {
+    final ApiResponse<List<GoldenTicket>> res =
+        await _gtRepo.getUnscratchedGoldenTickets();
+    if (res.isSuccess()) {
+      unscratchedGTList = res.model;
+    }
+  }
+
   //Fetch Levels of Journey
   getJourneyLevels() async {
     final res = await _journeyRepo.getJourneyLevels();
@@ -438,6 +453,34 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     });
   }
 
+  Future<void> updateRewardSTooltips() async {
+    completedMilestonesPrizeList.clear();
+    setCompletedMilestonesList();
+    await getUnscratchedGT();
+    if (unscratchedGTList == null || unscratchedGTList.isEmpty) return;
+    completedMilestoneList.forEach((MilestoneModel milestone) {
+      GoldenTicket matchTicket = unscratchedGTList.firstWhere(
+          (ticket) => ticket.prizeSubtype == milestone.prizeSubType,
+          orElse: () => null);
+      completedMilestonesPrizeList.add(matchTicket);
+    });
+
+    notifyListeners(JourneyServiceProperties.Prizes);
+    _logger.d("Prizes List Updated ${completedMilestoneList.length} ");
+    _logger.d("Prizes List Updated");
+    _logger.d("Prizes List Updated ${completedMilestonesPrizeList.toString()}");
+  }
+
+  void updateRewardStatus(String prizeSubtype) {
+    int activeRewardIndex = completedMilestonesPrizeList.indexWhere(
+        (reward) => reward != null && reward.prizeSubtype == prizeSubtype);
+    if (activeRewardIndex != -1) {
+      completedMilestonesPrizeList[activeRewardIndex] = null;
+      notifyListeners(JourneyServiceProperties.Prizes);
+      _logger.d("Prizes List Updated for prize $prizeSubtype ");
+    }
+  }
+
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
 
   userIsAtJourneyScreen() => (AppState.screenStack.length == 1 &&
@@ -468,6 +511,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     setCurrentMilestones();
     setCustomPathItems();
     setJourneyPathItems();
+    setCompletedMilestonesList();
     notifyListeners(JourneyServiceProperties.JourneyAssets);
   }
 
@@ -500,6 +544,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     });
   }
 
+  setCompletedMilestonesList() {
+    completedMilestoneList.clear();
+    currentMilestoneList.forEach((milestone) {
+      if (milestone.index < avatarRemoteMlIndex)
+        completedMilestoneList.add(milestone);
+    });
+  }
+
   resetJourneyData() {
     pageCount = 0;
     currentFullViewHeight = pageHeight * pageCount;
@@ -508,6 +560,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     currentMilestoneList.clear();
     customPathDataList.clear();
     journeyPathItemsList.clear();
+    completedMilestoneList.clear();
+    unscratchedGTList.clear();
+    completedMilestonesPrizeList.clear();
+
     log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage currentMilestoneList length: ${currentMilestoneList.length} customPathDataList length: ${customPathDataList.length} journeyPathItemsList length: ${journeyPathItemsList.length}");
   }
   //-------------------|-PAGE ITEMS AND PROPERTIES SETUP METHODS-END-|--------------------
@@ -645,6 +701,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       // if (gameLevelChangeResult != 0)
       // BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
       //     "New Milestones on your way!");
+      updateRewardSTooltips();
       checkIfUserIsOldAndNeedsStoryView();
       updateAvatarLocalLevel();
       baseGlow = 1;
@@ -656,7 +713,6 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   checkIfUserIsOldAndNeedsStoryView() {
-    //TODO
     Future.delayed(
       Duration(seconds: 2),
       () {

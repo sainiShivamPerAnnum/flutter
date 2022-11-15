@@ -148,5 +148,9 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
+	<key>NSCameraUsageDescription</key>
+<string>your usage description here</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>your usage description here</string>
 </dict>
 </plist>

@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
@@ -179,14 +180,14 @@ class GetterRepository extends BaseRepo {
     FaqsType type,
   }) async {
     try {
-      final token = await getBearerToken();
+      // final token = await getBearerToken();
 
       return await _cacheService.cachedApi(
         '${CacheKeys.FAQS}/${type.name}',
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
           ApiPath.faqs,
-          token: token,
+          // token: token,
           cBaseUrl: _baseUrl,
           queryParams: {"type": type.name},
         ),
@@ -218,6 +219,33 @@ class GetterRepository extends BaseRepo {
       final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
 
       return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<DynamicUI>> getPageConfigs() async {
+    try {
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+        '${CacheKeys.PAGE_CONFIGS}',
+        TTL.ONE_DAY,
+        () => APIService.instance.getData(
+          ApiPath.dynamicUi,
+          cBaseUrl: _baseUrl,
+          token: token,
+        ),
+        (response) {
+          final responseData = response["data"]["dynamicUi"];
+
+          logger.d("Page Config: $responseData");
+          final pageConfig = DynamicUI.fromMap(responseData);
+          logger.d("Page Config: $responseData");
+          return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
+        },
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);

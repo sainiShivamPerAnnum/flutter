@@ -1,14 +1,11 @@
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_appbar.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/components/profile_header.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
@@ -16,7 +13,6 @@ import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_email_verification_button.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

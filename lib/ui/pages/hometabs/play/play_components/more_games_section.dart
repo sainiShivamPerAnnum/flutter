@@ -1,9 +1,13 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -53,8 +57,8 @@ class MoreGamesSection extends StatelessWidget {
 class MoreGames extends StatelessWidget {
   final GameModel game;
   final bool showDivider;
-
-  const MoreGames({
+  final _analyticsService = locator<AnalyticsService>();
+  MoreGames({
     this.game,
     this.showDivider,
     Key key,
@@ -65,9 +69,23 @@ class MoreGames extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
+
         AppState.delegate.parseRoute(
           Uri.parse(game.route),
         );
+        _analyticsService.track(
+            eventName: AnalyticsEvents.gameTapped,
+            properties:
+                AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+              'Game name': game.gameName,
+              "Entry fee": game.playCost,
+              "Win upto": game.prizeAmount,
+              "Time left for draw Tambola (mins)":
+                  AnalyticsProperties.getTimeLeftForTambolaDraw(),
+              "Tambola Tickets Owned":
+                  AnalyticsProperties.getTambolaTicketCount(),
+              "location": "More games"
+            }));
       },
       child: Container(
         margin:
