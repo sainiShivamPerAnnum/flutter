@@ -29,10 +29,12 @@ class BannerWidget extends StatelessWidget {
             SizedBox(
               width: 2,
             ),
-            Text(
-              model.title,
-              style:
-                  TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
+            Flexible(
+              child: Text(
+                model.title,
+                style:
+                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
+              ),
             )
           ]),
     );

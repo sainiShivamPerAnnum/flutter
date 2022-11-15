@@ -85,7 +85,9 @@ class GetterRepository extends BaseRepo {
       final token = await getBearerToken();
       return await _cacheService.cachedApi(
         'AssetsOptions-$freq-$type',
-        DateTime.now().add(Duration(days: 7)).millisecondsSinceEpoch,
+        DateTime.now()
+            .add(Duration(minutes: TTL.ONE_DAY * 7))
+            .millisecondsSinceEpoch,
         () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
             cBaseUrl: _baseUrl, token: token),
         (p0) => ApiResponse<AssetOptionsModel>(
@@ -96,8 +98,7 @@ class GetterRepository extends BaseRepo {
         ),
       );
     } catch (e) {
-      log(e.toString() + 'Sanket');
-      return ApiResponse.withError("Unable to fetch statistics", 400);
+      return ApiResponse.withError('Something went wrongpla', 400);
     }
   }
 

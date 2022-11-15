@@ -43,7 +43,7 @@ class TambolaWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: UiConstants.kSnackBarPositiveContentColor,
               borderRadius: BorderRadius.all(
-                Radius.circular(SizeConfig.roundness24),
+                Radius.circular(SizeConfig.roundness12),
               ),
             ),
             child: Builder(builder: (_) {
@@ -52,10 +52,11 @@ class TambolaWidget extends StatelessWidget {
               }
               switch (tambolaController.tambolaWidgetType) {
                 case TambolaWidgetType.Banner:
-                  return _BannerWidget(model.game.route);
+                  return _BannerWidget(model.game?.route ?? '');
                 case TambolaWidgetType.Timer:
                   return _TambolaTimer(
-                      controller: tambolaController, route: model.game.route);
+                      controller: tambolaController,
+                      route: model.game?.route ?? '');
                 case TambolaWidgetType.Tickets:
                   return _TicketWidget(
                     model,
@@ -86,6 +87,7 @@ class _BannerWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              _BannerTitle(),
               SizedBox(
                 height: 12,
               ),
@@ -230,7 +232,7 @@ class _TicketWidget extends StatelessWidget {
                 picksList: model.todaysPicks ?? [-1, -1, -1],
                 ballHeight: SizeConfig.screenHeight * .05,
                 ballWidth: SizeConfig.screenHeight * .05,
-                margin: EdgeInsets.symmetric(horizontal: 1),
+                margin: EdgeInsets.symmetric(horizontal: 2),
               ),
               SizedBox(
                 height: 12,

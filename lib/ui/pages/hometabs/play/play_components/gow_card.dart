@@ -15,6 +15,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GOWCard extends StatelessWidget {
@@ -79,7 +80,7 @@ class GOWCard extends StatelessWidget {
                                     style: TextStyles.rajdhaniB.title3),
                                 Text(
                                     'Win upto ' +
-                                        model.gow.prizeAmount.toString(),
+                                        '${NumberFormat.compact().format(model.gow.prizeAmount)}',
                                     style: TextStyles.sourceSans.body4),
                                 SizedBox(height: SizeConfig.padding16),
                                 Container(

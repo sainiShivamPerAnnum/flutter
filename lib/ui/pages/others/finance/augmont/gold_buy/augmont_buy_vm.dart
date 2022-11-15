@@ -333,8 +333,10 @@ class GoldBuyViewModel extends BaseViewModel {
           "Gold Weight": goldAmountInGrams,
           "Per gram rate": goldRates.goldBuyPrice,
           "Best flag": assetOptionsModel.data.userOptions
-              .firstWhere((element) =>
-                  element.value.toString() == goldAmountController.text)
+              .firstWhere(
+                  (element) =>
+                      element.value.toString() == goldAmountController.text,
+                  orElse: () => UserOption(best: false))
               .best,
           "Error message": errorMessage,
         }));
@@ -577,6 +579,7 @@ class GoldBuyViewModel extends BaseViewModel {
             response.model.minAmountRequired != 0) {
           goldAmountController.text =
               response.model.minAmountRequired.toInt().toString();
+          goldBuyAmount = response.model.minAmountRequired;
           updateGoldAmount();
           animationController.forward();
         }

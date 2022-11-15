@@ -39,16 +39,20 @@ class CouponWidget extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: ((context, index) => Padding(
-                          padding: index == 0
-                              ? const EdgeInsets.only(left: 24)
-                              : EdgeInsets.only(left: 14),
-                          child: _CouponView(
-                            coupon[index],
-                            model,
-                            onTap: onTap,
-                          ),
-                        )),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: index == 0
+                            ? const EdgeInsets.only(left: 24)
+                            : index == coupon.length - 1
+                                ? EdgeInsets.only(right: 14, left: 14)
+                                : EdgeInsets.only(left: 14),
+                        child: _CouponView(
+                          coupon[index],
+                          model,
+                          onTap: onTap,
+                        ),
+                      );
+                    },
                     itemCount: coupon.length,
                   ),
                 ),

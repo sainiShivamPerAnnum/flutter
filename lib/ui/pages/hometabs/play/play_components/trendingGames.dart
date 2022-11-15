@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/util/locator.dart';
@@ -51,7 +52,7 @@ class TrendingGamesSection extends StatelessWidget {
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: .7,
+                childAspectRatio: .68,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
           ),
@@ -107,7 +108,17 @@ class TrendingGames extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
-            // Text('Win upto ${game.prizeAmount}'),
+            RichText(
+                text: TextSpan(
+                    text: 'Win upto ',
+                    style:
+                        TextStyles.sourceSans.body5.colour(Color(0xff919193)),
+                    children: [
+                  TextSpan(
+                      text:
+                          '${NumberFormat.compact().format(game.prizeAmount)}',
+                      style: TextStyles.sourceSans.colour(Color(0xffA9C6D6)))
+                ])),
             SizedBox(height: SizeConfig.padding10),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
