@@ -87,6 +87,7 @@ class ApiPath {
   static String pastWinners(String type, String freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
 
+  static String  getAssetOptions(String freq,String type) => '/asset/options?freq=$freq&type=$type';
   // Internal Ops
   static const String failureReport = '/fail/report';
 

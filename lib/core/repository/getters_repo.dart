@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
@@ -73,6 +76,28 @@ class GetterRepository extends BaseRepo {
       logger.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch statistics", 400);
+    }
+  }
+
+  Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
+      String freq, String type) async {
+    try {
+      final token = await getBearerToken();
+      return await _cacheService.cachedApi(
+        'AssetsOptions-$freq-$type',
+        DateTime.now().add(Duration(days: 7)).millisecondsSinceEpoch,
+        () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
+            cBaseUrl: _baseUrl, token: token),
+        (p0) => ApiResponse<AssetOptionsModel>(
+          code: 200,
+          model: AssetOptionsModel.fromJson(
+            p0,
+          ),
+        ),
+      );
+    } catch (e) {
+      log(e.toString() + 'Sanket');
+      return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
 

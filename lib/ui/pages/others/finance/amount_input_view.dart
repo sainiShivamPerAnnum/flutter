@@ -55,7 +55,7 @@ class _AmountInputViewState extends State<AmountInputView> {
 
   void updateFieldWidth() {
     int n = widget.amountController.text.length;
-    if (n == 0) n++;  
+    if (n == 0) n++;
     _fieldWidth = (SizeConfig.padding40 * n.toDouble());
   }
 
@@ -109,6 +109,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     width: _fieldWidth,
                     child: TextFormField(
                       autofocus: true,
+                      showCursor: true,
                       controller: widget.amountController,
                       focusNode: widget.focusNode,
                       enabled: widget.isEnabled,
@@ -173,6 +174,7 @@ class _AmountInputViewState extends State<AmountInputView> {
           children: widget.chipAmounts
               .mapIndexed((item, i) => AmountChip(
                   isActive: _selectedIndex == i,
+                  index: i,
                   amt: item,
                   isBest: widget.bestChipIndex == i,
                   onClick: (amt) {

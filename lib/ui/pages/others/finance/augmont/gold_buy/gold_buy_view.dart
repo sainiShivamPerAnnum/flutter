@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -23,7 +24,8 @@ class GoldBuyView extends StatefulWidget {
   State<GoldBuyView> createState() => _GoldBuyViewState();
 }
 
-class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver,SingleTickerProviderStateMixin {
+class _GoldBuyViewState extends State<GoldBuyView>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
   AppLifecycleState appLifecycleState;
@@ -97,8 +99,9 @@ class _GoldBuyViewState extends State<GoldBuyView> with WidgetsBindingObserver,S
                 },
                 child: BaseView<GoldBuyViewModel>(
                   onModelReady: (model) =>
-                      model.init(widget.amount, widget.skipMl,this),
+                      model.init(widget.amount, widget.skipMl, this),
                   builder: (ctx, model, child) {
+                    if (model.state == ViewState.Busy) return SizedBox();
                     return _getView(txnService, model);
                   },
                 ),

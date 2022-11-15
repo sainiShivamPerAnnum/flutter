@@ -32,16 +32,6 @@ class TambolaWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(
-                top: SizeConfig.pageHorizontalMargins / 2,
-                bottom: 11,
-                left: SizeConfig.pageHorizontalMargins + 10),
-            child: Text(
-              'Tambola',
-              style: TextStyles.rajdhaniSB.body1,
-            ),
-          ),
           Container(
             height: SizeConfig.screenHeight * 0.22,
             margin: EdgeInsets.only(
@@ -64,27 +54,12 @@ class TambolaWidget extends StatelessWidget {
                 case TambolaWidgetType.Banner:
                   return _BannerWidget(model.game.route);
                 case TambolaWidgetType.Timer:
+                  return _TambolaTimer(
+                      controller: tambolaController, route: model.game.route);
                 case TambolaWidgetType.Tickets:
-                  return GestureDetector(
-                    onTap: () {
-                      Haptic.vibrate();
-                      locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.tambolaGameCard,
-                          properties: AnalyticsProperties
-                              .getDefaultPropertiesMap(extraValuesMap: {
-                            "Time left for draw Tambola (mins)":
-                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                            "Tambola Tickets Owned":
-                                AnalyticsProperties.getTabolaTicketCount(),
-                          }));
-                      AppState.delegate.parseRoute(
-                        Uri.parse(model.game.route),
-                      );
-                    },
-                    child: _TicketWidget(
-                      model,
-                      tambolaWidgetType: tambolaController.tambolaWidgetType,
-                    ),
+                  return _TicketWidget(
+                    model,
+                    controller: tambolaController,
                   );
                 default:
                   return Container();
@@ -111,11 +86,13 @@ class _BannerWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(Assets.tambola_title),
+              _BannerTitle(),
               SizedBox(
                 height: 12,
               ),
               CustomSaveButton(
+                border: Border.all(color: Color(0xff919193)),
+                color: Color(0xff232326),
                 onTap: () {
                   Haptic.vibrate();
                   locator<AnalyticsService>().track(
@@ -132,9 +109,9 @@ class _BannerWidget extends StatelessWidget {
                   );
                 },
                 title: 'Start Playing',
-                width: SizeConfig.screenWidth * 0.35,
-                height: SizeConfig.screenWidth * 0.11,
-              )
+                width: SizeConfig.screenWidth * 0.40,
+                height: SizeConfig.screenWidth * 0.10,
+              ),
             ],
           ),
         )
@@ -143,10 +120,92 @@ class _BannerWidget extends StatelessWidget {
   }
 }
 
-class _TicketWidget extends StatelessWidget {
-  const _TicketWidget(this.model, {Key key, @required this.tambolaWidgetType})
+class _TambolaTimer extends StatelessWidget {
+  _TambolaTimer({Key key, @required this.controller, @required this.route})
       : super(key: key);
-  final TambolaWidgetType tambolaWidgetType;
+  final TambolaWidgetController controller;
+  final String route;
+
+  String intToTimeLeft(int value) {
+    int h, m, s;
+
+    h = (value ~/ 3600);
+
+    m = ((value - h * 3600)) ~/ 60;
+
+    s = value - (h * 3600) - (m * 60);
+
+    String result = h.toString().padLeft(2, '0') +
+        ' : ' +
+        m.toString().padLeft(2, '0') +
+        ' : ' +
+        s.toString().padLeft(2, '0');
+
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _BannerTitle(
+            space: 12,
+          ),
+          Spacer(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                intToTimeLeft(controller.timeLeftForTambola),
+                style: TextStyles.sourceSansB.title4,
+              ),
+              Text(
+                'Today’s draw at 6 PM ',
+                style: TextStyles.sourceSans.body4,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              CustomSaveButton(
+                border: Border.all(color: Color(0xff919193)),
+                color: Color(0xff232326),
+                onTap: () {
+                  Haptic.vibrate();
+                  locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.tambolaGameCard,
+                      properties: AnalyticsProperties.getDefaultPropertiesMap(
+                          extraValuesMap: {
+                            "Time left for draw Tambola (mins)":
+                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                            "Tambola Tickets Owned":
+                                AnalyticsProperties.getTabolaTicketCount(),
+                          }));
+                  AppState.delegate.parseRoute(
+                    Uri.parse(route),
+                  );
+                },
+                title: 'Start Playing',
+                width: SizeConfig.screenWidth * 0.40,
+                height: SizeConfig.screenWidth * 0.10,
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TicketWidget extends StatelessWidget {
+  const _TicketWidget(this.model, {Key key, @required this.controller})
+      : super(key: key);
+  final TambolaWidgetController controller;
   final TambolaCardModel model;
   @override
   Widget build(BuildContext context) {
@@ -158,54 +217,69 @@ class _TicketWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Tambola',
-                  style: TextStyles.rajdhaniSB.body1,
-                ),
-                Text('${model.dailyPicksCount * 7} Tickets',
-                    style: TextStyles.sourceSans.body4.setOpecity(0.5)),
-              ],
+            Text(
+              'Tambola',
+              style: TextStyles.rajdhaniB.title4,
             ),
-            Text('Win 1 Crore',
-                style: TextStyles.sourceSans.body2
-                    .colour(UiConstants.kModalSheetMutedTextBackgroundColor))
+            Text('Today’s draw is out!',
+                style: TextStyles.sourceSans.body4.colour(Colors.white))
           ],
         ),
         SizedBox(
           height: 12,
         ),
-        DailyPicksTimer(
-          replacementWidget: TodayPicksBallsAnimation(
-            picksList:
-                model.todaysPicks != null ? model.todaysPicks : [-1, -1, -1],
-          ),
+        TodayPicksBallsAnimation(
+          picksList:
+              model.todaysPicks != null ? model.todaysPicks : [-1, -1, -1],
         ),
         Spacer(),
-        if (tambolaWidgetType == TambolaWidgetType.Timer)
-          Text(
-            'Next draw at 6 PM',
-            style: TextStyles.sourceSans.body4,
-          ),
-        if (tambolaWidgetType == TambolaWidgetType.Tickets)
-          RichText(
-            text: TextSpan(
-              text: 'Today’s draw matches your',
-              style: TextStyles.sourceSans.body4,
-              children: [
-                TextSpan(
-                    text: ' 4 tickets!',
-                    style: TextStyles.sourceSans.body4
-                        .colour(UiConstants.kWinnerPlayerPrimaryColor))
-              ],
-            ),
-          ),
+        CustomSaveButton(
+          border: Border.all(color: Color(0xff919193)),
+          color: Color(0xff232326),
+          onTap: () {
+            Haptic.vibrate();
+            locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.tambolaGameCard,
+                properties: AnalyticsProperties.getDefaultPropertiesMap(
+                    extraValuesMap: {
+                      "Time left for draw Tambola (mins)":
+                          AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                      "Tambola Tickets Owned":
+                          AnalyticsProperties.getTabolaTicketCount(),
+                    }));
+            AppState.delegate.parseRoute(
+              Uri.parse(model.game.route),
+            );
+          },
+          title: 'Start Playing',
+          width: SizeConfig.screenWidth * 0.40,
+          height: SizeConfig.screenWidth * 0.10,
+        ),
         SizedBox(
-          height: 16,
+          height: 12,
         )
+      ],
+    );
+  }
+}
+
+class _BannerTitle extends StatelessWidget {
+  const _BannerTitle({Key key, this.space}) : super(key: key);
+  final double space;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SvgPicture.asset(Assets.tambola_title),
+        SizedBox(
+          height: space ?? 4,
+        ),
+        Text(
+          'Win 1 Crore!',
+          style: TextStyles.sourceSansB.body1.colour(Color(0xffFFD979)),
+        ),
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -5,8 +6,10 @@ import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/coupon_widget.dart';
+import 'package:felloapp/ui/pages/others/finance/banner_widget.dart';
+import 'package:felloapp/ui/pages/others/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -63,6 +66,10 @@ class GoldBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
+            if (model.assetOptionsModel != null)
+              BannerWidget(
+                model: model.assetOptionsModel.data.banner,
+              ),
             if (model.animationController != null)
               EnterAmountView(
                 model: model,
@@ -373,16 +380,21 @@ class EnterAmountView extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              model.amountChip(0),
-              model.amountChip(1),
-              model.amountChip(2),
-              model.amountChip(3),
-            ],
-          ),
+          if (model.assetOptionsModel != null)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                model.assetOptionsModel.data.userOptions.length,
+                (index) => AmountChip(
+                  index: index,
+                  isActive: model.lastTappedChipIndex == index,
+                  amt: model.assetOptionsModel.data.userOptions[index].value,
+                  onClick: model.onChipClick,
+                  isBest: model.assetOptionsModel.data.userOptions[index].best,
+                ),
+              ),
+            ),
           SizedBox(
             height: SizeConfig.padding24,
           ),

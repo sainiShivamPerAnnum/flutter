@@ -92,7 +92,7 @@ class _CouponView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.screenWidth * .7,
-      padding: EdgeInsets.only(left: 16, right: 18, bottom: 18),
+      padding: EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
       decoration: BoxDecoration(
         border: goldBuyViewModel.appliedCoupon != null
             ? goldBuyViewModel.appliedCoupon?.code == model.code
@@ -119,23 +119,33 @@ class _CouponView extends StatelessWidget {
                 style: TextStyles.sourceSansSB.body1.colour(Colors.white),
               ),
               Spacer(),
-              TextButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   if (goldBuyViewModel.appliedCoupon == null ||
-                      goldBuyViewModel.appliedCoupon.code !=
-                          model.code) if (!goldBuyViewModel
-                      .couponApplyInProgress) onTap(model);
+                      goldBuyViewModel.appliedCoupon.code != model.code) {
+                    if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
+                  } else {
+                    goldBuyViewModel.appliedCoupon = null;
+                  }
                 },
                 child: goldBuyViewModel.appliedCoupon == null ||
                         goldBuyViewModel.appliedCoupon.code != model.code
-                    ? goldBuyViewModel.couponApplyInProgress
-                        ? SizedBox()
+                    ? goldBuyViewModel.couponApplyInProgress &&
+                            goldBuyViewModel.couponCode == model.code
+                        ? SpinKitThreeBounce(
+                            size: SizeConfig.body2,
+                            color: UiConstants.primaryColor,
+                          )
                         : Text(
                             "Apply",
                             style: TextStyles.sourceSansSB.body3
                                 .colour(Color(0xff1ADAB7)),
                           )
-                    : SizedBox(),
+                    : Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Color(0xff1ADAB7),
+                      ),
               )
             ],
           ),
@@ -146,6 +156,8 @@ class _CouponView extends StatelessWidget {
             width: SizeConfig.screenWidth * 0.5,
             child: Text(
               model.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: TextStyles.sourceSans.body4,
             ),
           )
@@ -154,3 +166,6 @@ class _CouponView extends StatelessWidget {
     );
   }
 }
+
+
+// 

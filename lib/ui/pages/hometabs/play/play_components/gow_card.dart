@@ -68,7 +68,7 @@ class GOWCard extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: SizeConfig.pageHorizontalMargins),
                       width: double.infinity,
-                      height: SizeConfig.screenHeight * 0.2,
+                      height: SizeConfig.screenHeight * 0.18,
                       child: Row(
                         children: [
                           Column(
@@ -86,8 +86,10 @@ class GOWCard extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 14, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: UiConstants.kUserRankBackgroundColor,
-                                    borderRadius: BorderRadius.circular(48),
+                                    color: Color(0xff232326),
+                                    border:
+                                        Border.all(color: Color(0xff919193)),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Row(
                                     children: [
