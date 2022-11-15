@@ -331,7 +331,7 @@ class PaytmRepository extends BaseRepo {
       return ApiResponse<ActiveSubscriptionModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger.i(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to find active subscription", 400);
     }

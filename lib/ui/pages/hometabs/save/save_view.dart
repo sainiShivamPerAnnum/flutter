@@ -226,27 +226,32 @@ class SaveNetWorthSection extends StatelessWidget {
         ),
         child: Column(
           children: [
-              SizedBox(
+            SizedBox(
               height: SizeConfig.padding12,
             ),
-        model.userFundWallet.netWorth  != 0 &&  model.userFundWallet.netWorth != null ?   Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   SizedBox(
-              height: SizeConfig.padding12,
-            ),
-                  Text(
-                    'Your Networth',
-                    style: TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
-                  ),
-                  NetWorthValue(
-                    style: TextStyles.sourceSans.title0.bold,
-                  ),
-                ],
-              ),
-            ) : Container(),
+            model.userFundWallet.netWorth != null &&
+                    model.userFundWallet.netWorth != 0
+                ? Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding12,
+                        ),
+                        Text(
+                          'Your Networth',
+                          style: TextStyles.sourceSans.body2
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        NetWorthValue(
+                          style: TextStyles.sourceSans.title0.bold,
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             SizedBox(
               height: SizeConfig.padding10,
             ),

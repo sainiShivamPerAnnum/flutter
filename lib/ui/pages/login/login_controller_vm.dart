@@ -100,7 +100,6 @@ class LoginControllerViewModel extends BaseViewModel {
     _currentPage = page;
     notifyListeners();
   }
-  
 
   init(initPage, loginModelInstance) {
     _currentPage = (initPage != null) ? initPage : LoginMobileView.index;
@@ -177,11 +176,11 @@ class LoginControllerViewModel extends BaseViewModel {
                 _onSignInSuccess(LoginSource.FIREBASE);
               }).catchError((e) {
                 print(e.toString());
+                setState(ViewState.Idle);
                 _otpScreenKey.currentState.model.otpFieldEnabled = true;
                 BaseUtil.showNegativeAlert(
                     "Authentication failed", "Please try again after sometime");
               });
-              setState(ViewState.Idle);
             } else {
               _otpScreenKey.currentState.model.pinEditingController.clear();
               _otpScreenKey.currentState.model.otpFieldEnabled = true;
@@ -209,35 +208,18 @@ class LoginControllerViewModel extends BaseViewModel {
             if (refCode != null && refCode.isNotEmpty)
               BaseUtil.manualReferralCode = refCode;
 
-            // if (!_nameKey.currentState.model.isLoading &&
-            //     _nameKey.currentState.model.isValid) {
             setState(ViewState.Busy);
 
             String name =
                 _nameKey.currentState.model.nameController.text.trim();
 
-//TEST DATA ---STARTS---//
             if (userService.baseUser == null) {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
                   userService.firebaseUser.uid,
                   _formatMobileNumber(LoginControllerView.mobileno));
             }
-            // logger.d(
-            //     "Mobileno : ${_formatMobileNumber(LoginControllerView.mobileno)}");
-            // userService.baseUser.name = "Abc";
 
-            // userService.baseUser.email = "abc@gmail.com";
-
-            // userService.baseUser.isEmailVerified = false;
-
-            // userService.baseUser.dob = "12-05-2000";
-
-            // userService.baseUser.gender = "M";
-
-            // cstate = "AR7YPqDj";
-//TEST DATA ----ENDS----
-            // if (await dbProvider.checkIfUsernameIsAvailable(username)) {
             _nameKey.currentState.model.enabled = false;
             notifyListeners();
 
@@ -259,6 +241,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 message = response.errorMessage ??
                     "Unable to create account, please try again later.";
                 _nameKey.currentState.model.enabled = true;
+                setState(ViewState.Idle);
                 flag = false;
               } else {
                 final gtId = response.model['gtId'];
@@ -270,6 +253,7 @@ class LoginControllerViewModel extends BaseViewModel {
               }
             } catch (e) {
               logger.d(e);
+              setState(ViewState.Idle);
               _nameKey.currentState.model.enabled = true;
               flag = false;
             }
@@ -294,21 +278,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
               setState(ViewState.Idle);
             }
-            // } else {
-            //   BaseUtil.showNegativeAlert(
-            //     'username not available',
-            //     'Please choose another username',
-            //   );
-            //   _nameKey.currentState.model.enabled = true;
-
-            //   setState(ViewState.Idle);
-            // }
-            // } else {
-            //   BaseUtil.showNegativeAlert(
-            //     "Error",
-            //     "Please try again",
-            //   );
-            // }
           }
 
           break;
@@ -338,7 +307,6 @@ class LoginControllerViewModel extends BaseViewModel {
         userService.baseUser =
             BaseUser.newUser(userService.firebaseUser.uid, userMobile);
       }
-      setState(ViewState.Idle);
 
       ///First time user!
       _isSignup = true;
@@ -350,15 +318,22 @@ class LoginControllerViewModel extends BaseViewModel {
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
       if (source == LoginSource.FIREBASE)
-        _controller.animateToPage(
+        _controller
+            .animateToPage(
           LoginNameInputView.index,
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
-        );
-      else if (source == LoginSource.TRUECALLER)
+        )
+            .then((_) {
+          setState(ViewState.Idle);
+        });
+      else if (source == LoginSource.TRUECALLER) {
         _controller.jumpToPage(
           LoginNameInputView.index,
         );
+        setState(ViewState.Idle);
+      }
+
       loginUsingTrueCaller = false;
       Future.delayed(Duration(seconds: 1), () {
         nameViewScrollController.animateTo(
@@ -389,12 +364,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
       BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
 
-      // bool res = await lclDbProvider.showHomeTutorial;
-      // if (res) {
-      //   bool result = await userService.completeOnboarding();
-      //   if (result) lclDbProvider.setShowHomeTutorial = false;
-      // }
-
       _analyticsService.trackSignup(userService.baseUser.uid);
     }
 
@@ -416,15 +385,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
     bool res =
         PreferenceHelper.exists(PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
-    setState(ViewState.Idle);
-
-    ///check if the account is blocked
-    if (userService.baseUser != null && userService.baseUser.isBlocked) {
-      AppState.isUpdateScreen = true;
-      appStateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
-      return;
-    }
 
     Map<String, dynamic> response = await _internalOpsService.initDeviceInfo();
     logger.d("Device Details: $response");
@@ -444,6 +404,16 @@ class LoginControllerViewModel extends BaseViewModel {
         version: version,
         isPhysicalDevice: isPhysicalDevice,
       );
+    }
+
+    setState(ViewState.Idle);
+
+    ///check if the account is blocked
+    if (userService.baseUser != null && userService.baseUser.isBlocked) {
+      AppState.isUpdateScreen = true;
+      appStateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
+      return;
     }
 
     appStateProvider.currentAction =

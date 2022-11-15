@@ -310,8 +310,10 @@ class TransactionTile extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
+          contentPadding: EdgeInsets.only(
+            left: SizeConfig.padding20,
+            right: SizeConfig.padding14,
+          ),
           onTap: () {
             Haptic.vibrate();
             BaseUtil.openModalBottomSheet(
@@ -343,7 +345,6 @@ class TransactionTile extends StatelessWidget {
               ),
               Text(txnHistoryservice.getFormattedTxnAmount(txn.amount),
                   style: TextStyles.sourceSansSB.body2),
-
               Padding(
                 padding: EdgeInsets.all(SizeConfig.padding6),
                 child: Icon(
@@ -356,8 +357,10 @@ class TransactionTile extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: SizeConfig.screenWidth*0.9,
-          child: Divider(color: UiConstants.kTextColor2))
+            width: SizeConfig.screenWidth * 0.9,
+            child: Divider(
+              color: UiConstants.kTextColor2,
+            ))
       ],
     );
   }
