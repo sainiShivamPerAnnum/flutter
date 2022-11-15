@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 class LoginFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding44, horizontal: SizeConfig.padding14),
+    return SafeArea(
       child: Container(
-          height: SizeConfig.navBarHeight * 0.45,
+          // height: SizeConfig.navBarHeight * 0.5,
           width: SizeConfig.navBarWidth * 0.28,
+          padding: EdgeInsets.all(SizeConfig.padding12),
+          margin: EdgeInsets.only(
+              top: SizeConfig.pageHorizontalMargins / 2,
+              right: SizeConfig.pageHorizontalMargins),
           decoration: BoxDecoration(
             color: UiConstants.kDarkBackgroundColor,
             borderRadius:
