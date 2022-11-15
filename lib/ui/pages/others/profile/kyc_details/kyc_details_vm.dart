@@ -1,13 +1,9 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
-import 'package:felloapp/core/model/verify_pan_response_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -17,24 +13,38 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, INPROCESS, NONE }
+enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, NONE }
 
 class KYCDetailsViewModel extends BaseViewModel {
+  final _bankAndPanService = locator<BankAndPanService>();
   String stateChosenValue;
   TextEditingController nameController, panController;
   bool inEditMode = true;
-  bool isUpadtingKycDetails = false;
+  bool _isUpdatingKycDetails = false;
+
+  get isUpdatingKycDetails => this._isUpdatingKycDetails;
+
+  set isUpdatingKycDetails(value) {
+    this._isUpdatingKycDetails = value;
+    notifyListeners();
+  }
+
   bool _hasDetails = false;
   XFile _capturedImage;
   double _fileSize;
   UserKycDataModel _userKycData;
+  String _kycErrorMessage;
+
+  get kycErrorMessage => this._kycErrorMessage;
+
+  set kycErrorMessage(value) {
+    this._kycErrorMessage = value;
+    notifyListeners();
+  }
 
   UserKycDataModel get userKycData => this._userKycData;
 
@@ -97,43 +107,6 @@ class KYCDetailsViewModel extends BaseViewModel {
     checkForKycExistence();
   }
 
-  // checkForKeyboardChange(String val) {
-  //   if (val.length >= 0 &&
-  //       val.length < 5 &&
-  //       panTextInputType != TextInputType.name) {
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.name;
-  //     notifyListeners();
-  //     // Future.delayed(Duration(milliseconds: 100), () {
-  //     //   panFocusNode.requestFocus();
-  //     // });
-  //     return;
-  //   }
-  //   if (val.length >= 5 &&
-  //       val.length < 9 &&
-  //       panTextInputType != TextInputType.number) {
-  //     print("I got called");
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.number;
-  //     notifyListeners();
-  //     Future.delayed(Duration(milliseconds: 100), () {
-  //       panFocusNode.requestFocus();
-  //     });
-  //     return;
-  //   }
-
-  //   if (val.length >= 9 && panTextInputType != TextInputType.name) {
-  //     panFocusNode.unfocus();
-  //     panTextInputType = TextInputType.name;
-  //     notifyListeners();
-  //     Future.delayed(Duration(milliseconds: 100), () {
-  //       panFocusNode.requestFocus();
-  //     });
-  //   }
-
-  //   return;
-  // }
-
   void verifyImage() {
     if (capturedImage == null) return;
     final String ext = capturedImage.name.split('.').last.toLowerCase();
@@ -147,7 +120,7 @@ class KYCDetailsViewModel extends BaseViewModel {
         capturedImage = null;
         BaseUtil.openDialog(
             addToScreenStack: true,
-            isBarrierDismissable: false,
+            isBarrierDismissible: false,
             hapticVibrate: true,
             content: MoreInfoDialog(
                 title: 'Snap!',
@@ -159,7 +132,7 @@ class KYCDetailsViewModel extends BaseViewModel {
       capturedImage = null;
       BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: false,
+          isBarrierDismissible: false,
           hapticVibrate: true,
           content: MoreInfoDialog(
               title: 'Snap!',
@@ -170,67 +143,29 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   checkForKycExistence() async {
     setState(ViewState.Busy);
-    // if (_userService.baseUser.isSimpleKycVerified != null &&
-    //     _sellService.userPan != null &&
-    //     _sellService.userPan.isNotEmpty) {
-    //   if (_userService.baseUser.isSimpleKycVerified) {
-    //     hasDetails = true;
-    //     panController.text = _sellService.userPan;
-    //     nameController.text = _userService.baseUser.kycName;
-    //     inEditMode = false;
-    //   }
-    // }
     final kycRes = await _bankingRepo.getUserKycInfo();
     if (kycRes.isSuccess()) {
       userKycData = kycRes.model;
-
-      if (kycRes.model.ocrVerified) {
+      if (userKycData.ocrVerified) {
         kycVerificationStatus = KycVerificationStatus.VERIFIED;
-        panController.text = kycRes.model.pan;
-        nameController.text = kycRes.model.name;
+        panController.text = userKycData.pan;
+        nameController.text = userKycData.name;
         inEditMode = false;
         hasDetails = true;
-      } else if (kycRes.model.trackResult != null) {
-        switch (kycRes.model.trackResult.status) {
-          case 'pending':
-            kycVerificationStatus = KycVerificationStatus.INPROCESS;
-            break;
-          case 'failed':
-            kycVerificationStatus = KycVerificationStatus.FAILED;
-            break;
-        }
-      }
+      } else
+        kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     } else {
       kycVerificationStatus = KycVerificationStatus.NONE;
     }
     setState(ViewState.Idle);
   }
 
-  // bool _preVerifyInputs() {
-  //   RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
-  //   if (panController.text.isEmpty) {
-  //     BaseUtil.showNegativeAlert(
-  //         'Invalid Pan', 'Kindly enter a valid PAN Number');
-  //     return false;
-  //   } else if (!panCheck.hasMatch(panController.text) ||
-  //       panController.text.length != 10) {
-  //     BaseUtil.showNegativeAlert(
-  //         'Invalid Pan', 'Kindly enter a valid PAN Number');
-  //     return false;
-  //   } else if (nameController.text.isEmpty) {
-  //     BaseUtil.showNegativeAlert(
-  //         'Name missing', 'Kindly enter your name as per your pan card');
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
   Future<void> onSubmit(context) async {
     if (capturedImage == null)
       return BaseUtil.showNegativeAlert(
           "No file selected", "Please select a file");
-    if (isUpadtingKycDetails) return;
-    isUpadtingKycDetails = true;
+    if (isUpdatingKycDetails) return;
+    isUpdatingKycDetails = true;
     final res = await _bankingRepo.getSignedImageUrl(capturedImage.name);
 
     if (res.isSuccess()) {
@@ -238,81 +173,30 @@ class KYCDetailsViewModel extends BaseViewModel {
           await _bankingRepo.uploadPanImageFile(res.model.url, capturedImage);
       if (imageUploadRes.isSuccess()) {
         final forgeryUploadRes =
-            await _bankingRepo.postForgeryUpload(res.model.key, res.model.id);
+            await _bankingRepo.processForgeryUpload(res.model.key);
         if (forgeryUploadRes.isSuccess()) {
-          kycVerificationStatus = KycVerificationStatus.INPROCESS;
           capturedImage = null;
+          _bankAndPanService.activeBankAccountDetails = null;
+          _bankAndPanService.isBankDetailsAdded = false;
+          checkForKycExistence();
           BaseUtil.showPositiveAlert(
-              "Successful", "We'll notify you in a moment");
+              "Kyc Verification Successful!", "Sell Unlocked");
+          AppState.backButtonDispatcher.didPopRoute();
         } else {
+          kycErrorMessage = forgeryUploadRes.errorMessage;
           BaseUtil.showNegativeAlert(
               forgeryUploadRes.errorMessage ?? "Something went wrong!", "");
         }
       } else {
         capturedImage = null;
-        BaseUtil.showNegativeAlert("You are fraud", "Use a real pan image");
+        kycErrorMessage = imageUploadRes.errorMessage;
+        BaseUtil.showNegativeAlert(
+            imageUploadRes.errorMessage ?? "You are fraud",
+            "Use a real pan image");
       }
     } else
-      BaseUtil.showNegativeAlert("Failed to get Url", "Please try again");
-    isUpadtingKycDetails = false;
-    // if (!_preVerifyInputs()) {
-    //   isUpadtingKycDetails = false;
-    //   return;
-    // }
-
-    // FocusScope.of(context).unfocus();
-
-    // _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
-
-    // ///next get all details required for registration
-
-    // try {
-    //   ApiResponse<VerifyPanResponseModel> response =
-    //       await _bankingRepo.verifyPan(
-    //           uid: _userService.baseUser.uid,
-    //           panNumber: panController.text.trim(),
-    //           panName: nameController.text.trim().toUpperCase());
-
-    //   if (response.code == 200) {
-    //     if (response.model.flag) {
-    //       await _cacheService.invalidateByKey(CacheKeys.USER);
-    //       await _userService.setBaseUser();
-    //       _sellService.checkForUserPanDetails();
-    //       _sellService.isKYCVerified = true;
-    //       _analyticsService.track(
-    //         eventName: AnalyticsEvents.panVerified,
-    //         properties: {'userId': _userService.baseUser.uid},
-    //       );
-
-    //       isUpadtingKycDetails = false;
-
-    //       BaseUtil.showPositiveAlert(
-    //           'Verification Successful', 'You are successfully verified!');
-    //       // isKycInProgress = false;
-
-    //       _gtService.fetchAndVerifyGoldenTicketByID();
-
-    //       AppState.backButtonDispatcher.didPopRoute();
-    //     }
-    //   } else {
-    //     isUpadtingKycDetails = false;
-
-    //     BaseUtil.showNegativeAlert(
-    //         'Registration failed', response.errorMessage ?? 'Please try again');
-
-    //     _analyticsService.track(
-    //       eventName: AnalyticsEvents.kycVerificationFailed,
-    //       properties: {'userId': _userService.baseUser.uid},
-    //     );
-    //   }
-    // } on BadRequestException catch (e) {
-    //   return ApiResponse(
-    //     model: false,
-    //     code: 400,
-    //     errorMessage: e.toString(),
-    //   );
-    // } catch (e) {
-    //   _logger.e(e.toString());
-    // }
+      BaseUtil.showNegativeAlert(
+          res.errorMessage ?? "Failed to get Url", "Please try again");
+    isUpdatingKycDetails = false;
   }
 }

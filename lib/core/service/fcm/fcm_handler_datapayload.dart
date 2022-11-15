@@ -22,7 +22,7 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
     Future.delayed(Duration(seconds: 4), () {
       BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: false,
+          isBarrierDismissible: false,
           hapticVibrate: false,
           content: FelloRatingDialog());
     });
@@ -31,7 +31,7 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
   showDialog(title, body) {
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: true,
+      isBarrierDismissible: true,
       hapticVibrate: false,
       content: FelloInfoDialog(
         title: title,

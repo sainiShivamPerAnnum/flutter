@@ -314,7 +314,7 @@ class GoldenTicketService extends ChangeNotifier {
   showAutosavePrompt() {
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: FelloInfoDialog(
         title: "Put your savings on autopilot",

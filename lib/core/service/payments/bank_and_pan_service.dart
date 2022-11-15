@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
+import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -14,6 +15,14 @@ class BankAndPanService
   final _paymentRepo = locator<PaymentRepository>();
   final _userRepo = locator<UserRepository>();
   String _userPan;
+  UserKycDataModel _userKycData;
+
+  get userKycData => this._userKycData;
+
+  set userKycData(value) {
+    this._userKycData = value;
+    notifyListeners(BankAndPanServiceProperties.kycVerified);
+  }
 
   get userPan => this._userPan;
 

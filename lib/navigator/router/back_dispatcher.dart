@@ -33,7 +33,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Function confirmAction, bool isInLandScape) {
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: RotatedBox(
         quarterTurns: 0,

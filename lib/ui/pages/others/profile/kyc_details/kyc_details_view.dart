@@ -1,33 +1,26 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:camera/camera.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
-import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_failure.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_pending.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_unverifed.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
@@ -48,8 +41,7 @@ getKycView(KYCDetailsViewModel model) {
       return KycSuccessView(model: model);
     case KycVerificationStatus.UNVERIFIED:
       return KycUnVerifiedView(model: model);
-    case KycVerificationStatus.INPROCESS:
-      return KycInProcessView(model: model);
+
     case KycVerificationStatus.FAILED:
       return KycUnVerifiedView(model: model);
     case KycVerificationStatus.NONE:
@@ -130,14 +122,18 @@ class KYCDetailsView extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              ReactivePositiveAppButton(
-                                onPressed: () async {
-                                  model.panFocusNode.unfocus();
-                                  await model.onSubmit(context);
-                                },
-                                btnText: locale.btnSumbit,
-                                width: SizeConfig.screenWidth,
-                              ),
+                              model.isUpdatingKycDetails
+                                  ? LinearProgressIndicator(
+                                      backgroundColor: Colors.black,
+                                    )
+                                  : AppPositiveBtn(
+                                      onPressed: () async {
+                                        // model.panFocusNode.unfocus();
+                                        await model.onSubmit(context);
+                                      },
+                                      btnText: locale.btnSumbit,
+                                      width: SizeConfig.screenWidth,
+                                    ),
                             ],
                           )
                         : SizedBox(),
@@ -155,44 +151,95 @@ class KycBriefTile extends StatelessWidget {
       {Key key,
       @required this.model,
       @required this.trailing,
+      @required this.label,
+      this.subtitle,
       @required this.title})
       : super(key: key);
 
   final KYCDetailsViewModel model;
   final Widget trailing;
   final String title;
+  final String label;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTextFieldLabel(title),
+        AppTextFieldLabel(label),
         Container(
+          width: SizeConfig.screenWidth,
           padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding20,
+            vertical: SizeConfig.padding24,
           ),
           decoration: BoxDecoration(
             color: UiConstants.kBackgroundColor3,
             borderRadius: BorderRadius.circular(SizeConfig.roundness8),
           ),
-          child: ListTile(
-              leading: Icon(
-                Icons.check_circle_outline_rounded,
-                color: UiConstants.primaryColor,
-                size: SizeConfig.avatarRadius * 1.6,
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(SizeConfig.padding12),
+                width: SizeConfig.avatarRadius * 4,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                ),
+                child: SvgPicture.asset(
+                  Assets.ic_upload_success,
+                ),
               ),
-              title: Text(
-                title ?? model.capturedImage.name,
-                maxLines: 2,
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title ?? "",
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                    ),
+                    if (subtitle != null)
+                      Padding(
+                        padding: EdgeInsets.only(top: SizeConfig.padding6),
+                        child: Text(
+                          subtitle,
+                          style:
+                              TextStyles.body3.colour(UiConstants.kTextColor2),
+                        ),
+                      )
+                  ],
+                ),
               ),
-              subtitle: model.fileSize != null
-                  ? Text('Size: ${model.fileSize}',
-                      style: TextStyles.body3.colour(UiConstants.kTextColor3))
-                  : SizedBox(),
-              trailing: trailing),
-        ),
+              trailing
+            ],
+          ),
+        )
+        // Container(
+        //   padding: EdgeInsets.symmetric(
+        //     vertical: SizeConfig.padding20,
+        //   ),
+        //   decoration: BoxDecoration(
+        //     color: UiConstants.kBackgroundColor3,
+        //     borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        //   ),
+        //   child: ListTile(
+        //       leading: Icon(
+        //         Icons.check_circle_outline_rounded,
+        //         color: UiConstants.primaryColor,
+        //         size: SizeConfig.avatarRadius * 1.6,
+        //       ),
+        //       title: Text(
+        //         title ?? model.capturedImage.name,
+        //         maxLines: 2,
+        //         style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+        //       ),
+        //       subtitle: model.fileSize != null
+        //           ? Text('Size: ${model.fileSize}',
+        //               style: TextStyles.body3.colour(UiConstants.kTextColor3))
+        //           : SizedBox(),
+        //       trailing: trailing),
+        // ),
       ],
     );
   }

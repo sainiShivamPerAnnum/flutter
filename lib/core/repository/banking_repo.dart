@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/util/app_exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -20,6 +22,7 @@ class BankingRepository extends BaseRepo {
   final _logger = locator<CustomLogger>();
   final _apiPaths = locator<ApiPath>();
   final _cacheService = new CacheService();
+  final _bankAndPanService = locator<BankAndPanService>();
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
@@ -87,17 +90,14 @@ class BankingRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> uploadPanImageFile(
       String uploadUrl, XFile imageFile) async {
-    Uint8List body = await imageFile.readAsBytes();
     try {
-      final String token = await getBearerToken();
       var response = await http.put(Uri.parse(uploadUrl),
           body: await File(imageFile.path).readAsBytes(),
           headers: {'Content-Type': "image/${imageFile.name.split('.').last}"});
       if (response.statusCode == 200) {
         return ApiResponse(model: true, code: 200);
-      } else {
-        ApiResponse.withError(response.body.toString(), 400);
       }
+      return ApiResponse.withError(response.body.toString(), 400);
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError(
@@ -105,10 +105,9 @@ class BankingRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> postForgeryUpload(String key, String id) async {
+  Future<ApiResponse<bool>> processForgeryUpload(String key) async {
     final Map<String, dynamic> body = {
       "key": key,
-      "id": id,
     };
 
     try {
@@ -122,6 +121,10 @@ class BankingRepository extends BaseRepo {
 
       _logger.d(response);
       return ApiResponse(model: true, code: 200);
+    } on BadRequestException catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to verify pan", 400);
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError(
@@ -130,6 +133,8 @@ class BankingRepository extends BaseRepo {
   }
 
   Future<ApiResponse<UserKycDataModel>> getUserKycInfo() async {
+    if (_bankAndPanService.userKycData != null)
+      return ApiResponse(model: _bankAndPanService.userKycData, code: 200);
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.getData(
@@ -137,9 +142,15 @@ class BankingRepository extends BaseRepo {
         token: token,
         cBaseUrl: _baseUrl,
       );
-      _logger.d(response);
       final UserKycDataModel panData =
           UserKycDataModel.fromMap(response["data"]);
+      if (panData.ocrVerified != null && panData.ocrVerified) {
+        _bankAndPanService.userPan = panData.pan;
+        _bankAndPanService.userKycData = panData;
+        userService.setMyUserName(panData.name);
+      }
+      _logger.d(response);
+
       return ApiResponse(model: panData, code: 200);
     } catch (e) {
       logger.e(e.toString());

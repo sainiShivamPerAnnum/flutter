@@ -53,6 +53,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -287,7 +288,7 @@ class BaseUtil extends ChangeNotifier {
       if (_userService.userJourneyStats?.mlIndex == 1)
         return BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: true,
+          isBarrierDismissible: true,
           hapticVibrate: false,
           content: CompleteProfileDialog(),
         );
@@ -341,7 +342,7 @@ class BaseUtil extends ChangeNotifier {
       if (_userService.userJourneyStats.mlIndex == 1)
         return BaseUtil.openDialog(
             addToScreenStack: true,
-            isBarrierDismissable: true,
+            isBarrierDismissible: true,
             hapticVibrate: false,
             content: CompleteProfileDialog());
       final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
@@ -389,7 +390,7 @@ class BaseUtil extends ChangeNotifier {
     if (_userService.userJourneyStats.mlIndex == 1)
       return BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: true,
+          isBarrierDismissible: true,
           hapticVibrate: false,
           content: CompleteProfileDialog());
     _analyticsService.track(eventName: AnalyticsEvents.challengeCtaTapped);
@@ -421,6 +422,52 @@ class BaseUtil extends ChangeNotifier {
           augmontDetail.createdTime.toDate().isBefore(_dt));
     }
     return (!skFlag && !augFlag);
+  }
+
+  static showGtWinFlushBar(String title, String message, {int seconds = 2}) {
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    if ((title != null && title.length > 200) ||
+        (message != null && message.length > 200)) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Flushbar(
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: SvgPicture.asset(
+          Assets.flatIsland,
+          height: SizeConfig.padding24,
+        ),
+        margin: EdgeInsets.only(
+            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
+                ? SizeConfig.navBarHeight +
+                    math.max(SizeConfig.viewInsets.bottom,
+                        SizeConfig.pageHorizontalMargins)
+                : SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
+        title: title,
+        message: message,
+        duration: Duration(seconds: seconds),
+        backgroundColor: Colors.black,
+        onTap: (_) {
+          _.dismiss();
+          AppState.delegate.parseRoute(Uri.parse("/myWinnings"));
+        },
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.positiveAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(AppState.delegate.navigatorKey.currentContext);
+    });
   }
 
   static showPositiveAlert(String title, String message, {int seconds = 2}) {
@@ -558,7 +605,7 @@ class BaseUtil extends ChangeNotifier {
     Widget content,
     bool addToScreenStack,
     bool hapticVibrate,
-    bool isBarrierDismissable,
+    bool isBarrierDismissible,
     ValueChanged<dynamic> callback,
   }) async {
     if (addToScreenStack != null && addToScreenStack == true)
@@ -567,7 +614,7 @@ class BaseUtil extends ChangeNotifier {
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       context: AppState.delegate.navigatorKey.currentContext,
-      barrierDismissible: isBarrierDismissable,
+      barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content,
       useSafeArea: true,
     );

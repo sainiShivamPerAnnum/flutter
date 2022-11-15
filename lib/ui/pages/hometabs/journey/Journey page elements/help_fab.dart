@@ -1,22 +1,14 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HelpFab extends StatefulWidget {
@@ -62,11 +54,12 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          isOpen ? collapseFab() : expandFab();
-          AppState.screenStack.add(ScreenItem.dialog);
-          trackHelpTappedEvent();
-          AppState.delegate
-              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          BaseUtil.showGtWinFlushBar("You won a gt", "Tap to check it out");
+          // isOpen ? collapseFab() : expandFab();
+          // AppState.screenStack.add(ScreenItem.dialog);
+          // trackHelpTappedEvent();
+          // AppState.delegate
+          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             height: SizeConfig.avatarRadius * 2.4,

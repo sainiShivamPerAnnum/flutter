@@ -172,7 +172,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userJourneyStats(UserJourneyStatsModel stats) {
-    if (stats.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '')
+    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '')
       GoldenTicketService.previousPrizeSubtype =
           _userJourneyStats?.prizeSubtype ?? '';
     _userJourneyStats = stats;
@@ -643,7 +643,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               _logger.d("Auth: failed");
               return BaseUtil.openDialog(
                   hapticVibrate: true,
-                  isBarrierDismissable: false,
+                  isBarrierDismissible: false,
                   content: Platform.isAndroid
                       ? ConfirmationDialog(
                           title: "Please Authenticate",

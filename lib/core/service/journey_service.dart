@@ -472,8 +472,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   void updateRewardStatus(String prizeSubtype) {
-    int activeRewardIndex = completedMilestonesPrizeList
-        .indexWhere((reward) => reward.prizeSubtype == prizeSubtype);
+    int activeRewardIndex = completedMilestonesPrizeList.indexWhere(
+        (reward) => reward != null && reward.prizeSubtype == prizeSubtype);
     if (activeRewardIndex != -1) {
       completedMilestonesPrizeList[activeRewardIndex] = null;
       notifyListeners(JourneyServiceProperties.Prizes);
@@ -560,6 +560,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     currentMilestoneList.clear();
     customPathDataList.clear();
     journeyPathItemsList.clear();
+    completedMilestoneList.clear();
+    unscratchedGTList.clear();
+    completedMilestonesPrizeList.clear();
+
     log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage currentMilestoneList length: ${currentMilestoneList.length} customPathDataList length: ${customPathDataList.length} journeyPathItemsList length: ${journeyPathItemsList.length}");
   }
   //-------------------|-PAGE ITEMS AND PROPERTIES SETUP METHODS-END-|--------------------

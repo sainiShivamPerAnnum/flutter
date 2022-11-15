@@ -114,7 +114,7 @@ class GoldBuyLoadingView extends StatelessWidget {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       content: PendingDialog(
         title: "We're still processing!",
         subtitle:

@@ -223,7 +223,7 @@ class RootViewModel extends BaseViewModel {
     if (updateAvilable) {
       canExecuteStartupNotification = false;
       BaseUtil.openDialog(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
         content: ConfirmationDialog(
@@ -255,7 +255,7 @@ class RootViewModel extends BaseViewModel {
       canExecuteStartupNotification = false;
       String msg = PreferenceHelper.getString(Constants.MSG_NOTICE) ?? " ";
       BaseUtil.openDialog(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
         content: ConfirmationDialog(

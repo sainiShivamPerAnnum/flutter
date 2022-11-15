@@ -23,15 +23,21 @@ class KycUnVerifiedView extends StatelessWidget {
       children: [
         model.capturedImage != null
             ? KycBriefTile(
-                title: "Upload your PAN Card",
+                label: "Uploaded PAN Card",
+                title: model.capturedImage.name,
                 model: model,
-                trailing: IconButton(
-                  icon: Icon(Icons.delete_rounded),
-                  color: Colors.red,
-                  onPressed: () {
-                    Haptic.vibrate();
-                    model.capturedImage = null;
-                  },
+                subtitle: "${model.fileSize.toString()} MB",
+                trailing: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                  child: IconButton(
+                    icon: Icon(Icons.delete_rounded),
+                    color: Colors.red,
+                    onPressed: () {
+                      Haptic.vibrate();
+                      model.capturedImage = null;
+                    },
+                  ),
                 ),
               )
             : Column(
@@ -80,14 +86,41 @@ class KycUnVerifiedView extends StatelessWidget {
                 ],
               ),
         SizedBox(height: SizeConfig.padding10),
-        AppTextFieldLabel("Max size: 5 MB"),
-        AppTextFieldLabel("Formats: PNG, JPEG, JPG"),
+        Row(
+          children: [
+            AppTextFieldLabel("Max size: 5 MB", leftPadding: 0),
+            SizedBox(
+              width: SizeConfig.padding16,
+            )
+          ],
+        ),
+        AppTextFieldLabel("Formats: PNG, JPEG, JPG", leftPadding: 0),
         if (model.kycVerificationStatus == KycVerificationStatus.FAILED &&
             model.capturedImage == null)
           Padding(
             padding: EdgeInsets.only(top: SizeConfig.padding8),
-            child: Text(model.userKycData.trackResult.reason ?? '',
-                style: TextStyles.body3.colour(Colors.red)),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5, color: Colors.red),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                color: Colors.red.withOpacity(0.05),
+              ),
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: SizeConfig.padding16),
+                  Text(
+                    model?.kycErrorMessage?.reason ??
+                        'Something went wrong, please try again.',
+                    style: TextStyles.body3.colour(Colors.red),
+                  ),
+                ],
+              ),
+            ),
           ),
       ],
     );
