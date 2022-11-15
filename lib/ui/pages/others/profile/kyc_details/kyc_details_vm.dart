@@ -161,6 +161,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> onSubmit(context) async {
+    kycErrorMessage = null;
     if (capturedImage == null)
       return BaseUtil.showNegativeAlert(
           "No file selected", "Please select a file");
@@ -184,19 +185,24 @@ class KYCDetailsViewModel extends BaseViewModel {
           AppState.backButtonDispatcher.didPopRoute();
         } else {
           kycErrorMessage = forgeryUploadRes.errorMessage;
+          kycVerificationStatus = KycVerificationStatus.FAILED;
           BaseUtil.showNegativeAlert(
               forgeryUploadRes.errorMessage ?? "Something went wrong!", "");
         }
       } else {
         capturedImage = null;
         kycErrorMessage = imageUploadRes.errorMessage;
+        kycVerificationStatus = KycVerificationStatus.FAILED;
         BaseUtil.showNegativeAlert(
             imageUploadRes.errorMessage ?? "You are fraud",
             "Use a real pan image");
       }
-    } else
+    } else {
+      kycErrorMessage = res.errorMessage;
+      kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(
           res.errorMessage ?? "Failed to get Url", "Please try again");
+    }
     isUpdatingKycDetails = false;
   }
 }

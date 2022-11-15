@@ -35,6 +35,7 @@ class KycUnVerifiedView extends StatelessWidget {
                     color: Colors.red,
                     onPressed: () {
                       Haptic.vibrate();
+                      model.kycErrorMessage = null;
                       model.capturedImage = null;
                     },
                   ),
@@ -96,7 +97,7 @@ class KycUnVerifiedView extends StatelessWidget {
         ),
         AppTextFieldLabel("Formats: PNG, JPEG, JPG", leftPadding: 0),
         if (model.kycVerificationStatus == KycVerificationStatus.FAILED &&
-            model.capturedImage == null)
+            model.kycErrorMessage != null)
           Padding(
             padding: EdgeInsets.only(top: SizeConfig.padding8),
             child: Container(
@@ -114,7 +115,7 @@ class KycUnVerifiedView extends StatelessWidget {
                   ),
                   SizedBox(width: SizeConfig.padding16),
                   Text(
-                    model?.kycErrorMessage?.reason ??
+                    model?.kycErrorMessage ??
                         'Something went wrong, please try again.',
                     style: TextStyles.body3.colour(Colors.red),
                   ),

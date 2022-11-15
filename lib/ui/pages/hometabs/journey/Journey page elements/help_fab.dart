@@ -77,9 +77,8 @@ class _HelpFabState extends State<HelpFab> {
                 Transform.translate(
                   offset: Offset(0, SizeConfig.padding3),
                   child: SvgPicture.network(
-                    DynamicUiUtils.helpFab.iconUri ??
-                        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2F216643_help_icon.svg?alt=media&token=c1faf4d6-f19c-46a8-87d0-ae8ed938800f',
-                    height: SizeConfig.avatarRadius * 1.8,
+                    DynamicUiUtils.helpFab.iconUri ?? '',
+                    // height: SizeConfig.avatarRadius * 1.8,
                     width: SizeConfig.avatarRadius * 1.8,
                   ),
                 ),
