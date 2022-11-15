@@ -210,14 +210,6 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get unscratchedGTCount => this._unscratchedGTCount;
-
-  set unscratchedGTCount(int count) {
-    this._unscratchedGTCount = count;
-    notifyListeners();
-    print("Unscratched gt count: $_unscratchedGTCount");
-  }
-
   bool get showUnscratchedCount => this._showUnscratchedCount;
 
   set showUnscratchedCount(bool value) {
@@ -234,7 +226,6 @@ class WinViewModel extends BaseViewModel {
 
     fetchReferralCode();
     fetchBasicConstantValues();
-    getUnscratchedGTCount();
     // _baseUtil.fetchUserAugmontDetail();
     getFelloFacts();
     _lbService.fetchReferralLeaderBoard();
@@ -499,14 +490,6 @@ class WinViewModel extends BaseViewModel {
         cancelAction: AppState.backButtonDispatcher.didPopRoute,
       ),
     );
-  }
-
-  getUnscratchedGTCount() async {
-    final ApiResponse<List<GoldenTicket>> res =
-        await _gtRepo.getUnscratchedGoldenTickets();
-    if (res.isSuccess()) {
-      unscratchedGTCount = res.model.length;
-    }
   }
 
   getWinningHistory() async {

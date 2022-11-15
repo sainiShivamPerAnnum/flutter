@@ -126,6 +126,10 @@ class BankDetailsView extends StatelessWidget {
                               textEditingController: model.bankIfscController,
                               keyboardType: TextInputType.streetAddress,
                               textCapitalization: TextCapitalization.characters,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[A-Za-z0-9]'))
+                              ],
                               validator: (value) {
                                 print(value);
                                 if (value == null && value.trim().isEmpty)
@@ -133,9 +137,6 @@ class BankDetailsView extends StatelessWidget {
                                 else if (value.trim().length < 6 ||
                                     value.trim().length > 25)
                                   return 'Please enter a valid bank IFSC';
-                                else if (!RegExp(r'[a-zA-Z]{4}[0]\w{6}$')
-                                    .hasMatch(value))
-                                  return "Please enter a valid bank IFSC";
                                 return null;
                               },
                             ),

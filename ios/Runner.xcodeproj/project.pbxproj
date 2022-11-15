@@ -769,7 +769,7 @@
 				07AE377928BCC63900FC1168 /* upi_pay */,
 				53C8034027A85D5C00190100 /* url_launcher_ios */,
 				38E67FEA28EEEB80006595C4 /* video_player_avfoundation */,
-				53A33C5527994C080046F585 /* webengage_flutter */,
+				53A33C5527994C080046F585 /* webengage_flutter.framework */,
 				53C8034227A85D5C00190100 /* webview_flutter_wkwebview */,
 			);
 			name = Products;
@@ -1113,10 +1113,9 @@
 			remoteRef = 537E775527BBCB83004DA35F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53A33C5527994C080046F585 /* webengage_flutter */ = {
+		53A33C5527994C080046F585 /* webengage_flutter.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = webengage_flutter;
 			path = webengage_flutter.framework;
 			remoteRef = 53A33C5427994C080046F585 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1904,6 +1903,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
+				FLUTTER_BUILD_DIR = build/ios;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2192,6 +2192,7 @@
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64 i386 armv7";
+				FLUTTER_BUILD_DIR = build/ios;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2530,6 +2531,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
+				FLUTTER_BUILD_DIR = build/ios;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",

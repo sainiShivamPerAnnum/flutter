@@ -218,6 +218,13 @@ class Assets {
   static final String noTransactionAsset = "assets/svg/no_transactions.svg";
   static final String noWinnersAsset = "assets/svg/no_winners_asset.svg";
 
+  //icons
+  static final String ic_camera = "assets/vectors/icons/ic_camera.svg";
+  static final String ic_upload_file =
+      "assets/vectors/icons/ic_upload_file.svg";
+  static final String ic_upload_success =
+      "assets/vectors/icons/ic_upload_success.svg";
+
   //Prize claim assets
   static final List<String> prizeClaimAssets = [
     "assets/svg/prize_asset_0.svg",

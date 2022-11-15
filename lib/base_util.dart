@@ -241,7 +241,7 @@ class BaseUtil extends ChangeNotifier {
   openProfileDetailsScreen() {
     if (JourneyService.isAvatarAnimationInProgress) return;
     if (_userService.userJourneyStats.mlIndex > 1)
-      AppState.delegate.parseRoute(Uri.parse("settings"));
+      AppState.delegate.parseRoute(Uri.parse("profile"));
     else {
       AppState.delegate.appState.currentAction = PageAction(
         page: UserProfileDetailsConfig,

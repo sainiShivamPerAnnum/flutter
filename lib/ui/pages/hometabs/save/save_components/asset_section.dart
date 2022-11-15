@@ -84,6 +84,7 @@ class SaveNetWorthSection extends StatelessWidget {
       properties: [UserServiceProperties.myUserFund],
       builder: (context, model, property) => Container(
         // height: SizeConfig.screenWidth * 1.4,
+        margin: EdgeInsets.only(bottom: SizeConfig.padding24),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(SizeConfig.roundness16),
