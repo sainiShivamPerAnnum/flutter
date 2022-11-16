@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_widget.d
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
@@ -27,14 +28,15 @@ class TambolaExistingUserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: FAppBar(
-        type: FaqsType.play,
-        showAvatar: false,
-        showCoinBar: false,
-        showHelpButton: false,
-        title: "Tambola",
-        backgroundColor: UiConstants.kArowButtonBackgroundColor,
-      ),
-      backgroundColor: UiConstants.kBackgroundColor,
+                    type:
+                        FaqsType.play ,
+                    showAvatar: false,
+                    showCoinBar: false,
+                    showHelpButton: false,
+                    title: "Tambola",
+                    backgroundColor: UiConstants.kArowButtonBackgroundColor,
+                  ),
+                  backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
         children: [
           NewSquareBackground(),
@@ -103,9 +105,10 @@ class TambolaExistingUserPage extends StatelessWidget {
                   onTap: () {
                     AppState.delegate.appState.currentAction = PageAction(
                       state: PageState.addWidget,
-                      page: AllTambolaTicketsPageConfig,
-                      widget: AllTambolaTickets(
-                          ticketList: model.tambolaBoardViews.toList()),
+                      page: TambolaNewUser,
+                      widget: TambolaNewUserPage(
+                        model: model,
+                      ),
                     );
                   },
                   child: Container(

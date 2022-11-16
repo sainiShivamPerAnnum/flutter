@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -748,6 +749,13 @@ class ButTicketsComponent extends StatelessWidget {
                   //     },
                   //   ),
                   // );
+                  AppState.delegate.appState.currentAction = PageAction(
+                    state: PageState.addWidget,
+                    page: TambolaNewUser,
+                    widget: TambolaNewUserPage(
+                      model: model,
+                    ),
+                  );
                 },
                 child: Text(
                   'View Prizes',

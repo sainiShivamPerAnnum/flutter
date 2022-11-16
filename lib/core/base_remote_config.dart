@@ -15,6 +15,10 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
     'tambola_header_1': 'Today\'s picks'
   };
+
+  static const Map<String, String> _TAMBOLA_COST = {
+    'tambola_cost': '500'
+  };
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Pull to see the other picks'
   };
@@ -211,6 +215,7 @@ class BaseRemoteConfig {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
+    ..._TAMBOLA_COST,
     ..._TAMBOLA_DAILY_PICK_COUNT,
     ..._FORCE_MIN_BUILD_NUMBER_IOS,
     ..._FORCE_MIN_BUILD_NUMBER_ANDROID,
@@ -363,7 +368,8 @@ class BaseRemoteConfig {
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 
   static String get DEPOSIT_UPI_ADDRESS => _DEPOSIT_UPI_ADDRESS.keys.first;
-
+  
+static String get TAMBOLACOST => _TAMBOLA_COST.keys.first;
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;

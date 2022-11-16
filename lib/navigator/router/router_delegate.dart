@@ -36,6 +36,7 @@ import 'package:felloapp/ui/pages/others/finance/transactions_history/transactio
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_existing_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
@@ -222,6 +223,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Faq:
           _addPageData(FAQPage(), FaqPageConfig);
           break;
+        case Pages.TExistingUser:
+          _addPageData(TambolaExistingUserPage(), TambolaExistingUser);
+          break;
+        case Pages.TNewUser:
+          _addPageData(TambolaNewUserPage(), TambolaNewUser);
+          break;
 
         case Pages.UpdateRequired:
           _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
@@ -237,11 +244,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.THome:
-          _addPageData(TambolaNewUserPage(), THomePageConfig);
+          _addPageData(TambolaWrapper(), THomePageConfig);
           break;
         // case Pages.TGame: //
         //   _addPageData(TambolaGameView(), TGamePageConfig);
         //   break;
+        case Pages.TExistingUser:
+          _addPageData(TambolaExistingUserPage(), TambolaExistingUser);
+          break;
+        case Pages.TNewUser:
+          _addPageData(TambolaNewUserPage(), TambolaNewUser);
+          break;
         case Pages.TPickDraw:
           _addPageData(PicksDraw(), TPickDrawPageConfig);
           break;
@@ -494,6 +507,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.THome:
         THomePageConfig.currentPageAction = action;
+        break;
+      case Pages.TExistingUser:
+        TambolaExistingUser.currentPageAction = action;
+        break;
+      case Pages.TNewUser:
+        TambolaNewUser.currentPageAction = action;
         break;
       case Pages.TGame:
         TGamePageConfig.currentPageAction = action;
