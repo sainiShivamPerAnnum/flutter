@@ -14,6 +14,7 @@ class BannerWidget extends StatelessWidget {
         color: UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5),
       ),
+      margin: EdgeInsets.symmetric(horizontal: 8),
       padding:
           EdgeInsets.symmetric(vertical: 8, horizontal: 4).copyWith(right: 24),
       child: Row(
@@ -32,6 +33,7 @@ class BannerWidget extends StatelessWidget {
             Flexible(
               child: Text(
                 model.title,
+                maxLines: 1,
                 style:
                     TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
               ),

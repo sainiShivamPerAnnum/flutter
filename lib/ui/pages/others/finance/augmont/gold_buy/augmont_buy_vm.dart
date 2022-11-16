@@ -31,6 +31,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 //TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
@@ -187,10 +188,13 @@ class GoldBuyViewModel extends BaseViewModel {
     this._skipMl = value;
   }
 
-  init(int? amount, bool isSkipMilestone, TickerProvider vsync) async {
+  bool readOnly = true;
+
+  init(int amount, bool isSkipMilestone, TickerProvider vsync) async {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
+
     animationController = AnimationController(
         vsync: vsync, duration: Duration(milliseconds: 500));
     await getAssetOptionsModel();
@@ -216,6 +220,15 @@ class GoldBuyViewModel extends BaseViewModel {
     // checkIfDepositIsLocked();
 
     setState(ViewState.Idle);
+  }
+
+  bool hideKeyboard = false;
+
+  void showKeyBoard() {
+    if (readOnly) {
+      readOnly = false;
+      notifyListeners();
+    }
   }
 
   void listnear() {

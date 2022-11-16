@@ -23,21 +23,25 @@ class AmountInputView extends StatefulWidget {
   final String minAmountMsg;
   final FocusNode focusNode;
   final Function(int val) onAmountChange;
+  final bool readOnly;
+  final void Function() onTap;
 
-  const AmountInputView({
-    Key? key,
-    required this.chipAmounts,
-    required this.onAmountChange,
-    required this.amountController,
-    required this.isEnabled,
-    required this.maxAmount,
-    required this.minAmount,
-    required this.maxAmountMsg,
-    required this.minAmountMsg,
-    required this.focusNode,
-    this.bestChipIndex = 1,
-    this.notice,
-  }) : super(key: key);
+  const AmountInputView(
+      {Key? key,
+      required this.chipAmounts,
+      required this.onAmountChange,
+      required this.amountController,
+      required this.isEnabled,
+      required this.maxAmount,
+      required this.minAmount,
+      required this.maxAmountMsg,
+      required this.minAmountMsg,
+      required this.focusNode,
+      this.bestChipIndex = 1,
+      this.notice,
+      required this.readOnly,
+      required this.onTap})
+      : super(key: key);
 
   @override
   State<AmountInputView> createState() => _AmountInputViewState();
@@ -111,6 +115,10 @@ class _AmountInputViewState extends State<AmountInputView> {
                     child: TextFormField(
                       autofocus: true,
                       showCursor: true,
+                      readOnly: widget.readOnly,
+                      onTap: () {
+                        widget.onTap();
+                      },
                       controller: widget.amountController,
                       focusNode: widget.focusNode,
                       enabled: widget.isEnabled,

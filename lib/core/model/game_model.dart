@@ -24,6 +24,8 @@ class GameModel {
   final String? analyticEvent;
   final String? icon;
   final String? description;
+  final String? walkThroughUri;
+  final String? highLight;
 
   static final helper = HelperModel<GameModel>(
     (map) => GameModel.fromMap(map),
@@ -41,6 +43,8 @@ class GameModel {
       this.isGOW,
       this.order,
       this.isTrending,
+      this.highLight,
+      this.walkThroughUri,
       this.gameCode,
       this.code,
       this.analyticEvent,
@@ -123,6 +127,8 @@ class GameModel {
         order: map['order'] ?? 0,
         icon: map['icon'] ?? '',
         isTrending: map['isTrending'] ?? false,
+        highLight: map['highlight'] ?? '',
+        walkThroughUri: map['walkthrough_uri'] ?? '',
         event: map['event'] ?? '',
         description: map['description'] ?? '');
   }

@@ -65,6 +65,8 @@ class LendboxBuyInputView extends StatelessWidget {
               notice: model.buyNotice,
               onAmountChange: (int amount) {},
               bestChipIndex: 2,
+              readOnly: model.readOnly,
+              onTap:()=> model.showKeyBoard(),
             ),
             Spacer(),
             SizedBox(

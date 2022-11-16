@@ -10,11 +10,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LendboxWithdrawalInputView extends StatelessWidget {
-  final LendboxWithdrawalViewModel? model;
+  final LendboxWithdrawalViewModel model;
 
   const LendboxWithdrawalInputView({
     Key? key,
-    this.model,
+    required this.model,
   }) : super(key: key);
 
   @override
@@ -45,6 +45,8 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               focusNode: model!.fieldNode,
               chipAmounts: [],
               isEnabled: !model!.inProgress,
+              readOnly: model.readOnly,
+              onTap: () => model.readOnly = false,
               maxAmount: model!.withdrawableQuantity?.amount ?? 2,
               maxAmountMsg: "You can't withdraw more than available balance",
               minAmount: model!.minAmount,

@@ -21,7 +21,8 @@ import 'package:upi_pay/upi_pay.dart';
 
 class LendboxWithdrawalViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
-  final LendboxTransactionService? _txnService = locator<LendboxTransactionService>();
+  final LendboxTransactionService? _txnService =
+      locator<LendboxTransactionService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final LendboxRepo? _lendboxRepo = locator<LendboxRepo>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
@@ -43,6 +44,15 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   TextEditingController? vpaController;
 
   LendboxWithdrawableQuantity? withdrawableQuantity;
+
+  bool _readOnly = true;
+
+  bool get readOnly => this._readOnly;
+
+  set readOnly(value) {
+    this._readOnly = value;
+    notifyListeners();
+  }
 
   Future<void> init() async {
     setState(ViewState.Busy);

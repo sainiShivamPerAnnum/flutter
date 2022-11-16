@@ -52,7 +52,7 @@ class TrendingGamesSection extends StatelessWidget {
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: .68,
+                childAspectRatio: .64,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
           ),
@@ -113,7 +113,7 @@ class TrendingGames extends StatelessWidget {
                 text: TextSpan(
                     text: 'Win upto ',
                     style:
-                        TextStyles.sourceSans.body5.colour(Color(0xff919193)),
+                        TextStyles.sourceSans.body4.colour(Color(0xff919193)),
                     children: [
                   TextSpan(
                       text:

@@ -76,6 +76,8 @@ const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 const String InfoStoriesViewPath = "/inforStoriesViewPath";
 const String WebViewScreenPath = "/webViewScreenPath";
 const String SettingsScreenPath = '/settingsScreenPath';
+const String TExistingUserViewPath = '/texistingUserPath';
+const String TNewUserViewPath = '/tnewUserViewPath';
 
 enum Pages {
   Splash,
@@ -101,6 +103,8 @@ enum Pages {
   AutosaveWalkthrough,
   YourFunds,
   THome,
+  TNewUser,
+  TExistingUser,
   TGame,
   TWeeklyResult,
   TWalkthrough,
@@ -243,6 +247,18 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   uiPage: Pages.Referral,
   name: 'Referral Screen',
 );
+
+PageConfiguration TambolaExistingUser = PageConfiguration(
+    key: 'TexistingUser',
+    path: TExistingUserViewPath,
+    uiPage: Pages.TExistingUser,
+    name: 'TexistingUser Screen');
+
+    PageConfiguration TambolaNewUser = PageConfiguration(
+    key: 'TNewUser',
+    path: TNewUserViewPath,
+    uiPage: Pages.TNewUser,
+    name: 'TNewUser Screen');
 
 PageConfiguration FaqPageConfig = PageConfiguration(
   key: 'Faq',

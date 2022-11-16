@@ -94,6 +94,15 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool readOnly = true;
+
+  showKeyBoard() {
+    if (readOnly) {
+      readOnly = false;
+      notifyListeners();
+    }
+  }
+
   //2 Basic Checks
   Future<int> initChecks() async {
     final buyAmount = int.tryParse(this.amountController!.text) ?? 0;
