@@ -97,8 +97,8 @@ class SaveNetWorthSection extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding12,
             ),
-            model.userFundWallet.netWorth != null &&
-                    model.userFundWallet.netWorth != 0
+            model?.userFundWallet?.netWorth != null &&
+                    model?.userFundWallet?.netWorth != 0
                 ? Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
