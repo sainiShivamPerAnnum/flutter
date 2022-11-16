@@ -23,7 +23,7 @@ class CampaignRepo extends BaseRepo {
       final _token = await getBearerToken();
       final _queryParams = {"uid": _uid};
 
-      return await (_cacheService.cachedApi(
+      return (await (_cacheService.cachedApi(
         CacheKeys.CAMPAIGNS,
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -43,7 +43,7 @@ class CampaignRepo extends BaseRepo {
           print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
-      )) as Future<ApiResponse<List<EventModel>>>;
+      ))) as ApiResponse<List<EventModel>>;
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(

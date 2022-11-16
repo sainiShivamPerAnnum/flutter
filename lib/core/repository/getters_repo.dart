@@ -84,7 +84,7 @@ class GetterRepository extends BaseRepo {
       String freq, String type) async {
     try {
       final token = await getBearerToken();
-      return await _cacheService.cachedApi(
+      return (await _cacheService.cachedApi(
         'AssetsOptions-$freq-$type',
         DateTime.now()
             .add(Duration(minutes: TTL.ONE_DAY * 7))
@@ -97,7 +97,7 @@ class GetterRepository extends BaseRepo {
             p0,
           ),
         ),
-      ) as ApiResponse<AssetOptionsModel>;
+      )) as ApiResponse<AssetOptionsModel>;
     } catch (e) {
       return ApiResponse.withError('Something went wrongpla', 400);
     }
@@ -182,7 +182,7 @@ class GetterRepository extends BaseRepo {
     try {
       // final token = await getBearerToken();
 
-      return await (_cacheService.cachedApi(
+      return (await (_cacheService.cachedApi(
         '${CacheKeys.FAQS}/${type.name}',
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -195,7 +195,7 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      ) as Future<ApiResponse<List<FAQDataModel>>>);
+      ))) as ApiResponse<List<FAQDataModel>>;
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -229,7 +229,7 @@ class GetterRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
 
-      return await _cacheService.cachedApi(
+      return (await _cacheService.cachedApi(
         '${CacheKeys.PAGE_CONFIGS}',
         TTL.ONE_DAY,
         () => APIService.instance.getData(
@@ -245,7 +245,7 @@ class GetterRepository extends BaseRepo {
           logger.d("Page Config: $responseData");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
-      ) as ApiResponse<DynamicUI>;
+      )) as ApiResponse<DynamicUI>;
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);

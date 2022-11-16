@@ -341,7 +341,7 @@ class UserRepository extends BaseRepo {
       );
 
       String? latestNotifTime = await (CacheManager.readCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME) as Future<String?>);
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME)) as String;
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >
@@ -353,11 +353,11 @@ class UserRepository extends BaseRepo {
         else
           return ApiResponse<bool>(model: false, code: 200);
       } else {
-        logger!.d("No past notification time found");
+        logger.d("No past notification time found");
         return ApiResponse<bool>(model: false, code: 200);
       }
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       return ApiResponse.withError(
         "Unable to fetch checkIfUserHasNewNotifications",
         400,

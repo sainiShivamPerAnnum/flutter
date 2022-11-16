@@ -165,7 +165,7 @@ class Data {
 
 class Cache {
   TimestampModel? before;
-  List<dynamic>? keys;
+  List<String>? keys;
   Cache({
     @required this.before,
     @required this.keys,
@@ -173,7 +173,7 @@ class Cache {
 
   Cache copyWith({
     TimestampModel? before,
-    List<dynamic>? keys,
+    List<String>? keys,
   }) {
     return Cache(
       before: before ?? this.before,
@@ -191,9 +191,7 @@ class Cache {
   factory Cache.fromMap(Map<String, dynamic> map) {
     return Cache(
         before: TimestampModel.fromMap(map['before'] as Map<String, dynamic>),
-        keys: List<dynamic>.from(
-          (map['keys'] as List<dynamic>),
-        ));
+        keys: List<String>.from((map['keys'].cast<String>() as List<String>)));
   }
 
   Cache.base() {

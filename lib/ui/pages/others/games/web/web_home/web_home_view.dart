@@ -477,9 +477,9 @@ class StreamView extends StatelessWidget {
         }
 
         if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
-          Map<Object, Object> fetchedData = Map<dynamic, dynamic>.from(
-              (snapshot.data as DatabaseEvent).snapshot.value
-                  as Map<dynamic, dynamic>) as Map<Object, Object>;
+          Map<Object, Object> fetchedData = ((snapshot.data as DatabaseEvent)
+              .snapshot
+              .value as Map<dynamic, dynamic>) as Map<Object, Object>;
           String? fieldToFetch = fetchedData['field'] as String?;
 
           Map<Object, Object> requiredTimeData =

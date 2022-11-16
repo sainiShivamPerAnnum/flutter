@@ -144,7 +144,7 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   DailyPick? get weeklyDigits => tambolaService!.weeklyDigits;
 
-  List<TambolaBoard>? get userWeeklyBoards => tambolaService!.userWeeklyBoards;
+  List<TambolaBoard?>? get userWeeklyBoards => tambolaService!.userWeeklyBoards;
 
   List<Ticket>? get tambolaBoardViews => this._tambolaBoardViews;
 
@@ -230,7 +230,7 @@ class TambolaHomeViewModel extends BaseViewModel {
       ticketsLoaded = false;
       final tickets = await _tambolaRepo!.getTickets();
       if (tickets.code == 200) {
-        List<TambolaBoard?> boards =
+        List<TambolaBoard?>? boards =
             tickets.model!.map((e) => e.board).toList();
         tambolaService!.weeklyTicksFetched = true;
         tambolaService!.userWeeklyBoards = boards;
@@ -324,7 +324,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   int? get activeTambolaCardCount {
     if (tambolaService == null || tambolaService!.userWeeklyBoards == null)
       return 0;
-    return tambolaService!.userWeeklyBoards.length;
+    return tambolaService!.userWeeklyBoards!.length;
   }
 
   void updateTicketCount() {
@@ -448,7 +448,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
     _bestTambolaBoards = [];
     for (int i = 0; i < 4; i++) {
-      _bestTambolaBoards!.add(userWeeklyBoards![0]);
+      _bestTambolaBoards!.add(userWeeklyBoards![0]!);
     }
 
     if (weeklyDigits == null || weeklyDigits!.toList().isEmpty) {
@@ -456,13 +456,13 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
 
     userWeeklyBoards!.forEach((board) {
-      if (_bestTambolaBoards![0] == null) _bestTambolaBoards![0] = board;
-      if (_bestTambolaBoards![1] == null) _bestTambolaBoards![1] = board;
-      if (_bestTambolaBoards![2] == null) _bestTambolaBoards![2] = board;
-      if (_bestTambolaBoards![3] == null) _bestTambolaBoards![3] = board;
+      if (_bestTambolaBoards![0] == null) _bestTambolaBoards![0] = board!;
+      if (_bestTambolaBoards![1] == null) _bestTambolaBoards![1] = board!;
+      if (_bestTambolaBoards![2] == null) _bestTambolaBoards![2] = board!;
+      if (_bestTambolaBoards![3] == null) _bestTambolaBoards![3] = board!;
 
       if (_bestTambolaBoards![0].getCornerOdds(weeklyDigits!.toList()) >
-          board.getCornerOdds(weeklyDigits!.toList())) {
+          board!.getCornerOdds(weeklyDigits!.toList())) {
         _bestTambolaBoards![0] = board;
       }
       if (_bestTambolaBoards![1].getOneRowOdds(weeklyDigits!.toList()) >
@@ -493,7 +493,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
 
     userWeeklyBoards!.forEach((boardObj) {
-      if (boardObj
+      if (boardObj!
               .getCornerOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')

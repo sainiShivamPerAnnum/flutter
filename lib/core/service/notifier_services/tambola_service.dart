@@ -22,7 +22,7 @@ class TambolaService extends ChangeNotifier {
   static int? _dailyPicksCount = 3;
   static List<int>? _todaysPicks;
   static DailyPick? _weeklyDigits;
-  static List<TambolaBoard>? _userWeeklyBoards;
+  static List<TambolaBoard?>? _userWeeklyBoards;
   static bool _weeklyDrawFetched = false;
   static bool _weeklyTicksFetched = false;
   static bool _winnerDialogCalled = false;
@@ -79,9 +79,9 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  get userWeeklyBoards => _userWeeklyBoards;
+  List<TambolaBoard?>? get userWeeklyBoards => _userWeeklyBoards;
 
-  set userWeeklyBoards(value) {
+  set userWeeklyBoards(List<TambolaBoard?>? value) {
     _userWeeklyBoards = value;
     notifyListeners();
   }
