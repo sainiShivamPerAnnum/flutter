@@ -210,14 +210,6 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get unscratchedGTCount => this._unscratchedGTCount;
-
-  set unscratchedGTCount(int count) {
-    this._unscratchedGTCount = count;
-    notifyListeners();
-    print("Unscratched gt count: $_unscratchedGTCount");
-  }
-
   bool get showUnscratchedCount => this._showUnscratchedCount;
 
   set showUnscratchedCount(bool value) {
@@ -234,7 +226,6 @@ class WinViewModel extends BaseViewModel {
 
     fetchReferralCode();
     fetchBasicConstantValues();
-    getUnscratchedGTCount();
     // _baseUtil.fetchUserAugmontDetail();
     getFelloFacts();
     _lbService.fetchReferralLeaderBoard();
@@ -396,7 +387,7 @@ class WinViewModel extends BaseViewModel {
     }
     _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
         ? appShareMessage
-        : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+        : 'Hey I am gifting you ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
 
     loadingRefCode = false;
     refresh();
@@ -459,7 +450,7 @@ class WinViewModel extends BaseViewModel {
 
     AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
-        page: MyWinnigsPageConfig,
+        page: MyWinningsPageConfig,
         widget: MyWinningsView());
   }
 
@@ -472,10 +463,19 @@ class WinViewModel extends BaseViewModel {
   }
 
   showConfirmDialog(PrizeClaimChoice choice) {
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinningsTapped);
+    //TODO fields empty for winredeemWinningsTapped
+    _analyticsService.track(
+      eventName: AnalyticsEvents.winRedeemWinningsTapped,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "Total Winnings Amount":
+              _userService.userFundWallet.prizeLifetimeWin ?? 0
+        },
+      ),
+    );
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: ConfirmationDialog(
         confirmAction: () async {
@@ -490,14 +490,6 @@ class WinViewModel extends BaseViewModel {
         cancelAction: AppState.backButtonDispatcher.didPopRoute,
       ),
     );
-  }
-
-  getUnscratchedGTCount() async {
-    final ApiResponse<List<GoldenTicket>> res =
-        await _gtRepo.getUnscratchedGoldenTickets();
-    if (res.isSuccess()) {
-      unscratchedGTCount = res.model.length;
-    }
   }
 
   getWinningHistory() async {
@@ -576,7 +568,15 @@ class WinViewModel extends BaseViewModel {
       });
     });
 
-    _analyticsService.track(eventName: AnalyticsEvents.winRedeemWinnings);
+    _analyticsService.track(
+      eventName: AnalyticsEvents.winRedeemWinnings,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "Total Winnings Amount":
+              _userService.userFundWallet.prizeLifetimeWin ?? 0
+        },
+      ),
+    );
   }
 
 // SET AND GET CLAIM CHOICE
@@ -755,7 +755,7 @@ class WinViewModel extends BaseViewModel {
     _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate.appState.currentAction = PageAction(
       state: PageState.addPage,
-      page: MyWinnigsPageConfig,
+      page: MyWinningsPageConfig,
     );
   }
 

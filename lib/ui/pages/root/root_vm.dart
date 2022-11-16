@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -37,6 +38,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 
+//TODO : analytics for promos, challenges and blogs
 class RootViewModel extends BaseViewModel {
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final FcmHandler _fcmListener = locator<FcmHandler>();
@@ -143,10 +145,11 @@ class RootViewModel extends BaseViewModel {
               eventName: AnalyticsEvents.playSection,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                //TODO : time left not coming
                 "Time left for draw Tambola (mins)":
                     AnalyticsProperties.getTimeLeftForTambolaDraw(),
                 "Tambola Tickets Owned":
-                    AnalyticsProperties.getTabolaTicketCount(),
+                    AnalyticsProperties.getTambolaTicketCount(),
               }));
         }
         break;
@@ -220,7 +223,7 @@ class RootViewModel extends BaseViewModel {
     if (updateAvilable) {
       canExecuteStartupNotification = false;
       BaseUtil.openDialog(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
         content: ConfirmationDialog(
@@ -252,7 +255,7 @@ class RootViewModel extends BaseViewModel {
       canExecuteStartupNotification = false;
       String msg = PreferenceHelper.getString(Constants.MSG_NOTICE) ?? " ";
       BaseUtil.openDialog(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
         content: ConfirmationDialog(

@@ -52,7 +52,8 @@ class GOWCard extends StatelessWidget {
                             "Time left for draw Tambola (mins)":
                                 AnalyticsProperties.getTimeLeftForTambolaDraw(),
                             "Tambola Tickets Owned":
-                                AnalyticsProperties.getTabolaTicketCount(),
+                                AnalyticsProperties.getTambolaTicketCount(),
+                            "location": "Game of the Week"
                           }));
                       AppState.delegate.parseRoute(
                         Uri.parse(model.gow.route),

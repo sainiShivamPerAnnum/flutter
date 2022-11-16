@@ -9,6 +9,8 @@ class Constants {
   static const String GAME_TYPE_CRICKET = "GM_CRICKET_HERO";
   static const String GAME_TYPE_TAMBOLA = "GM_TAMBOLA2020";
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
+  static const String GAME_TYPE_BOTTLEFLIP = "GM_BOTTLE_FLIP";
+  static const String GAME_TYPE_BOWLING = "GM_BOWLING";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER_V2";
   static const String GAME_TYPE_FPL = "FPL";
 

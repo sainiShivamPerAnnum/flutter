@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -32,7 +33,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Function confirmAction, bool isInLandScape) {
     BaseUtil.openDialog(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       hapticVibrate: true,
       content: RotatedBox(
         quarterTurns: 0,
@@ -55,7 +56,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    _journeyService.checkForMilestoneLevelChange();
+    // _journeyService.checkForMilestoneLevelChange();
     if (_journeyService.isJourneyOnboardingInView) {
       _journeyService.isJourneyOnboardingInView = false;
       _journeyService.isUserJourneyOnboarded = true;
@@ -111,8 +112,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       AppState.isUpdateScreen = false;
       return _routerDelegate.popRoute();
     }
-    // If the root tab is not 0 at the time of exit
 
+    //If device authentication failed
+    else if (AppState.screenStack.length == 1 &&
+        AppState.delegate.pages[0].name == SplashPath) {
+      return _routerDelegate.popRoute();
+    }
+    // If the root tab is not 0 at the time of exit
     else if (_userService.isUserOnboarded &&
         AppState.screenStack.length == 1 &&
         AppState.delegate.appState.rootIndex != 0) {

@@ -39,7 +39,7 @@ class WinningsContainer extends StatelessWidget {
               onTap();
             }
           : () => AppState.delegate.appState.currentAction =
-              PageAction(state: PageState.addPage, page: MyWinnigsPageConfig),
+              PageAction(state: PageState.addPage, page: MyWinningsPageConfig),
       child: Container(
         decoration: gradient != null
             ? BoxDecoration(

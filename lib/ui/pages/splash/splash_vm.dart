@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:device_unlock/device_unlock.dart';
+// import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -28,6 +26,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
@@ -38,7 +37,7 @@ class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
   Timer _timer3;
   Stopwatch _logoWatch;
-  DeviceUnlock deviceUnlock;
+  // DeviceUnlock deviceUnlock;
   bool _isPerformanceCollectionEnabled = false, _isFetchingData = false;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
@@ -78,9 +77,7 @@ class LauncherViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  int startTime = DateTime.now().millisecondsSinceEpoch;
   init() {
-    log("Splash init: ${DateTime.now().millisecondsSinceEpoch - startTime}");
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
@@ -108,28 +105,14 @@ class LauncherViewModel extends BaseViewModel {
     // trace.putAttribute('Splash', 'userService init started');
     // trace.putAttribute('Splash', 'userService init ended');
     try {
-      startTime = DateTime.now().millisecondsSinceEpoch;
       await CacheService.initialize();
-      log("Splash init cache: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-
-      startTime = DateTime.now().millisecondsSinceEpoch;
       await userService.init();
-      log("Splash init userService: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      startTime = DateTime.now().millisecondsSinceEpoch;
-
       fetchUserBootUpDetails();
-      log("Splash init bootup: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      startTime = DateTime.now().millisecondsSinceEpoch;
       await BaseRemoteConfig.init();
-      log("Splash init remoteConfig: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
       if (userService.isUserOnboarded) {
-        startTime = DateTime.now().millisecondsSinceEpoch;
         await _journeyRepo.init();
-        log("Splash init journeyRepo: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-        startTime = DateTime.now().millisecondsSinceEpoch;
         await _journeyService.init();
-        log("Splash init journeyService: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
 
       // check if cache invalidation required
@@ -138,21 +121,15 @@ class LauncherViewModel extends BaseViewModel {
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
       if (now <= BaseRemoteConfig.invalidationBefore) {
-        startTime = DateTime.now().millisecondsSinceEpoch;
-
         await new CacheService().invalidateAll();
-        log("Splash init cache: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       }
       // test
       // await new CacheService().invalidateAll();
       if (userService.isUserOnboarded) _userCoinService.init();
-      log("Splash usercoinservice: ${DateTime.now().millisecondsSinceEpoch}");
 
       _baseUtil.init();
-      log("Splash init baseUtil: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
       _fcmListener.setupFcm();
-      log("Splash init fcm: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 
       if (userService.isUserOnboarded)
         userService.firebaseUser?.getIdToken()?.then(
@@ -161,14 +138,13 @@ class LauncherViewModel extends BaseViewModel {
             );
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)
-          startTime = DateTime.now().millisecondsSinceEpoch;
-        await _analyticsService.login(
-          isOnBoarded: userService?.isUserOnboarded,
-          baseUser: userService?.baseUser,
-        );
+          await _analyticsService.login(
+            isOnBoarded: userService?.isUserOnboarded,
+            baseUser: userService?.baseUser,
+          );
+
         //To fetch the properties required to pass for the analytics
-        AnalyticsProperties().init();
-        log("Splash init analytics: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+        await AnalyticsProperties().init();
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");
@@ -204,16 +180,16 @@ class LauncherViewModel extends BaseViewModel {
       new Duration(milliseconds: 820),
     );
 
-    try {
-      deviceUnlock = DeviceUnlock();
-    } catch (e) {
-      _logger.e(e.toString());
-      _internalOpsService.logFailure(
-        userService.baseUser?.uid ?? '',
-        FailType.Splash,
-        {'error': "device unlock : $e"},
-      );
-    }
+    // try {
+    //   deviceUnlock = DeviceUnlock();
+    // } catch (e) {
+    //   _logger.e(e.toString());
+    //   _internalOpsService.logFailure(
+    //     userService.baseUser?.uid ?? '',
+    //     FailType.Splash,
+    //     {'error': "device unlock : $e"},
+    //   );
+    // }
 
     ///check for breaking update (TESTING)
     // if (await checkBreakingUpdateTest()) {
@@ -246,25 +222,7 @@ class LauncherViewModel extends BaseViewModel {
     }
 
     ///Check if app needs to be open securely
-    ///NOTE: CHECK APP LOCK
-    bool _unlocked = true;
-    if (userService.baseUser.userPreferences != null &&
-        userService.baseUser.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
-            1 &&
-        deviceUnlock != null) {
-      _unlocked = await authenticateDevice();
-    }
-
-    if (_unlocked) {
-      return navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: RootPageConfig);
-    } else {
-      BaseUtil.showNegativeAlert(
-        'Authentication Failed',
-        'Please reopen and try again',
-      );
-    }
+    userService.authenticateDevice();
   }
 
   Future<void> _togglePerformanceCollection() async {
@@ -281,27 +239,28 @@ class LauncherViewModel extends BaseViewModel {
         : 'Performance collection is disabled.';
   }
 
-  Future<bool> authenticateDevice() async {
-    bool _res = false;
-    try {
-      _res = await deviceUnlock.request(
-          localizedReason:
-              'Confirm your phone screen lock pattern,PIN or password');
-    } on DeviceUnlockUnavailable {
-      BaseUtil.showPositiveAlert('No Device Authentication Found',
-          'Logging in, please enable device security to add lock');
-      return true;
-    } on RequestInProgress {
-      _res = false;
-      print('Request in progress');
-    } catch (e) {
-      _logger.e("error", [e]);
-      BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
-    }
-    return _res;
-    // return true;
-  }
+  // Future<bool> authenticateDevice() async {
+  //   bool _res = false;
+  //   try {
+  //     _res = await deviceUnlock.request(
+  //       localizedReason:
+  //           'Confirm your phone screen lock pattern,PIN or password',
+  //     );
+  //   } on DeviceUnlockUnavailable {
+  //     BaseUtil.showPositiveAlert('No Device Authentication Found',
+  //         'Logging in, please enable device security to add lock');
+  //     return true;
+  //   } on RequestInProgress {
+  //     _res = false;
+  //     print('Request in progress');
+  //   } catch (e) {
+  //     _logger.e("error", [e]);
+  //     BaseUtil.showNegativeAlert(
+  //         'Authentication Failed', 'Please restart and try again');
+  //   }
+  //   return _res;
+  //   // return true;
+  // }
 
   Future<bool> checkBreakingUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -325,3 +284,26 @@ class LauncherViewModel extends BaseViewModel {
     }
   }
 }
+
+/// Indicates that the user has not yet configured a passcode (iOS) or
+/// PIN/pattern/password (Android) on the device.
+const String passcodeNotSet = 'PasscodeNotSet';
+
+/// Indicates the user has not enrolled any biometrics on the device.
+const String notEnrolled = 'NotEnrolled';
+
+/// Indicates the device does not have hardware support for biometrics.
+const String notAvailable = 'NotAvailable';
+
+/// Indicates the device operating system is unsupported.
+const String otherOperatingSystem = 'OtherOperatingSystem';
+
+/// Indicates the API is temporarily locked out due to too many attempts.
+const String lockedOut = 'LockedOut';
+
+/// Indicates the API is locked out more persistently than [lockedOut].
+/// Strong authentication like PIN/Pattern/Password is required to unlock.
+const String permanentlyLockedOut = 'PermanentlyLockedOut';
+
+/// Indicates that the biometricOnly parameter can't be true on Windows
+const String biometricOnlyNotSupported = 'biometricOnlyNotSupported';

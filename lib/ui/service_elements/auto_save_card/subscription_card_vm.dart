@@ -101,7 +101,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
     if (_userService.userJourneyStats.mlIndex < 2)
       return BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: true,
+          isBarrierDismissible: true,
           hapticVibrate: false,
           content: CompleteProfileDialog(
             subtitle:

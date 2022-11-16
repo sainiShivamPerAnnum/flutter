@@ -74,6 +74,8 @@ const String SharePriceScreenPath = "/SharePriceScreenPath";
 const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
 const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 const String InfoStoriesViewPath = "/inforStoriesViewPath";
+const String WebViewScreenPath = "/webViewScreenPath";
+const String SettingsScreenPath = '/settingsScreenPath';
 
 enum Pages {
   Splash,
@@ -144,7 +146,9 @@ enum Pages {
   SharePriceScreenView,
   AllTambolaTicketsView,
   UserUpiDetailsView,
-  InfoStoriesView
+  InfoStoriesView,
+  WebView,
+  SettingsView,
 }
 
 class PageConfiguration {
@@ -440,7 +444,7 @@ PageConfiguration ReferralHistoryPageConfig = PageConfiguration(
   name: 'Refer History Screen',
 );
 
-PageConfiguration MyWinnigsPageConfig = PageConfiguration(
+PageConfiguration MyWinningsPageConfig = PageConfiguration(
   key: 'myWinnings',
   path: MyWinningsPath,
   uiPage: Pages.MyWinnings,
@@ -631,3 +635,15 @@ PageConfiguration InfoStoriesViewPageConfig = PageConfiguration(
     path: InfoStoriesViewPath,
     uiPage: Pages.InfoStoriesView,
     name: "Info Stories details Screen");
+
+PageConfiguration WebViewPageConfig = PageConfiguration(
+    key: 'WebView',
+    path: WebViewScreenPath,
+    uiPage: Pages.WebView,
+    name: "Web browser Screen");
+
+PageConfiguration SettingsViewPageConfig = PageConfiguration(
+    key: 'SettingsView',
+    path: SettingsScreenPath,
+    uiPage: Pages.SettingsView,
+    name: "Settings Screen");

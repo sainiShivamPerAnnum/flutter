@@ -44,7 +44,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
                   if (!subscriptionModel.isUserProfileComplete())
                     return BaseUtil.openDialog(
                         addToScreenStack: true,
-                        isBarrierDismissable: true,
+                        isBarrierDismissible: true,
                         hapticVibrate: false,
                         content: CompleteProfileDialog(
                           subtitle:

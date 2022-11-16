@@ -2,17 +2,14 @@ import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/help_fab.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -77,7 +74,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                               physics: NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,

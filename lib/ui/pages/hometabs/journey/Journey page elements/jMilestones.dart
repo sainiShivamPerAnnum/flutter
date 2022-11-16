@@ -11,6 +11,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 String generateAssetUrl(String name) {
@@ -284,64 +286,71 @@ class StaticMilestone extends StatelessWidget {
             left: model.pageWidth * milestone.x,
             bottom: model.pageHeight * (milestone.page - 1) +
                 model.pageHeight * milestone.y,
-            child: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(milestone.hFlip ? math.pi : 0),
-              child: model.isInComplete(milestone.index)
-                  ? Tooltip(
-                      // message: "Hello World!!",
-                      triggerMode: TooltipTriggerMode.tap,
-                      showDuration: Duration(seconds: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                      ),
+            child: model.isInComplete(milestone.index)
+                ? Tooltip(
+                    // message: "Hello World!!",
+                    triggerMode: TooltipTriggerMode.tap,
+                    showDuration: Duration(seconds: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                    ),
 
-                      richMessage: TextSpan(
-                        children: [
-                          WidgetSpan(
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                color: Colors.black,
-                                shape: TooltipShapeBorder(arrowArc: 0.5),
-                                shadows: [
-                                  BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 4.0,
-                                      offset: Offset(2, 2))
+                    richMessage: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Container(
+                            decoration: ShapeDecoration(
+                              color: Colors.black,
+                              shape: TooltipShapeBorder(arrowArc: 0.5),
+                              shadows: [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 4.0,
+                                    offset: Offset(2, 2))
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.lock_rounded,
+                                      color: Colors.white,
+                                      size: SizeConfig.iconSize1),
+                                  Text("${milestone.tooltip}",
+                                      style: TextStyles.sourceSansSB.body2),
                                 ],
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.lock_rounded,
-                                        color: Colors.white,
-                                        size: SizeConfig.iconSize1),
-                                    Text("${milestone.tooltip}",
-                                        style: TextStyles.sourceSansSB.body2),
-                                  ],
-                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                      enableFeedback: true,
-                      margin:
-                          EdgeInsets.only(bottom: milestone.asset.height * 2),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding10,
-                        vertical: SizeConfig.padding12,
-                      ),
-                      preferBelow: false,
-                      child: SourceAdaptiveAssetView(asset: milestone.asset),
-                    )
-                  : GestureDetector(
-                      onTap: () => model.showMilestoneDetailsModalSheet(
-                          milestone, context),
-                      child: SourceAdaptiveAssetView(asset: milestone.asset),
+                        ),
+                      ],
                     ),
+                    enableFeedback: true,
+                    margin: EdgeInsets.only(bottom: milestone.asset.height * 2),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding10,
+                      vertical: SizeConfig.padding12,
+                    ),
+                    preferBelow: false,
+                    child: SourceAdaptiveAssetView(asset: milestone.asset),
+                  )
+                : GestureDetector(
+                    onTap: () => model.showMilestoneDetailsModalSheet(
+                        milestone, context),
+                    child: SourceAdaptiveAssetView(asset: milestone.asset),
+                  ),
+          ),
+        if (milestone.index == 2)
+          Positioned(
+            left: model.pageWidth * milestone.x,
+            bottom: model.pageHeight * (milestone.page - 1) +
+                model.pageHeight * milestone.y,
+            child: SvgPicture.network(
+              milestone.asset.uri,
+              color: UiConstants.primaryColor.withOpacity(0.5),
+              height: model.pageHeight * milestone.asset.height,
+              width: model.pageWidth * milestone.asset.width,
             ),
           ),
         if (milestone.index < model.avatarActiveMilestoneLevel)

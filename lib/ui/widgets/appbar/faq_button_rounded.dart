@@ -23,7 +23,7 @@ class FaqButtonRounded extends StatelessWidget {
       radius: SizeConfig.avatarRadius,
       child: IconButton(
         icon: Icon(
-          Icons.question_mark_rounded,
+          Icons.support_agent,
           color: Colors.white,
           size: SizeConfig.avatarRadius * 0.8,
         ),

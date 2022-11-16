@@ -8,7 +8,6 @@ import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -19,6 +18,7 @@ import 'package:felloapp/core/model/feed_card_model.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/settings_items_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
@@ -30,7 +30,6 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -43,9 +42,6 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vie
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -53,11 +49,11 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -79,6 +75,7 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   List<FeedCard> feedCards;
   String userRegdPan;
+  List<SettingsListItemModel> settingsItemList;
 
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
@@ -247,13 +244,6 @@ class BaseUtil extends ChangeNotifier {
     if (_userService.userJourneyStats.mlIndex > 1)
       AppState.delegate.parseRoute(Uri.parse("profile"));
     else {
-      // print("Reachng");
-
-      // print(
-      //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-      //       "Test": "test"
-      //     })}");
-
       AppState.delegate.appState.currentAction = PageAction(
         page: UserProfileDetailsConfig,
         state: PageState.addWidget,
@@ -298,7 +288,7 @@ class BaseUtil extends ChangeNotifier {
       if (_userService.userJourneyStats?.mlIndex == 1)
         return BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: true,
+          isBarrierDismissible: true,
           hapticVibrate: false,
           content: CompleteProfileDialog(),
         );
@@ -352,7 +342,7 @@ class BaseUtil extends ChangeNotifier {
       if (_userService.userJourneyStats.mlIndex == 1)
         return BaseUtil.openDialog(
             addToScreenStack: true,
-            isBarrierDismissable: true,
+            isBarrierDismissible: true,
             hapticVibrate: false,
             content: CompleteProfileDialog());
       final bool isAugSellLocked = _userService?.userBootUp?.data?.banMap
@@ -400,10 +390,10 @@ class BaseUtil extends ChangeNotifier {
     if (_userService.userJourneyStats.mlIndex == 1)
       return BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: true,
+          isBarrierDismissible: true,
           hapticVibrate: false,
           content: CompleteProfileDialog());
-
+    _analyticsService.track(eventName: AnalyticsEvents.challengeCtaTapped);
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -432,6 +422,52 @@ class BaseUtil extends ChangeNotifier {
           augmontDetail.createdTime.toDate().isBefore(_dt));
     }
     return (!skFlag && !augFlag);
+  }
+
+  static showGtWinFlushBar(String title, String message, {int seconds = 2}) {
+    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
+    if ((title != null && title.length > 200) ||
+        (message != null && message.length > 200)) return;
+    bool isKeyboardOpen =
+        MediaQuery.of(AppState.delegate.navigatorKey.currentContext)
+                .viewInsets
+                .bottom !=
+            0;
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Flushbar(
+        flushbarPosition:
+            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: SvgPicture.asset(
+          Assets.flatIsland,
+          height: SizeConfig.padding24,
+        ),
+        margin: EdgeInsets.only(
+            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
+                ? SizeConfig.navBarHeight +
+                    math.max(SizeConfig.viewInsets.bottom,
+                        SizeConfig.pageHorizontalMargins)
+                : SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins),
+        borderRadius: SizeConfig.roundness12,
+        title: title,
+        message: message,
+        duration: Duration(seconds: seconds),
+        backgroundColor: Colors.black,
+        onTap: (_) {
+          _.dismiss();
+          AppState.delegate.parseRoute(Uri.parse("/myWinnings"));
+        },
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.positiveAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(AppState.delegate.navigatorKey.currentContext);
+    });
   }
 
   static showPositiveAlert(String title, String message, {int seconds = 2}) {
@@ -569,7 +605,7 @@ class BaseUtil extends ChangeNotifier {
     Widget content,
     bool addToScreenStack,
     bool hapticVibrate,
-    bool isBarrierDismissable,
+    bool isBarrierDismissible,
     ValueChanged<dynamic> callback,
   }) async {
     if (addToScreenStack != null && addToScreenStack == true)
@@ -578,7 +614,7 @@ class BaseUtil extends ChangeNotifier {
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       context: AppState.delegate.navigatorKey.currentContext,
-      barrierDismissible: isBarrierDismissable,
+      barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content,
       useSafeArea: true,
     );

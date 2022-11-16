@@ -147,7 +147,7 @@ class APIService implements API {
   @override
   Future<dynamic> putData(
     String url, {
-    Map<String, dynamic> body,
+    Object body,
     String cBaseUrl,
     String token,
   }) async {

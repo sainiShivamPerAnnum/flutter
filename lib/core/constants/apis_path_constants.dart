@@ -10,7 +10,10 @@ class ApiPath {
   get kAddBankAccount => "/bank";
   static String kGetBankAccountDetails(String uid) => '/$uid/bank';
   get kVerifyPan => "/verify/pan";
+  static String kGetSignedImageUrl(String uid) => "/upload/$uid/image";
+  static String kForgeryUpload(String uid) => "/forgery/$uid/image";
   static String kGetPan(String uid) => "/$uid/pan";
+
   static String kUpdateBankDetails(String uid) => '/user/$uid/bank';
   get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
@@ -34,6 +37,7 @@ class ApiPath {
   static String userBootUp(String uid) => "/user/$uid/bootup/alerts";
   static String goldenTickets(uid) => '/user/$uid/golden_tickets';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
+  static String get dynamicUi => '/ui/dynamic';
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";

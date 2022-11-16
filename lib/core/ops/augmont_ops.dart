@@ -208,7 +208,7 @@ class AugmontService extends ChangeNotifier {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       content: PendingDialog(
         title: "Withdrawal processing",
         subtitle:

@@ -42,7 +42,6 @@ class LendboxDetailsView extends StatelessWidget {
       ),
       body: SafeArea(
         child: BaseView<SaveViewModel>(
-          onModelReady: (model) => model.init(),
           builder: (context, model, child) => RefreshIndicator(
             color: UiConstants.primaryColor,
             backgroundColor: Colors.black,

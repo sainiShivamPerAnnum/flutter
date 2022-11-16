@@ -16,7 +16,7 @@ import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/help_and_support/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
@@ -44,22 +44,26 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/others/profile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -70,7 +74,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  CustomLogger _logger = locator<CustomLogger>();
   final AppState appState;
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
@@ -265,7 +269,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.MyWinnings:
-          _addPageData(MyWinningsView(), MyWinnigsPageConfig);
+          _addPageData(MyWinningsView(), MyWinningsPageConfig);
           break;
         case Pages.BlockedUser:
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
@@ -297,14 +301,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AllTambolaTicketsView:
           _addPageData(AllTambolaTickets(), AllTambolaTicketsPageConfig);
           break;
-        // case Pages.WebHomeView:
-        //   _addPageData(WebHomeView(), WebHomeViewPageConfig);
-        //   break;
-        // case Pages.WebGameView:
-        //   _addPageData(WebGameView(), WebGameViewPageConfig);
-        //   break;
-        // case Pages.PoolView:
-        //   _addPageData(PoolView(), PoolViewPageConfig);
         case Pages.WebHomeView:
           _addPageData(WebHomeView(), WebHomeViewPageConfig);
           break;
@@ -347,6 +343,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.InfoStoriesView:
           _addPageData(InfoStories(), InfoStoriesViewPageConfig);
+          break;
+        case Pages.SettingsView:
+          _addPageData(SettingsView(), SettingsViewPageConfig);
           break;
         default:
           break;
@@ -531,7 +530,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         ReferralHistoryPageConfig.currentPageAction = action;
         break;
       case Pages.MyWinnings:
-        MyWinnigsPageConfig.currentPageAction = action;
+        MyWinningsPageConfig.currentPageAction = action;
         break;
       case Pages.BlockedUser:
         BlockedUserPageConfig.currentPageAction = action;
@@ -624,6 +623,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.InfoStoriesView:
         InfoStoriesViewPageConfig.currentPageAction = action;
         break;
+      case Pages.WebView:
+        WebViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SettingsView:
+        SettingsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -678,6 +683,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void parseRoute(Uri uri) {
+    _logger.d("Url: ${uri.toString()}");
+    if (uri.scheme == "http" || uri.scheme == "https") {
+      AppState.delegate.appState.currentAction = PageAction(
+        page: WebViewPageConfig,
+        state: PageState.addWidget,
+        widget: WebViewScreen(
+          url: uri.toString(),
+        ),
+      );
+      return;
+    }
     if (uri.pathSegments.isEmpty) {
       setNewRoutePath(SplashPageConfig);
       return;
@@ -688,6 +704,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           dialogCheck(segment.split('-').last);
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last));
+        } else if (segment.startsWith('story-')) {
+          openStoryView(segment.split('-').last);
         } else {
           screenCheck(segment);
         }
@@ -726,6 +744,30 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         },
       );
     }
+  }
+
+  void openStoryView(String topic) {
+    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return InfoStories(
+            topic: topic,
+          );
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (context, animation, anotherAnimation, child) {
+          animation =
+              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+          return Align(
+            child: SizeTransition(
+              sizeFactor: animation,
+              child: child,
+              axisAlignment: 0.0,
+            ),
+          );
+        },
+      ),
+    );
   }
 
   void screenCheck(String screenKey) {
@@ -785,33 +827,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         pageConfiguration = THomePageConfig;
         break;
-
       case 'myWinnings':
-        pageConfiguration = MyWinnigsPageConfig;
+        pageConfiguration = MyWinningsPageConfig;
         break;
-
       case 'bankDetails':
         pageConfiguration = BankDetailsPageConfig;
         break;
-      // case 'chatSupport':
-      //   pageConfiguration = ChatSupportPageConfig;
-      //   break;
-      // case 'claimUsername':
-      //   pageConfiguration = ClaimUsernamePageConfig;
-      //   break;
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      case 'dailySaver':
+      case Constants.HS_DAILY_SAVER:
         openTopSaverScreen(Constants.HS_DAILY_SAVER);
         break;
-      case 'weeklySaver':
+      case Constants.HS_WEEKLY_SAVER:
         openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
         break;
-      case 'monthlySaver':
+      case Constants.HS_MONTHLY_SAVER:
         openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
         break;
       case 'bugBounty':
@@ -835,23 +869,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'poolHome':
         openWebGame(Constants.GAME_TYPE_POOLCLUB);
         break;
-      // case 'milestones':
-      //   pageConfiguration = GoldenMilestonesViewPageConfig;
-      //   break;
-
+      case 'bowlingHome':
+        openWebGame(Constants.GAME_TYPE_BOWLING);
+        break;
+      case 'bottleFlipHome':
+        openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
+        break;
       case 'pop':
         AppState.backButtonDispatcher.didPopRoute();
         break;
-      // case 'goldDetails':
-      //   pageConfiguration = SaveAssetsViewConfig;
-      //   break;
       case 'autosaveDetails':
         if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
-      // case 'autosaveProcess':
-      //   pageConfiguration = AutosaveProcessViewPageConfig;
-      //   break;
       case 'userAutosaveDetails':
         pageConfiguration = UserAutosaveDetailsViewPageConfig;
         break;
@@ -861,30 +891,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'AppWalkthrough':
         openAppWalkthrough();
         break;
-
-      // case 'AutosaveWalkthrough':
-      //   pageConfiguration = AutosaveWalkThroughConfig;
-      //   break;
-      // case 'completeProfile':
-      //   pageConfiguration = CompleteProfileViewPageConfig;
-      //   break;
-      // case 'upiDetails':
-      //   pageConfiguration = UserUpiDetailsViewPageConfig;
-      //   break;
-      // case 'goldBuyModal':
-      //   BaseUtil()
-      //       .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
-      //   break;
-      // case 'floBuyModal':
-      //   BaseUtil()
-      //       .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
-      //   break;
-      // case 'goldDetailsView':
-      //   pageConfiguration = SaveAssetsViewConfig;
-      //   break;
-      // case 'floDetailsView':
-      //   pageConfiguration = LendboxDetailsPageConfig;
-      //   break;
+      case 'settings':
+        pageConfiguration = SettingsViewPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
