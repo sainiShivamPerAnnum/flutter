@@ -477,13 +477,23 @@ class StreamView extends StatelessWidget {
         }
 
         if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
-          Map<Object, Object> fetchedData = ((snapshot.data as DatabaseEvent)
-              .snapshot
-              .value as Map<dynamic, dynamic>) as Map<Object, Object>;
+// <<<<<<< HEAD
+//           Map<Object, Object> fetchedData = ((snapshot.data as DatabaseEvent)
+//               .snapshot
+//               .value as Map<dynamic, dynamic>) as Map<Object, Object>;
+//           String? fieldToFetch = fetchedData['field'] as String?;
+
+//           Map<Object, Object> requiredTimeData =
+//               fetchedData[fieldToFetch!] as Map<Object, Object>;
+// =======
+          Map fetchedData = Map<dynamic, dynamic>.from(
+              (snapshot.data as DatabaseEvent).snapshot.value
+                  as Map<dynamic, dynamic>);
           String? fieldToFetch = fetchedData['field'] as String?;
 
           Map<Object, Object> requiredTimeData =
-              fetchedData[fieldToFetch!] as Map<Object, Object>;
+           Map<Object,Object>.from(fetchedData[fieldToFetch!]);
+// >>>>>>> feat/nullSafe
 
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),

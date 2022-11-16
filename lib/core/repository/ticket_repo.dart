@@ -86,7 +86,7 @@ class TambolaRepo extends BaseRepo {
   //   }
   // }
 
-  Future<ApiResponse<DailyPick>> getWeeklyPicks() async {
+  Future<ApiResponse<dynamic>> getWeeklyPicks() async {
     try {
       final String bearer = await getBearerToken();
 
@@ -112,7 +112,7 @@ class TambolaRepo extends BaseRepo {
           return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
       })) as ApiResponse<DailyPick>;
     } catch (e) {
-      logger!.e('daily pick $e');
+      logger.e('daily pick $e');
       return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
     }
   }

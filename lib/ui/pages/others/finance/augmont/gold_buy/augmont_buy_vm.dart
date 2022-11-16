@@ -208,10 +208,9 @@ class GoldBuyViewModel extends BaseViewModel {
     fetchGoldRates();
     await fetchNotices();
     status = checkAugmontStatus();
-    _paytmService!.getActiveSubscriptionDetails();
+    // _paytmService!.getActiveSubscriptionDetails();
     getAvailableCoupons();
-    userAugmontState = await (CacheManager.readCache(key: "UserAugmontState")
-        as Future<String?>);
+    userAugmontState = await (CacheManager.readCache(key: "UserAugmontState"));
     // await _userService.fetchUserAugmontDetail();
     // delayedAugmontCall();
     // checkIfDepositIsLocked();

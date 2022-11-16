@@ -189,7 +189,7 @@ class JourneyRepository extends BaseRepo {
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
       }))) as ApiResponse<List<JourneyPage>>;
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to journey pages", 400);
     }

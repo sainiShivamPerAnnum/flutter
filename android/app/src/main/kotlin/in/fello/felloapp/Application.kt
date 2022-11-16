@@ -9,6 +9,8 @@ import com.webengage.webengage_plugin.WebengageInitializer
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
+import com.apxor.androidsdk.core.ApxorSDK;
+import android.content.Context;
 
 class Application : FlutterApplication(), PluginRegistrantCallback {
     override fun onCreate() {
@@ -21,8 +23,8 @@ class Application : FlutterApplication(), PluginRegistrantCallback {
                 .build()
 
         WebengageInitializer.initialize(this, webEngageConfig)
-
-
+        ApxorSDK.initialize("5e1ae054-84ac-481c-9efe-9b413ac2dcbe",applicationContext);
+       
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
             if (!it.isSuccessful) {
                 Log.d("Native Error", "Fetching FCM registration token failed", it.exception)

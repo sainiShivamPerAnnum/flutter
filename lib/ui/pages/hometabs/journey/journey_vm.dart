@@ -111,7 +111,7 @@ class JourneyPageViewModel extends BaseViewModel {
     log("Journey VM init Called");
     isLoading = true;
     _journeyService!.vsync = ticker;
-    logger!.d("Pages length: ${_journeyService!.pages!.length}");
+    logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
     _journeyService!.getAvatarCachedMilestoneIndex();
     await _journeyService!.updateUserJourneyStats();
     if (_journeyService!.isThereAnyMilestoneLevelChange()!) {

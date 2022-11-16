@@ -7,8 +7,6 @@ import 'package:felloapp/util/api_response.dart';
 class SaveRepo extends BaseRepo {
   final String _blogUrl =
       "https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2";
-  final String _baseUrl =
-      'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev';
 
   Future<ApiResponse<List<BlogPostModel>>> getBlogs(int noOfBlogs) async {
     List<BlogPostModel> blogs = <BlogPostModel>[];
@@ -18,7 +16,7 @@ class SaveRepo extends BaseRepo {
       List responseData = await (APIService.instance.getData(
           ApiPath.getBlogs(noOfBlogs),
           token: token,
-          cBaseUrl: _blogUrl) as Future<List<dynamic>>);
+          cBaseUrl: _blogUrl));
       responseData.forEach((e) {
         blogs.add(BlogPostModel.fromMap(e));
       });

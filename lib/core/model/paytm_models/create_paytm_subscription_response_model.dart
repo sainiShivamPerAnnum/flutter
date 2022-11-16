@@ -6,7 +6,7 @@ class CreateSubscriptionResponseModel {
 
   CreateSubscriptionResponseModel.fromJson(Map<String, dynamic> json) {
     success = json['success'] ?? false;
-    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -28,7 +28,7 @@ class CreateSubscriptionResponseModel {
   factory CreateSubscriptionResponseModel.fromMap(Map<String, dynamic> map) {
     return CreateSubscriptionResponseModel(
       success: map['success'] ?? false,
-      data: map['data'] != null ?     Data.fromMap(map['data']) : Data.base(),
+      data: map['data'] != null ?     Data.fromMap(map['data']) : null,
     );
   }
 

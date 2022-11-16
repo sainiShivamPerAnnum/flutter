@@ -47,6 +47,7 @@ import 'package:provider/provider.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
+
 // void main() async {
 //   FlavorConfig(
 //       flavor: Flavor.PROD,

@@ -176,7 +176,7 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<FAQDataModel>>> getFaqs({
+  Future<ApiResponse<dynamic>> getFaqs({
     required FaqsType type,
   }) async {
     try {
@@ -196,8 +196,9 @@ class GetterRepository extends BaseRepo {
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
       ))) as ApiResponse<List<FAQDataModel>>;
+
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch statistics", 400);
     }

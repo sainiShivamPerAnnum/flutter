@@ -49,14 +49,13 @@ class ProfileImageSE extends StatelessWidget {
                       )
                     : SizedBox(),
                 backgroundImage:
-                    ((model.avatarId != null && model.avatarId == 'CUSTOM') ||
-                            model.myUserDpUrl != null
+                    (model.avatarId != null && model.avatarId == 'CUSTOM' &&  model.myUserDpUrl!.isNotEmpty) 
                         ? CachedNetworkImageProvider(
                             model.myUserDpUrl!,
                           )
                         : AssetImage(
                             Assets.profilePic,
-                          )) as ImageProvider<Object>?,
+                          ) as ImageProvider<Object>?,
               ),
             );
           },

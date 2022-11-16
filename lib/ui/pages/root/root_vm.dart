@@ -546,8 +546,13 @@ class RootViewModel extends BaseViewModel {
 
         //5. Clear all the caches
         if (_userService!.userBootUp!.data!.cache!.keys != null) {
+// <<<<<<< HEAD
           for (String id
               in _userService!.userBootUp!.data!.cache!.keys as List<String>) {
+// =======
+//           for (String id in _userService!.userBootUp!.data!.cache!.keys!
+//               ) {
+// >>>>>>> feat/nullSafe
             CacheService().invalidateByKey(id);
           }
         }

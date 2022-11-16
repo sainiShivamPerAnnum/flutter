@@ -16,7 +16,7 @@ class CampaignRepo extends BaseRepo {
       ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<List<EventModel>>> getOngoingEvents() async {
+  Future<ApiResponse<dynamic> >getOngoingEvents() async {
     List<EventModel> events = [];
     try {
       final String? _uid = userService!.baseUser!.uid;
@@ -34,7 +34,7 @@ class CampaignRepo extends BaseRepo {
         ),
         (response) {
           final responseData = response["data"];
-          logger!.d(responseData);
+          logger.d(responseData);
           if (responseData['status'] == true) {
             responseData["campaigns"].forEach((e) {
               events.add(EventModel.fromMap(e));
@@ -44,10 +44,11 @@ class CampaignRepo extends BaseRepo {
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
       ))) as ApiResponse<List<EventModel>>;
+
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch campaigns", 400);
+          e.toString() ?? "Unable to fetch campaigns", 400);
     }
   }
 

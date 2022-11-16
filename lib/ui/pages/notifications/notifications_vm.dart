@@ -40,7 +40,7 @@ class NotificationsViewModel extends BaseViewModel {
   void init() async {
     setState(ViewState.Busy);
     lastReadLatestNotificationTime = await (CacheManager.readCache(
-        key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME) as Future<String?>);
+        key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME));
     await fetchNotifications(false);
     _scrollController.addListener(() async {
       if (_scrollController.offset >=
