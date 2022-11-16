@@ -4,16 +4,16 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
 class MlSteps {
-  final String title;
-  final String subtitle;
+  final String? title;
+  final String? subtitle;
   MlSteps({
-    @required this.title,
-    @required this.subtitle,
+    required this.title,
+    required this.subtitle,
   });
 
   MlSteps copyWith({
-    String title,
-    String subtitle,
+    String? title,
+    String? subtitle,
   }) {
     return MlSteps(
       title: title ?? this.title,
@@ -30,8 +30,8 @@ class MlSteps {
 
   factory MlSteps.fromMap(Map<String, dynamic> map) {
     return MlSteps(
-      title: map['title'] as String,
-      subtitle: map['subtitle'] as String,
+      title: map['title'] as String?,
+      subtitle: map['subtitle'] as String?,
     );
   }
 

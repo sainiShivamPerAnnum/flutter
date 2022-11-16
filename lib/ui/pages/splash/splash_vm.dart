@@ -35,31 +35,30 @@ import '../../../core/repository/user_repo.dart';
 
 class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
-  Timer _timer3;
-  Stopwatch _logoWatch;
-  // DeviceUnlock deviceUnlock;
+  late Timer _timer3;
+  late Stopwatch _logoWatch;
   bool _isPerformanceCollectionEnabled = false, _isFetchingData = false;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
-  final navigator = AppState.delegate.appState;
+  final navigator = AppState.delegate!.appState;
 
-  AnimationController loopOutlottieAnimationController;
+  AnimationController? loopOutlottieAnimationController;
   int loopLottieDuration = 2500;
   // LOCATORS
-  final _baseUtil = locator<BaseUtil>();
-  final _fcmListener = locator<FcmListener>();
-  final userService = locator<UserService>();
-  final _logger = locator<CustomLogger>();
-  final _tambolaService = locator<TambolaService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _userRepo = locator<UserRepository>();
-  final _paytmService = locator<PaytmService>();
-  final _journeyService = locator<JourneyService>();
-  final _journeyRepo = locator<JourneyRepository>();
-  final _userCoinService = locator<UserCoinService>();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _localDBModel = locator<LocalDBModel>();
-  final _userService = locator<UserService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final FcmListener _fcmListener = locator<FcmListener>();
+  final UserService userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final TambolaService _tambolaService = locator<TambolaService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final PaytmService _paytmService = locator<PaytmService>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final LocalDBModel _localDBModel = locator<LocalDBModel>();
+  final UserService _userService = locator<UserService>();
 
   FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
@@ -91,7 +90,7 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   fetchUserBootUpDetails() async {
-    await _userService.userBootUpEE();
+    await _userService!.userBootUpEE();
   }
 
   exit() {
@@ -117,7 +116,7 @@ class LauncherViewModel extends BaseViewModel {
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
-      _logger.d(
+      _logger!.d(
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
       if (now <= BaseRemoteConfig.invalidationBefore) {
@@ -131,16 +130,16 @@ class LauncherViewModel extends BaseViewModel {
 
       _fcmListener.setupFcm();
 
-      if (userService.isUserOnboarded)
-        userService.firebaseUser?.getIdToken()?.then(
+      if (userService!.isUserOnboarded)
+        userService!.firebaseUser?.getIdToken()?.then(
               (token) =>
-                  _userRepo.updateUserAppFlyer(userService.baseUser, token),
+                  _userRepo!.updateUserAppFlyer(userService!.baseUser!, token),
             );
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)
           await _analyticsService.login(
-            isOnBoarded: userService?.isUserOnboarded,
-            baseUser: userService?.baseUser,
+            isOnBoarded: userService.isUserOnboarded,
+            baseUser: userService.baseUser,
           );
 
         //To fetch the properties required to pass for the analytics
@@ -170,7 +169,7 @@ class LauncherViewModel extends BaseViewModel {
       new Duration(milliseconds: delayedSecond),
     );
     isFetchingData = false;
-    loopOutlottieAnimationController.forward();
+    loopOutlottieAnimationController!.forward();
 
     // 21 FPS = 350 millisecods : Cal
     // = 1000 / 60 = 16.66
@@ -180,25 +179,6 @@ class LauncherViewModel extends BaseViewModel {
       new Duration(milliseconds: 820),
     );
 
-    // try {
-    //   deviceUnlock = DeviceUnlock();
-    // } catch (e) {
-    //   _logger.e(e.toString());
-    //   _internalOpsService.logFailure(
-    //     userService.baseUser?.uid ?? '',
-    //     FailType.Splash,
-    //     {'error': "device unlock : $e"},
-    //   );
-    // }
-
-    ///check for breaking update (TESTING)
-    // if (await checkBreakingUpdateTest()) {
-    //   AppState.isUpdateScreen = true;
-    //   navigator.currentAction =
-    //       PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-    //   return;
-    // }
-
     ///check if user is onboarded
 
     if (!userService.isUserOnboarded) {
@@ -206,7 +186,7 @@ class LauncherViewModel extends BaseViewModel {
       bool showOnboarding = PreferenceHelper.getBool(
           PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
 
-      if (showOnboarding == null || showOnboarding == false) {
+      if (showOnboarding == false) {
         //show tutorial
         return navigator.currentAction = PageAction(
           state: PageState.replaceAll,
@@ -237,51 +217,6 @@ class LauncherViewModel extends BaseViewModel {
     _performanceCollectionMessage = _isPerformanceCollectionEnabled
         ? 'Performance collection is enabled.'
         : 'Performance collection is disabled.';
-  }
-
-  // Future<bool> authenticateDevice() async {
-  //   bool _res = false;
-  //   try {
-  //     _res = await deviceUnlock.request(
-  //       localizedReason:
-  //           'Confirm your phone screen lock pattern,PIN or password',
-  //     );
-  //   } on DeviceUnlockUnavailable {
-  //     BaseUtil.showPositiveAlert('No Device Authentication Found',
-  //         'Logging in, please enable device security to add lock');
-  //     return true;
-  //   } on RequestInProgress {
-  //     _res = false;
-  //     print('Request in progress');
-  //   } catch (e) {
-  //     _logger.e("error", [e]);
-  //     BaseUtil.showNegativeAlert(
-  //         'Authentication Failed', 'Please restart and try again');
-  //   }
-  //   return _res;
-  //   // return true;
-  // }
-
-  Future<bool> checkBreakingUpdate() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String currentBuild = packageInfo.buildNumber;
-    _logger.i('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig.getString(
-      Platform.isAndroid
-          ? BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_ANDROID
-          : BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER_IOS,
-    );
-    _logger.v('Min Build Required $minBuild');
-    //minBuild = "50";
-    try {
-      if (int.parse(currentBuild) < int.parse(minBuild)) {
-        return true;
-      }
-      return false;
-    } catch (e) {
-      _logger.e(e.toString());
-      return false;
-    }
   }
 }
 

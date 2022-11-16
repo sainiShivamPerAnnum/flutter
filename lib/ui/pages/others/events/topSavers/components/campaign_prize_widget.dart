@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CampaignPrizeWidget extends StatelessWidget {
-  final TopSaverViewModel model;
+  final TopSaverViewModel? model;
   CampaignPrizeWidget({this.model});
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class CampaignPrizeWidget extends StatelessWidget {
               ),
             ),
             Container(
-              width: SizeConfig.screenWidth * 0.3,
+              width: SizeConfig.screenWidth! * 0.3,
               height: SizeConfig.bannerHeight,
               decoration: BoxDecoration(),
               child: Stack(
@@ -55,7 +55,7 @@ class CampaignPrizeWidget extends StatelessWidget {
                   Positioned(
                     bottom: SizeConfig.bannerHeight * 0.15,
                     child: Container(
-                      width: SizeConfig.screenWidth * 0.3,
+                      width: SizeConfig.screenWidth! * 0.3,
                       height: (SizeConfig.bannerHeight) / 3.9,
                       decoration: BoxDecoration(
                           gradient: UiConstants.kTrophyBackground,

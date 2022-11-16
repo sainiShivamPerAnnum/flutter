@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 class ConfirmationDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
-  final Widget asset;
+  final Widget? asset;
 
   ConfirmationDialog({
-    @required this.title,
+    required this.title,
     this.description = '',
-    @required this.buttonText,
-    @required this.confirmAction,
-    @required this.cancelAction,
+    required this.buttonText,
+    required this.confirmAction,
+    required this.cancelAction,
     this.asset,
     this.cancelBtnText = 'Cancel',
   });
@@ -85,7 +85,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
                 padding: EdgeInsets.only(
                   top: SizeConfig.padding12,
                 ),
-                width: SizeConfig.screenWidth * 0.75,
+                width: SizeConfig.screenWidth! * 0.75,
                 child: Text(
                   widget.description,
                   style: TextStyles.sourceSans.body2.colour(
@@ -111,7 +111,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AppNegativeBtn(
-                        width: SizeConfig.screenWidth * 0.40,
+                        width: SizeConfig.screenWidth! * 0.40,
                         btnText: widget.cancelBtnText,
                         onPressed: () {
                           return widget.cancelAction();
@@ -122,7 +122,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
                       ),
                       AppPositiveBtn(
                         btnText: widget.buttonText,
-                        width: SizeConfig.screenWidth * 0.40,
+                        width: SizeConfig.screenWidth! * 0.40,
                         onPressed: () {
                           setState(() {
                             isLoading = true;

@@ -13,17 +13,17 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import '../../ops/db_ops.dart';
 
 class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
-  final _logger = locator<CustomLogger>();
-  final _apiCacheManager = locator<ApiCacheManager>();
-  final _getterRepo = locator<GetterRepository>();
-  final _dbModel = locator<DBModel>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
+  final GetterRepository? _getterRepo = locator<GetterRepository>();
+  final DBModel? _dbModel = locator<DBModel>();
 
-  int _cricketWinnersLength = 0;
-  int _tambolaWinnersLength = 0;
-  int _poolClubWinnersLength = 0;
-  int _footBallWinnersLength = 0;
-  int _candyFiestaWinnersLength = 0;
-  Timestamp _timestamp;
+  int? _cricketWinnersLength = 0;
+  int? _tambolaWinnersLength = 0;
+  int? _poolClubWinnersLength = 0;
+  int? _footBallWinnersLength = 0;
+  int? _candyFiestaWinnersLength = 0;
+  Timestamp? _timestamp;
 
   List<Winners> _winners = [];
   List<String> _topWinners = [];
@@ -48,28 +48,28 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   setWinners() {
     notifyListeners(WinnerServiceProperties.winLeaderboard);
-    _logger.d("Win View leaderboard updated, property listeners notified");
+    _logger!.d("Win View leaderboard updated, property listeners notified");
   }
 
   setTopWinners() {
     notifyListeners(WinnerServiceProperties.topWinners);
-    _logger.d("Top Winners updated, property listeners notified");
+    _logger!.d("Top Winners updated, property listeners notified");
   }
 
   setBugBountyWinners() {
     notifyListeners(WinnerServiceProperties.bugBounty);
-    _logger.d(
+    _logger!.d(
         "Top Winners of Bug Bounty Campaign updated, property listeners notified");
   }
 
   setNewFelloWinners() {
     notifyListeners(WinnerServiceProperties.newFello);
-    _logger.d(
+    _logger!.d(
         "Top Winners of New Fello App Campaign updated, property listeners notified");
   }
 
-  Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid);
+  Future getProfileDpWithUid(String? uid) async {
+    return await _dbModel!.getUserDP(uid);
   }
 
   String getDateRange() {
@@ -94,7 +94,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       "kaiser won ₹5000 for Cricket Bug"
     ];
     setBugBountyWinners();
-    _logger.d("Bug Bounty Winners successfully fetched");
+    _logger!.d("Bug Bounty Winners successfully fetched");
   }
 
   fetchNewFelloWinners() async {
@@ -103,12 +103,12 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       "buckminister won ₹5000 for reviewing Save Screen"
     ];
     setNewFelloWinners();
-    _logger.d("New Fello winners successfully fetched");
+    _logger!.d("New Fello winners successfully fetched");
   }
 
   fetchtambolaWinners() async {
     _winners.clear();
-    WinnersModel _tambolaWinners = await getWinners(
+    WinnersModel? _tambolaWinners = await getWinners(
       Constants.GAME_TYPE_TAMBOLA,
       "weekly",
     );
@@ -118,16 +118,16 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _tambolaWinners?.winners?.length != 0) {
       _timestamp = _tambolaWinners.timestamp;
       _tambolaWinnersLength = _tambolaWinners?.winners?.length;
-      _winners.addAll(_tambolaWinners.winners);
-      _logger.d("Only Tambola Winners added to leaderboard");
+      _winners.addAll(_tambolaWinners.winners!);
+      _logger!.d("Only Tambola Winners added to leaderboard");
     } else {
-      _logger.i("Tambola Winners not added to leaderboard");
+      _logger!.i("Tambola Winners not added to leaderboard");
     }
 
     if (_winners != null)
       _winners.sort((a, b) => (a.amount == null || b.amount == null)
           ? -1
-          : b.amount.compareTo(a.amount));
+          : b.amount!.compareTo(a.amount!));
     else
       _winners = [];
 
@@ -136,27 +136,27 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   fetchWinners() async {
     _winners.clear();
-    WinnersModel _cricketWinners = await getWinners(
+    WinnersModel? _cricketWinners = await getWinners(
       Constants.GAME_TYPE_CRICKET,
       "weekly",
     );
 
-    WinnersModel _tambolaWinners = await getWinners(
+    WinnersModel? _tambolaWinners = await getWinners(
       Constants.GAME_TYPE_TAMBOLA,
       "weekly",
     );
 
-    WinnersModel _poolClubWinners = await getWinners(
+    WinnersModel? _poolClubWinners = await getWinners(
       Constants.GAME_TYPE_POOLCLUB,
       "weekly",
     );
 
-    WinnersModel _footBallWinners = await getWinners(
+    WinnersModel? _footBallWinners = await getWinners(
       Constants.GAME_TYPE_FOOTBALL,
       "weekly",
     );
 
-    WinnersModel _candyFiestaWinners = await getWinners(
+    WinnersModel? _candyFiestaWinners = await getWinners(
       Constants.GAME_TYPE_CANDYFIESTA,
       "weekly",
     );
@@ -165,14 +165,14 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
     if (_cricketWinners != null &&
         _cricketWinners.winners != null &&
-        _cricketWinners?.winners?.length != 0) {
-      _timestamp = _cricketWinners?.timestamp;
-      _cricketWinnersLength = _cricketWinners?.winners?.length;
-      _winners.addAll(_cricketWinners.winners);
-      _logger.d(_cricketWinners.winners.toString());
-      _logger.d("Cricket Winners added to leaderboard");
+        _cricketWinners.winners?.length != 0) {
+      _timestamp = _cricketWinners.timestamp;
+      _cricketWinnersLength = _cricketWinners.winners?.length;
+      _winners.addAll(_cricketWinners.winners!);
+      _logger!.d(_cricketWinners.winners.toString());
+      _logger!.d("Cricket Winners added to leaderboard");
     } else {
-      _logger.i("Cricket Winners not added to leaderboard");
+      _logger!.i("Cricket Winners not added to leaderboard");
     }
 
     if (_tambolaWinners != null &&
@@ -180,10 +180,10 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _tambolaWinners?.winners?.length != 0) {
       _timestamp = _tambolaWinners.timestamp;
       _tambolaWinnersLength = _tambolaWinners?.winners?.length;
-      _winners.addAll(_tambolaWinners.winners);
-      _logger.d("Tambola Winners added to leaderboard");
+      _winners.addAll(_tambolaWinners.winners!);
+      _logger!.d("Tambola Winners added to leaderboard");
     } else {
-      _logger.i("Tambola Winners not added to leaderboard");
+      _logger!.i("Tambola Winners not added to leaderboard");
     }
 
     if (_poolClubWinners != null &&
@@ -191,11 +191,11 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _poolClubWinners?.winners?.length != 0) {
       _timestamp = _poolClubWinners?.timestamp;
       _poolClubWinnersLength = _poolClubWinners?.winners?.length;
-      _winners.addAll(_poolClubWinners.winners);
-      _logger.d(_poolClubWinners.winners.toString());
-      _logger.d("PoolClub Winners added to leaderboard");
+      _winners.addAll(_poolClubWinners.winners!);
+      _logger!.d(_poolClubWinners.winners.toString());
+      _logger!.d("PoolClub Winners added to leaderboard");
     } else {
-      _logger.i("PoolClub Winners not added to leaderboard");
+      _logger!.i("PoolClub Winners not added to leaderboard");
     }
 
     if (_footBallWinners != null &&
@@ -203,11 +203,11 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _footBallWinners?.winners?.length != 0) {
       _timestamp = _footBallWinners?.timestamp;
       _footBallWinnersLength = _footBallWinners?.winners?.length;
-      _winners.addAll(_footBallWinners.winners);
-      _logger.d(_footBallWinners.winners.toString());
-      _logger.d("FootBall Winners added to leaderboard");
+      _winners.addAll(_footBallWinners.winners!);
+      _logger!.d(_footBallWinners.winners.toString());
+      _logger!.d("FootBall Winners added to leaderboard");
     } else {
-      _logger.i("FootBall Winners not added to leaderboard");
+      _logger!.i("FootBall Winners not added to leaderboard");
     }
 
     if (_candyFiestaWinners != null &&
@@ -215,11 +215,11 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _candyFiestaWinners?.winners?.length != 0) {
       _timestamp = _candyFiestaWinners?.timestamp;
       _candyFiestaWinnersLength = _candyFiestaWinners?.winners?.length;
-      _winners.addAll(_candyFiestaWinners.winners);
-      _logger.d(_candyFiestaWinners.winners.toString());
-      _logger.d("CandyFiesta Winners added to leaderboard");
+      _winners.addAll(_candyFiestaWinners.winners!);
+      _logger!.d(_candyFiestaWinners.winners.toString());
+      _logger!.d("CandyFiesta Winners added to leaderboard");
     } else {
-      _logger.i("CandyFiesta Winners not added to leaderboard");
+      _logger!.i("CandyFiesta Winners not added to leaderboard");
     }
 
     if (_tambolaWinners?.winners?.length == 0 &&
@@ -230,23 +230,23 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
       //     "Unable to fetch winners", "try again in sometime");
     }
 
-    if (_winners != null)
+    if (_winners != [])
       _winners.sort((a, b) => (a.amount == null || b.amount == null)
           ? -1
-          : b.amount.compareTo(a.amount));
+          : b.amount!.compareTo(a.amount!));
     else
       _winners = [];
 
     setWinners();
   }
 
-  Future<WinnersModel> getWinners(
+  Future<WinnersModel?> getWinners(
     String gameType,
     String freq,
   ) async {
-    _logger.d("Winner Game Type : $gameType \n Frequency: $freq");
+    _logger!.d("Winner Game Type : $gameType \n Frequency: $freq");
 
-    final ApiResponse response = await _getterRepo.getWinnerByFreqGameType(
+    final ApiResponse response = await _getterRepo!.getWinnerByFreqGameType(
       type: gameType,
       freq: freq,
     );

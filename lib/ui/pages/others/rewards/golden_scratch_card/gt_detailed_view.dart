@@ -21,7 +21,7 @@ final scratchKey = GlobalKey<ScratcherState>();
 
 class GTDetailedView extends StatelessWidget {
   final GoldenTicket ticket;
-  GTDetailedView({@required this.ticket});
+  GTDetailedView({required this.ticket});
   @override
   Widget build(BuildContext context) {
     return BaseView<GTDetailedViewModel>(
@@ -37,7 +37,7 @@ class GTDetailedView extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher!.didPopRoute();
                 },
                 icon: Icon(Icons.close),
               )
@@ -56,7 +56,7 @@ class GTDetailedView extends StatelessWidget {
                         titleStyle: TextStyles.title2,
                         titleStyle2: TextStyles.title4,
                         subtitleStyle: TextStyles.body1,
-                        width: SizeConfig.screenWidth * 0.75,
+                        width: SizeConfig.screenWidth! * 0.75,
                       ),
                     )
                   : (model.viewScratcher
@@ -75,7 +75,7 @@ class GTDetailedView extends StatelessWidget {
                             key: scratchKey,
                             onThreshold: () => model.redeemCard(ticket),
                             image: Image.asset(
-                              ticket.isLevelChange
+                              ticket.isLevelChange!
                                   ? Assets.levelUpUnredeemedGoldenTicketBGPNG
                                   : Assets.unredeemedGoldenTicketBG_png,
                               fit: BoxFit.fitWidth,
@@ -84,7 +84,7 @@ class GTDetailedView extends StatelessWidget {
                               key: ticketImageKey,
                               child: RedeemedGoldenScratchCard(
                                 ticket: ticket,
-                                width: SizeConfig.screenWidth * 0.75,
+                                width: SizeConfig.screenWidth! * 0.75,
                               ),
                             ),
                           ),
@@ -94,7 +94,7 @@ class GTDetailedView extends StatelessWidget {
                           titleStyle: TextStyles.title2,
                           titleStyle2: TextStyles.title4,
                           subtitleStyle: TextStyles.body1,
-                          width: SizeConfig.screenWidth * 0.75,
+                          width: SizeConfig.screenWidth! * 0.75,
                         )),
               AnimatedContainer(
                   decoration: BoxDecoration(),
@@ -138,9 +138,9 @@ class GTDetailedView extends StatelessWidget {
       );
     } else {
       if (model.isCardScratched) {
-        if (!ticket.isRewarding ||
+        if (!ticket.isRewarding! ||
             ticket.rewardArr == null ||
-            ticket.rewardArr.isEmpty)
+            ticket.rewardArr!.isEmpty)
           return Column(
             children: [
               Text("No Rewards won",
@@ -223,16 +223,16 @@ class GTDetailedView extends StatelessWidget {
                   ticket.redeemedTimestamp !=
                       TimestampModel(seconds: 0, nanoseconds: 0))
               ? bulletTiles(
-                  "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                  "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
               : bulletTiles(
-                  "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+                  "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
         ]),
       );
     } else {
       if (model.isCardScratched) {
-        if (!ticket.isRewarding ||
+        if (!ticket.isRewarding! ||
             ticket.rewardArr == null ||
-            ticket.rewardArr.isEmpty)
+            ticket.rewardArr!.isEmpty)
           return Column(
             children: [],
           );
@@ -274,9 +274,9 @@ class GTDetailedView extends StatelessWidget {
                             ticket.redeemedTimestamp !=
                                 TimestampModel(seconds: 0, nanoseconds: 0))
                         ? bulletTiles(
-                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp.seconds * 1000))}")
+                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
                         : bulletTiles(
-                            "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp.seconds * 1000))}")
+                            "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
                   ]),
             );
           }

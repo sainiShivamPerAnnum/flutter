@@ -23,8 +23,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginControllerView extends StatefulWidget {
-  final int initPage;
-  static String mobileno;
+  final int? initPage;
+  static String? mobileno;
 
   LoginControllerView({this.initPage});
 
@@ -35,13 +35,13 @@ class LoginControllerView extends StatefulWidget {
 
 class _LoginControllerViewState extends State<LoginControllerView> {
   final Log log = new Log("LoginController View");
-  final int initPage;
+  final int? initPage;
 
   _LoginControllerViewState(this.initPage);
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     bool keyboardIsOpen =
         MediaQuery.of(context).viewInsets.bottom > SizeConfig.viewInsets.bottom;
     return BaseView<LoginControllerViewModel>(
@@ -147,7 +147,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             FullScreenLoader(
-                                size: SizeConfig.screenWidth * 0.3),
+                                size: SizeConfig.screenWidth! * 0.3),
                             SizedBox(height: SizeConfig.padding12),
                             Text(
                               "Loading...",
@@ -221,7 +221,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           ),
                         ),
                         SizedBox(
-                          height: SizeConfig.screenWidth * 0.1 +
+                          height: SizeConfig.screenWidth! * 0.1 +
                               MediaQuery.of(context).viewInsets.bottom,
                         ),
                       ],
@@ -233,7 +233,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                     width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth * 0.2,
+                    height: SizeConfig.screenWidth! * 0.2,
                     margin: EdgeInsets.only(
                       bottom: SizeConfig.viewInsets.bottom +
                           SizeConfig.pageHorizontalMargins,
@@ -269,7 +269,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   child: Banner(
                     message: FlavorConfig.getStage(),
                     location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
+                    color: FlavorConfig.instance!.color,
                   ),
                 ),
               if (FlavorConfig.isQA())
@@ -278,7 +278,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   child: Banner(
                     message: FlavorConfig.getStage(),
                     location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
+                    color: FlavorConfig.instance!.color,
                   ),
                 ),
               BaseAnimation(),

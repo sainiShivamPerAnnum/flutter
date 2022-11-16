@@ -14,13 +14,13 @@ class GoldenTicketRepository extends BaseRepo {
       : 'https://bdqsoy9h84.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<GoldenTicket>> getGoldenTicketById({
-    String goldenTicketId,
+    String? goldenTicketId,
   }) async {
     try {
       final token = await getBearerToken();
       final goldenTicketRespone = await APIService.instance.getData(
         ApiPath.getGoldenTicketById(
-          this.userService.baseUser.uid,
+          this.userService!.baseUser!.uid,
           goldenTicketId,
         ),
         cBaseUrl: _baseUrl,
@@ -28,10 +28,10 @@ class GoldenTicketRepository extends BaseRepo {
       );
 
       final ticket =
-          GoldenTicket.fromJson(goldenTicketRespone['data'], goldenTicketId);
+          GoldenTicket.fromJson(goldenTicketRespone['data'], goldenTicketId!);
       return ApiResponse<GoldenTicket>(model: ticket, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch ticket", 400);
     }
   }
@@ -53,7 +53,7 @@ class GoldenTicketRepository extends BaseRepo {
       final prizesModel = PrizesModel.fromJson(milestoneRespone["data"]);
       return ApiResponse<PrizesModel>(model: prizesModel, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch ticket", 400);
     }
   }
@@ -61,13 +61,13 @@ class GoldenTicketRepository extends BaseRepo {
   //Skip milestone
   Future<ApiResponse<bool>> skipMilestone() async {
     try {
-      final Map<String, int> _body = {
-        "mlIndex": userService.userJourneyStats.mlIndex
+      final Map<String, int?> _body = {
+        "mlIndex": userService!.userJourneyStats!.mlIndex
       };
-      final queryParams = {"uid": userService.baseUser.uid};
+      final queryParams = {"uid": userService!.baseUser!.uid};
       final token = await getBearerToken();
       final response = await APIService.instance.postData(
-        ApiPath.kSkipMilestone(userService.baseUser.uid),
+        ApiPath.kSkipMilestone(userService!.baseUser!.uid),
         token: token,
         cBaseUrl: _baseUrl,
         body: _body,
@@ -75,23 +75,23 @@ class GoldenTicketRepository extends BaseRepo {
       );
       if (response != null) {
         final responseData = response["data"];
-        logger.d("Response from skip milestone API: $responseData");
+        logger!.d("Response from skip milestone API: $responseData");
         return ApiResponse(model: true, code: 200);
       } else
         return ApiResponse(model: false, code: 400);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to skip milestone", 400);
     }
   }
 
   Future<ApiResponse<GoldenTicket>> getGTByPrizeSubtype(
-      String prizeSubtype) async {
+      String? prizeSubtype) async {
     try {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
-        ApiPath.prizeBySubtype(userService.baseUser.uid),
+        ApiPath.prizeBySubtype(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           'subType': prizeSubtype,
@@ -102,7 +102,7 @@ class GoldenTicketRepository extends BaseRepo {
       final goldenTicket = GoldenTicket.fromJson(prizeResponse["data"], "");
       return ApiResponse<GoldenTicket>(model: goldenTicket, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e.toString() ?? "Unable to fetch ticket", 400);
     }
@@ -113,14 +113,14 @@ class GoldenTicketRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
-        ApiPath.getGoldenTicket(userService.baseUser.uid),
+        ApiPath.getGoldenTicket(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           'type': 'UNSCRATCHED',
         },
         token: token,
       );
-      final Map<String, dynamic> responseData = prizeResponse["data"];
+      final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
         responseData["gts"].forEach((gt) {
           unscratchedGoldenTickets.add(GoldenTicket.fromJson(gt, ""));
@@ -130,7 +130,7 @@ class GoldenTicketRepository extends BaseRepo {
       return ApiResponse<List<GoldenTicket>>(
           model: unscratchedGoldenTickets, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e.toString() ?? "Unable to fetch ticket", 400);
     }
@@ -141,7 +141,7 @@ class GoldenTicketRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
-        ApiPath.goldenTickets(userService.baseUser.uid),
+        ApiPath.goldenTickets(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           'type': type,
@@ -155,17 +155,17 @@ class GoldenTicketRepository extends BaseRepo {
 
       return ApiResponse<List<GoldenTicket>>(model: tickets, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e.toString() ?? "Unable to fetch ticket", 400);
     }
   }
 
   Future<ApiResponse<bool>> redeemReward(
-    String gtId,
+    String? gtId,
   ) async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       Map<String, dynamic> body = {"uid": uid, "gtId": gtId};
@@ -178,10 +178,10 @@ class GoldenTicketRepository extends BaseRepo {
       );
 
       final data = response['data'];
-      this.logger.d(data.toString());
+      this.logger!.d(data.toString());
       return ApiResponse(model: true, code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

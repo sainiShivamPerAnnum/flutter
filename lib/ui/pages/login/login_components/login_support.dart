@@ -17,7 +17,7 @@ class LoginFab extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Haptic.vibrate();
-          AppState.delegate.appState.currentAction = PageAction(
+          AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: FaqPageConfig,
             widget: FAQPage(

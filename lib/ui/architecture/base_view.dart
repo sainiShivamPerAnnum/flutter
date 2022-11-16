@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BaseView<T extends BaseViewModel> extends StatefulWidget {
-  final Widget Function(BuildContext context, T model, Widget child) builder;
-  final Function(T) onModelReady;
-  final Function(T) onModelDispose;
-  final Widget child;
+  final Widget Function(BuildContext context, T model, Widget? child)? builder;
+  final Function(T)? onModelReady;
+  final Function(T)? onModelDispose;
+  final Widget? child;
 
   BaseView({this.builder, this.onModelReady, this.onModelDispose, this.child});
 
@@ -21,12 +21,12 @@ class BaseView<T extends BaseViewModel> extends StatefulWidget {
 }
 
 class _BaseViewState<T extends BaseViewModel> extends State<BaseView<T>> {
-  T model = locator<T>();
+  T? model = locator<T>();
 
   @override
   void initState() {
     if (widget.onModelReady != null) {
-      widget.onModelReady(model);
+      widget.onModelReady!(model!);
     }
 
     super.initState();
@@ -34,7 +34,7 @@ class _BaseViewState<T extends BaseViewModel> extends State<BaseView<T>> {
 
   @override
   void dispose() {
-    if (widget.onModelDispose != null) widget.onModelDispose(model);
+    if (widget.onModelDispose != null) widget.onModelDispose!(model!);
     super.dispose();
   }
 
@@ -43,7 +43,7 @@ class _BaseViewState<T extends BaseViewModel> extends State<BaseView<T>> {
     return ChangeNotifierProvider(
       create: (context) => model,
       child: Consumer<T>(
-        builder: widget.builder,
+        builder: widget.builder!,
         child: widget.child,
       ),
     );

@@ -1,22 +1,21 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class GoldenTicket {
-  String gtId;
-  bool canTransfer;
-  String eventType;
-  String gtType;
-  bool isRewarding;
-  bool isLevelChange;
-  String note;
-  String prizeSubtype;
-  TimestampModel redeemedTimestamp;
-  List<Reward> rewardArr;
-  TimestampModel timestamp;
-  String userId;
-  String version;
+  String? gtId;
+  bool? canTransfer;
+  String? eventType;
+  String? gtType;
+  bool? isRewarding;
+  bool? isLevelChange;
+  String? note;
+  String? prizeSubtype;
+  TimestampModel? redeemedTimestamp;
+  List<Reward>? rewardArr;
+  TimestampModel? timestamp;
+  String? userId;
+  String? version;
 
   GoldenTicket({
     this.gtId,
@@ -34,14 +33,15 @@ class GoldenTicket {
     this.version,
   });
 
+  factory GoldenTicket.none() => GoldenTicket.fromJson({}, '');
   GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
     gtId = json['id'] ?? docId;
-    userId = json['userId'];
+    userId = json['userId'] ?? '';
     timestamp = TimestampModel.fromMap(json['timestamp']);
-    eventType = json['eventType'];
-    gtType = json['gtType'];
+    eventType = json['eventType'] ?? '';
+    gtType = json['gtType'] ?? '';
     isLevelChange = json['isLevelChange'] ?? false;
-    prizeSubtype = json['prizeSubtype'];
+    prizeSubtype = json['prizeSubtype'] ?? '';
     note = json['note'] ?? '';
     canTransfer = json['canTransfer'] ?? false;
     isRewarding = json['isRewarding'] ?? false;
@@ -53,8 +53,8 @@ class GoldenTicket {
 }
 
 class Reward {
-  String type;
-  int value;
+  String? type;
+  int? value;
   Reward({
     this.type,
     this.value,
@@ -69,8 +69,8 @@ class Reward {
   }
 
   Reward copyWith({
-    String type,
-    int value,
+    String? type,
+    int? value,
   }) {
     return Reward(
       type: type ?? this.type,
@@ -87,8 +87,8 @@ class Reward {
 
   factory Reward.fromMap(Map<String, dynamic> map) {
     return Reward(
-      type: map['type'] as String,
-      value: map['value'] as int,
+      type: map['type'] as String?,
+      value: map['value'] as int?,
     );
   }
 

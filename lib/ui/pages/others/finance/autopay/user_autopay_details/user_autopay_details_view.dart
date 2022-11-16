@@ -36,9 +36,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserAutosaveDetailsView extends StatelessWidget {
-  const UserAutosaveDetailsView({Key key}) : super(key: key);
+  const UserAutosaveDetailsView({Key? key}) : super(key: key);
 
-  getFreq(String freq) {
+  getFreq(String? freq) {
     if (freq == "DAILY") return "/day";
     if (freq == "WEEKLY") return "/week";
     return "";
@@ -119,7 +119,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () {
                                             Haptic.vibrate();
-                                            AppState.delegate.appState
+                                            AppState.delegate!.appState
                                                 .currentAction = PageAction(
                                               state: PageState.addWidget,
                                               widget: TransactionsHistory(
@@ -183,11 +183,11 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                               itemBuilder: (context, index) {
                                                 return TransationTile(
                                                   isLast: index ==
-                                                      model.filteredList
+                                                      model.filteredList!
                                                               .length -
                                                           1,
-                                                  txn:
-                                                      model.filteredList[index],
+                                                  txn: model
+                                                      .filteredList![index],
                                                 );
                                               },
                                             ),
@@ -232,9 +232,10 @@ class UserAutosaveDetailsView extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: (model.activeSubscription.status ==
+                            children: (model.activeSubscription!.status ==
                                         Constants.SUBSCRIPTION_INACTIVE &&
-                                    model.activeSubscription.resumeDate.isEmpty)
+                                    model.activeSubscription!.resumeDate!
+                                        .isEmpty)
                                 ? _buildRestartAutoPay()
                                 : _buildUpdateAutoPay(model),
                           ),
@@ -290,7 +291,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        model.activeSubscription.vpa ?? "hello@upi",
+                        model.activeSubscription!.vpa ?? "hello@upi",
                         style: TextStyles.sourceSans.body1,
                       ),
                       SizedBox(
@@ -322,7 +323,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
   Widget _buildAmountSavedCard(UserAutosaveDetailsViewModel model) {
     return Container(
       // height: SizeConfig.screenWidth * 0.5433,
-      width: SizeConfig.screenWidth * 0.8426,
+      width: SizeConfig.screenWidth! * 0.8426,
       decoration: BoxDecoration(
         color: UiConstants.kAutosaveBalanceColor.withOpacity(0.12),
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -338,9 +339,9 @@ class UserAutosaveDetailsView extends StatelessWidget {
       child: PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
         properties: [PaytmServiceProperties.ActiveSubscription],
         builder: (context, m, property) {
-          return (m.activeSubscription.status ==
+          return (m!.activeSubscription!.status ==
                       Constants.SUBSCRIPTION_INACTIVE &&
-                  m.activeSubscription.resumeDate.isEmpty)
+                  m.activeSubscription!.resumeDate!.isEmpty)
               ? Center(
                   child: Text(
                     "Autosave Inactive",
@@ -370,12 +371,12 @@ class UserAutosaveDetailsView extends StatelessWidget {
                     ),
                     RichText(
                       text: TextSpan(
-                          text: '₹${m.activeSubscription.autoAmount.toInt()}',
+                          text: '₹${m.activeSubscription!.autoAmount!.toInt()}',
                           style: TextStyles.rajdhaniB.title1,
                           children: [
                             TextSpan(
                                 text:
-                                    '${getFreq(m.activeSubscription.autoFrequency)}',
+                                    '${getFreq(m.activeSubscription!.autoFrequency)}',
                                 style: TextStyles.rajdhaniT.title2)
                           ]),
                     ),
@@ -432,7 +433,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
       AppPositiveBtn(
         btnText: "Restart Autosave",
         onPressed: () {
-          AppState.delegate.appState.currentAction = PageAction(
+          AppState.delegate!.appState.currentAction = PageAction(
             page: AutosaveProcessViewPageConfig,
             widget: AutosaveProcessView(page: 2),
             state: PageState.replaceWidget,
@@ -445,12 +446,12 @@ class UserAutosaveDetailsView extends StatelessWidget {
 
   _buildUpdateAutoPay(UserAutosaveDetailsViewModel model) {
     return [
-      if (model.activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+      if (model.activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
         AppPositiveBtn(
           btnText: 'Update',
           onPressed: () {
             //NOTE: CHECK IN EDIT MODE
-            AppState.delegate.appState.currentAction = PageAction(
+            AppState.delegate!.appState.currentAction = PageAction(
               page: AutosaveProcessViewPageConfig,
               widget: AutosaveProcessView(
                 page: 2,
@@ -477,7 +478,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                       MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
                 ),
                 child: Text(
-                  model.activeSubscription.status ==
+                  model.activeSubscription!.status ==
                           Constants.SUBSCRIPTION_INACTIVE
                       ? "RESUME AUTOSAVE"
                       : "PAUSE AUTOSAVE",
@@ -494,13 +495,14 @@ class UserAutosaveDetailsView extends StatelessWidget {
 
 class TransationTile extends StatelessWidget {
   TransationTile({
-    Key key,
-    @required this.txn,
-    @required this.isLast,
+    Key? key,
+    required this.txn,
+    required this.isLast,
   }) : super(key: key);
   final bool isLast;
   final AutosaveTransactionModel txn;
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final TransactionHistoryService? _txnHistoryService =
+      locator<TransactionHistoryService>();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -516,7 +518,7 @@ class TransationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _txnHistoryService.getTileTitle(
+                    _txnHistoryService!.getTileTitle(
                       UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD,
                     ),
                     style: TextStyles.rajdhaniM.body2,
@@ -525,7 +527,7 @@ class TransationTile extends StatelessWidget {
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    _txnHistoryService.getFormattedTime(txn.createdOn),
+                    _txnHistoryService!.getFormattedTime(txn.createdOn!),
                     style: TextStyles.rajdhaniL.body3,
                   ),
                 ],
@@ -535,16 +537,16 @@ class TransationTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _txnHistoryService.getFormattedTxnAmount(txn.amount),
+                    _txnHistoryService!.getFormattedTxnAmount(txn.amount!),
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   SizedBox(
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    txn.status,
+                    txn.status!,
                     style: TextStyles.rajdhaniM.body3.colour(
-                      _txnHistoryService.getTileColor(txn.status),
+                      _txnHistoryService!.getTileColor(txn.status),
                     ),
                   ),
                 ],
@@ -563,16 +565,16 @@ class TransationTile extends StatelessWidget {
 }
 
 class PauseAutosaveModal extends StatefulWidget {
-  final UserAutosaveDetailsViewModel model;
+  final UserAutosaveDetailsViewModel? model;
 
-  const PauseAutosaveModal({Key key, this.model}) : super(key: key);
+  const PauseAutosaveModal({Key? key, this.model}) : super(key: key);
 
   @override
   State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
 }
 
 class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
-  int pauseValue = 1;
+  int? pauseValue = 1;
   setPauseValue(value) {
     setState(() {
       pauseValue = value;
@@ -598,7 +600,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                 backgroundColor: Colors.transparent,
                 child: IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                   icon: Icon(
                     Icons.close,
@@ -649,7 +651,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                         "You will lose out on automated savings & many exclusive rewards⏸️",
                     cancelBtnText: "No",
                     cancelAction: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                     buttonText: "Yes",
                     confirmAction: () async {
@@ -657,8 +659,8 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                       setState(() {
                         isPausing = false;
                       });
-                      await widget.model.pauseSubscription(pauseValue);
-                      AppState.backButtonDispatcher.didPopRoute();
+                      await widget.model!.pauseSubscription(pauseValue);
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                   ),
                 );
@@ -667,7 +669,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                 setState(() {
                   isPausing = true;
                 });
-                await widget.model.pauseSubscription(pauseValue);
+                await widget.model!.pauseSubscription(pauseValue);
                 setState(() {
                   isPausing = false;
                 });
@@ -681,8 +683,8 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
   }
 
   pauseOptionTile({
-    @required text,
-    @required radioValue,
+    required text,
+    required radioValue,
   }) {
     return InkWell(
       splashColor: Colors.transparent,
@@ -714,7 +716,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
           trailing: Radio(
             value: radioValue,
             groupValue: pauseValue,
-            onChanged: (value) {
+            onChanged: (dynamic value) {
               setPauseValue(value);
             },
             activeColor: UiConstants.primaryColor,

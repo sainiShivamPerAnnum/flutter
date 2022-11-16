@@ -1,19 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
 class WithdrawableGoldResponseModel {
-  String message;
-  WithdrawableGoldDetails data;
+  String? message;
+  WithdrawableGoldDetails? data;
   WithdrawableGoldResponseModel({
     @required this.message,
     @required this.data,
   });
 
   WithdrawableGoldResponseModel copyWith({
-    String message,
-    WithdrawableGoldDetails data,
+    String? message,
+    WithdrawableGoldDetails? data,
   }) {
     return WithdrawableGoldResponseModel(
       message: message ?? this.message,
@@ -24,7 +23,7 @@ class WithdrawableGoldResponseModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'message': message ?? '',
-      'data': data.toMap(),
+      'data': data!.toMap(),
     };
   }
 
@@ -58,9 +57,9 @@ class WithdrawableGoldResponseModel {
 }
 
 class WithdrawableGoldDetails {
-  double quantity;
-  double lockedQuantity;
-  double balance;
+  double? quantity;
+  double? lockedQuantity;
+  double? balance;
   WithdrawableGoldDetails({
     @required this.quantity,
     @required this.lockedQuantity,
@@ -68,15 +67,21 @@ class WithdrawableGoldDetails {
   });
 
   WithdrawableGoldDetails copyWith({
-    double quantity,
-    double lockedQuantity,
-    double balance,
+    double? quantity,
+    double? lockedQuantity,
+    double? balance,
   }) {
     return WithdrawableGoldDetails(
       quantity: quantity ?? this.quantity,
       lockedQuantity: lockedQuantity ?? this.lockedQuantity,
       balance: balance ?? this.balance,
     );
+  }
+
+  WithdrawableGoldDetails.base() {
+    quantity = 0.0;
+    lockedQuantity = 0.0;
+    balance = 0.0;
   }
 
   Map<String, dynamic> toMap() {

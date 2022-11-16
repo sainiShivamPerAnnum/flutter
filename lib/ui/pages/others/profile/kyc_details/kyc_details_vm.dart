@@ -21,8 +21,7 @@ enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, NONE }
 
 class KYCDetailsViewModel extends BaseViewModel {
   final _bankAndPanService = locator<BankAndPanService>();
-  String stateChosenValue;
-  TextEditingController nameController, panController;
+  TextEditingController? nameController, panController;
   bool inEditMode = true;
   bool _isUpdatingKycDetails = false;
 
@@ -34,10 +33,10 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   bool _hasDetails = false;
-  XFile _capturedImage;
-  double _fileSize;
-  UserKycDataModel _userKycData;
-  String _kycErrorMessage;
+  XFile? _capturedImage;
+  double? _fileSize;
+  UserKycDataModel? _userKycData;
+  String? _kycErrorMessage;
 
   get kycErrorMessage => this._kycErrorMessage;
 
@@ -46,7 +45,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  UserKycDataModel get userKycData => this._userKycData;
+  UserKycDataModel? get userKycData => this._userKycData;
 
   set userKycData(value) {
     this._userKycData = value;
@@ -71,21 +70,21 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  XFile get capturedImage => this._capturedImage;
+  XFile? get capturedImage => this._capturedImage;
 
   set capturedImage(value) {
     this._capturedImage = value;
     notifyListeners();
   }
 
-  final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _bankingRepo = locator<BankingRepository>();
-  final _gtService = locator<GoldenTicketService>();
-  final _sellService = locator<BankAndPanService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final BankingRepository _bankingRepo = locator<BankingRepository>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final BankAndPanService? _sellService = locator<BankAndPanService>();
   final _cacheService = new CacheService();
-  bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
+  bool get isConfirmDialogInView => _userService!.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
 
@@ -109,10 +108,10 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   void verifyImage() {
     if (capturedImage == null) return;
-    final String ext = capturedImage.name.split('.').last.toLowerCase();
+    final String ext = capturedImage!.name.split('.').last.toLowerCase();
 
     if (ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
-      File imageFile = File(capturedImage.path);
+      File imageFile = File(capturedImage!.path);
       fileSize =
           BaseUtil.digitPrecision(imageFile.lengthSync() / 1048576, 2, true);
       print("File size: $fileSize");
@@ -146,10 +145,10 @@ class KYCDetailsViewModel extends BaseViewModel {
     final kycRes = await _bankingRepo.getUserKycInfo();
     if (kycRes.isSuccess()) {
       userKycData = kycRes.model;
-      if (userKycData.ocrVerified) {
+      if (userKycData!.ocrVerified) {
         kycVerificationStatus = KycVerificationStatus.VERIFIED;
-        panController.text = userKycData.pan;
-        nameController.text = userKycData.name;
+        panController!.text = userKycData!.pan;
+        nameController!.text = userKycData!.name;
         inEditMode = false;
         hasDetails = true;
       } else
@@ -167,14 +166,14 @@ class KYCDetailsViewModel extends BaseViewModel {
           "No file selected", "Please select a file");
     if (isUpdatingKycDetails) return;
     isUpdatingKycDetails = true;
-    final res = await _bankingRepo.getSignedImageUrl(capturedImage.name);
+    final res = await _bankingRepo.getSignedImageUrl(capturedImage!.name);
 
     if (res.isSuccess()) {
       final imageUploadRes =
-          await _bankingRepo.uploadPanImageFile(res.model.url, capturedImage);
+          await _bankingRepo.uploadPanImageFile(res.model!.url, capturedImage!);
       if (imageUploadRes.isSuccess()) {
         final forgeryUploadRes =
-            await _bankingRepo.processForgeryUpload(res.model.key);
+            await _bankingRepo.processForgeryUpload(res.model!.key);
         if (forgeryUploadRes.isSuccess()) {
           capturedImage = null;
           _bankAndPanService.activeBankAccountDetails = null;
@@ -182,7 +181,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           checkForKycExistence();
           BaseUtil.showPositiveAlert(
               "Kyc Verification Successful!", "Sell Unlocked");
-          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher!.didPopRoute();
         } else {
           kycErrorMessage = forgeryUploadRes.errorMessage;
           kycVerificationStatus = KycVerificationStatus.FAILED;

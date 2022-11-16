@@ -17,14 +17,14 @@ import 'package:lottie/lottie.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
-  final _txnService = locator<LendboxTransactionService>();
+  final LendboxTransactionService? _txnService = locator<LendboxTransactionService>();
 
-  LendboxSuccessView({Key key, @required this.transactionType})
+  LendboxSuccessView({Key? key, required this.transactionType})
       : super(key: key);
 
   void showGtIfAvailable() {
     if (transactionType == TransactionType.DEPOSIT) {
-      _txnService.showGtIfAvailable();
+      _txnService!.showGtIfAvailable();
     }
   }
 
@@ -42,7 +42,7 @@ class LendboxSuccessView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                     this.showGtIfAvailable();
                   },
                   icon: Icon(
@@ -63,7 +63,7 @@ class LendboxSuccessView extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                if (_txnService.currentTxnAmount > 0)
+                if (_txnService!.currentTxnAmount! > 0)
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -73,7 +73,7 @@ class LendboxSuccessView extends StatelessWidget {
                       ),
                       child: Lottie.asset(
                         Assets.floatingTokenIslandLottie,
-                        width: SizeConfig.screenWidth * 0.3,
+                        width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -88,18 +88,18 @@ class LendboxSuccessView extends StatelessWidget {
                       ),
                       child: Lottie.asset(
                         Assets.floatingGoldenTicketIslandLottie,
-                        width: SizeConfig.screenWidth * 0.3,
+                        width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                if (_txnService.currentTxnTambolaTicketsCount > 0)
+                if (_txnService!.currentTxnTambolaTicketsCount > 0)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       child: Lottie.asset(
                         Assets.floatingTambolaTicketIslandLottie,
-                        width: SizeConfig.screenWidth * 0.3,
+                        width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -150,7 +150,7 @@ class LendboxSuccessView extends StatelessWidget {
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                            "₹ ${_txnService.currentTxnAmount.toStringAsFixed(2)}",
+                            "₹ ${_txnService!.currentTxnAmount!.toStringAsFixed(2)}",
                             style: TextStyles.rajdhaniB.title3,
                           ),
                           SizedBox(
@@ -209,7 +209,7 @@ class LendboxSuccessView extends StatelessWidget {
                     title: 'Fello Tokens',
                     tooltip: "Use tokens to play games!",
                     asset: Assets.token,
-                    qty: _txnService.currentTxnAmount.toInt()),
+                    qty: _txnService!.currentTxnAmount!.toInt()),
                 if (GoldenTicketService.currentGT != null)
                   SizedBox(width: SizeConfig.padding12),
                 if (GoldenTicketService.currentGT != null)
@@ -218,22 +218,22 @@ class LendboxSuccessView extends StatelessWidget {
                       tooltip: "Scratch and win rewards!",
                       asset: Assets.unredemmedGoldenTicketBG,
                       qty: 1),
-                if (_txnService.currentTxnTambolaTicketsCount > 0)
+                if (_txnService!.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
-                if (_txnService.currentTxnTambolaTicketsCount > 0)
+                if (_txnService!.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
                     title: 'Tambola Ticket',
                     tooltip: "Win upto ₹1 Crore in Tambola!",
                     asset: Assets.singleTmbolaTicket,
-                    qty: _txnService.currentTxnTambolaTicketsCount.toInt(),
+                    qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
                   )
               ],
             ),
           ),
           TextButton(
             onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
-              AppState.delegate.appState.setCurrentTabIndex = 1;
+              AppState.backButtonDispatcher!.didPopRoute();
+              AppState.delegate!.appState.setCurrentTabIndex = 1;
               this.showGtIfAvailable();
             },
             child: Text(

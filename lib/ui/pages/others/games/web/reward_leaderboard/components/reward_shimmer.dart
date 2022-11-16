@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RewardShimmer extends StatelessWidget {
-  const RewardShimmer({Key key}) : super(key: key);
+  const RewardShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class RewardShimmer extends StatelessWidget {
         ),
         color: UiConstants.kSecondaryBackgroundColor,
       ),
-      height: SizeConfig.screenWidth * 1.389,
+      height: SizeConfig.screenWidth! * 1.389,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -44,7 +44,7 @@ class RewardShimmer extends StatelessWidget {
             ),
           )),
           SizedBox(
-            height: SizeConfig.screenWidth * 0.05,
+            height: SizeConfig.screenWidth! * 0.05,
           ),
           Expanded(
             child: ListView.builder(
@@ -65,7 +65,7 @@ class RewardShimmer extends StatelessWidget {
                           BorderRadius.circular(SizeConfig.roundness12),
                       color: Colors.white,
                     ),
-                    height: SizeConfig.screenWidth * 0.15,
+                    height: SizeConfig.screenWidth! * 0.15,
                   ),
                 );
               },
@@ -77,9 +77,9 @@ class RewardShimmer extends StatelessWidget {
   }
 
   Shimmer _buildPiller(int rank) {
-    double pillerBoxHeight = SizeConfig.screenHeight * 0.257 -
+    double pillerBoxHeight = SizeConfig.screenHeight! * 0.257 -
         ((rank - 1.0) *
-            SizeConfig.screenHeight *
+            SizeConfig.screenHeight! *
             0.024); // 200 - (rank - 1) * 20
 
     return Shimmer.fromColors(
@@ -93,7 +93,7 @@ class RewardShimmer extends StatelessWidget {
           bottom: 20,
         ),
         child: SizedBox(
-          width: SizeConfig.screenWidth * 0.2,
+          width: SizeConfig.screenWidth! * 0.2,
           child: Container(
             color: Colors.white,
           ),

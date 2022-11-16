@@ -16,9 +16,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PrizeWin extends StatefulWidget {
-  final Map<String, int> winningsMap;
-  final PrizesModel tPrizes;
-  const PrizeWin({Key key, @required this.winningsMap, @required this.tPrizes})
+  final Map<String, int>? winningsMap;
+  final PrizesModel? tPrizes;
+  const PrizeWin({Key? key, required this.winningsMap, required this.tPrizes})
       : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class PrizeWin extends StatefulWidget {
 
 class _PrizeWinState extends State<PrizeWin> {
   // ConfettiController _confettiController;
-  FcmListener _fcmListener;
+  FcmListener? _fcmListener;
   bool addedSubscription = false;
 
   @override
@@ -44,10 +44,10 @@ class _PrizeWinState extends State<PrizeWin> {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     _fcmListener = locator<FcmListener>();
     if (!addedSubscription) {
-      _fcmListener.addSubscription(FcmTopic.WINNERWINNER);
+      _fcmListener!.addSubscription(FcmTopic.WINNERWINNER);
       addedSubscription = true;
     }
     return Stack(
@@ -63,8 +63,8 @@ class _PrizeWinState extends State<PrizeWin> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth * 0.6,
-                      height: SizeConfig.screenWidth * 0.6,
+                      width: SizeConfig.screenWidth! * 0.6,
+                      height: SizeConfig.screenWidth! * 0.6,
                       padding: EdgeInsets.all(SizeConfig.padding16),
                       decoration: BoxDecoration(
                         color: UiConstants.kSliverAppBarBackgroundColor
@@ -72,8 +72,8 @@ class _PrizeWinState extends State<PrizeWin> {
                         shape: BoxShape.circle,
                       ),
                       child: Container(
-                        width: SizeConfig.screenWidth * 0.6,
-                        height: SizeConfig.screenWidth * 0.6,
+                        width: SizeConfig.screenWidth! * 0.6,
+                        height: SizeConfig.screenWidth! * 0.6,
                         decoration: BoxDecoration(
                           color: UiConstants.kSliverAppBarBackgroundColor,
                           shape: BoxShape.circle,
@@ -82,7 +82,7 @@ class _PrizeWinState extends State<PrizeWin> {
                     ),
                     SvgPicture.asset(
                       Assets.tambolaCardAsset,
-                      width: SizeConfig.screenWidth * 0.7,
+                      width: SizeConfig.screenWidth! * 0.7,
                     )
                   ],
                 ),
@@ -107,7 +107,7 @@ class _PrizeWinState extends State<PrizeWin> {
                   tPrize: widget.tPrizes,
                 ),
                 SizedBox(
-                  height: SizeConfig.screenWidth * 0.5,
+                  height: SizeConfig.screenWidth! * 0.5,
                 ),
               ],
             ),
@@ -138,9 +138,9 @@ class _PrizeWinState extends State<PrizeWin> {
                   margin:
                       EdgeInsets.only(bottom: SizeConfig.pageHorizontalMargins),
                   child: AppPositiveBtn(
-                    width: SizeConfig.screenWidth * 0.9,
+                    width: SizeConfig.screenWidth! * 0.9,
                     onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                     btnText: "SAVE MORE",
                   ),

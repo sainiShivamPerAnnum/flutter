@@ -27,22 +27,23 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 
 class LendboxTransactionService extends BaseTransactionService {
-  final _userService = locator<UserService>();
-  final _logger = locator<CustomLogger>();
-  final _userCoinService = locator<UserCoinService>();
-  final _paytmRepo = locator<PaytmRepository>();
+  final UserService? _userService = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
   final _gtService = GoldenTicketService();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _txnHistoryService = locator<TransactionHistoryService>();
-  final _paytmService = locator<PaytmService>();
-  final _razorpayService = locator<RazorpayService>();
-  final _tambolaService = locator<TambolaService>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final TransactionHistoryService? _txnHistoryService =
+      locator<TransactionHistoryService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final RazorpayService? _razorpayService = locator<RazorpayService>();
+  final TambolaService? _tambolaService = locator<TambolaService>();
 
   bool skipMl = false;
 
-  Future<void> initiateWithdrawal(double txnAmount, String txnId) async {
+  Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
     this.currentTransactionState = TransactionState.success;
-    await _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
+    await _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
   }
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
@@ -70,7 +71,7 @@ class LendboxTransactionService extends BaseTransactionService {
     final createdPaytmTransactionData = await this.createPaytmTransaction();
 
     if (createdPaytmTransactionData != null) {
-      bool _status = await _paytmService.initiatePaytmPGTransaction(
+      bool _status = await _paytmService!.initiatePaytmPGTransaction(
         paytmSubscriptionModel: createdPaytmTransactionData,
         restrictAppInvoke: FlavorConfig.isDevelopment(),
         investmentType: InvestmentType.LENDBOXP2P,
@@ -80,7 +81,7 @@ class LendboxTransactionService extends BaseTransactionService {
 
       if (_status) {
         AppState.blockNavigation();
-        _logger
+        _logger!
             .d("Txn Timer Function reinitialised and set with 30 secs delay");
         initiatePolling();
       } else {
@@ -104,15 +105,15 @@ class LendboxTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<CreatePaytmTransactionModel> createPaytmTransaction() async {
+  Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
     if (this.currentTxnAmount == null) return null;
     final mid = BaseRemoteConfig.remoteConfig.getString(
         FlavorConfig.isDevelopment()
             ? BaseRemoteConfig.PATYM_DEV_MID
             : BaseRemoteConfig.PATYM_PROD_MID);
     final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse = await _paytmRepo.createTransaction(
-      this.currentTxnAmount.toDouble(),
+        paytmSubscriptionApiResponse = await _paytmRepo!.createTransaction(
+      this.currentTxnAmount!.toDouble(),
       null,
       {},
       null,
@@ -124,35 +125,35 @@ class LendboxTransactionService extends BaseTransactionService {
     if (!paytmSubscriptionApiResponse.isSuccess())
       return BaseUtil.showNegativeAlert(
           paytmSubscriptionApiResponse.errorMessage, "");
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model.data.orderId;
+    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
     return paytmSubscriptionApiResponse.model;
   }
 
   Future<void> processRazorpayTransaction() async {
     AppState.blockNavigation();
 
-    await _razorpayService.initiateRazorpayTxn(
+    await _razorpayService!.initiateRazorpayTxn(
       amount: this.currentTxnAmount,
       augMap: {},
       lbMap: {},
-      email: _userService.baseUser.email,
-      mobile: _userService.baseUser.mobile,
+      email: _userService!.baseUser!.email,
+      mobile: _userService!.baseUser!.mobile,
       skipMl: this.skipMl,
       investmentType: InvestmentType.LENDBOXP2P,
     );
   }
 
-  Future<void> processPolling(Timer timer) async {
-    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
+  Future<void> processPolling(Timer? timer) async {
+    final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
-      TransactionResponseModel txnStatus = res.model;
-      switch (txnStatus.data.status) {
+      TransactionResponseModel txnStatus = res.model!;
+      switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
-          if (!txnStatus.data.isUpdating) {
-            currentTxnTambolaTicketsCount = res.model.data.tickets;
-            _tambolaService.weeklyTicksFetched = false;
+          if (!txnStatus.data!.isUpdating!) {
+            currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
+            _tambolaService!.weeklyTicksFetched = false;
 
-            timer.cancel();
+            timer!.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,
               gtId: currentTxnOrderId,
@@ -162,7 +163,7 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_PENDING:
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
-          timer.cancel();
+          timer!.cancel();
           currentTransactionState = TransactionState.idle;
           AppState.unblockNavigation();
           BaseUtil.showNegativeAlert(
@@ -174,8 +175,8 @@ class LendboxTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<void> transactionResponseUpdate({String gtId, double amount}) async {
-    _logger.d("Polling response processing");
+  Future<void> transactionResponseUpdate({String? gtId, double? amount}) async {
+    _logger!.d("Polling response processing");
     try {
       if (gtId != null) {
         print("Hey a new fcm recived with gtId: $gtId");
@@ -191,29 +192,29 @@ class LendboxTransactionService extends BaseTransactionService {
       }
 
       //add this to augmontBuyVM
-      _userCoinService.getUserCoinBalance();
+      _userCoinService!.getUserCoinBalance();
       double newFlcBalance = amount ?? 0;
       if (newFlcBalance > 0) {
-        _userCoinService.setFlcBalance(
-            (_userCoinService.flcBalance + newFlcBalance).toInt());
+        _userCoinService!.setFlcBalance(
+            (_userCoinService!.flcBalance! + newFlcBalance).toInt());
       }
-      _userService.getUserFundWalletData();
+      _userService!.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
         GoldenTicketService.goldenTicketId = gtId;
         await _gtService.fetchAndVerifyGoldenTicketByID();
-        await _userService.getUserJourneyStats();
+        await _userService!.getUserJourneyStats();
 
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
 
-      _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
+      _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
     } catch (e) {
-      _logger.e(e);
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.DepositPayloadError, e);
+      _logger!.e(e);
+      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+          FailType.DepositPayloadError, e as Map<String, dynamic>);
     }
   }
 
@@ -227,17 +228,17 @@ class LendboxTransactionService extends BaseTransactionService {
   @override
   Future<void> processUpiTransaction() async {
     AppState.blockNavigation();
-    CreatePaytmTransactionModel createdPaytmTransactionData =
+    CreatePaytmTransactionModel? createdPaytmTransactionData =
         await this.createPaytmTransaction();
 
     if (createdPaytmTransactionData != null) {
-      final deepUri = await _paytmService.generateUpiTransactionDeepUri(
+      final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
           selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
 
       if (deepUri != null && deepUri.isNotEmpty) {
-        final res = await _paytmService.initiateUpiTransaction(
+        final res = await _paytmService!.initiateUpiTransaction(
           amount: this.currentTxnAmount,
-          orderId: createdPaytmTransactionData.data.orderId,
+          orderId: createdPaytmTransactionData.data!.orderId,
           upiApplication: upiApplication,
           url: deepUri,
           investmentType: InvestmentType.AUGGOLD99,

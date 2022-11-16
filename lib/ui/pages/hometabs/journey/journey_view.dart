@@ -42,7 +42,7 @@ class JourneyView extends StatefulWidget {
 
 class _JourneyViewState extends State<JourneyView>
     with TickerProviderStateMixin {
-  JourneyPageViewModel modelInstance;
+  JourneyPageViewModel? modelInstance;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class _JourneyViewState extends State<JourneyView>
 
 class JourneyErrorScreen extends StatelessWidget {
   const JourneyErrorScreen({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -133,7 +133,7 @@ class JourneyErrorScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Lottie.asset(Assets.fullScreenLoaderLottie,
-              height: SizeConfig.screenWidth / 2),
+              height: SizeConfig.screenWidth! / 2),
           SizedBox(height: 20),
           Text(
             'Journey failed to load',
@@ -143,7 +143,7 @@ class JourneyErrorScreen extends StatelessWidget {
           AppNegativeBtn(
               btnText: 'Retry',
               onPressed: () {
-                AppState.delegate.appState.currentAction = PageAction(
+                AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll,
                   page: SplashPageConfig,
                 );
@@ -160,7 +160,7 @@ class LevelUpAnimation extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
         properties: [JourneyServiceProperties.LevelCompletion],
         builder: (context, jModel, properties) {
-          return jModel.showLevelUpAnimation
+          return jModel!.showLevelUpAnimation
               ? Align(
                   alignment: Alignment.center,
                   child: IgnorePointer(
@@ -171,7 +171,7 @@ class LevelUpAnimation extends StatelessWidget {
                       fit: BoxFit.fitWidth,
                       controller: jModel.levelUpLottieController,
                       onLoaded: (composition) {
-                        jModel.levelUpLottieController
+                        jModel.levelUpLottieController!
                           ..duration = composition.duration;
                       },
                     ),
@@ -185,7 +185,7 @@ class LevelUpAnimation extends StatelessWidget {
 class AvatarPathPainter extends StatelessWidget {
   final JourneyPageViewModel model;
 
-  const AvatarPathPainter({Key key, @required this.model}) : super(key: key);
+  const AvatarPathPainter({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +193,7 @@ class AvatarPathPainter extends StatelessWidget {
       bottom: 0,
       left: 0,
       child: CustomPaint(
-        size: Size(model.pageWidth, model.pageHeight * 2),
+        size: Size(model.pageWidth!, model.pageHeight! * 2),
         painter: PathPainter(model.avatarPath, Colors.transparent),
       ),
     );
@@ -202,7 +202,7 @@ class AvatarPathPainter extends StatelessWidget {
 
 class JRefreshIndicator extends StatelessWidget {
   final JourneyPageViewModel model;
-  const JRefreshIndicator({Key key, @required this.model}) : super(key: key);
+  const JRefreshIndicator({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +222,7 @@ class JRefreshIndicator extends StatelessWidget {
 
 class JPageLoader extends StatelessWidget {
   final JourneyPageViewModel model;
-  const JPageLoader({Key key, @required this.model}) : super(key: key);
+  const JPageLoader({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +235,7 @@ class JPageLoader extends StatelessWidget {
       left: SizeConfig.pageHorizontalMargins,
       child: SafeArea(
         child: Container(
-          width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+          width: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
           height: SizeConfig.padding80,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness16),
@@ -274,9 +274,9 @@ class LevelBlurView extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
           properties: [UserServiceProperties.myJourneyStats],
           builder: (context, m, properties) {
-            final JourneyLevel levelData = jModel.getJourneyLevelBlurData();
+            final JourneyLevel? levelData = jModel!.getJourneyLevelBlurData();
             log("Current Level Data ${levelData.toString()}");
-            return levelData != null && jModel.pages.length >= levelData.pageEnd
+            return levelData != null && jModel.pages!.length >= levelData.pageEnd!
                 ? Stack(
                     children: [
                       Positioned(
@@ -286,18 +286,18 @@ class LevelBlurView extends StatelessWidget {
                           child: Container(
                             color: Colors.transparent,
                             height:
-                                jModel.pageHeight * (1 - levelData.breakpoint) +
-                                    jModel.pageHeight *
-                                        (jModel.pageCount - levelData.pageEnd),
+                                jModel.pageHeight! * (1 - levelData.breakpoint!) +
+                                    jModel.pageHeight! *
+                                        (jModel.pageCount - levelData.pageEnd!),
                             width: jModel.pageWidth,
                             alignment: Alignment.bottomCenter,
                           ),
                         ),
                       ),
                       Positioned(
-                        top: jModel.pageHeight * (1 - levelData.breakpoint) +
-                            jModel.pageHeight *
-                                (jModel.pageCount - levelData.pageEnd) -
+                        top: jModel.pageHeight! * (1 - levelData.breakpoint!) +
+                            jModel.pageHeight! *
+                                (jModel.pageCount - levelData.pageEnd!) -
                             SizeConfig.avatarRadius,
                         child: Container(
                           width: jModel.pageWidth,
@@ -319,7 +319,7 @@ class LevelBlurView extends StatelessWidget {
                                     horizontal: SizeConfig.padding10),
                                 child: Row(
                                   children: [
-                                    Text("Level ${levelData.level + 1} ",
+                                    Text("Level ${levelData.level! + 1} ",
                                         style: TextStyles.rajdhaniB.body1
                                             .colour(Colors.black)),
                                     Icon(Icons.lock,
@@ -370,12 +370,12 @@ class DottedLinePainter extends CustomPainter {
 }
 
 class Avatar extends StatelessWidget {
-  final JourneyPageViewModel model;
-  Avatar({Key key, this.model}) : super(key: key);
-  final _baseUtil = locator<BaseUtil>();
+  final JourneyPageViewModel? model;
+  Avatar({Key? key, this.model}) : super(key: key);
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
-    print(model.avatarPosition);
+    print(model!.avatarPosition);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: [
         JourneyServiceProperties.AvatarPosition,
@@ -386,7 +386,7 @@ class Avatar extends StatelessWidget {
           key: avatarKey,
           // duration: Duration(seconds: 10),
           // curve: Curves.decelerate,
-          top: model.avatarPosition?.dy,
+          top: model!.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
           child: CustomPaint(
             size: Size(SizeConfig.padding20, SizeConfig.padding20),
@@ -438,7 +438,7 @@ class AvatarPainter extends CustomPainter {
 }
 
 class PathPainter extends CustomPainter {
-  Path path;
+  Path? path;
   final Color color;
   PathPainter(this.path, this.color);
 
@@ -450,7 +450,7 @@ class PathPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 1.0;
 
-    canvas.drawPath(path, paint);
+    canvas.drawPath(path!, paint);
   }
 
   @override
@@ -458,7 +458,7 @@ class PathPainter extends CustomPainter {
 }
 
 class BlurFilter extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
   final double sigmaX;
   final double sigmaY;
   BlurFilter({this.child, this.sigmaX = 10.0, this.sigmaY = 10.0});
@@ -467,7 +467,7 @@ class BlurFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        child,
+        child!,
         ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(

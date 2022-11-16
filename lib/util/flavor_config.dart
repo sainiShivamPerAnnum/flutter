@@ -5,18 +5,18 @@ enum Flavor { DEV, QA, PROD }
 
 class FlavorValues {
   FlavorValues({
-    @required this.awsIciciStage,
-    @required this.awsAugmontStage,
-    @required this.freshchatStage,
-    @required this.signzyStage,
-    @required this.signzyPanStage,
-    @required this.razorpayStage,
-    @required this.paytmStage,
-    @required this.baseUriAsia,
-    @required this.baseUriUS,
-    @required this.dynamicLinkPrefix,
-    @required this.mixpanelToken,
-    @required this.gameApiTokenSecret,
+    required this.awsIciciStage,
+    required this.awsAugmontStage,
+    required this.freshchatStage,
+    required this.signzyStage,
+    required this.signzyPanStage,
+    required this.razorpayStage,
+    required this.paytmStage,
+    required this.baseUriAsia,
+    required this.baseUriUS,
+    required this.dynamicLinkPrefix,
+    required this.mixpanelToken,
+    required this.gameApiTokenSecret,
   });
 
   final AWSIciciStage awsIciciStage;
@@ -39,31 +39,31 @@ class FlavorConfig {
   final String name;
   final Color color;
   final FlavorValues values;
-  static FlavorConfig _instance;
+  static FlavorConfig? _instance;
 
   factory FlavorConfig(
-      {@required Flavor flavor,
+      {required Flavor flavor,
       Color color: Colors.blue,
-      @required FlavorValues values}) {
+      required FlavorValues values}) {
     _instance ??=
         FlavorConfig._internal(flavor, flavor.toString(), color, values);
-    return _instance;
+    return _instance!;
   }
 
   FlavorConfig._internal(this.flavor, this.name, this.color, this.values);
 
-  static FlavorConfig get instance {
+  static FlavorConfig? get instance {
     return _instance;
   }
 
-  static bool isProduction() => _instance.flavor == Flavor.PROD;
+  static bool isProduction() => _instance!.flavor == Flavor.PROD;
 
-  static bool isDevelopment() => _instance.flavor == Flavor.DEV;
+  static bool isDevelopment() => _instance!.flavor == Flavor.DEV;
 
-  static bool isQA() => _instance.flavor == Flavor.QA;
+  static bool isQA() => _instance!.flavor == Flavor.QA;
 
   static String getStage() {
-    switch (_instance.flavor) {
+    switch (_instance!.flavor) {
       case Flavor.PROD:
         return 'prod';
       case Flavor.QA:

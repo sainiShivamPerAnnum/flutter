@@ -9,18 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FelloConfirmationLandScapeDialog extends StatefulWidget {
-  final Widget content;
-  final Function onAccept;
-  final Function onReject;
-  final Color acceptColor;
-  final Color rejectColor;
-  final ValueChanged result;
-  final bool showCrossIcon;
-  final String title;
-  final String asset;
-  final String subtitle;
-  final String accept;
-  final String reject;
+  final Widget? content;
+  final Function? onAccept;
+  final Function? onReject;
+  final Color? acceptColor;
+  final Color? rejectColor;
+  final ValueChanged? result;
+  final bool? showCrossIcon;
+  final String? title;
+  final String? asset;
+  final String? subtitle;
+  final String? accept;
+  final String? reject;
   final bool inLandScape;
 
   FelloConfirmationLandScapeDialog(
@@ -46,7 +46,7 @@ class FelloConfirmationLandScapeDialog extends StatefulWidget {
 class _FelloConfirmationDialogState
     extends State<FelloConfirmationLandScapeDialog> {
   bool showButtons = true;
-  ValueChanged<bool> isBusy;
+  ValueChanged<bool>? isBusy;
   @override
   Widget build(BuildContext context) {
     return FelloDialog(
@@ -54,30 +54,30 @@ class _FelloConfirmationDialogState
           ? RotatedBox(
               quarterTurns: 0,
               child: Container(
-                height: SizeConfig.screenWidth * 0.7,
-                width: SizeConfig.screenWidth * 0.7,
+                height: SizeConfig.screenWidth! * 0.7,
+                width: SizeConfig.screenWidth! * 0.7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     widget.content != null
-                        ? widget.content
+                        ? widget.content!
                         : Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Expanded(
                                   child: SvgPicture.asset(
-                                    widget.asset,
+                                    widget.asset!,
                                   ),
                                 ),
                                 SizedBox(height: SizeConfig.padding8),
                                 Text(
-                                  widget.title,
+                                  widget.title!,
                                   style: TextStyles.title3.bold,
                                 ),
                                 SizedBox(height: SizeConfig.padding8),
                                 Text(
-                                  widget.subtitle,
+                                  widget.subtitle!,
                                   textAlign: TextAlign.center,
                                   style: TextStyles.body1.colour(Colors.grey),
                                 ),
@@ -98,13 +98,13 @@ class _FelloConfirmationDialogState
                             ),
                           )
                         : Container(
-                            width: SizeConfig.screenWidth * 0.8,
+                            width: SizeConfig.screenWidth! * 0.8,
                             child: Row(
                               children: [
                                 Expanded(
                                   child: FelloButtonLg(
                                     child: Text(
-                                      widget.accept,
+                                      widget.accept!,
                                       style: TextStyles.body3.bold
                                           .colour(Colors.white),
                                     ),
@@ -115,9 +115,9 @@ class _FelloConfirmationDialogState
                                         showButtons = false;
                                       });
                                       if (widget.result != null)
-                                        widget.result(true);
+                                        widget.result!(true);
                                       if (widget.onAccept != null)
-                                        widget.onAccept();
+                                        widget.onAccept!();
                                     },
                                   ),
                                 ),
@@ -125,14 +125,14 @@ class _FelloConfirmationDialogState
                                 Expanded(
                                   child: FelloButtonLg(
                                     child: Text(
-                                      widget.reject,
+                                      widget.reject!,
                                       style: TextStyles.body3.bold,
                                     ),
                                     color: widget.rejectColor,
                                     height: SizeConfig.padding54,
                                     onPressed: () {
                                       if (widget.reject != null)
-                                        widget.onReject();
+                                        widget.onReject!();
                                     },
                                   ),
                                 ),

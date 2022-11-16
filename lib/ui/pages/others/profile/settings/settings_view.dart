@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SettingsView extends StatelessWidget {
-  const SettingsView({Key key}) : super(key: key);
+  const SettingsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class SettingsView extends StatelessWidget {
                     children: [
                       FelloUserAvatar(
                         child: ProfileImageSE(
-                          radius: SizeConfig.screenWidth * 0.16,
+                          radius: SizeConfig.screenWidth! * 0.16,
                         ),
                       ),
                       UserNameTextSE(),
@@ -58,9 +58,9 @@ class SettingsView extends StatelessWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: model.items.length,
+                  itemCount: model.items!.length,
                   separatorBuilder: (ctx, i) {
-                    if (i != model.items.length - 1)
+                    if (i != model.items!.length - 1)
                       return Divider(
                         color: UiConstants.kTextColor3.withOpacity(0.2),
                         endIndent: SizeConfig.pageHorizontalMargins,
@@ -72,17 +72,17 @@ class SettingsView extends StatelessWidget {
                   itemBuilder: (context, i) => ListTile(
                     onTap: () {
                       Haptic.vibrate();
-                      AppState.delegate
-                          .parseRoute(Uri.parse(model.items[i].actionUri));
+                      AppState.delegate!
+                          .parseRoute(Uri.parse(model.items![i].actionUri));
                     },
                     contentPadding: EdgeInsets.symmetric(
                         vertical: SizeConfig.padding4,
                         horizontal: SizeConfig.pageHorizontalMargins),
-                    leading: SvgPicture.asset(model.items[i].asset,
+                    leading: SvgPicture.asset(model.items![i].asset,
                         width: SizeConfig.padding28,
                         height: SizeConfig.padding28,
                         fit: BoxFit.contain),
-                    title: Text(model.items[i].title,
+                    title: Text(model.items![i].title,
                         style: TextStyles.body1.colour(Colors.white)),
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,

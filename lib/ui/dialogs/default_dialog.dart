@@ -3,8 +3,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseDialog extends StatelessWidget {
-  final Widget content;
-  BaseDialog({@required this.content});
+  final Widget? content;
+  BaseDialog({required this.content});
   @override
   Widget build(BuildContext context) {
     return Dialog(

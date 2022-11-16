@@ -16,18 +16,18 @@ import 'package:lottie/lottie.dart';
 
 class RedeemSucessfulScreen extends StatelessWidget {
   RedeemSucessfulScreen(
-      {@required this.subTitleWidget,
-      @required this.claimPrize,
-      @required this.choice,
-      @required this.dpUrl,
-      @required this.wonGrams,
-      Key key})
+      {required this.subTitleWidget,
+      required this.claimPrize,
+      required this.choice,
+      required this.dpUrl,
+      required this.wonGrams,
+      Key? key})
       : super(key: key);
 
   final Widget subTitleWidget;
   final double claimPrize;
   final PrizeClaimChoice choice;
-  final String dpUrl;
+  final String? dpUrl;
   final String wonGrams;
 
   @override
@@ -188,7 +188,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                   width: double.infinity,
                   child: TextButton(
                       onPressed: () {
-                        AppState.delegate.appState.currentAction = PageAction(
+                        AppState.delegate!.appState.currentAction = PageAction(
                           state: PageState.addWidget,
                           widget: SharePriceScreen(
                             dpUrl: dpUrl,
@@ -214,7 +214,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: IconButton(
                     onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                     icon: Icon(
                       Icons.close,
@@ -229,7 +229,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
   }
 }
 
-Widget drawDottedLine({int lenghtOfStripes}) {
+Widget drawDottedLine({required int lenghtOfStripes}) {
   return Column(
     children: [
       for (int i = 0; i < lenghtOfStripes; i++)

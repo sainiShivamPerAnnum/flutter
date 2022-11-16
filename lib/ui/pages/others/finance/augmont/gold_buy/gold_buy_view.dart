@@ -17,7 +17,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class GoldBuyView extends StatefulWidget {
   final int amount;
   final bool skipMl;
-  const GoldBuyView({Key key, this.amount = 250, this.skipMl = false})
+  const GoldBuyView({Key? key, this.amount = 250, this.skipMl = false})
       : super(key: key);
 
   @override
@@ -28,24 +28,24 @@ class _GoldBuyViewState extends State<GoldBuyView>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
-  AppLifecycleState appLifecycleState;
+  AppLifecycleState? appLifecycleState;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _txnService.currentTxnGms = 0.0;
       _txnService.currentTxnAmount = 0.0;
       _txnService.currentTxnOrderId = '';
       _txnService.currentTxnTambolaTicketsCount = 0;
       _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
@@ -82,7 +82,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(txnService),
+              _getBackground(txnService!),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
@@ -130,11 +130,11 @@ class _GoldBuyViewState extends State<GoldBuyView>
     return GoldBuyLoadingView(model: model);
   }
 
-  double _getHeight(txnService) {
+  double? _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight * 0.95;
+      return SizeConfig.screenHeight! * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return SizeConfig.screenHeight * 0.95;
+      return SizeConfig.screenHeight! * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return SizeConfig.screenHeight;
     }

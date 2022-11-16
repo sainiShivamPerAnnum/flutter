@@ -19,7 +19,7 @@ import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SkipMilestoneModalSheet extends StatefulWidget {
-  final MilestoneModel milestone;
+  final MilestoneModel? milestone;
   SkipMilestoneModalSheet({this.milestone});
   @override
   State<SkipMilestoneModalSheet> createState() =>
@@ -27,10 +27,10 @@ class SkipMilestoneModalSheet extends StatefulWidget {
 }
 
 class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
-  final GoldenTicketRepository _goldenTicketRepo =
+  final GoldenTicketRepository? _goldenTicketRepo =
       locator<GoldenTicketRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
 
   get skippingInProgress => this._skippingInProgress;
@@ -44,30 +44,30 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   onTokenSkipPressed() async {
     AppState.screenStack.add(ScreenItem.loader);
     skippingInProgress = true;
-    final res = await _goldenTicketRepo.skipMilestone();
+    final res = await _goldenTicketRepo!.skipMilestone();
     if (res.isSuccess()) {
-      _userCoinService.getUserCoinBalance();
+      _userCoinService!.getUserCoinBalance();
       skippingInProgress = false;
       AppState.screenStack.removeLast();
       while (AppState.screenStack.length > 1)
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
 
       BaseUtil.showPositiveAlert(
           "Milestone Skipped Successfully", "Let's get to the next milestone");
-      _journeyService.updateAvatarIndexDirectly();
-      _journeyService.checkAndAnimateAvatar();
+      _journeyService!.updateAvatarIndexDirectly();
+      _journeyService!.checkAndAnimateAvatar();
     } else {
       skippingInProgress = false;
       AppState.screenStack.removeLast();
-      AppState.backButtonDispatcher.didPopRoute();
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert("", res.errorMessage);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Skip Map: ${widget.milestone.skipCost}");
+    print("Skip Map: ${widget.milestone!.skipCost}");
     return WillPopScope(
       onWillPop: () async {
         log("Milestone details Modalsheet closed");
@@ -94,7 +94,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                 child: IconButton(
                     onPressed: skippingInProgress
                         ? () {}
-                        : () => AppState.backButtonDispatcher.didPopRoute(),
+                        : () => AppState.backButtonDispatcher!.didPopRoute(),
                     icon: Icon(
                       Icons.close,
                       color: Colors.white,
@@ -119,7 +119,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                           TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
                     ),
                     SizedBox(height: SizeConfig.padding40),
-                    if (widget.milestone.skipCost.containsKey('amt'))
+                    if (widget.milestone!.skipCost!.containsKey('amt'))
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -134,15 +134,15 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                   height: SizeConfig.iconSize1),
                               SizedBox(width: SizeConfig.padding10),
                               Text(
-                                "₹ ${widget.milestone.skipCost['amt']}",
+                                "₹ ${widget.milestone!.skipCost!['amt']}",
                                 style: TextStyles.rajdhaniSB.title4
                                     .colour(Colors.white),
                               ),
                             ]),
                             SizedBox(height: SizeConfig.padding24),
                           ]),
-                    if (widget.milestone.skipCost.length == 1 &&
-                        widget.milestone.skipCost.containsKey('flc'))
+                    if (widget.milestone!.skipCost!.length == 1 &&
+                        widget.milestone!.skipCost!.containsKey('flc'))
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -158,7 +158,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                     height: SizeConfig.iconSize1),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(
-                                  widget.milestone.skipCost['flc'].toString(),
+                                  widget.milestone!.skipCost!['flc'].toString(),
                                   style: TextStyles.rajdhaniSB.title4
                                       .colour(Colors.white),
                                 ),
@@ -178,24 +178,24 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                           )
                         : Column(
                             children: [
-                              if (widget.milestone.skipCost.containsKey('amt'))
+                              if (widget.milestone!.skipCost!.containsKey('amt'))
                                 AppPositiveBtn(
                                     btnText: "Save Now",
                                     onPressed: () {
-                                      AppState.backButtonDispatcher
+                                      AppState.backButtonDispatcher!
                                           .didPopRoute();
-                                      AppState.backButtonDispatcher
+                                      AppState.backButtonDispatcher!
                                           .didPopRoute();
                                       return BaseUtil()
                                           .openDepositOptionsModalSheet(
                                         isSkipMl: true,
                                         amount:
-                                            widget.milestone.skipCost['amt'],
+                                            widget.milestone!.skipCost!['amt'],
                                       );
                                     },
                                     width: SizeConfig.screenWidth),
-                              if (widget.milestone.skipCost.containsKey('flc'))
-                                widget.milestone.skipCost.length == 1
+                              if (widget.milestone!.skipCost!.containsKey('flc'))
+                                widget.milestone!.skipCost!.length == 1
                                     ? AppNegativeBtn(
                                         btnText: "SKIP WITH TOKENS",
                                         width: SizeConfig.screenWidth,
@@ -206,7 +206,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                         alignment: Alignment.center,
                                         child: TextButton(
                                           child: Text(
-                                            "SKIP WITH ${widget.milestone.skipCost['flc']} TOKENS",
+                                            "SKIP WITH ${widget.milestone!.skipCost!['flc']} TOKENS",
                                             style: TextStyles.sourceSansL.body3
                                                 .colour(Colors.white),
                                           ),

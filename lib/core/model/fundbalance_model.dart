@@ -1,9 +1,9 @@
 class FundBalanceModel {
-  double wAugBalance;
-  double wAugPrinciple;
-  double wAugQuantity;
-  int wLifeTimeWin;
-  int wPriBalance;
+  double? wAugBalance;
+  double? wAugPrinciple;
+  double? wAugQuantity;
+  int? wLifeTimeWin;
+  int? wPriBalance;
 
   FundBalanceModel(
       {this.wAugBalance,
@@ -13,11 +13,11 @@ class FundBalanceModel {
       this.wPriBalance});
 
   FundBalanceModel.fromJson(Map<String, dynamic> json) {
-    wAugBalance = json['wAugBalance'];
-    wAugPrinciple = json['wAugPrinciple'];
-    wAugQuantity = json['wAugQuantity'];
-    wLifeTimeWin = json['wLifeTimeWin'];
-    wPriBalance = json['wPriBalance'];
+    wAugBalance = json['wAugBalance'] ?? 0.0;
+    wAugPrinciple = json['wAugPrinciple'] ?? 0.0;
+    wAugQuantity = json['wAugQuantity'] ?? 0.0;
+    wLifeTimeWin = json['wLifeTimeWin'] ?? 0;
+    wPriBalance = json['wPriBalance'] ?? 0.0;
   }
 
   Map<String, dynamic> toJson() {
@@ -45,8 +45,8 @@ class FundBalanceModel {
       wAugBalance: (map['wAugBalance'] ?? 0).toDouble(),
       wAugPrinciple: (map['wAugPrinciple'] ?? 0).toDouble(),
       wAugQuantity: (map['wAugQuantity'] ?? 0).toDouble(),
-      wLifeTimeWin: map['wLifeTimeWin'],
-      wPriBalance: map['wPriBalance'],
+      wLifeTimeWin: map['wLifeTimeWin'] ?? 0,
+      wPriBalance: map['wPriBalance'] ?? 0,
     );
   }
 

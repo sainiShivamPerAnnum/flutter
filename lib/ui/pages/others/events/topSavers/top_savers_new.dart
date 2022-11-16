@@ -41,7 +41,7 @@ extension TruncateDoubles on double {
 class CampaignView extends StatelessWidget {
   StreamController controller = StreamController();
 
-  final String eventType;
+  final String? eventType;
   final bool isGameRedirected;
   CampaignView({this.eventType, this.isGameRedirected = false});
 
@@ -74,7 +74,7 @@ class CampaignView extends StatelessWidget {
                         Platform.isIOS
                             ? SliverToBoxAdapter(
                                 child: IOSCampaignCard(
-                                  event: model.event,
+                                  event: model.event!,
                                   subText: Padding(
                                     padding: EdgeInsets.only(
                                       top: SizeConfig.padding10,
@@ -102,7 +102,7 @@ class CampaignView extends StatelessWidget {
                                         UiConstants.kBackgroundColor,
                                     leading: IconButton(
                                       onPressed: () {
-                                        AppState.backButtonDispatcher
+                                        AppState.backButtonDispatcher!
                                             .didPopRoute();
                                       },
                                       icon: Icon(Icons.arrow_back_ios),
@@ -117,7 +117,7 @@ class CampaignView extends StatelessWidget {
                                           bottom: SizeConfig.padding24,
                                         ),
                                         child: CampaignCard(
-                                          event: model.event,
+                                          event: model.event!,
                                           subText: Padding(
                                             padding: EdgeInsets.only(
                                               top: SizeConfig.padding10,
@@ -142,9 +142,9 @@ class CampaignView extends StatelessWidget {
                               InfoComponent(
                                   heading: model.boxHeading,
                                   assetList: model
-                                      .getBoxAssets(model.event.info.length),
+                                      .getBoxAssets(model.event!.info.length),
                                   titleList:
-                                      model.getBoxTitles(model.event.info),
+                                      model.getBoxTitles(model.event!.info),
                                   onStateChanged: () {
                                     _controller.animateTo(
                                         _controller.position.maxScrollExtent,
@@ -170,7 +170,7 @@ class CampaignView extends StatelessWidget {
                         Icons.arrow_back_ios_new_rounded,
                       ),
                       color: Colors.white,
-                      onPressed: AppState.backButtonDispatcher.didPopRoute,
+                      onPressed: AppState.backButtonDispatcher!.didPopRoute,
                     ),
                   ),
                 ),
@@ -258,7 +258,7 @@ class CampaignView extends StatelessWidget {
 
 //To generate page with current participamnts list
 class CurrentParticipantsLeaderBoard extends StatelessWidget {
-  final TopSaverViewModel model;
+  final TopSaverViewModel? model;
   CurrentParticipantsLeaderBoard({this.model});
 
   bool isInteger(num value) => value is int || value == value.roundToDouble();
@@ -277,16 +277,16 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: SizeConfig.padding16),
-            model.currentParticipants != null
-                ? (model.currentParticipants.isNotEmpty
+            model!.currentParticipants != null
+                ? (model!.currentParticipants!.isNotEmpty
                     ? Column(
                         children: [
                           Column(
                             children: List.generate(
                               // model.currentParticipants.length,
-                              model.currentParticipants.length > 3
+                              model!.currentParticipants!.length > 3
                                   ? 3
-                                  : model.currentParticipants.length,
+                                  : model!.currentParticipants!.length,
                               (index) => Padding(
                                 padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding20,
@@ -307,8 +307,9 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                             width: SizeConfig.padding20,
                                           ),
                                           FutureBuilder(
-                                            future: model.getProfileDpWithUid(
-                                                model.currentParticipants[index]
+                                            future: model!.getProfileDpWithUid(
+                                                model!
+                                                    .currentParticipants![index]
                                                     .userid),
                                             builder: (context, snapshot) {
                                               if (snapshot.connectionState ==
@@ -348,8 +349,8 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              model.currentParticipants[index]
-                                                  .username,
+                                              model!.currentParticipants![index]
+                                                  .username!,
                                               style: TextStyles.sourceSans.body3
                                                   .setOpecity(0.8),
                                               overflow: TextOverflow.ellipsis,
@@ -360,7 +361,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      model.currentParticipants[index]
+                                      model!.currentParticipants![index]
                                               ?.displayScore ??
                                           '',
                                       style: TextStyles.rajdhaniM.body3,
@@ -370,7 +371,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          (model.currentParticipants.length > 3)
+                          (model!.currentParticipants!.length > 3)
                               ? Padding(
                                   padding: EdgeInsets.only(
                                       bottom: SizeConfig.padding16,
@@ -380,7 +381,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          AppState.delegate
+                                          AppState.delegate!
                                                   .appState.currentAction =
                                               PageAction(
                                                   widget: AllParticipantsView(
@@ -445,7 +446,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
 
 //To generate page with current participamnts list
 class PastWinnersLeaderBoard extends StatelessWidget {
-  final TopSaverViewModel model;
+  final TopSaverViewModel? model;
   PastWinnersLeaderBoard({this.model});
 
   bool isInteger(num value) => value is int || value == value.roundToDouble();
@@ -464,16 +465,16 @@ class PastWinnersLeaderBoard extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: SizeConfig.padding16),
-            model.pastWinners != null
-                ? (model.pastWinners.isNotEmpty
+            model!.pastWinners != null
+                ? (model!.pastWinners!.isNotEmpty
                     ? Column(
                         children: [
                           Column(
                             children: List.generate(
                               // model.currentParticipants.length,
-                              model.pastWinners.length > 3
+                              model!.pastWinners!.length > 3
                                   ? 3
-                                  : model.pastWinners.length,
+                                  : model!.pastWinners!.length,
                               (index) => Padding(
                                 padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding20,
@@ -494,9 +495,9 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                             width: SizeConfig.padding20,
                                           ),
                                           FutureBuilder(
-                                            future: model.getProfileDpWithUid(
-                                                model
-                                                    .pastWinners[index].userid),
+                                            future: model!.getProfileDpWithUid(
+                                                model!.pastWinners![index]
+                                                    .userid),
                                             builder: (context, snapshot) {
                                               if (snapshot.connectionState ==
                                                       ConnectionState.waiting ||
@@ -535,7 +536,8 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              model.pastWinners[index].username,
+                                              model!.pastWinners![index]
+                                                  .username!,
                                               style: TextStyles.sourceSans.body3
                                                   .setOpecity(0.8),
                                               overflow: TextOverflow.ellipsis,
@@ -546,7 +548,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "${model.pastWinners[index].displayScore}",
+                                      "${model!.pastWinners![index].displayScore}",
                                       style: TextStyles.rajdhaniM.body3,
                                     ),
                                   ],
@@ -554,7 +556,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          (model.pastWinners.length > 3)
+                          (model!.pastWinners!.length > 3)
                               ? Padding(
                                   padding: EdgeInsets.only(
                                       bottom: SizeConfig.padding16,
@@ -564,7 +566,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          AppState.delegate
+                                          AppState.delegate!
                                                   .appState.currentAction =
                                               PageAction(
                                                   widget: AllParticipantsView(

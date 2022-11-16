@@ -7,14 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PoolView extends StatefulWidget {
-  const PoolView({Key key}) : super(key: key);
+  const PoolView({Key? key}) : super(key: key);
 
   @override
   State<PoolView> createState() => _PoolViewState();
 }
 
 class _PoolViewState extends State<PoolView> {
-  final _userService = locator<UserService>();
+  final UserService? _userService = locator<UserService>();
   @override
   void initState() {
     super.initState();
@@ -30,7 +30,7 @@ class _PoolViewState extends State<PoolView> {
   @override
   Widget build(BuildContext context) {
     String _poolClubUri = "https://d2qfyj2eqvh06a.cloudfront.net/pool-club/index.html";
-    String _loadUri = "$_poolClubUri?user=${_userService.baseUser.uid}&name=${_userService.baseUser.username}";
+    String _loadUri = "$_poolClubUri?user=${_userService!.baseUser!.uid}&name=${_userService!.baseUser!.username}";
     if(FlavorConfig.isDevelopment())_loadUri = "$_loadUri&dev=true";
     return Scaffold(
       backgroundColor: Colors.black,

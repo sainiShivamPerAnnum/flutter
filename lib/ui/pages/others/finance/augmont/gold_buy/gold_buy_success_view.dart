@@ -15,9 +15,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
-  final _augTxnService = locator<AugmontTransactionService>();
-  final _gtService = locator<GoldenTicketService>();
-  GoldBuySuccessView({Key key}) : super(key: key);
+  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  GoldBuySuccessView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +33,12 @@ class GoldBuySuccessView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                     Future.delayed(Duration(milliseconds: 500), () {
-                      _gtService.showInstantGoldenTicketView(
-                        amount: _augTxnService.currentTxnAmount,
+                      _gtService!.showInstantGoldenTicketView(
+                        amount: _augTxnService!.currentTxnAmount,
                         title:
-                            "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
+                            "You have successfully saved ₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                         source: GTSOURCE.deposit,
                       );
                     });
@@ -61,7 +61,7 @@ class GoldBuySuccessView extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                if (_augTxnService.currentTxnAmount > 0)
+                if (_augTxnService!.currentTxnAmount! > 0)
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -70,7 +70,7 @@ class GoldBuySuccessView extends StatelessWidget {
                           bottom: SizeConfig.padding24),
                       child: Lottie.asset(
                         Assets.floatingTokenIslandLottie,
-                        width: SizeConfig.screenWidth * 0.3,
+                        width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -85,18 +85,18 @@ class GoldBuySuccessView extends StatelessWidget {
                       ),
                       child: Lottie.asset(
                         Assets.floatingGoldenTicketIslandLottie,
-                        width: SizeConfig.screenWidth * 0.3,
+                        width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                if (_augTxnService.currentTxnTambolaTicketsCount > 0)
+                if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       child: Lottie.asset(
                         Assets.floatingTambolaTicketIslandLottie,
-                        width: SizeConfig.screenWidth * 0.3,
+                        width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -143,7 +143,7 @@ class GoldBuySuccessView extends StatelessWidget {
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.getIntOrDouble(_augTxnService.currentTxnAmount)}",
+                              "₹ ${BaseUtil.getIntOrDouble(_augTxnService!.currentTxnAmount!)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -169,7 +169,7 @@ class GoldBuySuccessView extends StatelessWidget {
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${_augTxnService.currentTxnGms} gm",
+                          Text("${_augTxnService!.currentTxnGms} gm",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -221,7 +221,7 @@ class GoldBuySuccessView extends StatelessWidget {
                     title: 'Fello Tokens',
                     tooltip: "Use tokens to play games!",
                     asset: Assets.token,
-                    qty: _augTxnService.currentTxnAmount.toInt()),
+                    qty: _augTxnService!.currentTxnAmount!.toInt()),
                 if (GoldenTicketService.currentGT != null)
                   SizedBox(width: SizeConfig.padding12),
                 if (GoldenTicketService.currentGT != null)
@@ -230,27 +230,27 @@ class GoldBuySuccessView extends StatelessWidget {
                       tooltip: "Scratch and win rewards!",
                       asset: Assets.unredemmedGoldenTicketBG,
                       qty: 1),
-                if (_augTxnService.currentTxnTambolaTicketsCount > 0)
+                if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
-                if (_augTxnService.currentTxnTambolaTicketsCount > 0)
+                if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
                       title: 'Tambola Ticket',
                       tooltip: "Win upto ₹1 Crore in Tambola!",
                       asset: Assets.singleTmbolaTicket,
-                      qty: _augTxnService.currentTxnTambolaTicketsCount)
+                      qty: _augTxnService!.currentTxnTambolaTicketsCount)
               ],
             ),
           ),
           TextButton(
             onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
-              AppState.delegate.appState.setCurrentTabIndex = 1;
+              AppState.backButtonDispatcher!.didPopRoute();
+              AppState.delegate!.appState.setCurrentTabIndex = 1;
               Future.delayed(Duration(milliseconds: 500), () {
-                _gtService.showInstantGoldenTicketView(
-                  amount: _augTxnService.currentTxnAmount,
+                _gtService!.showInstantGoldenTicketView(
+                  amount: _augTxnService!.currentTxnAmount,
                   showAutoSavePrompt: true,
                   title:
-                      "You have successfully saved ₹${_augTxnService.getAmount(_augTxnService.currentTxnAmount)}",
+                      "You have successfully saved ₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                   source: GTSOURCE.deposit,
                 );
               });
@@ -272,14 +272,14 @@ class WinningChips extends StatelessWidget {
   final String asset;
   final int qty;
   final String tooltip;
-  final EdgeInsets margin;
+  final EdgeInsets? margin;
 
   const WinningChips(
-      {Key key,
-      @required this.title,
-      @required this.asset,
-      @required this.qty,
-      @required this.tooltip,
+      {Key? key,
+      required this.title,
+      required this.asset,
+      required this.qty,
+      required this.tooltip,
       this.margin})
       : super(key: key);
 
@@ -301,7 +301,7 @@ class WinningChips extends StatelessWidget {
                   vertical: SizeConfig.padding12,
                 ),
                 margin: margin ?? EdgeInsets.zero,
-                child: constraints.maxWidth < SizeConfig.screenWidth / 3
+                child: constraints.maxWidth < SizeConfig.screenWidth! / 3
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -319,7 +319,7 @@ class WinningChips extends StatelessWidget {
                               ),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                    maxWidth: SizeConfig.screenWidth * 0.08),
+                                    maxWidth: SizeConfig.screenWidth! * 0.08),
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(qty.toString(),
@@ -352,7 +352,7 @@ class WinningChips extends StatelessWidget {
                                 ),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
-                                      maxWidth: SizeConfig.screenWidth * 0.09),
+                                      maxWidth: SizeConfig.screenWidth! * 0.09),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(qty.toString(),

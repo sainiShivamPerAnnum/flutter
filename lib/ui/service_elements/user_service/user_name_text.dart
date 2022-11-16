@@ -11,7 +11,7 @@ class UserNameTextSE extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserName],
       builder: (context, model, property) => Text(
-        "${model?.baseUser?.kycName ?? model?.baseUser?.name ?? "user"}",
+        "${model!.myUserName?.split(' ').first ?? "user"}",
         style: TextStyles.sourceSansSB.title4,
       ),
     );

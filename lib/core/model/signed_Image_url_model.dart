@@ -4,7 +4,12 @@ class SignedImageUrlModel {
   final String key;
   final String message;
 
-  SignedImageUrlModel({this.id, this.url, this.key, this.message});
+  SignedImageUrlModel({
+    required this.id,
+    required this.url,
+    required this.key,
+    required this.message,
+  });
 
   SignedImageUrlModel.fromMap(Map<String, dynamic> map)
       : this(

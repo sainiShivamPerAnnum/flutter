@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BannerWidget extends StatelessWidget {
-  const BannerWidget({Key key, this.model}) : super(key: key);
+  const BannerWidget({Key? key, required this.model}) : super(key: key);
   final I.Banner model;
   @override
   Widget build(BuildContext context) {

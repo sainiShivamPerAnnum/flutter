@@ -14,8 +14,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAssetPath extends StatefulWidget {
-  final JourneyPageViewModel model;
-  const JourneyAssetPath({Key key, this.model}) : super(key: key);
+  final JourneyPageViewModel? model;
+  const JourneyAssetPath({Key? key, this.model}) : super(key: key);
   @override
   State<JourneyAssetPath> createState() => _JourneyAssetPathState();
 }
@@ -24,19 +24,19 @@ class _JourneyAssetPathState extends State<JourneyAssetPath> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: widget.model.currentFullViewHeight,
-      width: widget.model.pageWidth,
+      height: widget.model!.currentFullViewHeight,
+      width: widget.model!.pageWidth,
       child: Stack(
-        children: List.generate(widget.model.journeyPathItemsList.length, (i) {
+        children: List.generate(widget.model!.journeyPathItemsList.length, (i) {
           return Positioned(
             left:
-                widget.model.pageWidth * widget.model.journeyPathItemsList[i].x,
-            bottom: widget.model.pageHeight *
-                    (widget.model.journeyPathItemsList[i].page - 1) +
-                widget.model.pageHeight *
-                    widget.model.journeyPathItemsList[i].y,
+                widget.model!.pageWidth! * widget.model!.journeyPathItemsList[i].x,
+            bottom: widget.model!.pageHeight! *
+                    (widget.model!.journeyPathItemsList[i].page - 1) +
+                widget.model!.pageHeight! *
+                    widget.model!.journeyPathItemsList[i].y,
             child: SourceAdaptiveAssetView(
-              asset: widget.model.journeyPathItemsList[i].asset,
+              asset: widget.model!.journeyPathItemsList[i].asset,
             ),
           );
         }),
@@ -93,26 +93,26 @@ class ActiveMilestoneBackgroundGlow extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
         properties: [JourneyServiceProperties.BaseGlow],
         builder: (context, model, properties) {
-          final asset = model.journeyPathItemsList.firstWhere((element) =>
+          final asset = model!.journeyPathItemsList.firstWhere((element) =>
               element.mlIndex == model.avatarRemoteMlIndex && element.isBase);
           return Positioned(
-            left: model.pageWidth * asset.x,
-            bottom: model.pageHeight * (asset.page - 1) +
-                model.pageHeight * asset.y,
+            left: model.pageWidth! * asset.x,
+            bottom: model.pageHeight! * (asset.page - 1) +
+                model.pageHeight! * asset.y,
             child: AnimatedOpacity(
               opacity: model.baseGlow,
               duration: Duration(milliseconds: 700),
               curve: Curves.easeInCubic,
               child: Container(
-                height: SizeConfig.screenWidth * asset.asset.width,
-                width: SizeConfig.screenWidth * asset.asset.width,
+                height: SizeConfig.screenWidth! * asset.asset.width,
+                width: SizeConfig.screenWidth! * asset.asset.width,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle, //color: Colors.black
                   boxShadow: [
                     BoxShadow(
                       color: const Color(0xff62E3C4).withOpacity(0.8),
                       spreadRadius: 0,
-                      blurRadius: SizeConfig.screenWidth,
+                      blurRadius: SizeConfig.screenWidth!,
                       offset: const Offset(0, 0),
                     )
                   ],
@@ -133,23 +133,23 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
         JourneyServiceProperties.Pages,
       ],
       builder: (context, model, properties) {
-        final JourneyPathModel base = model.journeyPathItemsList.firstWhere(
+        final JourneyPathModel base = model!.journeyPathItemsList.firstWhere(
             (element) =>
                 element.mlIndex == model.avatarRemoteMlIndex && element.isBase,
             orElse: null);
         print("Base id: $base");
         return base != null
             ? Positioned(
-                left: model.pageWidth * base.x,
-                bottom: model.pageHeight * (base.page - 1) +
-                    model.pageHeight * base.y,
+                left: model.pageWidth! * base.x,
+                bottom: model.pageHeight! * (base.page - 1) +
+                    model.pageHeight! * base.y,
                 child: AnimatedOpacity(
                   opacity: model.baseGlow,
                   curve: Curves.easeInCubic,
                   duration: Duration(milliseconds: 700),
                   child: Container(
-                    width: model.pageWidth * base.asset.width,
-                    height: model.pageHeight * base.asset.height * 2,
+                    width: model.pageWidth! * base.asset.width,
+                    height: model.pageHeight! * base.asset.height * 2,
                     // color: Colors.black,
                     child: Stack(
                       children: [
@@ -158,9 +158,9 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
                           child: ClipPath(
                             clipper: const BackBeamClipper(),
                             child: Container(
-                              width: model.pageWidth * base.asset.width * 4,
+                              width: model.pageWidth! * base.asset.width * 4,
                               height:
-                                  model.pageHeight * base.asset.height * 1.5,
+                                  model.pageHeight! * base.asset.height * 1.5,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
@@ -239,9 +239,9 @@ class ActiveMilestoneBaseGlow extends StatelessWidget {
 // }
 
 class BaseRings extends StatelessWidget {
-  final double size;
+  final double? size;
 
-  const BaseRings({Key key, this.size}) : super(key: key);
+  const BaseRings({Key? key, this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +260,7 @@ class BaseRings extends StatelessWidget {
                 decoration: BoxDecoration(
                     border: Border.all(width: 6, color: Colors.white),
                     shape: BoxShape.circle),
-                height: size * 0.4,
+                height: size! * 0.4,
               ),
             ),
             Align(
@@ -270,7 +270,7 @@ class BaseRings extends StatelessWidget {
                     border: Border.all(
                         width: 3, color: Colors.white.withOpacity(0.8)),
                     shape: BoxShape.circle),
-                height: size * 0.6,
+                height: size! * 0.6,
               ),
             ),
             Align(
@@ -292,14 +292,14 @@ class BaseRings extends StatelessWidget {
 
 class MileStoneCheck extends StatelessWidget {
   // final JourneyService model;
-  final MilestoneModel milestone;
-  const MileStoneCheck({Key key, this.milestone}) : super(key: key);
+  final MilestoneModel? milestone;
+  const MileStoneCheck({Key? key, this.milestone}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth * 0.08,
-      height: SizeConfig.screenWidth * 0.08,
+      width: SizeConfig.screenWidth! * 0.08,
+      height: SizeConfig.screenWidth! * 0.08,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: UiConstants.primaryColor, width: 3),

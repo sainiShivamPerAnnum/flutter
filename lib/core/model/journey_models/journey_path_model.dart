@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 class JourneyPathModel {
   final String id;
   final JourneyAssetModel asset;
-  final JourneyAssetModel animAsset;
+  final JourneyAssetModel? animAsset;
   final double x;
   final double y;
-  final double ax;
-  final double ay;
+  final double? ax;
+  final double? ay;
   final bool isBase;
   final bool hFlip;
   final bool vFlip;
@@ -18,36 +18,36 @@ class JourneyPathModel {
   final int page;
   final int mlIndex;
   JourneyPathModel({
-    @required this.id,
-    @required this.asset,
-    @required this.x,
-    @required this.y,
+    required this.id,
+    required this.asset,
+    required this.x,
+    required this.y,
     this.animAsset,
     this.ax,
     this.ay,
     this.isBase = false,
     this.hFlip = false,
     this.vFlip = false,
-    @required this.z,
-    @required this.page,
-    @required this.mlIndex,
+    required this.z,
+    required this.page,
+    required this.mlIndex,
   });
 
   JourneyPathModel copyWith({
-    String id,
-    JourneyAssetModel asset,
-    String alignment,
-    double x,
-    double y,
-    JourneyAssetModel animAsset,
-    double ax,
-    double ay,
-    bool isBase,
-    bool hFlip,
-    bool vFlip,
-    int dz,
-    int page,
-    int level,
+    String? id,
+    JourneyAssetModel? asset,
+    String? alignment,
+    double? x,
+    double? y,
+    JourneyAssetModel? animAsset,
+    double? ax,
+    double? ay,
+    bool? isBase,
+    bool? hFlip,
+    bool? vFlip,
+    int? dz,
+    int? page,
+    int? level,
   }) {
     return JourneyPathModel(
       id: id ?? this.id,

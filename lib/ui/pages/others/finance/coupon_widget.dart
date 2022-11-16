@@ -12,7 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponWidget extends StatelessWidget {
-  const CouponWidget(this.coupon, this.model, {Key key, @required this.onTap})
+  const CouponWidget(this.coupon, this.model, {Key? key, required this.onTap})
       : super(key: key);
   final List<CouponModel> coupon;
   final Function(CouponModel coupon) onTap;
@@ -22,7 +22,7 @@ class CouponWidget extends StatelessWidget {
     return coupon == null
         ? SizedBox()
         : SizedBox(
-            height: SizeConfig.screenHeight * 0.22,
+            height: SizeConfig.screenHeight! * 0.22,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -47,8 +47,8 @@ class CouponWidget extends StatelessWidget {
                                 ? EdgeInsets.only(right: 14, left: 14)
                                 : EdgeInsets.only(left: 14),
                         child: _CouponView(
-                          coupon[index],
-                          model,
+                          model: coupon[index],
+                          goldBuyViewModel: model,
                           onTap: onTap,
                         ),
                       );
@@ -86,8 +86,11 @@ class CouponWidget extends StatelessWidget {
 }
 
 class _CouponView extends StatelessWidget {
-  const _CouponView(this.model, this.goldBuyViewModel,
-      {Key key, @required this.onTap})
+  const _CouponView(
+      {required this.model,
+      required this.goldBuyViewModel,
+      Key? key,
+      required this.onTap})
       : super(key: key);
   final CouponModel model;
   final Function(CouponModel coupon) onTap;
@@ -95,7 +98,7 @@ class _CouponView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth * .7,
+      width: SizeConfig.screenWidth! * .7,
       padding: EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
       decoration: BoxDecoration(
         border: goldBuyViewModel.appliedCoupon != null
@@ -119,21 +122,21 @@ class _CouponView extends StatelessWidget {
                 width: 8,
               ),
               Text(
-                model.code,
+                model.code!,
                 style: TextStyles.sourceSansSB.body1.colour(Colors.white),
               ),
               Spacer(),
               GestureDetector(
                 onTap: () {
                   if (goldBuyViewModel.appliedCoupon == null ||
-                      goldBuyViewModel.appliedCoupon.code != model.code) {
+                      goldBuyViewModel.appliedCoupon!.code != model.code) {
                     if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
                   } else {
                     goldBuyViewModel.appliedCoupon = null;
                   }
                 },
                 child: goldBuyViewModel.appliedCoupon == null ||
-                        goldBuyViewModel.appliedCoupon.code != model.code
+                        goldBuyViewModel.appliedCoupon!.code != model.code
                     ? goldBuyViewModel.couponApplyInProgress &&
                             goldBuyViewModel.couponCode == model.code
                         ? SpinKitThreeBounce(
@@ -157,9 +160,9 @@ class _CouponView extends StatelessWidget {
             height: 6,
           ),
           SizedBox(
-            width: SizeConfig.screenWidth * 0.5,
+            width: SizeConfig.screenWidth! * 0.5,
             child: Text(
-              model.description,
+              model.description!,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyles.sourceSans.body4,

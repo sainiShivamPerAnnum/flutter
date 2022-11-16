@@ -25,7 +25,8 @@ class AutosaveTransactionDetailsDialogState
     extends State<AutosaveTransactionDetailsDialog> {
   final Log log = new Log('AutosaveAutosaveTransactionDetailsDialog');
 
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final TransactionHistoryService? _txnHistoryService =
+      locator<TransactionHistoryService>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +48,18 @@ class AutosaveTransactionDetailsDialogState
     return Wrap(
       children: [
         Container(
-          height: SizeConfig.largeTextSize * 4,
+          height: SizeConfig.largeTextSize! * 4,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(12)),
           child: Center(
             child: Text(
-              _txnHistoryService
+              _txnHistoryService!
                   .getTileTitle(UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD),
               style: TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.w700,
-                fontSize: SizeConfig.largeTextSize * 1.2,
+                fontSize: SizeConfig.largeTextSize! * 1.2,
               ),
             ),
           ),
@@ -87,8 +88,8 @@ class AutosaveTransactionDetailsDialogState
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Text(
-                      _txnHistoryService
-                          .getFormattedTxnAmount(widget._transaction.amount),
+                      _txnHistoryService!
+                          .getFormattedTxnAmount(widget._transaction.amount!),
                       // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -97,18 +98,18 @@ class AutosaveTransactionDetailsDialogState
                     ),
                   ),
                   Divider(
-                    color: _txnHistoryService
+                    color: _txnHistoryService!
                         .getTileColor(widget._transaction.status)
                         .withOpacity(0.7),
                     height: 0,
-                    endIndent: SizeConfig.screenWidth * 0.1,
-                    indent: SizeConfig.screenWidth * 0.1,
+                    endIndent: SizeConfig.screenWidth! * 0.1,
+                    indent: SizeConfig.screenWidth! * 0.1,
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     margin: EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
-                      color: _txnHistoryService
+                      color: _txnHistoryService!
                           .getTileColor(widget._transaction.status)
                           .withOpacity(0.7),
                       borderRadius: BorderRadius.only(
@@ -139,12 +140,12 @@ class AutosaveTransactionDetailsDialogState
                         children: [
                           referralTile(
                             'Purchase Rate:',
-                            '₹ ${widget._transaction.augmontMap.aLockPrice ?? 'N/A'}/gm',
+                            '₹ ${widget._transaction.augmontMap!.aLockPrice ?? 'N/A'}/gm',
                             Colors.redAccent.withOpacity(0.6),
                           ),
                           referralTile(
                             'Gold Purchased:',
-                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap.aGoldBalance) ?? 'N/A')} grams',
+                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap!.aGoldBalance) ?? 'N/A' as double)} grams',
                             Colors.redAccent.withOpacity(0.6),
                           )
                         ],
@@ -152,15 +153,15 @@ class AutosaveTransactionDetailsDialogState
                     (widget._transaction.status != null)
                         ? referralTileWide(
                             'Transaction Status:',
-                            widget._transaction.status,
-                            _txnHistoryService
+                            widget._transaction.status!,
+                            _txnHistoryService!
                                 .getTileColor(widget._transaction.status),
                           )
                         : referralTileWide('Transaction Status:', "COMPLETED",
                             UiConstants.primaryColor),
                     referralTileWide(
                         "Date & Time",
-                        "${_getFormattedDate(widget._transaction.createdOn)}, ${_getFormattedTime(widget._transaction.createdOn)}",
+                        "${_getFormattedDate(widget._transaction.createdOn!)}, ${_getFormattedTime(widget._transaction.createdOn!)}",
                         Colors.black)
                   ],
                 ),

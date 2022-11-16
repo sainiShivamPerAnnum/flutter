@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 
 class AppNegativeDialog extends StatelessWidget {
   const AppNegativeDialog({
-    Key key,
-    @required this.btnText,
-    @required this.title,
+    Key? key,
+    required this.btnText,
+    required this.title,
     this.subtitle,
-    @required this.btnAction,
+    required this.btnAction,
   }) : super(key: key);
-  final String title, btnText, subtitle;
+  final String? title, btnText, subtitle;
   final VoidCallback btnAction;
 
   @override
@@ -65,10 +65,10 @@ class AppNegativeDialog extends StatelessWidget {
                 height: SizeConfig.padding32,
               ),
               SizedBox(
-                width: SizeConfig.screenWidth -
+                width: SizeConfig.screenWidth! -
                     SizeConfig.pageHorizontalMargins * 2,
                 child: Text(
-                  title,
+                  title!,
                   style: TextStyles.sourceSansSB.title4,
                   textAlign: TextAlign.center,
                 ),
@@ -79,7 +79,7 @@ class AppNegativeDialog extends StatelessWidget {
                       vertical: SizeConfig.padding12,
                       horizontal: SizeConfig.pageHorizontalMargins),
                   child: Text(
-                    subtitle,
+                    subtitle!,
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSans.body3.colour(Colors.white60),
                   ),
@@ -88,11 +88,11 @@ class AppNegativeDialog extends StatelessWidget {
                 height: SizeConfig.padding32,
               ),
               AppPositiveBtn(
-                width: SizeConfig.screenWidth * 0.8333,
+                width: SizeConfig.screenWidth! * 0.8333,
                 btnText: btnText,
                 onPressed: () {
                   Haptic.vibrate();
-                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher!.didPopRoute();
                   return btnAction();
                 },
               ),

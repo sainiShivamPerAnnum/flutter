@@ -1,7 +1,7 @@
 class ApiResponse<T> {
-  T model;
-  String errorMessage;
-  int code;
+  T? model;
+  String? errorMessage;
+  int? code;
 
   ApiResponse({
     this.model,
@@ -10,7 +10,7 @@ class ApiResponse<T> {
   });
 
   ApiResponse.withError(String error, int code)
-      : model = null,
+      : model = null ,
         errorMessage = error,
         code = code;
 

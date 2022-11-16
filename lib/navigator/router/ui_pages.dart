@@ -141,8 +141,8 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
-  AllParticipantsWinnersTopReferersView,
-  RedeemSucessfulScreenView,
+  AllParticipantsWinnersTopReferrersView,
+  RedeemSuccessfulScreenView,
   SharePriceScreenView,
   AllTambolaTicketsView,
   UserUpiDetailsView,
@@ -155,16 +155,16 @@ class PageConfiguration {
   final String key;
   final String path;
   final Pages uiPage;
-  final String name;
+  final String? name;
 
-  PageAction currentPageAction;
+  PageAction? currentPageAction;
   var returnValue;
 
   PageConfiguration({
-    @required this.key,
-    @required this.path,
-    @required this.uiPage,
-    @required this.name,
+    required this.key,
+    required this.path,
+    required this.uiPage,
+    this.name,
     this.currentPageAction,
   });
 
@@ -199,6 +199,7 @@ PageConfiguration RootPageConfig = PageConfiguration(
   key: 'Root',
   path: RootPath,
   uiPage: Pages.Root,
+  name: 'Root',
 );
 
 PageConfiguration OnboardPageConfig = PageConfiguration(
@@ -599,16 +600,16 @@ PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
   name: "View All Blogs View",
 );
 
-PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
+PageConfiguration AllParticipantsWinnersTopReferrersConfig = PageConfiguration(
   key: 'AllParticipantsWinnersTopReferersView',
   path: AllParticipantsWinnersTopReferersPath,
-  uiPage: Pages.AllParticipantsWinnersTopReferersView,
+  uiPage: Pages.AllParticipantsWinnersTopReferrersView,
 );
 
-PageConfiguration RedeemSucessfulScreenPageConfig = PageConfiguration(
+PageConfiguration RedeemSuccessfulScreenPageConfig = PageConfiguration(
   key: 'RedeemSucessfulScreenView',
   path: RedeemSucessfulScreenPath,
-  uiPage: Pages.RedeemSucessfulScreenView,
+  uiPage: Pages.RedeemSuccessfulScreenView,
   name: "Redeem Sucessfull View",
 );
 

@@ -28,14 +28,14 @@ class LowerCaseTextFormatter extends TextInputFormatter {
 class LoginNameInputView extends StatefulWidget {
   static const int index = 2;
   final LoginControllerViewModel loginModel;
-  const LoginNameInputView({Key key, @required this.loginModel})
+  const LoginNameInputView({Key? key, required this.loginModel})
       : super(key: key);
   @override
   State<LoginNameInputView> createState() => LoginUserNameViewState();
 }
 
 class LoginUserNameViewState extends State<LoginNameInputView> {
-  LoginNameInputViewModel model;
+  late LoginNameInputViewModel model;
   @override
   Widget build(BuildContext context) {
     return BaseView<LoginNameInputViewModel>(
@@ -118,7 +118,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       )
                     ],
                     validator: (val) {
-                      if (val.trim().length == 0 || val == null) return null;
+                      if (val!.trim().length == 0) return null;
                       if (val.trim().length < 6 || val.trim().length > 10)
                         return "Invalid referral code";
                       return null;
@@ -147,8 +147,8 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
 }
 
 class FelloUserAvatar extends StatelessWidget {
-  final Widget child;
-  const FelloUserAvatar({Key key, this.child}) : super(key: key);
+  const FelloUserAvatar({Key? key, this.child}) : super(key: key);
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +156,10 @@ class FelloUserAvatar extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-          width: SizeConfig.screenWidth * 0.54,
-          height: SizeConfig.screenWidth * 0.54,
+          width: SizeConfig.screenWidth! * 0.54,
+          height: SizeConfig.screenWidth! * 0.54,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.screenWidth),
+            borderRadius: BorderRadius.circular(SizeConfig.screenWidth!),
             boxShadow: [
               BoxShadow(
                 color: UiConstants.primaryColor.withOpacity(0.2),
@@ -174,8 +174,8 @@ class FelloUserAvatar extends StatelessWidget {
           ),
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.501,
-          height: SizeConfig.screenWidth * 0.501,
+          width: SizeConfig.screenWidth! * 0.501,
+          height: SizeConfig.screenWidth! * 0.501,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -185,8 +185,8 @@ class FelloUserAvatar extends StatelessWidget {
           ),
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.424, // 142
-          height: SizeConfig.screenWidth * 0.424,
+          width: SizeConfig.screenWidth! * 0.424, // 142
+          height: SizeConfig.screenWidth! * 0.424,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -208,8 +208,8 @@ class FelloUserAvatar extends StatelessWidget {
           ),
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.32,
-          height: SizeConfig.screenWidth * 0.32,
+          width: SizeConfig.screenWidth! * 0.32,
+          height: SizeConfig.screenWidth! * 0.32,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -221,8 +221,8 @@ class FelloUserAvatar extends StatelessWidget {
         child ??
             SvgPicture.asset(
               Assets.cvtar2,
-              height: SizeConfig.screenWidth * 0.3067,
-              width: SizeConfig.screenWidth * 0.3067,
+              height: SizeConfig.screenWidth! * 0.3067,
+              width: SizeConfig.screenWidth! * 0.3067,
             ),
       ],
     );

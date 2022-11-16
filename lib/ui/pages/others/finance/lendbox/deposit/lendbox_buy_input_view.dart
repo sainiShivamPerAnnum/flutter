@@ -16,21 +16,22 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxBuyInputView extends StatelessWidget {
-  final int amount;
-  final bool skipMl;
+  final int? amount;
+  final bool? skipMl;
   final LendboxBuyViewModel model;
 
   const LendboxBuyInputView({
-    Key key,
+    Key? key,
     this.amount,
     this.skipMl,
-    this.model,
+    required this.model,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     if (model.state == ViewState.Busy) return SizedBox();
+
     return Stack(
       children: [
         Column(
@@ -42,20 +43,20 @@ class LendboxBuyInputView extends StatelessWidget {
             LendboxAppBar(
               isEnabled: !model.isBuyInProgress,
               trackClosingEvent: () {
-                _analyticsService.track(
+                _analyticsService!.track(
                     eventName: AnalyticsEvents.savePageClosed,
                     properties: {
-                      "Amount entered": model.amountController.text,
+                      "Amount entered": model.amountController!.text,
                       "Asset": 'Flo',
                     });
               },
             ),
             SizedBox(height: SizeConfig.padding32),
-            BannerWidget(model: model.assetOptionsModel.data.banner),
+            BannerWidget(model: model.assetOptionsModel!.data.banner),
             AmountInputView(
               amountController: model.amountController,
               focusNode: model.buyFieldNode,
-              chipAmounts: model.assetOptionsModel.data.userOptions,
+              chipAmounts: model.assetOptionsModel!.data.userOptions,
               isEnabled: !model.isBuyInProgress,
               maxAmount: model.maxAmount,
               maxAmountMsg: "Up to ₹50,000 can be invested at one go.",
@@ -75,13 +76,13 @@ class LendboxBuyInputView extends StatelessWidget {
                 BankAndPanServiceProperties.kycVerified,
               ],
               builder: (ctx, service, child) {
-                return (!service.isKYCVerified)
+                return (!service!.isKYCVerified)
                     ? _kycWidget(model)
                     : model.isBuyInProgress
                         ? Container(
-                            height: SizeConfig.screenWidth * 0.1556,
+                            height: SizeConfig.screenWidth! * 0.1556,
                             alignment: Alignment.center,
-                            width: SizeConfig.screenWidth * 0.7,
+                            width: SizeConfig.screenWidth! * 0.7,
                             child: LinearProgressIndicator(
                               color: UiConstants.primaryColor,
                               backgroundColor: UiConstants.kDarkBackgroundColor,
@@ -95,7 +96,7 @@ class LendboxBuyInputView extends StatelessWidget {
                                 model.initiateBuy();
                               }
                             },
-                            width: SizeConfig.screenWidth * 0.813,
+                            width: SizeConfig.screenWidth! * 0.813,
                           );
               },
             ),

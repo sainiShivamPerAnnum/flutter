@@ -20,7 +20,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../util/styles/ui_constants.dart';
 
 class TambolaWidget extends StatelessWidget {
-  const TambolaWidget(this.tambolaController, this.model, {Key key})
+  const TambolaWidget(this.tambolaController, this.model, {Key? key})
       : super(key: key);
   final TambolaWidgetController tambolaController;
   final TambolaCardModel model;
@@ -33,7 +33,7 @@ class TambolaWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: SizeConfig.screenHeight * 0.22,
+            height: SizeConfig.screenHeight! * 0.22,
             margin: EdgeInsets.only(
                 right: SizeConfig.pageHorizontalMargins,
                 bottom: SizeConfig.pageHorizontalMargins,
@@ -74,7 +74,7 @@ class TambolaWidget extends StatelessWidget {
 }
 
 class _BannerWidget extends StatelessWidget {
-  const _BannerWidget(this.route, {Key key}) : super(key: key);
+  const _BannerWidget(this.route, {Key? key}) : super(key: key);
   final String route;
   @override
   Widget build(BuildContext context) {
@@ -105,13 +105,13 @@ class _BannerWidget extends StatelessWidget {
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
                           }));
-                  AppState.delegate.parseRoute(
+                  AppState.delegate!.parseRoute(
                     Uri.parse(route),
                   );
                 },
                 title: 'Start Playing',
-                width: SizeConfig.screenWidth * 0.40,
-                height: SizeConfig.screenWidth * 0.10,
+                width: SizeConfig.screenWidth! * 0.40,
+                height: SizeConfig.screenWidth! * 0.10,
               ),
             ],
           ),
@@ -122,7 +122,7 @@ class _BannerWidget extends StatelessWidget {
 }
 
 class _TambolaTimer extends StatelessWidget {
-  _TambolaTimer({Key key, @required this.controller, @required this.route})
+  _TambolaTimer({Key? key, required this.controller, required this.route})
       : super(key: key);
   final TambolaWidgetController controller;
   final String route;
@@ -185,13 +185,13 @@ class _TambolaTimer extends StatelessWidget {
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
                           }));
-                  AppState.delegate.parseRoute(
+                  AppState.delegate!.parseRoute(
                     Uri.parse(route),
                   );
                 },
                 title: 'Start Playing',
-                width: SizeConfig.screenWidth * 0.40,
-                height: SizeConfig.screenWidth * 0.10,
+                width: SizeConfig.screenWidth! * 0.40,
+                height: SizeConfig.screenWidth! * 0.10,
               )
             ],
           ),
@@ -202,7 +202,7 @@ class _TambolaTimer extends StatelessWidget {
 }
 
 class _TicketWidget extends StatelessWidget {
-  const _TicketWidget(this.model, {Key key, @required this.controller})
+  const _TicketWidget(this.model, {Key? key, required this.controller})
       : super(key: key);
   final TambolaWidgetController controller;
   final TambolaCardModel model;
@@ -230,8 +230,8 @@ class _TicketWidget extends StatelessWidget {
               ),
               TodayPicksBallsAnimation(
                 picksList: model.todaysPicks ?? [-1, -1, -1],
-                ballHeight: SizeConfig.screenHeight * .05,
-                ballWidth: SizeConfig.screenHeight * .05,
+                ballHeight: SizeConfig.screenHeight! * .05,
+                ballWidth: SizeConfig.screenHeight! * .05,
                 margin: EdgeInsets.symmetric(horizontal: 2),
               ),
               SizedBox(
@@ -251,13 +251,13 @@ class _TicketWidget extends StatelessWidget {
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
                           }));
-                  AppState.delegate.parseRoute(
-                    Uri.parse(model.game.route),
+                  AppState.delegate!.parseRoute(
+                    Uri.parse(model.game!.route!),
                   );
                 },
                 title: 'Start Playing',
-                width: SizeConfig.screenWidth * 0.40,
-                height: SizeConfig.screenWidth * 0.10,
+                width: SizeConfig.screenWidth! * 0.40,
+                height: SizeConfig.screenWidth! * 0.10,
               )
             ],
           ),
@@ -268,8 +268,8 @@ class _TicketWidget extends StatelessWidget {
 }
 
 class _BannerTitle extends StatelessWidget {
-  const _BannerTitle({Key key, this.space}) : super(key: key);
-  final double space;
+  const _BannerTitle({Key? key, this.space}) : super(key: key);
+  final double? space;
   @override
   Widget build(BuildContext context) {
     return Column(

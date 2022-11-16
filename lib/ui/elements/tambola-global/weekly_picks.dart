@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class WeeklyPicks extends StatelessWidget {
-  final DailyPick weeklyDraws;
+  final DailyPick? weeklyDraws;
   // BaseUtil baseProvider;
 
   const WeeklyPicks({
     this.weeklyDraws,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   String getDayName(int weekday) {
@@ -37,14 +37,14 @@ class WeeklyPicks extends StatelessWidget {
     }
   }
 
-  Widget _getDrawBallRow(DailyPick draws, int day) {
+  Widget _getDrawBallRow(DailyPick? draws, int day) {
     List<Widget> balls = [];
     DateTime today = DateTime.now();
     int colCount = today.weekday;
     if (draws != null &&
         draws.getWeekdayDraws(day - 1) != null &&
-        !draws.getWeekdayDraws(day - 1).contains(-1)) {
-      draws.getWeekdayDraws(day - 1).forEach((element) {
+        !draws.getWeekdayDraws(day - 1)!.contains(-1)) {
+      draws.getWeekdayDraws(day - 1)!.forEach((element) {
         balls.add(
             _getDrawBall(element.toString(), colCount == day ? true : false));
       });
@@ -63,8 +63,8 @@ class WeeklyPicks extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: SizeConfig.padding4, vertical: SizeConfig.padding6),
-      width: SizeConfig.screenWidth * 0.07,
-      height: SizeConfig.screenWidth * 0.07,
+      width: SizeConfig.screenWidth! * 0.07,
+      height: SizeConfig.screenWidth! * 0.07,
       decoration: new BoxDecoration(
         color: isToday
             ? UiConstants.kSnackBarPositiveContentColor
@@ -75,7 +75,7 @@ class WeeklyPicks extends StatelessWidget {
           child: Text(
         digit,
         style: TextStyle(
-            fontSize: SizeConfig.mediumTextSize * 1,
+            fontSize: SizeConfig.mediumTextSize! * 1,
             fontWeight: FontWeight.w500,
             color: Colors.white),
         textAlign: TextAlign.center,
@@ -85,13 +85,13 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("TEsting mon: ${weeklyDraws.mon}");
-    print("TEsting tue: ${weeklyDraws.tue}");
-    print("TEsting wed: ${weeklyDraws.wed}");
-    print("TEsting thu: ${weeklyDraws.thu}");
-    print("TEsting fri: ${weeklyDraws.fri}");
-    print("TEsting sat: ${weeklyDraws.sat}");
-    print("TEsting sun: ${weeklyDraws.sun}");
+    print("TEsting mon: ${weeklyDraws!.mon}");
+    print("TEsting tue: ${weeklyDraws!.tue}");
+    print("TEsting wed: ${weeklyDraws!.wed}");
+    print("TEsting thu: ${weeklyDraws!.thu}");
+    print("TEsting fri: ${weeklyDraws!.fri}");
+    print("TEsting sat: ${weeklyDraws!.sat}");
+    print("TEsting sun: ${weeklyDraws!.sun}");
     // print("TEsting wekkcode: ${weeklyDraws.weekCode}");
     // if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
     //   return Container(

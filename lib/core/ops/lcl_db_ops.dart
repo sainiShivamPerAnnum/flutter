@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDBModel extends ChangeNotifier {
-  LocalApi _api = locator<LocalApi>();
+  LocalApi? _api = locator<LocalApi>();
   final Log log = new Log("LocalDBModel");
 
   Future<int> isTambolaResultProcessingDone() async {
     try {
-      final file = await _api.tambolaResultFile;
+      final file = await _api!.tambolaResultFile;
       String contents = await file.readAsString();
       return int.parse(contents);
     } catch (e) {
@@ -22,7 +22,7 @@ class LocalDBModel extends ChangeNotifier {
 
   Future<bool> isConfettiRequired(int weekCde) async {
     try {
-      final file = await _api.confettiFile;
+      final file = await _api!.confettiFile;
       String contents = await file.readAsString();
       //check if confetti file has this week's code
       //if not, confetti is required
@@ -33,21 +33,21 @@ class LocalDBModel extends ChangeNotifier {
   }
 
   Future saveConfettiUpdate(int weekCde) async {
-    return _api.writeConfettiTrackFile('$weekCde');
+    return _api!.writeConfettiTrackFile('$weekCde');
   }
 
   Future saveTambolaResultProcessingStatus(bool flag) async {
     // Write the file
     int status = (flag) ? 1 : 0;
-    return _api.writeTmbResultFile('$status');
+    return _api!.writeTmbResultFile('$status');
   }
 
   Future<bool> get showTambolaTutorial async {
     try {
-      final file = await _api.tambolaTutorialFile;
+      final file = await _api!.tambolaTutorialFile;
       if (file == null) return true;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return true;
+      if (contents == '' || contents.isEmpty) return true;
 
       int flag = int.parse(contents);
       return (flag == 1);
@@ -59,16 +59,16 @@ class LocalDBModel extends ChangeNotifier {
 
   set setShowTambolaTutorial(bool flag) {
     int status = (flag) ? 1 : 0;
-    _api.writeFreshTambolaTutorialFile('$status');
+    _api!.writeFreshTambolaTutorialFile('$status');
   }
 
   Future<bool> get showHomeTutorial async {
     //home tutorial only shown during signup and not signin
     try {
-      final file = await _api.homeTutorialFile;
+      final file = await _api!.homeTutorialFile;
       if (file == null) return true;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return true; //default to true
+      if (contents == '' || contents.isEmpty) return true; //default to true
 
       int flag = int.parse(contents);
       return (flag == 1);
@@ -80,7 +80,7 @@ class LocalDBModel extends ChangeNotifier {
 
   set setShowHomeTutorial(bool flag) {
     int status = (flag) ? 1 : 0;
-    _api.writeFreshHomeTutorialFile('$status');
+    _api!.writeFreshHomeTutorialFile('$status');
   }
 
   Future<bool> savePrizeClaimChoice(PrizeClaimChoice choice) async {
@@ -102,7 +102,7 @@ class LocalDBModel extends ChangeNotifier {
   Future<PrizeClaimChoice> getPrizeClaimChoice() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String data = prefs.getString("claimChoice");
+      String? data = prefs.getString("claimChoice");
       if (data == "agv") {
         return PrizeClaimChoice.AMZ_VOUCHER;
       } else if (data == "adg") {
@@ -117,28 +117,28 @@ class LocalDBModel extends ChangeNotifier {
 
   Future<bool> deleteLocalAppData() async {
     try {
-      await _api.deleteTmbResultFile();
+      await _api!.deleteTmbResultFile();
     } catch (e) {
       log.error('Failed to delete onboarding file:' + e.toString());
     }
     try {
-      await _api.deleteFreshTambolaTutorialFile();
+      await _api!.deleteFreshTambolaTutorialFile();
     } catch (e) {
       log.error('Failed to delete fresh tambola tutorial file:' + e.toString());
     }
     try {
-      await _api.deleteFreshHomeTutorialFile();
+      await _api!.deleteFreshHomeTutorialFile();
     } catch (e) {
       log.error('Failed to delete fresh user file:' + e.toString());
     }
     try {
-      await _api.deleteConfettiFile();
+      await _api!.deleteConfettiFile();
     } catch (e) {
       log.error('Failed to delete confetti track file:' + e.toString());
     }
     //User file deletion is crucial for return flag. Rest can be missing
     try {
-      await _api.deleteUserFile();
+      await _api!.deleteUserFile();
       return true;
     } catch (e) {
       log.error('Failed to delete onboarding or user file:' + e.toString());
@@ -156,8 +156,8 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> showSecurityPrompt() async {
-    bool flag = false;
+  Future<bool?> showSecurityPrompt() async {
+    bool? flag = false;
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       if (_prefs.containsKey("SECURITY_PROMPT")) {
@@ -183,7 +183,7 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
-  Future<int> getDailyPickAnimLastDay() async {
+  Future<int?> getDailyPickAnimLastDay() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     return _prefs.getInt("DPAS");
   }

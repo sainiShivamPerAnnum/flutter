@@ -15,7 +15,7 @@ final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
 
 class CampaignParticipantsWidget extends StatelessWidget {
   final TopSaverViewModel model;
-  CampaignParticipantsWidget({@required this.model});
+  CampaignParticipantsWidget({required this.model});
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -60,7 +60,7 @@ class CampaignParticipantsWidget extends StatelessWidget {
                         Container(
                           color: UiConstants.kTabBorderColor,
                           height: 5,
-                          width: SizeConfig.screenWidth * 0.38,
+                          width: SizeConfig.screenWidth! * 0.38,
                         )
                       ],
                     ),

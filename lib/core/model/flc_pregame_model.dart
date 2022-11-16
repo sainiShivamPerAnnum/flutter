@@ -1,15 +1,15 @@
 class FlcModel {
-  String message;
-  bool status;
-  int ticketCount;
-  int flcBalance;
-  String sessionId;
-  bool isValidUser;
-  bool canUserPlay;
-  bool isWalletInitalized;
-  String ticketFieldName;
-  String gameEndpoint;
-  bool isGtRewarded;
+  String? message;
+  bool? status;
+  int? ticketCount;
+  int? flcBalance;
+  String? sessionId;
+  bool? isValidUser;
+  bool? canUserPlay;
+  bool? isWalletInitalized;
+  String? ticketFieldName;
+  String? gameEndpoint;
+  bool? isGtRewarded;
 
   FlcModel(
       {this.message,
@@ -25,17 +25,17 @@ class FlcModel {
       this.isGtRewarded});
 
   FlcModel.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    flcBalance = json['flcBalance'];
-    sessionId = json['sessionId'];
-    isValidUser = json['isValidUser'];
-    canUserPlay = json['canUserPlay'];
-    isWalletInitalized = json['isWalletInitalized'];
-    ticketFieldName = json['ticketFieldName'];
-    gameEndpoint = json['gameEndpoint'];
-    status = json['status'];
-    ticketCount = json['ticketCount'];
-    isGtRewarded = json['isGtRewarded'];
+    message = json['message'] ?? '';
+    flcBalance = json['flcBalance'] ?? 0;
+    sessionId = json['sessionId'] ?? '';
+    isValidUser = json['isValidUser'] ?? false;
+    canUserPlay = json['canUserPlay'] ?? false;
+    isWalletInitalized = json['isWalletInitalized'] ?? false;
+    ticketFieldName = json['ticketFieldName'] ?? '';
+    gameEndpoint = json['gameEndpoint'] ?? '';
+    status = json['status'] ?? false;
+    ticketCount = json['ticketCount'] ?? 0;
+    isGtRewarded = json['isGtRewarded'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -71,15 +71,16 @@ class FlcModel {
 
   factory FlcModel.fromMap(Map<String, dynamic> map) {
     return FlcModel(
-        message: map['message'],
-        flcBalance: map['flcBalance'],
-        sessionId: map['sessionId'],
-        isValidUser: map['isValidUser'],
-        canUserPlay: map['canUserPlay'],
-        isWalletInitalized: map['isWalletInitalized'],
-        gameEndpoint: map['gameEndpoint'],
-        status: map['status'],
-        ticketCount: map['ticketCount'],
-        isGtRewarded: map['isGtRewarded']);
+      message: map['message'] ?? '',
+      flcBalance: map['flcBalance'] ?? 0,
+      sessionId: map['sessionId'] ?? '',
+      isValidUser: map['isValidUser'] ?? false,
+      canUserPlay: map['canUserPlay'] ?? false,
+      isWalletInitalized: map['isWalletInitalized'] ?? false,
+      gameEndpoint: map['gameEndpoint'] ?? '',
+      status: map['status'] ?? false,
+      ticketCount: map['ticketCount'] ?? 0,
+      isGtRewarded: map['isGtRewarded'] ?? false,
+    );
   }
 }

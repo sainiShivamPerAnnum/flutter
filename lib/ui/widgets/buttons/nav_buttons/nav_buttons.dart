@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AppBarButton extends StatelessWidget {
-  final String svgAsset, coin;
-  final Color borderColor;
-  final VoidCallback onTap;
-  final TextStyle style;
-  final double size;
+  final String? svgAsset, coin;
+  final Color? borderColor;
+  final VoidCallback? onTap;
+  final TextStyle? style;
+  final double? size;
   const AppBarButton({
     this.svgAsset,
     this.coin,
@@ -17,7 +17,7 @@ class AppBarButton extends StatelessWidget {
     this.onTap,
     this.style,
     this.size,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -38,13 +38,13 @@ class AppBarButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SvgPicture.asset(
-              svgAsset,
+              svgAsset!,
               height: size ?? SizeConfig.padding24,
               width: size ?? SizeConfig.padding24,
             ),
             SizedBox(width: SizeConfig.padding4),
             Text(
-              coin,
+              coin!,
               style: style ?? TextStyles.sourceSansSB.body2,
             ),
           ],
@@ -55,14 +55,14 @@ class AppBarButton extends StatelessWidget {
 }
 
 class FelloAppBarBackButton extends StatelessWidget {
-  final Function onBackPress;
+  final Function? onBackPress;
   final Color color;
   FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
+      onTap: onBackPress as void Function()? ?? (() => AppState.backButtonDispatcher!.didPopRoute()),
       child: Padding(
         padding: EdgeInsets.all(SizeConfig.padding4),
         child: Icon(

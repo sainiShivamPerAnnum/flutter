@@ -19,8 +19,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:http_parser/http_parser.dart';
 
 class BankingRepository extends BaseRepo {
-  final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
   final _cacheService = new CacheService();
   final _bankAndPanService = locator<BankAndPanService>();
 
@@ -29,7 +29,7 @@ class BankingRepository extends BaseRepo {
       : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
-      {String uid, String panName, String panNumber}) async {
+      {String? uid, String? panName, String? panNumber}) async {
     final Map<String, dynamic> body = {
       "uid": uid,
       "panName": panName,
@@ -39,7 +39,7 @@ class BankingRepository extends BaseRepo {
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.postData(
-        _apiPaths.kVerifyPan,
+        _apiPaths!.kVerifyPan,
         body: body,
         token: token,
         cBaseUrl: _baseUrl,
@@ -49,7 +49,7 @@ class BankingRepository extends BaseRepo {
       VerifyPanResponseModel _verifyPanApiResponse =
           VerifyPanResponseModel.fromMap(response["data"]);
 
-      if (_verifyPanApiResponse.flag) {
+      if (_verifyPanApiResponse.flag!) {
         await _cacheService.invalidateByKey(CacheKeys.USER);
         return ApiResponse(model: _verifyPanApiResponse, code: 200);
       } else {
@@ -73,7 +73,7 @@ class BankingRepository extends BaseRepo {
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.postData(
-        ApiPath.kGetSignedImageUrl(userService.baseUser.uid),
+        ApiPath.kGetSignedImageUrl(userService.baseUser!.uid!),
         body: body,
         token: token,
         cBaseUrl: _baseUrl,
@@ -113,7 +113,7 @@ class BankingRepository extends BaseRepo {
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.postData(
-        ApiPath.kForgeryUpload(userService.baseUser.uid),
+        ApiPath.kForgeryUpload(userService.baseUser!.uid!),
         body: body,
         token: token,
         cBaseUrl: _baseUrl,
@@ -138,7 +138,7 @@ class BankingRepository extends BaseRepo {
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.kGetPan(userService.baseUser.uid),
+        ApiPath.kGetPan(userService.baseUser!.uid!),
         token: token,
         cBaseUrl: _baseUrl,
       );

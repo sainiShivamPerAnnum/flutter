@@ -4,8 +4,8 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:flutter/foundation.dart';
 
 class FAQModel {
-  String category;
-  List<FAQ> faqList;
+  String? category;
+  List<FAQ>? faqList;
 
   FAQModel({this.category, this.faqList});
 
@@ -13,7 +13,7 @@ class FAQModel {
     category = json['category'];
     faqList = [];
     for (int i = 0; i < json['fList'].length; i++) {
-      faqList.add(
+      faqList!.add(
         FAQ(
           header: json['fList'][i]['header'],
           response: json['fList'][i]['response'],
@@ -25,16 +25,16 @@ class FAQModel {
 }
 
 class FAQ {
-  final String header;
-  final String response;
-  final int order;
+  final String? header;
+  final String? response;
+  final int ?order;
 
   FAQ({this.header, this.order, this.response});
 }
 
 class FAQDataModel {
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   static final helper =
       HelperModel<FAQDataModel>((map) => FAQDataModel.fromMap(map));
 
@@ -44,8 +44,8 @@ class FAQDataModel {
   });
 
   FAQDataModel copyWith({
-    String title,
-    String description,
+    String? title,
+    String? description,
   }) {
     return FAQDataModel(
       title: title ?? this.title,

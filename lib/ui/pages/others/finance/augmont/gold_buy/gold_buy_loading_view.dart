@@ -16,9 +16,9 @@ import 'package:lottie/lottie.dart';
 
 class GoldBuyLoadingView extends StatelessWidget {
   final GoldBuyViewModel model;
-  GoldBuyLoadingView({@required this.model});
+  GoldBuyLoadingView({required this.model});
 
-  final _augTxnService = locator<AugmontTransactionService>();
+  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
   final int waitTimeInSec = 45;
 
   @override
@@ -38,7 +38,7 @@ class GoldBuyLoadingView extends StatelessWidget {
         ),
         Expanded(
           child: Lottie.asset(Assets.goldDepostLoadingLottie,
-              height: SizeConfig.screenHeight * 0.7),
+              height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(
           children: [
@@ -55,10 +55,10 @@ class GoldBuyLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () {},
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final seconds = value.inSeconds % 60;
                 return Container(
-                  width: SizeConfig.screenWidth * 0.7,
+                  width: SizeConfig.screenWidth! * 0.7,
                   child: LinearProgressIndicator(
                     value: 1 - (seconds / waitTimeInSec),
                     color: UiConstants.primaryColor,
@@ -75,25 +75,25 @@ class GoldBuyLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _augTxnService
-                    .processPolling(_augTxnService.pollingPeriodicTimer);
-                if (_augTxnService.currentTransactionState !=
+                await _augTxnService!
+                    .processPolling(_augTxnService!.pollingPeriodicTimer);
+                if (_augTxnService!.currentTransactionState !=
                     TransactionState.ongoing) return;
 
-                _augTxnService.pollingPeriodicTimer?.cancel();
+                _augTxnService!.pollingPeriodicTimer?.cancel();
 
-                _augTxnService.currentTransactionState = TransactionState.idle;
+                _augTxnService!.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 AppState.unblockNavigation();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
                 showTransactionPendingDialog();
                 log("Screen Stack:${AppState.screenStack.toString()}");
               },
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final minutes = value.inMinutes;
                 final seconds = value.inSeconds % 60;
                 return Text(

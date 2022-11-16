@@ -6,28 +6,28 @@ class UserFundWallet {
   static Log log = new Log('UserFundWallet');
 
   //augmont
-  double _augGoldPrinciple;
-  double _augGoldBalance;
-  double _augGoldQuantity;
+  double? _augGoldPrinciple;
+  double? _augGoldBalance;
+  double? _augGoldQuantity;
 
   //lendbox
-  double wLbBalance;
-  double wLbPrinciple;
-  double wLbProcessingAmt;
+  double? wLbBalance;
+  double? wLbPrinciple;
+  double? wLbProcessingAmt;
 
-  double netWorth;
+  double? netWorth;
 
   //icici
-  double _iciciPrinciple;
-  double _iciciBalance;
+  double? _iciciPrinciple;
+  double? _iciciBalance;
 
   //prizes
-  double _prizeBalance;
-  double _lockedPrizeBalance;
-  double _prizeLifetimeWin;
+  double? _prizeBalance;
+  double? _lockedPrizeBalance;
+  double? _prizeLifetimeWin;
 
   //on hold
-  double _processingRedemptionBalance;
+  double? _processingRedemptionBalance;
 
   static final String fldAugmontGoldPrinciple = 'wAugPrinciple';
   static final String fldAugmontGoldBalance = 'wAugBalance';
@@ -55,6 +55,29 @@ class UserFundWallet {
       this.netWorth);
 
   UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+  UserFundWallet.base() {
+
+_augGoldPrinciple = 0.0;
+ _augGoldBalance = 0.0;
+ _augGoldQuantity = 0.0;
+
+  //lendbox
+ wLbBalance = 0.0;
+ wLbPrinciple = 0.0;
+ wLbProcessingAmt = 0.0;
+
+ netWorth = 0.0;
+
+  //icici
+ _iciciPrinciple = 0.0;
+ _iciciBalance = 0.0;
+
+  //prizes
+ _prizeBalance = 0.0;
+ _lockedPrizeBalance = 0.0;
+ _prizeLifetimeWin = 0.0;
+  }
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
@@ -97,55 +120,55 @@ class UserFundWallet {
     );
   }
 
-  double get prizeLifetimeWin => _prizeLifetimeWin;
+  double get prizeLifetimeWin => _prizeLifetimeWin!;
 
   set prizeLifetimeWin(double value) {
     _prizeLifetimeWin = value;
   }
 
-  double get prizeBalance => _prizeBalance;
+  double get prizeBalance => _prizeBalance!;
 
   set prizeBalance(double value) {
     _prizeBalance = value;
   }
 
-  double get iciciBalance => _iciciBalance;
+  double get iciciBalance => _iciciBalance!;
 
   set iciciBalance(double value) {
     _iciciBalance = value;
   }
 
-  double get iciciPrinciple => _iciciPrinciple;
+  double get iciciPrinciple => _iciciPrinciple!;
 
   set iciciPrinciple(double value) {
     _iciciPrinciple = value;
   }
 
-  double get augGoldQuantity => _augGoldQuantity;
+  double get augGoldQuantity => _augGoldQuantity!;
 
   set augGoldQuantity(double value) {
     _augGoldQuantity = value;
   }
 
-  double get augGoldBalance => _augGoldBalance;
+  double get augGoldBalance => _augGoldBalance!;
 
   set augGoldBalance(double value) {
     _augGoldBalance = value;
   }
 
-  double get augGoldPrinciple => _augGoldPrinciple;
+  double get augGoldPrinciple => _augGoldPrinciple!;
 
   set augGoldPrinciple(double value) {
     _augGoldPrinciple = value;
   }
 
-  double get lockedPrizeBalance => _lockedPrizeBalance;
+  double get lockedPrizeBalance => _lockedPrizeBalance!;
 
   set lockedPrizeBalance(double value) {
     _lockedPrizeBalance = value;
   }
 
-  double get processingRedemptionBalance => _processingRedemptionBalance;
+  double get processingRedemptionBalance => _processingRedemptionBalance!;
 
   bool isPrizeBalanceUnclaimed() {
     double _a = _prizeBalance ?? 0.0;

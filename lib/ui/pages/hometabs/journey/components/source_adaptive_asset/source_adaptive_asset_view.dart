@@ -13,9 +13,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SourceAdaptiveAssetView extends StatelessWidget {
   final JourneyAssetModel asset;
-  final double height, width;
+  final double? height, width;
   const SourceAdaptiveAssetView(
-      {@required this.asset, this.height, this.width});
+      {required this.asset, this.height, this.width});
 
   // String generateAssetUrl(String name) {
   //   return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
@@ -29,7 +29,7 @@ class SourceAdaptiveAssetView extends StatelessWidget {
     }, onModelDispose: (model) {
       model.dump();
     }, builder: (ctx, model, child) {
-      return model.assetUrl.startsWith('http')
+      return model.assetUrl!.startsWith('http')
           ? NetworkAsset(
               asset: asset,
               networkUrl: model.assetUrl,
@@ -48,19 +48,19 @@ class SourceAdaptiveAssetView extends StatelessWidget {
 
 class FileAsset extends StatelessWidget {
   final JourneyAssetModel asset;
-  final String filePath;
-  final double height, width;
+  final String? filePath;
+  final double? height, width;
   const FileAsset(
-      {@required this.asset, @required this.filePath, this.height, this.width});
+      {required this.asset, required this.filePath, this.height, this.width});
 
   @override
   Widget build(BuildContext context) {
     // log("ROOTVIEW: Build called for FileAsset widget with height: ${asset.height}");
-    dynamic file = File(filePath);
+    dynamic file = File(filePath!);
     return SvgPicture.file(
       file,
-      height: height ?? SizeConfig.screenWidth * 2.165 * asset.height,
-      width: width ?? SizeConfig.screenWidth * asset.width,
+      height: height ?? SizeConfig.screenWidth! * 2.165 * asset.height,
+      width: width ?? SizeConfig.screenWidth! * asset.width,
       fit: BoxFit.contain,
     );
   }
@@ -68,20 +68,20 @@ class FileAsset extends StatelessWidget {
 
 class NetworkAsset extends StatelessWidget {
   final JourneyAssetModel asset;
-  final String networkUrl;
-  final double height, width;
+  final String? networkUrl;
+  final double? height, width;
   const NetworkAsset(
-      {@required this.asset,
-      @required this.networkUrl,
+      {required this.asset,
+      required this.networkUrl,
       this.height,
       this.width});
   @override
   Widget build(BuildContext context) {
     // log("ROOTVIEW: Build called for NetworkAsset widget");
     return SvgPicture.network(
-      networkUrl,
-      height: height ?? SizeConfig.screenWidth * 2.165 * asset.height,
-      width: width ?? SizeConfig.screenWidth * asset.width,
+      networkUrl!,
+      height: height ?? SizeConfig.screenWidth! * 2.165 * asset.height,
+      width: width ?? SizeConfig.screenWidth! * asset.width,
       fit: BoxFit.contain,
     );
   }

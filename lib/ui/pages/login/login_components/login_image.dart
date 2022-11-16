@@ -9,7 +9,7 @@ class LoginImage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
-      height: SizeConfig.screenHeight * 0.3,
+      height: SizeConfig.screenHeight! * 0.3,
       width: SizeConfig.navBarWidth,
       child: Center(
           child: BaseRemoteConfig.remoteConfig
@@ -18,7 +18,6 @@ class LoginImage extends StatelessWidget {
               ? SvgPicture.network(
                   BaseRemoteConfig.remoteConfig
                       .getString(BaseRemoteConfig.LOGIN_ASSET_URL),
-                  
                 )
               : Container()),
     );

@@ -19,12 +19,12 @@ parseTimeStamp(dynamic data) {
     return null;
 }
 
-parseTransactionStatusSummary(Map summary) {
+parseTransactionStatusSummary(Map? summary) {
   List<TransactionStatusMapItemModel> txnSummary = [];
   if (summary != null) {
     summary.forEach((key, value) {
-      TimestampModel timeStamp;
-      String result;
+      TimestampModel? timeStamp;
+      String? result;
       if (value.runtimeType == String)
         result = value;
       else
@@ -45,24 +45,24 @@ parseTransactionStatusSummary(Map summary) {
 
 class UserTransaction {
   static Log log = new Log('UserTransaction');
-  String _docKey;
+  String? _docKey;
   double _amount;
   double _closingBalance;
-  String _type;
-  String _subType;
-  String _redeemType;
-  int _ticketUpCount;
-  String _note;
-  String _userId;
-  String _tranStatus;
-  String _couponCode;
-  Map<String, dynamic> _icici;
-  Map<String, dynamic> _rzp;
-  Map<String, dynamic> _augmnt;
-  Map<String, dynamic> _paytmMap;
-  Timestamp _timestamp;
-  Timestamp _updatedTime;
-  List<TransactionStatusMapItemModel> transactionUpdatesMap;
+  String? _type;
+  String? _subType;
+  String? _redeemType;
+  int? _ticketUpCount;
+  String? _note;
+  String? _userId;
+  String? _tranStatus;
+  String? _couponCode;
+  Map<String, dynamic>? _icici;
+  Map<String, dynamic>? _rzp;
+  Map<String, dynamic>? _augmnt;
+  Map<String, dynamic>? _paytmMap;
+  Timestamp? _timestamp;
+  Timestamp? _updatedTime;
+  List<TransactionStatusMapItemModel>? transactionUpdatesMap;
 
   static final String fldAmount = 'tAmount';
   static final String fldPaytmMap = 'paytmMap';
@@ -81,7 +81,6 @@ class UserTransaction {
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
   static const String fldtransactionUpdatesMap = "transactionUpdatesMap";
-
 
   ///paytm submap feilds
   static final String subFldPaytmBankName = 'bankName';
@@ -172,23 +171,23 @@ class UserTransaction {
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
       : this(
           documentID,
-          BaseUtil.toDouble(data[fldAmount]),
-          BaseUtil.toDouble(data[fldClosingBalance]),
-          data[fldNote],
-          data[fldSubType],
-          data[fldType],
-          data[fldRedeemType],
-          data[fldTicketUpCount],
-          data[fldUserId],
-          data[fldTranStatus],
-          data[fldCouponCode],
-          data[fldIciciMap],
-          data[fldRzpMap],
-          data[fldAugmontMap],
-          parseTimeStamp(data[fldTimestamp]),
-          data[fldPaytmMap],
-          parseTimeStamp(data[fldUpdatedTime]),
-          parseTransactionStatusSummary(data[fldtransactionUpdatesMap]),
+          BaseUtil.toDouble(data[fldAmount] ?? 0),
+          BaseUtil.toDouble(data[fldClosingBalance] ?? 0),
+          data[fldNote] ?? '',
+          data[fldSubType] ?? '',
+          data[fldType] ?? '',
+          data[fldRedeemType] ?? '',
+          data[fldTicketUpCount] ?? 0,
+          data[fldUserId] ?? '',
+          data[fldTranStatus] ?? '',
+          data[fldCouponCode] ?? '',
+          data[fldIciciMap] ?? {},
+          data[fldRzpMap] ?? {},
+          data[fldAugmontMap] ?? {},
+          parseTimeStamp(data[fldTimestamp]) ?? Timestamp(0, 0),
+          data[fldPaytmMap] ?? {},
+          parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
+          parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -207,139 +206,66 @@ class UserTransaction {
             data[fldIciciMap],
             data[fldRzpMap],
             data[fldAugmontMap],
-            null,
+            Timestamp(0, 0),
             data[fldPaytmMap],
-            null,
+            Timestamp(0, 0),
             data[fldtransactionUpdatesMap]);
-  //TODO JSON response received as HashMap for Timestamps
 
-  // //ICICI investment initiated by new investor
-  // UserTransaction.mfDeposit(String tranId, String multipleId,
-  //     String upiTimestamp, double amount, String userId)
+  //Augmont gold investment initiated by investor
+  // UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
+  //     double lockPrice, double quantity, String paymode, String userId)
   //     : this(
-  //           null,
+  //           '',
   //           amount,
   //           0,
   //           'NA',
-  //           TRAN_SUBTYPE_ICICI,
+  //           TRAN_SUBTYPE_AUGMONT_GOLD,
   //           TRAN_TYPE_DEPOSIT,
-  //           null,
+  //           '',
   //           0,
   //           userId,
   //           TRAN_STATUS_PENDING,
+  //           '',
+  //           {},
+  //           {},
   //           {
-  //             subFldIciciTranId: tranId,
-  //             subFldIciciMultipleId: multipleId,
-  //             subFldIciciUpiTime: upiTimestamp
+  //             subFldAugBlockId: blockId,
+  //             subFldAugLockPrice: lockPrice,
+  //             subFldAugPaymode: paymode,
+  //             subFldAugCurrentGoldGm: quantity,
+  //             subFldAugPostTaxTotal: postTax
   //           },
-  //           null,
-  //           null,
   //           Timestamp.now(),
-  //           data[fldPaytmMap],
-  //           Timestamp.now());
-
-  //ICICI withdrawal initiated and completed by active investor
-  // UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note,
-  //     String upiTimestamp, double amount, String userId)
-  //     : this(
-  //           null,
-  //           amount,
-  //           0,
-  //           note ?? 'NA',
-  //           TRAN_SUBTYPE_ICICI,
-  //           TRAN_TYPE_WITHDRAW,
-  //           null,
-  //           0,
-  //           userId,
-  //           TRAN_STATUS_COMPLETE,
-  //           {
-  //             subFldIciciTranId: tranId,
-  //             subFldIciciBankRnn: bankRnn,
-  //             subFldIciciUpiTime: upiTimestamp
-  //           },
-  //           null,
-  //           null,
+  //           {},
   //           Timestamp.now(),
-  //           Timestamp.now());
-
-  // UserTransaction.mfNonInstantWithdrawal(String tranId, String note,
-  //     String upiTimestamp, double amount, String userId)
-  //     : this(
-  //           null,
-  //           amount,
-  //           0,
-  //           note ?? 'NA',
-  //           TRAN_SUBTYPE_ICICI,
-  //           TRAN_TYPE_WITHDRAW,
-  //           null,
-  //           0,
-  //           userId,
-  //           TRAN_STATUS_COMPLETE,
-  //           {
-  //             subFldIciciTranId: tranId,
-  //             subFldIciciWithdrawType: 'NONINSTANT',
-  //             subFldIciciUpiTime: upiTimestamp
-  //           },
-  //           null,
-  //           null,
-  //           Timestamp.now(),
-  //           Timestamp.now());
+  //           []);
 
   //Augmont gold investment initiated by investor
-  UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
-      double lockPrice, double quantity, String paymode, String userId)
-      : this(
-            null,
-            amount,
-            0,
-            'NA',
-            TRAN_SUBTYPE_AUGMONT_GOLD,
-            TRAN_TYPE_DEPOSIT,
-            null,
-            0,
-            userId,
-            TRAN_STATUS_PENDING,
-            null,
-            null,
-            null,
-            {
-              subFldAugBlockId: blockId,
-              subFldAugLockPrice: lockPrice,
-              subFldAugPaymode: paymode,
-              subFldAugCurrentGoldGm: quantity,
-              subFldAugPostTaxTotal: postTax
-            },
-            Timestamp.now(),
-            null,
-            Timestamp.now(),
-            []);
-
-  //Augmont gold investment initiated by investor
-  UserTransaction.newGoldWithdrawal(double amount, String blockId,
-      double lockPrice, double quantity, String userId)
-      : this(
-            null,
-            amount,
-            0,
-            'NA',
-            TRAN_SUBTYPE_AUGMONT_GOLD,
-            TRAN_TYPE_WITHDRAW,
-            null,
-            0,
-            userId,
-            TRAN_STATUS_PENDING,
-            null,
-            null,
-            null,
-            {
-              subFldAugBlockId: blockId,
-              subFldAugLockPrice: lockPrice,
-              subFldAugCurrentGoldGm: quantity
-            },
-            Timestamp.now(),
-            null,
-            Timestamp.now(),
-            []);
+  // UserTransaction.newGoldWithdrawal(double amount, String blockId,
+  //     double lockPrice, double quantity, String userId)
+  //     : this(
+  //           '',
+  //           amount,
+  //           0,
+  //           'NA',
+  //           TRAN_SUBTYPE_AUGMONT_GOLD,
+  //           TRAN_TYPE_WITHDRAW,
+  //           '',
+  //           0,
+  //           userId,
+  //           TRAN_STATUS_PENDING,
+  //           '',
+  //           {},
+  //           {},
+  //           {
+  //             subFldAugBlockId: blockId,
+  //             subFldAugLockPrice: lockPrice,
+  //             subFldAugCurrentGoldGm: quantity
+  //           },
+  //           Timestamp.now(),
+  //           {},
+  //           Timestamp.now(),
+  //           []);
 
   toJson() {
     return {
@@ -361,58 +287,60 @@ class UserTransaction {
     };
   }
 
+  static toBase() => null;
+
   bool isExpired() {
-    DateTime txnTime = _updatedTime.toDate();
+    DateTime txnTime = _updatedTime!.toDate();
     DateTime nowTime = DateTime.now();
     DateTime txnExpireTime = txnTime.add(new Duration(hours: 1));
 
     return nowTime.isAfter(txnExpireTime);
   }
 
-  String get tranStatus => _tranStatus;
+  String? get tranStatus => _tranStatus;
 
-  set tranStatus(String value) {
+  set tranStatus(String? value) {
     _tranStatus = value;
   }
 
-  String get couponCode => _couponCode;
-  set couponCode(String value) {
+  String? get couponCode => _couponCode;
+  set couponCode(String? value) {
     _couponCode = value;
   }
 
-  String get userId => _userId;
+  String? get userId => _userId;
 
-  set userId(String value) {
+  set userId(String? value) {
     _userId = value;
   }
 
-  String get type => _type;
+  String? get type => _type;
 
-  set type(String value) {
+  set type(String? value) {
     _type = value;
   }
 
-  int get ticketUpCount => _ticketUpCount;
+  int? get ticketUpCount => _ticketUpCount;
 
-  set ticketUpCount(int value) {
+  set ticketUpCount(int? value) {
     _ticketUpCount = value;
   }
 
-  String get subType => _subType;
+  String? get subType => _subType;
 
-  set subType(String value) {
+  set subType(String? value) {
     _subType = value;
   }
 
-  String get redeemType => _redeemType;
+  String? get redeemType => _redeemType;
 
-  set redeemType(String value) {
+  set redeemType(String? value) {
     _redeemType = value;
   }
 
-  String get note => _note;
+  String? get note => _note;
 
-  set note(String value) {
+  set note(String? value) {
     _note = value;
   }
 
@@ -428,42 +356,42 @@ class UserTransaction {
     _amount = value;
   }
 
-  Map<String, dynamic> get icici => _icici;
+  Map<String, dynamic>? get icici => _icici;
 
-  set icici(Map<String, dynamic> value) {
+  set icici(Map<String, dynamic>? value) {
     _icici = value;
   }
 
-  Map<String, dynamic> get rzp => _rzp;
+  Map<String, dynamic>? get rzp => _rzp;
 
-  set rzp(Map<String, dynamic> value) {
+  set rzp(Map<String, dynamic>? value) {
     _rzp = value;
   }
 
-  Map<String, dynamic> get augmnt => _augmnt;
-  Map<String, dynamic> get paytmMap => _paytmMap;
+  Map<String, dynamic>? get augmnt => _augmnt;
+  Map<String, dynamic>? get paytmMap => _paytmMap;
 
-  set augmnt(Map<String, dynamic> value) {
+  set augmnt(Map<String, dynamic>? value) {
     _augmnt = value;
   }
 
-  String get docKey => _docKey;
+  String? get docKey => _docKey;
 
-  set docKey(String value) {
+  set docKey(String? value) {
     _docKey = value;
   }
 
-  Timestamp get timestamp => _timestamp;
+  Timestamp? get timestamp => _timestamp;
 
-  set timestamp(Timestamp value) {
+  set timestamp(Timestamp? value) {
     _timestamp = value;
   }
 }
 
 class TransactionStatusMapItemModel {
-  String title;
-  TimestampModel timestamp;
-  String value;
+  String? title;
+  TimestampModel? timestamp;
+  String? value;
   TransactionStatusMapItemModel({
     @required this.title,
     this.timestamp,
@@ -471,9 +399,9 @@ class TransactionStatusMapItemModel {
   });
 
   TransactionStatusMapItemModel copyWith({
-    String title,
-    TimestampModel timestamp,
-    String value,
+    String? title,
+    TimestampModel? timestamp,
+    String? value,
   }) {
     return TransactionStatusMapItemModel(
       title: title ?? this.title,
@@ -485,7 +413,7 @@ class TransactionStatusMapItemModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'title': title,
-      'timestamp': timestamp.toMap(),
+      'timestamp': timestamp!.toMap(),
       'value': value,
     };
   }
@@ -495,8 +423,8 @@ class TransactionStatusMapItemModel {
       title: map.keys.first,
       timestamp: map.values.first.runtimeType == Map
           ? TimestampModel.fromMap(map.values.first as Map<String, dynamic>)
-          : null,
-      value: map.values.first.runtimeType == String ? map.values.first : null,
+          : TimestampModel(nanoseconds: 0, seconds: 0),
+      value: map.values.first.runtimeType == String ? map.values.first : '',
     );
   }
 

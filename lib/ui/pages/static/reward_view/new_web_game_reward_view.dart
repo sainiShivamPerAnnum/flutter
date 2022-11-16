@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RewardView extends StatelessWidget {
-  const RewardView({Key key, @required this.model}) : super(key: key);
+  const RewardView({Key? key, required this.model}) : super(key: key);
 
-  final PrizesModel model;
+  final PrizesModel? model;
 
   @override
   Widget build(BuildContext context) {
@@ -34,30 +34,30 @@ class RewardView extends StatelessWidget {
         children: [
           RankWidget(
             firstPriceMoney:
-                model.prizesA.firstWhere((element) => element.rank == 1).amt,
+                model!.prizesA!.firstWhere((element) => element.rank == 1).amt,
             firstPricePoint:
-                model.prizesA.firstWhere((element) => element.rank == 1).flc,
+                model!.prizesA!.firstWhere((element) => element.rank == 1).flc,
             secondPriceMoney:
-                model.prizesA.firstWhere((element) => element.rank == 2).amt,
+                model!.prizesA!.firstWhere((element) => element.rank == 2).amt,
             secondPricePoint:
-                model.prizesA.firstWhere((element) => element.rank == 2).flc,
+                model!.prizesA!.firstWhere((element) => element.rank == 2).flc,
             thirdPriceMoney:
-                model.prizesA.firstWhere((element) => element.rank == 3).amt,
+                model!.prizesA!.firstWhere((element) => element.rank == 3).amt,
             thirdPricePoint:
-                model.prizesA.firstWhere((element) => element.rank == 3).flc,
+                model!.prizesA!.firstWhere((element) => element.rank == 3).flc,
           ),
           Column(
             children: List.generate(
-              model.prizesA.length - 3,
+              model!.prizesA!.length - 3,
               (index) {
                 return Column(
                   children: [
                     SizedBox(
-                      height: SizeConfig.screenHeight * 0.0897,
+                      height: SizeConfig.screenHeight! * 0.0897,
                       child: Center(
                         child: ListTile(
                           title: Text(
-                            model.prizesA[index + 3].displayName.replaceFirst(
+                            model!.prizesA![index + 3].displayName!.replaceFirst(
                               ' Prize',
                               '',
                             ),
@@ -67,7 +67,7 @@ class RewardView extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Rs ${model.prizesA[index + 3].amt}',
+                                'Rs ${model!.prizesA![index + 3].amt}',
                                 style: TextStyles.sourceSans.body2,
                               ),
                               SizedBox(
@@ -85,7 +85,7 @@ class RewardView extends StatelessWidget {
                                     width: SizeConfig.padding2,
                                   ),
                                   Text(
-                                    '${model.prizesA[index + 3].flc}',
+                                    '${model!.prizesA![index + 3].flc}',
                                     style: TextStyles.sourceSans.body3,
                                   ),
                                 ],
@@ -95,7 +95,7 @@ class RewardView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (model.prizesA.length - 1 != index + 3)
+                    if (model!.prizesA!.length - 1 != index + 3)
                       Divider(
                         height: SizeConfig.dividerHeight,
                         color: UiConstants.kDividerColor,

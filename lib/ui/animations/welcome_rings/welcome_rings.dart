@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CircularAnim extends StatefulWidget {
-  const CircularAnim({Key key}) : super(key: key);
+  const CircularAnim({Key? key}) : super(key: key);
 
   @override
   State<CircularAnim> createState() => _CircularAnimState();
@@ -11,11 +11,11 @@ class CircularAnim extends StatefulWidget {
 
 class _CircularAnimState extends State<CircularAnim>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  ScrollController _scrollController;
-  Animation<double> _ringOneAnimation;
-  Animation<double> _ringTwoAnimation;
-  Animation<double> _holeAnimation;
+  late AnimationController _controller;
+  ScrollController? _scrollController;
+  late Animation<double> _ringOneAnimation;
+  late Animation<double> _ringTwoAnimation;
+  late Animation<double> _holeAnimation;
   double _scaleFactor = 1;
 
   double get scaleFactor => this._scaleFactor;
@@ -128,21 +128,21 @@ class _CircularAnimState extends State<CircularAnim>
 }
 
 class Ring extends AnimatedWidget {
-  Ring({Key key, this.ringAnimation, this.widthFactor})
+  Ring({Key? key, required this.ringAnimation, this.widthFactor})
       : super(key: key, listenable: ringAnimation);
   final Animation<double> ringAnimation;
-  final int widthFactor;
+  final int? widthFactor;
   final width = 10;
   @override
   Widget build(BuildContext context) {
-    final maxWidth = width * widthFactor;
+    final maxWidth = width * widthFactor!;
     return Align(
       alignment: Alignment.center,
       child: Transform.scale(
         scale: ringAnimation.value,
         child: Container(
-          width: SizeConfig.screenWidth * (widthFactor == 2 ? 0.8 : 1),
-          height: SizeConfig.screenWidth * (widthFactor == 2 ? 0.8 : 1),
+          width: SizeConfig.screenWidth! * (widthFactor == 2 ? 0.8 : 1),
+          height: SizeConfig.screenWidth! * (widthFactor == 2 ? 0.8 : 1),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -159,7 +159,7 @@ class Ring extends AnimatedWidget {
 }
 
 class Hole extends AnimatedWidget {
-  Hole({Key key, this.holeAnimation})
+  Hole({Key? key, required this.holeAnimation})
       : super(key: key, listenable: holeAnimation);
 
   final Animation<double> holeAnimation;
@@ -188,14 +188,14 @@ class Hole extends AnimatedWidget {
 
 class InvertedCircleClipper extends CustomClipper<Path> {
   InvertedCircleClipper({this.animation}) : super(reclip: animation);
-  Animation<double> animation;
+  Animation<double>? animation;
 
   @override
   Path getClip(Size size) {
     return Path()
       ..addOval(Rect.fromCircle(
           center: Offset(size.width / 2, size.height / 2),
-          radius: animation.value * (size.height / 8)))
+          radius: animation!.value * (size.height / 8)))
       ..addRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height))
       ..fillType = PathFillType.evenOdd;
   }

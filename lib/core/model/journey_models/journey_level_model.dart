@@ -1,9 +1,9 @@
 class JourneyLevel {
-  int start;
-  int end;
-  double breakpoint;
-  int pageEnd;
-  int level;
+  int? start;
+  int? end;
+  double? breakpoint;
+  int? pageEnd;
+  int? level;
 
   JourneyLevel(
       {this.start, this.end, this.breakpoint, this.pageEnd, this.level});

@@ -9,8 +9,8 @@ import '../../util/locator.dart';
 import '../model/cache_model/cache_model.dart';
 
 class CacheService {
-  static Isar _isar;
-  final _logger = locator<CustomLogger>();
+  static Isar? _isar;
+  final CustomLogger? _logger = locator<CustomLogger>();
 
   static Future<void> initialize() async {
     if (_isar == null) {
@@ -24,12 +24,12 @@ class CacheService {
 
   Future<void> invalidateAll() async {
     try {
-      _logger.d('cache: invalidate all');
-      await _isar.writeTxn((i) async {
+      _logger!.d('cache: invalidate all');
+      await _isar!.writeTxn((i) async {
         await i.clear();
       });
     } catch (e) {
-      _logger.e('cache: invalidation failed $e');
+      _logger!.e('cache: invalidation failed $e');
     }
   }
 
@@ -43,10 +43,10 @@ class CacheService {
 
     if (cachedData != null && ttl != 0) {
       try {
-        _logger.d('cache: data read successfully');
-        return parseData(json.decode(cachedData.data));
+        _logger!.d('cache: data read successfully');
+        return parseData(json.decode(cachedData.data!));
       } catch (e) {
-        _logger.e(
+        _logger!.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
         await invalidateByKey(key);
         return await _processApiAndSaveToCache(
@@ -91,62 +91,62 @@ class CacheService {
         expireAfterTimestamp: now + (ttl * 60 * 1000),
         data: data,
       );
-      _logger.d('cache: write $cache');
-      await _isar.writeTxn((i) async {
+      _logger!.d('cache: write $cache');
+      await _isar!.writeTxn((i) async {
         final id = await i.cacheModels.put(cache);
-        _logger.d('cache: write id $id');
+        _logger!.d('cache: write id $id');
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: writing to cache failed', e);
+      _logger!.e('cache: writing to cache failed', e);
       return false;
     }
   }
 
   Future<bool> invalidateByKey(String key) async {
     try {
-      _logger.d('cache: invalidating key $key');
+      _logger!.d('cache: invalidating key $key');
 
-      await _isar.writeTxn((i) async {
-        final data = await i.cacheModels.filter().keyEqualTo(key).findAll();
-        _logger.d('cache: $data');
+      await _isar!.writeTxn((i) async {
+        final List<CacheModel> data = await i.cacheModels.filter().keyEqualTo(key).findAll();
+        _logger!.d('cache: $data');
 
-        final c = await i.cacheModels.deleteAll(data.map((e) => e.id).toList());
-        _logger.d('cache: invalidated $c');
+        final c = await i.cacheModels.deleteAll(data.map((e) => e.id).toList() as List<int>);
+        _logger!.d('cache: invalidated $c');
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: invalidation for key $key failed $e');
+      _logger!.e('cache: invalidation for key $key failed $e');
       return false;
     }
   }
 
   Future<bool> _invalidate(int id) async {
     try {
-      _logger.d('cache: invalidating id $id');
+      _logger!.d('cache: invalidating id $id');
 
-      await _isar.writeTxn((i) async {
+      await _isar!.writeTxn((i) async {
         return await i.cacheModels.delete(id);
       });
 
       return true;
     } catch (e) {
-      _logger.e('cache: invalidation for id $id failed', e);
+      _logger!.e('cache: invalidation for id $id failed', e);
       return false;
     }
   }
 
-  Future<CacheModel> getData(String key) async {
-    final data = await _isar.cacheModels.filter().keyEqualTo(key).findFirst();
+  Future<CacheModel?> getData(String key) async {
+    final data = await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
     final now = DateTime.now().millisecondsSinceEpoch;
 
     if (data != null) {
-      _logger.d(
+      _logger!.d(
           'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
 
-      if (data.expireAfterTimestamp > now) {
+      if (data.expireAfterTimestamp! > now) {
         return data;
       } else {
         await invalidateByKey(key);
@@ -170,15 +170,15 @@ class CacheService {
       final key = '$keyPrefix/$i';
       final cachedData = await getData(key);
       if (cachedData != null && ttl != 0)
-        items.add(json.decode(cachedData.data));
+        items.add(json.decode(cachedData.data!));
     }
 
     if (items.length == end - start + 1) {
       try {
-        _logger.d('cache: paginated data read successfully $items');
+        _logger!.d('cache: paginated data read successfully $items');
         return parseData({"start": start, "end": end, "items": items});
       } catch (e) {
-        _logger.e(
+        _logger!.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
 
         // invalidate all keys
@@ -217,11 +217,11 @@ class CacheService {
     if (responseData != null && responseData.isNotEmpty && ttl != 0) {
       final start = responseData["start"];
       final end = responseData["end"];
-      List<dynamic> items = responseData["items"];
+      List<dynamic>? items = responseData["items"];
 
       for (int i = start; i <= end; i++) {
         final key = '$keyPrefix/$i';
-        await writeMap(key, ttl, items[i - start]);
+        await writeMap(key, ttl, items![i - start as int]);
       }
     }
 

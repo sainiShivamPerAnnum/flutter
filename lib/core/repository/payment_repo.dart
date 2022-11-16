@@ -15,8 +15,8 @@ class PaymentRepository extends BaseRepo {
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
-  final UserService _userService = locator<UserService>();
-  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final UserService? _userService = locator<UserService>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
 
   Future<ApiResponse<WithdrawableGoldResponseModel>>
       getWithdrawableAugGoldQuantity() async {
@@ -28,7 +28,7 @@ class PaymentRepository extends BaseRepo {
       final token = await getBearerToken();
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
-          this.userService.baseUser.uid,
+          this.userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         token: token,
@@ -38,23 +38,24 @@ class PaymentRepository extends BaseRepo {
 
       return ApiResponse(model: responseModel, code: 200);
     } on BadRequestException catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       BaseUtil.showNegativeAlert(
           e.toString() ?? "Unable to fetch gold details", "Please try again");
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch quantity", 400);
     }
+    return ApiResponse();
   }
 
   Future<ApiResponse<bool>> addBankDetails(
-      {String bankAccno, String bankHolderName, String bankIfsc}) async {
+      {String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
     String message = '';
     try {
       final token = await getBearerToken();
-      final Map<String, String> _body = {
-        "uid": userService.baseUser.uid,
+      final Map<String, String?> _body = {
+        "uid": userService!.baseUser!.uid,
         "name": bankHolderName,
         "ifsc": bankIfsc,
         "account": bankAccno
@@ -66,7 +67,7 @@ class PaymentRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
         token: token,
       );
-      logger.d(response);
+      logger!.d(response);
 
       return ApiResponse(
         model: true,
@@ -80,7 +81,7 @@ class PaymentRepository extends BaseRepo {
         errorMessage: e.toString(),
       );
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
         e.toString() ?? message,
         400,
@@ -93,19 +94,20 @@ class PaymentRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.kGetBankAccountDetails(userService.baseUser.uid),
+        ApiPath.kGetBankAccountDetails(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         token: token,
       );
-      final Map responseData = response["data"];
-      BankAccountDetailsModel bankAccountDetails;
+      final Map? responseData = response["data"];
+      BankAccountDetailsModel? bankAccountDetails;
       if (responseData != null) {
-        bankAccountDetails = BankAccountDetailsModel.fromMap(responseData);
+        bankAccountDetails = BankAccountDetailsModel.fromMap(
+            responseData as Map<String, dynamic>);
       }
 
       return ApiResponse(model: bankAccountDetails, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch User Upi Id", 400);
     }
   }

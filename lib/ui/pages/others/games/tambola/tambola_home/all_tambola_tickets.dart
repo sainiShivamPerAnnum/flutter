@@ -5,7 +5,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AllTambolaTickets extends StatelessWidget {
-  const AllTambolaTickets({Key key, @required this.ticketList})
+  const AllTambolaTickets({Key? key, required this.ticketList})
       : super(key: key);
 
   final List<Widget> ticketList;

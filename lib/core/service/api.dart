@@ -27,14 +27,14 @@ class Api {
       databaseURL:
           'https://fello-dev-station.asia-southeast1.firebasedatabase.app/');
 
-  final logger = locator<CustomLogger>();
+  final CustomLogger? logger = locator<CustomLogger>();
 
-  String path;
-  CollectionReference ref;
+  String? path;
+  late CollectionReference ref;
 
   Api();
 
-  Future<void> deleteUserClientToken(String userId) {
+  Future<void> deleteUserClientToken(String? userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
@@ -42,7 +42,7 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
   }
 
-  Future<DocumentSnapshot> fetchGoldenTicketById(
+  Future<DocumentSnapshot?> fetchGoldenTicketById(
       String userId, String gtId) async {
     DocumentReference docRef = _db
         .collection(Constants.COLN_USERS)
@@ -53,13 +53,13 @@ class Api {
       DocumentSnapshot docSnap = await docRef.get();
       return docSnap;
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
     }
     return null;
   }
 
-  Future<QuerySnapshot> checkForLatestGTStatus(String userId) {
-    Future<QuerySnapshot> snapshot;
+  Future<QuerySnapshot>? checkForLatestGTStatus(String userId) {
+    Future<QuerySnapshot>? snapshot;
     Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
@@ -67,7 +67,7 @@ class Api {
     try {
       snapshot = query.orderBy('timestamp', descending: true).limit(30).get();
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
     }
     return snapshot;
   }
@@ -98,7 +98,7 @@ class Api {
         .set(data, SetOptions(merge: true));
   }
 
-  Future<QuerySnapshot> getUserPrizeTransactionDocuments(String userId) {
+  Future<QuerySnapshot> getUserPrizeTransactionDocuments(String? userId) {
     final query = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
@@ -108,7 +108,9 @@ class Api {
   }
 
   Future<void> addFeedbackDocument(Map data) {
-    return _db.collection(Constants.COLN_FEEDBACK).add(data);
+    return _db
+        .collection(Constants.COLN_FEEDBACK)
+        .add(data as Map<String, dynamic>);
   }
 
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
@@ -123,12 +125,12 @@ class Api {
   }
 
   Future<QuerySnapshot> getUserTransactionsByField({
-    @required String userId,
-    String type,
-    String subtype,
-    String status,
-    DocumentSnapshot lastDocument,
-    @required int limit,
+    required String userId,
+    String? type,
+    String? subtype,
+    String? status,
+    DocumentSnapshot? lastDocument,
+    required int limit,
   }) {
     Query query = _db
         .collection(Constants.COLN_USERS)
@@ -146,7 +148,7 @@ class Api {
     return query.get();
   }
 
-  Future<String> getFileFromDPBucketURL(String uid, String path) {
+  Future<String> getFileFromDPBucketURL(String? uid, String path) {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
 
@@ -172,12 +174,12 @@ class Api {
     }
   }
 
-  Future<QueryDocumentSnapshot> fetchFaqs(String category) async {
+  Future<QueryDocumentSnapshot<Object?>?> fetchFaqs(String category) async {
     Query _query = _db
         .collection(Constants.COLN_FAQS)
         .where('category', isEqualTo: category);
     try {
-      QuerySnapshot _querySnapshot = await _query.get();
+      QuerySnapshot? _querySnapshot = await _query.get();
       return _querySnapshot.docs?.first;
     } catch (e) {
       throw e;
@@ -203,7 +205,7 @@ class Api {
     }
   }
 
-  Stream<rdb.DatabaseEvent> fetchRealTimePlayingStats(String gameType) {
+  Stream<rdb.DatabaseEvent>? fetchRealTimePlayingStats(String gameType) {
     try {
       var data = _realtimeDatabase.ref().child("stats").child(gameType).onValue;
 
@@ -214,7 +216,7 @@ class Api {
     }
   }
 
-  Stream<rdb.DatabaseEvent> fetchRealTimeFinanceStats() {
+  Stream<rdb.DatabaseEvent>? fetchRealTimeFinanceStats() {
     try {
       var data = db2.ref().child("finance-stats").onValue;
 

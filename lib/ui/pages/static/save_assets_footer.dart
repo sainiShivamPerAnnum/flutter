@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
-  const SaveAssetsFooter({Key key}) : super(key: key);
+  const SaveAssetsFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class SaveAssetsFooter extends StatelessWidget {
                   SaveInfoSection(
                     title: 'Govt. Accredited',
                     imageAsset: Assets.augmontLogo,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
+                    imageHeight: SizeConfig.screenWidth! * 0.07,
+                    imageWidth: SizeConfig.screenWidth! * 0.16,
                   ),
                   VerticalDivider(
                     color: Colors.white,
@@ -38,8 +38,8 @@ class SaveAssetsFooter extends StatelessWidget {
                   SaveInfoSection(
                     title: 'RBI Certified',
                     imageAsset: Assets.lendboxLogo,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
+                    imageHeight: SizeConfig.screenWidth! * 0.07,
+                    imageWidth: SizeConfig.screenWidth! * 0.16,
                   ),
                   VerticalDivider(
                     color: Colors.white,
@@ -51,8 +51,8 @@ class SaveAssetsFooter extends StatelessWidget {
                   SaveInfoSection(
                     title: 'Gold Insurer',
                     imageAsset: Assets.idbiTrustee,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
+                    imageHeight: SizeConfig.screenWidth! * 0.07,
+                    imageWidth: SizeConfig.screenWidth! * 0.16,
                   ),
                 ],
               ),
@@ -65,13 +65,17 @@ class SaveAssetsFooter extends StatelessWidget {
 }
 
 class SaveInfoSection extends StatelessWidget {
-  final String title;
-  final String imageAsset;
-  final double imageHeight;
-  final double imageWidth;
+  final String? title;
+  final String? imageAsset;
+  final double? imageHeight;
+  final double? imageWidth;
 
   const SaveInfoSection(
-      {Key key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
+      {Key? key,
+      this.title,
+      this.imageAsset,
+      this.imageHeight,
+      this.imageWidth})
       : super(key: key);
 
   @override
@@ -80,16 +84,16 @@ class SaveInfoSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          title,
+          title ?? '',
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
         ),
         SizedBox(
           height: SizeConfig.padding20,
         ),
         SizedBox(
-            height: imageHeight,
-            width: imageWidth,
-            child: SvgPicture.asset(imageAsset)),
+            height: imageHeight ?? 0,
+            width: imageWidth ?? 0,
+            child: SvgPicture.asset(imageAsset ?? '')),
       ],
     );
   }

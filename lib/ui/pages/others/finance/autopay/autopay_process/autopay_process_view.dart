@@ -29,7 +29,7 @@ class AutosaveProcessView extends StatefulWidget {
   final int page;
   final bool isUpdate;
 
-  const AutosaveProcessView({Key key, this.page = 0, this.isUpdate = false})
+  const AutosaveProcessView({Key? key, this.page = 0, this.isUpdate = false})
       : super(key: key);
 
   @override
@@ -70,7 +70,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 Icons.arrow_back_ios,
                 color: UiConstants.kTextColor,
               ),
-              onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+              onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
             ),
             actions: [],
           ),
@@ -125,7 +125,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.12,
+          height: SizeConfig.screenWidth! * 0.12,
         ),
         Text(
           "SETUP AUTO SAVE",
@@ -139,7 +139,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.1,
+          height: SizeConfig.screenWidth! * 0.1,
         ),
         Padding(
           padding: EdgeInsets.symmetric(
@@ -172,7 +172,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.padding32,
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.8,
+          width: SizeConfig.screenWidth! * 0.8,
           child: Wrap(
             runSpacing: SizeConfig.padding8,
             spacing: SizeConfig.padding6,
@@ -198,7 +198,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         ),
         Image.asset(
           "assets/images/autosavebanks.png",
-          width: SizeConfig.screenWidth * 0.7,
+          width: SizeConfig.screenWidth! * 0.7,
         ),
         Spacer(),
         model.isSubscriptionInProgress
@@ -211,7 +211,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   FocusScope.of(context).unfocus();
                   // model.pageController.jumpToPage(1);
                 },
-                width: SizeConfig.screenWidth * 0.8,
+                width: SizeConfig.screenWidth! * 0.8,
               ),
         SizedBox(
           height: SizeConfig.padding32,
@@ -250,13 +250,13 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildPendingUI(AutosaveProcessViewModel model) {
-    final _analyticService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticService = locator<AnalyticsService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.12,
+          height: SizeConfig.screenWidth! * 0.12,
         ),
         Text(
           "SETUP AUTO SAVE",
@@ -270,7 +270,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.1,
+          height: SizeConfig.screenWidth! * 0.1,
         ),
         Padding(
           padding: EdgeInsets.symmetric(
@@ -324,7 +324,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           btnText: 'Open ${getUpiAppName(model)}',
           onPressed: () async {
             Haptic.vibrate();
-            _analyticService.track(
+            _analyticService!.track(
                 eventName: AnalyticsEvents.openUPIAppTapped,
                 properties: {
                   "App name": getUpiAppName(model),
@@ -337,7 +337,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             );
             // model.pageController.jumpToPage(2);
           },
-          width: SizeConfig.screenWidth * 0.8,
+          width: SizeConfig.screenWidth! * 0.8,
         ),
         SizedBox(
           height: SizeConfig.padding24,
@@ -356,7 +356,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               onEnd: () {
                 log('Timer ended');
               },
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final minutes = value.inMinutes;
                 final seconds = value.inSeconds % 60;
                 return Text(
@@ -405,14 +405,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildAmountSetUi(AutosaveProcessViewModel model, bool isUpdate) {
-    final _analyticService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticService = locator<AnalyticsService>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth * 0.05,
+          height: SizeConfig.screenWidth! * 0.05,
         ),
         Text(
           isUpdate ? "UPDATE AUTOSAVE" : "SETUP AUTOSAVE",
@@ -426,7 +426,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.144,
+          height: SizeConfig.screenWidth! * 0.144,
         ),
         Container(
           decoration: BoxDecoration(
@@ -437,17 +437,17 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               width: SizeConfig.border1,
             ),
           ),
-          width: SizeConfig.screenWidth * 0.5133,
-          height: SizeConfig.screenWidth * 0.0987,
+          width: SizeConfig.screenWidth! * 0.5133,
+          height: SizeConfig.screenWidth! * 0.0987,
           child: Stack(
             children: [
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
                 curve: Curves.decelerate,
-                left: model.isDaily ? 0 : SizeConfig.screenWidth * 0.248,
+                left: model.isDaily ? 0 : SizeConfig.screenWidth! * 0.248,
                 child: AnimatedContainer(
-                  width: SizeConfig.screenWidth * 0.26,
-                  height: SizeConfig.screenWidth * 0.094,
+                  width: SizeConfig.screenWidth! * 0.26,
+                  height: SizeConfig.screenWidth! * 0.094,
                   decoration: BoxDecoration(
                     color: UiConstants.kAutopayAmountActiveTabColor
                         .withOpacity(0.45),
@@ -472,7 +472,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                         Haptic.vibrate();
                         model.isDaily = true;
                         model.onAmountValueChanged(
-                            model?.amountFieldController?.text);
+                            model.amountFieldController.text);
                       },
                       child: SegmentChips(
                         model: model,
@@ -501,10 +501,10 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           ),
         ),
         SizedBox(
-          height: SizeConfig.screenWidth * 0.0693,
+          height: SizeConfig.screenWidth! * 0.0693,
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.784,
+          width: SizeConfig.screenWidth! * 0.784,
           decoration: BoxDecoration(
             color: UiConstants.kTextFieldColor,
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -523,10 +523,10 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                     Text(
                       "₹",
                       style: TextStyles.rajdhaniB
-                          .size(SizeConfig.screenWidth * 0.1067),
+                          .size(SizeConfig.screenWidth! * 0.1067),
                     ),
                     SizedBox(
-                      width: ((SizeConfig.screenWidth * 0.065) *
+                      width: ((SizeConfig.screenWidth! * 0.065) *
                           model.amountFieldController.text.length.toDouble()),
                       child: AppTextField(
                         textEditingController: model.amountFieldController,
@@ -548,7 +548,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                         ),
                         textAlign: TextAlign.center,
                         textStyle: TextStyles.rajdhaniB
-                            .size(SizeConfig.screenWidth * 0.1067),
+                            .size(SizeConfig.screenWidth! * 0.1067),
                         // height: SizeConfig.screenWidth * 0.1706,
                       ),
                     ),
@@ -556,8 +556,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 ),
               ),
               Positioned(
-                top: SizeConfig.screenWidth * 0.0666,
-                right: SizeConfig.screenWidth * 0.0666,
+                top: SizeConfig.screenWidth! * 0.0666,
+                right: SizeConfig.screenWidth! * 0.0666,
                 child: Text(
                   model.isDaily ? "Daily" : "Weekly",
                   style: TextStyles.sourceSans.body4.setOpecity(0.4),
@@ -639,12 +639,12 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                               model.amountFieldController?.text == null ||
                               model.amountFieldController.text.isEmpty
                           ? '0'
-                          : model.amountFieldController?.text,
-                    ).toDouble(),
+                          : model.amountFieldController.text,
+                    )!.toDouble(),
                   );
                   // model.pageController.jumpToPage(3);
                 },
-                width: SizeConfig.screenWidth * 0.8,
+                width: SizeConfig.screenWidth! * 0.8,
               ),
         SizedBox(
           height: SizeConfig.pageHorizontalMargins,
@@ -665,8 +665,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           ),
           Image.asset(
             Assets.completeCheck,
-            width: SizeConfig.screenWidth * 0.5333,
-            height: SizeConfig.screenWidth * 0.5333,
+            width: SizeConfig.screenWidth! * 0.5333,
+            height: SizeConfig.screenWidth! * 0.5333,
           ),
           SizedBox(
             height: SizeConfig.padding10,
@@ -714,8 +714,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                     //   width: SizeConfig.padding40,
                     // ),
                     Container(
-                      width: SizeConfig.screenWidth * 0.05866,
-                      height: SizeConfig.screenWidth * 0.05866,
+                      width: SizeConfig.screenWidth! * 0.05866,
+                      height: SizeConfig.screenWidth! * 0.05866,
                       decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius:
@@ -724,8 +724,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       child: Center(
                         child: SvgPicture.asset(
                           Assets.upiIcon,
-                          width: SizeConfig.screenWidth * 0.032,
-                          height: SizeConfig.screenWidth * 0.032,
+                          width: SizeConfig.screenWidth! * 0.032,
+                          height: SizeConfig.screenWidth! * 0.032,
                         ),
                       ),
                     ),
@@ -747,7 +747,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       TextSpan(
                         text: "₹${model.amountFieldController.text}/",
                         style: TextStyles.rajdhaniB
-                            .size(SizeConfig.screenWidth * 0.1067),
+                            .size(SizeConfig.screenWidth! * 0.1067),
                       ),
                       TextSpan(
                         text: "${model.isDaily ? "Daily" : "Weekly"}",
@@ -766,9 +766,9 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             child: AppPositiveBtn(
               btnText: "DONE",
               width:
-                  SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+                  SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
               onPressed: () {
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
               },
             ),
           )

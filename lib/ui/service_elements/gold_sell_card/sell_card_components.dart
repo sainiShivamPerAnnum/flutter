@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class SellText extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const SellText({Key key, @required this.investmentType}) : super(key: key);
+  const SellText({Key? key, required this.investmentType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,16 +43,16 @@ class SellButton extends StatelessWidget {
   final Function onTap;
   final bool isActive;
 
-  SellButton({Key key, @required this.onTap, @required this.isActive})
+  SellButton({Key? key, required this.onTap, required this.isActive})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isActive ? onTap : () {},
+      onTap: isActive ? onTap as void Function()? : () {},
       child: Container(
-        height: SizeConfig.screenWidth * 0.12,
-        width: SizeConfig.screenWidth * 0.29,
+        height: SizeConfig.screenWidth! * 0.12,
+        width: SizeConfig.screenWidth! * 0.29,
         margin: EdgeInsets.only(left: SizeConfig.padding24),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -75,7 +75,7 @@ class SellButton extends StatelessWidget {
 }
 
 class AugmontDownCard extends StatelessWidget {
-  const AugmontDownCard({Key key}) : super(key: key);
+  const AugmontDownCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class AugmontDownCard extends StatelessWidget {
 }
 
 class ongoingCard extends StatelessWidget {
-  const ongoingCard({Key key}) : super(key: key);
+  const ongoingCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class ongoingCard extends StatelessWidget {
 }
 
 class GoldLockedInCard extends StatelessWidget {
-  const GoldLockedInCard({Key key}) : super(key: key);
+  const GoldLockedInCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,13 +102,13 @@ class GoldLockedInCard extends StatelessWidget {
 }
 
 class SellActionButton extends StatelessWidget {
-  final String title;
-  final String iconData;
+  final String? title;
+  final String? iconData;
   final bool isCenter;
-  final Function() onTap;
+  final Function()? onTap;
 
   const SellActionButton({
-    Key key,
+    Key? key,
     this.title,
     this.iconData,
     this.onTap,
@@ -125,7 +125,7 @@ class SellActionButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          height: SizeConfig.screenWidth * 0.16,
+          height: SizeConfig.screenWidth! * 0.16,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -139,7 +139,7 @@ class SellActionButton extends StatelessWidget {
                   : MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  title,
+                  title!,
                   style: TextStyles.rajdhaniM.body1,
                 ),
               ],
@@ -152,15 +152,15 @@ class SellActionButton extends StatelessWidget {
 }
 
 class SellCardInfoStrips extends StatelessWidget {
-  final Widget leadingIcon;
-  final String content;
-  final Color backgroundColor;
-  final Color textColor;
+  final Widget? leadingIcon;
+  final String? content;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   const SellCardInfoStrips({
-    Key key,
+    Key? key,
     this.leadingIcon,
-    @required this.content,
+    required this.content,
     this.textColor,
     this.backgroundColor,
   }) : super(key: key);
@@ -193,7 +193,7 @@ class SellCardInfoStrips extends StatelessWidget {
               ),
           Expanded(
             child: Text(
-              content,
+              content!,
               style: TextStyles.sourceSans.body4.colour(
                 textColor ?? UiConstants.kTextColor2,
               ),

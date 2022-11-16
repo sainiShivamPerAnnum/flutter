@@ -11,13 +11,13 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebGameView extends StatelessWidget {
   const WebGameView(
-      {Key key,
-      @required this.initialUrl,
-      @required this.game,
+      {Key? key,
+      required this.initialUrl,
+      required this.game,
       this.inLandscapeMode = false})
       : super(key: key);
   final String initialUrl;
-  final String game;
+  final String? game;
   final bool inLandscapeMode;
 
   @override
@@ -63,7 +63,7 @@ class GameView extends StatelessWidget {
   final bool inLandscapeMode;
   final String initialUrl;
 
-  GameView({@required this.inLandscapeMode, @required this.initialUrl});
+  GameView({required this.inLandscapeMode, required this.initialUrl});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,7 +116,7 @@ class Close extends StatelessWidget {
         child: Opacity(
           opacity: 0,
           child: IconButton(
-            onPressed: AppState.backButtonDispatcher.didPopRoute,
+            onPressed: AppState.backButtonDispatcher!.didPopRoute,
             icon: Icon(
               Icons.close,
               color: Colors.white,

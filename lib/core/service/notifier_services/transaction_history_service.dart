@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -14,46 +15,46 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class TransactionHistoryService
     extends PropertyChangeNotifier<TransactionHistoryServiceProperties> {
-  final _logger = locator<CustomLogger>();
-  final _baseUtil = locator<BaseUtil>();
-  final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final TransactionHistoryRepository? _transactionHistoryRepo = locator<TransactionHistoryRepository>();
 
-  List<UserTransaction> _txnList;
-  String lastTxnDocId;
-  String lastPrizeTxnDocId;
-  String lastDepositTxnDocId;
-  String lastWithdrawalTxnDocId;
-  String lastRefundedTxnDocId;
+  List<UserTransaction>? _txnList;
+  String? lastTxnDocId;
+  String? lastPrizeTxnDocId;
+  String? lastDepositTxnDocId;
+  String? lastWithdrawalTxnDocId;
+  String? lastRefundedTxnDocId;
   bool hasMoreTxns = true;
   bool hasMorePrizeTxns = true;
   bool hasMoreDepositTxns = true;
   bool hasMoreWithdrawalTxns = true;
   bool hasMoreRefundedTxns = true;
 
-  List<UserTransaction> get txnList => _txnList;
+  List<UserTransaction>? get txnList => _txnList;
 
-  set txnList(List<UserTransaction> list) {
+  set txnList(List<UserTransaction>? list) {
     _txnList = list;
     notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
   }
 
   appendTxns(List<UserTransaction> list) {
     list.forEach((txn) {
-      UserTransaction duplicate = _txnList
-          .firstWhere((t) => t.timestamp == txn.timestamp, orElse: () => null);
-      if (duplicate == null) _txnList.add(txn);
+      UserTransaction? duplicate = _txnList!
+          .firstWhereOrNull((t) => t.timestamp == txn.timestamp);
+      if (duplicate == null) _txnList!.add(txn);
     });
-    _txnList.sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
+    _txnList!.sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
     notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
   }
 
   fetchTransactions({
-    String status,
-    String type,
-    InvestmentType subtype,
+    String? status,
+    String? type,
+    required InvestmentType subtype,
   }) async {
     //fetch filtered transactions
-    final response = await _transactionHistoryRepo.getUserTransactions(
+    final response = await _transactionHistoryRepo!.getUserTransactions(
       type: type,
       subtype: subtype.name,
       status: status,
@@ -67,26 +68,26 @@ class TransactionHistoryService
       );
     }
     // if transaction list is empty
-    if (_txnList == null || _txnList.length == 0) {
-      txnList = response.model.transactions;
+    if (_txnList == null || _txnList!.length == 0) {
+      txnList = response.model!.transactions;
     } else {
       // if transaction list already have some items
-      appendTxns(response.model.transactions);
+      appendTxns(response.model!.transactions!);
     }
-    _logger.d("Current Transaction List length: ${_txnList.length}");
+    _logger!.d("Current Transaction List length: ${_txnList!.length}");
     // set proper lastDocument snapshot for further fetches
-    if (response.model.transactions.isNotEmpty)
+    if (response.model!.transactions!.isNotEmpty)
       setLastTxnDocType(
         status: status,
         type: type,
-        lastDocId: response.model.transactions.last.docKey,
+        lastDocId: response.model!.transactions!.last.docKey,
       );
     // check and set which category has no more items to fetch
-    if (response.model.isLastPage)
+    if (response.model!.isLastPage!)
       setHasMoreTxnsValue(type: type, status: status);
   }
 
-  String getLastTxnDocType({String status, String type}) {
+  String? getLastTxnDocType({String? status, String? type}) {
     if (status == null && type == null) return lastTxnDocId;
     if (status != null) return lastRefundedTxnDocId;
     if (type != null) {
@@ -98,7 +99,7 @@ class TransactionHistoryService
     return lastTxnDocId;
   }
 
-  setLastTxnDocType({String status, String type, String lastDocId}) {
+  setLastTxnDocType({String? status, String? type, String? lastDocId}) {
     if (status == null && type == null) {
       lastTxnDocId = lastDocId;
       lastRefundedTxnDocId = lastDocId;
@@ -117,7 +118,7 @@ class TransactionHistoryService
     }
   }
 
-  setHasMoreTxnsValue({String status, String type}) {
+  setHasMoreTxnsValue({String? status, String? type}) {
     if (status == null && type == null) {
       hasMoreTxns = false;
       hasMorePrizeTxns = false;
@@ -125,7 +126,7 @@ class TransactionHistoryService
       hasMoreRefundedTxns = false;
       hasMoreWithdrawalTxns = false;
       findFirstAugmontTransaction();
-      _logger.d("Transaction fetch complete, no more operations from here on");
+      _logger!.d("Transaction fetch complete, no more operations from here on");
     } else if (status != null) {
       hasMoreRefundedTxns = false;
     } else if (type != null) {
@@ -140,13 +141,13 @@ class TransactionHistoryService
 
   findFirstAugmontTransaction() {
     try {
-      List<UserTransaction> reversedList = txnList.reversed.toList();
-      _baseUtil.firstAugmontTransaction = reversedList.firstWhere((element) =>
+      List<UserTransaction> reversedList = txnList!.reversed.toList();
+      _baseUtil!.firstAugmontTransaction = reversedList.firstWhere((element) =>
           element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
           element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
           element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
     } catch (e) {
-      _logger.i("No transaction found");
+      _logger!.i("No transaction found");
     }
   }
 
@@ -159,7 +160,7 @@ class TransactionHistoryService
     hasMoreRefundedTxns = true;
     txnList?.clear();
     await fetchTransactions(subtype: investmentType);
-    _logger.i("Transactions got updated");
+    _logger!.i("Transactions got updated");
   }
 
   // Clear transactions
@@ -170,7 +171,7 @@ class TransactionHistoryService
     hasMoreDepositTxns = true;
     hasMoreWithdrawalTxns = true;
     hasMoreRefundedTxns = true;
-    if (txnList != null) txnList.clear();
+    if (txnList != null) txnList!.clear();
   }
 
   //UI HELPERS
@@ -207,8 +208,8 @@ class TransactionHistoryService
   }
 
   Widget getTileLead(String type) {
-    IconData icon;
-    Color iconColor;
+    IconData? icon;
+    Color? iconColor;
     if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       icon = Icons.check_circle;
       iconColor = UiConstants.primaryColor;
@@ -268,7 +269,7 @@ class TransactionHistoryService
     return UiConstants.kTextColor;
   }
 
-  Color getTileColor(String type) {
+  Color getTileColor(String? type) {
     if (type == UserTransaction.TRAN_STATUS_CANCELLED ||
         type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;

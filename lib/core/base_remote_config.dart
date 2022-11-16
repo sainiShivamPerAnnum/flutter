@@ -6,9 +6,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
-  static RemoteConfig remoteConfig;
-  static UserService _userService = locator<UserService>();
-  static final _internalOpsService = locator<InternalOpsService>();
+  static late RemoteConfig remoteConfig;
+  static UserService? _userService = locator<UserService>();
+  static final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
 
@@ -301,8 +301,8 @@ class BaseRemoteConfig {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _internalOpsService.logFailure(
-          _userService.baseUser.uid,
+        _internalOpsService!.logFailure(
+          _userService!.baseUser!.uid,
           FailType.RemoteConfigFailed,
           errorDetails,
         );

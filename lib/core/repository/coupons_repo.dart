@@ -12,16 +12,16 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 
 class CouponRepository extends BaseRepo {
-  final _logger = locator<CustomLogger>();
+  final CustomLogger? _logger = locator<CustomLogger>();
   final _rsaEncryption = new RSAEncryption();
   final String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon({
-    String uid,
-    String couponcode,
-    int amount,
+    String? uid,
+    String? couponcode,
+    int? amount,
   }) async {
     try {
       final String _bearer = await getBearerToken();
@@ -30,12 +30,12 @@ class CouponRepository extends BaseRepo {
         "couponCode": couponcode,
         "amt": amount
       };
-      _logger.d("initiateUserDeposit:: Pre encryption: $_body");
+      _logger!.d("initiateUserDeposit:: Pre encryption: $_body");
       if (await _rsaEncryption.init()) {
         _body = _rsaEncryption.encryptRequestBody(_body);
-        _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+        _logger!.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
       } else {
-        _logger.e("Encrypter initialization failed!! exiting method");
+        _logger!.e("Encrypter initialization failed!! exiting method");
       }
       final res = await APIService.instance.postData(
         ApiPath.kFelloCoupons,
@@ -49,7 +49,7 @@ class CouponRepository extends BaseRepo {
       return ApiResponse(
           model: _reponseModel, code: 200, errorMessage: res["message"]);
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }

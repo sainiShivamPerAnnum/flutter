@@ -16,13 +16,13 @@ import 'package:provider/provider.dart';
 
 class SecurityModalSheet extends StatelessWidget {
   SecurityModalSheet();
-  final UserRepository userRepo = locator<UserRepository>();
-  final UserService userService = locator<UserService>();
+  final UserRepository? userRepo = locator<UserRepository>();
+  final UserService? userService = locator<UserService>();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: Padding(
@@ -37,7 +37,7 @@ class SecurityModalSheet extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                 child: SvgPicture.asset(
                   "assets/svg/safety_asset.svg",
-                  width: SizeConfig.screenWidth * 0.15,
+                  width: SizeConfig.screenWidth! * 0.15,
                 ),
               ),
             ),
@@ -60,12 +60,12 @@ class SecurityModalSheet extends StatelessWidget {
                     btnText: 'Enable',
                     onPressed: () async {
                       // baseProvider.flipSecurityValue(true);
-                      await userRepo.updateUser(dMap: {
+                      await userRepo!.updateUser(dMap: {
                         BaseUser.fldUserPrefsTn: true,
                         BaseUser.fldUserPrefsAl: true,
-                      }).then((value) => userService.setBaseUser());
+                      }).then((value) => userService!.setBaseUser());
 
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                   ),
                   SizedBox(height: SizeConfig.padding16),
@@ -73,7 +73,7 @@ class SecurityModalSheet extends StatelessWidget {
                     width: SizeConfig.screenWidth,
                     btnText: "Not Now",
                     onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                   ),
                 ],

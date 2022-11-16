@@ -2,9 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -21,13 +19,13 @@ import 'package:shimmer/shimmer.dart';
 class GOWCard extends StatelessWidget {
   final PlayViewModel model;
   const GOWCard({
-    @required this.model,
-    Key key,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
     return (model.isGamesListDataLoading)
         ? GameCardShimmer()
@@ -42,26 +40,26 @@ class GOWCard extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Haptic.vibrate();
-                      _analyticsService.track(
+                      _analyticsService!.track(
                           eventName: AnalyticsEvents.gameTapped,
                           properties: AnalyticsProperties
                               .getDefaultPropertiesMap(extraValuesMap: {
-                            'Game name': model.gow.gameName,
-                            "Entry fee": model.gow.playCost,
-                            "Win upto": model.gow.prizeAmount,
+                            'Game name': model.gow!.gameName,
+                            "Entry fee": model.gow!.playCost,
+                            "Win upto": model.gow!.prizeAmount,
                             "Time left for draw Tambola (mins)":
                                 AnalyticsProperties.getTimeLeftForTambolaDraw(),
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
                             "location": "Game of the Week"
                           }));
-                      AppState.delegate.parseRoute(
-                        Uri.parse(model.gow.route),
+                      AppState.delegate!.parseRoute(
+                        Uri.parse(model.gow!.route!),
                       );
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: model.gow.shadowColor,
+                          color: model.gow!.shadowColor,
                           borderRadius:
                               BorderRadius.circular(SizeConfig.roundness12)),
                       margin: EdgeInsets.symmetric(
@@ -70,18 +68,18 @@ class GOWCard extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: SizeConfig.pageHorizontalMargins),
                       width: double.infinity,
-                      height: SizeConfig.screenHeight * 0.18,
+                      height: SizeConfig.screenHeight! * 0.18,
                       child: Row(
                         children: [
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(model.gow.gameName,
+                                Text(model.gow!.gameName!,
                                     style: TextStyles.rajdhaniB.title3),
                                 Text(
                                     'Win upto ' +
-                                        '${NumberFormat.compact().format(model.gow.prizeAmount)}',
+                                        '${NumberFormat.compact().format(model.gow!.prizeAmount)}',
                                     style: TextStyles.sourceSans.body4),
                                 SizedBox(height: SizeConfig.padding16),
                                 Container(
@@ -101,7 +99,7 @@ class GOWCard extends StatelessWidget {
                                         width: SizeConfig.padding20,
                                       ),
                                       SizedBox(width: SizeConfig.padding4),
-                                      Text(model.gow.playCost.toString(),
+                                      Text(model.gow!.playCost.toString(),
                                           style: TextStyles.sourceSans.body1),
                                     ],
                                   ),
@@ -109,20 +107,20 @@ class GOWCard extends StatelessWidget {
                               ]),
                           Spacer(),
                           SvgPicture.network(
-                            model.gow.thumbnailUri,
+                            model.gow!.thumbnailUri!,
                           ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              ));
+              )) as Widget;
   }
 }
 
 class GameCardShimmer extends StatelessWidget {
   const GameCardShimmer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -135,7 +133,7 @@ class GameCardShimmer extends StatelessWidget {
           horizontal: SizeConfig.padding24,
           vertical: SizeConfig.padding12,
         ),
-        height: SizeConfig.screenWidth * 0.456,
+        height: SizeConfig.screenWidth! * 0.456,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
           color: UiConstants.gameCardColor,

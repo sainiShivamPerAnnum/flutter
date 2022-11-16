@@ -7,15 +7,7 @@ class DynamicUI {
   List<String> play;
   SaveUi save;
   SingleInfo journeyFab;
-  DynamicUI(
-      {@required this.play, @required this.save, @required this.journeyFab});
-
-  DynamicUI copyWith({List<String> play, SaveUi save, SingleInfo journeyFab}) {
-    return DynamicUI(
-        play: play ?? this.play,
-        save: save ?? this.save,
-        journeyFab: journeyFab ?? this.journeyFab);
-  }
+  DynamicUI({required this.play, required this.save, required this.journeyFab});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -55,19 +47,9 @@ class SaveUi {
   List<String> assets;
   List<String> sections;
   SaveUi({
-    @required this.assets,
-    @required this.sections,
+    required this.assets,
+    required this.sections,
   });
-
-  SaveUi copyWith({
-    List<String> assets,
-    List<String> sections,
-  }) {
-    return SaveUi(
-      assets: assets ?? this.assets,
-      sections: sections ?? this.sections,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -109,20 +91,20 @@ class SingleInfo {
   String actionUri;
   String title;
   SingleInfo({
-    @required this.iconUri,
-    @required this.actionUri,
-    @required this.title,
+    required this.iconUri,
+    required this.actionUri,
+    required this.title,
   });
 
   SingleInfo copyWith({
-    String iconUri,
-    String actionUri,
-    String title,
+    required String iconUri,
+    required String actionUri,
+    required String title,
   }) {
     return SingleInfo(
-      iconUri: iconUri ?? this.iconUri,
-      actionUri: actionUri ?? this.actionUri,
-      title: title ?? this.title,
+      iconUri: iconUri,
+      actionUri: actionUri,
+      title: title,
     );
   }
 

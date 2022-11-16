@@ -19,25 +19,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PageAction {
   PageState state;
-  PageConfiguration page;
-  List<PageConfiguration> pages;
-  Widget widget;
+  PageConfiguration? page;
+  List<PageConfiguration>? pages;
+  Widget? widget;
 
   PageAction({this.state = PageState.none, this.page, this.pages, this.widget});
 }
 
 class AppState extends ChangeNotifier {
-  final _winnerService = locator<WinnerService>();
-  final _lbService = locator<LeaderboardService>();
+  final WinnerService? _winnerService = locator<WinnerService>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
   int _rootIndex = 0;
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
-  Timer _txnTimer;
-  Future _txnFunction;
+  Timer? _txnTimer;
+  Future? _txnFunction;
 
-  static Map<String, dynamic> startupNotifMessage;
+  static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
-  static String _fcmData;
+  static String? _fcmData;
   static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
@@ -51,17 +51,17 @@ class AppState extends ChangeNotifier {
   static bool isWinOpened = false;
 
   static List<ScreenItem> screenStack = [];
-  static FelloRouterDelegate delegate;
-  static FelloBackButtonDispatcher backButtonDispatcher;
+  static FelloRouterDelegate? delegate;
+  static FelloBackButtonDispatcher? backButtonDispatcher;
 
   PageAction _currentAction = PageAction();
   // BackButtonDispatcher backButtonDispatcher;
 
   get rootIndex => this._rootIndex;
 
-  Timer get txnTimer => this._txnTimer;
+  Timer? get txnTimer => this._txnTimer;
 
-  set txnTimer(Timer timer) {
+  set txnTimer(Timer? timer) {
     this._txnTimer = timer;
   }
 
@@ -76,7 +76,7 @@ class AppState extends ChangeNotifier {
   }
 
   scrollHome(int cardNo) {
-    double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;
+    double scrollDepth = SizeConfig.screenHeight! * 0.2 * cardNo;
     homeCardListController.animateTo(scrollDepth,
         duration: Duration(milliseconds: 600), curve: Curves.easeInOutSine);
     notifyListeners();
@@ -94,7 +94,7 @@ class AppState extends ChangeNotifier {
 
   routeDeepLink() {
     if (isRootLoaded && _fcmData != null) {
-      delegate.parseRoute(Uri.parse(_fcmData));
+      delegate!.parseRoute(Uri.parse(_fcmData!));
     }
   }
 
@@ -114,11 +114,11 @@ class AppState extends ChangeNotifier {
     _rootIndex = index;
     // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
-      _lbService.fetchReferralLeaderBoard();
+      _lbService!.fetchReferralLeaderBoard();
       isWinOpened = true;
     }
     if (index == 2) {
-      _winnerService.fetchWinners();
+      _winnerService!.fetchWinners();
     }
     print(_rootIndex);
     notifyListeners();

@@ -31,31 +31,31 @@ import 'package:http/http.dart' as http;
 
 class AugmontService extends ChangeNotifier {
   final Log log = new Log('AugmontService');
-  final CustomLogger _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
-  final _internalOpsService = locator<InternalOpsService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
-  final InvestmentActionsRepository _investmentActionsRepository =
+  final InvestmentActionsRepository? _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
-  final DBModel _dbModel = locator<DBModel>();
-  final BaseUtil _baseProvider = locator<BaseUtil>();
-  final UserService _userService = locator<UserService>();
-  final _userCoinService = locator<UserCoinService>();
-  final AugmontTransactionService _augTxnService =
+  final DBModel? _dbModel = locator<DBModel>();
+  final BaseUtil? _baseProvider = locator<BaseUtil>();
+  final UserService? _userService = locator<UserService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final TransactionHistoryService _txnHistoryService =
+  final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
 
-  ValueChanged<UserTransaction> _augmontTxnProcessListener;
+  ValueChanged<UserTransaction>? _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
-  String _baseUri;
-  String _apiKey;
-  var headers;
+  String? _baseUri;
+  String? _apiKey;
+  late var headers;
 
   List<String> get sellingReasons => _sellingReasons;
   String get selectedReasonForSelling => _selectedReasonForSelling;
@@ -65,7 +65,7 @@ class AugmontService extends ChangeNotifier {
     notifyListeners();
   }
 
-  ApiResponse<DepositResponseModel> _initialDepositResponse;
+  ApiResponse<DepositResponseModel>? _initialDepositResponse;
 
   Future<bool> _init() async {
     _sellingReasons = [
@@ -83,24 +83,24 @@ class AugmontService extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  Future<AugmontRates> getRates() async {
+  Future<AugmontRates?> getRates() async {
     if (!isInit()) await _init();
 
     // New rates api code, requires conformation from augmont for dev enviroment.
     ApiResponse<Map<String, dynamic>> response =
-        await _investmentActionsRepository.getGoldRates();
+        await _investmentActionsRepository!.getGoldRates();
     if (response.code == 400) {
-      _logger.e(response.errorMessage);
+      _logger!.e(response.errorMessage);
       return null;
     } else {
-      return AugmontRates.fromMap(response.model);
+      return AugmontRates.fromMap(response.model!);
     }
   }
 
-  Future<double> getGoldBalance() async {
+  Future<double?> getGoldBalance() async {
     if (!isInit()) await _init();
-    Map<String, String> _params = {
-      Passbook.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    Map<String, String?> _params = {
+      Passbook.fldAugmontUid: _baseProvider!.augmontDetail!.userId,
     };
     var _request = http.Request(
         'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
@@ -126,7 +126,7 @@ class AugmontService extends ChangeNotifier {
     }
   }
 
-  Future<List<GoldGraphPoint>> getGoldRateChart(
+  Future<List<GoldGraphPoint>?> getGoldRateChart(
       DateTime fromTime, DateTime toTime) async {
     if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
       return null;
@@ -173,33 +173,33 @@ class AugmontService extends ChangeNotifier {
       SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice,
     };
 
-    _logger.d(_params);
+    _logger!.d(_params);
     ApiResponse<bool> _onSellCompleteResponse =
-        await _investmentActionsRepository.withdrawlComplete(
-      amount: -1 * BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice),
+        await _investmentActionsRepository!.withdrawlComplete(
+      amount: -1 * BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice!),
       sellGoldMap: _params,
-      userUid: _userService.baseUser.uid,
+      userUid: _userService!.baseUser!.uid,
     );
 
     if (_onSellCompleteResponse.code == 200) {
       return true;
     } else {
-      _augTxnService.currentTransactionState = TransactionState.idle;
+      _augTxnService!.currentTransactionState = TransactionState.idle;
       AppState.unblockNavigation();
       if (_onSellCompleteResponse.errorMessage != null &&
-          _onSellCompleteResponse.errorMessage.isNotEmpty)
+          _onSellCompleteResponse.errorMessage!.isNotEmpty)
         BaseUtil.showNegativeAlert(
             _onSellCompleteResponse.errorMessage, 'Please try again!');
       else
         BaseUtil.showNegativeAlert('Verifying transaction',
             'Your transaction is being verified and will be updated shortly');
 
-      _internalOpsService.logFailure(
-          _userService.baseUser.uid, FailType.WithdrawlCompleteApiFailed, {
+      _internalOpsService!.logFailure(
+          _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
             _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       return false;
     }
   }
@@ -219,8 +219,8 @@ class AugmontService extends ChangeNotifier {
   }
 
   ///returns path where invoice is generated and saved
-  Future<String> generatePurchaseInvoicePdf(
-      String txnId, Map<String, String> userDetails) async {
+  Future<String?> generatePurchaseInvoicePdf(
+      String? txnId, Map<String, String?>? userDetails) async {
     AugmontInvoiceService _pdfService = AugmontInvoiceService();
     if (!isInit()) await _init();
     var _params = {
@@ -243,19 +243,19 @@ class AugmontService extends ChangeNotifier {
       // final pdfFile =
       //     await PdfInvoiceApi.generate(await generateInvoiceContent());
       // return pdfFile.path;
-      String _path = await _pdfService.generateInvoice(resMap, userDetails);
+      String? _path = await _pdfService.generateInvoice(resMap, userDetails);
       return _path;
     }
   }
 
-  String _constructRequest(String subPath, Map<String, String> params) {
+  String _constructRequest(String subPath, Map<String, String?> params) {
     String _path = '$_baseUri/$subPath';
     if (params != null && params.length > 0) {
       String _p = '';
       if (params.length == 1) {
         _p = params.keys.elementAt(0) +
             '=' +
-            Uri.encodeComponent(params.values.elementAt(0));
+            Uri.encodeComponent(params.values.elementAt(0)!);
         _path = '$_path?$_p';
       } else {
         params.forEach((key, value) {
@@ -268,7 +268,7 @@ class AugmontService extends ChangeNotifier {
     return _path;
   }
 
-  Future<Map<String, dynamic>> _processResponse(
+  Future<Map<String, dynamic>?> _processResponse(
       http.StreamedResponse response) async {
     if (response == null) {
       log.error('response is null');
@@ -310,9 +310,9 @@ class AugmontService extends ChangeNotifier {
     // _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 
-    _baseProvider.userMiniTxnList = null;
-    _baseProvider.hasMoreTransactionListDocuments = true;
-    _baseProvider.lastTransactionListDocument =
+    _baseProvider!.userMiniTxnList = null;
+    _baseProvider!.hasMoreTransactionListDocuments = true;
+    _baseProvider!.lastTransactionListDocument =
         null; //this is to ensure that the transactions list gets refreshed
   }
 

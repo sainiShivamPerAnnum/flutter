@@ -19,7 +19,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class SaveNetWorthSection extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
-  const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
+  const SaveNetWorthSection({Key? key, required this.saveViewModel})
+      : super(key: key);
 
   getAssetsOrder() {
     List<Widget> orderedAssests = [];

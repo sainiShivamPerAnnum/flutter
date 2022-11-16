@@ -15,7 +15,7 @@ import '../static/new_square_background.dart';
 class BlockedUserView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = S.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -26,7 +26,7 @@ class BlockedUserView extends StatelessWidget {
           Positioned(
             top: 0,
             child: Container(
-              height: SizeConfig.screenHeight * 0.5,
+              height: SizeConfig.screenHeight! * 0.5,
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -41,10 +41,10 @@ class BlockedUserView extends StatelessWidget {
             ),
           ),
           Positioned(
-              top: SizeConfig.screenHeight * 0.35,
+              top: SizeConfig.screenHeight! * 0.35,
               child: SvgPicture.asset(
                 Assets.flatIsland,
-                width: SizeConfig.screenWidth * 0.5,
+                width: SizeConfig.screenWidth! * 0.5,
               )),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,

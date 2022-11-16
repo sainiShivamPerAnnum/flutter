@@ -14,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 
 class KycUnVerifiedView extends StatelessWidget {
   final KYCDetailsViewModel model;
-  const KycUnVerifiedView({Key key, @required this.model}) : super(key: key);
+  const KycUnVerifiedView({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class KycUnVerifiedView extends StatelessWidget {
         model.capturedImage != null
             ? KycBriefTile(
                 label: "Uploaded PAN Card",
-                title: model.capturedImage.name,
+                title: model.capturedImage!.name,
                 model: model,
                 subtitle: "${model.fileSize.toString()} MB",
                 trailing: Padding(
@@ -47,7 +47,7 @@ class KycUnVerifiedView extends StatelessWidget {
                   AppTextFieldLabel("Upload your PAN Card"),
                   Container(
                     width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth / 2.5,
+                    height: SizeConfig.screenWidth! / 2.5,
                     margin: EdgeInsets.only(top: SizeConfig.padding4),
                     child: Row(children: [
                       FileCaptureOption(
@@ -78,7 +78,7 @@ class KycUnVerifiedView extends StatelessWidget {
                               .pickImage(source: ImageSource.gallery);
                           model.verifyImage();
                           if (model.capturedImage != null) {
-                            Log(model.capturedImage.path);
+                            Log(model.capturedImage!.path);
                           }
                         },
                       ),

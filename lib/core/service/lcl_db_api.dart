@@ -45,7 +45,7 @@ class LocalApi {
 
   Future<void> deleteUserFile() async {
     final file = await userFile;
-    if (file != null) return file.delete();
+    file.delete();
   }
 
   Future<File> writeTmbResultFile(String content) async {
@@ -55,7 +55,7 @@ class LocalApi {
 
   Future<void> deleteTmbResultFile() async {
     final file = await tambolaResultFile;
-    if (file != null) return file.delete();
+   file.delete();
   }
 
   Future<File> writeFreshTambolaTutorialFile(String content) async {
@@ -65,7 +65,7 @@ class LocalApi {
 
   Future<void> deleteFreshTambolaTutorialFile() async {
     final file = await tambolaTutorialFile;
-    if (file != null) return file.delete();
+     file.delete();
   }
 
   Future<File> writeFreshHomeTutorialFile(String content) async {
@@ -75,7 +75,7 @@ class LocalApi {
 
   Future<void> deleteFreshHomeTutorialFile() async {
     final file = await homeTutorialFile;
-    if (file != null) return file.delete();
+    file.delete();
   }
 
   Future<File> writeConfettiTrackFile(String content) async {
@@ -85,6 +85,6 @@ class LocalApi {
 
   Future<void> deleteConfettiFile() async {
     final file = await confettiFile;
-    if (file != null) return file.delete();
+    file.delete();
   }
 }

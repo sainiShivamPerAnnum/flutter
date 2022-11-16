@@ -9,70 +9,70 @@ import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_description.dart';
 
 class MilestoneModel {
-  final String id;
+  final String? id;
   final JourneyAssetModel asset;
-  final JourneyAssetModel animAsset;
-  final double x;
-  final double y;
-  final double ax;
-  final double ay;
-  List<Reward> rewards;
-  Map<String, dynamic> skipCost;
+  final JourneyAssetModel? animAsset;
+  final double? x;
+  final double? y;
+  final double? ax;
+  final double? ay;
+  List<Reward>? rewards;
+  Map<String, dynamic>? skipCost;
   final List<MlSteps> steps;
-  final String actionUri;
-  final String animType;
-  final String tooltip;
-  bool isCompleted = false;
-  final String prizeSubType;
+  final String? actionUri;
+  final String? animType;
+  final String? tooltip;
+  bool? isCompleted = false;
+  final String? prizeSubType;
   final int page;
-  final int index;
-  final MilestoneShadowModel shadow;
-  final bool hFlip;
+  final int? index;
+  final MilestoneShadowModel? shadow;
+  final bool? hFlip;
   final bool vFlip;
   MilestoneModel({
     this.id,
-    @required this.asset,
+    required this.asset,
     this.animAsset,
-    @required this.x,
-    @required this.y,
+    required this.x,
+    required this.y,
     this.ax,
     this.ay,
     this.rewards,
     this.tooltip,
     this.skipCost,
     this.prizeSubType,
-    @required this.steps,
-    @required this.actionUri,
+    required this.steps,
+    required this.actionUri,
     this.animType = "NONE",
     this.isCompleted,
-    @required this.page,
-    @required this.index,
+    required this.page,
+    required this.index,
     this.shadow,
     this.hFlip = false,
     this.vFlip = false,
   });
 
   MilestoneModel copyWith({
-    String id,
-    JourneyAssetModel asset,
-    JourneyAssetModel animAsset,
-    double x,
-    double y,
-    double ax,
-    double ay,
-    Map<String, dynamic> skipCost,
-    List<Reward> rewards,
-    List<MlSteps> description,
-    String actionUri,
-    String animType,
-    String tooltip,
-    bool isCompleted,
-    String prizeSubType,
-    int page,
-    int mlIndex,
-    MilestoneShadowModel shadow,
-    bool hFlip,
-    bool vFlip,
+    String? id,
+    JourneyAssetModel? asset,
+    JourneyAssetModel? animAsset,
+    double? x,
+    double? y,
+    double? ax,
+    double? ay,
+    Map<String, dynamic>? skipCost,
+    List<Reward>? rewards,
+    List<MlSteps>? description,
+    String? actionUri,
+    String? animType,
+    String? tooltip,
+    bool? isCompleted,
+    String? prizeSubType,
+    int? page,
+    int? mlIndex,
+    MilestoneShadowModel? shadow,
+    bool? hFlip,
+    bool? vFlip,
   }) {
     return MilestoneModel(
       id: id ?? this.id,
@@ -104,8 +104,8 @@ class MilestoneModel {
       'y': y,
       if (animAsset != null) 'ax': ax,
       if (animAsset != null) 'ay': ay,
-      if (shadow != null) 'sx': shadow.x,
-      if (shadow != null) 'sy': shadow.y,
+      if (shadow != null) 'sx': shadow!.x,
+      if (shadow != null) 'sy': shadow!.y,
       'hFlip': hFlip ?? false
     };
   }
@@ -113,35 +113,35 @@ class MilestoneModel {
   Map<String, dynamic> toMap(int page) {
     return <String, dynamic>{
       'assetRef': asset.name,
-      if (animAsset != null) 'animRef': animAsset.name,
+      if (animAsset != null) 'animRef': animAsset!.name,
       'animType': animType ?? "none",
       'actionUri': actionUri ?? '',
       'toolTip': tooltip ?? '',
       'page': page,
       'steps': steps.map((x) => x.toMap()).toList(),
       'prizeSubType': prizeSubType ?? '',
-      if (shadow != null) 'shadow': {'assetRef': shadow.name},
+      if (shadow != null) 'shadow': {'assetRef': shadow!.name},
     };
   }
 
   factory MilestoneModel.fromMap(Map<String, dynamic> map, int page) {
     return MilestoneModel(
-      index: map['index'] as int,
-      x: map['x'] as double,
-      y: map['y'] as double,
-      ax: map.containsKey('ax') && map['ax'] != 0 ? map['ax'] as double : null,
-      ay: map.containsKey('ay') && map['ay'] != 0 ? map['ay'] as double : null,
-      hFlip: map['hFlip'] as bool,
-      tooltip: map['toolTip'] as String,
+      index: map['index'] as int?,
+      x: map['x'] as double?,
+      y: map['y'] as double?,
+      ax: map.containsKey('ax') && map['ax'] != 0 ? map['ax'] as double? : null,
+      ay: map.containsKey('ay') && map['ay'] != 0 ? map['ay'] as double? : null,
+      hFlip: map['hFlip'] as bool?,
+      tooltip: map['toolTip'] as String?,
       steps: List<MlSteps>.from(
         (map['steps'] as List<dynamic>).map<MlSteps>(
           (x) => MlSteps.fromMap(x as Map<String, dynamic>),
         ),
       ),
       skipCost: map['skipCost'] ?? {},
-      prizeSubType: map['prizeSubType'] as String,
-      animType: map['animType'] as String,
-      actionUri: map['actionUri'] as String,
+      prizeSubType: map['prizeSubType'] as String?,
+      animType: map['animType'] as String?,
+      actionUri: map['actionUri'] as String?,
       asset:
           JourneyAssetModel.fromMap(map['asset'] as Map<String, dynamic>, page),
       animAsset: map.containsKey('animAsset')

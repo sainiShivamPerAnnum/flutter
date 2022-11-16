@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class AnimatedCount extends ImplicitlyAnimatedWidget {
   AnimatedCount({
-    Key key,
-    @required this.count,
-    @required Duration duration,
+    Key? key,
+    required this.count,
+    required Duration duration,
     Curve curve = Curves.linear,
   }) : super(duration: duration, curve: curve, key: key);
 
@@ -18,38 +18,38 @@ class AnimatedCount extends ImplicitlyAnimatedWidget {
 }
 
 class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
-  IntTween _intCount;
-  Tween<double> _doubleCount;
+  IntTween? _intCount;
+  Tween<double>? _doubleCount;
 
   @override
   Widget build(BuildContext context) {
     return widget.count is int
         ? Text(
-            _intCount.evaluate(animation).toString(),
+            _intCount!.evaluate(animation).toString(),
             style: TextStyles.body1.bold.colour(Colors.white),
           )
         : Text(
-            _doubleCount.evaluate(animation).toStringAsFixed(1),
+            _doubleCount!.evaluate(animation).toStringAsFixed(1),
             style: TextStyles.body1.bold.colour(
               Colors.white,
             ),
           );
   }
 
-  @override
-  void forEachTween(TweenVisitor visitor) {
+  @protected
+  void forEachTween(TweenVisitor<dynamic> visitor) {
     if (widget.count is int) {
       _intCount = visitor(
         _intCount,
         widget.count,
-        (dynamic value) => IntTween(begin: value),
-      );
+        (dynamic value) => IntTween(begin: value as int),
+      ) as IntTween;
     } else {
       _doubleCount = visitor(
         _doubleCount,
         widget.count,
-        (dynamic value) => Tween<double>(begin: value),
-      );
+        (dynamic value) => Tween<double>(begin: value as double),
+      ) as Tween<double>;
     }
   }
 }

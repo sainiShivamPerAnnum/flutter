@@ -6,8 +6,14 @@ class UserKycDataModel {
   final String name;
   final String url;
 
-  UserKycDataModel(
-      {this.uid, this.ocrVerified, this.pan, this.name, this.url, this.status});
+  UserKycDataModel({
+    required this.uid,
+    required this.ocrVerified,
+    required this.pan,
+    required this.name,
+    required this.url,
+    required this.status,
+  });
 
   UserKycDataModel.fromMap(Map<String, dynamic> map)
       : this(

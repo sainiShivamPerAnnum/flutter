@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 
 class AppCongratulatoryDialog extends StatelessWidget {
   const AppCongratulatoryDialog({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.description = '',
-    @required this.buttonText,
-    @required this.confirmAction,
+    required this.buttonText,
+    required this.confirmAction,
   }) : super(key: key);
 
   final String title, description, buttonText;
@@ -46,13 +46,13 @@ class AppCongratulatoryDialog extends StatelessWidget {
           ],
         ),
       ),
-      height: SizeConfig.screenWidth * 1.083,
+      height: SizeConfig.screenWidth! * 1.083,
       child: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
           constraints: BoxConstraints(
-            maxHeight: SizeConfig.screenWidth * 1.0778,
-            minHeight: SizeConfig.screenWidth * 1.0778,
+            maxHeight: SizeConfig.screenWidth! * 1.0778,
+            minHeight: SizeConfig.screenWidth! * 1.0778,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
@@ -67,11 +67,11 @@ class AppCongratulatoryDialog extends StatelessWidget {
               ),
               Image.asset(
                 Assets.completeCheck,
-                width: SizeConfig.screenWidth * 0.4778,
-                height: SizeConfig.screenWidth * 0.4111,
+                width: SizeConfig.screenWidth! * 0.4778,
+                height: SizeConfig.screenWidth! * 0.4111,
               ),
               SizedBox(
-                width: SizeConfig.screenWidth * 0.5,
+                width: SizeConfig.screenWidth! * 0.5,
                 child: Text(
                   title,
                   style: TextStyles.rajdhaniB.title2,
@@ -82,7 +82,7 @@ class AppCongratulatoryDialog extends StatelessWidget {
                 height: SizeConfig.padding12,
               ),
               SizedBox(
-                width: SizeConfig.screenWidth * 0.4922,
+                width: SizeConfig.screenWidth! * 0.4922,
                 child: Text(
                   description,
                   style: TextStyles.sourceSans.body2.colour(
@@ -96,10 +96,10 @@ class AppCongratulatoryDialog extends StatelessWidget {
               ),
               AppPositiveBtn(
                 btnText: buttonText,
-                width: SizeConfig.screenWidth * 0.8333,
+                width: SizeConfig.screenWidth! * 0.8333,
                 onPressed: () {
                   Haptic.vibrate();
-                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher!.didPopRoute();
                   return confirmAction();
                 },
               ),

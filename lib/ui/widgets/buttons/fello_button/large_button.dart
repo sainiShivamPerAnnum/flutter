@@ -5,10 +5,10 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class FelloButtonLg extends StatelessWidget {
-  final Widget child;
-  final Function onPressed;
-  final Color color;
-  final double height;
+  final Widget? child;
+  final Function? onPressed;
+  final Color? color;
+  final double? height;
   FelloButtonLg({this.child, this.onPressed, this.color, this.height});
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class FelloButtonLg extends StatelessWidget {
       child: FelloButton(
         activeButtonUI: Container(
           width: SizeConfig.screenWidth,
-          height: height ?? SizeConfig.screenWidth * 0.14,
+          height: height ?? SizeConfig.screenWidth! * 0.14,
           decoration: BoxDecoration(
             gradient: UiConstants.kButtonGradient,
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -25,7 +25,7 @@ class FelloButtonLg extends StatelessWidget {
           child: Material(
             child: MaterialButton(
               child: child,
-              onPressed: onPressed,
+              onPressed: onPressed as void Function()?,
               highlightColor: Colors.orange.withOpacity(0.5),
               splashColor: Colors.orange.withOpacity(0.5),
             ),

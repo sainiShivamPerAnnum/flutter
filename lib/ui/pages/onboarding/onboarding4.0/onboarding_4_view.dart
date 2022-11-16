@@ -13,7 +13,7 @@ const String COMING_FROM_HOME = "fromHome";
 class OnBoardingView extends StatefulWidget {
   final String comingFrom;
 
-  const OnBoardingView({Key key, this.comingFrom = COMING_FROM_SPLASH})
+  const OnBoardingView({Key? key, this.comingFrom = COMING_FROM_SPLASH})
       : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class OnBoardingView extends StatefulWidget {
 
 class _OnBoardingViewState extends State<OnBoardingView>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
+  AnimationController? controller;
 
   @override
   void initState() {
@@ -31,9 +31,9 @@ class _OnBoardingViewState extends State<OnBoardingView>
     Future.delayed(
       Duration(seconds: 2),
       () {
-        WidgetsBinding.instance.addPostFrameCallback(
+        WidgetsBinding.instance!.addPostFrameCallback(
           (timeStamp) {
-            controller.animateTo(0.26);
+            controller!.animateTo(0.26);
           },
         );
       },
@@ -43,14 +43,14 @@ class _OnBoardingViewState extends State<OnBoardingView>
 
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(milliseconds: 1000), () {
-      controller.animateTo(0.53);
+      controller!.animateTo(0.53);
     });
 
     return BaseView<OnboardingViewModel>(
@@ -66,7 +66,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
               if (model.currentPage == 2)
                 model.registerWalkthroughCompletion(widget.comingFrom);
               else
-                model.pageController.animateToPage(model.currentPage + 1,
+                model.pageController!.animateToPage(model.currentPage + 1,
                     duration: Duration(milliseconds: 500),
                     curve: Curves.easeIn);
             },
@@ -100,13 +100,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                     // model.registerWalkthroughCompletion(comingFrom);
                     return;
                   } else {
-                    model.pageController.nextPage(
+                    model.pageController!.nextPage(
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     );
                   }
                 } else {
-                  model.pageController.previousPage(
+                  model.pageController!.previousPage(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.easeIn,
                   );
@@ -138,7 +138,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                   alignment: Alignment.topCenter,
                   child: SafeArea(
                     child: Transform.translate(
-                      offset: Offset(0, -SizeConfig.screenHeight * 0.1),
+                      offset: Offset(0, -SizeConfig.screenHeight! * 0.1),
                       child: Container(
                         // color: Colors.red,
                         child: Lottie.asset("assets/lotties/onboarding.json",
@@ -154,7 +154,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                   bottom: 0,
                   child: Container(
                     width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenHeight * 0.6,
+                    height: SizeConfig.screenHeight! * 0.6,
                     decoration: BoxDecoration(
                       // color: Colors.transparent,
                       gradient: LinearGradient(
@@ -188,8 +188,8 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          height: SizeConfig.screenWidth * 0.45,
-                          width: SizeConfig.screenWidth * 0.8,
+                          height: SizeConfig.screenWidth! * 0.45,
+                          width: SizeConfig.screenWidth! * 0.8,
                           margin: EdgeInsets.only(bottom: SizeConfig.padding32),
                           child: PageView.builder(
                             controller: model.pageController,
@@ -197,17 +197,17 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             onPageChanged: (val) {
                               if (val > model.currentPage) {
                                 if (val == 2)
-                                  controller.animateTo(1);
+                                  controller!.animateTo(1);
                                 else
-                                  controller.animateTo(0.53);
+                                  controller!.animateTo(0.53);
                               } else {
                                 if (val == 0) {
-                                  controller.reset();
-                                  controller.animateTo(0.28);
+                                  controller!.reset();
+                                  controller!.animateTo(0.28);
                                 } else if (val == 1)
-                                  controller.animateBack(0.53);
+                                  controller!.animateBack(0.53);
                                 else
-                                  controller.animateBack(0);
+                                  controller!.animateBack(0);
                               }
                               model.currentPage = val;
                             },
@@ -216,14 +216,14 @@ class _OnBoardingViewState extends State<OnBoardingView>
                               return Column(
                                 children: [
                                   Text(
-                                    model.onboardingData[index][0],
+                                    model.onboardingData![index][0],
                                     style: TextStyles.rajdhaniB.title2,
                                   ),
                                   SizedBox(
                                     height: SizeConfig.padding16,
                                   ),
                                   Text(
-                                    model.onboardingData[index][1],
+                                    model.onboardingData![index][1],
                                     textAlign: TextAlign.center,
                                     style: TextStyles.sourceSans.body2,
                                   ),

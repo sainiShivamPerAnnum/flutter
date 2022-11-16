@@ -12,16 +12,16 @@ import 'package:flutter/material.dart';
 
 class WinningsContainer extends StatelessWidget {
   final bool shadow;
-  final Widget child;
-  final double height;
-  final Function onTap;
-  final double borderRadius;
-  final Color color;
-  final LinearGradient gradient;
+  final Widget? child;
+  final double? height;
+  final Function? onTap;
+  final double? borderRadius;
+  final Color? color;
+  final LinearGradient? gradient;
   final bool hapticRequired;
   WinningsContainer(
       {this.child,
-      @required this.shadow,
+      required this.shadow,
       this.height,
       this.onTap,
       this.borderRadius,
@@ -31,14 +31,14 @@ class WinningsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return InkWell(
       onTap: onTap != null
           ? () {
               if (hapticRequired) Haptic.vibrate();
-              onTap();
+              onTap!();
             }
-          : () => AppState.delegate.appState.currentAction =
+          : () => AppState.delegate!.appState.currentAction =
               PageAction(state: PageState.addPage, page: MyWinningsPageConfig),
       child: Container(
         decoration: gradient != null
@@ -58,11 +58,11 @@ class WinningsContainer extends StatelessWidget {
                   if (shadow)
                     BoxShadow(
                       blurRadius: 30,
-                      color: color.withOpacity(0.5) ??
+                      color: color!.withOpacity(0.5) ??
                           UiConstants.primaryColor.withOpacity(0.5),
                       offset: Offset(
                         0,
-                        SizeConfig.screenWidth * 0.1,
+                        SizeConfig.screenWidth! * 0.1,
                       ),
                       spreadRadius: -30,
                     )
@@ -76,17 +76,17 @@ class WinningsContainer extends StatelessWidget {
                   if (shadow)
                     BoxShadow(
                       blurRadius: 30,
-                      color: color.withOpacity(0.5) ??
+                      color: color!.withOpacity(0.5) ??
                           UiConstants.primaryColor.withOpacity(0.5),
                       offset: Offset(
                         0,
-                        SizeConfig.screenWidth * 0.1,
+                        SizeConfig.screenWidth! * 0.1,
                       ),
                       spreadRadius: -30,
                     )
                 ],
               ),
-        height: height ?? SizeConfig.screenWidth * 0.24,
+        height: height ?? SizeConfig.screenWidth! * 0.24,
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Stack(
@@ -100,7 +100,7 @@ class WinningsContainer extends StatelessWidget {
               ),
             ),
             child != null
-                ? child
+                ? child!
                 : Container(
                     width: SizeConfig.screenWidth,
                     alignment: Alignment.center,
@@ -109,7 +109,7 @@ class WinningsContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          locale.saveWinningsLabel,
+                          locale!.saveWinningsLabel,
                           style: TextStyles.title5.colour(Colors.white),
                         ),
                         UserWinningsSE(

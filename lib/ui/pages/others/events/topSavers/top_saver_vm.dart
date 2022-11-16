@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
@@ -24,12 +25,12 @@ import '../../../../../core/service/api.dart';
 import '../../../../../util/assets.dart';
 
 class TopSaverViewModel extends BaseViewModel {
-  final _logger = locator<CustomLogger>();
-  final _dbModel = locator<DBModel>();
-  final _userService = locator<UserService>();
-  final _getterRepo = locator<GetterRepository>();
-  final _winnerService = locator<WinnerService>();
-  final _campaignRepo = locator<CampaignRepo>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final DBModel? _dbModel = locator<DBModel>();
+  final UserService? _userService = locator<UserService>();
+  final GetterRepository? _getterRepo = locator<GetterRepository>();
+  final WinnerService? _winnerService = locator<WinnerService>();
+  final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
 
   // final eventService = EventService();
   //Local variables
@@ -44,10 +45,10 @@ class TopSaverViewModel extends BaseViewModel {
   int weekDay = DateTime.now().weekday;
 
   int _userRank = 0;
-  String _userDisplayAmount = '-';
+  String? _userDisplayAmount = '-';
   String _highestSavingsDisplayAmount = '-';
   String winnerTitle = "Past Winners";
-  EventModel event;
+  EventModel? event;
   bool showStandingsAndWinners = true;
   String eventStandingsType = "HIGHEST_SAVER_V2";
   String actionTitle = "Buy Digital Gold";
@@ -56,9 +57,9 @@ class TopSaverViewModel extends BaseViewModel {
 
   int _tabNo = 0;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
-  PageController _pageController;
+  PageController? _pageController;
 
-  PageController get pageController => _pageController;
+  PageController? get pageController => _pageController;
 
   bool infoBoxOpen = false;
 
@@ -78,10 +79,10 @@ class TopSaverViewModel extends BaseViewModel {
     if (tab == tabNo) return;
 
     tabPosWidthFactor = tabNo == 0
-        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        ? SizeConfig.screenWidth! / 2 + SizeConfig.pageHorizontalMargins
         : SizeConfig.pageHorizontalMargins;
 
-    _pageController.animateToPage(
+    _pageController!.animateToPage(
       tab,
       duration: Duration(milliseconds: 300),
       curve: Curves.linear,
@@ -103,14 +104,14 @@ class TopSaverViewModel extends BaseViewModel {
   // ];
   ////////////////////////////////////////////
 
-  List<ScoreBoard> currentParticipants;
-  List<PastHighestSaver> _pastWinners;
+  List<ScoreBoard>? currentParticipants;
+  List<PastHighestSaver>? _pastWinners;
 
-  List<PastHighestSaver> get pastWinners => _pastWinners;
+  List<PastHighestSaver>? get pastWinners => _pastWinners;
 
-  displayUsername(username) => _userService.diplayUsername(username);
+  displayUsername(username) => _userService!.diplayUsername(username);
 
-  set pastWinners(List<PastHighestSaver> value) {
+  set pastWinners(List<PastHighestSaver>? value) {
     _pastWinners = value;
     notifyListeners();
   }
@@ -129,14 +130,14 @@ class TopSaverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String get userDisplayAmount => this._userDisplayAmount;
+  String? get userDisplayAmount => this._userDisplayAmount;
 
   set userDisplayAmount(value) {
     this._userDisplayAmount = value;
     notifyListeners();
   }
 
-  init(String eventType, bool isGameRedirected) async {
+  init(String? eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
 
     this.event = await getSingleEventDetails(eventType);
@@ -145,10 +146,10 @@ class TopSaverViewModel extends BaseViewModel {
     getRealTimeFinanceStream();
     setState(ViewState.Idle);
 
-    campaignType = event.type;
+    campaignType = event!.type;
     // eventService.getEventType(event.type);
-    _logger
-        .d("Top Saver Viewmodel initialised with saver type : ${event.type}");
+    _logger!
+        .d("Top Saver Viewmodel initialised with saver type : ${event!.type}");
     setAppbarTitle();
     fetchTopSavers();
 
@@ -156,8 +157,8 @@ class TopSaverViewModel extends BaseViewModel {
     // _logger.d(CodeFromFreq.getPastDayCode());
     // _logger.d(CodeFromFreq.getPastWeekCode());
     // _logger.d(CodeFromFreq.getPastMonthCode());
-    _logger.d(event.type);
-    _logger.d(isGameRedirected);
+    _logger!.d(event!.type);
+    _logger!.d(isGameRedirected);
     // if (event.type == "FPL" && isGameRedirected)
     //   BaseUtil.openModalBottomSheet(
     //     addToScreenStack: true,
@@ -230,7 +231,7 @@ class TopSaverViewModel extends BaseViewModel {
           eventStandingsType = "BUG_BOUNTY";
           showStandingsAndWinners = false;
           actionTitle = "Review";
-          _winnerService.fetchBugBountyWinners();
+          _winnerService!.fetchBugBountyWinners();
           break;
         }
       case Constants.NEW_FELLO_UI:
@@ -240,7 +241,7 @@ class TopSaverViewModel extends BaseViewModel {
           eventStandingsType = "NEW_FELLO";
           showStandingsAndWinners = false;
           actionTitle = "View";
-          _winnerService.fetchNewFelloWinners();
+          _winnerService!.fetchNewFelloWinners();
           break;
         }
     }
@@ -252,13 +253,13 @@ class TopSaverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<EventModel> getSingleEventDetails(String eventType) async {
-    EventModel event;
-    _logger.d(eventType);
+  Future<EventModel?> getSingleEventDetails(String? eventType) async {
+    EventModel? event;
+    _logger!.d(eventType);
 
-    final response = await _campaignRepo.getOngoingEvents();
+    final response = await _campaignRepo!.getOngoingEvents();
     if (response.code == 200) {
-      List<EventModel> ongoingEvents = response.model;
+      List<EventModel> ongoingEvents = response.model!;
       // ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
       ongoingEvents.forEach((element) {
         if (element.type == eventType) event = element;
@@ -266,12 +267,12 @@ class TopSaverViewModel extends BaseViewModel {
     } else
       BaseUtil.showNegativeAlert(
           response.errorMessage, "Please try again in sometime");
-    _logger.d(event.toString());
+    _logger!.d(event.toString());
     return event;
   }
 
   fetchTopSavers() async {
-    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
       freq: saverFreq,
       type: eventStandingsType,
     );
@@ -284,17 +285,17 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   fetchPastWinners() async {
-    List<WinnersModel> winnerModels = await getPastWinners(
+    List<WinnersModel>? winnerModels = await getPastWinners(
       Constants.GAME_TYPE_HIGHEST_SAVER,
       saverFreq,
     );
     if (winnerModels != null && winnerModels.isNotEmpty) {
       pastWinners = [];
       for (int i = 0; i < winnerModels.length; i++) {
-        for (int j = 0; j < winnerModels[i].winners.length; j++) {
-          pastWinners.add(
+        for (int j = 0; j < winnerModels[i].winners!.length; j++) {
+          pastWinners!.add(
             PastHighestSaver.fromMap(
-              winnerModels[i].winners[j],
+              winnerModels[i].winners![j],
               winnerModels[i].gametype,
               winnerModels[i].code,
             ),
@@ -310,25 +311,24 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   updateWinnersTitle() {
-    if (pastWinners.length == 1)
+    if (pastWinners!.length == 1)
       winnerTitle = winnerTitle.substring(0, winnerTitle.length - 1);
     notifyListeners();
   }
 
-  Future getProfileDpWithUid(String uid) async {
-    return await _dbModel.getUserDP(uid);
+  Future getProfileDpWithUid(String? uid) async {
+    return await _dbModel!.getUserDP(uid);
   }
 
   getUserRankIfAny() {
-    if (currentParticipants != null && currentParticipants.isNotEmpty) {
-      if (currentParticipants.firstWhere(
-              (e) => e.userid == _userService.baseUser.uid,
-              orElse: () => null) !=
+    if (currentParticipants != null && currentParticipants!.isNotEmpty) {
+      if (currentParticipants!.firstWhereOrNull(
+              (e) => e.userid == _userService!.baseUser!.uid) !=
           null) {
-        final ScoreBoard curentUserStat = currentParticipants
-            .firstWhere((e) => e.userid == _userService.baseUser.uid);
-        int rank = currentParticipants
-            .indexWhere((e) => e.userid == _userService.baseUser.uid);
+        final ScoreBoard curentUserStat = currentParticipants!
+            .firstWhere((e) => e.userid == _userService!.baseUser!.uid);
+        int rank = currentParticipants!
+            .indexWhere((e) => e.userid == _userService!.baseUser!.uid);
         userRank = rank + 1;
         userDisplayAmount = curentUserStat.displayScore; //TODO
       }
@@ -337,7 +337,7 @@ class TopSaverViewModel extends BaseViewModel {
     }
   }
 
-  Stream<DatabaseEvent> getRealTimeFinanceStream() {
+  Stream<DatabaseEvent>? getRealTimeFinanceStream() {
     return Api().fetchRealTimeFinanceStats();
   }
 
@@ -352,7 +352,7 @@ class TopSaverViewModel extends BaseViewModel {
     }
   }
 
-  String getPathForRealTimeFinanceStats(String campaignType) {
+  String getPathForRealTimeFinanceStats(String? campaignType) {
     if (campaignType == Constants.HS_DAILY_SAVER) {
       return Constants.DAILY;
     } else if (campaignType == Constants.HS_WEEKLY_SAVER) {
@@ -364,7 +364,7 @@ class TopSaverViewModel extends BaseViewModel {
     }
   }
 
-  String getDeafultRealTimeStat(String value) {
+  String getDeafultRealTimeStat(String? value) {
     if (value == Constants.HS_DAILY_SAVER) {
       return "50+";
     } else if (value == Constants.HS_WEEKLY_SAVER) {
@@ -398,12 +398,12 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   fetchHighestSavings() {
-    highestSavings = currentParticipants[0]?.displayScore ?? '';
+    highestSavings = currentParticipants![0]?.displayScore ?? '';
   }
 
-  Future<List<WinnersModel>> getPastWinners(
+  Future<List<WinnersModel>?> getPastWinners(
       String gameType, String freq) async {
-    ApiResponse<List<WinnersModel>> response = await _getterRepo.getPastWinners(
+    ApiResponse<List<WinnersModel>> response = await _getterRepo!.getPastWinners(
       type: gameType,
       freq: freq,
     );
@@ -417,15 +417,15 @@ class TopSaverViewModel extends BaseViewModel {
 }
 
 class PastHighestSaver {
-  double score;
-  int amount;
-  bool isMockUser;
-  int flc;
-  String userid;
-  String username;
-  String gameType;
-  String code;
-  String displayScore;
+  double? score;
+  int? amount;
+  bool? isMockUser;
+  int? flc;
+  String? userid;
+  String? username;
+  String? gameType;
+  String? code;
+  String? displayScore;
 
   PastHighestSaver(
       {this.score,
@@ -438,9 +438,9 @@ class PastHighestSaver {
       this.code,
       this.displayScore});
 
-  factory PastHighestSaver.fromMap(Winners map, String gameType, String code) {
+  factory PastHighestSaver.fromMap(Winners map, String? gameType, String? code) {
     return PastHighestSaver(
-        score: map.score.toDouble(),
+        score: map.score!.toDouble(),
         userid: map.userid,
         username: map.username,
         gameType: gameType,

@@ -14,8 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
-  CouponModalSheet({Key key, @required this.model}) : super(key: key);
-  final GoldBuyViewModel model;
+  CouponModalSheet({Key? key, required this.model}) : super(key: key);
+  final GoldBuyViewModel? model;
   final TextEditingController couponCodeController =
       new TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -23,17 +23,17 @@ class CouponModalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final _analyticsService = locator<AnalyticsService>();
 
-    List<String> taggedCoupons = [];
-    for (CouponModel cm in model.couponList) {
+    List<String?> taggedCoupons = [];
+    for (CouponModel cm in model!.couponList!) {
       taggedCoupons.add(cm.code);
     }
     _analyticsService
         .track(eventName: AnalyticsEvents.applyCouponTapped, properties: {
-      'Amount entered': model.goldAmountController.text,
-      'Gold weight': model.goldAmountInGrams,
-      "per gram rate": model.isGoldBuyInProgress
+      'Amount entered': model!.goldAmountController!.text,
+      'Gold weight': model!.goldAmountInGrams,
+      "per gram rate": model!.isGoldBuyInProgress
           ? "Not fetched"
-          : model.goldRates.goldBuyPrice.toString(),
+          : model!.goldRates!.goldBuyPrice.toString(),
       "coupons tagged": taggedCoupons,
     });
 
@@ -53,7 +53,7 @@ class CouponModalSheet extends StatelessWidget {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher!.didPopRoute();
                 },
               ),
             ),
@@ -101,9 +101,9 @@ class CouponModalSheet extends StatelessWidget {
                         .colour(UiConstants.kPrimaryColor),
                   ),
                   onTap: () {
-                    if (_formKey.currentState.validate()) {
-                      model.applyCoupon(couponCodeController.text.trim(), true);
-                      AppState.backButtonDispatcher.didPopRoute();
+                    if (_formKey.currentState!.validate()) {
+                      model!.applyCoupon(couponCodeController.text.trim(), true);
+                      AppState.backButtonDispatcher!.didPopRoute();
                     }
                   },
                 ),
@@ -111,7 +111,7 @@ class CouponModalSheet extends StatelessWidget {
                   minWidth: 40,
                 ),
                 validator: (val) {
-                  if (val.trim().length == 0 || val == null)
+                  if (val!.trim().length == 0 )
                     return "Please enter a code to continue";
                   if (val.trim().length < 3 || val.trim().length > 10)
                     return "Invalid Coupon code";
@@ -131,19 +131,19 @@ class CouponModalSheet extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
               physics: BouncingScrollPhysics(),
               children: List.generate(
-                model.couponList.length,
-                (i) => model.couponList[i].code == null ||
-                        model.couponList[i].description == null
+                model!.couponList!.length,
+                (i) => model!.couponList![i].code == null ||
+                        model!.couponList![i].description == null
                     ? SizedBox()
                     : Container(
                         margin:
                             EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                         child: _buildCoupenListTile(
-                          couponCode: model.couponList[i].code,
-                          desc: model.couponList[i].description,
+                          couponCode: model!.couponList![i].code!,
+                          desc: model!.couponList![i].description!,
                           onTap: () {
-                            model.applyCoupon(model.couponList[i].code, false);
-                            AppState.backButtonDispatcher.didPopRoute();
+                            model!.applyCoupon(model!.couponList![i].code, false);
+                            AppState.backButtonDispatcher!.didPopRoute();
                           },
                         ),
                       ),
@@ -164,9 +164,9 @@ class CouponModalSheet extends StatelessWidget {
   }
 
   Widget _buildCoupenListTile(
-      {@required String couponCode,
-      @required String desc,
-      @required Function onTap}) {
+      {required String couponCode,
+      required String desc,
+      required Function onTap}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
@@ -202,7 +202,7 @@ class CouponModalSheet extends StatelessWidget {
                   Container(
                     // margin:
                     //     EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                    width: SizeConfig.screenWidth * 0.55,
+                    width: SizeConfig.screenWidth! * 0.55,
                     child: Text(
                       desc,
                       style: TextStyles.sourceSans.body3
@@ -214,7 +214,7 @@ class CouponModalSheet extends StatelessWidget {
               ),
               Spacer(),
               TextButton(
-                onPressed: onTap,
+                onPressed: onTap as void Function()?,
                 child: Text(
                   'APPLY',
                   style: TextStyles.sourceSans.body3

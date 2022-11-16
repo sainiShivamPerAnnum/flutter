@@ -4,10 +4,10 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class GameTitle extends StatelessWidget {
-  final String title;
+  final String? title;
   const GameTitle({
     this.title,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class GameTitle extends StatelessWidget {
         bottom: SizeConfig.padding20,
       ),
       child: Text(
-        title,
+        title!,
         style: TextStyles.sourceSansSB.title4,
       ),
     );
@@ -26,11 +26,11 @@ class GameTitle extends StatelessWidget {
 }
 
 class GameTitleWithSubTitle extends StatelessWidget {
-  GameTitleWithSubTitle({@required this.title, this.subtitle, Key key})
+  GameTitleWithSubTitle({required this.title, this.subtitle, Key? key})
       : super(key: key);
 
   String title;
-  String subtitle;
+  String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class GameTitleWithSubTitle extends StatelessWidget {
           subtitle == null
               ? SizedBox.shrink()
               : Text(
-                  subtitle,
+                  subtitle!,
                   style: TextStyles.sourceSans.body4
                       .colour(UiConstants.kTextColor2),
                 ),

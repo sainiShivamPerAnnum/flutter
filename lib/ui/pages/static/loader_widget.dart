@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
 class FullScreenLoader extends StatelessWidget {
-  final double size;
+  final double? size;
   final bool bottomPadding;
-  const FullScreenLoader({Key key, this.size, this.bottomPadding = false})
+  const FullScreenLoader({Key? key, this.size, this.bottomPadding = false})
       : super(key: key);
 
   @override
@@ -17,9 +17,9 @@ class FullScreenLoader extends StatelessWidget {
       children: [
         Lottie.asset(
           Assets.fullScreenLoaderLottie,
-          height: size ?? SizeConfig.screenWidth / 2,
+          height: size ?? SizeConfig.screenWidth! / 2,
         ),
-        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight * 0.1)
+        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight! * 0.1)
       ],
     );
   }

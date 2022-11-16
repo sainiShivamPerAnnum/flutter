@@ -10,11 +10,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInService extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn();
-  final _userService = locator<UserService>();
-  final _userRepo = locator<UserRepository>();
-  final _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  final CustomLogger? _logger = locator<CustomLogger>();
 
-  Future<String> signInWithGoogle() async {
+  Future<String?> signInWithGoogle() async {
     try {
       if (await _googleSignIn.isSignedIn()) await _googleSignIn.signOut();
       print('Signed out');
@@ -22,7 +22,7 @@ class GoogleSignInService extends ChangeNotifier {
       print('Failed to signout: $e');
     }
     try {
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         BaseUtil.showNegativeAlert(
           "No account selected",
@@ -32,9 +32,9 @@ class GoogleSignInService extends ChangeNotifier {
       }
 
       final isEmailRegistered =
-          await _userRepo.isEmailRegistered(googleUser.email);
+          await _userRepo!.isEmailRegistered(googleUser.email);
 
-      if (isEmailRegistered.model) {
+      if (isEmailRegistered.model!) {
         BaseUtil.showNegativeAlert(
           "Email already registered",
           "Please try with another email",
@@ -43,21 +43,21 @@ class GoogleSignInService extends ChangeNotifier {
       }
 
       final userEmail = googleUser.email;
-      _userService.setEmail(userEmail);
-      final res = await _userRepo.updateUser(dMap: {
+      _userService!.setEmail(userEmail);
+      final res = await _userRepo!.updateUser(dMap: {
         BaseUser.fldIsEmailVerified: true,
         'email': userEmail,
       });
-      if (res.isSuccess() && res.model) {
-        _userService.isEmailVerified = true;
-        AppState.backButtonDispatcher.didPopRoute();
+      if (res.isSuccess() && res.model!) {
+        _userService!.isEmailVerified = true;
+        AppState.backButtonDispatcher!.didPopRoute();
         return userEmail;
       } else
         BaseUtil.showNegativeAlert(
             res.errorMessage ?? "Something is wrong!", "Please try again");
       return null;
     } catch (e) {
-      _logger.d(e.toString());
+      _logger!.d(e.toString());
       BaseUtil.showNegativeAlert(
         "Unable to verify",
         "Please try a different method",

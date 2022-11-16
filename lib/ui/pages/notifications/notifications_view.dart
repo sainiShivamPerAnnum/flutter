@@ -18,7 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class NotficationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return BaseView<NotificationsViewModel>(onModelReady: (model) {
       model.init();
     }, builder: (ctx, model, child) {
@@ -35,7 +35,7 @@ class NotficationsPage extends StatelessWidget {
           backgroundColor: UiConstants.kBackgroundColor,
           leading: IconButton(
             onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher!.didPopRoute();
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -66,18 +66,18 @@ class NotficationsPage extends StatelessWidget {
                           itemBuilder: (context, index) => InkWell(
                             onTap: () {
                               model.updateHighlightStatus(index);
-                              if (model.notifications[index].actionUri !=
+                              if (model.notifications![index].actionUri !=
                                       null &&
-                                  model.notifications[index].actionUri
+                                  model.notifications![index].actionUri!
                                       .isNotEmpty) {
-                                print(model.notifications[index].actionUri
+                                print(model.notifications![index].actionUri
                                     .toString());
-                                AppState.delegate.parseRoute(Uri.parse(
-                                    model.notifications[index].actionUri));
+                                AppState.delegate!.parseRoute(Uri.parse(
+                                    model.notifications![index].actionUri!));
                               }
                             },
                             child: Container(
-                              color: model.notifications[index].isHighlighted
+                              color: model.notifications![index].isHighlighted!
                                   ? UiConstants.primaryLight.withOpacity(0.3)
                                   : UiConstants.kBackgroundColor,
                               padding: EdgeInsets.fromLTRB(
@@ -98,7 +98,7 @@ class NotficationsPage extends StatelessWidget {
                                             SizeConfig.notificationAvatarRadius,
                                         child: SvgPicture.asset(
                                           model.getNotificationAsset(
-                                              model.notifications[index].title),
+                                              model.notifications![index].title!),
                                           color: UiConstants.primaryColor,
                                           height: SizeConfig.iconSize1,
                                           fit: BoxFit.contain,
@@ -118,7 +118,7 @@ class NotficationsPage extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    model.notifications[index]
+                                                    model.notifications![index]
                                                             .title ??
                                                         "Title",
                                                     maxLines: 2,
@@ -135,9 +135,9 @@ class NotficationsPage extends StatelessWidget {
                                                   DateHelper.timeAgoSinceDate(
                                                     DateTime.fromMillisecondsSinceEpoch(
                                                             model
-                                                                    .notifications[
+                                                                    .notifications![
                                                                         index]
-                                                                    .createdTime
+                                                                    .createdTime!
                                                                     .seconds *
                                                                 1000)
                                                         .toString(),
@@ -155,7 +155,7 @@ class NotficationsPage extends StatelessWidget {
                                               padding: EdgeInsets.only(
                                                   right: SizeConfig.padding28),
                                               child: Text(
-                                                model.notifications[index]
+                                                model.notifications![index]
                                                         .subtitle ??
                                                     "Subtitle",
                                                 style: TextStyles.body4
@@ -167,7 +167,7 @@ class NotficationsPage extends StatelessWidget {
                                       )
                                     ],
                                   ),
-                                  index != model.notifications.length
+                                  index != model.notifications!.length
                                       ? Container(
                                           margin: EdgeInsets.only(
                                               top: SizeConfig.padding24),

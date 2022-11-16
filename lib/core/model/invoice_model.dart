@@ -13,15 +13,15 @@ class Invoice {
   final String total;
 
   const Invoice(
-      {@required this.info,
-      @required this.supplier,
-      @required this.customer,
-      @required this.items,
-      @required this.bgImage,
-      @required this.brokerLogo,
-      @required this.description,
-      @required this.sellerLogo,
-      @required this.total});
+      {required this.info,
+      required this.supplier,
+      required this.customer,
+      required this.items,
+      required this.bgImage,
+      required this.brokerLogo,
+      required this.description,
+      required this.sellerLogo,
+      required this.total});
 }
 
 class InvoiceInfo {
@@ -29,8 +29,8 @@ class InvoiceInfo {
   final String date;
 
   const InvoiceInfo({
-    @required this.number,
-    @required this.date,
+    required this.number,
+    required this.date,
   });
 }
 
@@ -41,20 +41,20 @@ class InvoiceItem {
   final String amount;
 
   const InvoiceItem({
-    @required this.description,
-    @required this.grams,
-    @required this.rate,
-    @required this.amount,
+    required this.description,
+    required this.grams,
+    required this.rate,
+    required this.amount,
   });
 }
 
 class Customer {
-  final String name;
-  final String address;
+  final String? name;
+  final String? address;
 
   const Customer({
-    @required this.name,
-    @required this.address,
+    required this.name,
+    required this.address,
   });
 }
 
@@ -63,8 +63,8 @@ class Supplier {
   final String GSTIN;
 
   const Supplier({
-    @required this.name,
-    @required this.GSTIN,
+    required this.name,
+    required this.GSTIN,
   });
 }
 
@@ -74,8 +74,8 @@ class Description {
   final String hsn;
 
   const Description({
-    @required this.metal,
-    @required this.hsn,
-    @required this.trnId,
+    required this.metal,
+    required this.hsn,
+    required this.trnId,
   });
 }

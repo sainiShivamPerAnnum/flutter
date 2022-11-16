@@ -9,15 +9,15 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   Log log = new Log("OtpInputScreen");
   String _loaderMessage = "Enter the received OTP..";
   FocusNode otpFocusNode = FocusNode();
-  LoginControllerViewModel parentModelInstance;
-  String mobileNo;
+  late LoginControllerViewModel parentModelInstance;
+  String? mobileNo;
   bool _otpFieldEnabled = true;
   bool _autoDetectingOtp = true;
   bool _isResendClicked = false;
   bool _isTriesExceeded = false;
   bool _showResendOption = false;
 
-  get otpFieldEnabled => _otpFieldEnabled;
+  bool get otpFieldEnabled => _otpFieldEnabled;
   get isTriesExceeded => _isTriesExceeded;
   get isResendClicked => _isResendClicked;
   get autoDetectingOtp => _autoDetectingOtp;
@@ -82,7 +82,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   @override
   void codeUpdated() {
     if (code != null) {
-      pinEditingController.text = code;
+      pinEditingController.text = code!;
       parentModelInstance.processScreenInput(1);
       notifyListeners();
     }

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosavePerks extends StatelessWidget {
-  final String image;
-  final String svg;
+  final String? image;
+  final String? svg;
   final String text;
 
-  AutosavePerks({this.image, @required this.text, this.svg});
+  AutosavePerks({this.image, required this.text, this.svg});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +31,11 @@ class AutosavePerks extends StatelessWidget {
                 backgroundColor: UiConstants.tertiaryLight,
                 child: image != null
                     ? Image.asset(
-                        image,
+                        image!,
                         height: SizeConfig.padding16,
                       )
                     : SvgPicture.asset(
-                        svg,
+                        svg!,
                         height: SizeConfig.padding16,
                       ),
                 radius: SizeConfig.padding16,

@@ -23,7 +23,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class NewWebGameLeaderBoardView extends StatelessWidget {
-  const NewWebGameLeaderBoardView({Key key}) : super(key: key);
+  const NewWebGameLeaderBoardView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +34,16 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties.LeaderBoardState
       ],
       builder: (context, m, properties) {
-        return m.isLeaderboardLoading
+        return m!.isLeaderboardLoading
             ? LeaderboardShimmer()
             : (m.WebGameLeaderBoard != null &&
-                    m.WebGameLeaderBoard.scoreboard != null &&
-                    m.WebGameLeaderBoard.scoreboard.isNotEmpty)
+                    m.WebGameLeaderBoard!.scoreboard != null &&
+                    m.WebGameLeaderBoard!.scoreboard!.isNotEmpty)
                 // &&
                 // (m.userProfilePicUrl.length >=
                 //     m.WebGameLeaderBoard.scoreboard.length)
                 ? NewLeaderBoardView(
-                    scoreBoard: m.WebGameLeaderBoard.scoreboard,
+                    scoreBoard: m.WebGameLeaderBoard!.scoreboard,
                     userProfilePicUrl: m.userProfilePicUrl,
                     currentUserRank: m.currentUserRank,
                     isUserInTopThree: m.isUserInTopThree,
@@ -69,14 +69,14 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 
 class NewLeaderBoardView extends StatelessWidget {
   NewLeaderBoardView({
-    @required this.scoreBoard,
-    @required this.userProfilePicUrl,
-    @required this.isUserInTopThree,
-    @required this.currentUserRank,
+    required this.scoreBoard,
+    required this.userProfilePicUrl,
+    required this.isUserInTopThree,
+    required this.currentUserRank,
   });
 
-  final List<ScoreBoard> scoreBoard;
-  final List<String> userProfilePicUrl;
+  final List<ScoreBoard>? scoreBoard;
+  final List<String?> userProfilePicUrl;
   final bool isUserInTopThree;
   final int currentUserRank;
   @override
@@ -98,30 +98,30 @@ class NewLeaderBoardView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (scoreBoard.length >= 3)
+          if (scoreBoard!.length >= 3)
             WinnerWidgets(
               scoreboard: scoreBoard,
               userProfilePicUrl: userProfilePicUrl,
             ),
-          if (scoreBoard.length >= 7 &&
+          if (scoreBoard!.length >= 7 &&
               !isUserInTopThree &&
               currentUserRank != 0)
             UserRank(
-              currentUserScore: scoreBoard[currentUserRank - 1],
+              currentUserScore: scoreBoard![currentUserRank - 1],
               currentUserRank: currentUserRank,
             ),
           RemainingRank(
             userProfilePicUrl: userProfilePicUrl,
             scoreboard: scoreBoard,
           ),
-          if (scoreBoard.length >= 7)
+          if (scoreBoard!.length >= 7)
             SizedBox(
               height: SizeConfig.padding12,
             ),
-          if (scoreBoard.length >= 7)
+          if (scoreBoard!.length >= 7)
             TextButton(
               onPressed: () {
-                AppState.delegate.appState.currentAction = PageAction(
+                AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.addPage,
                   page: TopPlayerLeaderboardPageConfig,
                 );
@@ -154,26 +154,26 @@ class NewLeaderBoardView extends StatelessWidget {
 //
 class RemainingRank extends StatelessWidget {
   RemainingRank({
-    Key key,
-    @required this.userProfilePicUrl,
-    @required this.scoreboard,
+    Key? key,
+    required this.userProfilePicUrl,
+    required this.scoreboard,
   }) : super(key: key);
-  final List<String> userProfilePicUrl;
-  final _userService = locator<UserService>();
-  final List<ScoreBoard> scoreboard;
+  final List<String?> userProfilePicUrl;
+  final UserService? _userService = locator<UserService>();
+  final List<ScoreBoard>? scoreboard;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: scoreboard.length <= 2
-          ? scoreboard.length
-          : scoreboard.length <= 6
-              ? scoreboard.length - 3
+      itemCount: scoreboard!.length <= 2
+          ? scoreboard!.length
+          : scoreboard!.length <= 6
+              ? scoreboard!.length - 3
               : 3,
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        int countedIndex = scoreboard.length <= 2 ? index : index + 3;
+        int countedIndex = scoreboard!.length <= 2 ? index : index + 3;
         return Padding(
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.padding20,
@@ -201,7 +201,7 @@ class RemainingRank extends StatelessWidget {
                           )
                         : ClipOval(
                             child: CachedNetworkImage(
-                              imageUrl: userProfilePicUrl[countedIndex],
+                              imageUrl: userProfilePicUrl[countedIndex]!,
                               errorWidget: (a, b, c) => DefaultAvatar(),
                               placeholder: (ctx, a) => DefaultAvatar(),
                               width: SizeConfig.iconSize5,
@@ -214,7 +214,7 @@ class RemainingRank extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        '${_userService.diplayUsername(scoreboard[countedIndex].username)}',
+                        '${_userService!.diplayUsername(scoreboard![countedIndex].username!)}',
                         style: TextStyles.sourceSans.body3.setOpecity(0.8),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -224,7 +224,7 @@ class RemainingRank extends StatelessWidget {
                 ),
               ),
               Text(
-                '${(scoreboard[countedIndex].score).toInt()} points',
+                '${scoreboard![countedIndex].score!.toInt()} points',
                 style: TextStyles.rajdhaniM.body3,
               ),
             ],

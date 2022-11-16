@@ -20,20 +20,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class LoginOtpView extends StatefulWidget {
-  final VoidCallback otpEntered;
-  final VoidCallback resendOtp;
-  final VoidCallback changeNumber;
+  final VoidCallback? otpEntered;
+  final VoidCallback? resendOtp;
+  final VoidCallback? changeNumber;
   static const int index = 1; //pager index
-  final String mobileNo;
+  final String? mobileNo;
   final LoginControllerViewModel loginModel;
 
   LoginOtpView({
-    Key key,
+    Key? key,
     this.otpEntered,
     this.resendOtp,
     this.changeNumber,
     this.mobileNo,
-    @required this.loginModel,
+    required this.loginModel,
   }) : super(key: key);
 
   @override
@@ -41,13 +41,13 @@ class LoginOtpView extends StatefulWidget {
 }
 
 class LoginOtpViewState extends State<LoginOtpView> {
-  LoginOtpViewModel model;
+  LoginOtpViewModel? model;
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     final baseProvider = Provider.of<BaseUtil>(context, listen: true);
-    final logger = locator<CustomLogger>();
+    final CustomLogger? logger = locator<CustomLogger>();
     return BaseView<LoginOtpViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -97,7 +97,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 ),
                 onChanged: (value) {
                   if (value.length == 6) {
-                    if (widget.otpEntered != null) widget.otpEntered();
+                    if (widget.otpEntered != null) widget.otpEntered!();
                   }
                 },
                 onSubmit: (pin) {
@@ -134,12 +134,12 @@ class LoginOtpViewState extends State<LoginOtpView> {
 
                       if (!model.isResendClicked) {
                         //ensure that button isnt clicked multiple times
-                        if (widget.resendOtp != null) widget.resendOtp();
+                        if (widget.resendOtp != null) widget.resendOtp!();
                       }
 
                       if (baseProvider.isOtpResendCount < 2) {
                         baseProvider.isOtpResendCount++;
-                        logger.d(baseProvider.isOtpResendCount);
+                        logger!.d(baseProvider.isOtpResendCount);
                         BaseUtil.showPositiveAlert(
                           "OTP resent successfully",
                           "Please wait for the new otp",
@@ -157,7 +157,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
               ),
             if (model.isTriesExceeded)
               Text(
-                locale.obOtpTryExceed,
+                locale!.obOtpTryExceed,
                 textAlign: TextAlign.center,
                 style: TextStyles.body2.colour(
                   Colors.red[400],
@@ -186,7 +186,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     builder: (
                       BuildContext context,
                       Duration value,
-                      Widget child,
+                      Widget? child,
                     ) {
                       final minutes =
                           (value.inMinutes).toString().padLeft(2, '0');

@@ -27,24 +27,24 @@ import 'package:felloapp/base_util.dart';
 import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
-  final _getterRepo = locator<GetterRepository>();
-  final _userService = locator<UserService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final GameRepo gamesRepo = locator<GameRepo>();
-  final _baseUtil = locator<BaseUtil>();
+  final GetterRepository? _getterRepo = locator<GetterRepository>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final GameRepo? gamesRepo = locator<GameRepo>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
   bool _showSecurityMessageAtTop = true;
   final TambolaWidgetController _tambolaController = TambolaWidgetController();
 
-  String _message;
-  String _sessionId;
+  String? _message;
+  String? _sessionId;
   bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
 
-  List<PromoCardModel> _offerList;
-  List<GameModel> _gamesListData;
-  GameModel gow;
-  List<GameModel> trendingGamesListData;
-  List<GameModel> moreGamesListData;
+  List<PromoCardModel>? _offerList;
+  List<GameModel>? _gamesListData;
+  GameModel? gow;
+  late List<GameModel> trendingGamesListData;
+  late List<GameModel> moreGamesListData;
 
   //Related to the info box/////////////////
   String boxHeading = "How Fello games work?";
@@ -62,19 +62,19 @@ class PlayViewModel extends BaseViewModel {
   ];
   ////////////////////////////////////////////
 
-  List<GameModel> get gamesListData => _gamesListData;
+  List<GameModel>? get gamesListData => _gamesListData;
 
   get isGamesListDataLoading => this._isGamesListDataLoading;
 
-  set gamesListData(List<GameModel> games) {
+  set gamesListData(List<GameModel>? games) {
     _gamesListData = games;
     if (_gamesListData != null) {
       trendingGamesListData = [];
       moreGamesListData = [];
-      gow = gamesListData?.firstWhere((game) => game.isGOW,
-          orElse: () => gamesListData[0]);
-      _gamesListData.forEach((game) {
-        if (game.isTrending)
+      gow = gamesListData?.firstWhere((game) => game.isGOW!,
+          orElse: () => gamesListData![0]);
+      _gamesListData!.forEach((game) {
+        if (game.isTrending!)
           trendingGamesListData.add(game);
         else
           moreGamesListData.add(game);
@@ -97,14 +97,14 @@ class PlayViewModel extends BaseViewModel {
   }
 
   openProfile() {
-    _baseUtil.openProfileDetailsScreen();
+    _baseUtil!.openProfileDetailsScreen();
   }
 
   init() async {
     isGamesListDataLoading = true;
-    final response = await gamesRepo.getGames();
+    final response = await gamesRepo!.getGames();
     showSecurityMessageAtTop =
-        _userService.userJourneyStats.mlIndex > 6 ? false : true;
+        _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {
       gamesListData = response.model;
       isGamesListDataLoading = false;
@@ -131,7 +131,7 @@ class PlayViewModel extends BaseViewModel {
             heading: model.boxHeading,
             assetList: model.boxAssets,
             titleList: model.boxTitles,
-            height: SizeConfig.screenWidth * 0.3,
+            height: SizeConfig.screenWidth! * 0.3,
           ));
           break;
         case 'GOW':
@@ -151,8 +151,8 @@ class PlayViewModel extends BaseViewModel {
   }
 
   void openGame(GameModel game) {
-    _analyticsService.track(eventName: game.analyticEvent);
-    AppState.delegate.appState.currentAction =
+    _analyticsService!.track(eventName: game.analyticEvent);
+    AppState.delegate!.appState.currentAction =
         PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 }

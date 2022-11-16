@@ -17,10 +17,10 @@ import 'package:lottie/lottie.dart';
 
 class LendboxLoadingView extends StatelessWidget {
   final TransactionType transactionType;
-  final _txnService = locator<LendboxTransactionService>();
+  final LendboxTransactionService? _txnService = locator<LendboxTransactionService>();
   final int waitTimeInSec = 45;
 
-  LendboxLoadingView({Key key, @required this.transactionType})
+  LendboxLoadingView({Key? key, required this.transactionType})
       : super(key: key);
 
   @override
@@ -40,7 +40,7 @@ class LendboxLoadingView extends StatelessWidget {
         ),
         Expanded(
           child: Lottie.asset(Assets.floDepostLoadingLottie,
-              height: SizeConfig.screenHeight * 0.7),
+              height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(
           children: [
@@ -57,10 +57,10 @@ class LendboxLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () {},
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final seconds = value.inSeconds % 60;
                 return Container(
-                  width: SizeConfig.screenWidth * 0.7,
+                  width: SizeConfig.screenWidth! * 0.7,
                   child: LinearProgressIndicator(
                     value: 1 - (seconds / waitTimeInSec),
                     color: UiConstants.primaryColor,
@@ -77,25 +77,25 @@ class LendboxLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _txnService
-                    .processPolling(_txnService.pollingPeriodicTimer);
-                if (_txnService.currentTransactionState !=
+                await _txnService!
+                    .processPolling(_txnService!.pollingPeriodicTimer);
+                if (_txnService!.currentTransactionState !=
                     TransactionState.ongoing) return;
 
-                _txnService.pollingPeriodicTimer?.cancel();
+                _txnService!.pollingPeriodicTimer?.cancel();
 
-                _txnService.currentTransactionState = TransactionState.idle;
+                _txnService!.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 AppState.unblockNavigation();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
                 showTransactionPendingDialog();
                 log("Screen Stack:${AppState.screenStack.toString()}");
               },
-              builder: (BuildContext context, Duration value, Widget child) {
+              builder: (BuildContext context, Duration value, Widget? child) {
                 final minutes = value.inMinutes;
                 final seconds = value.inSeconds % 60;
                 return Text(

@@ -13,10 +13,10 @@ class LendboxRepo extends BaseRepo {
 
   Future<ApiResponse<String>> createWithdrawal(
     int amount,
-    String payoutSourceId,
+    String? payoutSourceId,
   ) async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       final response = await APIService.instance.postData(
@@ -32,7 +32,7 @@ class LendboxRepo extends BaseRepo {
       final data = response['data'];
       return ApiResponse(model: data['txnId'], code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -40,7 +40,7 @@ class LendboxRepo extends BaseRepo {
   Future<ApiResponse<LendboxWithdrawableQuantity>>
       getWithdrawableQuantity() async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(
@@ -53,7 +53,7 @@ class LendboxRepo extends BaseRepo {
       return ApiResponse(
           model: LendboxWithdrawableQuantity.fromMap(data), code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

@@ -13,7 +13,7 @@ import 'package:shimmer/shimmer.dart';
 
 class Campaigns extends StatelessWidget {
   final SaveViewModel model;
-  const Campaigns({Key key, @required this.model}) : super(key: key);
+  const Campaigns({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class Campaigns extends StatelessWidget {
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveVm;
 
-  const CampaignCardSection({Key key, @required this.saveVm}) : super(key: key);
+  const CampaignCardSection({Key? key, required this.saveVm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,26 +44,21 @@ class CampaignCardSection extends StatelessWidget {
         right: SizeConfig.padding16,
       ),
       child: Container(
-        height: SizeConfig.screenWidth * 0.57,
+        height: SizeConfig.screenWidth! * 0.57,
         child: saveVm.isChallengesLoading
-            ? CampaignCard(
-                event: null,
-                subText: Text(''),
-                isLoading: true,
-                topPadding: SizeConfig.padding16,
-                leftPadding: SizeConfig.padding20)
+            ? SizedBox()
             : CarousalWidget(
-                height: SizeConfig.screenWidth * 0.49,
+                height: SizeConfig.screenWidth! * 0.49,
                 width: SizeConfig.screenWidth,
                 widgets: List.generate(
-                  saveVm.ongoingEvents.length,
+                  saveVm.ongoingEvents!.length,
                   (index) {
-                    final event = saveVm.ongoingEvents[index];
+                    final event = saveVm.ongoingEvents![index];
 
                     return GestureDetector(
                       onTap: () {
                         saveVm.trackChallangeTapped(event.type, index);
-                        AppState.delegate.parseRoute(Uri.parse(event.type));
+                        AppState.delegate!.parseRoute(Uri.parse(event.type));
                       },
                       child: Padding(
                         padding: EdgeInsets.only(right: SizeConfig.padding10),
@@ -75,12 +70,12 @@ class CampaignCardSection extends StatelessWidget {
                           subText: FittedBox(
                             fit: BoxFit.contain,
                             child: Container(
-                              width: SizeConfig.screenWidth * 0.4,
+                              width: SizeConfig.screenWidth! * 0.4,
                               padding: EdgeInsets.only(
                                 top: SizeConfig.padding8,
                               ),
                               child: Text(
-                                event?.subtitle ?? '',
+                                event.subtitle ?? '',
                                 style: TextStyles.sourceSans.body4,
                               ),
                             ),
@@ -104,11 +99,11 @@ class IOSCampaignCard extends StatelessWidget {
   final double leftPadding;
 
   const IOSCampaignCard(
-      {@required this.event,
-      @required this.subText,
-      @required this.isLoading,
-      @required this.topPadding,
-      @required this.leftPadding});
+      {required this.event,
+      required this.subText,
+      required this.isLoading,
+      required this.topPadding,
+      required this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +132,7 @@ class IOSCampaignCard extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.padding16),
                   child: Container(
-                    height: SizeConfig.screenWidth * 0.18,
+                    height: SizeConfig.screenWidth! * 0.18,
                     decoration: BoxDecoration(
                       color: UiConstants.kSecondaryBackgroundColor,
                     ),
@@ -203,11 +198,11 @@ class CampaignCard extends StatelessWidget {
   final double leftPadding;
 
   const CampaignCard(
-      {@required this.event,
-      @required this.subText,
-      @required this.isLoading,
-      @required this.topPadding,
-      @required this.leftPadding});
+      {required this.event,
+      required this.subText,
+      required this.isLoading,
+      required this.topPadding,
+      required this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +228,7 @@ class CampaignCard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(SizeConfig.padding16),
                 child: Container(
-                  height: SizeConfig.screenWidth * 0.18,
+                  height: SizeConfig.screenWidth! * 0.18,
                   decoration: BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
                   ),

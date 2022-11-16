@@ -1,19 +1,19 @@
 class CreateSubscriptionResponseModel {
-  bool success;
-  Data data;
+  bool? success;
+  Data? data;
 
   CreateSubscriptionResponseModel({this.success, this.data});
 
   CreateSubscriptionResponseModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    success = json['success'] ?? false;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
@@ -21,14 +21,14 @@ class CreateSubscriptionResponseModel {
   Map<String, dynamic> toMap() {
     return {
       'success': success,
-      'data': data.toMap(),
+      'data': data!.toMap(),
     };
   }
 
   factory CreateSubscriptionResponseModel.fromMap(Map<String, dynamic> map) {
     return CreateSubscriptionResponseModel(
       success: map['success'] ?? false,
-      data: Data.fromMap(map['data']),
+      data: map['data'] != null ?     Data.fromMap(map['data']) : Data.base(),
     );
   }
 
@@ -38,11 +38,11 @@ class CreateSubscriptionResponseModel {
 }
 
 class Data {
-  String temptoken;
-  String subscriptionId;
-  String orderId;
-  String callbackUrl;
-  String authenticationUrl;
+  String? temptoken;
+  String? subscriptionId;
+  String? orderId;
+  String? callbackUrl;
+  String? authenticationUrl;
 
   Data(
       {this.temptoken,
@@ -51,14 +51,22 @@ class Data {
       this.callbackUrl,
       this.authenticationUrl});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    temptoken = json['temptoken'];
-    subscriptionId = json['subscriptionId'];
-    orderId = json['orderId'];
-    callbackUrl = json['callbackUrl'];
-    authenticationUrl = json['authenticationUrl'];
+  Data.base() {
+    temptoken = '';
+    subscriptionId = '';
+    orderId = '';
+    callbackUrl = '';
+    authenticationUrl = '';
   }
 
+
+  Data.fromJson(Map<String, dynamic> json) {
+    temptoken = json['temptoken'] ?? '';
+    subscriptionId = json['subscriptionId'] ?? '';
+    orderId = json['orderId'] ?? '';
+    callbackUrl = json['callbackUrl'] ?? '';
+    authenticationUrl = json['authenticationUrl'] ?? '';
+  }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
@@ -95,3 +103,4 @@ class Data {
     return 'Data(tempToken: $temptoken, subscriptionId: $subscriptionId, orderId: $orderId, callbackUrl: $callbackUrl authenticationUrl: $authenticationUrl)';
   }
 }
+

@@ -33,13 +33,11 @@ import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WebHomeView extends StatelessWidget {
-  const WebHomeView({Key key, @required this.game}) : super(key: key);
+  const WebHomeView({Key? key, required this.game}) : super(key: key);
   final String game;
 
   @override
   Widget build(BuildContext context) {
-    StreamController controller = StreamController.broadcast();
-
     ScrollController _controller = ScrollController();
 
     return BaseView<WebHomeViewModel>(
@@ -71,18 +69,18 @@ class WebHomeView extends StatelessWidget {
                             duration: Duration(milliseconds: 100),
                             curve: Curves.easeIn,
                             opacity: constraints.scrollOffset >
-                                    (SizeConfig.screenWidth * 0.35)
+                                    (SizeConfig.screenWidth! * 0.35)
                                 ? 1
                                 : 0, //constraints.scrollOffset.clamp(0, 1),
                             child: Text(
-                              model.currentGameModel.gameName,
+                              model.currentGameModel!.gameName!,
                               style: TextStyles.rajdhaniB.title5
                                   .colour(Colors.white),
                             ),
                           ),
                           pinned: true,
                           centerTitle: false,
-                          backgroundColor: model.currentGameModel.shadowColor,
+                          backgroundColor: model.currentGameModel!.shadowColor,
                           actions: [
                             Padding(
                               padding:
@@ -94,7 +92,7 @@ class WebHomeView extends StatelessWidget {
                               ),
                             ),
                           ],
-                          expandedHeight: SizeConfig.screenWidth * 0.45,
+                          expandedHeight: SizeConfig.screenWidth! * 0.45,
                           flexibleSpace: FlexibleSpaceBar(
                             background: model.isLoading
                                 ? Shimmer.fromColors(
@@ -107,7 +105,7 @@ class WebHomeView extends StatelessWidget {
                                     ),
                                   )
                                 : Container(
-                                    color: model.currentGameModel.shadowColor,
+                                    color: model.currentGameModel!.shadowColor,
                                     padding: EdgeInsets.only(
                                         top: SizeConfig.viewInsets.top +
                                             SizeConfig.padding12,
@@ -124,15 +122,15 @@ class WebHomeView extends StatelessWidget {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                  model
-                                                      .currentGameModel.gameName
+                                                  model.currentGameModel!
+                                                      .gameName!
                                                       .split(' ')
                                                       .first,
                                                   style: TextStyles
                                                       .rajdhaniB.title1),
                                               Text(
-                                                  model
-                                                      .currentGameModel.gameName
+                                                  model.currentGameModel!
+                                                      .gameName!
                                                       .split(' ')
                                                       .last,
                                                   style: TextStyles
@@ -142,12 +140,13 @@ class WebHomeView extends StatelessWidget {
                                             ]),
                                         Spacer(),
                                         SvgPicture.network(
-                                            model.currentGameModel.thumbnailUri,
+                                            model.currentGameModel!
+                                                .thumbnailUri!,
                                             fit: BoxFit.cover,
                                             height:
-                                                SizeConfig.screenWidth * 0.5,
+                                                SizeConfig.screenWidth! * 0.5,
                                             width:
-                                                SizeConfig.screenWidth * 0.5),
+                                                SizeConfig.screenWidth! * 0.5),
                                       ],
                                     ),
                                   ),
@@ -175,8 +174,8 @@ class WebHomeView extends StatelessWidget {
                                       highlightColor:
                                           UiConstants.kBackgroundColor,
                                       child: Container(
-                                        width: SizeConfig.screenWidth * 0.155,
-                                        height: SizeConfig.screenWidth * 0.120,
+                                        width: SizeConfig.screenWidth! * 0.155,
+                                        height: SizeConfig.screenWidth! * 0.120,
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -187,8 +186,8 @@ class WebHomeView extends StatelessWidget {
                                       highlightColor:
                                           UiConstants.kBackgroundColor,
                                       child: Container(
-                                        width: SizeConfig.screenWidth * 0.155,
-                                        height: SizeConfig.screenWidth * 0.120,
+                                        width: SizeConfig.screenWidth! * 0.155,
+                                        height: SizeConfig.screenWidth! * 0.120,
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -199,8 +198,8 @@ class WebHomeView extends StatelessWidget {
                                       highlightColor:
                                           UiConstants.kBackgroundColor,
                                       child: Container(
-                                        width: SizeConfig.screenWidth * 0.155,
-                                        height: SizeConfig.screenWidth * 0.120,
+                                        width: SizeConfig.screenWidth! * 0.155,
+                                        height: SizeConfig.screenWidth! * 0.120,
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -215,14 +214,14 @@ class WebHomeView extends StatelessWidget {
                                     StreamView(model: model, game: game),
                                     GameInfoBlock(
                                       coin:
-                                          '${NumberFormat.compact().format(model.currentGameModel.prizeAmount)}',
+                                          '${NumberFormat.compact().format(model.currentGameModel!.prizeAmount)}',
                                       coinText: 'Win upto',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.rewardGameAsset,
                                     ),
                                     GameInfoBlock(
                                       coin:
-                                          '${model.currentGameModel.playCost}',
+                                          '${model.currentGameModel!.playCost}',
                                       coinText: 'Per Game',
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.token,
@@ -248,7 +247,7 @@ class WebHomeView extends StatelessWidget {
                                               SizeConfig.roundness5),
                                         ),
                                         width: SizeConfig.screenWidth,
-                                        height: SizeConfig.screenWidth * 0.021,
+                                        height: SizeConfig.screenWidth! * 0.021,
                                       ),
                                       Container(
                                         margin:
@@ -258,8 +257,8 @@ class WebHomeView extends StatelessWidget {
                                           borderRadius: BorderRadius.circular(
                                               SizeConfig.roundness5),
                                         ),
-                                        width: SizeConfig.screenWidth / 2,
-                                        height: SizeConfig.screenWidth * 0.021,
+                                        width: SizeConfig.screenWidth! / 2,
+                                        height: SizeConfig.screenWidth! * 0.021,
                                       ),
                                     ],
                                   ),
@@ -268,22 +267,22 @@ class WebHomeView extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding16),
                                   child: Text(
-                                    model.currentGameModel.description,
+                                    model.currentGameModel!.description!,
                                     style: TextStyles.sourceSans.body3
                                         .colour(Colors.grey.shade600),
                                     maxLines: 3,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
-                          if (model.currentCoinValue <
-                              model.currentGameModel.playCost)
+                          if (model.currentCoinValue! <
+                              model.currentGameModel!.playCost!)
                             RechargeOptions(model: model),
                           SizedBox(
                             height: SizeConfig.padding32,
                           ),
                           RewardLeaderboardView(game: game),
-                          if (model.currentCoinValue >=
-                              model.currentGameModel.playCost)
+                          if (model.currentCoinValue! >=
+                              model.currentGameModel!.playCost!)
                             RechargeOptions(model: model),
                           Padding(
                               padding: EdgeInsets.only(
@@ -308,7 +307,7 @@ class WebHomeView extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: SizeConfig.screenHeight * 0.105,
+                    height: SizeConfig.screenHeight! * 0.105,
                     decoration: BoxDecoration(color: UiConstants.gameCardColor),
                     width: SizeConfig.screenWidth,
                     child: Padding(
@@ -327,7 +326,7 @@ class WebHomeView extends StatelessWidget {
                     ),
                   ),
                 ),
-                model.currentCoinValue < model.currentGameModel.playCost
+                model.currentCoinValue! < model.currentGameModel!.playCost!
                     ? PlayButtonOverlapper()
                     : SizedBox.shrink(),
               ],
@@ -341,7 +340,7 @@ class WebHomeView extends StatelessWidget {
 
 class RechargeOptions extends StatelessWidget {
   final WebHomeViewModel model;
-  const RechargeOptions({Key key, @required this.model}) : super(key: key);
+  const RechargeOptions({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -361,7 +360,7 @@ class RechargeOptions extends StatelessWidget {
           margin: EdgeInsets.only(
             top: SizeConfig.padding16,
           ),
-          height: SizeConfig.screenWidth * 0.10,
+          height: SizeConfig.screenWidth! * 0.10,
           width: SizeConfig.screenWidth,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -381,10 +380,10 @@ class RechargeOptions extends StatelessWidget {
 }
 
 class PlayButtonOverlapper extends StatelessWidget {
-  final _analytics = locator<AnalyticsService>();
+  final AnalyticsService? _analytics = locator<AnalyticsService>();
 
   PlayButtonOverlapper({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -396,7 +395,8 @@ class PlayButtonOverlapper extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (JourneyService.isAvatarAnimationInProgress) return;
-              _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+              _analytics!
+                  .track(eventName: AnalyticsEvents.addFLCTokensTopRight);
               BaseUtil.openModalBottomSheet(
                 addToScreenStack: true,
                 backgroundColor: UiConstants.gameCardColor,
@@ -455,7 +455,7 @@ class PlayButtonOverlapper extends StatelessWidget {
 }
 
 class StreamView extends StatelessWidget {
-  StreamView({Key key, @required this.model, @required this.game})
+  StreamView({Key? key, required this.model, required this.game})
       : super(key: key);
 
   final WebHomeViewModel model;
@@ -479,10 +479,11 @@ class StreamView extends StatelessWidget {
         if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
           Map<Object, Object> fetchedData = Map<dynamic, dynamic>.from(
               (snapshot.data as DatabaseEvent).snapshot.value
-                  as Map<dynamic, dynamic>);
-          String fieldToFetch = fetchedData['field'] as String;
+                  as Map<dynamic, dynamic>) as Map<Object, Object>;
+          String? fieldToFetch = fetchedData['field'] as String?;
 
-          Map<Object, Object> requiredTimeData = fetchedData[fieldToFetch];
+          Map<Object, Object> requiredTimeData =
+              fetchedData[fieldToFetch!] as Map<Object, Object>;
 
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
@@ -512,13 +513,13 @@ class StreamView extends StatelessWidget {
 }
 
 class RechargeBox extends StatelessWidget {
-  final RechargeOption rechargeOption;
+  final RechargeOption? rechargeOption;
 
-  const RechargeBox({Key key, this.rechargeOption}) : super(key: key);
+  const RechargeBox({Key? key, this.rechargeOption}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return rechargeOption.isCustom
+    return rechargeOption!.isCustom
         ? InkWell(
             onTap: () {
               return BaseUtil().openDepositOptionsModalSheet();
@@ -536,7 +537,7 @@ class RechargeBox extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.add,
-                  size: SizeConfig.screenWidth * 0.05,
+                  size: SizeConfig.screenWidth! * 0.05,
                   color: Colors.white,
                 ),
               ),
@@ -545,7 +546,7 @@ class RechargeBox extends StatelessWidget {
         : InkWell(
             onTap: () {
               return BaseUtil()
-                  .openDepositOptionsModalSheet(amount: rechargeOption.amount);
+                  .openDepositOptionsModalSheet(amount: rechargeOption!.amount);
             },
             child: Container(
               margin: EdgeInsets.only(right: SizeConfig.padding12),
@@ -570,7 +571,7 @@ class RechargeBox extends StatelessWidget {
                   ),
                   SizedBox(width: SizeConfig.padding4),
                   Text(
-                    rechargeOption.amount.toString(),
+                    rechargeOption!.amount.toString(),
                     style: TextStyles.sourceSansSB.body3,
                   ),
                 ],
@@ -581,12 +582,12 @@ class RechargeBox extends StatelessWidget {
 }
 
 class GameInfoBlock extends StatelessWidget {
-  final String coin, coinText, assetUrl;
-  final double assetHeight;
+  final String? coin, coinText, assetUrl;
+  final double? assetHeight;
   final bool isDot;
 
   const GameInfoBlock({
-    Key key,
+    Key? key,
     this.coin,
     this.coinText,
     this.assetHeight,
@@ -608,19 +609,19 @@ class GameInfoBlock extends StatelessWidget {
                       backgroundColor: UiConstants.primaryColor,
                       radius: SizeConfig.padding4)
                   : SvgPicture.asset(
-                      assetUrl,
+                      assetUrl!,
                       height: assetHeight,
                     ),
               SizedBox(width: SizeConfig.padding8),
               Text(
-                coin,
+                coin!,
                 style:
                     TextStyles.sourceSans.title5.bold.colour(Color(0xffBDBDBE)),
               ),
             ],
           ),
           Text(
-            coinText,
+            coinText!,
             style: TextStyles.sourceSans.body3,
           ),
         ],
@@ -630,7 +631,7 @@ class GameInfoBlock extends StatelessWidget {
 }
 
 class PastWeekWinners extends StatelessWidget {
-  const PastWeekWinners({Key key, @required this.count, @required this.model})
+  const PastWeekWinners({Key? key, required this.count, required this.model})
       : super(key: key);
   final int count;
   final WebHomeViewModel model;
@@ -653,8 +654,8 @@ class PastWeekWinners extends StatelessWidget {
         //1
         Container(
           margin: EdgeInsets.only(top: SizeConfig.padding32),
-          width: SizeConfig.screenWidth * 0.5,
-          height: SizeConfig.screenWidth * 0.5,
+          width: SizeConfig.screenWidth! * 0.5,
+          height: SizeConfig.screenWidth! * 0.5,
           decoration: BoxDecoration(
             color: UiConstants.kSecondaryBackgroundColor,
             shape: BoxShape.circle,
@@ -667,7 +668,7 @@ class PastWeekWinners extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins),
           margin: EdgeInsets.fromLTRB(
               SizeConfig.padding14,
-              SizeConfig.screenWidth * 0.15 + SizeConfig.padding32,
+              SizeConfig.screenWidth! * 0.15 + SizeConfig.padding32,
               SizeConfig.padding14,
               0.0),
           width: double.infinity,
@@ -700,10 +701,10 @@ class PastWeekWinners extends StatelessWidget {
                                   vertical: SizeConfig.padding24),
                               alignment: Alignment.center,
                               child: FullScreenLoader(
-                                size: SizeConfig.screenWidth * 0.5,
+                                size: SizeConfig.screenWidth! * 0.5,
                               ),
                             )
-                          : (model.pastWeekParticipants.isEmpty
+                          : (model.pastWeekParticipants!.isEmpty
                               ? Container(
                                   width: SizeConfig.screenWidth,
                                   color: Colors.transparent,
@@ -758,7 +759,7 @@ class PastWeekWinners extends StatelessWidget {
                                     Column(
                                       children: List.generate(
                                         getLength(
-                                            model.pastWeekParticipants.length),
+                                            model.pastWeekParticipants!.length),
                                         (i) {
                                           return Container(
                                             width: SizeConfig.screenWidth,
@@ -781,7 +782,7 @@ class PastWeekWinners extends StatelessWidget {
                                                     FutureBuilder(
                                                       future: model
                                                           .getProfileDpWithUid(model
-                                                              .pastWeekParticipants[
+                                                              .pastWeekParticipants![
                                                                   i]
                                                               .userid),
                                                       builder:
@@ -844,9 +845,9 @@ class PastWeekWinners extends StatelessWidget {
                                                         children: [
                                                           Text(
                                                               model
-                                                                      .pastWeekParticipants[
+                                                                      .pastWeekParticipants![
                                                                           i]
-                                                                      .username
+                                                                      .username!
                                                                       .replaceAll(
                                                                           '@',
                                                                           '.') ??
@@ -860,7 +861,7 @@ class PastWeekWinners extends StatelessWidget {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${model.pastWeekParticipants[i].score.toInt().toString() ?? "00"} points",
+                                                      "${model.pastWeekParticipants![i].score!.toInt().toString() ?? "00"} points",
                                                       style: TextStyles
                                                           .sourceSans.body3
                                                           .colour(Colors.white),
@@ -872,7 +873,7 @@ class PastWeekWinners extends StatelessWidget {
                                                 ),
                                                 if (i + 1 <
                                                     getLength(model
-                                                        .pastWeekParticipants
+                                                        .pastWeekParticipants!
                                                         .length))
                                                   Divider(
                                                     color: Colors.white,
@@ -890,13 +891,13 @@ class PastWeekWinners extends StatelessWidget {
                                     SizedBox(
                                       height: SizeConfig.padding16,
                                     ),
-                                    if (model.pastWeekParticipants.length >
+                                    if (model.pastWeekParticipants!.length >
                                         getLength(
-                                            model.pastWeekParticipants.length))
+                                            model.pastWeekParticipants!.length))
                                       GestureDetector(
                                         onTap: () {
                                           Haptic.vibrate();
-                                          AppState.delegate.appState
+                                          AppState.delegate!.appState
                                               .currentAction = PageAction(
                                             state: PageState.addWidget,
                                             widget:
@@ -908,7 +909,7 @@ class PastWeekWinners extends StatelessWidget {
                                                   model.pastWeekParticipants,
                                             ),
                                             page:
-                                                AllParticipantsWinnersTopReferersConfig,
+                                                AllParticipantsWinnersTopReferrersConfig,
                                           );
                                         },
                                         child: Row(
@@ -945,7 +946,7 @@ class PastWeekWinners extends StatelessWidget {
           margin: EdgeInsets.only(right: SizeConfig.padding14),
           child: SvgPicture.asset(
             Assets.winScreenHighestScorers,
-            width: SizeConfig.screenWidth * 0.3,
+            width: SizeConfig.screenWidth! * 0.3,
           ),
         ),
       ],

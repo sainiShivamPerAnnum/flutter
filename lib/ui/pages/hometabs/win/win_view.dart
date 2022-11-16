@@ -32,7 +32,7 @@ List<Color> randomColors = [
 class Win extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
 
     return BaseView<WinViewModel>(
       onModelReady: (model) {
@@ -45,7 +45,7 @@ class Win extends StatelessWidget {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: [UserServiceProperties.myUserFund],
             builder: (context, m, property) {
-              double currentWinning = m.userFundWallet?.unclaimedBalance ?? 0;
+              double currentWinning = m!.userFundWallet?.unclaimedBalance ?? 0;
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: FAppBar(
@@ -59,7 +59,7 @@ class Win extends StatelessWidget {
                     children: [
                       //Current Winnings section
                       GestureDetector(
-                        onTap: () => AppState.delegate
+                        onTap: () => AppState.delegate!
                             .parseRoute(Uri.parse('/myWinnings')),
                         child: Container(
                           decoration: BoxDecoration(
@@ -98,22 +98,22 @@ class Win extends StatelessWidget {
                                         height: SizeConfig.padding32,
                                       ),
                                       currentWinning >=
-                                              model.minWithdrawPrizeAmt
+                                              model.minWithdrawPrizeAmt!
                                           ? AppPositiveBtn(
-                                              height:
-                                                  SizeConfig.screenWidth * 0.12,
+                                              height: SizeConfig.screenWidth! *
+                                                  0.12,
                                               btnText: "Redeem",
                                               onPressed: () {
                                                 model.showConfirmDialog(
                                                     PrizeClaimChoice
                                                         .GOLD_CREDIT);
                                               },
-                                              width:
-                                                  SizeConfig.screenWidth * 0.32)
+                                              width: SizeConfig.screenWidth! *
+                                                  0.32)
                                           : currentWinning > 0
                                               ? Container(
                                                   width:
-                                                      SizeConfig.screenWidth /
+                                                      SizeConfig.screenWidth! /
                                                           2.5,
                                                   child: RichText(
                                                     maxLines: 3,
@@ -153,7 +153,7 @@ class Win extends StatelessWidget {
                                   if (m.userFundWallet != null)
                                     Expanded(
                                       child: SvgPicture.asset(
-                                          model.getRedeemAsset(m.userFundWallet
+                                          model.getRedeemAsset(m.userFundWallet!
                                               .unclaimedBalance)),
                                     ),
                                 ],
@@ -211,7 +211,9 @@ class Win extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: SizeConfig.padding24,),
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
 
                       //Refer and Earn
                       Stack(
@@ -225,7 +227,7 @@ class Win extends StatelessWidget {
                                   SizeConfig.padding24,
                                   SizeConfig.padding24,
                                   SizeConfig.padding24,
-                                  (SizeConfig.screenWidth * 0.15) / 2),
+                                  (SizeConfig.screenWidth! * 0.15) / 2),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   color: UiConstants.kSecondaryBackgroundColor,
@@ -242,7 +244,7 @@ class Win extends StatelessWidget {
                                         opacity: 0.3,
                                         child: Image.asset(
                                           Assets.iPadPNG,
-                                          width: SizeConfig.screenWidth * 0.3,
+                                          width: SizeConfig.screenWidth! * 0.3,
                                         ),
                                       ),
                                     ),
@@ -476,7 +478,7 @@ class Win extends StatelessWidget {
 
 class FelloNewsComponent extends StatelessWidget {
   final WinViewModel model;
-  const FelloNewsComponent({Key key, @required this.model}) : super(key: key);
+  const FelloNewsComponent({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -498,33 +500,33 @@ class FelloNewsComponent extends StatelessWidget {
           SizedBox(height: SizeConfig.padding24),
           Container(
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenWidth * 0.4026,
+            height: SizeConfig.screenWidth! * 0.4026,
             child: model.isFelloFactsLoading
                 ? FullScreenLoader(
-                    size: SizeConfig.screenWidth * 0.4,
+                    size: SizeConfig.screenWidth! * 0.4,
                   )
                 : ListView.builder(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount: model.fellofacts.length,
+                    itemCount: model.fellofacts!.length,
                     itemBuilder: (context, index) {
                       return Container(
                         padding: EdgeInsets.only(
                             left: index == 0 ? 0.0 : SizeConfig.padding20,
                             right: SizeConfig.padding20),
                         height: double.maxFinite,
-                        width: SizeConfig.screenWidth * 0.8,
+                        width: SizeConfig.screenWidth! * 0.8,
                         margin: EdgeInsets.only(
                             left: SizeConfig.padding24,
-                            right: index == model.fellofacts.length - 1
+                            right: index == model.fellofacts!.length - 1
                                 ? SizeConfig.padding24
                                 : 0.0),
                         decoration: BoxDecoration(
-                          color: model.fellofacts[index].bgColor == null
+                          color: model.fellofacts![index].bgColor == null
                               ? randomColors[
                                   math.Random().nextInt(randomColors.length)]
-                              : model.fellofacts[index].bgColor.toColor(),
+                              : model.fellofacts![index].bgColor!.toColor(),
                           borderRadius: BorderRadius.all(
                               Radius.circular(SizeConfig.roundness12)),
                         ),
@@ -532,8 +534,8 @@ class FelloNewsComponent extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SvgPicture.network(
-                              model.fellofacts[index].asset,
-                              width: SizeConfig.screenWidth * 0.25,
+                              model.fellofacts![index].asset!,
+                              width: SizeConfig.screenWidth! * 0.25,
                               fit: BoxFit.cover,
                             ),
                             SizedBox(
@@ -546,7 +548,7 @@ class FelloNewsComponent extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      model.fellofacts[index].title,
+                                      model.fellofacts![index].title!,
                                       style: TextStyles.rajdhaniSB.body1
                                           .colour(UiConstants.kBackgroundColor),
                                     ),
@@ -556,7 +558,7 @@ class FelloNewsComponent extends StatelessWidget {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      model.fellofacts[index].subTitle,
+                                      model.fellofacts![index].subTitle!,
                                       style: TextStyles.sourceSans.body4
                                           .colour(UiConstants.kBackgroundColor),
                                     ),
@@ -578,8 +580,8 @@ class FelloNewsComponent extends StatelessWidget {
 
 class ReferAndEarnComponent extends StatelessWidget {
   ReferAndEarnComponent({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final WinViewModel model;
@@ -597,7 +599,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                 SizeConfig.padding24,
                 SizeConfig.padding44,
                 SizeConfig.padding24,
-                (SizeConfig.screenWidth * 0.15) / 2),
+                (SizeConfig.screenWidth! * 0.15) / 2),
             width: double.infinity,
             decoration: BoxDecoration(
                 color: UiConstants.kSecondaryBackgroundColor,
@@ -699,8 +701,8 @@ class ReferAndEarnComponent extends StatelessWidget {
             ),
           ),
           Container(
-            width: SizeConfig.screenWidth * 0.17,
-            height: SizeConfig.screenWidth * 0.17,
+            width: SizeConfig.screenWidth! * 0.17,
+            height: SizeConfig.screenWidth! * 0.17,
             decoration: BoxDecoration(
               color: UiConstants.kSecondaryBackgroundColor,
               shape: BoxShape.circle,
@@ -731,20 +733,20 @@ class ReferAndEarnComponent extends StatelessWidget {
 }
 
 class RewardsAvatar extends StatelessWidget {
-  final Color color;
-  final String asset;
+  final Color? color;
+  final String? asset;
 
   RewardsAvatar({this.asset, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth * 0.24,
+      width: SizeConfig.screenWidth! * 0.24,
       margin: EdgeInsets.only(right: SizeConfig.padding16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness56),
         color: color,
-        image: DecorationImage(image: AssetImage(asset), fit: BoxFit.fitWidth),
+        image: DecorationImage(image: AssetImage(asset!), fit: BoxFit.fitWidth),
       ),
     );
   }

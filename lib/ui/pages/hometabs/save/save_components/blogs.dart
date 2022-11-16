@@ -14,7 +14,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class Blogs extends StatelessWidget {
   final SaveViewModel model;
-  const Blogs({Key key, @required this.model}) : super(key: key);
+  const Blogs({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class Blogs extends StatelessWidget {
 
 class SaveBlogSection extends StatelessWidget {
   final SaveViewModel model;
-  const SaveBlogSection({Key key, @required this.model}) : super(key: key);
+  const SaveBlogSection({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class SaveBlogSection extends StatelessWidget {
         padding: EdgeInsets.only(
             left: SizeConfig.padding24, top: SizeConfig.padding10),
         child: Container(
-          height: SizeConfig.screenWidth * 0.4,
+          height: SizeConfig.screenWidth! * 0.4,
           child: model.isLoading
               ? ListView.builder(
                   itemCount: 2,
@@ -85,7 +85,7 @@ class SaveBlogSection extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.only(right: SizeConfig.padding10),
                       child: Container(
-                        width: SizeConfig.screenWidth - 80,
+                        width: SizeConfig.screenWidth! - 80,
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(SizeConfig.roundness12),
@@ -98,8 +98,8 @@ class SaveBlogSection extends StatelessWidget {
                                 baseColor: UiConstants.kUserRankBackgroundColor,
                                 highlightColor: UiConstants.kBackgroundColor,
                                 child: Container(
-                                  height: SizeConfig.screenWidth * 0.23,
-                                  width: SizeConfig.screenWidth * 0.25,
+                                  height: SizeConfig.screenWidth! * 0.23,
+                                  width: SizeConfig.screenWidth! * 0.25,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12),
@@ -113,11 +113,11 @@ class SaveBlogSection extends StatelessWidget {
                     );
                   },
                 )
-              : model.blogPosts == null || model.blogPosts.isEmpty
+              : model.blogPosts == null || model.blogPosts!.isEmpty
                   ? SizedBox()
                   : ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: model.blogPosts.length,
+                      itemCount: model.blogPosts!.length,
                       itemBuilder: (ctx, index) {
                         return Padding(
                           padding: EdgeInsets.only(right: SizeConfig.padding10),
@@ -126,12 +126,13 @@ class SaveBlogSection extends StatelessWidget {
                               model.trackBannerClickEvent(index);
 
                               model.navigateToBlogWebView(
-                                  model.blogPosts[index].slug,
-                                  model.blogPosts[index].acf.categories);
+                                  model.blogPosts![index].slug,
+                                  model.blogPosts![index].acf!.categories);
                             },
-                            title: model.blogPosts[index].acf.categories,
-                            description: model.blogPosts[index].title.rendered,
-                            imageUrl: model.blogPosts[index].yoastHeadJson,
+                            title: model.blogPosts![index].acf!.categories!,
+                            description:
+                                model.blogPosts![index].title!.rendered!,
+                            imageUrl: model.blogPosts![index].yoastHeadJson!,
                           ),
                         );
                       },
@@ -141,9 +142,9 @@ class SaveBlogSection extends StatelessWidget {
 }
 
 class BlogWebView extends StatelessWidget {
-  final String initialUrl;
-  final String title;
-  const BlogWebView({Key key, this.initialUrl, this.title}) : super(key: key);
+  final String? initialUrl;
+  final String? title;
+  const BlogWebView({Key? key, this.initialUrl, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -165,13 +166,13 @@ class BlogWebView extends StatelessWidget {
 }
 
 class SaveBlogTile extends StatelessWidget {
-  final Function() onTap;
-  final String title;
-  final String description;
-  final String imageUrl;
+  final Function()? onTap;
+  final String? title;
+  final String? description;
+  final String? imageUrl;
 
   const SaveBlogTile({
-    Key key,
+    Key? key,
     this.onTap,
     this.title,
     this.description,
@@ -185,12 +186,12 @@ class SaveBlogTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: SizeConfig.screenWidth - 50,
+        width: SizeConfig.screenWidth! - 50,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
           child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            height: SizeConfig.screenWidth * 0.4,
+            imageUrl: imageUrl!,
+            height: SizeConfig.screenWidth! * 0.4,
             width: SizeConfig.screenWidth,
             fit: BoxFit.cover,
             alignment: Alignment.centerLeft,

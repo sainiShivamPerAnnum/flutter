@@ -5,7 +5,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
-import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_pending.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_unverifed.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -55,7 +54,7 @@ class KYCDetailsView extends StatelessWidget {
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
         SizeConfig.viewInsets.bottom;
 
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -148,19 +147,19 @@ class KYCDetailsView extends StatelessWidget {
 
 class KycBriefTile extends StatelessWidget {
   const KycBriefTile(
-      {Key key,
-      @required this.model,
-      @required this.trailing,
-      @required this.label,
+      {Key? key,
+      required this.model,
+      required this.trailing,
+      required this.label,
       this.subtitle,
-      @required this.title})
+      required this.title})
       : super(key: key);
 
   final KYCDetailsViewModel model;
   final Widget trailing;
   final String title;
   final String label;
-  final String subtitle;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -196,14 +195,14 @@ class KycBriefTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title ?? "",
+                      title,
                       style: TextStyles.sourceSansSB.body2.colour(Colors.white),
                     ),
                     if (subtitle != null)
                       Padding(
                         padding: EdgeInsets.only(top: SizeConfig.padding6),
                         child: Text(
-                          subtitle,
+                          subtitle!,
                           style:
                               TextStyles.body3.colour(UiConstants.kTextColor2),
                         ),
@@ -247,13 +246,13 @@ class KycBriefTile extends StatelessWidget {
 
 class FileCaptureOption extends StatelessWidget {
   final String icon;
-  final String desc;
+  final String? desc;
   final Function func;
   const FileCaptureOption({
-    Key key,
-    @required this.icon,
+    Key? key,
+    required this.icon,
     this.desc,
-    @required this.func,
+    required this.func,
   }) : super(key: key);
 
   @override
@@ -287,7 +286,7 @@ class FileCaptureOption extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding8),
                 child: Text(
-                  desc,
+                  desc!,
                   style: TextStyles.body3.colour(UiConstants.kTextColor2),
                 ),
               )
@@ -301,9 +300,9 @@ class FileCaptureOption extends StatelessWidget {
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
-    Key key,
-    @required this.model,
-    @required this.camera,
+    Key? key,
+    required this.model,
+    required this.camera,
   });
 
   final CameraDescription camera;
@@ -314,8 +313,8 @@ class TakePictureScreen extends StatefulWidget {
 }
 
 class TakePictureScreenState extends State<TakePictureScreen> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  CameraController? _controller;
+  Future<void>? _initializeControllerFuture;
 
   @override
   void initState() {
@@ -330,13 +329,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
 
     // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+    _initializeControllerFuture = _controller!.initialize();
   }
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -348,7 +347,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         topRight: Radius.circular(SizeConfig.roundness24),
       ),
       child: Container(
-        height: SizeConfig.screenHeight * 0.8,
+        height: SizeConfig.screenHeight! * 0.8,
         child: Column(children: [
           FutureBuilder<void>(
             future: _initializeControllerFuture,
@@ -359,14 +358,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   child: Stack(
                     children: [
                       Container(
-                          height: SizeConfig.screenHeight * 0.8,
-                          child: CameraPreview(_controller)),
+                          height: SizeConfig.screenHeight! * 0.8,
+                          child: CameraPreview(_controller!)),
                       Align(
                         alignment: Alignment.center,
                         child: CustomPaint(
                           size: Size(
-                              SizeConfig.screenWidth * 0.8,
-                              (SizeConfig.screenWidth * 0.8 * 0.588)
+                              SizeConfig.screenWidth! * 0.8,
+                              (SizeConfig.screenWidth! * 0.8 * 0.588)
                                   .toDouble()),
                           painter: RPSCustomPainter(),
                         ),
@@ -383,7 +382,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                 color: Colors.white,
                                 onPressed: () {
                                   Haptic.vibrate();
-                                  AppState.backButtonDispatcher.didPopRoute();
+                                  AppState.backButtonDispatcher!.didPopRoute();
                                 },
                               ),
                             ),
@@ -417,10 +416,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
                 // Attempt to take a picture and get the file `image`
                 // where it was saved.
-                widget.model.capturedImage = await _controller.takePicture();
+                widget.model.capturedImage = await _controller!.takePicture();
                 widget.model.verifyImage();
                 if (!mounted) return;
-                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
               } catch (e) {
                 // If an error occurs, log the error to the console.
                 print(e);

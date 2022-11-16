@@ -10,21 +10,21 @@ import 'package:shimmer/shimmer.dart';
 
 class Ticket extends StatelessWidget {
   Ticket({
-    @required this.board,
-    @required this.calledDigits,
+    required this.board,
+    required this.calledDigits,
     this.bestBoards,
     this.dailyPicks,
     this.showBestOdds = true,
   });
 
-  final TambolaBoard board;
-  final DailyPick dailyPicks;
-  final List<TambolaBoard> bestBoards;
+  final TambolaBoard? board;
+  final DailyPick? dailyPicks;
+  final List<TambolaBoard?>? bestBoards;
   final List<int> calledDigits;
   final bool showBestOdds;
 
   //List<int> markedIndices = [];
-  List<int> ticketNumbers = [];
+  List<int?> ticketNumbers = [];
 
   // markItem(int index) {
   //   print("marked index : $index");
@@ -74,7 +74,7 @@ class Ticket extends StatelessWidget {
   generateNumberList() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
-        ticketNumbers.add(board.tambolaBoard[i][j]);
+        ticketNumbers.add(board!.tambolaBoard![i][j]);
       }
     }
   }
@@ -104,7 +104,7 @@ class Ticket extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    (board.assigned_time.toDate().day == DateTime.now().day)
+                    (board!.assigned_time.toDate().day == DateTime.now().day)
                         ? Shimmer(
                             gradient: LinearGradient(
                               colors: [
@@ -124,7 +124,7 @@ class Ticket extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '#${board.getTicketNumber()}',
+                          '#${board!.getTicketNumber()}',
                           style: TextStyles.sourceSans.body3
                               .colour(Colors.white.withOpacity(0.7)),
                         ),
@@ -204,7 +204,7 @@ class Ticket extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(SizeConfig.padding6),
             child: Text(
-              "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
+              "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: SizeConfig.smallTextSize,

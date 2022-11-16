@@ -13,7 +13,7 @@ import 'package:flutter_svg/svg.dart';
 class KycSuccessView extends StatelessWidget {
   final KYCDetailsViewModel model;
 
-  const KycSuccessView({Key key, @required this.model}) : super(key: key);
+  const KycSuccessView({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class KycSuccessView extends StatelessWidget {
           },
           isEnabled: model.inEditMode,
           textEditingController: model.panController,
-          validator: (String value) {
+          validator: (String? value) {
             return '';
           },
         ),
@@ -54,7 +54,7 @@ class KycSuccessView extends StatelessWidget {
           // textCapitalization: TextCapitalization.characters,
           isEnabled: model.inEditMode,
           textEditingController: model.nameController,
-          validator: (String value) {
+          validator: (String? value) {
             return '';
           },
           keyboardType: TextInputType.name,

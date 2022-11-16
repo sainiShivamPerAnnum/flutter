@@ -13,7 +13,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class PrizeToolTips extends StatelessWidget {
   final JourneyPageViewModel model;
-  PrizeToolTips({Key key, this.model}) : super(key: key);
+  PrizeToolTips({Key? key, required this.model}) : super(key: key);
   final _gtService = locator<GoldenTicketService>();
   @override
   Widget build(BuildContext context) {
@@ -33,16 +33,17 @@ class PrizeToolTips extends StatelessWidget {
                       final milestone = model.completedMilestoneList[i];
                       final goldenTicket = model.completedMilestonePrizeList[i];
                       return (goldenTicket != null &&
-                              goldenTicket.isRewarding &&
+                              goldenTicket.isRewarding! &&
                               goldenTicket.redeemedTimestamp ==
                                   TimestampModel(seconds: 0, nanoseconds: 0))
                           ? Positioned(
-                              left: model.pageWidth * milestone.x * 0.9,
-                              bottom: (model.pageHeight * (milestone.page - 1) +
-                                      model.pageHeight * milestone.y) +
-                                  model.pageHeight *
-                                      milestone.asset.height *
-                                      0.5,
+                              left: model.pageWidth! * milestone.x! * 0.9,
+                              bottom:
+                                  (model.pageHeight! * (milestone.page - 1) +
+                                          model.pageHeight! * milestone.y!) +
+                                      model.pageHeight! *
+                                          milestone.asset.height *
+                                          0.5,
                               child: SafeArea(
                                 child: GestureDetector(
                                     onTap: () async {
@@ -67,7 +68,7 @@ class PrizeToolTips extends StatelessWidget {
                                       child: Padding(
                                           padding: EdgeInsets.all(16.0),
                                           child: Image.asset(
-                                            goldenTicket.isLevelChange
+                                            goldenTicket.isLevelChange!
                                                 ? Assets
                                                     .levelUpUnredeemedGoldenTicketBGPNG
                                                 : Assets

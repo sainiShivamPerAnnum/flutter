@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LeaderboardShimmer extends StatelessWidget {
-  const LeaderboardShimmer({Key key}) : super(key: key);
+  const LeaderboardShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class LeaderboardShimmer extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: SizeConfig.screenWidth * 0.07,
+            height: SizeConfig.screenWidth! * 0.07,
           ),
           Column(
             children: List.generate(
@@ -64,7 +64,7 @@ class LeaderboardShimmer extends StatelessWidget {
                       horizontal: SizeConfig.padding12,
                       vertical: SizeConfig.padding8,
                     ),
-                    height: SizeConfig.screenWidth * 0.15,
+                    height: SizeConfig.screenWidth! * 0.15,
                     decoration: BoxDecoration(
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness12),
@@ -76,14 +76,14 @@ class LeaderboardShimmer extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: SizeConfig.screenWidth * 0.08,
+            height: SizeConfig.screenWidth! * 0.08,
           ),
         ],
       ),
     );
   }
 
-  Shimmer _buildUserProfile({EdgeInsets padding}) {
+  Shimmer _buildUserProfile({required EdgeInsets padding}) {
     return Shimmer.fromColors(
       baseColor: UiConstants.kUserRankBackgroundColor,
       highlightColor: UiConstants.kBackgroundColor,

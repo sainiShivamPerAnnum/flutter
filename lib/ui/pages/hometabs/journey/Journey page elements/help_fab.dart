@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
@@ -12,14 +13,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HelpFab extends StatefulWidget {
-  const HelpFab({Key key}) : super(key: key);
+  const HelpFab({Key? key}) : super(key: key);
 
   @override
   State<HelpFab> createState() => _HelpFabState();
 }
 
 class _HelpFabState extends State<HelpFab> {
-  final _analyticsService = locator<AnalyticsService>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+
   double width = SizeConfig.avatarRadius * 2.4;
   bool isOpen = false;
   expandFab() {
@@ -40,7 +43,7 @@ class _HelpFabState extends State<HelpFab> {
   }
 
   trackHelpTappedEvent() {
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.journeyHelpTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap());
   }
@@ -55,11 +58,11 @@ class _HelpFabState extends State<HelpFab> {
       child: InkWell(
         onTap: () {
           BaseUtil.showGtWinFlushBar("You won a gt", "Tap to check it out");
-          // isOpen ? collapseFab() : expandFab();
-          // AppState.screenStack.add(ScreenItem.dialog);
-          // trackHelpTappedEvent();
-          // AppState.delegate
-          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          isOpen ? collapseFab() : expandFab();
+          AppState.screenStack.add(ScreenItem.dialog);
+          trackHelpTappedEvent();
+          AppState.delegate!
+              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             height: SizeConfig.avatarRadius * 2.4,

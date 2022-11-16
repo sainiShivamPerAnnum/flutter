@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LendboxDetailsView extends StatelessWidget {
-  const LendboxDetailsView({Key key}) : super(key: key);
+  const LendboxDetailsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class LendboxDetailsView extends StatelessWidget {
                               investmentType: InvestmentType.LENDBOXP2P,
                             ),
                       SizedBox(
-                        height: SizeConfig.screenWidth * 0.4,
+                        height: SizeConfig.screenWidth! * 0.4,
                       )
                     ],
                   ),
@@ -111,7 +111,7 @@ class LendboxDetailsView extends StatelessWidget {
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
                       btnText: "SAVE",
-                      width: SizeConfig.screenWidth -
+                      width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () => BaseUtil().openRechargeModalSheet(
                           investmentType: InvestmentType.LENDBOXP2P),
@@ -128,7 +128,7 @@ class LendboxDetailsView extends StatelessWidget {
 }
 
 class LBoxAssetCard extends StatelessWidget {
-  const LBoxAssetCard({Key key}) : super(key: key);
+  const LBoxAssetCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,15 +150,15 @@ class LBoxAssetCard extends StatelessWidget {
             offset: Offset(-SizeConfig.padding12, -SizeConfig.padding40),
             child: Image.asset(
               Assets.felloFlo,
-              height: SizeConfig.screenWidth * 0.32,
-              width: SizeConfig.screenWidth * 0.32,
+              height: SizeConfig.screenWidth! * 0.32,
+              width: SizeConfig.screenWidth! * 0.32,
             ),
           ),
           Column(
             children: [
               Row(
                 children: [
-                  SizedBox(width: SizeConfig.screenWidth * 0.35),
+                  SizedBox(width: SizeConfig.screenWidth! * 0.35),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +230,7 @@ class LBoxAssetCard extends StatelessWidget {
 }
 
 class AssetCard extends StatelessWidget {
-  const AssetCard({Key key}) : super(key: key);
+  const AssetCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -244,8 +244,8 @@ class AssetCard extends StatelessWidget {
               right: SizeConfig.padding24,
             ),
             child: Container(
-              height: SizeConfig.screenWidth * 0.88,
-              width: SizeConfig.screenWidth * 0.87,
+              height: SizeConfig.screenWidth! * 0.88,
+              width: SizeConfig.screenWidth! * 0.87,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness32),
                 color: UiConstants.kSaveStableFelloCardBg,
@@ -253,7 +253,7 @@ class AssetCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Padding(
-                  padding: EdgeInsets.only(top: SizeConfig.screenWidth * 0.25),
+                  padding: EdgeInsets.only(top: SizeConfig.screenWidth! * 0.25),
                   child: Column(
                     children: [
                       Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
@@ -318,7 +318,7 @@ class AssetCard extends StatelessWidget {
                           );
                         },
                         title: 'Save',
-                        width: SizeConfig.screenWidth * 0.2,
+                        width: SizeConfig.screenWidth! * 0.2,
                       ),
                     ],
                   ),
@@ -330,8 +330,8 @@ class AssetCard extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
           child: Container(
-            height: SizeConfig.screenWidth - 50,
-            width: SizeConfig.screenWidth * 0.87,
+            height: SizeConfig.screenWidth! - 50,
+            width: SizeConfig.screenWidth! * 0.87,
             child: Align(
               alignment: Alignment.topCenter,
               child: Transform(
@@ -339,8 +339,8 @@ class AssetCard extends StatelessWidget {
                 transform: Matrix4.rotationY(math.pi),
                 child: Image.asset(
                   Assets.felloFlo,
-                  height: SizeConfig.screenWidth * 0.4,
-                  width: SizeConfig.screenWidth * 0.4,
+                  height: SizeConfig.screenWidth! * 0.4,
+                  width: SizeConfig.screenWidth! * 0.4,
                 ),
               ),
             ),

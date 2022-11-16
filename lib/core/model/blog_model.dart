@@ -7,8 +7,8 @@ List<BlogPostModel> blogPostModelFromMap(String str) =>
         json.decode(str).map((x) => BlogPostModel.fromMap(x)));
 
 class BlogPostModelByCategory {
-  final String category;
-  final List<BlogPostModel> blogs;
+  final String? category;
+  final List<BlogPostModel>? blogs;
 
   BlogPostModelByCategory({
     @required this.category,
@@ -26,20 +26,20 @@ class BlogPostModel {
     this.yoastHeadJson,
   });
 
-  int id;
-  DateTime date;
-  String slug;
-  Title title;
-  Acf acf;
-  String yoastHeadJson;
+  int? id;
+  DateTime? date;
+  String? slug;
+  Title? title;
+  Acf? acf;
+  String? yoastHeadJson;
 
   factory BlogPostModel.fromMap(Map<String, dynamic> json) => BlogPostModel(
-        id: json["id"],
+        id: json["id"] ?? -1,
         date: DateTime.parse(json["date"]),
-        slug: json["slug"],
+        slug: json["slug"] ?? '',
         title: Title.fromMap(json["title"]),
         acf: Acf.fromMap(json["acf"]),
-        yoastHeadJson: getImageFromMap(json["yoast_head_json"]),
+        yoastHeadJson: getImageFromMap(json["yoast_head_json"]) ,
       );
 
   static String getImageFromMap(Map<String, dynamic> yoastHeadJson) {
@@ -55,10 +55,12 @@ class Acf {
     this.categories,
   });
 
-  String categories;
-
+  String? categories;
+  Acf.base() {
+    categories = '';
+  }
   factory Acf.fromMap(Map<String, dynamic> json) => Acf(
-        categories: json["categories"],
+        categories: json["categories"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {
@@ -71,10 +73,12 @@ class Title {
     this.rendered,
   });
 
-  String rendered;
-
+  String? rendered;
+  Title.base() {
+    rendered = '';
+  }
   factory Title.fromMap(Map<String, dynamic> json) => Title(
-        rendered: json["rendered"],
+        rendered: json["rendered"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {
@@ -87,15 +91,17 @@ class YoastHeadJson {
     this.ogImage,
   });
 
-  List<OgImage> ogImage;
-
+  List<OgImage>? ogImage;
+  YoastHeadJson.base() {
+    ogImage = [];
+  }
   factory YoastHeadJson.fromMap(Map<String, dynamic> json) => YoastHeadJson(
         ogImage:
             List<OgImage>.from(json["og_image"].map((x) => OgImage.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "og_image": List<dynamic>.from(ogImage.map((x) => x.toMap())),
+        "og_image": List<dynamic>.from(ogImage!.map((x) => x.toMap())),
       };
 }
 
@@ -107,16 +113,16 @@ class OgImage {
     this.type,
   });
 
-  int width;
-  int height;
-  String url;
-  Type type;
+  int? width;
+  int? height;
+  String? url;
+  Type? type;
 
   factory OgImage.fromMap(Map<String, dynamic> json) => OgImage(
-        width: json["width"],
-        height: json["height"],
-        url: json["url"],
-        type: json["type"],
+        width: json["width"] ?? 0,
+        height: json["height"] ?? 0,
+        url: json["url"] ?? '',
+        type: json["type"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {

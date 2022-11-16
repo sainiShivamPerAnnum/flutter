@@ -25,8 +25,8 @@ class FelloRatingDialog extends StatefulWidget {
 
 class _FelloRatingDialogState extends State<FelloRatingDialog> {
   double rating = 0;
-  final CustomLogger logger = locator<CustomLogger>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final CustomLogger? logger = locator<CustomLogger>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   bool showEmptyRatingError = false;
   bool showButtons = true;
 
@@ -44,7 +44,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
           SizedBox(height: SizeConfig.padding20),
           SvgPicture.asset(
             "assets/vectors/rating.svg",
-            height: SizeConfig.screenHeight * 0.14,
+            height: SizeConfig.screenHeight! * 0.14,
           ),
           SizedBox(
             height: SizeConfig.padding20,
@@ -62,7 +62,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
             textAlign: TextAlign.center,
             style: TextStyles.body2.colour(Colors.grey),
           ),
-          SizedBox(height: SizeConfig.screenHeight * 0.025),
+          SizedBox(height: SizeConfig.screenHeight! * 0.025),
           Container(
             width: SizeConfig.screenWidth,
             alignment: Alignment.center,
@@ -74,7 +74,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
               unratedColor: Colors.grey.withOpacity(0.5),
               itemCount: 5,
               itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemSize: SizeConfig.screenWidth / 10,
+              itemSize: SizeConfig.screenWidth! / 10,
               itemBuilder: (context, _) => Icon(
                 Icons.star,
                 color: UiConstants.tertiarySolid,
@@ -85,7 +85,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
               },
             ),
           ),
-          SizedBox(height: SizeConfig.screenHeight * 0.025),
+          SizedBox(height: SizeConfig.screenHeight! * 0.025),
           if (showEmptyRatingError)
             Padding(
               padding: EdgeInsets.all(SizeConfig.padding4),
@@ -126,7 +126,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                             return;
                           }
                           showLoading(true);
-                          _analyticsService.track(
+                          _analyticsService!.track(
                               eventName: "App Rating",
                               properties: {"rating": rating});
                           try {
@@ -137,8 +137,8 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                               );
                           } catch (e) {
                             showLoading(false);
-                            logger.e(e.toString());
-                            logger.e(
+                            logger!.e(e.toString());
+                            logger!.e(
                                 "Unable to save the rating completed preference");
                           }
                           if (rating >= 4) {
@@ -149,13 +149,13 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                               if (await inAppReview.isAvailable()) {
                                 inAppReview.requestReview();
                               } else {
-                                logger.d(
+                                logger!.d(
                                     "In app review not available, opening native application store");
                                 inAppReview.openStoreListing(
                                     appStoreId: '1558445254');
                               }
                             } catch (e) {
-                              logger.e(e.toString());
+                              logger!.e(e.toString());
                               if (Platform.isAndroid)
                                 BaseUtil.launchUrl(
                                     'https://play.google.com/store/apps/details?id=in.fello.felloapp');
@@ -168,7 +168,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                                 "Thank you for your feedback",
                                 "We hope to serve you better");
                           }
-                          AppState.backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher!.didPopRoute();
                         },
                       ),
                     ),
@@ -183,7 +183,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                         color: Colors.grey.withOpacity(0.5),
                         height: SizeConfig.padding54,
                         onPressed: () async {
-                          AppState.backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher!.didPopRoute();
                         },
                       ),
                     ),

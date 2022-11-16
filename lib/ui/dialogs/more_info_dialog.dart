@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 class MoreInfoDialog extends StatelessWidget {
   final String title;
   final String text;
-  final String imagePath;
-  final Size imageSize;
-  final Function onPressed;
-  final String btnText;
+  final String? imagePath;
+  final Size? imageSize;
+  final Function? onPressed;
+  final String? btnText;
 
   MoreInfoDialog(
-      {@required this.title,
-      @required this.text,
+      {required this.title,
+      required this.text,
       this.imagePath,
       this.onPressed,
       this.btnText,
@@ -43,13 +43,13 @@ class MoreInfoDialog extends StatelessWidget {
                 SizedBox(
                   height: 5,
                 ),
-                if (imagePath != null && imagePath.isNotEmpty)
+                if (imagePath != null && imagePath!.isNotEmpty)
                   Image.asset(
-                    imagePath,
+                    imagePath!,
                     alignment: Alignment.center,
                     fit: BoxFit.contain,
-                    width: SizeConfig.screenWidth * 0.8,
-                    height: SizeConfig.screenHeight * 0.24,
+                    width: SizeConfig.screenWidth! * 0.8,
+                    height: SizeConfig.screenHeight! * 0.24,
                   ),
                 SizedBox(height: SizeConfig.padding12),
                 Text(
@@ -60,8 +60,8 @@ class MoreInfoDialog extends StatelessWidget {
                 SizedBox(height: SizeConfig.padding20),
                 AppPositiveBtn(
                     btnText: btnText ?? "OK",
-                    onPressed: onPressed ??
-                        () => AppState.backButtonDispatcher.didPopRoute())
+                    onPressed: onPressed as void Function()? ??
+                        (() => AppState.backButtonDispatcher!.didPopRoute()))
               ],
             ),
           ),

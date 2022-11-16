@@ -12,13 +12,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SharePriceScreen extends StatelessWidget {
   SharePriceScreen({
-    Key key,
-    @required this.dpUrl,
-    @required this.choice,
-    @required this.prizeAmount,
+    Key? key,
+    required this.dpUrl,
+    required this.choice,
+    required this.prizeAmount,
   }) : super(key: key);
 
-  String dpUrl;
+  String? dpUrl;
   PrizeClaimChoice choice;
   double prizeAmount;
 
@@ -64,8 +64,8 @@ class SharePriceScreen extends StatelessWidget {
                     ),
                     model.isShareLoading
                         ? Container(
-                            height: SizeConfig.screenWidth * 0.1556,
-                            width: SizeConfig.screenWidth * 0.5,
+                            height: SizeConfig.screenWidth! * 0.1556,
+                            width: SizeConfig.screenWidth! * 0.5,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
                                 SizeConfig.buttonBorderRadius,
@@ -91,7 +91,7 @@ class SharePriceScreen extends StatelessWidget {
                             onPressed: () {
                               model.sharePrizeDetails(prizeAmount);
                             },
-                            width: SizeConfig.screenWidth * 0.5),
+                            width: SizeConfig.screenWidth! * 0.5),
                     SizedBox(height: SizeConfig.padding24)
                   ],
                 ),
@@ -102,7 +102,7 @@ class SharePriceScreen extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     onPressed: () {
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                     icon: Icon(
                       Icons.close,

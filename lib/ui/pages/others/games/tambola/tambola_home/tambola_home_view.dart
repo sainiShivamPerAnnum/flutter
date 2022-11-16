@@ -85,7 +85,7 @@ class TambolaHomeView extends StatelessWidget {
                           model: model,
                         ),
                       SizedBox(
-                        height: SizeConfig.screenWidth * 0.075,
+                        height: SizeConfig.screenWidth! * 0.075,
                       ),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
@@ -125,7 +125,7 @@ class TambolaHomeView extends StatelessWidget {
                           heading: model.boxHeading,
                           assetList: model.boxAssets,
                           titleList: model.boxTitlles,
-                          height: SizeConfig.screenWidth * 0.35),
+                          height: SizeConfig.screenWidth! * 0.35),
 
                       //Tambola Prizes
                       TambolaPrize(
@@ -136,7 +136,7 @@ class TambolaHomeView extends StatelessWidget {
                         model: model,
                       ),
                       SizedBox(
-                        height: SizeConfig.screenWidth * 0.35,
+                        height: SizeConfig.screenWidth! * 0.35,
                       )
                     ],
                   ),
@@ -157,27 +157,27 @@ class TambolaHomeView extends StatelessWidget {
 }
 
 class TicketsView extends StatelessWidget {
-  final TambolaHomeViewModel model;
+  final TambolaHomeViewModel? model;
 
   TicketsView({this.model});
   @override
   Widget build(BuildContext context) {
-    if (!model.weeklyTicksFetched || !model.weeklyDrawFetched) {
+    if (!model!.weeklyTicksFetched || !model!.weeklyDrawFetched) {
       return SizedBox();
-    } else if (model.userWeeklyBoards == null ||
-        model.activeTambolaCardCount == 0) {
+    } else if (model!.userWeeklyBoards == null ||
+        model!.activeTambolaCardCount == 0) {
       return Padding(
         padding: EdgeInsets.all(10),
         child: Container(
           width: SizeConfig.screenWidth,
           child: Center(
-              child: (model.ticketsBeingGenerated)
+              child: (model!.ticketsBeingGenerated)
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          width: SizeConfig.screenWidth * 0.8,
+                          width: SizeConfig.screenWidth! * 0.8,
                           height: 4,
                           decoration: BoxDecoration(
                             color: UiConstants.primaryColor.withOpacity(0.3),
@@ -185,15 +185,15 @@ class TicketsView extends StatelessWidget {
                           ),
                           child: FractionallySizedBox(
                             heightFactor: 1,
-                            widthFactor: model
-                                        .tambolaService.ticketGenerateCount ==
-                                    model.tambolaService
+                            widthFactor: model!
+                                        .tambolaService!.ticketGenerateCount ==
+                                    model!.tambolaService!
                                         .atomicTicketGenerationLeftCount
                                 ? 0.1
-                                : (model.tambolaService.ticketGenerateCount -
-                                        model.tambolaService
+                                : (model!.tambolaService!.ticketGenerateCount! -
+                                        model!.tambolaService!
                                             .atomicTicketGenerationLeftCount) /
-                                    model.tambolaService.ticketGenerateCount,
+                                    model!.tambolaService!.ticketGenerateCount!,
                             alignment: Alignment.centerLeft,
                             child: Container(
                               decoration: BoxDecoration(
@@ -205,7 +205,7 @@ class TicketsView extends StatelessWidget {
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Generated ${model.tambolaService.ticketGenerateCount - model.tambolaService.atomicTicketGenerationLeftCount} of your ${model.tambolaService.ticketGenerateCount} tickets',
+                          'Generated ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} of your ${model!.tambolaService!.ticketGenerateCount} tickets',
                           style: TextStyles.rajdhani.body2.colour(Colors.white),
                         ),
                       ],
@@ -213,15 +213,15 @@ class TicketsView extends StatelessWidget {
                   : SizedBox()),
         ),
       );
-    } else if (model.activeTambolaCardCount == 1) {
+    } else if (model!.activeTambolaCardCount == 1) {
       //One tambola ticket
-      model.tambolaBoardViews = [];
-      model.tambolaBoardViews.add(Ticket(
-        bestBoards: model.refreshBestBoards(),
-        dailyPicks: model.weeklyDigits,
-        board: model.userWeeklyBoards[0],
-        calledDigits: (model.weeklyDrawFetched && model.weeklyDigits != null)
-            ? model.weeklyDigits.toList()
+      model!.tambolaBoardViews = [];
+      model!.tambolaBoardViews!.add(Ticket(
+        bestBoards: model!.refreshBestBoards(),
+        dailyPicks: model!.weeklyDigits,
+        board: model!.userWeeklyBoards![0],
+        calledDigits: (model!.weeklyDrawFetched && model!.weeklyDigits != null)
+            ? model!.weeklyDigits!.toList()
             : [],
       ));
 
@@ -240,7 +240,7 @@ class TicketsView extends StatelessWidget {
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 Text(
-                  "Total tickets: ${model.userWeeklyBoards.length}",
+                  "Total tickets: ${model!.userWeeklyBoards!.length}",
                   style: TextStyles.rajdhaniSB.body3,
                 ),
               ],
@@ -260,19 +260,19 @@ class TicketsView extends StatelessWidget {
       );
     } else {
       //Multiple tickets
-      if (!model.ticketsLoaded) {
-        model.ticketsLoaded = true;
-        model.tambolaBoardViews = [];
+      if (!model!.ticketsLoaded) {
+        model!.ticketsLoaded = true;
+        model!.tambolaBoardViews = [];
 
-        model.userWeeklyBoards.forEach((board) {
-          model.tambolaBoardViews.add(
+        model!.userWeeklyBoards!.forEach((board) {
+          model!.tambolaBoardViews!.add(
             Ticket(
-              bestBoards: model.refreshBestBoards(),
-              dailyPicks: model.weeklyDigits,
+              bestBoards: model!.refreshBestBoards(),
+              dailyPicks: model!.weeklyDigits,
               board: board,
               calledDigits:
-                  (model.weeklyDrawFetched && model.weeklyDigits != null)
-                      ? model.weeklyDigits.toList()
+                  (model!.weeklyDrawFetched && model!.weeklyDigits != null)
+                      ? model!.weeklyDigits!.toList()
                       : [],
             ),
           );
@@ -295,11 +295,11 @@ class TicketsView extends StatelessWidget {
                 ),
                 TextButton(
                     onPressed: () {
-                      AppState.delegate.appState.currentAction = PageAction(
+                      AppState.delegate!.appState.currentAction = PageAction(
                         state: PageState.addWidget,
                         page: AllTambolaTicketsPageConfig,
                         widget: AllTambolaTickets(
-                            ticketList: model.tambolaBoardViews.toList()),
+                            ticketList: model!.tambolaBoardViews!.toList()),
                       );
                     },
                     child: Row(
@@ -310,7 +310,7 @@ class TicketsView extends StatelessWidget {
                             top: SizeConfig.padding2,
                           ),
                           child: Text(
-                              'View All (${model.userWeeklyBoards.length})',
+                              'View All (${model!.userWeeklyBoards!.length})',
                               style: TextStyles.rajdhaniSB.body2),
                         ),
                         SvgPicture.asset(Assets.chevRonRightArrow,
@@ -345,19 +345,19 @@ class TicketsView extends StatelessWidget {
 }
 
 class TambolaResultCard extends StatelessWidget {
-  final TambolaHomeViewModel model;
+  final TambolaHomeViewModel? model;
 
   TambolaResultCard({this.model});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => AppState.delegate.appState.currentAction = PageAction(
+      onTap: () => AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: TWeeklyResultPageConfig,
         widget: WeeklyResult(
-          winningsmap: model.ticketCodeWinIndex,
-          isEligible: model.isEligible,
+          winningsmap: model!.ticketCodeWinIndex,
+          isEligible: model!.isEligible,
         ),
       ),
       child: Container(
@@ -372,7 +372,7 @@ class TambolaResultCard extends StatelessWidget {
         child: ListTile(
           leading: SvgPicture.asset(
             Assets.tambolaCardAsset,
-            width: SizeConfig.screenWidth * 0.13,
+            width: SizeConfig.screenWidth! * 0.13,
           ),
           title: FittedBox(
             fit: BoxFit.scaleDown,
@@ -394,12 +394,12 @@ class TambolaResultCard extends StatelessWidget {
 
 class TabViewGenerator extends StatefulWidget {
   const TabViewGenerator({
-    Key key,
-    @required this.model,
-    @required this.showIndicatorForAll,
+    Key? key,
+    required this.model,
+    required this.showIndicatorForAll,
   }) : super(key: key);
 
-  final TambolaHomeViewModel model;
+  final TambolaHomeViewModel? model;
   final bool showIndicatorForAll;
 
   @override
@@ -408,16 +408,16 @@ class TabViewGenerator extends StatefulWidget {
 
 class _TabViewGeneratorState extends State<TabViewGenerator>
     with TickerProviderStateMixin {
-  TabController _tabController;
-  List<TambolaBoard> _bestBoards;
+  TabController? _tabController;
+  List<TambolaBoard?>? _bestBoards;
 
   @override
   void initState() {
     super.initState();
     _tabController =
-        new TabController(vsync: this, length: widget.model.tabList.length);
-    _tabController.addListener(_handleTabSelection);
-    _bestBoards = widget.model.refreshBestBoards();
+        new TabController(vsync: this, length: widget.model!.tabList.length);
+    _tabController!.addListener(_handleTabSelection);
+    _bestBoards = widget.model!.refreshBestBoards();
   }
 
   void _handleTabSelection() {
@@ -427,7 +427,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: widget.model.tabList.length,
+        length: widget.model!.tabList.length,
         child: Column(
           children: [
             TabBar(
@@ -437,10 +437,10 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                 physics: BouncingScrollPhysics(),
                 isScrollable: true,
                 tabs: List.generate(
-                    widget.model.tabList.length,
+                    widget.model!.tabList.length,
                     (index) => Container(
                           margin: EdgeInsets.only(
-                            right: index == widget.model.tabList.length - 1
+                            right: index == widget.model!.tabList.length - 1
                                 ? SizeConfig.pageHorizontalMargins
                                 : SizeConfig.padding10,
                             left: index == 0
@@ -456,16 +456,16 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                                   BorderRadius.circular(SizeConfig.padding8),
                               color: UiConstants.gameCardColor,
                               border: Border.all(
-                                  color: _tabController.index == index
+                                  color: _tabController!.index == index
                                       ? Colors.white
                                       : Colors.transparent,
-                                  width: _tabController.index == index
+                                  width: _tabController!.index == index
                                       ? 0.5
                                       : 0.0)),
-                          child: Text(widget.model.tabList[index],
+                          child: Text(widget.model!.tabList[index],
                               textAlign: TextAlign.center,
                               style: TextStyles.body4.colour(Colors.white
-                                  .withOpacity(_tabController.index == index
+                                  .withOpacity(_tabController!.index == index
                                       ? 1
                                       : 0.5))),
                         ))),
@@ -473,7 +473,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
               height: SizeConfig.padding16,
             ),
             Container(
-              height: SizeConfig.screenWidth * 0.56,
+              height: SizeConfig.screenWidth! * 0.56,
               child: TabBarView(
                 controller: _tabController,
                 physics: NeverScrollableScrollPhysics(),
@@ -484,47 +484,47 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                     showIndicator: widget.showIndicatorForAll,
                   ),
                   //Corner
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length >= 1
+                  widget.model!.userWeeklyBoards != null &&
+                          widget.model!.userWeeklyBoards!.length >= 1
                       ? Column(
                           children: [
                             Ticket(
-                                dailyPicks: widget.model.weeklyDigits,
+                                dailyPicks: widget.model!.weeklyDigits,
                                 bestBoards: _bestBoards,
-                                board: _bestBoards[0],
+                                board: _bestBoards![0],
                                 showBestOdds: false,
                                 calledDigits:
-                                    widget.model.weeklyDigits.toList()),
+                                    widget.model!.weeklyDigits!.toList()),
                           ],
                         )
                       : NoTicketWidget(),
                   //Top row
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length >= 1
+                  widget.model!.userWeeklyBoards != null &&
+                          widget.model!.userWeeklyBoards!.length >= 1
                       ? Ticket(
-                          dailyPicks: widget.model.weeklyDigits,
+                          dailyPicks: widget.model!.weeklyDigits,
                           bestBoards: _bestBoards,
-                          board: _bestBoards[1],
+                          board: _bestBoards![1],
                           showBestOdds: false,
-                          calledDigits: widget.model.weeklyDigits.toList())
+                          calledDigits: widget.model!.weeklyDigits!.toList())
                       : NoTicketWidget(),
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length >= 1
+                  widget.model!.userWeeklyBoards != null &&
+                          widget.model!.userWeeklyBoards!.length >= 1
                       ? Ticket(
-                          dailyPicks: widget.model.weeklyDigits,
+                          dailyPicks: widget.model!.weeklyDigits,
                           bestBoards: _bestBoards,
-                          board: _bestBoards[2],
+                          board: _bestBoards![2],
                           showBestOdds: false,
-                          calledDigits: widget.model.weeklyDigits.toList())
+                          calledDigits: widget.model!.weeklyDigits!.toList())
                       : NoTicketWidget(),
-                  widget.model.userWeeklyBoards != null &&
-                          widget.model.userWeeklyBoards.length >= 1
+                  widget.model!.userWeeklyBoards != null &&
+                          widget.model!.userWeeklyBoards!.length >= 1
                       ? Ticket(
-                          dailyPicks: widget.model.weeklyDigits,
+                          dailyPicks: widget.model!.weeklyDigits,
                           bestBoards: _bestBoards,
-                          board: _bestBoards[3],
+                          board: _bestBoards![3],
                           showBestOdds: false,
-                          calledDigits: widget.model.weeklyDigits.toList())
+                          calledDigits: widget.model!.weeklyDigits!.toList())
                       : NoTicketWidget(),
                 ],
               ),
@@ -535,7 +535,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
 }
 
 class NoTicketWidget extends StatelessWidget {
-  const NoTicketWidget({Key key}) : super(key: key);
+  const NoTicketWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -544,7 +544,7 @@ class NoTicketWidget extends StatelessWidget {
       children: [
         SvgPicture.asset(
           Assets.noWinnersAsset,
-          width: SizeConfig.screenWidth * 0.2,
+          width: SizeConfig.screenWidth! * 0.2,
         ),
         SizedBox(
           height: SizeConfig.padding14,
@@ -668,15 +668,15 @@ class Odds extends StatelessWidget {
 
 class ButTicketsComponent extends StatelessWidget {
   const ButTicketsComponent({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final TambolaHomeViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     return Container(
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.symmetric(
@@ -711,7 +711,7 @@ class ButTicketsComponent extends StatelessWidget {
               InkWell(
                 onTap: () {
                   AppState.screenStack.add(ScreenItem.dialog);
-                  _analyticsService.track(
+                  _analyticsService!.track(
                       eventName: AnalyticsEvents.tambolaHelpTapped,
                       properties: AnalyticsProperties.getDefaultPropertiesMap(
                           extraValuesMap: {
@@ -720,7 +720,7 @@ class ButTicketsComponent extends StatelessWidget {
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
                           }));
-                  Navigator.of(AppState.delegate.navigatorKey.currentContext)
+                  Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
                       .push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, anotherAnimation) {
@@ -773,7 +773,7 @@ class ButTicketsComponent extends StatelessWidget {
                       onPressed: model.decreaseTicketCount,
                     ),
                     Container(
-                      width: SizeConfig.screenHeight * 0.03,
+                      width: SizeConfig.screenHeight! * 0.03,
                       height: SizeConfig.padding54,
                       child: TextField(
                         style: TextStyles.sourceSans.body2.setHeight(2),
@@ -818,9 +818,9 @@ class ButTicketsComponent extends StatelessWidget {
               Spacer(),
               AppPositiveBtn(
                   height: SizeConfig.padding54,
-                  width: SizeConfig.screenWidth * 0.34,
+                  width: SizeConfig.screenWidth! * 0.34,
                   onPressed: () {
-                    _analyticsService.track(
+                    _analyticsService!.track(
                         eventName: AnalyticsEvents.tambolaSaveTapped,
                         properties: AnalyticsProperties
                             .getDefaultPropertiesMap(extraValuesMap: {
@@ -829,8 +829,7 @@ class ButTicketsComponent extends StatelessWidget {
                           "Tambola Tickets Owned":
                               AnalyticsProperties.getTambolaTicketCount(),
                           "Number of Tickets":
-                              model.ticketCountController.text ?? "",
-                          //TODO : amount not coming
+                              model.ticketCountController!.text ?? "",
                           "Amount": model.ticketSavedAmount,
                         }));
                     BaseUtil().openDepositOptionsModalSheet(
@@ -847,10 +846,10 @@ class ButTicketsComponent extends StatelessWidget {
 
 class PageViewWithIndicator extends StatefulWidget {
   const PageViewWithIndicator(
-      {Key key, @required this.model, @required this.showIndicator})
+      {Key? key, required this.model, required this.showIndicator})
       : super(key: key);
 
-  final TambolaHomeViewModel model;
+  final TambolaHomeViewModel? model;
   final bool showIndicator;
 
   @override
@@ -863,9 +862,9 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
 
   @override
   void initState() {
-    ticketsCount = widget.model.tambolaBoardViews.length > 5
+    ticketsCount = widget.model!.tambolaBoardViews!.length > 5
         ? 5
-        : widget.model.tambolaBoardViews.length;
+        : widget.model!.tambolaBoardViews!.length;
     super.initState();
   }
 
@@ -888,13 +887,13 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
     return Column(
       children: [
         Container(
-          height: SizeConfig.screenWidth * 0.48,
+          height: SizeConfig.screenWidth! * 0.48,
           width: SizeConfig.screenWidth,
           child: PageView(
             physics: BouncingScrollPhysics(),
-            controller: widget.model.ticketPageController,
+            controller: widget.model!.ticketPageController,
             scrollDirection: Axis.horizontal,
-            children: widget.model.tambolaBoardViews.sublist(0, ticketsCount),
+            children: widget.model!.tambolaBoardViews!.sublist(0, ticketsCount),
             onPageChanged: (int index) {
               _currentPageNotifier.value = index;
             },
@@ -911,42 +910,42 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
 
 class ListLoader extends StatelessWidget {
   final bool bottomPadding;
-  const ListLoader({Key key, this.bottomPadding = false}) : super(key: key);
+  const ListLoader({Key? key, this.bottomPadding = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: SizeConfig.screenHeight * 0.1),
+        SizedBox(height: SizeConfig.screenHeight! * 0.1),
         FullScreenLoader(size: SizeConfig.padding80),
-        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight * 0.1),
+        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight! * 0.1),
       ],
     );
   }
 }
 
 class GameChips extends StatelessWidget {
-  final TambolaHomeViewModel model;
-  final String text;
-  final int page;
+  final TambolaHomeViewModel? model;
+  final String? text;
+  final int? page;
   GameChips({this.model, this.text, this.page});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => model.viewpage(page),
+      onTap: () => model!.viewpage(page),
       child: Container(
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding24, vertical: SizeConfig.padding12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: model.currentPage == page
+          color: model!.currentPage == page
               ? UiConstants.primaryColor
               : UiConstants.primaryColor.withOpacity(0.2),
           borderRadius: BorderRadius.circular(100),
         ),
-        child: Text(text,
-            style: model.currentPage == page
+        child: Text(text!,
+            style: model!.currentPage == page
                 ? TextStyles.body3.bold.colour(Colors.white)
                 : TextStyles.body3.colour(UiConstants.primaryColor)),
       ),
@@ -956,8 +955,8 @@ class GameChips extends StatelessWidget {
 
 class TodayWeeklyPicksCard extends StatelessWidget {
   const TodayWeeklyPicksCard({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final TambolaHomeViewModel model;
@@ -987,8 +986,8 @@ class TodayWeeklyPicksCard extends StatelessWidget {
 
 class TambolaLeaderBoard extends StatelessWidget {
   const TambolaLeaderBoard({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final TambolaHomeViewModel model;
@@ -1142,7 +1141,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                                             children: [
                                               Text(
                                                   //"avc",
-                                                  model.winners[i].username
+                                                  model.winners[i].username!
                                                           .replaceAll(
                                                               '@', '.') ??
                                                       "username",
@@ -1155,7 +1154,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          "₹ ${model.winners[i].amount.toInt() ?? "00"}",
+                                          "₹ ${model.winners[i].amount!.toInt() ?? "00"}",
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
                                         )
@@ -1185,8 +1184,8 @@ class TambolaLeaderBoard extends StatelessWidget {
 
 class TambolaPrize extends StatelessWidget {
   const TambolaPrize({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final TambolaHomeViewModel model;
@@ -1197,14 +1196,14 @@ class TambolaPrize extends StatelessWidget {
       alignment: Alignment.topCenter,
       children: [
         Container(
-          margin: EdgeInsets.only(top: SizeConfig.screenWidth * 0.15),
+          margin: EdgeInsets.only(top: SizeConfig.screenWidth! * 0.15),
           decoration: BoxDecoration(
             color: UiConstants.kTambolaMidTextColor,
           ),
           child: Column(
             children: [
               SizedBox(
-                height: SizeConfig.screenWidth * 0.17,
+                height: SizeConfig.screenWidth! * 0.17,
               ),
               Text(
                 "Tambola Prizes",
@@ -1247,7 +1246,7 @@ class TambolaPrize extends StatelessWidget {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        itemCount: model.tPrizes.prizesA.length,
+                        itemCount: model.tPrizes!.prizesA!.length,
                         itemBuilder: (context, index) {
                           return Container(
                             margin: EdgeInsets.symmetric(
@@ -1267,12 +1266,13 @@ class TambolaPrize extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      model.tPrizes.prizesA[index].displayName,
+                                      model.tPrizes!.prizesA![index]
+                                          .displayName!,
                                       style: TextStyles.rajdhaniB.body2
                                           .colour(Colors.white),
                                     ),
                                     Text(
-                                      "Complete ${model.tPrizes.prizesA[index].displayName} to get",
+                                      "Complete ${model.tPrizes!.prizesA![index].displayName} to get",
                                       style: TextStyles.sourceSans.body4.colour(
                                           Colors.white.withOpacity(0.5)),
                                     )
@@ -1286,7 +1286,7 @@ class TambolaPrize extends StatelessWidget {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          model.tPrizes.prizesA[index]
+                                          model.tPrizes!.prizesA![index]
                                                   .displayAmount ??
                                               "",
                                           style: TextStyles.sourceSans.body3
@@ -1304,7 +1304,7 @@ class TambolaPrize extends StatelessWidget {
                                               width: SizeConfig.padding10,
                                             ),
                                             Text(
-                                              "${model.tPrizes.prizesA[index].flc}",
+                                              "${model.tPrizes!.prizesA![index].flc}",
                                               style: TextStyles.sourceSans.body4
                                                   .colour(Colors.white
                                                       .withOpacity(0.5)),
@@ -1326,8 +1326,8 @@ class TambolaPrize extends StatelessWidget {
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
-          width: SizeConfig.screenWidth * 0.3,
-          height: SizeConfig.screenWidth * 0.3,
+          width: SizeConfig.screenWidth! * 0.3,
+          height: SizeConfig.screenWidth! * 0.3,
           decoration: BoxDecoration(
             color: UiConstants.kTambolaMidTextColor,
             shape: BoxShape.circle,

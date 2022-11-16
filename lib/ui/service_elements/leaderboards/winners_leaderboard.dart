@@ -21,12 +21,12 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'dart:math' as math;
 
 class WinnerboardView extends StatelessWidget {
-  final int count;
+  final int? count;
   WinnerboardView({this.count});
 
   getLength(int listLength) {
     if (count != null) {
-      if (listLength < count)
+      if (listLength < count!)
         return listLength;
       else
         return count;
@@ -34,7 +34,7 @@ class WinnerboardView extends StatelessWidget {
       return listLength;
   }
 
-  getGameName(String gamename) {
+  getGameName(String? gamename) {
     switch (gamename) {
       case Constants.GAME_TYPE_TAMBOLA:
         return "Tambola";
@@ -61,8 +61,8 @@ class WinnerboardView extends StatelessWidget {
                 //1
                 Container(
                   margin: EdgeInsets.only(top: SizeConfig.padding32),
-                  width: SizeConfig.screenWidth * 0.5,
-                  height: SizeConfig.screenWidth * 0.5,
+                  width: SizeConfig.screenWidth! * 0.5,
+                  height: SizeConfig.screenWidth! * 0.5,
                   decoration: BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
                     shape: BoxShape.circle,
@@ -74,7 +74,7 @@ class WinnerboardView extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
                   margin: EdgeInsets.fromLTRB(
                       0.0,
-                      SizeConfig.screenWidth * 0.15 + SizeConfig.padding32,
+                      SizeConfig.screenWidth! * 0.15 + SizeConfig.padding32,
                       0.0,
                       0.0),
                   width: double.infinity,
@@ -100,7 +100,7 @@ class WinnerboardView extends StatelessWidget {
                                     UiConstants.kSecondaryLeaderBoardTextColor),
                               ),
                               Text(
-                                model.getDateRange(),
+                                model!.getDateRange(),
                                 style: TextStyles.sourceSans.body4
                                     .colour(UiConstants.kTextFieldTextColor),
                               )
@@ -111,14 +111,15 @@ class WinnerboardView extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 Haptic.vibrate();
-                                AppState.delegate.appState.currentAction =
+                                AppState.delegate!.appState.currentAction =
                                     PageAction(
                                   state: PageState.addWidget,
                                   widget: AllParticipantsWinnersTopReferers(
                                     isForTopReferers: false,
                                     winners: model.winners,
                                   ),
-                                  page: AllParticipantsWinnersTopReferersConfig,
+                                  page:
+                                      AllParticipantsWinnersTopReferrersConfig,
                                 );
                               },
                               child: Row(
@@ -315,7 +316,7 @@ class WinnerboardView extends StatelessWidget {
                                                             Text(
                                                                 //"avc",
                                                                 model.winners[i]
-                                                                        .username
+                                                                        .username!
                                                                         .replaceAll(
                                                                             '@',
                                                                             '.') ??
@@ -341,7 +342,7 @@ class WinnerboardView extends StatelessWidget {
                                                         ),
                                                       ),
                                                       Text(
-                                                        "₹ ${model.winners[i].amount.toInt() ?? "00"}",
+                                                        "₹ ${model.winners[i].amount!.toInt() ?? "00"}",
                                                         style: TextStyles
                                                             .sourceSans.body2
                                                             .colour(
@@ -376,7 +377,7 @@ class WinnerboardView extends StatelessWidget {
                   margin: EdgeInsets.only(right: SizeConfig.padding14),
                   child: SvgPicture.asset(
                     Assets.winScreenHighestScorers,
-                    width: SizeConfig.screenWidth * 0.3,
+                    width: SizeConfig.screenWidth! * 0.3,
                   ),
                 ),
               ],

@@ -5,31 +5,31 @@ import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
   static Log log = new Log("User");
-  String uid;
-  String mobile;
-  String name;
-  String email;
-  String dob;
-  String gender; // 0: Male | 1: Female | -1: Rather Not to say
-  String username;
-  String verifiedName;
-  String client_token; //fetched from a subcollection
-  bool isInvested;
-  bool isIciciOnboarded;
-  bool isAugmontOnboarded;
-  bool isSimpleKycVerified;
-  bool isBlocked;
+  String?  uid;
+  String?  mobile;
+  String?  name;
+  String?  email;
+  String?  dob;
+  String?  gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String?  username;
+  String?  verifiedName;
+  String?  client_token; //fetched from a subcollection
+  bool?  isInvested;
+  bool?  isIciciOnboarded;
+  bool?  isAugmontOnboarded;
+  bool?  isSimpleKycVerified;
+  bool?  isBlocked;
   int isKycVerified;
-  String kycName;
-  String pendingTxnId;
-  bool isIciciEnabled;
-  bool isAugmontEnabled;
-  bool isEmailVerified;
+  String ? kycName;
+  String ? pendingTxnId;
+  bool ? isIciciEnabled;
+  bool ? isAugmontEnabled;
+  bool ? isEmailVerified;
   UserPreferences userPreferences;
   TimestampModel createdOn;
-  String appFlyerId;
-  String avatarId;
-  bool isOldUser;
+  String ? appFlyerId;
+  String ? avatarId;
+  bool?  isOldUser;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -93,55 +93,81 @@ class BaseUser {
       : this(
           id,
           mobile,
-          null,
-          null,
-          null,
-          null,
-          null,
+          '',
+          '',
+          '',
+          '', 
+          '' , 
           false,
-          null,
+          false, 
+          false, 
           false,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          "",
+          0,
+          '',
+          '',
           false,
           false,
-          UserPreferences(null),
+          '',
+          false,
+          false,
+          UserPreferences({}),
           TimestampModel.currentTimeStamp(),
-          null,
-          null,
+          '',
+          '',
           false,
         );
-
-  BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
+BaseUser.base()
+      : this(
+          '',
+          '',
+          '',
+          '',
+          '',
+          '', 
+          '' , 
+          false,
+          false, 
+          false, 
+          false,
+          0,
+          '',
+          '',
+          false,
+          false,
+          '',
+          false,
+          false,
+          UserPreferences({}),
+          TimestampModel(seconds: 0,nanoseconds: 0),
+          '',
+          '',
+          false,
+        );
+  BaseUser.fromMap(Map<String, dynamic> data, String id, [String ? client_token])
       : this(
             id,
-            data[fldMobile]?.toString(),
-            data[fldEmail]?.toString(),
-            data[fldName]?.toString(),
-            data[fldDob]?.toString(),
-            data[fldGender]?.toString()?.toUpperCase(),
-            client_token?.toString(),
+            data[fldMobile]?.toString()?? '',
+            data[fldEmail]?.toString() ?? '',
+            data[fldName]?.toString() ?? '',
+            data[fldDob]?.toString() ?? '',
+            data[fldGender]?.toString()?.toUpperCase() ?? '',
+            client_token?.toString() ?? '',
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
             data[fldIsAugmontOnboarded] ?? false,
-            data[fldIsSimpleKycVerified],
-            data[fldIsKycVerified],
-            data[fldKycName],
-            data[fldPendingTxnId],
-            data[fldIsIciciEnabled],
-            data[fldIsAugmontEnabled],
-            data[fldUsername]?.toString(),
+            data[fldIsSimpleKycVerified] ?? false,
+            data[fldIsKycVerified] ?? 0,
+            data[fldKycName] ?? '',
+            data[fldPendingTxnId] ?? '',
+            data[fldIsIciciEnabled] ?? false,
+            data[fldIsAugmontEnabled] ?? false,
+            data[fldUsername]?.toString() ?? '',
             data[fldIsEmailVerified] ?? false,
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
             TimestampModel.fromMap(data[fldCreatedOn]),
-            data[fldAppFlyerId],
-            data[fldAvatarId],
+            data[fldAppFlyerId] ?? '',
+            data[fldAvatarId] ?? '',
             data[fldIsOldUser] ?? false);
 
   //to send user object to server
@@ -159,14 +185,14 @@ class BaseUser {
       fldIsEmailVerified: isEmailVerified,
       fldCreatedOn: createdOn
     };
-    if (isKycVerified != null) userObj[fldIsKycVerified] = isKycVerified;
+    if (isKycVerified != 0) userObj[fldIsKycVerified] = isKycVerified;
     if (kycName != null) userObj[fldKycName] = kycName;
     if (isIciciOnboarded != null)
       userObj[fldIsIciciOnboarded] = isIciciOnboarded;
     if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
     if (isAugmontEnabled != null)
       userObj[fldIsAugmontEnabled] = isAugmontEnabled;
-    if (userPreferences != null)
+    if (userPreferences != UserPreferences({}))
       userObj[fldUserPrefs] = userPreferences.toJson();
     if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
@@ -201,21 +227,21 @@ class UserPreferences {
   };
 
   //current values
-  Map<String, int> _activePrefs = {};
+  Map<String?, int?> _activePrefs = {};
 
-  UserPreferences(Map<dynamic, dynamic> remValues) {
+  UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {
-      String _fKey = _index[p];
-      int _defValue = _defValues[p];
-      _activePrefs[_fKey] = (remValues != null &&
-              remValues[_fKey] != null &&
+      String?  _fKey = _index[p];
+      int ? _defValue = _defValues[p];
+      _activePrefs[_fKey] = (remValues != {} &&
+              remValues![_fKey] != null &&
               remValues[_fKey] is int)
           ? remValues[_fKey]
           : _defValue;
     }
   }
 
-  int getPreference(Preferences p) => _activePrefs[_index[p]];
+  int? getPreference(Preferences p) => _activePrefs[_index[p]];
 
   setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 

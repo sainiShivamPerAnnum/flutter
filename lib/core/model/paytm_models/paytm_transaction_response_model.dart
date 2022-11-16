@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:felloapp/util/constants.dart';
 
 class TransactionResponseModel {
-  String message;
-  Data data;
+  String? message;
+  Data? data;
   TransactionResponseModel({
     @required this.message,
     @required this.data,
   });
 
   TransactionResponseModel copyWith({
-    String message,
-    Data data,
+    String? message,
+    Data? data,
   }) {
     return TransactionResponseModel(
       message: message ?? this.message,
@@ -26,14 +26,16 @@ class TransactionResponseModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'message': message,
-      'data': data.toMap(),
+      'data': data!.toMap(),
     };
   }
 
   factory TransactionResponseModel.fromMap(Map<String, dynamic> map) {
     return TransactionResponseModel(
       message: map['message'] as String,
-      data: Data.fromMap(map['data'] as Map<String, dynamic>),
+      data: map['data'] != null
+          ? Data.fromMap(map['data'] as Map<String, dynamic>)
+          : Data.base(),
     );
   }
 
@@ -59,24 +61,24 @@ class TransactionResponseModel {
 }
 
 class Data {
-  String status;
-  bool isUpdating;
-  int tickets;
-  double goldInTxnBought;
+  String? status;
+  bool? isUpdating;
+  int? tickets;
+  double? goldInTxnBought;
   Data(
       {@required this.status,
       @required this.isUpdating,
       @required this.tickets,
       this.goldInTxnBought});
 
-  Data copyWith(
-      {bool status, bool isUpdating, int tickets, double goldInTxnBought}) {
-    return Data(
-        status: status ?? this.status,
-        isUpdating: isUpdating ?? this.isUpdating,
-        tickets: tickets ?? this.tickets,
-        goldInTxnBought: goldInTxnBought ?? this.goldInTxnBought);
-  }
+  // Data copyWith(
+  //     {bool? status, bool? isUpdating, int? tickets, double? goldInTxnBought}) {
+  //   return Data(
+  //       status: statu ?? this.status,
+  //       isUpdating: isUpdating ?? this.isUpdating,
+  //       tickets: tickets ?? this.tickets,
+  //       goldInTxnBought: goldInTxnBought ?? this.goldInTxnBought);
+  // }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -89,12 +91,18 @@ class Data {
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
         status:
-            map['status'] as String ?? Constants.TXN_STATUS_RESPONSE_PENDING,
-        isUpdating: map['isUpdating'] as bool ?? true,
-        tickets: map['tickets'] as int ?? 0,
+            map['status'] as String? ?? Constants.TXN_STATUS_RESPONSE_PENDING,
+        isUpdating: map['isUpdating'] as bool? ?? true,
+        tickets: map['tickets'] as int? ?? 0,
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble());
   }
 
+  Data.base() {
+    status = Constants.TXN_STATUS_RESPONSE_PENDING;
+    isUpdating = true;
+    tickets = 0;
+    goldInTxnBought = 0.0;
+  }
   String toJson() => json.encode(toMap());
 
   factory Data.fromJson(String source) =>
@@ -114,3 +122,4 @@ class Data {
   @override
   int get hashCode => status.hashCode ^ isUpdating.hashCode;
 }
+

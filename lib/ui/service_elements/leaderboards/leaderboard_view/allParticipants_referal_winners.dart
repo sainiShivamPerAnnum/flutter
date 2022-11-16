@@ -9,21 +9,21 @@ import 'package:flutter/material.dart';
 
 class AllParticipantsWinnersTopReferers extends StatelessWidget {
   AllParticipantsWinnersTopReferers(
-      {@required this.isForTopReferers,
+      {required this.isForTopReferers,
       this.winners,
       this.referralLeaderBoard,
       this.showPoints = false,
       this.appBarTitle,
-      Key key})
+      Key? key})
       : super(key: key);
 
   final bool isForTopReferers;
-  final List<Winners> winners;
-  final List<ScoreBoard> referralLeaderBoard;
+  final List<Winners>? winners;
+  final List<ScoreBoard>? referralLeaderBoard;
   final bool showPoints;
-  final String appBarTitle;
+  final String? appBarTitle;
 
-  getGameName(String gamename) {
+  getGameName(String? gamename) {
     switch (gamename) {
       case Constants.GAME_TYPE_TAMBOLA:
         return "Tambola";
@@ -69,7 +69,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                   child: Column(
                     children: isForTopReferers
                         ? List.generate(
-                            referralLeaderBoard.length,
+                            referralLeaderBoard!.length,
                             (i) {
                               return Container(
                                 width: SizeConfig.screenWidth,
@@ -95,8 +95,8 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                  referralLeaderBoard[i]
-                                                          .username
+                                                  referralLeaderBoard![i]
+                                                          .username!
                                                           .replaceAll(
                                                               '@', '.') ??
                                                       "username",
@@ -108,11 +108,11 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                         ),
                                         Text(
                                           showPoints
-                                              ? getPoints(referralLeaderBoard[i]
-                                                          .score)
+                                              ? getPoints(referralLeaderBoard![i]
+                                                          .score!)
                                                       .toString() ??
                                                   "00"
-                                              : referralLeaderBoard[i]
+                                              : referralLeaderBoard![i]
                                                       .refCount
                                                       .toString() ??
                                                   "00",
@@ -124,7 +124,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                     SizedBox(
                                       height: SizeConfig.padding14,
                                     ),
-                                    if (i + 1 < referralLeaderBoard.length)
+                                    if (i + 1 < referralLeaderBoard!.length)
                                       Divider(
                                         color: Colors.white,
                                         thickness: 0.2,
@@ -138,7 +138,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                             },
                           )
                         : List.generate(
-                            winners.length,
+                            winners!.length,
                             (i) {
                               return Column(
                                 children: [
@@ -173,8 +173,8 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                             children: [
                                               Text(
                                                   //"avc",
-                                                  winners[i]
-                                                          .username
+                                                  winners![i]
+                                                          .username!
                                                           .replaceAll(
                                                               '@', '.') ??
                                                       "username",
@@ -183,7 +183,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                                       .colour(Colors.white)),
                                               Text(
                                                 getGameName(
-                                                    winners[i].gameType),
+                                                    winners![i].gameType),
                                                 style: TextStyles.body4.colour(
                                                     UiConstants.kTextColor2),
                                               ),
@@ -193,14 +193,14 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          "₹ ${winners[i].amount.toInt() ?? "00"}",
+                                          "₹ ${winners![i].amount!.toInt() ?? "00"}",
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
                                         )
                                       ],
                                     ),
                                   ),
-                                  if (i + 1 < winners.length)
+                                  if (i + 1 < winners!.length)
                                     Divider(
                                       color: Colors.white,
                                       thickness: 0.2,

@@ -6,7 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TambolaCard extends StatelessWidget {
-  const TambolaCard({Key key, this.tambolaController}) : super(key: key);
+  const TambolaCard({Key? key, required this.tambolaController})
+      : super(key: key);
   final TambolaWidgetController tambolaController;
   @override
   Widget build(BuildContext context) {

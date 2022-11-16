@@ -18,14 +18,14 @@ import 'package:lottie/lottie.dart';
 
 class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
-  const LoginMobileView({Key key, @required this.loginModel}) : super(key: key);
+  const LoginMobileView({Key? key, required this.loginModel}) : super(key: key);
   final LoginControllerViewModel loginModel;
   @override
   State<LoginMobileView> createState() => LoginMobileViewState();
 }
 
 class LoginMobileViewState extends State<LoginMobileView> {
-  LoginMobileViewModel model;
+  late LoginMobileViewModel model;
 
   static TextSpan renderedWidget(String paragraph) {
     if (paragraph.isEmpty ||
@@ -91,14 +91,13 @@ class LoginMobileViewState extends State<LoginMobileView> {
     return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;
-        
       },
       onModelDispose: (model) {},
       builder: (ctx, model, child) {
         return Column(
-          mainAxisAlignment: MainAxisAlignment.start, 
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: SizeConfig.screenHeight*0.10),
+            SizedBox(height: SizeConfig.screenHeight! * 0.10),
             LoginImage(),
             SizedBox(
               child: Padding(padding: EdgeInsets.all(SizeConfig.padding8)),
@@ -130,8 +129,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 prefixTextStyle: TextStyles.sourceSans.body3,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom >
-                            SizeConfig.screenHeight / 3
-                        ? SizeConfig.screenHeight * 0.1
+                            SizeConfig.screenHeight! / 3
+                        ? SizeConfig.screenHeight! * 0.1
                         : 0),
                 textStyle: TextStyles.sourceSans.body3,
                 suffixIcon: model.showTickCheck
@@ -161,13 +160,13 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
 class SignupHeroAsset extends StatelessWidget {
   final String asset;
-  const SignupHeroAsset({Key key, @required this.asset}) : super(key: key);
+  const SignupHeroAsset({Key? key, required this.asset}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth * 0.54,
-      height: SizeConfig.screenWidth * 0.54,
+      width: SizeConfig.screenWidth! * 0.54,
+      height: SizeConfig.screenWidth! * 0.54,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: RadialGradient(
@@ -193,25 +192,25 @@ class SignupHeroAsset extends StatelessWidget {
 }
 
 class BankingLogo extends StatelessWidget {
-  final String asset;
+  final String? asset;
 
-  const BankingLogo({Key key, this.asset}) : super(key: key);
+  const BankingLogo({Key? key, this.asset}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-      height: SizeConfig.screenWidth * 0.085,
-      width: SizeConfig.screenWidth * 0.085,
+      height: SizeConfig.screenWidth! * 0.085,
+      width: SizeConfig.screenWidth! * 0.085,
       decoration: BoxDecoration(
         color: Color(0xFF39393C),
         shape: BoxShape.circle,
       ),
       child: Center(
         child: Image.asset(
-          asset,
-          height: SizeConfig.screenWidth * 0.053,
-          width: SizeConfig.screenWidth * 0.053,
+          asset!,
+          height: SizeConfig.screenWidth! * 0.053,
+          width: SizeConfig.screenWidth! * 0.053,
         ),
       ),
     );

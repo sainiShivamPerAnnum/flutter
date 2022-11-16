@@ -19,11 +19,11 @@ class FreshDeskHelp extends StatefulWidget {
 }
 
 class _FreshDeskHelpState extends State<FreshDeskHelp> {
-  WebViewController _webViewController;
+  late WebViewController _webViewController;
   int counter = 0;
   int exitCounter = 0;
   bool isLoading = true;
-  final _userService = locator<UserService>();
+  final UserService? _userService = locator<UserService>();
 
   _loadHtmlFromAssets() async {
     await _webViewController.loadUrl(
@@ -72,7 +72,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                 await _webViewController.runJavascript('openWidget()');
                 //prefill form with name email mobile and userid
                 await _webViewController.runJavascript(
-                    'prefillForm("${_userService.baseUser.name}","${_userService.baseUser.email}","${_userService.baseUser.mobile}","${_userService.baseUser.uid}" )');
+                    'prefillForm("${_userService!.baseUser!.name}","${_userService!.baseUser!.email}","${_userService!.baseUser!.mobile}","${_userService!.baseUser!.uid}" )');
                 //hide fields which are disabled and uneditable
                 await _webViewController.runJavascript('hideFields()');
                 exitLoading();
@@ -95,7 +95,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                       if (message.message == 'Close the window' &&
                           exitCounter == 1) {
                         log("Close the freshdesk window");
-                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher!.didPopRoute();
                       }
                     })
               ]),
@@ -148,7 +148,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                       icon: Icon(Icons.close),
                       color: Colors.white,
                       onPressed: () {
-                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher!.didPopRoute();
                       },
                     ),
                   ),

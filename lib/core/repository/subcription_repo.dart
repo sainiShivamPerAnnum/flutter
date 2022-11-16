@@ -13,9 +13,9 @@ class SubscriptionRepo extends BaseRepo {
       : "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<List<AutosaveTransactionModel>>> getAutosaveTransactions({
-    @required String uid,
-    String lastDocument,
-    int limit,
+    required String? uid,
+    String? lastDocument,
+    int? limit,
   }) async {
     try {
       final String token = await getBearerToken();
@@ -29,12 +29,12 @@ class SubscriptionRepo extends BaseRepo {
         token: token,
       );
       final responseData = res['data'];
-      logger.d(responseData);
+      logger!.d(responseData);
       final result = AutosaveTransactionModel.helper.fromMapArray(res['data']);
 
       return ApiResponse(model: result, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(e?.toString() ?? "Unable to get txns", 400);
     }
   }

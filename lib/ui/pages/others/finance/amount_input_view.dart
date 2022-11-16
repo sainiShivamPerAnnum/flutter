@@ -11,10 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AmountInputView extends StatefulWidget {
-  final TextEditingController amountController;
+  final TextEditingController? amountController;
   final List<UserOption> chipAmounts;
+
   final int bestChipIndex;
-  final String notice;
+  final String? notice;
   final bool isEnabled;
   final double maxAmount;
   final double minAmount;
@@ -24,16 +25,16 @@ class AmountInputView extends StatefulWidget {
   final Function(int val) onAmountChange;
 
   const AmountInputView({
-    Key key,
-    @required this.chipAmounts,
-    @required this.onAmountChange,
-    @required this.amountController,
-    @required this.isEnabled,
-    @required this.maxAmount,
-    @required this.minAmount,
-    @required this.maxAmountMsg,
-    @required this.minAmountMsg,
-    @required this.focusNode,
+    Key? key,
+    required this.chipAmounts,
+    required this.onAmountChange,
+    required this.amountController,
+    required this.isEnabled,
+    required this.maxAmount,
+    required this.minAmount,
+    required this.maxAmountMsg,
+    required this.minAmountMsg,
+    required this.focusNode,
     this.bestChipIndex = 1,
     this.notice,
   }) : super(key: key);
@@ -54,16 +55,16 @@ class _AmountInputViewState extends State<AmountInputView> {
   }
 
   void updateFieldWidth() {
-    int n = widget.amountController.text.length;
+    int n = widget.amountController!.text.length;
     if (n == 0) n++;
     _fieldWidth = (SizeConfig.padding40 * n.toDouble());
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentAmt = double.tryParse(widget.amountController.text) ?? 0;
-    if (currentAmt == null) widget.amountController.text = "0.0";
-    final _analyticsService = locator<AnalyticsService>();
+    final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
+    if (currentAmt == null) widget.amountController!.text = "0.0";
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
@@ -75,7 +76,7 @@ class _AmountInputViewState extends State<AmountInputView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              if (widget.notice != null && widget.notice.isNotEmpty)
+              if (widget.notice != null && widget.notice!.isNotEmpty)
                 Container(
                   margin: EdgeInsets.only(bottom: SizeConfig.padding16),
                   decoration: BoxDecoration(
@@ -85,7 +86,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                   width: SizeConfig.screenWidth,
                   padding: EdgeInsets.all(SizeConfig.padding16),
                   child: Text(
-                    widget.notice,
+                    widget.notice!,
                     textAlign: TextAlign.center,
                     style: TextStyles.body3.light,
                   ),
@@ -97,7 +98,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                   Text(
                     "₹",
                     style: TextStyles.rajdhaniB.title0.colour(
-                      widget.amountController.text == "0"
+                      widget.amountController!.text == "0"
                           ? UiConstants.kTextColor2
                           : UiConstants.kTextColor,
                     ),
@@ -139,7 +140,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyles.rajdhaniB.title68.colour(
-                        widget.amountController.text == "0"
+                        widget.amountController!.text == "0"
                             ? UiConstants.kTextColor2
                             : UiConstants.kTextColor,
                       ),
@@ -178,7 +179,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                   amt: item.value,
                   isBest: item.best,
                   onClick: (amt) {
-                    _analyticsService.track(
+                    _analyticsService!.track(
                         eventName: AnalyticsEvents.suggestedAmountTapped,
                         properties: {
                           'order': i,
@@ -187,7 +188,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                         });
                     setState(() {
                       _selectedIndex = i;
-                      widget.amountController.text =
+                      widget.amountController!.text =
                           widget.chipAmounts[i].value.toString();
                       this.updateFieldWidth();
                     });
