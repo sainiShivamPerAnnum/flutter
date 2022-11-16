@@ -1,3 +1,4 @@
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -23,7 +24,7 @@ class SafetyWidget extends StatelessWidget {
         child: Row(
           children: [
             SvgPicture.asset(
-              "assets/svg/safety_asset.svg",
+              Assets.securityCheck,
               width: SizeConfig.screenWidth * 0.15,
             ),
             SizedBox(

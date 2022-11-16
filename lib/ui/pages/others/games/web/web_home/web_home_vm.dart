@@ -161,17 +161,18 @@ class WebHomeViewModel extends BaseViewModel {
     currentGame = game;
   }
 
-  trackPlayTappedAnalytics() {
+  trackGameStart() {
     _analyticsService.track(
         eventName: AnalyticsEvents.playGameTapped,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          //TODO : add location [Trending, gow,others, etc]
           'Game name': _currentGameModel.gameName,
           "Entry fee": _currentGameModel.playCost,
           "Win upto": _currentGameModel.prizeAmount,
           "Time left for draw Tambola (mins)":
               AnalyticsProperties.getTimeLeftForTambolaDraw(),
-          "Tambola Tickets Owned": AnalyticsProperties.getTabolaTicketCount(),
+          "Tambola Tickets Owned": AnalyticsProperties.getTambolaTicketCount(),
         }));
   }
 
@@ -230,12 +231,12 @@ class WebHomeViewModel extends BaseViewModel {
 
   Future<bool> checkIfDeviceIsNotAnEmulator() async {
     //TODO
-    final bool isReal = await _internalOps.checkIfDeviceIsReal();
-    if (isReal != null && !isReal) {
-      BaseUtil.showNegativeAlert(
-          "Simulators not allowed", "Please use the app on a real device");
-      return false;
-    }
+    // final bool isReal = await _internalOps.checkIfDeviceIsReal();
+    // if (isReal != null && !isReal) {
+    //   BaseUtil.showNegativeAlert(
+    //       "Simulators not allowed", "Please use the app on a real device");
+    //   return false;
+    // }
     return true;
   }
 
@@ -315,8 +316,7 @@ class WebHomeViewModel extends BaseViewModel {
   launchGame() {
     String initialUrl;
     viewpage(1);
-    trackPlayTappedAnalytics();
-
+    trackGameStart();
     initialUrl = generateGameUrl();
     _logger.d("Game Url: $initialUrl");
     AppState.delegate.appState.currentAction = PageAction(

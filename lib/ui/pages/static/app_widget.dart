@@ -151,6 +151,7 @@ class AppTextField extends StatelessWidget {
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(
+              counterStyle: TextStyle(color: UiConstants.kTextColor),
               suffixIcon: Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: suffixIcon,

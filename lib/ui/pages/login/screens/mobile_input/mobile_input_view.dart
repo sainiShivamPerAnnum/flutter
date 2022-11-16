@@ -1,5 +1,7 @@
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -89,19 +91,23 @@ class LoginMobileViewState extends State<LoginMobileView> {
     return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;
+        
       },
       onModelDispose: (model) {},
       builder: (ctx, model, child) {
         return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start, 
           children: [
-            SizedBox(height: SizeConfig.padding80),
-            SignupHeroAsset(asset: Assets.flatFullFlagIsland),
+            SizedBox(height: SizeConfig.screenHeight*0.10),
+            LoginImage(),
+            SizedBox(
+              child: Padding(padding: EdgeInsets.all(SizeConfig.padding8)),
+            ),
             Text(
               'Login/Sign up',
               style: TextStyles.rajdhaniB.title2,
             ),
-            SizedBox(height: SizeConfig.padding32),
+            SizedBox(height: SizeConfig.padding20),
             // Text(
             //   'Enter mobile number to sign up',
             //   style: TextStyles.sourceSans.body3.colour(Color(0xFFBDBDBE)),

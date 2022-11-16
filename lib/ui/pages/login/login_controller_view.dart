@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
@@ -62,7 +63,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               NewSquareBackground(
                   backgroundColor: UiConstants
                       .kRechargeModalSheetAmountSectionBackgroundColor),
-
               SingleChildScrollView(
                 reverse: true,
                 child: Column(
@@ -74,7 +74,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: new NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -97,6 +97,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     // ),
                   ],
                 ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: LoginFab(),
               ),
               if (keyboardIsOpen)
                 Positioned(

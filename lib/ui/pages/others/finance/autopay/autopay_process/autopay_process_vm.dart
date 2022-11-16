@@ -23,7 +23,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 // enum STATUS { Pending, Complete, Cancel }
-
+//TODO add chip tap to Enter amount setup
 class AutosaveProcessViewModel extends BaseViewModel {
   final _paytmService = locator<PaytmService>();
   final _logger = locator<CustomLogger>();
@@ -40,6 +40,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   AnimationController lottieAnimationController;
   String _androidPackageName = "";
   String _iosUrlScheme = "";
+  int lastTappedChipAmount = 0;
 
   int _minValue = 25;
   int maxAmount = 5000;
@@ -285,6 +286,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           AnalyticsProperties.getFelloFloAmount(),
       "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
       "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Selected Chip Amount": lastTappedChipAmount,
     });
   }
 
@@ -459,7 +461,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         content: PendingDialog(
           title: "We're still processing!",
           subtitle:

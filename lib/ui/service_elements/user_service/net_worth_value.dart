@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -13,7 +14,7 @@ class NetWorthValue extends StatelessWidget {
   });
 
   String getQuantity(UserFundWallet fund) {
-    final quantity = fund?.netWorth;
+    final quantity = BaseUtil.getIntOrDouble(fund?.netWorth ?? 0);
     final prefix = "₹";
 
     if (quantity != null) {

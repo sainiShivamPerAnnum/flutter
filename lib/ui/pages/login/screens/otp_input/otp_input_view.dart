@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
@@ -56,8 +58,14 @@ class LoginOtpViewState extends State<LoginOtpView> {
         return ListView(
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding54 + SizeConfig.padding4),
-            SignupHeroAsset(asset: Assets.flatFullFlagIsland),
+           SizedBox(height: SizeConfig.padding64),
+            Padding(
+                 padding: EdgeInsets.all(SizeConfig.padding12),
+              child:LoginImage(),
+            ),
+            SizedBox(
+              child: Padding(padding: EdgeInsets.all(SizeConfig.padding4)),
+            ),
             Align(
               alignment: Alignment.center,
               child: Text(
@@ -65,7 +73,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
-            SizedBox(height: SizeConfig.padding32),
+            SizedBox(height: SizeConfig.padding20),
             //input
             Padding(
               padding: EdgeInsets.symmetric(

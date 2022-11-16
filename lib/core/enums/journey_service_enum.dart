@@ -5,6 +5,7 @@ enum JourneyServiceProperties {
   AvatarRemoteMilestoneIndex,
   BaseGlow,
   Pages,
+  Prizes,
   JourneyPath,
   JourneyBuildFailure,
   LevelCompletion,

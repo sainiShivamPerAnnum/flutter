@@ -1,5 +1,7 @@
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -48,9 +50,14 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
           controller: widget.loginModel.nameViewScrollController,
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding44),
-
-            FelloUserAvatar(),
+            SizedBox(height: SizeConfig.padding64),
+            Padding(
+              padding: EdgeInsets.all(SizeConfig.padding12),
+              child: LoginImage(),
+            ),
+            SizedBox(
+              child: Padding(padding: EdgeInsets.all(SizeConfig.padding4)),
+            ),
             Align(
               alignment: Alignment.center,
               child: Text(
@@ -58,7 +65,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
-            SizedBox(height: SizeConfig.padding32),
+            SizedBox(height: SizeConfig.padding20),
 
             //input
             Form(
@@ -140,9 +147,8 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
 }
 
 class FelloUserAvatar extends StatelessWidget {
-  const FelloUserAvatar({
-    Key key,
-  }) : super(key: key);
+  final Widget child;
+  const FelloUserAvatar({Key key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -212,14 +218,12 @@ class FelloUserAvatar extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: SizeConfig.padding8),
-          child: SvgPicture.asset(
-            Assets.cvtar2,
-            height: SizeConfig.screenWidth * 0.3067,
-            width: SizeConfig.screenWidth * 0.3067,
-          ),
-        ),
+        child ??
+            SvgPicture.asset(
+              Assets.cvtar2,
+              height: SizeConfig.screenWidth * 0.3067,
+              width: SizeConfig.screenWidth * 0.3067,
+            ),
       ],
     );
   }

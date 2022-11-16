@@ -116,7 +116,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
       _refCode = res.model;
       _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
           ? appShareMessage
-          : 'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+          : 'Hey I am gifting you ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
     } else {
       _refCode = '';
       _shareMsg = '';

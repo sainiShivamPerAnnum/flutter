@@ -83,6 +83,7 @@ import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.da
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
+import 'package:felloapp/ui/pages/others/profile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
@@ -209,6 +210,7 @@ void setupLocator() {
   locator.registerFactory(() => LendboxBuyViewModel());
   locator.registerFactory(() => LendboxWithdrawalViewModel());
   locator.registerFactory(() => InfoStoriesViewModel());
+  locator.registerFactory(() => SettingsViewModel());
 
   //WIDGETS
   locator.registerFactory(() => MiniTransactionCardViewModel());

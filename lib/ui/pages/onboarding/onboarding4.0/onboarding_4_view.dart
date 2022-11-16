@@ -1,16 +1,10 @@
-import 'dart:developer';
-
-import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 const String COMING_FROM_SPLASH = "fromSplash";
@@ -234,7 +228,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                     style: TextStyles.sourceSans.body2,
                                   ),
                                   SizedBox(
-                                    height: SizeConfig.padding16,
+                                    height: SizeConfig.padding24,
                                   ),
                                   model.assetWidgets[index],
                                 ],

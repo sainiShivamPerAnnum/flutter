@@ -34,6 +34,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:upi_pay/upi_pay.dart';
 
+//TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
 class GoldBuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_OPEN = 2;
@@ -335,6 +336,18 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   trackCheckOOutEvent(String errorMessage) {
+    _augTxnService.currentTransactionAnalyticsDetails = {
+      "Asset": "Gold",
+      "Coupon Code": appliedCoupon != null ? appliedCoupon.code : "Not Applied",
+      "Amount Entered": goldAmountController.text,
+      "Gold Weight": goldAmountInGrams,
+      "Per gram rate": goldRates.goldBuyPrice,
+      "Best flag": goldAmountController.text ==
+              assetOptionsModel.data.userOptions[2].value.toString()
+          ? true
+          : false,
+      "Error message": errorMessage,
+    };
     _analyticsService.track(
         eventName: AnalyticsEvents.saveCheckout,
         properties:

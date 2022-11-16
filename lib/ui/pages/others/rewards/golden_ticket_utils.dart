@@ -84,7 +84,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
   }
 }
 
-class RedeemedGoldenScratchCard extends StatelessWidget {
+class RedeemedGoldenScratchCard extends StatefulWidget {
   final GoldenTicket ticket;
   // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
@@ -94,6 +94,13 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       // @required this.subtitleStyle,
       // @required this.titleStyle2,
       @required this.width});
+
+  @override
+  State<RedeemedGoldenScratchCard> createState() =>
+      _RedeemedGoldenScratchCardState();
+}
+
+class _RedeemedGoldenScratchCardState extends State<RedeemedGoldenScratchCard> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -101,15 +108,15 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         print("I rebuilded");
         return Container(
           child: AnimatedContainer(
-            height: width,
-            width: width,
+            height: widget.width,
+            width: widget.width,
             duration: Duration(milliseconds: 300),
             curve: Curves.easeIn,
-            padding: EdgeInsets.all(width * 0.04),
+            padding: EdgeInsets.all(widget.width * 0.04),
             child: Stack(
               children: [
                 SvgPicture.asset(
-                  getGTBackground(ticket),
+                  getGTBackground(widget.ticket),
                   width: double.maxFinite,
                   height: double.maxFinite,
                   fit: BoxFit.contain,
@@ -131,7 +138,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       curve: Curves.easeIn,
                       child: Material(
                         color: Colors.transparent,
-                        child: getGTContent(ticket, constraint.maxWidth),
+                        child: getGTContent(widget.ticket, constraint.maxWidth),
                       ),
                     ),
                   ),

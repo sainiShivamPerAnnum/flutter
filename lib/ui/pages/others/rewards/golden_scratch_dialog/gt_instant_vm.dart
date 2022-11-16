@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -25,6 +26,7 @@ class GTInstantViewModel extends BaseViewModel {
   final _apiPaths = locator<ApiPath>();
   final _gtService = locator<GoldenTicketService>();
   final _paytmService = locator<PaytmService>();
+  final _journeyService = locator<JourneyService>();
 
   final _rsaEncryption = new RSAEncryption();
   final _coinService = locator<UserCoinService>();
@@ -137,9 +139,13 @@ class GTInstantViewModel extends BaseViewModel {
                 notifyListeners();
               },
             );
+
+            // _journeyService.updateRewardSTooltips().then((_) {
+            // });
           },
         ),
       );
+      _journeyService.updateRewardStatus(goldenTicket.prizeSubtype);
     } catch (e) {
       _logger.e(e);
       BaseUtil.showNegativeAlert(

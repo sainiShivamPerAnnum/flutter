@@ -49,6 +49,7 @@ class Assets {
   static final String bankLottie = "assets/lotties/bank.json";
   static final String truecaller = "assets/images/truecaller.png";
   static final String journeyOnbLottie = "assets/lotties/journey_onb.json";
+  static final String support = "assets/images/support.png";
   // WANT MORE MODAL
   static final String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static final String wmtShare = "assets/vectors/icons/wmt_share.svg";
@@ -73,6 +74,7 @@ class Assets {
   static final String tambola_1cr = 'assets/svg/1_cr_tambola.svg';
   static final String tambola_1cr_ = 'assets/svg/1_cr_ticket.svg';
   static final String tambola_title = 'assets/svg/tambola_title.svg';
+  static final String securityCheck = "assets/svg/safety_asset.svg";
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
   static final String moneyIcon = "assets/images/icons/money.png";
@@ -206,9 +208,9 @@ class Assets {
   static final String unredemmedGoldenTicketBG = "assets/svg/unredeemed_gt.svg";
   static final String levelUpUnRedeemedGoldenTicketBG =
       "assets/svg/levelupTicket.svg";
-  static final String unredemmedGoldenTicketBG_png =
+  static final String unredeemedGoldenTicketBG_png =
       "assets/images/gt_unredeemed.png"; //for scractcher
-  static final String levelUpUnredemmedGoldenTicketBGPNG =
+  static final String levelUpUnredeemedGoldenTicketBGPNG =
       "assets/images/levelupTicketpng.png";
   static final String gt_token = "assets/svg/gt_token.svg";
   static final String gt_cashback = "assets/svg/gt_cashback.svg";
@@ -219,6 +221,13 @@ class Assets {
   static final String noReferalAsset = "assets/svg/no_referal_asset.svg";
   static final String noTransactionAsset = "assets/svg/no_transactions.svg";
   static final String noWinnersAsset = "assets/svg/no_winners_asset.svg";
+
+  //icons
+  static final String ic_camera = "assets/vectors/icons/ic_camera.svg";
+  static final String ic_upload_file =
+      "assets/vectors/icons/ic_upload_file.svg";
+  static final String ic_upload_success =
+      "assets/vectors/icons/ic_upload_success.svg";
 
   //Prize claim assets
   static final List<String> prizeClaimAssets = [

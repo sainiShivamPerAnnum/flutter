@@ -234,7 +234,7 @@ class GoldSellInputView extends StatelessWidget {
                             BaseUtil.openDialog(
                               addToScreenStack: true,
                               hapticVibrate: true,
-                              isBarrierDismissable: false,
+                              isBarrierDismissible: false,
                               content: ConfirmationDialog(
                                 title: 'Are you sure you want\nto sell?',
                                 // asset: SvgPicture.asset(Assets.magicalSpiritBall),

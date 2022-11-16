@@ -84,7 +84,8 @@ class TrendingGames extends StatelessWidget {
               "Time left for draw Tambola (mins)":
                   AnalyticsProperties.getTimeLeftForTambolaDraw(),
               "Tambola Tickets Owned":
-                  AnalyticsProperties.getTabolaTicketCount(),
+                  AnalyticsProperties.getTambolaTicketCount(),
+              "location": "Trending games"
             }));
         Haptic.vibrate();
         AppState.delegate.parseRoute(
