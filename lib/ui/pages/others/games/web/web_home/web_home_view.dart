@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -317,10 +316,6 @@ class WebHomeView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: 'Play',
                       onPressed: () async {
-                        ApxorFlutter?.logAppEvent("play game",
-                                    attributes: {
-                                      "type": "clicked on play game",
-                                    });
                         Haptic.vibrate();
                         if (await model.setupGame()) model.launchGame();
 

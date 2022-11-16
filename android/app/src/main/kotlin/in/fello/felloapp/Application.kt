@@ -15,8 +15,6 @@ import android.content.Context;
 class Application : FlutterApplication(), PluginRegistrantCallback {
     override fun onCreate() {
         super.onCreate()
-                
-       
         val webEngageConfig = WebEngageConfig.Builder()
                 .setWebEngageKey(getString(R.string.webengage_code))
                 .setAutoGCMRegistrationFlag(false)
@@ -25,6 +23,7 @@ class Application : FlutterApplication(), PluginRegistrantCallback {
                 .build()
 
         WebengageInitializer.initialize(this, webEngageConfig)
+        ApxorSDK.initialize("5e1ae054-84ac-481c-9efe-9b413ac2dcbe",applicationContext);
        
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
             if (!it.isSuccessful) {
