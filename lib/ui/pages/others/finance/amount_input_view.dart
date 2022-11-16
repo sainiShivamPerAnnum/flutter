@@ -22,6 +22,8 @@ class AmountInputView extends StatefulWidget {
   final String minAmountMsg;
   final FocusNode focusNode;
   final Function(int val) onAmountChange;
+  final bool readOnly;
+  final void Function() onTap;
 
   const AmountInputView({
     Key key,
@@ -36,6 +38,8 @@ class AmountInputView extends StatefulWidget {
     @required this.focusNode,
     this.bestChipIndex = 1,
     this.notice,
+    @required this.readOnly,
+    @required this.onTap
   }) : super(key: key);
 
   @override
@@ -64,6 +68,7 @@ class _AmountInputViewState extends State<AmountInputView> {
     final currentAmt = double.tryParse(widget.amountController.text) ?? 0;
     if (currentAmt == null) widget.amountController.text = "0.0";
     final _analyticsService = locator<AnalyticsService>();
+
     return Column(
       children: [
         Container(
@@ -110,6 +115,10 @@ class _AmountInputViewState extends State<AmountInputView> {
                     child: TextFormField(
                       autofocus: true,
                       showCursor: true,
+                      readOnly:widget.readOnly ,
+                      onTap:(){
+                        widget.onTap();
+                      },
                       controller: widget.amountController,
                       focusNode: widget.focusNode,
                       enabled: widget.isEnabled,

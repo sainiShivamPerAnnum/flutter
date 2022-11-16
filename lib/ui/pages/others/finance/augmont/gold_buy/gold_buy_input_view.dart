@@ -322,6 +322,8 @@ class EnterAmountView extends StatelessWidget {
                               width: model.fieldWidth,
                               child: TextFormField(
                                 autofocus: true,
+                                readOnly: model.readOnly,
+                                showCursor: true,
                                 controller: model.goldAmountController,
                                 focusNode: model.buyFieldNode,
                                 enabled: !txnService.isGoldBuyInProgress &&
@@ -331,6 +333,9 @@ class EnterAmountView extends StatelessWidget {
                                 },
                                 onChanged: (val) {
                                   model.onBuyValueChanged(val);
+                                },
+                                onTap: () {
+                                  model.showKeyBoard();
                                 },
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: true),

@@ -27,6 +27,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -94,6 +95,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  TambolaWidgetController tambolaWidgetController;
   //Constant values
   Map<String, IconData> tambolaOdds = {
     "Full House": Icons.apps,
@@ -205,7 +207,9 @@ class TambolaHomeViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     await getGameDetails();
     getLeaderboard();
-
+    if (tambolaWidgetController == null) {
+      tambolaWidgetController = TambolaWidgetController();
+    }
     fetchWinners();
     if (tPrizes == null) getPrizes();
 
