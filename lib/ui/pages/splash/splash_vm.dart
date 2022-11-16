@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -78,6 +79,14 @@ class LauncherViewModel extends BaseViewModel {
 
   int startTime = DateTime.now().millisecondsSinceEpoch;
   init() {
+    try {
+      ApxorFlutter?.logAppEvent("Splash", attributes: {
+        "type": 'splash',
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+
     log("Splash init: ${DateTime.now().millisecondsSinceEpoch - startTime}");
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
@@ -202,8 +211,6 @@ class LauncherViewModel extends BaseViewModel {
       new Duration(milliseconds: 820),
     );
 
-
-
     ///check for breaking update (TESTING)
     // if (await checkBreakingUpdateTest()) {
     //   AppState.isUpdateScreen = true;
@@ -246,9 +253,9 @@ class LauncherViewModel extends BaseViewModel {
     // }
 
     // if (_unlocked) {
-    //   return 
-      navigator.currentAction =
-          PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    //   return
+    navigator.currentAction =
+        PageAction(state: PageState.replaceAll, page: RootPageConfig);
     // } else {
     //   BaseUtil.showNegativeAlert(
     //     'Authentication Failed',

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -257,6 +258,10 @@ class SaveNetWorthSection extends StatelessWidget {
                 );
               },
               onTap: () {
+                 ApxorFlutter.logAppEvent("SaveGold",
+                                 attributes: { 
+                                  "type":" Gold Buy" 
+                                  });
                 Haptic.vibrate();
                 return BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.AUGGOLD99,
@@ -271,6 +276,14 @@ class SaveNetWorthSection extends StatelessWidget {
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,
               onCardTap: () {
+
+
+                 ApxorFlutter.logAppEvent("SaveFlo",
+                                 attributes: { 
+                                  "type":" Flo Buy" 
+                                  });
+
+
                 saveViewModel!.navigateToSaveAssetView(
                   InvestmentType.LENDBOXP2P,
                 );

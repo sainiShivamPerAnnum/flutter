@@ -1,3 +1,4 @@
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -55,6 +56,10 @@ class BottomNavBar extends StatelessWidget {
                             )
                           : GestureDetector(
                               onTap: () {
+                                ApxorFlutter?.logAppEvent("BottomNav",
+                                    attributes: {
+                                      "type": navbarItems[index].title,
+                                    });
                                 parentModel.onItemTapped(index);
                               },
                               child: NavBarIcon(
@@ -80,8 +85,7 @@ class NavBarIcon extends StatelessWidget {
   final bool animate;
   final NavBarItemModel item;
   final TextStyle style;
-  NavBarIcon(
-      {required this.animate, required this.item, required this.style});
+  NavBarIcon({required this.animate, required this.item, required this.style});
   @override
   Widget build(BuildContext context) {
     return Container(
