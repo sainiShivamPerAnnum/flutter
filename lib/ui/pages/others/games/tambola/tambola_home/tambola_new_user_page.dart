@@ -11,10 +11,13 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_existing_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -66,9 +69,33 @@ class TambolaWrapper extends StatelessWidget {
   }
 }
 
-class TambolaNewUserPage extends StatelessWidget {
-  const TambolaNewUserPage({Key key, this.model}) : super(key: key);
+class TambolaNewUserPage extends StatefulWidget {
+  const TambolaNewUserPage({Key key, this.model, this.showPrizeSection = false})
+      : super(key: key);
   final TambolaHomeViewModel model;
+  final bool showPrizeSection;
+  @override
+  State<TambolaNewUserPage> createState() => _TambolaNewUserPageState();
+}
+
+class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+
+    if (widget.showPrizeSection) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent / 2,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.fastLinearToSlowEaseIn);
+      });
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,19 +111,23 @@ class TambolaNewUserPage extends StatelessWidget {
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 TambolaHeader(
-                  model: model,
+                  model: widget.model,
                 ),
                 SizedBox(
                   height: 14,
                 ),
-                Text(
-                  'Get your tickets and match numbers\neveryday at 6 PM to see if you win 1 Crore',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.rajdhaniSB.body1
-                      .colour(Color(0xffD9D9D9).withOpacity(0.41)),
+                SizedBox(
+                  width: SizeConfig.screenWidth * 0.9,
+                  child: Text(
+                    widget.model.game.description,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.rajdhaniSB.body1
+                        .colour(Color(0xffD9D9D9).withOpacity(0.41)),
+                  ),
                 ),
                 SizedBox(
                   height: 14,
@@ -106,10 +137,10 @@ class TambolaNewUserPage extends StatelessWidget {
                   height: 14,
                 ),
                 TambolaPrize(
-                  model: model,
+                  model: widget.model,
                 ),
                 TambolaLeaderBoard(
-                  model: model,
+                  model: widget.model,
                 ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 0.17,
@@ -123,20 +154,28 @@ class TambolaNewUserPage extends StatelessWidget {
               padding:
                   EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
               width: double.infinity,
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withOpacity(0.8),
               height: SizeConfig.screenHeight * 0.17,
               child: Column(
                 children: [
-                  Text(
-                    model.game?.highLight ?? '',
-                    style: TextStyles.sourceSans,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(Assets.sparklingStar),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        widget.model.game?.highLight ?? '',
+                        style: TextStyles.sourceSans.body4
+                            .colour(Color(0xffA7A7A8)),
+                      ),
+                    ],
                   ),
                   Spacer(),
-                  FelloButtonLg(
-                    child: Text(
-                      'Get your first ticket',
-                      style: TextStyles.rajdhaniB.body1,
-                    ),
+                  AppPositiveBtn(
+                    btnText: 'Get your first ticket',
                     onPressed: () {
                       locator<AnalyticsService>().track(
                           eventName: AnalyticsEvents.tambolaSaveTapped,
@@ -147,11 +186,11 @@ class TambolaNewUserPage extends StatelessWidget {
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
                             "Number of Tickets": 1,
-                            "Amount": model.ticketSavedAmount,
+                            "Amount": widget.model.ticketSavedAmount,
                           }));
-                      model.updateTicketSavedAmount(1);
+                      widget.model.updateTicketSavedAmount(1);
                       BaseUtil().openDepositOptionsModalSheet(
-                          amount: model.ticketSavedAmount);
+                          amount: widget.model.ticketSavedAmount);
                     },
                   )
                 ],
@@ -168,9 +207,6 @@ class TambolaHeader extends StatelessWidget {
   const TambolaHeader({Key key, this.model}) : super(key: key);
   final TambolaHomeViewModel model;
 
-  UrlType get urlType => UrlTypeHelper.getType(
-      'https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/410.svg');
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -183,14 +219,11 @@ class TambolaHeader extends StatelessWidget {
           borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
       child: Builder(
         builder: (_) {
-          switch (urlType) {
+          switch (UrlTypeHelper.getType(model.game.walkThroughUri)) {
             case UrlType.IMAGE:
-              return SvgPicture.network(
-                  'https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/410.svg');
+              return SvgPicture.network(model.game.walkThroughUri);
             case UrlType.VIDEO:
-              return TambolaVideoPlayer(
-                  link:
-                      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+              return TambolaVideoPlayer(link: model.game.walkThroughUri);
 
             default:
               return SizedBox();
@@ -271,6 +304,8 @@ class TambolaTicketInfo extends StatelessWidget {
       ),
     );
   }
+
+  String gethiglightedText() {}
 }
 
 class TambolaVideoPlayer extends StatefulWidget {

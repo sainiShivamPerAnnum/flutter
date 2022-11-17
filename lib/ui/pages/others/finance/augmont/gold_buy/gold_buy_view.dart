@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_loading_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_success_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -17,7 +18,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class GoldBuyView extends StatefulWidget {
   final int amount;
   final bool skipMl;
-  const GoldBuyView({Key key, this.amount = 250, this.skipMl = false})
+  const GoldBuyView({Key key, this.amount, this.skipMl = false})
       : super(key: key);
 
   @override
@@ -101,7 +102,8 @@ class _GoldBuyViewState extends State<GoldBuyView>
                   onModelReady: (model) =>
                       model.init(widget.amount, widget.skipMl, this),
                   builder: (ctx, model, child) {
-                    if (model.state == ViewState.Busy) return SizedBox();
+                    if (model.state == ViewState.Busy)
+                      return Center(child: FullScreenLoader());
                     return _getView(txnService, model);
                   },
                 ),

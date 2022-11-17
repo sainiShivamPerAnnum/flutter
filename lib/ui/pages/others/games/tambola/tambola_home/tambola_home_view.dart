@@ -753,6 +753,7 @@ class ButTicketsComponent extends StatelessWidget {
                     page: TambolaNewUser,
                     widget: TambolaNewUserPage(
                       model: model,
+                      showPrizeSection: true,
                     ),
                   );
                 },
@@ -770,57 +771,49 @@ class ButTicketsComponent extends StatelessWidget {
           ),
           Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  // color: UiConstants.kArowButtonBackgroundColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(SizeConfig.roundness8),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.remove),
+                    iconSize: SizeConfig.padding16,
+                    color: Colors.white,
+                    onPressed: model.decreaseTicketCount,
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.remove),
-                      iconSize: SizeConfig.padding16,
-                      color: Colors.white,
-                      onPressed: model.decreaseTicketCount,
-                    ),
-                    Container(
-                      width: SizeConfig.screenHeight * 0.02,
-                      height: SizeConfig.padding54,
-                      child: TextField(
-                        style: TextStyles.sourceSans.body2.setHeight(2),
-                        textAlign: TextAlign.center,
-                        controller: model.ticketCountController,
-                        enableInteractiveSelection: false,
-                        enabled: false,
-                        keyboardType:
-                            TextInputType.numberWithOptions(signed: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: (String text) {
-                          model.updateTicketCount();
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                        ),
+                  Container(
+                    width: SizeConfig.screenHeight * 0.02,
+                    height: SizeConfig.padding54,
+                    child: TextField(
+                      style: TextStyles.sourceSans.body2.setHeight(2),
+                      textAlign: TextAlign.center,
+                      controller: model.ticketCountController,
+                      enableInteractiveSelection: false,
+                      enabled: false,
+                      keyboardType:
+                          TextInputType.numberWithOptions(signed: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      onChanged: (String text) {
+                        model.updateTicketCount();
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      iconSize: SizeConfig.padding16,
-                      color: Colors.white,
-                      onPressed: model.increaseTicketCount,
-                    ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    iconSize: SizeConfig.padding16,
+                    color: Colors.white,
+                    onPressed: model.increaseTicketCount,
+                  ),
+                ],
               ),
               SizedBox(
                 width: SizeConfig.padding2,

@@ -104,12 +104,11 @@ class TambolaExistingUserPage extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     AppState.delegate.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: TambolaNewUser,
-                      widget: TambolaNewUserPage(
-                        model: model,
-                      ),
-                    );
+                        state: PageState.addWidget,
+                        page: AllTambolaTicketsPageConfig,
+                        widget: AllTambolaTickets(
+                            ticketList: model.tambolaBoardViews.toList()),
+                      );
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(
