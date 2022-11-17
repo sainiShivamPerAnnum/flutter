@@ -1,12 +1,9 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/tambola_ticket_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -28,46 +25,56 @@ class TambolaWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: tambolaController,
-      builder: (_, __) => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: SizeConfig.screenHeight! * 0.22,
-            margin: EdgeInsets.only(
-                right: SizeConfig.pageHorizontalMargins,
-                bottom: SizeConfig.pageHorizontalMargins,
-                left: SizeConfig.pageHorizontalMargins),
-            width: SizeConfig.screenWidth,
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-            decoration: BoxDecoration(
-              color: UiConstants.kSnackBarPositiveContentColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(SizeConfig.roundness12),
-              ),
+      builder: (_, __) => GestureDetector(
+        onTap: () {
+          Haptic.vibrate();
+          locator<AnalyticsService>().track(
+              eventName: AnalyticsEvents.tambolaGameCard,
+              properties:
+                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+                "Time left for draw Tambola (mins)":
+                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                "Tambola Tickets Owned":
+                    AnalyticsProperties.getTambolaTicketCount(),
+              }));
+          if (model.game!.route != null)
+            AppState.delegate!.parseRoute(Uri.parse(model.game!.route!));
+        },
+        child: Container(
+          height: SizeConfig.screenHeight! * 0.22,
+          margin: EdgeInsets.only(
+              right: SizeConfig.pageHorizontalMargins,
+              bottom: SizeConfig.pageHorizontalMargins,
+              left: SizeConfig.pageHorizontalMargins),
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          decoration: BoxDecoration(
+            color: UiConstants.kSnackBarPositiveContentColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(SizeConfig.roundness12),
             ),
-            child: Builder(builder: (_) {
-              if (model == null) {
-                return SizedBox.shrink();
-              }
-              switch (tambolaController.tambolaWidgetType) {
-                case TambolaWidgetType.Banner:
-                  return _BannerWidget(model.game?.route ?? '');
-                case TambolaWidgetType.Timer:
-                  return _TambolaTimer(
-                      controller: tambolaController,
-                      route: model.game?.route ?? '');
-                case TambolaWidgetType.Tickets:
-                  return _TicketWidget(
-                    model,
-                    controller: tambolaController,
-                  );
-                default:
-                  return Container();
-              }
-            }),
           ),
-        ],
+          child: Builder(builder: (_) {
+            if (model == null) {
+              return SizedBox.shrink();
+            }
+            switch (tambolaController.tambolaWidgetType) {
+              case TambolaWidgetType.Banner:
+                return _BannerWidget(model.game?.route ?? '');
+              case TambolaWidgetType.Timer:
+                return _TambolaTimer(
+                    controller: tambolaController,
+                    route: model.game?.route ?? '');
+              case TambolaWidgetType.Tickets:
+                return _TicketWidget(
+                  model,
+                  controller: tambolaController,
+                );
+              default:
+                return Container();
+            }
+          }),
+        ),
       ),
     );
   }
@@ -94,21 +101,6 @@ class _BannerWidget extends StatelessWidget {
               CustomSaveButton(
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                onTap: () {
-                  Haptic.vibrate();
-                  locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.tambolaGameCard,
-                      properties: AnalyticsProperties.getDefaultPropertiesMap(
-                          extraValuesMap: {
-                            "Time left for draw Tambola (mins)":
-                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                            "Tambola Tickets Owned":
-                                AnalyticsProperties.getTambolaTicketCount(),
-                          }));
-                  AppState.delegate!.parseRoute(
-                    Uri.parse(route),
-                  );
-                },
                 title: 'Start Playing',
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,
@@ -174,21 +166,6 @@ class _TambolaTimer extends StatelessWidget {
               CustomSaveButton(
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                onTap: () {
-                  Haptic.vibrate();
-                  locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.tambolaGameCard,
-                      properties: AnalyticsProperties.getDefaultPropertiesMap(
-                          extraValuesMap: {
-                            "Time left for draw Tambola (mins)":
-                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                            "Tambola Tickets Owned":
-                                AnalyticsProperties.getTambolaTicketCount(),
-                          }));
-                  AppState.delegate!.parseRoute(
-                    Uri.parse(route),
-                  );
-                },
                 title: 'Start Playing',
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,
@@ -240,21 +217,6 @@ class _TicketWidget extends StatelessWidget {
               CustomSaveButton(
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                onTap: () {
-                  Haptic.vibrate();
-                  locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.tambolaGameCard,
-                      properties: AnalyticsProperties.getDefaultPropertiesMap(
-                          extraValuesMap: {
-                            "Time left for draw Tambola (mins)":
-                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                            "Tambola Tickets Owned":
-                                AnalyticsProperties.getTambolaTicketCount(),
-                          }));
-                  AppState.delegate!.parseRoute(
-                    Uri.parse(model.game!.route!),
-                  );
-                },
                 title: 'Start Playing',
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,

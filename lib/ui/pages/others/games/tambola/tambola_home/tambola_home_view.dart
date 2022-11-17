@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
@@ -8,7 +7,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -18,13 +16,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -753,6 +748,7 @@ class ButTicketsComponent extends StatelessWidget {
                     page: TambolaNewUser,
                     widget: TambolaNewUserPage(
                       model: model,
+                      showPrizeSection: true,
                     ),
                   );
                 },
@@ -770,57 +766,49 @@ class ButTicketsComponent extends StatelessWidget {
           ),
           Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  // color: UiConstants.kArowButtonBackgroundColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(SizeConfig.roundness8),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.remove),
+                    iconSize: SizeConfig.padding16,
+                    color: Colors.white,
+                    onPressed: model.decreaseTicketCount,
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.remove),
-                      iconSize: SizeConfig.padding16,
-                      color: Colors.white,
-                      onPressed: model.decreaseTicketCount,
-                    ),
-                    Container(
-                      width: SizeConfig.screenHeight! * 0.02,
-                      height: SizeConfig.padding54,
-                      child: TextField(
-                        style: TextStyles.sourceSans.body2.setHeight(2),
-                        textAlign: TextAlign.center,
-                        controller: model.ticketCountController,
-                        enableInteractiveSelection: false,
-                        enabled: false,
-                        keyboardType:
-                            TextInputType.numberWithOptions(signed: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: (String text) {
-                          model.updateTicketCount();
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                        ),
+                  Container(
+                    width: SizeConfig.screenHeight! * 0.02,
+                    height: SizeConfig.padding54,
+                    child: TextField(
+                      style: TextStyles.sourceSans.body2.setHeight(2),
+                      textAlign: TextAlign.center,
+                      controller: model.ticketCountController,
+                      enableInteractiveSelection: false,
+                      enabled: false,
+                      keyboardType:
+                          TextInputType.numberWithOptions(signed: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      onChanged: (String text) {
+                        model.updateTicketCount();
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      iconSize: SizeConfig.padding16,
-                      color: Colors.white,
-                      onPressed: model.increaseTicketCount,
-                    ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    iconSize: SizeConfig.padding16,
+                    color: Colors.white,
+                    onPressed: model.increaseTicketCount,
+                  ),
+                ],
               ),
               SizedBox(
                 width: SizeConfig.padding2,

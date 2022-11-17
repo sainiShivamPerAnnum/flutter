@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxBuyView extends StatefulWidget {
-  final int amount;
+  final int? amount;
   final bool skipMl;
 
   const LendboxBuyView({Key? key, this.amount = 250, this.skipMl = false})

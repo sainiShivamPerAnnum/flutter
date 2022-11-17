@@ -49,14 +49,15 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   init(
-    int amount,
+    int? amount,
     bool isSkipMilestone,
   ) async {
     setState(ViewState.Busy);
     await getAssetOptionsModel();
     skipMl = isSkipMilestone;
     amountController = TextEditingController(
-      text: assetOptionsModel?.data.userOptions[1].value.toString(),
+      text: amount?.toString() ??
+          assetOptionsModel!.data.userOptions[1].value.toString(),
     );
 
     setState(ViewState.Idle);

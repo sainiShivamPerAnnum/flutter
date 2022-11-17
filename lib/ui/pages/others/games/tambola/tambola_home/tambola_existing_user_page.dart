@@ -104,10 +104,9 @@ class TambolaExistingUserPage extends StatelessWidget {
                   onTap: () {
                     AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addWidget,
-                      page: TambolaNewUser,
-                      widget: TambolaNewUserPage(
-                        model: model,
-                      ),
+                      page: AllTambolaTicketsPageConfig,
+                      widget: AllTambolaTickets(
+                          ticketList: model.tambolaBoardViews!.toList()),
                     );
                   },
                   child: Container(

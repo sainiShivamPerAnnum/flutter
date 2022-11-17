@@ -75,6 +75,8 @@ class Assets {
   static final String tambola_1cr_ = 'assets/svg/1_cr_ticket.svg';
   static final String tambola_title = 'assets/svg/tambola_title.svg';
   static final String securityCheck = "assets/svg/safety_asset.svg";
+  static final String sparklingStar = "assets/svg/sparkling_star.svg";
+  static final String tambola_space = "assets/svg/tambola_space.svg";
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
   static final String moneyIcon = "assets/images/icons/money.png";

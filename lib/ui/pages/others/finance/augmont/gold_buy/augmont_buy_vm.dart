@@ -96,7 +96,6 @@ class GoldBuyViewModel extends BaseViewModel {
     final res =
         await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
     if (res.code == 200) assetOptionsModel = res.model;
-    log(res.model?.message ?? '');
   }
 
   get goldAmountInGrams => this._goldAmountInGrams;
@@ -190,7 +189,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   bool readOnly = true;
 
-  init(int amount, bool isSkipMilestone, TickerProvider vsync) async {
+  init(int? amount, bool isSkipMilestone, TickerProvider vsync) async {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
@@ -202,9 +201,10 @@ class GoldBuyViewModel extends BaseViewModel {
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
     goldBuyAmount = amount?.toDouble() ??
-        assetOptionsModel?.data.userOptions[1].value.toDouble();
+        assetOptionsModel!.data.userOptions[1].value.toDouble();
     goldAmountController = TextEditingController(
-        text: assetOptionsModel?.data.userOptions[1].value.toString());
+        text: amount?.toString() ??
+            assetOptionsModel!.data.userOptions[1].value.toString());
     fieldWidth =
         (SizeConfig.padding40 * goldAmountController!.text.length.toDouble());
     if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value)

@@ -333,11 +333,11 @@ class BaseUtil extends ChangeNotifier {
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
             ? GoldBuyView(
-                amount: amt ?? 201,
+                amount: amt,
                 skipMl: isSkipMl ?? false,
               )
             : LendboxBuyView(
-                amount: amt ?? 201,
+                amount: amt,
                 skipMl: isSkipMl ?? false,
               ),
       );
