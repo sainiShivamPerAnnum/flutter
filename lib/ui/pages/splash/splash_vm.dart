@@ -1,8 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
-
-// import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -130,10 +127,10 @@ class LauncherViewModel extends BaseViewModel {
 
       _fcmListener.setupFcm();
 
-      if (userService!.isUserOnboarded)
-        userService!.firebaseUser?.getIdToken()?.then(
+      if (userService.isUserOnboarded)
+        userService.firebaseUser?.getIdToken().then(
               (token) =>
-                  _userRepo!.updateUserAppFlyer(userService!.baseUser!, token),
+                  _userRepo.updateUserAppFlyer(userService!.baseUser!, token),
             );
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)

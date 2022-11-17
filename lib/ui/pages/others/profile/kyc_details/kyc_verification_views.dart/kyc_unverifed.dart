@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';

@@ -1,4 +1,5 @@
 import 'package:app_install_date/app_install_date_imp.dart';
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -59,6 +60,8 @@ class AnalyticsService extends BaseAnalyticsService {
       _mixpanel!.track(eventName: eventName, properties: properties);
       _webengage!.track(eventName: eventName, properties: properties);
       _appFlyer!.track(eventName: eventName, properties: properties);
+      ApxorFlutter.logAppEvent(eventName!, attributes: properties);
+
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
       _logger!.e(error);

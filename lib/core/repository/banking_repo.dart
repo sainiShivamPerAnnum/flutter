@@ -4,7 +4,6 @@ import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:http/http.dart' as http;
-import 'package:camera/camera.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/signed_Image_url_model.dart';
@@ -17,6 +16,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 
 class BankingRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
