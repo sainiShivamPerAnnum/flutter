@@ -80,9 +80,6 @@ class LauncherViewModel extends BaseViewModel {
   int startTime = DateTime.now().millisecondsSinceEpoch;
   init() {
     try {
-      ApxorFlutter?.logAppEvent("Splash", attributes: {
-        "type": 'splash',
-      });
     } catch (e) {
       log(e.toString());
     }

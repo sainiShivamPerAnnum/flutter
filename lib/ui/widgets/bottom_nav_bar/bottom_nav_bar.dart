@@ -56,10 +56,6 @@ class BottomNavBar extends StatelessWidget {
                             )
                           : GestureDetector(
                               onTap: () {
-                                ApxorFlutter?.logAppEvent("BottomNav",
-                                    attributes: {
-                                      "type": navbarItems[index].title,
-                                    });
                                 parentModel.onItemTapped(index);
                               },
                               child: NavBarIcon(

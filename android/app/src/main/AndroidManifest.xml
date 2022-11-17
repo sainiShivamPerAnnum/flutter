@@ -40,8 +40,6 @@
             </intent-filter>
         </service>
 
-        
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

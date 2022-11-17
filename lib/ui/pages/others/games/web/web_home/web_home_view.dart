@@ -317,10 +317,6 @@ class WebHomeView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: 'Play',
                       onPressed: () async {
-                        ApxorFlutter?.logAppEvent("play game",
-                                    attributes: {
-                                      "type": "clicked on play game",
-                                    });
                         Haptic.vibrate();
                         if (await model.setupGame()) model.launchGame();
 
