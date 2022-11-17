@@ -23,7 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserProfileDetails extends StatelessWidget {
-  const UserProfileDetails({Key? key, this.isNewUser = false}) : super(key: key);
+  const UserProfileDetails({Key? key, this.isNewUser = false})
+      : super(key: key);
   final bool isNewUser;
   @override
   Widget build(BuildContext context) {
@@ -258,16 +259,12 @@ class UserProfileForm extends StatelessWidget {
                           labelText: "dd",
                           maxlength: 2,
                           validate: (String val) {
-                            if (val.isEmpty || val == null) {
-                              // setState(() {
+                            if (val.isEmpty) {
                               model.dateInputError =
                                   "Date field cannot be empty";
-                              // });
                             } else if (int.tryParse(val)! > 31 ||
                                 int.tryParse(val)! < 1) {
-                              // setState(() {
                               model.dateInputError = "Invalid date";
-                              // });
                             }
                             return null;
                           },
@@ -502,7 +499,8 @@ class UserProfileForm extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Haptic.vibrate();
-                          AppState.delegate!.appState.currentAction = PageAction(
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
                             state: PageState.addPage,
                             page: FreshDeskHelpPageConfig,
                           );

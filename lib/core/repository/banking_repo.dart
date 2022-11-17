@@ -144,7 +144,7 @@ class BankingRepository extends BaseRepo {
       );
       final UserKycDataModel panData =
           UserKycDataModel.fromMap(response["data"]);
-      if (panData.ocrVerified != null && panData.ocrVerified) {
+      if (panData.ocrVerified) {
         _bankAndPanService.userPan = panData.pan;
         _bankAndPanService.userKycData = panData;
         userService.setMyUserName(panData.name);

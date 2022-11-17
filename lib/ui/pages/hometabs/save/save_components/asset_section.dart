@@ -110,7 +110,7 @@ class SaveNetWorthSection extends StatelessWidget {
                           height: SizeConfig.padding12,
                         ),
                         Text(
-                          'Your Networth',
+                          'Total Savings',
                           style: TextStyles.rajdhani.body2
                               .colour(UiConstants.kTextColor2),
                         ),

@@ -548,10 +548,10 @@ class BaseUtil extends ChangeNotifier {
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.pageHorizontalMargins),
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title: (title == null || title.isEmpty)
-            ? "Please try again after sometime"
-            : title,
-        message: (message.isEmpty) ? "Something went wrong" : message,
+        title:
+            (title == null || title.isEmpty) ? "Something went wrong" : title,
+        message:
+            (message.isEmpty) ? "Please try again after sometime" : message,
         duration: Duration(seconds: seconds ?? 2),
         backgroundColor: Colors.black,
         boxShadows: [

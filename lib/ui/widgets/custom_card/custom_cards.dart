@@ -43,7 +43,7 @@ class SaveCustomCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onCardTap,
         child: Container(
-          height: SizeConfig.screenWidth! * 0.351,
+          height: SizeConfig.screenWidth! * 0.35,
           width: SizeConfig.screenWidth,
           child: Stack(
             fit: StackFit.loose,
@@ -61,7 +61,6 @@ class SaveCustomCard extends StatelessWidget {
               Container(
                 height: SizeConfig.screenWidth! * 0.351,
                 width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(color: Colors.transparent),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
@@ -123,7 +122,7 @@ class SaveCustomCard extends StatelessWidget {
                                 ),
                                 CustomSaveButton(
                                   onTap: onTap,
-                                  title: 'Save',
+                                  title: 'SAVE',
                                   width: SizeConfig.screenWidth! * 0.2,
                                   height: SizeConfig.screenWidth! * 0.11,
                                 )
@@ -271,6 +270,10 @@ class CustomSaveButton extends StatelessWidget {
     return Container(
       height: height ?? SizeConfig.screenWidth! * 0.13,
       width: width ?? SizeConfig.screenWidth,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          color: color ?? UiConstants.kBackgroundDividerColor,
+          border: border ?? Border.all()),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         child: MaterialButton(
@@ -278,10 +281,11 @@ class CustomSaveButton extends StatelessWidget {
           onPressed: onTap ?? () {},
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                color:
-                    color ?? UiConstants.kBackgroundDividerColor.withAlpha(200),
-                border: border ?? Border.all()),
+              gradient: LinearGradient(
+                  colors: [Colors.grey.withOpacity(0.1), Colors.transparent],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
             child: Center(
               child: Text(
                 title ?? '',

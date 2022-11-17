@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class NoKycView extends StatelessWidget {
@@ -13,9 +14,17 @@ class NoKycView extends StatelessWidget {
       title: "No Kyc Data Found",
       label: "Please refresh",
       model: model,
-      trailing: Icon(
-        Icons.rotate_left,
-        color: Colors.amber,
+      trailing: Padding(
+        padding: EdgeInsets.only(right: SizeConfig.padding8),
+        child: IconButton(
+          onPressed: () {
+            model.init();
+          },
+          icon: Icon(
+            Icons.rotate_left,
+            color: Colors.amber,
+          ),
+        ),
       ),
     );
   }

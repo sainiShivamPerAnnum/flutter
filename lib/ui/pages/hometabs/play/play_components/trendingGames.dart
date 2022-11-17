@@ -52,7 +52,7 @@ class TrendingGamesSection extends StatelessWidget {
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: .64,
+                childAspectRatio: .58,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
           ),
@@ -102,27 +102,29 @@ class TrendingGames extends StatelessWidget {
             SvgPicture.network(
               game!.thumbnailUri!,
               fit: BoxFit.cover,
-              width: SizeConfig.screenWidth! * 0.2,
+              width: SizeConfig.screenWidth! * 0.24,
+              height: SizeConfig.screenWidth! * 0.24,
             ),
             Text(
               game!.gameName!,
               textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              style: TextStyles.rajdhani.body3
+                  .colour(Colors.white.withOpacity(0.7)),
             ),
+            SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text: 'Win upto ',
-                    style:
-                        TextStyles.sourceSans.body4.colour(Color(0xff919193)),
+                    text: 'Win ',
+                    style: TextStyles.sourceSans.body3.colour(Colors.white),
                     children: [
                   TextSpan(
                       text:
                           '${NumberFormat.compact().format(game!.prizeAmount)}',
-                      style: TextStyles.sourceSans.colour(Color(0xffA9C6D6)))
+                      style: TextStyles.sourceSansB.body3.colour(Colors.white))
                 ])),
             SizedBox(height: SizeConfig.padding10),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               decoration: BoxDecoration(
                 color: Color(0xff232326),
                 border: Border.all(color: Color(0xff919193)),
@@ -133,8 +135,8 @@ class TrendingGames extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     Assets.token,
-                    height: SizeConfig.padding16,
-                    width: SizeConfig.padding16,
+                    height: SizeConfig.padding12,
+                    width: SizeConfig.padding12,
                   ),
                   SizedBox(width: SizeConfig.padding4),
                   Text(game!.playCost.toString(),

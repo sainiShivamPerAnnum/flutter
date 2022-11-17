@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
@@ -24,7 +25,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   TextEditingController? nameController, panController;
   bool inEditMode = true;
   bool _isUpdatingKycDetails = false;
-
+  int permissionFailureCount = 0;
   get isUpdatingKycDetails => this._isUpdatingKycDetails;
 
   set isUpdatingKycDetails(value) {
@@ -78,7 +79,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
@@ -147,6 +148,11 @@ class KYCDetailsViewModel extends BaseViewModel {
       userKycData = kycRes.model;
       if (userKycData!.ocrVerified) {
         kycVerificationStatus = KycVerificationStatus.VERIFIED;
+        _cacheService.invalidateByKey(CacheKeys.USER);
+        _userService.setMyUserName(userKycData!.name);
+        _bankAndPanService.isBankDetailsAdded = false;
+        _bankAndPanService.activeBankAccountDetails = null;
+        _bankAndPanService.checkForUserBankAccountDetails();
         panController!.text = userKycData!.pan;
         nameController!.text = userKycData!.name;
         inEditMode = false;
@@ -166,6 +172,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           "No file selected", "Please select a file");
     if (isUpdatingKycDetails) return;
     isUpdatingKycDetails = true;
+    AppState.blockNavigation();
     final res = await _bankingRepo.getSignedImageUrl(capturedImage!.name);
 
     if (res.isSuccess()) {
@@ -203,5 +210,6 @@ class KYCDetailsViewModel extends BaseViewModel {
           res.errorMessage ?? "Failed to get Url", "Please try again");
     }
     isUpdatingKycDetails = false;
+    AppState.unblockNavigation();
   }
 }

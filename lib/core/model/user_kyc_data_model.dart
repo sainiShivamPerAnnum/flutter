@@ -20,7 +20,7 @@ class UserKycDataModel {
           name: map["name"] ?? '',
           ocrVerified: map["ocrVerified"] ?? false,
           pan: map["pan"] ?? '',
-          status: map['trackResult'],
+          status: map['status'],
           uid: map["uid"] ?? '',
           url: map["url"] ?? '',
         );

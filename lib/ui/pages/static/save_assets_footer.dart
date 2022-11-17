@@ -88,7 +88,7 @@ class SaveInfoSection extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
         ),
         SizedBox(
-          height: SizeConfig.padding20,
+          height: SizeConfig.padding6,
         ),
         SizedBox(
             height: imageHeight ?? 0,

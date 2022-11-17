@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
@@ -10,6 +14,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_vi
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -61,13 +66,20 @@ class KYCDetailsView extends StatelessWidget {
       },
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: FAppBar(
-          type: FaqsType.yourAccount,
-          title: 'Add KYC Details',
+        appBar: AppBar(
+          leading: BackButton(
+            onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+          ),
           backgroundColor: UiConstants.kSecondaryBackgroundColor,
-          showAvatar: false,
-          showCoinBar: false,
-          showHelpButton: false,
+          title: Text(
+            'KYC Details',
+            style: TextStyles.rajdhaniSB.title3,
+          ),
+          actions: [
+            if (!model.isUpdatingKycDetails)
+              FaqButtonRounded(type: FaqsType.yourAccount),
+            SizedBox(width: SizeConfig.padding16)
+          ],
         ),
         backgroundColor: UiConstants.kBackgroundColor,
         body: model.state == ViewState.Busy
@@ -248,10 +260,12 @@ class FileCaptureOption extends StatelessWidget {
   final String icon;
   final String? desc;
   final Function func;
+  final EdgeInsets? padding;
   const FileCaptureOption({
     Key? key,
     required this.icon,
     this.desc,
+    this.padding,
     required this.func,
   }) : super(key: key);
 
@@ -271,8 +285,9 @@ class FileCaptureOption extends StatelessWidget {
           ),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Container(
-              padding: EdgeInsets.all(SizeConfig.padding12),
-              width: SizeConfig.avatarRadius * 4,
+              padding: padding ?? EdgeInsets.all(SizeConfig.padding12),
+              width: SizeConfig.avatarRadius * 3,
+              height: SizeConfig.avatarRadius * 3,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
                 shape: BoxShape.circle,
@@ -297,231 +312,255 @@ class FileCaptureOption extends StatelessWidget {
   }
 }
 
-// A screen that allows users to take a picture using a given camera.
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    Key? key,
-    required this.model,
-    required this.camera,
-  });
+// // A screen that allows users to take a picture using a given camera.
+// class TakePictureScreen extends StatefulWidget {
+//   const TakePictureScreen({
+//     Key? key,
+//     required this.model,
+//     required this.camera,
+//   });
 
-  final CameraDescription camera;
-  final KYCDetailsViewModel model;
+//   final CameraDescription camera;
+//   final KYCDetailsViewModel model;
 
-  @override
-  TakePictureScreenState createState() => TakePictureScreenState();
-}
+//   @override
+//   TakePictureScreenState createState() => TakePictureScreenState();
+// }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
-  CameraController? _controller;
-  Future<void>? _initializeControllerFuture;
+// class TakePictureScreenState extends State<TakePictureScreen> {
+//   CameraController? _controller;
+//   Future<void>? _initializeControllerFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
+//   @override
+//   void initState() {
+//     super.initState();
+//     // To display the current output from the Camera,
+//     // create a CameraController.
+//     _controller = CameraController(
+//       // Get a specific camera from the list of available cameras.
+//       widget.camera,
+//       // Define the resolution to use.
+//       ResolutionPreset.max,
+//     );
+//     try {
+//       _initializeControllerFuture = _controller?.initialize().then((_) {
+//         if (!mounted) {
+//           return;
+//         }
+//         setState(() {});
+//       }).catchError((Object e) {
+//         if (e is CameraException) {
+//           switch (e.code) {
+//             case 'CameraAccessDenied':
+//               print('User denied camera access.');
+//               break;
+//             default:
+//               print('Handle other errors.');
+//               break;
+//           }
+//         }
+//       });
+//     } on CameraException catch (e) {
+//       log(e.toString());
+//       BaseUtil.openDialog(
+//           isBarrierDismissible: true,
+//           addToScreenStack: true,
+//           hapticVibrate: true,
+//           content: MoreInfoDialog(title: "Alert!", text: e.toString()));
+//     }
+//     // Next, initialize the controller. This returns a Future.
+//   }
 
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller!.initialize();
-  }
+//   @override
+//   void dispose() {
+//     // Dispose of the controller when the widget is disposed.
+//     _controller?.dispose();
+//     super.dispose();
+//   }
 
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller?.dispose();
-    super.dispose();
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return ClipRRect(
+//       borderRadius: BorderRadius.only(
+//         topLeft: Radius.circular(SizeConfig.roundness24),
+//         topRight: Radius.circular(SizeConfig.roundness24),
+//       ),
+//       child: Container(
+//         height: SizeConfig.screenHeight! * 0.8,
+//         child: Column(children: [
+//           FutureBuilder<void>(
+//             future: _initializeControllerFuture,
+//             builder: (context, snapshot) {
+//               if (snapshot.connectionState == ConnectionState.done) {
+//                 // If the Future is complete, display the preview.
+//                 return Expanded(
+//                   child: Stack(
+//                     children: [
+//                       Container(
+//                           height: SizeConfig.screenHeight! * 0.8,
+//                           child: CameraPreview(_controller!)),
+//                       Align(
+//                         alignment: Alignment.center,
+//                         child: CustomPaint(
+//                           size: Size(
+//                               SizeConfig.screenWidth! * 0.8,
+//                               (SizeConfig.screenWidth! * 0.8 * 0.588)
+//                                   .toDouble()),
+//                           painter: RPSCustomPainter(),
+//                         ),
+//                       ),
+//                       Align(
+//                           alignment: Alignment.topLeft,
+//                           child: SafeArea(
+//                             minimum: EdgeInsets.all(
+//                                 SizeConfig.pageHorizontalMargins),
+//                             child: CircleAvatar(
+//                               backgroundColor: Colors.black,
+//                               child: IconButton(
+//                                 icon: Icon(Icons.arrow_back),
+//                                 color: Colors.white,
+//                                 onPressed: () {
+//                                   Haptic.vibrate();
+//                                   AppState.backButtonDispatcher!.didPopRoute();
+//                                 },
+//                               ),
+//                             ),
+//                           ))
+//                     ],
+//                   ),
+//                 );
+//               } else {
+//                 // Otherwise, display a loading indicator.
+//                 return Expanded(
+//                   child: Container(
+//                     color: Colors.black,
+//                     child: SpinKitThreeBounce(
+//                       color: UiConstants.primaryColor,
+//                       size: SizeConfig.padding32,
+//                     ),
+//                   ),
+//                 );
+//               }
+//             },
+//           ),
+//           AppPositiveBtn(
+//             btnText: 'Capture',
+//             onPressed: () async {
+//               // Take the Picture in a try / catch block. If anything goes wrong,
+//               // catch the error.
+//               try {
+//                 Haptic.vibrate();
+//                 // Ensure that the camera is initialized.
+//                 await _initializeControllerFuture;
 
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness24),
-        topRight: Radius.circular(SizeConfig.roundness24),
-      ),
-      child: Container(
-        height: SizeConfig.screenHeight! * 0.8,
-        child: Column(children: [
-          FutureBuilder<void>(
-            future: _initializeControllerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                // If the Future is complete, display the preview.
-                return Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                          height: SizeConfig.screenHeight! * 0.8,
-                          child: CameraPreview(_controller!)),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CustomPaint(
-                          size: Size(
-                              SizeConfig.screenWidth! * 0.8,
-                              (SizeConfig.screenWidth! * 0.8 * 0.588)
-                                  .toDouble()),
-                          painter: RPSCustomPainter(),
-                        ),
-                      ),
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: SafeArea(
-                            minimum: EdgeInsets.all(
-                                SizeConfig.pageHorizontalMargins),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.black,
-                              child: IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                color: Colors.white,
-                                onPressed: () {
-                                  Haptic.vibrate();
-                                  AppState.backButtonDispatcher!.didPopRoute();
-                                },
-                              ),
-                            ),
-                          ))
-                    ],
-                  ),
-                );
-              } else {
-                // Otherwise, display a loading indicator.
-                return Expanded(
-                  child: Container(
-                    color: Colors.black,
-                    child: SpinKitThreeBounce(
-                      color: UiConstants.primaryColor,
-                      size: SizeConfig.padding32,
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-          AppPositiveBtn(
-            btnText: 'Capture',
-            onPressed: () async {
-              // Take the Picture in a try / catch block. If anything goes wrong,
-              // catch the error.
-              try {
-                Haptic.vibrate();
-                // Ensure that the camera is initialized.
-                await _initializeControllerFuture;
+//                 // Attempt to take a picture and get the file `image`
+//                 // where it was saved.
+//                 widget.model.capturedImage = await _controller!.takePicture();
+//                 widget.model.verifyImage();
+//                 if (!mounted) return;
+//                 AppState.backButtonDispatcher!.didPopRoute();
+//               } catch (e) {
+//                 // If an error occurs, log the error to the console.
+//                 print(e);
+//               }
+//             },
+//           )
+//         ]),
+//       ),
+//     );
+//   }
+// }
 
-                // Attempt to take a picture and get the file `image`
-                // where it was saved.
-                widget.model.capturedImage = await _controller!.takePicture();
-                widget.model.verifyImage();
-                if (!mounted) return;
-                AppState.backButtonDispatcher!.didPopRoute();
-              } catch (e) {
-                // If an error occurs, log the error to the console.
-                print(e);
-              }
-            },
-          )
-        ]),
-      ),
-    );
-  }
-}
+// class RPSCustomPainter extends CustomPainter {
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     Path path_0 = Path();
+//     path_0.moveTo(size.width * 0.01372541, size.height * 0.2443188);
+//     path_0.cubicTo(
+//         size.width * 0.01372545,
+//         size.height * 0.01704545,
+//         size.width * -0.007843216,
+//         size.height * 0.01704580,
+//         size.width * 0.2039216,
+//         size.height * 0.01704580);
 
-class RPSCustomPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(size.width * 0.01372541, size.height * 0.2443188);
-    path_0.cubicTo(
-        size.width * 0.01372545,
-        size.height * 0.01704545,
-        size.width * -0.007843216,
-        size.height * 0.01704580,
-        size.width * 0.2039216,
-        size.height * 0.01704580);
+//     Paint paint_0_stroke = Paint()
+//       ..style = PaintingStyle.stroke
+//       ..strokeWidth = size.width * 0.01960784;
+//     paint_0_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
+//     paint_0_stroke.strokeJoin = StrokeJoin.round;
+//     canvas.drawPath(path_0, paint_0_stroke);
 
-    Paint paint_0_stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.01960784;
-    paint_0_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
-    paint_0_stroke.strokeJoin = StrokeJoin.round;
-    canvas.drawPath(path_0, paint_0_stroke);
+//     Paint paint_0_fill = Paint()..style = PaintingStyle.stroke;
+//     paint_0_fill.color = Color(0xff000000).withOpacity(1.0);
+//     canvas.drawPath(path_0, paint_0_fill);
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.stroke;
-    paint_0_fill.color = Color(0xff000000).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+//     Path path_1 = Path();
+//     path_1.moveTo(size.width * 0.01372541, size.height * 0.7556818);
+//     path_1.cubicTo(
+//         size.width * 0.01372545,
+//         size.height * 0.9829545,
+//         size.width * -0.007843216,
+//         size.height * 0.9829545,
+//         size.width * 0.2039216,
+//         size.height * 0.9829545);
 
-    Path path_1 = Path();
-    path_1.moveTo(size.width * 0.01372541, size.height * 0.7556818);
-    path_1.cubicTo(
-        size.width * 0.01372545,
-        size.height * 0.9829545,
-        size.width * -0.007843216,
-        size.height * 0.9829545,
-        size.width * 0.2039216,
-        size.height * 0.9829545);
+//     Paint paint_1_stroke = Paint()
+//       ..style = PaintingStyle.stroke
+//       ..strokeWidth = size.width * 0.01960784;
+//     paint_1_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
+//     paint_1_stroke.strokeJoin = StrokeJoin.round;
+//     canvas.drawPath(path_1, paint_1_stroke);
 
-    Paint paint_1_stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.01960784;
-    paint_1_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
-    paint_1_stroke.strokeJoin = StrokeJoin.round;
-    canvas.drawPath(path_1, paint_1_stroke);
+//     Paint paint_1_fill = Paint()..style = PaintingStyle.stroke;
+//     paint_1_fill.color = Color(0xff000000).withOpacity(1.0);
+//     canvas.drawPath(path_1, paint_1_fill);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.stroke;
-    paint_1_fill.color = Color(0xff000000).withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+//     Path path_2 = Path();
+//     path_2.moveTo(size.width * 0.9876157, size.height * 0.2443188);
+//     path_2.cubicTo(
+//         size.width * 0.9876157,
+//         size.height * 0.01704545,
+//         size.width * 1.009184,
+//         size.height * 0.01704580,
+//         size.width * 0.7974196,
+//         size.height * 0.01704580);
 
-    Path path_2 = Path();
-    path_2.moveTo(size.width * 0.9876157, size.height * 0.2443188);
-    path_2.cubicTo(
-        size.width * 0.9876157,
-        size.height * 0.01704545,
-        size.width * 1.009184,
-        size.height * 0.01704580,
-        size.width * 0.7974196,
-        size.height * 0.01704580);
+//     Paint paint_2_stroke = Paint()
+//       ..style = PaintingStyle.stroke
+//       ..strokeWidth = size.width * 0.01960784;
+//     paint_2_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
+//     paint_2_stroke.strokeJoin = StrokeJoin.round;
+//     canvas.drawPath(path_2, paint_2_stroke);
 
-    Paint paint_2_stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.01960784;
-    paint_2_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
-    paint_2_stroke.strokeJoin = StrokeJoin.round;
-    canvas.drawPath(path_2, paint_2_stroke);
+//     Paint paint_2_fill = Paint()..style = PaintingStyle.stroke;
+//     paint_2_fill.color = Color(0xff000000).withOpacity(1.0);
+//     canvas.drawPath(path_2, paint_2_fill);
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.stroke;
-    paint_2_fill.color = Color(0xff000000).withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+//     Path path_3 = Path();
+//     path_3.moveTo(size.width * 0.9876157, size.height * 0.7556818);
+//     path_3.cubicTo(
+//         size.width * 0.9876157,
+//         size.height * 0.9829545,
+//         size.width * 1.009184,
+//         size.height * 0.9829545,
+//         size.width * 0.7974196,
+//         size.height * 0.9829545);
 
-    Path path_3 = Path();
-    path_3.moveTo(size.width * 0.9876157, size.height * 0.7556818);
-    path_3.cubicTo(
-        size.width * 0.9876157,
-        size.height * 0.9829545,
-        size.width * 1.009184,
-        size.height * 0.9829545,
-        size.width * 0.7974196,
-        size.height * 0.9829545);
+//     Paint paint_3_stroke = Paint()
+//       ..style = PaintingStyle.stroke
+//       ..strokeWidth = size.width * 0.01960784;
+//     paint_3_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
+//     paint_3_stroke.strokeJoin = StrokeJoin.round;
+//     canvas.drawPath(path_3, paint_3_stroke);
 
-    Paint paint_3_stroke = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.01960784;
-    paint_3_stroke.color = Color(0xff60BF8B).withOpacity(1.0);
-    paint_3_stroke.strokeJoin = StrokeJoin.round;
-    canvas.drawPath(path_3, paint_3_stroke);
+//     Paint paint_3_fill = Paint()..style = PaintingStyle.stroke;
+//     paint_3_fill.color = Color(0xff000000).withOpacity(1.0);
+//     canvas.drawPath(path_3, paint_3_fill);
+//   }
 
-    Paint paint_3_fill = Paint()..style = PaintingStyle.stroke;
-    paint_3_fill.color = Color(0xff000000).withOpacity(1.0);
-    canvas.drawPath(path_3, paint_3_fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
+//   @override
+//   bool shouldRepaint(covariant CustomPainter oldDelegate) {
+//     return true;
+//   }
+// }

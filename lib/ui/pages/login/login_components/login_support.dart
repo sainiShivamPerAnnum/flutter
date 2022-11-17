@@ -27,8 +27,9 @@ class LoginFab extends StatelessWidget {
         },
         child: Container(
             // height: SizeConfig.navBarHeight * 0.5,
-            width: SizeConfig.navBarWidth * 0.28,
-            padding: EdgeInsets.all(SizeConfig.padding12),
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding12,
+                horizontal: SizeConfig.padding16),
             margin: EdgeInsets.only(
                 top: SizeConfig.pageHorizontalMargins / 2,
                 right: SizeConfig.pageHorizontalMargins),
@@ -37,11 +38,11 @@ class LoginFab extends StatelessWidget {
               borderRadius:
                   BorderRadius.all(Radius.circular(SizeConfig.roundness112)),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Wrap(
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Support",
+                  "Help",
                   style: TextStyles.body4.colour(UiConstants.kTextColor),
                 ),
                 Padding(

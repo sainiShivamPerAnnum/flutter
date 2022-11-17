@@ -180,7 +180,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger!
         .d("Journey Stats updated in userservice, property listeners notified");
     _logger!.d(
-        "Previous PrizeSubtype : ${GoldenTicketService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats!.prizeSubtype} ");
+        "Previous PrizeSubtype : ${GoldenTicketService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
