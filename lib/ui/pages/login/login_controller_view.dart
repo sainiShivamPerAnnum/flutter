@@ -100,7 +100,11 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: LoginFab(),
+                child: Container(
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.pageHorizontalMargins / 2,
+                        right: SizeConfig.pageHorizontalMargins),
+                    child: FaqPill()),
               ),
               if (keyboardIsOpen)
                 Positioned(

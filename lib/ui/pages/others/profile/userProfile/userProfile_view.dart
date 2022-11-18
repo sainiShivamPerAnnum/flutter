@@ -258,8 +258,8 @@ class UserProfileForm extends StatelessWidget {
                           fieldWidth: SizeConfig.screenWidth! * 0.12,
                           labelText: "dd",
                           maxlength: 2,
-                          validate: (String val) {
-                            if (val.isEmpty) {
+                          validate: (String? val) {
+                            if (val == null || val.isEmpty) {
                               model.dateInputError =
                                   "Date field cannot be empty";
                             } else if (int.tryParse(val)! > 31 ||
@@ -278,26 +278,25 @@ class UserProfileForm extends StatelessWidget {
                           ),
                         ),
                         AppDateField(
-                          controller: model.monthFieldController,
-                          fieldWidth: SizeConfig.screenWidth! * 0.12,
-                          labelText: "mm",
-                          maxlength: 2,
-                          validate: (String val) {
-                            if (val.isEmpty || val == null) {
-                              // setState(() {
-                              model.dateInputError =
-                                  "Date field cannot be empty";
-                              // });
-                            } else if (int.tryParse(val) != null &&
-                                (int.tryParse(val)! > 13 ||
-                                    int.tryParse(val)! < 1)) {
-                              // setState(() {
-                              model.dateInputError = "Invalid date";
-                              // });
-                            }
-                            return null;
-                          },
-                        ),
+                            controller: model.monthFieldController,
+                            fieldWidth: SizeConfig.screenWidth! * 0.12,
+                            labelText: "mm",
+                            maxlength: 2,
+                            validate: (String? val) {
+                              if (val == null || val.isEmpty) {
+                                // setState(() {
+                                model.dateInputError =
+                                    "Date field cannot be empty";
+                                // });
+                              } else if (int.tryParse(val) != null &&
+                                  (int.tryParse(val)! > 13 ||
+                                      int.tryParse(val)! < 1)) {
+                                // setState(() {
+                                model.dateInputError = "Invalid date";
+                                // });
+                              }
+                              return null;
+                            }),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -311,8 +310,8 @@ class UserProfileForm extends StatelessWidget {
                           fieldWidth: SizeConfig.screenWidth! * 0.16,
                           labelText: "yyyy",
                           maxlength: 4,
-                          validate: (String val) {
-                            if (val.isEmpty || val == null) {
+                          validate: (String? val) {
+                            if (val == null || val.isEmpty) {
                               // setState(() {
                               model.dateInputError =
                                   "Date field cannot be empty";

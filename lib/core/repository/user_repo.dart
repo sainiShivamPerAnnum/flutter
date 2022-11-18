@@ -69,6 +69,7 @@ class UserRepository extends BaseRepo {
           BaseUser.fldDob: baseUser.dob,
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
+          BaseUser.fldAvatarId: 'AV1',
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
           BaseUser.fldStateId: state,
           BaseUser.fldAppFlyerId: await _appsFlyerService!.appFlyerId,
@@ -78,14 +79,14 @@ class UserRepository extends BaseRepo {
 
       final res = await APIService.instance.postData(_apiPaths!.kAddNewUser,
           cBaseUrl: _baseUrl, body: _body, token: _bearer);
-      logger!.d(res);
+      logger.d(res);
       final responseData = res['data'];
-      logger!.d(responseData);
+      logger.d(responseData);
       return ApiResponse(
           code: 200,
           model: {"flag": responseData['flag'], "gtId": responseData['gtId']});
     } catch (e) {
-      logger!.d(e);
+      logger.d(e);
       return ApiResponse.withError(
           e.toString() ?? "Unable to create user account", 400);
     }
@@ -236,7 +237,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<UserTransaction>>> getWinningHistory(
+  Future<ApiResponse<List<UserTransaction>>>? getWinningHistory(
       String? userUid) async {
     List<UserTransaction> _userPrizeTransactions = [];
     try {
@@ -250,15 +251,15 @@ class UserRepository extends BaseRepo {
                 element.data() as Map<String, dynamic>, element.id),
           );
         });
-        logger!.d(
+        logger.d(
             "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
       } else {
-        logger!.d("user prize transaction empty");
+        logger.d("user prize transaction empty");
       }
 
       return ApiResponse(model: _userPrizeTransactions, code: 200);
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       throw e;
     }
   }

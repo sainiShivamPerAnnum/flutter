@@ -81,16 +81,16 @@ class MyWinningsViewModel extends BaseViewModel {
   getWinningHistory() async {
     _isWinningHistoryLoading = true;
     _gtService!.updateUnscratchedGTCount();
-    trackGoldenTicketsOpen();
-    ApiResponse<List<UserTransaction>> temp =
+    // trackGoldenTicketsOpen();
+    ApiResponse<List<UserTransaction>>? temp =
         await userRepo!.getWinningHistory(_userService!.baseUser!.uid);
-    temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
-    isWinningHistoryLoading = false;
-    if (temp != null)
+    if (temp != null) {
+      temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
       winningHistory = temp.model;
-    else
+    } else
       BaseUtil.showNegativeAlert(
           "Winning History fetch failed", "Please try again after sometime");
+    isWinningHistoryLoading = false;
   }
 
   trackGoldenTicketsOpen() {

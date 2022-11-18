@@ -73,6 +73,7 @@ class WinViewModel extends BaseViewModel {
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
   final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
   final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
   int _unscratchedGTCount = 0;
 
   Timer? _timer;
@@ -483,19 +484,6 @@ class WinViewModel extends BaseViewModel {
     );
   }
 
-  getWinningHistory() async {
-    isWinningHistoryLoading = true;
-    ApiResponse<List<UserTransaction>> temp =
-        await userRepo!.getWinningHistory(_userService!.baseUser!.uid);
-    temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
-    isWinningHistoryLoading = false;
-    if (temp != null)
-      winningHistory = temp.model;
-    else
-      BaseUtil.showNegativeAlert(
-          "Winning History fetch failed", "Please try again after sometime");
-  }
-
   Future<String> getGramsWon(double amount) async {
     AugmontService? augmontService = locator<AugmontService>();
     if (augmontService == null) return '0.0gm';
@@ -549,7 +537,14 @@ class WinViewModel extends BaseViewModel {
       getGramsWon(claimPrize).then((value) {
         AppState.backButtonDispatcher!.didPopRoute();
         if (flag) {
-          getWinningHistory();
+          isWinningHistoryLoading = true;
+          _userRepo
+              .getWinningHistory(_userService!.baseUser!.uid)!
+              .then((temp) {
+            temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
+            winningHistory = temp.model;
+            isWinningHistoryLoading = true;
+          });
           showSuccessPrizeWithdrawalDialog(
               choice,
               choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",

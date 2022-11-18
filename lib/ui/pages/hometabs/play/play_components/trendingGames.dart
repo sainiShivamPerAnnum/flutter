@@ -34,8 +34,8 @@ class TrendingGamesSection extends StatelessWidget {
         ),
         Container(
           width: SizeConfig.screenWidth,
-          margin:
-              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          margin: EdgeInsets.symmetric(
+              vertical: SizeConfig.pageHorizontalMargins / 2),
           child: GridView.builder(
             physics: BouncingScrollPhysics(),
             itemCount: model.isGamesListDataLoading

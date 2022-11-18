@@ -112,7 +112,7 @@ class SaveNetWorthSection extends StatelessWidget {
                         Text(
                           'Total Savings',
                           style: TextStyles.rajdhani.body2
-                              .colour(UiConstants.kTextColor2),
+                              .colour(UiConstants.kTextColor),
                         ),
                         NetWorthValue(
                           style: TextStyles.sourceSans.title0.bold,

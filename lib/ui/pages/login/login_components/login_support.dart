@@ -10,7 +10,9 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class LoginFab extends StatelessWidget {
+class FaqPill extends StatelessWidget {
+  final FaqsType? type;
+  const FaqPill({Key? key, this.type}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,7 +23,7 @@ class LoginFab extends StatelessWidget {
             state: PageState.addWidget,
             page: FaqPageConfig,
             widget: FAQPage(
-              type: FaqsType.journey,
+              type: type ?? FaqsType.journey,
             ),
           );
         },
@@ -30,9 +32,6 @@ class LoginFab extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 vertical: SizeConfig.padding12,
                 horizontal: SizeConfig.padding16),
-            margin: EdgeInsets.only(
-                top: SizeConfig.pageHorizontalMargins / 2,
-                right: SizeConfig.pageHorizontalMargins),
             decoration: BoxDecoration(
               color: UiConstants.kDarkBackgroundColor,
               borderRadius:

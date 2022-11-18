@@ -119,7 +119,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
       AugmontTransactionService txnService, GoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return GoldBuyInputView(
-        amount: widget.amount,
+        // amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
         augTxnService: txnService,

@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
+import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -11,9 +12,10 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class BankAndPanService
     extends PropertyChangeNotifier<BankAndPanServiceProperties> {
   final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final UserRepository _userRep = locator<UserRepository>();
+  final BankingRepository _bankingRepo = locator<BankingRepository>();
   String? _userPan;
   UserKycDataModel? _userKycData;
 
@@ -54,7 +56,7 @@ class BankAndPanService
   get withdrawableQnt => this._withdrawableQnt;
   get nonWithdrawableQnt => this._nonWithdrawableQnt;
   get isLockInReached => this._isLockInReached;
-  bool get isSimpleKycVerified => _userService!.isSimpleKycVerified;
+  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
   bool get isSellButtonVisible => _isSellButtonVisible;
@@ -114,10 +116,20 @@ class BankAndPanService
   }
 
   checkForUserPanDetails() async {
-    final res = await _userRep.getUserPan();
+    if (verifyKYCStatus()) return;
+    final res = await _bankingRepo.getUserKycInfo();
+
     if (res.isSuccess()) {
-      userPan = res.model;
+      if (res.model!.ocrVerified) {
+        userPan = res.model!.pan;
+        userKycData = res.model!;
+        _userService.setMyUserName(res.model!.name);
+      }
     }
+    // final res = await _userRep.getUserPan();
+    // if (res.isSuccess()) {
+    //   userPan = res.model;
+    // }
   }
 
   checkForUserBankAccountDetails() async {
@@ -136,16 +148,18 @@ class BankAndPanService
   }
 
   verifyKYCStatus() {
-    isKYCVerified = _userService!.baseUser?.isSimpleKycVerified ?? false;
-    print(_isKYCVerified);
+    isKYCVerified = (_userService.baseUser?.isSimpleKycVerified ?? false) &&
+        userPan != null;
     _logger!.d('kyc verified! $isKYCVerified');
+
+    return isKYCVerified;
   }
 
   checkForSellNotice() {
     // if (_userService.userAugmontDetails != null &&
     //     _userService.userAugmontDetails.sellNotice != null &&
     //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
-    sellNotice = _userService!.userBootUp?.data?.banMap?.investments?.withdrawal
+    sellNotice = _userService.userBootUp?.data?.banMap?.investments?.withdrawal
             ?.augmont?.reason ??
         '';
   }
@@ -154,7 +168,7 @@ class BankAndPanService
     // if (_userService.userAugmontDetails != null &&
     //     _userService.userAugmontDetails.sellNotice != null &&
     //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
-    isSellLocked = _userService!.userBootUp?.data?.banMap?.investments
+    isSellLocked = _userService.userBootUp?.data?.banMap?.investments
             ?.withdrawal?.augmont?.isBanned ??
         false;
   }

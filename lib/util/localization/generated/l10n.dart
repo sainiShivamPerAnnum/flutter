@@ -957,7 +957,7 @@ class S {
   // skipped getter for the '-----------------------------' key
 
   /// `Submit`
-  String get btnSumbit {
+  String get btnSubmit {
     return Intl.message(
       'Submit',
       name: 'btnSumbit',

@@ -43,6 +43,7 @@ class TambolaWidget extends StatelessWidget {
         child: Container(
           height: SizeConfig.screenHeight! * 0.22,
           margin: EdgeInsets.only(
+              top: SizeConfig.padding8,
               right: SizeConfig.pageHorizontalMargins,
               bottom: SizeConfig.pageHorizontalMargins,
               left: SizeConfig.pageHorizontalMargins),

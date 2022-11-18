@@ -190,6 +190,7 @@ class KYCDetailsViewModel extends BaseViewModel {
               "Kyc Verification Successful!", "Sell Unlocked");
           AppState.backButtonDispatcher!.didPopRoute();
         } else {
+          capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;
           kycVerificationStatus = KycVerificationStatus.FAILED;
           BaseUtil.showNegativeAlert(
@@ -204,6 +205,7 @@ class KYCDetailsViewModel extends BaseViewModel {
             "Use a real pan image");
       }
     } else {
+      capturedImage = null;
       kycErrorMessage = res.errorMessage;
       kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(

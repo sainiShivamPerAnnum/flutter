@@ -14,10 +14,8 @@ class CoinBalanceTextSE extends StatelessWidget {
       builder: (context, model, property) => Text(
           model!.flcBalance != null ? model.flcBalance.toString() : "0",
           style: style != null
-              ? style!.copyWith(
-                  color: model.flcBalance == 0 ? Colors.red : Colors.white)
-              : TextStyles.rajdhaniSB.body2
-                  .colour(model.flcBalance == 0 ? Colors.red : Colors.white)),
+              ? style!.copyWith(color: Colors.white)
+              : TextStyles.rajdhaniSB.body2.colour(Colors.white)),
     );
   }
 }

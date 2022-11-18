@@ -485,7 +485,8 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
         builder: (ctx, model, child) => Container(
               height: SizeConfig.screenWidth! * 0.1556,
               width: widget.width ??
-                  SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+                  SizeConfig.screenWidth! -
+                      SizeConfig.pageHorizontalMargins * 2,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(
                   SizeConfig.buttonBorderRadius,
@@ -572,14 +573,14 @@ class AppDateField extends StatelessWidget {
   final TextEditingController? controller;
   final maxlength;
   final double? fieldWidth;
-  final Function? validate;
+  final FormFieldValidator<String> validate;
 
   AppDateField(
       {this.controller,
       this.labelText,
       this.maxlength,
       this.fieldWidth,
-      this.validate});
+      required this.validate});
 
   @override
   Widget build(BuildContext context) {
@@ -588,7 +589,7 @@ class AppDateField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         maxLength: maxlength,
-        validator: validate as String? Function(String?)?,
+        validator: validate,
         cursorColor: UiConstants.primaryColor,
         cursorWidth: 1,
         textAlign: TextAlign.center,

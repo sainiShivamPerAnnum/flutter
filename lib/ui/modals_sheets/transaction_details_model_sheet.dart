@@ -272,7 +272,7 @@ class _TransactionDetailsBottomSheetState
                         width: SizeConfig.padding8,
                       ),
                       Text(
-                        widget.transaction?.couponCode ??
+                        widget.transaction!.couponCode ??
                             '' + " coupon applied",
                         style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kPrimaryColor),

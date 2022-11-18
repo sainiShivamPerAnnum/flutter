@@ -210,7 +210,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   set errorPadding(value) {
-    this._errorPadding = value;
+    this._errorPadding = value.toDouble();
     notifyListeners();
   }
 
@@ -263,7 +263,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   void showAndroidDatePicker() async {
-    var res = await (showDatePicker(
+    var res = await showDatePicker(
       context: AppState.delegate!.navigatorKey.currentContext!,
       initialDate: DateTime(2000, 1, 1),
       firstDate: DateTime(1950, 1, 1),
@@ -296,15 +296,17 @@ class UserProfileVM extends BaseViewModel {
           child: child!,
         );
       },
-    ) as Future<DateTime>);
-    if (res != null) print(res);
-    selectedDate = res;
-    dateFieldController!.text = res.day.toString().padLeft(2, '0');
-    monthFieldController!.text = res.month.toString().padLeft(2, '0');
-    yearFieldController!.text = res.year.toString();
-    dobController!.text =
-        "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
-    notifyListeners();
+    );
+    if (res != null) {
+      print(res);
+      selectedDate = res;
+      dateFieldController!.text = res.day.toString().padLeft(2, '0');
+      monthFieldController!.text = res.month.toString().padLeft(2, '0');
+      yearFieldController!.text = res.year.toString();
+      dobController!.text =
+          "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
+      notifyListeners();
+    }
   }
 
   enableEdit() {
@@ -363,7 +365,7 @@ class UserProfileVM extends BaseViewModel {
               _userService!.setEmail(_userService!.baseUser!.email);
               _userService!.setDateOfBirth(_userService!.baseUser!.dob);
               _userService!.setGender(_userService!.baseUser!.gender);
-              genderController!.text = setGender();
+              setGender();
               dobController!.text = _userService!.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
@@ -396,7 +398,7 @@ class UserProfileVM extends BaseViewModel {
 
   Future<bool> usernameIsValid() async {
     if (!isNewUser) return true;
-    if (!await (validateUsername() as Future<bool>)) {
+    if (!(await (validateUsername()) ?? false)) {
       BaseUtil.showNegativeAlert(
           "Username invalid", "please try another username");
       return false;
@@ -876,7 +878,7 @@ class UserProfileVM extends BaseViewModel {
     );
   }
 
-  Future<bool?> validateUsername() async {
+  Future<bool?>? validateUsername() async {
     // if (isUsernameLoading) return false;
     isUsernameLoading = true;
     notifyListeners();

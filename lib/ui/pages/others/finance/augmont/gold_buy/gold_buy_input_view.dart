@@ -25,14 +25,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldBuyInputView extends StatelessWidget {
-  final int? amount;
+  // final int? amount;
   final bool? skipMl;
   final AugmontTransactionService augTxnService;
   final GoldBuyViewModel model;
 
   const GoldBuyInputView({
     Key? key,
-    this.amount,
+    // this.amount,
     this.skipMl,
     required this.model,
     required this.augTxnService,
@@ -66,7 +66,7 @@ class GoldBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
-            if (model!.assetOptionsModel != null)
+            if (model.assetOptionsModel != null)
               BannerWidget(
                 model: model.assetOptionsModel!.data.banner,
               ),
@@ -79,7 +79,7 @@ class GoldBuyInputView extends StatelessWidget {
               height: 40,
             ),
             CouponWidget(
-              model.couponList!,
+              model.couponList,
               model,
               onTap: (coupon) {
                 model.applyCoupon(coupon.code, false);
@@ -97,11 +97,11 @@ class GoldBuyInputView extends StatelessWidget {
                     ),
                   )
                 : AppPositiveBtn(
-                    btnText: model!.status == 2 ? 'Save' : "UNAVAILABLE",
+                    btnText: model.status == 2 ? 'Save' : "UNAVAILABLE",
                     onPressed: () async {
                       if (!augTxnService.isGoldBuyInProgress) {
                         FocusScope.of(context).unfocus();
-                        model!.initiateBuy();
+                        model.initiateBuy();
                       }
                     },
                     width: SizeConfig.screenWidth! * 0.813,
@@ -112,7 +112,7 @@ class GoldBuyInputView extends StatelessWidget {
           ],
         ),
         CustomKeyboardSubmitButton(
-            onSubmit: () => model!.buyFieldNode.unfocus()),
+            onSubmit: () => model.buyFieldNode.unfocus()),
       ],
     );
   }

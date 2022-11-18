@@ -14,7 +14,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CouponWidget extends StatelessWidget {
   const CouponWidget(this.coupon, this.model, {Key? key, required this.onTap})
       : super(key: key);
-  final List<CouponModel> coupon;
+  final List<CouponModel>? coupon;
   final Function(CouponModel coupon) onTap;
   final GoldBuyViewModel model;
   @override
@@ -36,26 +36,28 @@ class CouponWidget extends StatelessWidget {
                 SizedBox(
                   height: 18,
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: index == 0
-                            ? const EdgeInsets.only(left: 24)
-                            : index == coupon.length - 1
-                                ? EdgeInsets.only(right: 14, left: 14)
-                                : EdgeInsets.only(left: 14),
-                        child: _CouponView(
-                          model: coupon[index],
-                          goldBuyViewModel: model,
-                          onTap: onTap,
+                coupon != null
+                    ? Expanded(
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: index == 0
+                                  ? const EdgeInsets.only(left: 24)
+                                  : index == coupon!.length - 1
+                                      ? EdgeInsets.only(right: 14, left: 14)
+                                      : EdgeInsets.only(left: 14),
+                              child: _CouponView(
+                                model: coupon![index],
+                                goldBuyViewModel: model,
+                                onTap: onTap,
+                              ),
+                            );
+                          },
+                          itemCount: coupon!.length,
                         ),
-                      );
-                    },
-                    itemCount: coupon.length,
-                  ),
-                ),
+                      )
+                    : SizedBox(),
                 SizedBox(
                   height: 12,
                 ),
