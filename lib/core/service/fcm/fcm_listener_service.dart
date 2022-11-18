@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -51,7 +52,8 @@ class FcmListener {
 
       _fcm!.getInitialMessage().then((RemoteMessage? message) {
         if (message != null && message.data != null) {
-          logger!.d("terminated onMessage received: " + message.data.toString());
+          logger!
+              .d("terminated onMessage received: " + message.data.toString());
           // _handler.handleMessage(message.data, MsgSource.Terminated);
           AppState.startupNotifMessage = message.data;
         }
@@ -86,6 +88,14 @@ class FcmListener {
       if (Platform.isAndroid) {
         _androidNativeSetup();
       }
+
+      ApxorFlutter.setDeeplinkListener((url) {
+        // interpret the URL and handle redirection within the application
+        logger!.d("rerouting to Apxor" + url!);
+        AppState.delegate!.parseRoute(Uri.parse(url));
+      });
+
+      
     } catch (e) {
       logger!.e(e.toString());
       _internalOpsService!.logFailure(
@@ -94,6 +104,7 @@ class FcmListener {
         "error": e.toString(),
       });
     }
+
     return _fcm;
   }
 
