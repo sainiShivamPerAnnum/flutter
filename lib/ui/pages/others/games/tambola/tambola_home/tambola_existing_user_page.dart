@@ -140,7 +140,7 @@ class TambolaExistingUserPage extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 52,
-                )
+                ),
               ],
             ),
           ),

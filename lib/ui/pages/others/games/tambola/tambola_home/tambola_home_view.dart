@@ -771,52 +771,71 @@ class ButTicketsComponent extends StatelessWidget {
           ),
           Row(
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    iconSize: SizeConfig.padding16,
-                    color: Colors.white,
-                    onPressed: model.decreaseTicketCount,
-                  ),
-                  Container(
-                    width: SizeConfig.screenHeight * 0.02,
-                    height: SizeConfig.padding54,
-                    child: TextField(
-                      style: TextStyles.sourceSans.body2.setHeight(2),
-                      textAlign: TextAlign.center,
-                      controller: model.ticketCountController,
-                      enableInteractiveSelection: false,
-                      enabled: false,
-                      keyboardType:
-                          TextInputType.numberWithOptions(signed: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      onChanged: (String text) {
-                        model.updateTicketCount();
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
+              Container(
+                width: SizeConfig.screenWidth * 0.25,
+                decoration: BoxDecoration(
+                  color: Color(0xff000000).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: model.decreaseTicketCount,
+                      child: Icon(
+                        Icons.remove,
+                        color: Colors.white,
+                        size: SizeConfig.padding16,
+                      ),
+
+                      // iconSize: SizeConfig.padding16,
+                      // color: Colors.white,
+                      // onPressed: model.decreaseTicketCount,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenHeight * 0.02,
+                      height: SizeConfig.padding35,
+                      child: Center(
+                        child: TextField(
+                          style: TextStyles.sourceSans.body2.setHeight(2),
+                          textAlign: TextAlign.center,
+                          controller: model.ticketCountController,
+                          enableInteractiveSelection: false,
+                          enabled: false,
+                          keyboardType:
+                              TextInputType.numberWithOptions(signed: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: (String text) {
+                            model.updateTicketCount();
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    iconSize: SizeConfig.padding16,
-                    color: Colors.white,
-                    onPressed: model.increaseTicketCount,
-                  ),
-                ],
+                    GestureDetector(
+                      child: Icon(
+                        Icons.add,
+                        size: SizeConfig.padding16,
+                        color: Colors.white,
+                      ),
+                      // iconSize: SizeConfig.padding16,
+                      // color: Colors.white,
+                      onTap: model.increaseTicketCount,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
-                width: SizeConfig.padding2,
+                width: SizeConfig.padding8,
               ),
               Text(
                 "= ₹ ${model.ticketSavedAmount.toString()}",

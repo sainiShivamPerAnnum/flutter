@@ -94,78 +94,87 @@ class _CouponView extends StatelessWidget {
   final GoldBuyViewModel goldBuyViewModel;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth * .7,
-      padding: EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
-      decoration: BoxDecoration(
-        border: goldBuyViewModel.appliedCoupon != null
-            ? goldBuyViewModel.appliedCoupon?.code == model.code
-                ? Border.all(color: Color(0xFF08D2AD))
-                : null
-            : null,
-        color: UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                Assets.ticketTilted,
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Text(
-                model.code,
-                style: TextStyles.sourceSansSB.body1.colour(Colors.white),
-              ),
-              Spacer(),
-              GestureDetector(
-                onTap: () {
-                  if (goldBuyViewModel.appliedCoupon == null ||
-                      goldBuyViewModel.appliedCoupon.code != model.code) {
-                    if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
-                  } else {
-                    goldBuyViewModel.appliedCoupon = null;
-                  }
-                },
-                child: goldBuyViewModel.appliedCoupon == null ||
-                        goldBuyViewModel.appliedCoupon.code != model.code
-                    ? goldBuyViewModel.couponApplyInProgress &&
-                            goldBuyViewModel.couponCode == model.code
-                        ? SpinKitThreeBounce(
-                            size: SizeConfig.body2,
-                            color: UiConstants.primaryColor,
-                          )
-                        : Text(
-                            "Apply",
-                            style: TextStyles.sourceSansSB.body3
-                                .colour(Color(0xff1ADAB7)),
-                          )
-                    : Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Color(0xff1ADAB7),
-                      ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 6,
-          ),
-          SizedBox(
-            width: SizeConfig.screenWidth * 0.5,
-            child: Text(
-              model.description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.sourceSans.body4,
+    return GestureDetector(
+      onTap: () {
+        if (goldBuyViewModel.appliedCoupon == null ||
+            goldBuyViewModel.appliedCoupon.code != model.code) {
+          if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
+        }
+      },
+      child: Container(
+        width: SizeConfig.screenWidth * .7,
+        padding: EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
+        decoration: BoxDecoration(
+          border: goldBuyViewModel.appliedCoupon != null
+              ? goldBuyViewModel.appliedCoupon?.code == model.code
+                  ? Border.all(color: Color(0xFF08D2AD))
+                  : null
+              : null,
+          color:
+              UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  Assets.ticketTilted,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  model.code,
+                  style: TextStyles.sourceSansSB.body1.colour(Colors.white),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    if (goldBuyViewModel.appliedCoupon == null ||
+                        goldBuyViewModel.appliedCoupon.code != model.code) {
+                      if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
+                    } else {
+                      goldBuyViewModel.appliedCoupon = null;
+                    }
+                  },
+                  child: goldBuyViewModel.appliedCoupon == null ||
+                          goldBuyViewModel.appliedCoupon.code != model.code
+                      ? goldBuyViewModel.couponApplyInProgress &&
+                              goldBuyViewModel.couponCode == model.code
+                          ? SpinKitThreeBounce(
+                              size: SizeConfig.body2,
+                              color: UiConstants.primaryColor,
+                            )
+                          : Text(
+                              "Apply",
+                              style: TextStyles.sourceSansSB.body3
+                                  .colour(Color(0xff1ADAB7)),
+                            )
+                      : Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Color(0xff1ADAB7),
+                        ),
+                )
+              ],
             ),
-          )
-        ],
+            SizedBox(
+              height: 6,
+            ),
+            SizedBox(
+              width: SizeConfig.screenWidth * 0.5,
+              child: Text(
+                model.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.sourceSans.body4,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
