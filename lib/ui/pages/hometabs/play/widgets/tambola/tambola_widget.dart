@@ -17,29 +17,31 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../util/styles/ui_constants.dart';
 
 class TambolaWidget extends StatelessWidget {
-  const TambolaWidget(this.tambolaController, this.model, {Key? key})
+  TambolaWidget(this.tambolaController, this.model, {Key? key})
       : super(key: key);
   final TambolaWidgetController tambolaController;
   final TambolaCardModel model;
+
+  void onTap() {
+    Haptic.vibrate();
+    locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.tambolaGameCard,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "Time left for draw Tambola (mins)":
+              AnalyticsProperties.getTimeLeftForTambolaDraw(),
+          "Tambola Tickets Owned": AnalyticsProperties.getTambolaTicketCount(),
+        }));
+    if (model.game?.route != null)
+      AppState.delegate!.parseRoute(Uri.parse(model.game!.route!));
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: tambolaController,
       builder: (_, __) => GestureDetector(
-        onTap: () {
-          Haptic.vibrate();
-          locator<AnalyticsService>().track(
-              eventName: AnalyticsEvents.tambolaGameCard,
-              properties:
-                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                "Time left for draw Tambola (mins)":
-                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                "Tambola Tickets Owned":
-                    AnalyticsProperties.getTambolaTicketCount(),
-              }));
-          if (model.game!.route != null)
-            AppState.delegate!.parseRoute(Uri.parse(model.game!.route!));
-        },
+        onTap: onTap,
         child: Container(
           height: SizeConfig.screenHeight! * 0.22,
           margin: EdgeInsets.only(
@@ -61,14 +63,16 @@ class TambolaWidget extends StatelessWidget {
             }
             switch (tambolaController.tambolaWidgetType) {
               case TambolaWidgetType.Banner:
-                return _BannerWidget(model.game?.route ?? '');
+                return _BannerWidget(onTap);
               case TambolaWidgetType.Timer:
                 return _TambolaTimer(
-                    controller: tambolaController,
-                    route: model.game?.route ?? '');
+                  controller: tambolaController,
+                  onTap: onTap,
+                );
               case TambolaWidgetType.Tickets:
                 return _TicketWidget(
                   model,
+                  onTap: onTap,
                   controller: tambolaController,
                 );
               default:
@@ -82,8 +86,8 @@ class TambolaWidget extends StatelessWidget {
 }
 
 class _BannerWidget extends StatelessWidget {
-  const _BannerWidget(this.route, {Key? key}) : super(key: key);
-  final String route;
+  const _BannerWidget(this.onTap, {Key? key}) : super(key: key);
+  final void Function() onTap;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -100,6 +104,7 @@ class _BannerWidget extends StatelessWidget {
                 height: 12,
               ),
               CustomSaveButton(
+                onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
                 title: 'Start Playing',
@@ -115,10 +120,10 @@ class _BannerWidget extends StatelessWidget {
 }
 
 class _TambolaTimer extends StatelessWidget {
-  _TambolaTimer({Key? key, required this.controller, required this.route})
+  _TambolaTimer({Key? key, required this.controller, required this.onTap})
       : super(key: key);
   final TambolaWidgetController controller;
-  final String route;
+  final void Function() onTap;
 
   String intToTimeLeft(int value) {
     int h, m, s;
@@ -165,6 +170,7 @@ class _TambolaTimer extends StatelessWidget {
                 height: 12,
               ),
               CustomSaveButton(
+                onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
                 title: 'Start Playing',
@@ -180,10 +186,12 @@ class _TambolaTimer extends StatelessWidget {
 }
 
 class _TicketWidget extends StatelessWidget {
-  const _TicketWidget(this.model, {Key? key, required this.controller})
+  const _TicketWidget(this.model,
+      {Key? key, required this.controller, required this.onTap})
       : super(key: key);
   final TambolaWidgetController controller;
   final TambolaCardModel model;
+  final void Function() onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -216,6 +224,7 @@ class _TicketWidget extends StatelessWidget {
                 height: 12,
               ),
               CustomSaveButton(
+                onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
                 title: 'Start Playing',

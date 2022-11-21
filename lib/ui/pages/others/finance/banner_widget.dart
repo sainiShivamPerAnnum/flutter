@@ -14,7 +14,7 @@ class BannerWidget extends StatelessWidget {
         color: UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: EdgeInsets.symmetric(horizontal: 16),
       padding:
           EdgeInsets.symmetric(vertical: 8, horizontal: 4).copyWith(right: 24),
       child: Row(
