@@ -685,7 +685,7 @@ class ButTicketsComponent extends StatelessWidget {
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                     Text(
-                      "Get 1 Ticket for every ₹500 saved",
+                      "Get 1 Ticket for every ₹${(BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLACOST).isEmpty ? '500' : BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLACOST))} saved",
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),

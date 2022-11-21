@@ -222,7 +222,7 @@ class WebHomeViewModel extends BaseViewModel {
 
   Future<bool> setupGame() async {
     if (_userService.baseUser!.username!.isEmpty) {
-      BaseUtil.showUsernameInputModalSheet();
+      BaseUtil.showUsernameInputModalSheet(subtitle: "TODO");
       return false;
     }
     if (checkIfUserIsBannedFromThisGame() &&

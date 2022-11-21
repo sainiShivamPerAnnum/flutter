@@ -112,7 +112,8 @@ class UsernameInputView extends StatelessWidget {
                             backgroundColor: Colors.black,
                           )
                         : AppPositiveBtn(
-                            btnText: "ADD", onPressed: model.updateUsername),
+                            btnText: "ADD",
+                            onPressed: () => model.updateUsername(subtitle)),
                   )
                 ]),
           )),
