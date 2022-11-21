@@ -59,6 +59,7 @@ class _JourneyViewState extends State<JourneyView>
         log("ROOT: Journey view baseview build called");
 
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.black,
           body: model.isLoading && model.pages == null
               ? JourneyErrorScreen()
@@ -276,7 +277,8 @@ class LevelBlurView extends StatelessWidget {
           builder: (context, m, properties) {
             final JourneyLevel? levelData = jModel!.getJourneyLevelBlurData();
             log("Current Level Data ${levelData.toString()}");
-            return levelData != null && jModel.pages!.length >= levelData.pageEnd!
+            return levelData != null &&
+                    jModel.pages!.length >= levelData.pageEnd!
                 ? Stack(
                     children: [
                       Positioned(
@@ -285,10 +287,10 @@ class LevelBlurView extends StatelessWidget {
                         child: BlurFilter(
                           child: Container(
                             color: Colors.transparent,
-                            height:
-                                jModel.pageHeight! * (1 - levelData.breakpoint!) +
-                                    jModel.pageHeight! *
-                                        (jModel.pageCount - levelData.pageEnd!),
+                            height: jModel.pageHeight! *
+                                    (1 - levelData.breakpoint!) +
+                                jModel.pageHeight! *
+                                    (jModel.pageCount - levelData.pageEnd!),
                             width: jModel.pageWidth,
                             alignment: Alignment.bottomCenter,
                           ),

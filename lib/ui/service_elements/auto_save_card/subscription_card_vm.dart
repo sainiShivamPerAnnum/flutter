@@ -98,15 +98,15 @@ class SubscriptionCardViewModel extends BaseViewModel {
 
   getActiveButtonAction() async {
     Haptic.vibrate();
-    if (_userService!.userJourneyStats!.mlIndex! < 2)
-      return BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissible: true,
-          hapticVibrate: false,
-          content: CompleteProfileDialog(
-            subtitle:
-                'Please complete your profile to win your first reward and to start autosaving',
-          ));
+    // if (_userService!.userJourneyStats!.mlIndex! < 2)
+    //   return BaseUtil.openDialog(
+    //       addToScreenStack: true,
+    //       isBarrierDismissible: true,
+    //       hapticVibrate: false,
+    //       content: CompleteProfileDialog(
+    //         subtitle:
+    //             'Please complete your profile to win your first reward and to start autosaving',
+    //       ));
     // await _paytmService!.getActiveSubscriptionDetails();
     if (_paytmService!.activeSubscription == null ||
         (_paytmService!.activeSubscription!.status ==
@@ -155,10 +155,10 @@ class SubscriptionCardViewModel extends BaseViewModel {
         eventName: AnalyticsEvents.sipStartTapped,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-          "location":
-              AppState.delegate!.appState.currentAction.widget == SaveAssetView()
-                  ? "Save Asset View"
-                  : "Save Section",
+          "location": AppState.delegate!.appState.currentAction.widget ==
+                  SaveAssetView()
+              ? "Save Asset View"
+              : "Save Section",
         }));
   }
 

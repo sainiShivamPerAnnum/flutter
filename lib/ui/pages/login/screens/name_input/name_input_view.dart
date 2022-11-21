@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -55,83 +56,182 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                'Enter Name',
+                'Some Details',
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
             SizedBox(height: SizeConfig.padding20),
 
             //input
-            Form(
-              key: model.formKey,
-              child: AppTextField(
-                textEditingController: model.nameController,
-                isEnabled: model.enabled,
-                margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins * 2,
-                ),
-                hintText: "Enter your name as per your PAN",
-                focusNode: model.nameFocusNode,
-                textCapitalization: TextCapitalization.words,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                    RegExp(r'[a-zA-Z ]'),
-                  ),
-                ],
-                onSubmit: (_) => widget.loginModel.processScreenInput(2),
-                // suffix: SizedBox(),
-                validator: (value) {
-                  if (value != null && value.isNotEmpty) {
-                    // model.hasInputError = false;
-                    return null;
-                  } else {
-                    // model.hasInputError = true;
-                    return 'Please enter your name as per PAN';
-                  }
-                },
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding20),
-            model.hasReferralCode
-                ? AppTextField(
-                    textEditingController: model.referralCodeController,
-                    onChanged: (val) {},
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins * 2),
-                    maxLength: 6,
-                    isEnabled: true,
-                    scrollPadding:
-                        EdgeInsets.only(bottom: SizeConfig.padding80),
-                    hintText: "Enter your referral code here",
-                    textAlign: TextAlign.left,
-                    onSubmit: (_) => widget.loginModel.processScreenInput(2),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'[a-zA-Z0-9]'),
-                      )
-                    ],
-                    validator: (val) {
-                      if (val!.trim().length == 0) return null;
-                      if (val.trim().length < 6 || val.trim().length > 10)
-                        return "Invalid referral code";
-                      return null;
-                    },
-                  )
-                : TextButton(
-                    onPressed: () {
-                      if (widget.loginModel.state == ViewState.Busy) return;
-                      model.hasReferralCode = true;
-                    },
-                    child: Center(
-                      child: Text(
-                        "Have a referral code?",
-                        style: TextStyles.body2.bold
-                            .colour(UiConstants.kPrimaryColor),
-                        textAlign: TextAlign.center,
-                      ),
+            Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins * 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextFieldLabel("Name"),
+                  Form(
+                    key: model.formKey,
+                    child: AppTextField(
+                      textEditingController: model.nameController,
+                      isEnabled: model.enabled,
+
+                      hintText: "Enter your name as per your PAN",
+                      focusNode: model.nameFocusNode,
+                      textCapitalization: TextCapitalization.words,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'[a-zA-Z ]'),
+                        ),
+                      ],
+                      onSubmit: (_) => widget.loginModel.processScreenInput(2),
+                      // suffix: SizedBox(),
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          // model.hasInputError = false;
+                          return null;
+                        } else {
+                          // model.hasInputError = true;
+                          return 'Please enter your name as per PAN';
+                        }
+                      },
                     ),
                   ),
+                  SizedBox(height: SizeConfig.padding20),
+                  AppTextFieldLabel("Gender"),
+                  Row(
+                    children: List.generate(
+                      3,
+                      (index) {
+                        return Expanded(
+                          child: Container(
+                            margin: index == 0
+                                ? EdgeInsets.only(right: SizeConfig.padding8)
+                                : index == 1
+                                    ? EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding4)
+                                    : EdgeInsets.only(
+                                        left: SizeConfig.padding8),
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Haptic.vibrate();
+                                setState(() {
+                                  model.genderValue = index;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding12,
+                                  vertical: SizeConfig.padding12,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    model.genderOptions[index],
+                                    style: TextStyles.sourceSans.body3.colour(
+                                      (model.genderValue == index)
+                                          ? UiConstants.primaryColor
+                                          : UiConstants.kTextColor2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  model.genderValue == index
+                                      ? UiConstants.primaryColor
+                                          .withOpacity(0.1)
+                                      : UiConstants.kTextFieldColor,
+                                ),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness8),
+                                    side: BorderSide(
+                                        style: BorderStyle.solid,
+                                        width: 2,
+                                        color: (model.genderValue == index)
+                                            ? UiConstants.primaryColor
+                                            : Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding20),
+                  model.hasReferralCode
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: SizeConfig.padding4),
+                            AppTextFieldLabel("Referral Code (Optional)"),
+                            AppTextField(
+                              textEditingController:
+                                  model.referralCodeController,
+                              onChanged: (val) {},
+                              maxLength: 6,
+                              isEnabled: true,
+                              scrollPadding:
+                                  EdgeInsets.only(bottom: SizeConfig.padding80),
+                              hintText: "Enter your referral code here",
+                              textAlign: TextAlign.left,
+                              onSubmit: (_) =>
+                                  widget.loginModel.processScreenInput(2),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[a-zA-Z0-9]'),
+                                )
+                              ],
+                              validator: (val) {
+                                if (val!.trim().length == 0) return null;
+                                if (val.trim().length < 6 ||
+                                    val.trim().length > 10)
+                                  return "Invalid referral code";
+                                return null;
+                              },
+                            ),
+                          ],
+                        )
+                      : OutlinedButton(
+                          onPressed: () {
+                            if (widget.loginModel.state == ViewState.Busy)
+                              return;
+                            model.hasReferralCode = true;
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(SizeConfig.padding8),
+                            child: Text(
+                              "Have a referral code?",
+                              style: TextStyles.body2.bold
+                                  .colour(UiConstants.kPrimaryColor),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                ],
+              ),
+            ),
+
+            Container(
+              width: SizeConfig.screenWidth,
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins * 2,
+                  vertical: SizeConfig.padding12),
+              alignment: Alignment.center,
+              child: Text(
+                "By proceeding, you agree that you are 18 years and older.",
+                textAlign: TextAlign.center,
+                style: TextStyles.body3.colour(
+                  UiConstants.kTextColor2.withOpacity(0.5),
+                ),
+              ),
+            ),
+
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );

@@ -167,7 +167,7 @@ class _FocusRingState extends State<FocusRing>
                                       vertical: SizeConfig.padding8),
                                   child: Wrap(
                                     children: [
-                                      Text("Build Profile",
+                                      Text("Start Saving",
                                           style: TextStyles.sourceSansM.body3),
                                       SvgPicture.asset(
                                         Assets.chevRonRightArrow,

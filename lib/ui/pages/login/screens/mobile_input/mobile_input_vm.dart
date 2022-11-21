@@ -50,6 +50,8 @@ class LoginMobileViewModel extends BaseViewModel {
             completePhoneNumber.substring(completePhoneNumber.length - 10);
         upDateCheckTick();
         // notifyListeners();
+      } else {
+        mobileFocusNode.requestFocus();
       }
       Future.delayed(Duration(milliseconds: 500), () {
         mobileFocusNode.requestFocus();

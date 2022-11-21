@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -48,7 +49,7 @@ class LoginControllerViewModel extends BaseViewModel {
   final FcmListener? fcmListener = locator<FcmListener>();
   final AugmontService? augmontProvider = locator<AugmontService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final UserService? userService = locator<UserService>();
+  final UserService userService = locator<UserService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final CustomLogger? logger = locator<CustomLogger>();
   final ApiPath? apiPaths = locator<ApiPath>();
@@ -84,7 +85,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
   String? userMobile;
   String? _verificationId;
-  String? cstate;
   int? _currentPage;
   ValueNotifier<double?>? _pageNotifier;
   StreamSubscription? streamSubscription;
@@ -213,30 +213,33 @@ class LoginControllerViewModel extends BaseViewModel {
 
             String name =
                 _nameKey.currentState!.model.nameController.text.trim();
+            String gender =
+                _formatGender(_nameKey.currentState!.model.genderValue);
 
 //TEST DATA ---STARTS---//
-            if (userService!.baseUser == null) {
+            if (userService.baseUser == null) {
               //firebase user should never be null at this point
-              userService!.baseUser = BaseUser.newUser(
-                  userService!.firebaseUser!.uid,
+              userService.baseUser = BaseUser.newUser(
+                  userService.firebaseUser!.uid,
                   _formatMobileNumber(LoginControllerView.mobileno)!);
             }
 
             _nameKey.currentState?.model.enabled = false;
             notifyListeners();
 
-            userService!.baseUser!.name = name;
+            userService.baseUser!.name = name;
+            userService.baseUser!.gender = gender;
+            userService.baseUser!.avatarId = "AV1";
+
             bool flag = false;
             String message = "Please try again in sometime";
-            logger!.d(userService!.baseUser!.toJson().toString());
-            userService!.baseUser!.avatarId = "AV1";
+            log(userService.baseUser!.toJson().toString());
             try {
               final token = await _getBearerToken();
-              userService!.baseUser!.mobile = userMobile;
+              userService.baseUser!.mobile = userMobile;
               final ApiResponse response = await _userRepo!.setNewUser(
-                userService!.baseUser!,
+                userService.baseUser!,
                 token,
-                cstate,
               );
               logger!.i(response.toString());
               if (response.code == 400) {
@@ -484,6 +487,19 @@ class LoginControllerViewModel extends BaseViewModel {
       }
     }
     return null;
+  }
+
+  String _formatGender(int genderValue) {
+    switch (genderValue) {
+      case 0:
+        return "M";
+      case 1:
+        return "F";
+      case 2:
+        return "O";
+      default:
+        return "M";
+    }
   }
 
   Color getCTATextColor() {

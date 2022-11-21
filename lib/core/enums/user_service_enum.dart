@@ -1,6 +1,7 @@
 enum UserServiceProperties {
   myUserDpUrl,
   myUserName,
+  myName,
   myUserWallet,
   myUserFund,
   myDob,

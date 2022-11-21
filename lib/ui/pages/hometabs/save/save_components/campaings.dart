@@ -1,9 +1,12 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/widgets/carousal_widget.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,8 +35,8 @@ class Campaigns extends StatelessWidget {
 
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveVm;
-
-  const CampaignCardSection({Key? key, required this.saveVm}) : super(key: key);
+  final UserService _userService = locator<UserService>();
+  CampaignCardSection({Key? key, required this.saveVm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +60,8 @@ class CampaignCardSection extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
+                        if (_userService.baseUser!.username!.isEmpty)
+                          return BaseUtil.showUsernameInputModalSheet();
                         saveVm.trackChallangeTapped(event.type, index);
                         AppState.delegate!.parseRoute(Uri.parse(event.type));
                       },

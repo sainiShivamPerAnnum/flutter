@@ -111,12 +111,12 @@ class _FelloButtonState extends State<FelloButton> {
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
-                  if (_journeyService!.avatarRemoteMlIndex < 2)
-                    return BaseUtil.openDialog(
-                        addToScreenStack: true,
-                        isBarrierDismissible: true,
-                        hapticVibrate: false,
-                        content: CompleteProfileDialog());
+                  // if (_journeyService!.avatarRemoteMlIndex < 2)
+                  //   return BaseUtil.openDialog(
+                  //       addToScreenStack: true,
+                  //       isBarrierDismissible: true,
+                  //       hapticVibrate: false,
+                  //       content: CompleteProfileDialog());
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
                       widget.action!(true);

@@ -46,7 +46,7 @@ class RechargeOption {
 
 class WebHomeViewModel extends BaseViewModel {
   //Dependency Injection
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final PrizeService? _prizeService = locator<PrizeService>();
@@ -221,6 +221,10 @@ class WebHomeViewModel extends BaseViewModel {
   // }
 
   Future<bool> setupGame() async {
+    if (_userService.baseUser!.username!.isEmpty) {
+      BaseUtil.showUsernameInputModalSheet();
+      return false;
+    }
     if (checkIfUserIsBannedFromThisGame() &&
         await checkIfDeviceIsNotAnEmulator()) {
       await getBearerToken();

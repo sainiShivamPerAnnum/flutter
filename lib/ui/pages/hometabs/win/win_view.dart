@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
@@ -235,35 +236,14 @@ class Win extends StatelessWidget {
                                       Radius.circular(SizeConfig.roundness12))),
                               child: Stack(
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: SizeConfig.padding24),
-                                      child: Opacity(
-                                        opacity: 0.3,
-                                        child: Image.asset(
-                                          Assets.iPadPNG,
-                                          width: SizeConfig.screenWidth! * 0.3,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                   Container(
                                     padding: EdgeInsets.all(
                                       SizeConfig.padding24,
                                     ),
                                     child: Column(
                                       children: [
-                                        Container(
-                                          child: SvgPicture.asset(
-                                              Assets.referAndEarn,
-                                              height: SizeConfig.padding90 +
-                                                  SizeConfig.padding10),
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.padding20,
-                                        ),
+                                        ReferAndEarnAsset(),
+                                        SizedBox(height: SizeConfig.padding20),
                                         RichText(
                                           textAlign: TextAlign.center,
                                           text: TextSpan(

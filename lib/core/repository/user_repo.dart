@@ -55,7 +55,7 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser, token, String? state) async {
+      BaseUser baseUser, token) async {
     try {
       final String _bearer = token;
 
@@ -69,9 +69,8 @@ class UserRepository extends BaseRepo {
           BaseUser.fldDob: baseUser.dob,
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
-          BaseUser.fldAvatarId: 'AV1',
+          BaseUser.fldAvatarId: baseUser.avatarId,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
-          BaseUser.fldStateId: state,
           BaseUser.fldAppFlyerId: await _appsFlyerService!.appFlyerId,
           'referralCode': BaseUtil.manualReferralCode ?? ''
         }

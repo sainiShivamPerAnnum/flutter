@@ -43,7 +43,7 @@ class AnalyticsProperties {
     }
   }
 
-  static getTotalReferalCount() {
+  static getTotalReferralCount() {
     if (!_baseUtil!.referralsFetched!) {
       return 0;
     } else {
@@ -51,7 +51,7 @@ class AnalyticsProperties {
     }
   }
 
-  static getSucessReferalCount() {
+  static getSuccessReferralCount() {
     if (!_baseUtil!.referralsFetched!) {
       return 0;
     } else {
@@ -65,8 +65,8 @@ class AnalyticsProperties {
 
   static getPendingReferalCount() {
     int? pendingCount = 0;
-    if (getTotalReferalCount() >= getSucessReferalCount())
-      pendingCount = getTotalReferalCount() - getSucessReferalCount();
+    if (getTotalReferralCount() >= getSuccessReferralCount())
+      pendingCount = getTotalReferralCount() - getSuccessReferralCount();
     return pendingCount;
   }
 

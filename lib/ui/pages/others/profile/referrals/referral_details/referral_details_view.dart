@@ -34,25 +34,6 @@ class ReferralDetailsView extends StatelessWidget {
   var _unselectedTextStyle = TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
-  List<Shadow> shadowDrawerList = [
-    Shadow(
-      offset: Offset(0.0, 5.0),
-      blurRadius: 3.0,
-      color: Color.fromARGB(255, 0, 0, 0),
-    ),
-    Shadow(
-      offset: Offset(0.0, 5.0),
-      blurRadius: 3.0,
-      color: Color.fromARGB(255, 0, 0, 0),
-    ),
-  ];
-
-  getHeadingCustomTextStyle(Color color) {
-    return TextStyles.rajdhaniEB.title50
-        .colour(color)
-        .copyWith(shadows: shadowDrawerList);
-  }
-
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
@@ -98,41 +79,8 @@ class ReferralDetailsView extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                child: Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      child: SvgPicture.asset(
-                                          Assets.refreAndEarnBackgroundAsset,
-                                          width: SizeConfig.screenWidth! * 0.5),
-                                    ),
-                                    Image.asset(Assets.iPadPNG,
-                                        fit: BoxFit.cover,
-                                        width: SizeConfig.screenWidth! * 0.3)
-                                  ],
-                                ),
-                              ),
-                              RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: 'REFER ',
-                                        style: getHeadingCustomTextStyle(
-                                            UiConstants.kTabBorderColor)),
-                                    TextSpan(
-                                        text: '& ',
-                                        style: getHeadingCustomTextStyle(
-                                            Colors.white)),
-                                    TextSpan(
-                                        text: 'EARN',
-                                        style: getHeadingCustomTextStyle(
-                                            UiConstants
-                                                .kWinnerPlayerPrimaryColor)),
-                                  ],
-                                ),
-                              ),
+                              SizedBox(height: SizeConfig.padding6),
+                              ReferAndEarnAsset(),
                               SizedBox(
                                 height: SizeConfig.padding16,
                               ),
@@ -304,13 +252,10 @@ class ReferralDetailsView extends StatelessWidget {
                                 UserServiceProperties.myJourneyStats
                               ],
                               builder: (context, m, properties) {
-                                return FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "${m?.myUserName?.split(" ")?.first ?? ''}",
-                                    style: TextStyles.sourceSans.body1.colour(
-                                      Colors.white,
-                                    ),
+                                return Text(
+                                  "${(m?.myUserName ?? '').split(" ").first}",
+                                  style: TextStyles.sourceSans.body1.colour(
+                                    Colors.white,
                                   ),
                                 );
                               },
@@ -584,7 +529,8 @@ class BonusLockedReferals extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(model.referalList![i].userName ?? '-',
+                                      Text(
+                                          model.referalList![i].userName ?? '-',
                                           style: TextStyles.sourceSans.body1
                                               .colour(
                                             Colors.white,
@@ -969,6 +915,68 @@ class InfoTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ReferAndEarnAsset extends StatelessWidget {
+  ReferAndEarnAsset({Key? key}) : super(key: key);
+  getHeadingCustomTextStyle(Color color) {
+    return TextStyles.rajdhaniEB.title0
+        .colour(color)
+        .copyWith(shadows: shadowDrawerList)
+        .setHeight(1);
+  }
+
+  final List<Shadow> shadowDrawerList = [
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                child: SvgPicture.asset(Assets.refreAndEarnBackgroundAsset,
+                    width: SizeConfig.screenWidth! * 0.5),
+              ),
+              Image.asset(Assets.iPadPNG,
+                  fit: BoxFit.cover, width: SizeConfig.screenWidth! * 0.24)
+            ],
+          ),
+        ),
+        SizedBox(height: SizeConfig.padding6),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                  text: 'REFER ',
+                  style:
+                      getHeadingCustomTextStyle(UiConstants.kTabBorderColor)),
+              TextSpan(
+                  text: '& ', style: getHeadingCustomTextStyle(Colors.white)),
+              TextSpan(
+                  text: 'EARN',
+                  style: getHeadingCustomTextStyle(
+                      UiConstants.kWinnerPlayerPrimaryColor)),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

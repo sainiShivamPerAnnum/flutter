@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -5,6 +7,7 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -20,11 +23,11 @@ class HelpFab extends StatefulWidget {
 }
 
 class _HelpFabState extends State<HelpFab> {
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
-  double width = SizeConfig.avatarRadius * 2.4;
-  bool isOpen = false;
+  double width = SizeConfig.padding90;
+  bool isOpen = true;
   expandFab() {
     setState(() {
       isOpen = true;
@@ -57,18 +60,18 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          BaseUtil.showGtWinFlushBar("You won a gt", "Tap to check it out");
-          isOpen ? collapseFab() : expandFab();
-          AppState.screenStack.add(ScreenItem.dialog);
-          trackHelpTappedEvent();
-          AppState.delegate!
-              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          // isOpen ? collapseFab() : expandFab();
+          // AppState.screenStack.add(ScreenItem.dialog);
+          // trackHelpTappedEvent();
+          // AppState.delegate!
+          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          // BaseUtil.showUsernameInputModalSheet();
+
+          _userService.checkIfUsernameHasAddedUsername();
         },
-        child: AnimatedContainer(
+        child: Container(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
             height: SizeConfig.avatarRadius * 2.4,
-            duration: Duration(milliseconds: 600),
-            width: this.width,
-            curve: Curves.easeInOutCubic,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
               border: Border.all(color: Colors.white, width: 1),
@@ -77,23 +80,16 @@ class _HelpFabState extends State<HelpFab> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Transform.translate(
-                  offset: Offset(0, SizeConfig.padding3),
-                  child: SvgPicture.network(
-                    DynamicUiUtils.helpFab.iconUri ?? '',
-                    // height: SizeConfig.avatarRadius * 1.8,
-                    width: SizeConfig.avatarRadius * 1.8,
-                  ),
+                SvgPicture.network(
+                  DynamicUiUtils.helpFab.iconUri ?? '',
+                  // height: SizeConfig.avatarRadius * 1.8,
+                  width: SizeConfig.avatarRadius * 1.8,
                 ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 600),
-                  curve: Curves.easeInOutCubic,
-                  width: isOpen ? SizeConfig.padding32 : 0,
-                  child: FittedBox(
-                    child: Text(
-                      " ${DynamicUiUtils.helpFab.title ?? 'Help'}",
-                      style: TextStyles.sourceSansSB.body3,
-                    ),
+                SizedBox(width: SizeConfig.padding6),
+                Container(
+                  child: Text(
+                    " ${DynamicUiUtils.helpFab.title ?? 'Help'}",
+                    style: TextStyles.sourceSansSB.body3,
                   ),
                 )
               ],

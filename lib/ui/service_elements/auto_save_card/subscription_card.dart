@@ -41,15 +41,15 @@ class _AutosaveCardState extends State<AutosaveCard> {
                 onTap: () async {
                   if (connectivityStatus == ConnectivityStatus.Offline)
                     return BaseUtil.showNoInternetAlert();
-                  if (!subscriptionModel.isUserProfileComplete())
-                    return BaseUtil.openDialog(
-                        addToScreenStack: true,
-                        isBarrierDismissible: true,
-                        hapticVibrate: false,
-                        content: CompleteProfileDialog(
-                          subtitle:
-                              'Please complete your profile to win your first reward and to start autosaving',
-                        ));
+                  // if (!subscriptionModel.isUserProfileComplete())
+                  //   return BaseUtil.openDialog(
+                  //       addToScreenStack: true,
+                  //       isBarrierDismissible: true,
+                  //       hapticVibrate: false,
+                  //       content: CompleteProfileDialog(
+                  //         subtitle:
+                  //             'Please complete your profile to win your first reward and to start autosaving',
+                  //       ));
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;
@@ -276,8 +276,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     width: SizeConfig.padding6,
                                                   ),
                                                   Text(
-                                                    model
-                                                        .activeSubscription!.vpa!,
+                                                    model.activeSubscription!
+                                                        .vpa!,
                                                     style: TextStyles
                                                         .sourceSans.body4
                                                         .colour(UiConstants

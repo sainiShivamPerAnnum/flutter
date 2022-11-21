@@ -63,6 +63,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   String? _myUserDpUrl = '';
   String? _myUserName;
+  String? _name;
+  String? _kycName;
   // String _myUpiId;
   String? _dob;
   String? _gender;
@@ -90,6 +92,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String? get avatarId => _avatarId;
   String? get myUserDpUrl => _myUserDpUrl;
   String? get myUserName => _myUserName;
+  String? get name =>
+      (_kycName != null && _kycName!.isNotEmpty) ? _kycName : _name;
   String? get idToken => _idToken;
   String? get dob => _dob;
   String? get gender => _gender;
@@ -133,8 +137,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setMyUserName(String? name) {
     _myUserName = name;
     notifyListeners(UserServiceProperties.myUserName);
-    _logger!
+    _logger
         .d("My user name updated in userservice, property listeners notified");
+  }
+
+  setName(String? name) {
+    _name = name;
+    notifyListeners(UserServiceProperties.myName);
+    _logger.d(" name updated in userservice, property listeners notified");
   }
 
   // setMyUpiId(String upi) {
@@ -214,6 +224,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.myAugmontDetails);
     _logger!.d(
         "AgmontDetails :User augmontDetails updated, property listeners notified");
+  }
+
+  bool checkIfUsernameHasAddedUsername() {
+    _logger.d(baseUser!.username ?? "No username");
+    return baseUser!.username != null && baseUser!.username!.isNotEmpty;
   }
 
   bool get isUserOnboarded {
@@ -368,7 +383,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         return;
       }
       _baseUser = response.model;
-      _logger!.d("Base user initialized, UID: ${_baseUser?.uid}");
+      _logger!
+          .d("Base user initialized, UID: ${_baseUser?.toJson().toString()}");
 
       _idToken = await CacheManager.readCache(key: 'token');
 
@@ -388,8 +404,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       setMyUserName(baseUser?.kycName ?? baseUser!.name);
       setDateOfBirth(baseUser!.dob);
       setGender(baseUser!.gender);
+      setName(
+          baseUser!.kycName!.isNotEmpty ? _baseUser!.kycName : _baseUser!.name);
     } else {
-      _logger!.d("Firebase User is null");
+      _logger.d("Firebase User is null");
     }
   }
 

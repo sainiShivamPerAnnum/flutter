@@ -245,8 +245,8 @@ class WinViewModel extends BaseViewModel {
 
     _analyticsService
         .track(eventName: AnalyticsEvents.shareReferalCode, properties: {
-      "Referrred Count Success": AnalyticsProperties.getSucessReferalCount(),
-      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
+      "Referrred Count Success": AnalyticsProperties.getSuccessReferralCount(),
+      "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
       "code": _refCode,
     });
     shareLinkInProgress = true;
@@ -305,8 +305,8 @@ class WinViewModel extends BaseViewModel {
     Haptic.vibrate();
     _analyticsService
         .track(eventName: AnalyticsEvents.copyReferalCode, properties: {
-      "Referrred Count Success": AnalyticsProperties.getSucessReferalCount(),
-      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
+      "Referrred Count Success": AnalyticsProperties.getSuccessReferralCount(),
+      "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
       "code": _refCode,
     });
     Clipboard.setData(ClipboardData(text: _refCode)).then((_) {

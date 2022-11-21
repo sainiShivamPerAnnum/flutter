@@ -33,6 +33,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -97,12 +98,10 @@ class MyWinningsViewModel extends BaseViewModel {
     _analyticsService!
         .track(eventName: AnalyticsEvents.goldenTicketSectionOpen, properties: {
       "Unscratched tickets count": _gtService!.unscratchedTicketsCount,
-      "Scratched tickets count": _gtService!.activeGoldenTickets == null
-          ? 0
-          : _gtService!.activeGoldenTickets.length,
+      "Scratched tickets count": _gtService!.activeGoldenTickets.length,
       "total prize won": _userService!.userFundWallet!.prizeLifetimeWin,
-      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
-      "Referred count sucess": AnalyticsProperties.getSucessReferalCount(),
+      "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
+      "Referred count success": AnalyticsProperties.getSuccessReferralCount(),
     });
   }
 
@@ -113,10 +112,8 @@ class MyWinningsViewModel extends BaseViewModel {
       switch (redeemtype) {
         case UserTransaction.TRAN_REDEEMTYPE_AUGMONT_GOLD:
           return "Digital Gold Redemption";
-          break;
         case UserTransaction.TRAN_REDEEMTYPE_AMZ_VOUCHER:
           return "Amazon Voucher Redemption";
-          break;
         default:
           return "Fello Rewards";
       }
@@ -126,19 +123,14 @@ class MyWinningsViewModel extends BaseViewModel {
       switch (subtype) {
         case UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD:
           return "Digital Gold";
-          break;
         case UserTransaction.TRAN_SUBTYPE_GLDN_TCK:
           return "Fello Golden Ticket";
-          break;
         case UserTransaction.TRAN_SUBTYPE_REF_BONUS:
           return "Referral Bonus";
-          break;
         case UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN:
           return "Tambola Win";
-          break;
         case UserTransaction.TRAN_SUBTYPE_CRICKET_WIN:
           return "Cricket Win";
-          break;
         default:
           return "Fello Rewards";
       }
@@ -218,7 +210,7 @@ class MyWinningsViewModel extends BaseViewModel {
                       }
 
                       if (url != null)
-                        caputure(
+                        capture(
                             'Hey, I won ₹${_userService!.userFundWallet!.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
                     } catch (e) {
                       _logger!.e(e.toString());
@@ -277,7 +269,6 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   claim(PrizeClaimChoice choice, double claimPrize) {
-    double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher!.didPopRoute();
       if (flag) {
@@ -349,7 +340,7 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
 // Capture Share card Logic
-  caputure(String shareMessage) {
+  capture(String shareMessage) {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
         AppState.backButtonDispatcher!.didPopRoute();
@@ -417,15 +408,15 @@ class MyWinningsViewModel extends BaseViewModel {
     return null;
   }
 
-  shareCard(Uint8List image, String shareMessage) async {
+  shareCard(Uint8List image, String? shareMessage) async {
     try {
       if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
-        File imgg = new File('$directory/fello-reward-$dt.png');
-        imgg.writeAsBytesSync(image);
-        Share.shareFiles(
-          [imgg.path],
+        File imageFile = new File('$directory/fello-reward-$dt.png');
+        imageFile.writeAsBytesSync(image);
+        Share.shareXFiles(
+          [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
@@ -444,14 +435,14 @@ class MyWinningsViewModel extends BaseViewModel {
         final directory = await getTemporaryDirectory();
         if (!await directory.exists()) await directory.create(recursive: true);
 
-        final File imgg =
+        final File imageFile =
             await new File('${directory.path}/fello-reward-$dt.jpg').create();
-        imgg.writeAsBytesSync(image);
+        imageFile.writeAsBytesSync(image);
 
-        _logger!.d("Image file created and sharing, ${imgg.path}");
+        _logger!.d("Image file created and sharing, ${imageFile.path}");
 
-        Share.shareFiles(
-          [imgg.path],
+        Share.shareXFiles(
+          [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {

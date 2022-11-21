@@ -63,7 +63,7 @@ class UserProfileVM extends BaseViewModel {
   bool isUsernameLoading = false;
   bool? isValid = false;
 
-  final UserRepository? _userRepo = locator<UserRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
   final UserService? _userService = locator<UserService>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final FcmListener? fcmlistener = locator<FcmListener>();
@@ -114,7 +114,7 @@ class UserProfileVM extends BaseViewModel {
   FocusNode emailFocusNode = FocusNode();
 
   String? get myUserDpUrl => _userService!.myUserDpUrl;
-  String get myname => _userService!.myUserName ?? "";
+  String get myname => _userService!.name ?? "";
   String get myUsername => _userService!.baseUser!.username ?? "";
   String get myDob => _userService!.dob ?? "";
   String get myEmail => _userService!.email ?? "";
@@ -233,6 +233,15 @@ class UserProfileVM extends BaseViewModel {
     checkIfUserIsKYCVerified();
   }
 
+  usernameInit() {
+    inEditMode = true;
+    usernameController = TextEditingController();
+  }
+
+  usernameDispose() {
+    usernameController?.dispose();
+  }
+
   setGender() {
     if (myGender == "M") {
       gender = _locale!.obGenderMale;
@@ -345,7 +354,7 @@ class UserProfileVM extends BaseViewModel {
           _userService!.baseUser!.email = emailController!.text.trim();
           _userService!.baseUser!.username =
               isNewUser ? username : _userService!.baseUser!.username;
-          await _userRepo!.updateUser(
+          await _userRepo.updateUser(
             uid: _userService!.baseUser!.uid,
             dMap: {
               BaseUser.fldName: _userService!.baseUser!.name,
@@ -809,6 +818,27 @@ class UserProfileVM extends BaseViewModel {
     isSigningInWithGoogle = false;
   }
 
+  Future updateUsername() async {
+    if (isUpdaingUserDetails) return;
+    if (!(await validateUsername() ?? false)) return;
+    AppState.blockNavigation();
+    isUpdaingUserDetails = true;
+    inEditMode = false;
+    final res = await _userRepo
+        .updateUser(dMap: {BaseUser.fldUsername: usernameController?.text});
+    if (res.isSuccess()) {
+      await _userService!.setBaseUser();
+      AppState.unblockNavigation();
+      AppState.backButtonDispatcher!.didPopRoute();
+      return true;
+    } else {
+      inEditMode = true;
+      BaseUtil.showNegativeAlert(res.errorMessage, "");
+    }
+    isUpdaingUserDetails = false;
+    AppState.unblockNavigation();
+  }
+
   Widget showResult() {
     print("Response " + response.toString());
     if (isValid == null) {
@@ -818,8 +848,10 @@ class UserProfileVM extends BaseViewModel {
       return Container(
         height: SizeConfig.padding16,
         width: SizeConfig.padding16,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
+        child: Expanded(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
         ),
       );
     } else if (response == UsernameResponse.EMPTY)

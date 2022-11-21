@@ -515,15 +515,6 @@ class UserProfileForm extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: SizeConfig.padding54),
-                      Center(
-                        child: TextButton(
-                          child: Text(
-                            'SIGN OUT',
-                            style: TextStyles.rajdhaniB.body1,
-                          ),
-                          onPressed: model.signout,
-                        ),
-                      ),
                     ],
                   )
                 : ReactivePositiveAppButton(
@@ -531,6 +522,15 @@ class UserProfileForm extends StatelessWidget {
                     btnText: "Complete",
                     onPressed: model.updateDetails),
             SizedBox(height: SizeConfig.padding6),
+            Center(
+              child: TextButton(
+                child: Text(
+                  'SIGN OUT',
+                  style: TextStyles.rajdhaniB.body1,
+                ),
+                onPressed: model.signout,
+              ),
+            ),
             AppFooter(),
             SizedBox(height: SizeConfig.padding28),
           ],

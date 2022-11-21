@@ -42,6 +42,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vie
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -240,23 +241,23 @@ class BaseUtil extends ChangeNotifier {
   }
 
   openProfileDetailsScreen() {
-    if (JourneyService.isAvatarAnimationInProgress) return;
-    if (_userService!.userJourneyStats!.mlIndex! > 1)
-      AppState.delegate!.parseRoute(Uri.parse("profile"));
-    else {
-      // print("Reachng");
+    // if (JourneyService.isAvatarAnimationInProgress) return;
+    // if (_userService!.userJourneyStats!.mlIndex! > 1)
+    AppState.delegate!.parseRoute(Uri.parse("profile"));
+    // else {
+    // print("Reachng");
 
-      // print(
-      //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-      //       "Test": "test"
-      //     })}");
+    // print(
+    //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+    //       "Test": "test"
+    //     })}");
 
-      AppState.delegate!.appState.currentAction = PageAction(
-        page: UserProfileDetailsConfig,
-        state: PageState.addWidget,
-        widget: UserProfileDetails(isNewUser: true),
-      );
-    }
+    // AppState.delegate!.appState.currentAction = PageAction(
+    //   page: UserProfileDetailsConfig,
+    //   state: PageState.addWidget,
+    //   widget: UserProfileDetails(isNewUser: true),
+    // );
+    // }
 
     _analyticsService!.track(
         eventName: AnalyticsEvents.profileClicked,
@@ -286,19 +287,29 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  static showUsernameInputModalSheet() {
+    return openModalBottomSheet(
+      isScrollControlled: true,
+      isBarrierDismissable: true,
+      addToScreenStack: true,
+      content: UsernameInputView(),
+      hapticVibrate: true,
+    );
+  }
+
   openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (_userService!.userJourneyStats?.mlIndex == 1)
-        return BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissible: true,
-          hapticVibrate: false,
-          content: CompleteProfileDialog(),
-        );
+      // if (_userService!.userJourneyStats?.mlIndex == 1)
+      //   return BaseUtil.openDialog(
+      //     addToScreenStack: true,
+      //     isBarrierDismissible: true,
+      //     hapticVibrate: false,
+      //     content: CompleteProfileDialog(),
+      //   );
       final bool? isAugDepositBanned = _userService
           ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
       final String? augDepositBanNotice = _userService
@@ -346,12 +357,12 @@ class BaseUtil extends ChangeNotifier {
 
   void openSellModalSheet({required InvestmentType investmentType}) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (_userService!.userJourneyStats!.mlIndex == 1)
-        return BaseUtil.openDialog(
-            addToScreenStack: true,
-            isBarrierDismissible: true,
-            hapticVibrate: false,
-            content: CompleteProfileDialog());
+      // if (_userService!.userJourneyStats!.mlIndex == 1)
+      //   return BaseUtil.openDialog(
+      //       addToScreenStack: true,
+      //       isBarrierDismissible: true,
+      //       hapticVibrate: false,
+      //       content: CompleteProfileDialog());
       final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
@@ -394,12 +405,12 @@ class BaseUtil extends ChangeNotifier {
   }
 
   openDepositOptionsModalSheet({int? amount, bool isSkipMl = false}) {
-    if (_userService!.userJourneyStats!.mlIndex == 1)
-      return BaseUtil.openDialog(
-          addToScreenStack: true,
-          isBarrierDismissible: true,
-          hapticVibrate: false,
-          content: CompleteProfileDialog());
+    // if (_userService!.userJourneyStats!.mlIndex == 1)
+    //   return BaseUtil.openDialog(
+    //       addToScreenStack: true,
+    //       isBarrierDismissible: true,
+    //       hapticVibrate: false,
+    //       content: CompleteProfileDialog());
     _analyticsService!.track(eventName: AnalyticsEvents.challengeCtaTapped);
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
@@ -643,10 +654,15 @@ class BaseUtil extends ChangeNotifier {
       enableDrag: enableDrag,
       constraints: boxContraints,
       shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.zero,
+        borderRadius: borderRadius ??
+            BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.padding16),
+              topRight: Radius.circular(SizeConfig.padding16),
+            ),
       ),
-      isScrollControlled: isScrollControlled ?? false,
-      backgroundColor: backgroundColor != null ? backgroundColor : Colors.white,
+      isScrollControlled: isScrollControlled,
+      backgroundColor: backgroundColor ??
+          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       isDismissible: isBarrierDismissable,
       context: AppState.delegate!.navigatorKey.currentContext!,
       builder: (ctx) => content!,

@@ -99,6 +99,7 @@ class AppState extends ChangeNotifier {
   }
 
   static blockNavigation() {
+    if (screenStack.last == ScreenItem.loader) return;
     screenStack.add(ScreenItem.loader);
   }
 
