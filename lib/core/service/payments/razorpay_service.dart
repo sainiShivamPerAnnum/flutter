@@ -88,7 +88,7 @@ class RazorpayService extends ChangeNotifier {
         eventName: AnalyticsEvents.paymentCancelled,
         properties: currentTxnDetails);
 
-    _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
+    _currentTxn!.rzp?[UserTransaction.subFldRzpStatus] =
         UserTransaction.RZP_TRAN_STATUS_FAILED;
     if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
 
@@ -154,7 +154,7 @@ class RazorpayService extends ChangeNotifier {
           'color': '#2EB19F',
           'backdrop_color': '#F1F1F1'
         },
-        'prefill': {'contact': mobile, 'email': email}
+        'prefill': {'contact': mobile, 'email': "hello@fello.in"}
       };
 
       if (txnResponse.isSuccess()) {
@@ -183,7 +183,7 @@ class RazorpayService extends ChangeNotifier {
             'color': '#2EB19F',
             'backdrop_color': '#F1F1F1'
           },
-          'prefill': {'contact': mobile, 'email': email}
+          'prefill': {'contact': mobile, 'email': "hello@fello.in"}
         };
 
         _razorpay!.open(options);

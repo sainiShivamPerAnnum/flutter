@@ -210,10 +210,20 @@ class LBoxAssetCard extends StatelessWidget {
                           SizedBox(
                             height: SizeConfig.padding2,
                           ),
-                          Text(
-                            'Current',
-                            style: TextStyles.sourceSans.body3.colour(
-                                UiConstants.kTextColor.withOpacity(0.8)),
+                          Row(
+                            children: [
+                              Text(
+                                'Current',
+                                style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor.withOpacity(0.8)),
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              Icon(
+                                Icons.arrow_upward,
+                                size: SizeConfig.padding14,
+                                color: UiConstants.primaryColor,
+                              )
+                            ],
                           ),
                         ],
                       ),

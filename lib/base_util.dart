@@ -290,7 +290,7 @@ class BaseUtil extends ChangeNotifier {
   static showUsernameInputModalSheet() {
     return openModalBottomSheet(
       isScrollControlled: true,
-      isBarrierDismissable: true,
+      isBarrierDismissable: false,
       addToScreenStack: true,
       content: UsernameInputView(),
       hapticVibrate: true,
@@ -428,20 +428,6 @@ class BaseUtil extends ChangeNotifier {
         content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
   }
 
-  bool get checkKycMissing {
-    bool skFlag = (myUser!.isSimpleKycVerified != null &&
-        myUser!.isSimpleKycVerified == true);
-    bool augFlag = false;
-    if (myUser!.isAugmontOnboarded!) {
-      final DateTime _dt = new DateTime(2021, 8, 28);
-      //if the person regd for augmont before v2.5.4 release, then their kyc is complete
-      augFlag = (augmontDetail != null &&
-          augmontDetail!.createdTime != null &&
-          augmontDetail!.createdTime.toDate().isBefore(_dt));
-    }
-    return (!skFlag && !augFlag);
-  }
-
   static showGtWinFlushBar(String title, String message, {int seconds = 2}) {
     // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
     if ((title != null && title.length > 200) ||
@@ -473,10 +459,10 @@ class BaseUtil extends ChangeNotifier {
         message: message,
         duration: Duration(seconds: seconds),
         backgroundColor: Colors.black,
-        onTap: (_) {
-          _.dismiss();
-          AppState.delegate!.parseRoute(Uri.parse("/myWinnings"));
-        },
+        // onTap: (_) {
+        //   _.dismiss();
+        //   AppState.delegate!.parseRoute(Uri.parse("/myWinnings"));
+        // },
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor!,

@@ -14,6 +14,8 @@ class PrizeService extends ChangeNotifier {
   PrizesModel? _poolClubPrizes;
   PrizesModel? _footballPrizes;
   PrizesModel? _candyFiestaPrizes;
+  PrizesModel? _bowlingPrizes;
+  PrizesModel? _bottleFlipPrizes;
 
   PrizesModel? get footballPrizes => this._footballPrizes;
 
@@ -29,24 +31,38 @@ class PrizeService extends ChangeNotifier {
     notifyListeners();
   }
 
-PrizesModel?  get poolClubPrizes => this._poolClubPrizes;
+  PrizesModel? get poolClubPrizes => this._poolClubPrizes;
 
-  set poolClubPrizes(PrizesModel?  value) {
+  set poolClubPrizes(PrizesModel? value) {
     this._poolClubPrizes = value;
     notifyListeners();
   }
 
- PrizesModel? get tambolaPrizes => this._tambolaPrizes;
+  PrizesModel? get tambolaPrizes => this._tambolaPrizes;
 
-  set tambolaPrizes(PrizesModel?  value) {
+  set tambolaPrizes(PrizesModel? value) {
     this._tambolaPrizes = value;
     notifyListeners();
   }
 
-PrizesModel?  get cricketPrizes => this._cricketPrizes;
+  PrizesModel? get cricketPrizes => this._cricketPrizes;
 
-  set cricketPrizes( PrizesModel? value) {
+  set cricketPrizes(PrizesModel? value) {
     this._cricketPrizes = value;
+    notifyListeners();
+  }
+
+  get bowlingPrizes => this._bowlingPrizes;
+
+  set bowlingPrizes(value) {
+    this._bowlingPrizes = value;
+    notifyListeners();
+  }
+
+  get bottleFlipPrizes => this._bottleFlipPrizes;
+
+  set bottleFlipPrizes(value) {
+    this._bottleFlipPrizes = value;
     notifyListeners();
   }
 
@@ -95,12 +111,35 @@ PrizesModel?  get cricketPrizes => this._cricketPrizes;
   }
 
   fetchPoolClubPrizes() async {
-     await _gtRepo!
+    await _gtRepo!
         .getPrizesPerGamePerFreq(
       Constants.GAME_TYPE_POOLCLUB,
       "weekly",
-    )  .then((value){
+    )
+        .then((value) {
       poolClubPrizes = value.model;
+    });
+  }
+
+  fetchBottleFlipPrizes() async {
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_BOTTLEFLIP,
+      "weekly",
+    )
+        .then((value) {
+      bottleFlipPrizes = value.model;
+    });
+  }
+
+  fetchBowlingPrizes() async {
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_BOWLING,
+      "weekly",
+    )
+        .then((value) {
+      bowlingPrizes = value.model;
     });
   }
 }

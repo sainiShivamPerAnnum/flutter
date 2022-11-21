@@ -69,7 +69,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppTextFieldLabel("Name"),
+                  AppTextFieldLabel("Name", leftPadding: 0),
                   Form(
                     key: model.formKey,
                     child: AppTextField(
@@ -99,7 +99,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     ),
                   ),
                   SizedBox(height: SizeConfig.padding20),
-                  AppTextFieldLabel("Gender"),
+                  AppTextFieldLabel("Gender", leftPadding: 0),
                   Row(
                     children: List.generate(
                       3,
@@ -203,6 +203,16 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                               return;
                             model.hasReferralCode = true;
                           },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness8),
+                            ),
+                            side: BorderSide(
+                              width: 1,
+                              color: UiConstants.primaryColor.withOpacity(0.2),
+                            ),
+                          ),
                           child: Padding(
                             padding: EdgeInsets.all(SizeConfig.padding8),
                             child: Text(

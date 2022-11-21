@@ -52,18 +52,19 @@ class TambolaWrapper extends StatelessWidget {
           );
         }
         return RefreshIndicator(
-            color: UiConstants.primaryColor,
-            backgroundColor: Colors.black,
-            onRefresh: model.refreshTambolaTickets,
-            child: Scaffold(
-              body: (model.activeTambolaCardCount ?? 0) > 0
-                  ? TambolaExistingUserPage(
-                      model: model,
-                    )
-                  : TambolaNewUserPage(
-                      model: model,
-                    ),
-            ));
+          color: UiConstants.primaryColor,
+          backgroundColor: Colors.black,
+          onRefresh: model.refreshTambolaTickets,
+          child: Scaffold(
+            body: (model.activeTambolaCardCount ?? 0) > 0
+                ? TambolaExistingUserPage(
+                    model: model,
+                  )
+                : TambolaNewUserPage(
+                    model: model,
+                  ),
+          ),
+        );
       },
     );
   }
@@ -87,11 +88,12 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
     _scrollController = ScrollController();
 
     if (widget.showPrizeSection) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        _scrollController?.animateTo(
-            _scrollController?.position.maxScrollExtent ?? 0 / 2,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.fastLinearToSlowEaseIn);
+      Future.delayed(Duration(seconds: 1), () {
+        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+          _scrollController?.animateTo(SizeConfig.screenWidth! * 1.2,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn);
+        });
       });
     }
 
@@ -106,6 +108,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
         showCoinBar: false,
         showHelpButton: false,
         title: "Tambola",
+        type: FaqsType.play,
         backgroundColor: UiConstants.kArowButtonBackgroundColor,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
@@ -118,25 +121,18 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                 TambolaHeader(
                   model: widget.model,
                 ),
-                SizedBox(
-                  height: 14,
-                ),
-                SizedBox(
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
                   width: SizeConfig.screenWidth! * 0.9,
                   child: Text(
                     widget.model.game!.description!,
                     textAlign: TextAlign.center,
-                    style: TextStyles.rajdhaniSB.body1
+                    style: TextStyles.rajdhaniSB.body2
                         .colour(Color(0xffD9D9D9).withOpacity(0.41)),
                   ),
                 ),
-                SizedBox(
-                  height: 14,
-                ),
                 TambolaTicketInfo(),
-                SizedBox(
-                  height: 14,
-                ),
+                SizedBox(height: SizeConfig.padding20),
                 TambolaPrize(
                   model: widget.model,
                 ),
@@ -155,28 +151,33 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
               padding:
                   EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
               width: double.infinity,
-              color: Colors.black.withOpacity(0.8),
-              height: SizeConfig.screenHeight! * 0.17,
+              color: UiConstants.kBackgroundColor,
+              // height: SizeConfig.screenHeight! * 0.17,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(Assets.sparklingStar),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        widget.model.game?.highLight ?? '',
-                        style: TextStyles.sourceSans.body4
-                            .colour(Color(0xffA7A7A8)),
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(Assets.sparklingStar),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          widget.model.game?.highLight ?? '',
+                          style: TextStyles.sourceSans.body4
+                              .colour(Color(0xffA7A7A8)),
+                        ),
+                      ],
+                    ),
                   ),
-                  Spacer(),
                   AppPositiveBtn(
-                    btnText: 'Get your first ticket',
+                    btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
+                        ? "Get Tickets"
+                        : 'Get your first ticket',
                     onPressed: () {
                       locator<AnalyticsService>().track(
                           eventName: AnalyticsEvents.tambolaSaveTapped,
@@ -241,7 +242,7 @@ class TambolaTicketInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenHeight! * 0.12,
+      height: SizeConfig.screenHeight! * 0.10,
       width: SizeConfig.screenWidth! * 0.80,
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xff627F8E)),

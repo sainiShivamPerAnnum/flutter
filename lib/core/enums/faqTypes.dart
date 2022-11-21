@@ -8,5 +8,6 @@ enum FaqsType {
   winnings,
   gold,
   flo,
-  journey
+  journey,
+  onboarding,
 }

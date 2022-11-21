@@ -98,15 +98,15 @@ class AnalyticsProperties {
   }
 
   static double getGoldInvestedAmount() {
-    return _userService!.userFundWallet!.augGoldPrinciple ?? 0;
+    return _userService!.userFundWallet?.augGoldPrinciple ?? 0;
   }
 
   static double getGoldQuantityInGrams() {
-    return _userService!.userFundWallet!.augGoldQuantity ?? 0;
+    return _userService!.userFundWallet?.augGoldQuantity ?? 0;
   }
 
   static double getFelloFloAmount() {
-    return _userService!.userFundWallet!.wLbPrinciple ?? 0;
+    return _userService!.userFundWallet?.wLbPrinciple ?? 0;
   }
 
   static bool isKYCVerified() {

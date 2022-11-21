@@ -62,7 +62,8 @@ class LeaderboardService
   }
 
   fetchReferralLeaderBoard() async {
-    ApiResponse response = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response =
+        await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
       type: "REF-ACTIVE",
       freq: "monthly",
     );
@@ -78,7 +79,8 @@ class LeaderboardService
 
   fetchWebGameLeaderBoard({required String? game}) async {
     isLeaderboardLoading = true;
-    ApiResponse response = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response =
+        await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
       type: game,
       freq: "weekly",
     );
@@ -91,11 +93,11 @@ class LeaderboardService
       await fetchLeaderBoardProfileImage();
 
       setWebGameLeaderBoard();
-      isLeaderboardLoading = false;
       _logger!.d("$game Leaderboard successfully fetched");
     } else {
       _WebGameLeaderBoard = null;
     }
+    isLeaderboardLoading = false;
   }
 
   Future getProfileDpWithUid(String? uid) async {
@@ -145,8 +147,10 @@ class LeaderboardService
       parentController
           .animateTo(parentController.position.maxScrollExtent,
               duration: Duration(seconds: 1), curve: Curves.easeIn)
-          .then((value) => ownController.animateTo(index! * SizeConfig.padding54,
-              duration: Duration(seconds: 1), curve: Curves.easeIn));
+          .then((value) => ownController.animateTo(
+              index! * SizeConfig.padding54,
+              duration: Duration(seconds: 1),
+              curve: Curves.easeIn));
     }
   }
 

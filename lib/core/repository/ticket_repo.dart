@@ -105,7 +105,7 @@ class TambolaRepo extends BaseRepo {
         final data = response['data'];
         if (data != null && data.isNotEmpty)
           return ApiResponse<DailyPick>(
-            model: DailyPick.fromMap(data),
+            model: DailyPick.fromMap(data["picks"]),
             code: 200,
           );
         else

@@ -55,7 +55,7 @@ class RewardLeaderboardViewModel extends BaseViewModel {
   //Super Methods
   init(String game) async {
     currentGame = game;
-    print(currentGame);
+    print('Opened game: $currentGame');
     _pageController = PageController(initialPage: 0);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       refreshPrizes();
@@ -82,6 +82,7 @@ class RewardLeaderboardViewModel extends BaseViewModel {
     tabNo = tab;
   }
 
+//OPTIMIZE: pass game type and fetch all the prizes instead of separate fetch functions
   refreshPrizes() async {
     isPrizesLoading = true;
     switch (currentGame) {
@@ -113,7 +114,16 @@ class RewardLeaderboardViewModel extends BaseViewModel {
         if (_prizeService!.candyFiestaPrizes == null)
           await _prizeService!.fetchCandyFiestaPrizes();
         prizes = _prizeService!.candyFiestaPrizes;
-
+        break;
+      case Constants.GAME_TYPE_BOTTLEFLIP:
+        if (_prizeService!.bottleFlipPrizes == null)
+          await _prizeService!.fetchBottleFlipPrizes();
+        prizes = _prizeService!.bottleFlipPrizes;
+        break;
+      case Constants.GAME_TYPE_BOWLING:
+        if (_prizeService!.bowlingPrizes == null)
+          await _prizeService!.fetchBowlingPrizes();
+        prizes = _prizeService!.bowlingPrizes;
         break;
     }
     isPrizesLoading = false;

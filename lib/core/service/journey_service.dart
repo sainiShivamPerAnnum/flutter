@@ -476,10 +476,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   void updateRewardStatus(String prizeSubtype) {
     int activeRewardIndex = completedMilestonesPrizeList!.indexWhere((reward) =>
         reward != GoldenTicket.none() && reward.prizeSubtype == prizeSubtype);
+    if (unscratchedGTList != null)
+      unscratchedGTList!.removeWhere((gt) => gt.prizeSubtype == prizeSubtype);
     if (activeRewardIndex != -1) {
       completedMilestonesPrizeList![activeRewardIndex] = GoldenTicket.none();
       notifyListeners(JourneyServiceProperties.Prizes);
-      _logger.d("Prizes List Updated for prize $prizeSubtype ");
+      _logger.d("Prizes List Updated for prize ;$prizeSubtype ");
     }
   }
 

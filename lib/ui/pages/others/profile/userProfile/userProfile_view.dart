@@ -152,7 +152,9 @@ class UserProfileForm extends StatelessWidget {
                       ))
                 : AppTextField(
                     readOnly: true,
-                    isEnabled: model.isEmailVerified ? false : true,
+                    isEnabled: model.isEmailVerified || model.myEmail.isEmpty
+                        ? false
+                        : true,
                     validator: (va) {
                       return null;
                     },
@@ -220,18 +222,7 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale!.obDobLabel,
             ),
-            // AppDatePickerField(
-            //   isEnabled: model.inEditMode,
-            //   child: Text(
-            //     "${model.dobController.text}",
-            //     style: TextStyles.body2.colour(
-            //       model.inEditMode
-            //           ? UiConstants.kTextColor
-            //           : UiConstants.kTextFieldTextColor,
-            //     ),
-            //   ),
-            //   onTap: model.inEditMode ? model.showAndroidDatePicker : null,
-            // ),
+
             model.inEditMode
                 ? Container(
                     width: double.infinity,

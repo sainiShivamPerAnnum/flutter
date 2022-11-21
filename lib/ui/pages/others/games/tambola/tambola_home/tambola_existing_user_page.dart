@@ -1,12 +1,8 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/faqTypes.dart';
+import 'dart:math';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_widget.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -14,24 +10,76 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class TambolaExistingUserPage extends StatelessWidget {
+class TambolaExistingUserPage extends StatefulWidget {
   TambolaExistingUserPage({Key? key, required this.model}) : super(key: key);
   final TambolaHomeViewModel model;
+
+  @override
+  State<TambolaExistingUserPage> createState() =>
+      _TambolaExistingUserPageState();
+}
+
+class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
+    with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
+
+  late final AnimationController animationController;
+
+  @override
+  void initState() {
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: FAppBar(
-        type: FaqsType.play,
+        // type: FaqsType.play,
         showAvatar: false,
         showCoinBar: false,
         showHelpButton: false,
+
+        action: TextButton(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+            child: Text(
+              'How to play',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: SizeConfig.body2,
+              ),
+            ),
+          ),
+          style: TextButton.styleFrom(
+            primary: Colors.white,
+            onSurface: Colors.white,
+            side: BorderSide(color: Colors.white, width: 2),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+          ),
+          onPressed: () {
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addWidget,
+              page: TambolaNewUser,
+              widget: TambolaNewUserPage(model: widget.model),
+            );
+          },
+        ),
         title: "Tambola",
         backgroundColor: UiConstants.kArowButtonBackgroundColor,
       ),
@@ -45,16 +93,17 @@ class TambolaExistingUserPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TodayWeeklyPicksCard(
-                  model: model,
+                  model: widget.model,
                 ),
-                if (model.userWeeklyBoards != null) ...[
+                if (widget.model.userWeeklyBoards != null) ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 26, vertical: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Tickets(${model.activeTambolaCardCount})',
+                        Text(
+                            'Total Tickets: ${widget.model.activeTambolaCardCount}',
                             style: TextStyles.rajdhaniSB.body1),
                         GestureDetector(
                           onTap: () {
@@ -62,10 +111,15 @@ class TambolaExistingUserPage extends StatelessWidget {
                                 _scrollController.position.maxScrollExtent,
                                 duration: Duration(milliseconds: 500),
                                 curve: Curves.fastOutSlowIn);
+                            animationController
+                                .forward()
+                                .then((value) => animationController.reset());
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
+                              horizontal: SizeConfig.padding12,
+                              vertical: SizeConfig.padding6,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.transparent,
                               border: Border.all(color: Colors.white),
@@ -81,7 +135,7 @@ class TambolaExistingUserPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  TicketsView(model: model),
+                  TicketsView(model: widget.model),
                 ] else
                   Container(
                     width: SizeConfig.screenWidth,
@@ -106,7 +160,7 @@ class TambolaExistingUserPage extends StatelessWidget {
                       state: PageState.addWidget,
                       page: AllTambolaTicketsPageConfig,
                       widget: AllTambolaTickets(
-                          ticketList: model.tambolaBoardViews!.toList()),
+                          ticketList: widget.model.tambolaBoardViews!.toList()),
                     );
                   },
                   child: Container(
@@ -126,7 +180,11 @@ class TambolaExistingUserPage extends StatelessWidget {
                           'View All Tickets',
                           style: TextStyles.rajdhaniSB.body1,
                         ),
-                        Icon(Icons.arrow_forward_ios, color: Colors.white),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: SizeConfig.padding16,
+                        ),
                       ],
                     ),
                   ),
@@ -134,8 +192,19 @@ class TambolaExistingUserPage extends StatelessWidget {
                 SizedBox(
                   height: 32,
                 ),
-                ButTicketsComponent(
-                  model: model,
+                AnimatedBuilder(
+                  animation: animationController,
+                  builder: (ctx, child) {
+                    final sineValue =
+                        sin(5 * 2 * pi * animationController.value);
+                    return Transform.translate(
+                      offset: Offset(sineValue * 5, 0),
+                      child: child,
+                    );
+                  },
+                  child: ButTicketsComponent(
+                    model: widget.model,
+                  ),
                 ),
                 SizedBox(
                   height: 52,

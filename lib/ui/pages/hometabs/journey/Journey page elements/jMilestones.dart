@@ -1,17 +1,15 @@
 import 'dart:math' as math;
-import 'dart:developer';
+
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jAssetPath.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -340,18 +338,6 @@ class StaticMilestone extends StatelessWidget {
                         .showMilestoneDetailsModalSheet(milestone, context),
                     child: SourceAdaptiveAssetView(asset: milestone.asset),
                   ),
-          ),
-        if (milestone.index == 2)
-          Positioned(
-            left: model!.pageWidth! * milestone.x!,
-            bottom: model!.pageHeight! * (milestone.page - 1) +
-                model!.pageHeight! * milestone.y!,
-            child: SvgPicture.network(
-              milestone.asset.uri,
-              color: UiConstants.primaryColor.withOpacity(0.5),
-              height: model!.pageHeight! * milestone.asset.height,
-              width: model!.pageWidth! * milestone.asset.width,
-            ),
           ),
         if (milestone.index! < model!.avatarActiveMilestoneLevel!)
           Positioned(

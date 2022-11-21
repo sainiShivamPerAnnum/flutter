@@ -24,4 +24,10 @@ class UserKycDataModel {
           uid: map["uid"] ?? '',
           url: map["url"] ?? '',
         );
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "Name: $name OcrVerified: $ocrVerified Pan: $pan Status: $status Uid: $uid Url: $url";
+  }
 }

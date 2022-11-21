@@ -121,7 +121,6 @@ class UserProfileVM extends BaseViewModel {
   String get myGender => _userService!.gender ?? "";
   String get myMobile => _userService!.baseUser!.mobile ?? "";
   bool get isEmailVerified => _userService!.isEmailVerified;
-  bool get isSimpleKycVerified => _userService!.isSimpleKycVerified;
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
   bool get isApplockLoading => _isApplockLoading;
   bool get hasInputError => _hasInputError;
@@ -848,10 +847,14 @@ class UserProfileVM extends BaseViewModel {
       return Container(
         height: SizeConfig.padding16,
         width: SizeConfig.padding16,
-        child: Expanded(
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            ),
+          ],
         ),
       );
     } else if (response == UsernameResponse.EMPTY)

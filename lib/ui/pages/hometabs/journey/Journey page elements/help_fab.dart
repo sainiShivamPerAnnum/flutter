@@ -60,14 +60,11 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          // isOpen ? collapseFab() : expandFab();
-          // AppState.screenStack.add(ScreenItem.dialog);
-          // trackHelpTappedEvent();
-          // AppState.delegate!
-          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
-          // BaseUtil.showUsernameInputModalSheet();
-
-          _userService.checkIfUsernameHasAddedUsername();
+          isOpen ? collapseFab() : expandFab();
+          AppState.screenStack.add(ScreenItem.dialog);
+          trackHelpTappedEvent();
+          AppState.delegate!
+              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
@@ -81,14 +78,14 @@ class _HelpFabState extends State<HelpFab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.network(
-                  DynamicUiUtils.helpFab.iconUri ?? '',
+                  DynamicUiUtils.helpFab.iconUri,
                   // height: SizeConfig.avatarRadius * 1.8,
                   width: SizeConfig.avatarRadius * 1.8,
                 ),
-                SizedBox(width: SizeConfig.padding6),
+                SizedBox(width: SizeConfig.padding4),
                 Container(
                   child: Text(
-                    " ${DynamicUiUtils.helpFab.title ?? 'Help'}",
+                    " ${DynamicUiUtils.helpFab.title}",
                     style: TextStyles.sourceSansSB.body3,
                   ),
                 )

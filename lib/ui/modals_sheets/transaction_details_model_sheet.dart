@@ -51,7 +51,8 @@ class _TransactionDetailsBottomSheetState
         widget.transaction!.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget.transaction!.tranStatus ==
             UserTransaction.TRAN_STATUS_COMPLETE &&
-        widget.transaction!.couponCode != null) _showAppliedCoupon = true;
+        widget.transaction!.couponCode != null &&
+        widget.transaction!.couponCode!.isNotEmpty) _showAppliedCoupon = true;
     super.initState();
   }
 

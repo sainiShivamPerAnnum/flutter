@@ -110,9 +110,21 @@ class SaveCustomCard extends StatelessWidget {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      subtitle ?? "Balance",
-                                      style: TextStyles.sourceSansM.body4,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          subtitle ?? "Balance",
+                                          style: TextStyles.sourceSansM.body4,
+                                        ),
+                                        SizedBox(width: SizeConfig.padding4),
+                                        if (key!.value ==
+                                            Constants.ASSET_TYPE_LENDBOX)
+                                          Icon(
+                                            Icons.arrow_upward,
+                                            size: SizeConfig.padding14,
+                                            color: UiConstants.primaryColor,
+                                          )
+                                      ],
                                     ),
                                     UserFundQuantitySE(
                                       style: TextStyles.sourceSansSB.title4,

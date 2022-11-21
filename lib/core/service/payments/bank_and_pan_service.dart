@@ -19,7 +19,7 @@ class BankAndPanService
   String? _userPan;
   UserKycDataModel? _userKycData;
 
-  get userKycData => this._userKycData;
+  UserKycDataModel? get userKycData => this._userKycData;
 
   set userKycData(value) {
     this._userKycData = value;
@@ -56,7 +56,6 @@ class BankAndPanService
   get withdrawableQnt => this._withdrawableQnt;
   get nonWithdrawableQnt => this._nonWithdrawableQnt;
   get isLockInReached => this._isLockInReached;
-  bool get isSimpleKycVerified => _userService.isSimpleKycVerified;
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
   bool get isSellButtonVisible => _isSellButtonVisible;
@@ -99,7 +98,6 @@ class BankAndPanService
     // await _userService.fetchUserAugmontDetail();
     await checkForUserBankAccountDetails();
     await checkForUserPanDetails();
-    verifyKYCStatus();
     verifyBankDetails();
     checkForSellNotice();
     checkIfSellIsLocked();
@@ -116,14 +114,14 @@ class BankAndPanService
   }
 
   checkForUserPanDetails() async {
-    if (verifyKYCStatus()) return;
+    if (userKycData != null) return;
     final res = await _bankingRepo.getUserKycInfo();
 
     if (res.isSuccess()) {
       if (res.model!.ocrVerified) {
         userPan = res.model!.pan;
         userKycData = res.model!;
-        _userService.setMyUserName(res.model!.name);
+        isKYCVerified = true;
       }
     }
     // final res = await _userRep.getUserPan();
@@ -145,14 +143,6 @@ class BankAndPanService
         activeBankAccountDetails!.account!.isNotEmpty) {
       isBankDetailsAdded = true;
     }
-  }
-
-  verifyKYCStatus() {
-    isKYCVerified = (_userService.baseUser?.isSimpleKycVerified ?? false) &&
-        userPan != null;
-    _logger!.d('kyc verified! $isKYCVerified');
-
-    return isKYCVerified;
   }
 
   checkForSellNotice() {

@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -30,6 +31,7 @@ class GTDetailedViewModel extends BaseViewModel {
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final _rsaEncryption = new RSAEncryption();
   final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
@@ -100,6 +102,8 @@ class GTDetailedViewModel extends BaseViewModel {
       _gtService!.updateUnscratchedGTCount();
       _userService!.getUserFundWalletData();
       _userCoinService!.getUserCoinBalance();
+      _journeyService.updateRewardStatus(ticket.prizeSubtype!);
+
       return true;
     } catch (e) {
       _logger!.e(e);

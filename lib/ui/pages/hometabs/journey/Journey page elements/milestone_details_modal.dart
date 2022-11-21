@@ -212,16 +212,6 @@ class _JourneyMilestoneDetailsModalSheetState
                                 btnText: "Let's Go",
                                 onPressed: () {
                                   AppState.backButtonDispatcher!.didPopRoute();
-                                  if (widget.milestone.index == 1) {
-                                    AppState.delegate!.appState.currentAction =
-                                        PageAction(
-                                            page: UserProfileDetailsConfig,
-                                            state: PageState.addWidget,
-                                            widget: UserProfileDetails(
-                                                isNewUser: true));
-                                    return;
-                                  }
-
                                   if (widget.milestone.actionUri != null &&
                                       widget.milestone.actionUri!.isNotEmpty)
                                     AppState.delegate!.parseRoute(

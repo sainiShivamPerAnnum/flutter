@@ -73,17 +73,10 @@ class TambolaHomeView extends StatelessWidget {
                   child: Column(
                     children: [
                       //Today and Weekly Picks
-                      TodayWeeklyPicksCard(
-                        model: model,
-                      ),
+                      TodayWeeklyPicksCard(model: model),
                       //Win Announcement card
-                      if (model.showWinCard)
-                        TambolaResultCard(
-                          model: model,
-                        ),
-                      SizedBox(
-                        height: SizeConfig.screenWidth! * 0.075,
-                      ),
+                      if (model.showWinCard) TambolaResultCard(model: model),
+                      SizedBox(height: SizeConfig.screenWidth! * 0.075),
                       //Your best tickets
                       connectivityStatus != ConnectivityStatus.Offline
                           ? model.userWeeklyBoards != null
@@ -222,38 +215,12 @@ class TicketsView extends StatelessWidget {
             : [],
       ));
 
-      return Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal:
-                    SizeConfig.pageHorizontalMargins + SizeConfig.padding2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Your Best tickets",
-                  style: TextStyles.rajdhaniSB.body0,
-                ),
-                Text(
-                  "Total tickets: ${model!.userWeeklyBoards!.length}",
-                  style: TextStyles.rajdhaniSB.body3,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Container(
-            width: SizeConfig.screenWidth,
-            child: TabViewGenerator(
-              model: model,
-              showIndicatorForAll: false,
-            ),
-          ),
-        ],
+      return Container(
+        width: SizeConfig.screenWidth,
+        child: TabViewGenerator(
+          model: model,
+          showIndicatorForAll: false,
+        ),
       );
     } else {
       //Multiple tickets
@@ -498,30 +465,45 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                   //Top row
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.length >= 1
-                      ? Ticket(
-                          dailyPicks: widget.model!.weeklyDigits,
-                          bestBoards: _bestBoards,
-                          board: _bestBoards![1],
-                          showBestOdds: false,
-                          calledDigits: widget.model!.weeklyDigits!.toList())
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model!.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards![1],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model!.weeklyDigits!.toList()),
+                          ],
+                        )
                       : NoTicketWidget(),
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.length >= 1
-                      ? Ticket(
-                          dailyPicks: widget.model!.weeklyDigits,
-                          bestBoards: _bestBoards,
-                          board: _bestBoards![2],
-                          showBestOdds: false,
-                          calledDigits: widget.model!.weeklyDigits!.toList())
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model!.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards![2],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model!.weeklyDigits!.toList()),
+                          ],
+                        )
                       : NoTicketWidget(),
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.length >= 1
-                      ? Ticket(
-                          dailyPicks: widget.model!.weeklyDigits,
-                          bestBoards: _bestBoards,
-                          board: _bestBoards![3],
-                          showBestOdds: false,
-                          calledDigits: widget.model!.weeklyDigits!.toList())
+                      ? Column(
+                          children: [
+                            Ticket(
+                                dailyPicks: widget.model!.weeklyDigits,
+                                bestBoards: _bestBoards,
+                                board: _bestBoards![3],
+                                showBestOdds: false,
+                                calledDigits:
+                                    widget.model!.weeklyDigits!.toList()),
+                          ],
+                        )
                       : NoTicketWidget(),
                 ],
               ),
@@ -909,7 +891,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
     return Column(
       children: [
         Container(
-          height: SizeConfig.screenWidth! * 0.48,
+          height: SizeConfig.screenWidth! * 0.47,
           width: SizeConfig.screenWidth,
           child: PageView(
             physics: BouncingScrollPhysics(),

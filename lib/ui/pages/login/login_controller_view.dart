@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -104,7 +105,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     margin: EdgeInsets.only(
                         top: SizeConfig.pageHorizontalMargins / 2,
                         right: SizeConfig.pageHorizontalMargins),
-                    child: FaqPill()),
+                    child: FaqPill(type: FaqsType.onboarding)),
               ),
               if (keyboardIsOpen)
                 Positioned(

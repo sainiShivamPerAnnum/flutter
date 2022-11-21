@@ -71,6 +71,7 @@ class UsernameInputView extends StatelessWidget {
                     hintText: 'Your username',
                     onTap: () {},
                     prefixText: '@',
+                    autoFocus: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     textEditingController: model.usernameController,
                     isEnabled: model.inEditMode,

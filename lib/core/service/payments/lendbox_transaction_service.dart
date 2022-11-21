@@ -97,12 +97,12 @@ class LendboxTransactionService extends BaseTransactionService {
       AppState.unblockNavigation();
       // resetBuyOptions();
     } else {
-      AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
         'Failed to create transaction',
         'Please try after sometime',
       );
     }
+    AppState.unblockNavigation();
   }
 
   Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {

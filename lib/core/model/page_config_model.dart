@@ -118,9 +118,9 @@ class SingleInfo {
 
   factory SingleInfo.fromMap(Map<String, dynamic> map) {
     return SingleInfo(
-      iconUri: map['iconUri'] as String,
-      actionUri: map['actionUri'] as String,
-      title: map['title'] as String,
+      iconUri: (map['iconUri'] ?? '') as String,
+      actionUri: (map['actionUri'] ?? '') as String,
+      title: (map['title'] ?? '') as String,
     );
   }
 

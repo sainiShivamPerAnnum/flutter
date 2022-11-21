@@ -78,8 +78,8 @@ class APIService implements API {
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
-    } on UnauthorisedException {
-      throw UnauthorisedException("Token Expired, Signout current user");
+    } on UnauthorizedException {
+      throw UnauthorizedException("Token Expired, Signout current user");
     } finally {
       // await metric.stop();
     }
@@ -96,9 +96,6 @@ class APIService implements API {
     Map<String, dynamic>? queryParams,
     bool isAuthTokenAvailable = true,
   }) async {
-    final HttpMetric metric =
-        FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Post);
-    // await metric.start();
     var responseJson;
     String queryString = '';
 
@@ -305,7 +302,7 @@ class APIService implements API {
         throw BadRequestException(responseJson['message']);
       case 401:
       case 403:
-        throw UnauthorisedException(response.body.toString());
+        throw UnauthorizedException(response.body.toString());
       case 500:
       default:
         throw FetchDataException(responseJson["message"]);

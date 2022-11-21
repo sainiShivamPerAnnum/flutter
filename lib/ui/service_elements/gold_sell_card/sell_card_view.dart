@@ -107,7 +107,7 @@ class SellCardView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: SizeConfig.padding12),
-              if (!sellService.isKYCVerified || sellService.userPan == null)
+              if (!sellService.isKYCVerified || sellService.userKycData == null)
                 SellActionButton(
                   title: 'Complete KYC',
                   onTap: navigateToKycScreen,

@@ -29,7 +29,7 @@ class SaveNetWorthSection extends StatelessWidget {
         case 'LB':
           orderedAssests.add(
             SaveCustomCard(
-              title: 'Fello Flo',
+              title: 'Fello Flo (10%)',
               subtitle: "Current Value",
               key: ValueKey(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,

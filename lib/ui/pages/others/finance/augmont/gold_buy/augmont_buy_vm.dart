@@ -269,6 +269,7 @@ class GoldBuyViewModel extends BaseViewModel {
   //BUY FLOW
   //1
   initiateBuy() async {
+    if (_augTxnService.isGoldSellInProgress || couponApplyInProgress) return;
     _augTxnService!.isGoldBuyInProgress = true;
     if (!await initChecks()) {
       _augTxnService!.isGoldBuyInProgress = false;
@@ -571,7 +572,9 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
-    if (couponApplyInProgress || isGoldBuyInProgress) return;
+    if (couponApplyInProgress ||
+        isGoldBuyInProgress ||
+        _augTxnService.isGoldBuyInProgress) return;
 
     int order = -1;
     int? minTransaction = -1;

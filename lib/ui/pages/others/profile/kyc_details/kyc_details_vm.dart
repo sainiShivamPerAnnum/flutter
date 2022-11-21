@@ -80,12 +80,10 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
-  final BankAndPanService? _sellService = locator<BankAndPanService>();
+
   final _cacheService = new CacheService();
-  bool get isConfirmDialogInView => _userService!.isConfirmationDialogOpen;
+  bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
 
@@ -141,18 +139,19 @@ class KYCDetailsViewModel extends BaseViewModel {
     }
   }
 
-  checkForKycExistence() async {
+  Future checkForKycExistence() async {
+    _logger!.d("${_bankAndPanService.userKycData?.toString()}");
     setState(ViewState.Busy);
-    final kycRes = await _bankingRepo.getUserKycInfo();
-    if (kycRes.isSuccess()) {
-      userKycData = kycRes.model;
+    if (_bankAndPanService.isKYCVerified &&
+        _bankAndPanService.userKycData != null)
+      userKycData = _bankAndPanService.userKycData;
+    else {
+      await _bankAndPanService.checkForUserPanDetails();
+      userKycData = _bankAndPanService.userKycData;
+    }
+    if (userKycData != null) {
       if (userKycData!.ocrVerified) {
         kycVerificationStatus = KycVerificationStatus.VERIFIED;
-        _cacheService.invalidateByKey(CacheKeys.USER);
-        _userService.setMyUserName(userKycData!.name);
-        _bankAndPanService.isBankDetailsAdded = false;
-        _bankAndPanService.activeBankAccountDetails = null;
-        _bankAndPanService.checkForUserBankAccountDetails();
         panController!.text = userKycData!.pan;
         nameController!.text = userKycData!.name;
         inEditMode = false;
@@ -160,7 +159,7 @@ class KYCDetailsViewModel extends BaseViewModel {
       } else
         kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     } else {
-      kycVerificationStatus = KycVerificationStatus.NONE;
+      kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     }
     setState(ViewState.Idle);
   }
@@ -185,31 +184,37 @@ class KYCDetailsViewModel extends BaseViewModel {
           capturedImage = null;
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
-          checkForKycExistence();
-          BaseUtil.showPositiveAlert(
-              "KYC successully completed ✅", "Your KYC verification has been successully completed");
+          await checkForKycExistence();
+          _cacheService.invalidateByKey(CacheKeys.USER);
+          await _userService.setBaseUser();
+
+          _bankAndPanService.checkForUserBankAccountDetails();
+          BaseUtil.showPositiveAlert("KYC successfully completed ✅",
+              "Your KYC verification has been successfully completed");
           AppState.backButtonDispatcher!.didPopRoute();
         } else {
           capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;
           kycVerificationStatus = KycVerificationStatus.FAILED;
           BaseUtil.showNegativeAlert(
-              forgeryUploadRes.errorMessage ?? "Something went wrong!", "");
+              forgeryUploadRes.errorMessage ?? "PAN verification failed",
+              "Please upload a valid PAN image and try again");
         }
       } else {
         capturedImage = null;
         kycErrorMessage = imageUploadRes.errorMessage;
         kycVerificationStatus = KycVerificationStatus.FAILED;
         BaseUtil.showNegativeAlert(
-            imageUploadRes.errorMessage ?? "PAN verification failed",
-            "Please upload a valid PAN image and try again");
+            imageUploadRes.errorMessage ?? "Failed to upload your PAN image",
+            "Please try again after sometime");
       }
     } else {
       capturedImage = null;
       kycErrorMessage = res.errorMessage;
       kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(
-          res.errorMessage ?? "Failed to upload your PAN image", "Please try again after sometime");
+          res.errorMessage ?? "Failed to upload your PAN image",
+          "Please try again after sometime");
     }
     isUpdatingKycDetails = false;
     AppState.unblockNavigation();
