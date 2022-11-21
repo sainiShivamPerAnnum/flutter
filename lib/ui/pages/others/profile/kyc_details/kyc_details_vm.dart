@@ -123,9 +123,9 @@ class KYCDetailsViewModel extends BaseViewModel {
             isBarrierDismissible: false,
             hapticVibrate: true,
             content: MoreInfoDialog(
-                title: 'Snap!',
+                title: 'Invalid File',
                 text:
-                    'Selected file is too big, please add an image less than 5 MB'));
+                    'Selected file size is very large. Please select an image of size less than 5 MB.'));
       } else
         return;
     } else {
@@ -135,9 +135,9 @@ class KYCDetailsViewModel extends BaseViewModel {
           isBarrierDismissible: false,
           hapticVibrate: true,
           content: MoreInfoDialog(
-              title: 'Snap!',
+              title: 'Invalid File',
               text:
-                  'Selected file is invalid, please add a valid image (PNG, JPEG, JPG)'));
+                  'Selected file is invalid. Please select a valid PNG, JPEG or JPG image.'));
     }
   }
 
@@ -169,7 +169,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     kycErrorMessage = null;
     if (capturedImage == null)
       return BaseUtil.showNegativeAlert(
-          "No file selected", "Please select a file");
+          "No file selected", "Please select a valid PAN image");
     if (isUpdatingKycDetails) return;
     isUpdatingKycDetails = true;
     AppState.blockNavigation();
@@ -187,7 +187,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.isBankDetailsAdded = false;
           checkForKycExistence();
           BaseUtil.showPositiveAlert(
-              "Kyc Verification Successful!", "Sell Unlocked");
+              "KYC successully completed ✅", "Your KYC verification has been successully completed");
           AppState.backButtonDispatcher!.didPopRoute();
         } else {
           capturedImage = null;
@@ -201,15 +201,15 @@ class KYCDetailsViewModel extends BaseViewModel {
         kycErrorMessage = imageUploadRes.errorMessage;
         kycVerificationStatus = KycVerificationStatus.FAILED;
         BaseUtil.showNegativeAlert(
-            imageUploadRes.errorMessage ?? "You are fraud",
-            "Use a real pan image");
+            imageUploadRes.errorMessage ?? "PAN verification failed",
+            "Please upload a valid PAN image and try again");
       }
     } else {
       capturedImage = null;
       kycErrorMessage = res.errorMessage;
       kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(
-          res.errorMessage ?? "Failed to get Url", "Please try again");
+          res.errorMessage ?? "Failed to upload your PAN image", "Please try again after sometime");
     }
     isUpdatingKycDetails = false;
     AppState.unblockNavigation();
