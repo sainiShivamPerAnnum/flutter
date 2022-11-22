@@ -49,7 +49,7 @@ class SaveAssetsFooter extends StatelessWidget {
               endIndent: 2,
             ),
             SaveInfoSection(
-              title: 'Gold Insurer',
+              title: 'Trusted by',
               imageAsset: Assets.idbiTrustee,
               imageHeight: SizeConfig.screenWidth! * 0.07,
               imageWidth: SizeConfig.screenWidth! * 0.16,

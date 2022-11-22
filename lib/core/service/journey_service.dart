@@ -74,7 +74,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool _showLevelUpAnimation = false;
   bool _isUserJourneyOnboarded = false;
   get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
-  List<GoldenTicket>? unscratchedGTList;
+  List<GoldenTicket>? _unscratchedGTList;
+
+  get unscratchedGTList => this._unscratchedGTList;
+
+  set unscratchedGTList(value) {
+    this._unscratchedGTList = value;
+    notifyListeners(JourneyServiceProperties.Prizes);
+  }
 
   set isUserJourneyOnboarded(value) {
     this._isUserJourneyOnboarded = value;

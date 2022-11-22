@@ -223,7 +223,7 @@ class UserProfileForm extends StatelessWidget {
               locale!.obDobLabel,
             ),
 
-            model.inEditMode
+            model.inEditMode && model.isNameEnabled
                 ? Container(
                     width: double.infinity,
                     // height: SizeConfig.screenWidth * 0.1377,
@@ -337,6 +337,13 @@ class UserProfileForm extends StatelessWidget {
                     validator: (val) {
                       return "";
                     },
+                    suffixIcon: !model.isNameEnabled
+                        ? Icon(
+                            Icons.verified,
+                            color: UiConstants.primaryColor,
+                            size: SizeConfig.iconSize1,
+                          )
+                        : SizedBox(),
                     // child: Text(
                     //   "${model.dobController.text}",
                     //   style: TextStyles.body2.colour(

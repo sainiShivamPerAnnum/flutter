@@ -101,6 +101,7 @@ class RootViewModel extends BaseViewModel {
         .fetchTransactions(subtype: InvestmentType.AUGGOLD99);
     await _journeyService!.checkForMilestoneLevelChange();
     await _gtService!.updateUnscratchedGTCount();
+    await _journeyService!.getUnscratchedGT();
   }
 
   static final GlobalKey<ScaffoldState> scaffoldKey =

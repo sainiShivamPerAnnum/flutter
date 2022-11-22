@@ -329,8 +329,8 @@ class UserProfileVM extends BaseViewModel {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(ViewState.Busy);
       if (_bankAndKycService!.isKYCVerified) {
-        nameController!.text =
-            _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
+        // nameController!.text =
+        //     _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
         isNameEnabled = false;
       }
       setState(ViewState.Idle);
@@ -535,6 +535,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool isValidDate() {
+    if (!isNameEnabled) return true;
     dateInputError = "";
     String inputDate = yearFieldController!.text +
         monthFieldController!.text +
@@ -828,7 +829,7 @@ class UserProfileVM extends BaseViewModel {
     if (res.isSuccess()) {
       await _userService!.setBaseUser();
       AppState.unblockNavigation();
-      BaseUtil.showPositiveAlert("", subtitle);
+      BaseUtil.showPositiveAlert("Username added successfully", subtitle);
       AppState.backButtonDispatcher!.didPopRoute();
       return true;
     } else {

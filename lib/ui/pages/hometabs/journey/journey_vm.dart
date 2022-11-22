@@ -148,7 +148,7 @@ class JourneyPageViewModel extends BaseViewModel {
       });
     });
 
-    checkIfUserIsNewAndNeedsStoryView();
+    // checkIfUserIsNewAndNeedsStoryView();
   }
 
   checkIfUserIsNewAndNeedsStoryView() {

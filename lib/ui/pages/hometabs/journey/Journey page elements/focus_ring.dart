@@ -5,7 +5,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -13,7 +12,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:vector_math/vector_math.dart' as vector;
@@ -49,6 +47,7 @@ class _FocusRingState extends State<FocusRing>
     endingAnimation = CurvedAnimation(
         parent: _animationController!,
         curve: const Interval(0, 1.0, curve: Curves.decelerate));
+    animateRing();
 
     super.initState();
   }
@@ -81,9 +80,8 @@ class _FocusRingState extends State<FocusRing>
         ],
         builder: (context, m, properties) {
           log("Focus Ring build called");
-          if (m!.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded)
-            animateRing();
-          return m.avatarRemoteMlIndex == 1 && m.isUserJourneyOnboarded
+
+          return m!.avatarRemoteMlIndex == 1
               ? Positioned(
                   bottom: m.pageHeight! * 0.22,
                   left: SizeConfig.screenWidth! * 0.4,

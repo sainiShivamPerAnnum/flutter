@@ -193,6 +193,8 @@ class RazorpayService extends ChangeNotifier {
           'Failed to create transaction',
           'Please try after sometime',
         );
+        AppState.unblockNavigation();
+
         return false;
       }
     } else {
@@ -200,6 +202,7 @@ class RazorpayService extends ChangeNotifier {
         'Transaction failed',
         txnResponse.errorMessage,
       );
+      AppState.unblockNavigation();
     }
   }
 

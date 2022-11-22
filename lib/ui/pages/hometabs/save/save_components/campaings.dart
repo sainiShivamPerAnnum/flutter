@@ -62,7 +62,7 @@ class CampaignCardSection extends StatelessWidget {
                       onTap: () {
                         if (_userService.baseUser!.username!.isEmpty)
                           return BaseUtil.showUsernameInputModalSheet(
-                              subtitle: "TODO");
+                              subtitle: "TODO", successToastSubtitle: "");
                         saveVm.trackChallangeTapped(event.type, index);
                         AppState.delegate!.parseRoute(Uri.parse(event.type));
                       },

@@ -91,7 +91,9 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<dynamic>> getUserById({required String? id}) async {
+  Future<ApiResponse<dynamic>> getUserById({
+    required String? id
+  }) async {
     try {
       final token = await getBearerToken();
 

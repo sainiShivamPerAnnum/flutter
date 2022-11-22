@@ -11,7 +11,9 @@ import 'package:flutter/services.dart';
 
 class UsernameInputView extends StatelessWidget {
   final String? subtitle;
-  const UsernameInputView({Key? key, this.subtitle}) : super(key: key);
+  final String? successToastSubtitle;
+  const UsernameInputView({Key? key, this.subtitle, this.successToastSubtitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +98,7 @@ class UsernameInputView extends StatelessWidget {
                   ),
                   if (model.showResult().runtimeType != SizedBox)
                     Container(
-                      margin: EdgeInsets.only(
-                        // top: SizeConfig.padding8,
-                        top: SizeConfig.padding4,
-                      ),
+                      height: SizeConfig.padding20,
                       child: model.showResult(),
                     ),
                   Container(
@@ -113,7 +112,8 @@ class UsernameInputView extends StatelessWidget {
                           )
                         : AppPositiveBtn(
                             btnText: "ADD",
-                            onPressed: () => model.updateUsername(subtitle)),
+                            onPressed: () =>
+                                model.updateUsername(successToastSubtitle)),
                   )
                 ]),
           )),
