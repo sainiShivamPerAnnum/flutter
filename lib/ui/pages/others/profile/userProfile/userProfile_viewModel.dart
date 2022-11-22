@@ -91,7 +91,7 @@ class UserProfileVM extends BaseViewModel {
   bool _hasInputError = false;
   int? _gen;
   String? gender;
-  late DateTime selectedDate;
+  DateTime? selectedDate;
   String _dateInputError = "";
   String username = "";
   double _errorPadding = 0;
@@ -342,11 +342,13 @@ class UserProfileVM extends BaseViewModel {
         isValidDate() &&
         await usernameIsValid()) {
       if (_checkForChanges() && checkForNullData()) {
-        if (DateHelper.isAdult(selectedDate)) {
+        if (checkIfAdult()) {
           isUpdaingUserDetails = true;
-          _userService!.baseUser!.name = nameController!.text.trim();
-          _userService!.baseUser!.dob =
-              "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
+          if (isNameEnabled)
+            _userService!.baseUser!.name = nameController!.text.trim();
+          if (isNameEnabled)
+            _userService!.baseUser!.dob =
+                "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
           _userService!.baseUser!.gender = getGender();
           _userService!.baseUser!.isEmailVerified =
               _userService!.isEmailVerified;
@@ -402,6 +404,13 @@ class UserProfileVM extends BaseViewModel {
     } else
       BaseUtil.showNegativeAlert(
           "Invalid details", "please check the fields again");
+  }
+
+  bool checkIfAdult() {
+    if (selectedDate == null && !isNameEnabled)
+      return true;
+    else
+      return DateHelper.isAdult(selectedDate);
   }
 
   Future<bool> usernameIsValid() async {
@@ -535,7 +544,10 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool isValidDate() {
-    if (!isNameEnabled) return true;
+    if (!isNameEnabled) {
+      selectedDate = null;
+      return true;
+    }
     dateInputError = "";
     String inputDate = yearFieldController!.text +
         monthFieldController!.text +
@@ -818,7 +830,7 @@ class UserProfileVM extends BaseViewModel {
     isSigningInWithGoogle = false;
   }
 
-  Future updateUsername(String? subtitle) async {
+  Future updateUsername() async {
     if (isUpdaingUserDetails) return;
     if (!(await validateUsername() ?? false)) return;
     AppState.blockNavigation();
@@ -829,7 +841,8 @@ class UserProfileVM extends BaseViewModel {
     if (res.isSuccess()) {
       await _userService!.setBaseUser();
       AppState.unblockNavigation();
-      BaseUtil.showPositiveAlert("Username added successfully", subtitle);
+      BaseUtil.showPositiveAlert("Username created successfully",
+          "Your username ${_userService!.baseUser?.username ?? ''} has been successfully registered!");
       AppState.backButtonDispatcher!.didPopRoute();
       return true;
     } else {

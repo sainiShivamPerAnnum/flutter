@@ -10,11 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UsernameInputView extends StatelessWidget {
-  final String? subtitle;
-  final String? successToastSubtitle;
-  const UsernameInputView({Key? key, this.subtitle, this.successToastSubtitle})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return BaseView<UserProfileVM>(
@@ -41,15 +36,14 @@ class UsernameInputView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Add Username',
+                              'Create your username',
                               style: TextStyles.rajdhaniB.title3,
                             ),
                             SizedBox(height: SizeConfig.padding6),
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                subtitle ??
-                                    "Add username to participate in fun events",
+                                "This will be your unique name across our games and challenges leaderboard",
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
                               ),
@@ -112,8 +106,7 @@ class UsernameInputView extends StatelessWidget {
                           )
                         : AppPositiveBtn(
                             btnText: "ADD",
-                            onPressed: () =>
-                                model.updateUsername(successToastSubtitle)),
+                            onPressed: () => model.updateUsername()),
                   )
                 ]),
           )),

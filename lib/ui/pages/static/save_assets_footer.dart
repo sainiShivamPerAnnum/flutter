@@ -50,7 +50,7 @@ class SaveAssetsFooter extends StatelessWidget {
             ),
             SaveInfoSection(
               title: 'Trusted by',
-              imageAsset: Assets.idbiTrustee,
+              imageAsset: Assets.rbiLogo,
               imageHeight: SizeConfig.screenWidth! * 0.07,
               imageWidth: SizeConfig.screenWidth! * 0.16,
             ),
@@ -89,9 +89,13 @@ class SaveInfoSection extends StatelessWidget {
             height: SizeConfig.padding6,
           ),
           SizedBox(
-              height: imageHeight ?? 0,
-              width: imageWidth ?? 0,
-              child: SvgPicture.asset(imageAsset ?? '')),
+            height: imageHeight ?? 0,
+            width: imageWidth ?? 0,
+            child: SvgPicture.asset(
+              imageAsset ?? '',
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
     );

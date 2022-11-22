@@ -88,7 +88,6 @@ class Assets {
   static final String felloFlo = 'assets/vectors/stable_fello.webp';
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
-  static final String rbiLogo = 'assets/vectors/rbi_logo.png';
   static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';
   static final String sebiLogo = 'assets/vectors/sebi_logo.png';
   static final String magicalSpiritBall = 'assets/svg/magical_spirit_ball.svg';
@@ -100,6 +99,7 @@ class Assets {
   static final String augmontLogo = 'assets/svg/augmont-white.svg';
   static final String lendboxLogo = 'assets/svg/lendbox-white.svg';
   static final String idbiTrustee = 'assets/svg/idbi-trustee.svg';
+  static final String rbiLogo = "assets/vectors/icons/rbilogo.svg";
 
   // WIN
 

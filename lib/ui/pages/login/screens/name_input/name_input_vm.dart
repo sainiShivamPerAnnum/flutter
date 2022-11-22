@@ -14,7 +14,7 @@ class LoginNameInputViewModel extends BaseViewModel {
   final _referralCodeController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   int genderValue = 0;
-  List<String> genderOptions = ["Male", "Female", "Others"];
+  List<String> genderOptions = ["Male", "Female", "Other"];
   bool enabled = true;
   // bool isLoading = false;
   // bool isUpdating = false;

@@ -71,7 +71,11 @@ class KYCDetailsView extends StatelessWidget {
           ),
           actions: [
             if (!model.isUpdatingKycDetails)
-              FaqPill(type: FaqsType.yourAccount),
+              Row(
+                children: [
+                  FaqPill(type: FaqsType.yourAccount),
+                ],
+              ),
             SizedBox(width: SizeConfig.padding16)
           ],
         ),

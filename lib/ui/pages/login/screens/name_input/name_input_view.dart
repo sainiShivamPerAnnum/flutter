@@ -56,7 +56,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                'Some Details',
+                'Share your details',
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
@@ -163,13 +163,16 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       },
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding20),
+                  SizedBox(height: SizeConfig.padding14),
                   model.hasReferralCode
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: SizeConfig.padding4),
-                            AppTextFieldLabel("Referral Code (Optional)"),
+                            SizedBox(height: SizeConfig.padding10),
+                            AppTextFieldLabel(
+                              "Referral Code (Optional)",
+                              leftPadding: 0,
+                            ),
                             AppTextField(
                               textEditingController:
                                   model.referralCodeController,
@@ -197,31 +200,26 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                             ),
                           ],
                         )
-                      : OutlinedButton(
-                          onPressed: () {
-                            if (widget.loginModel.state == ViewState.Busy)
-                              return;
-                            model.hasReferralCode = true;
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MaterialButton(
+                              onPressed: () {
+                                if (widget.loginModel.state == ViewState.Busy)
+                                  return;
+                                model.hasReferralCode = true;
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(SizeConfig.padding8),
+                                child: Text(
+                                  "Have a referral code?",
+                                  style: TextStyles.body2.bold
+                                      .colour(UiConstants.kPrimaryColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
-                            side: BorderSide(
-                              width: 1,
-                              color: UiConstants.primaryColor.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(SizeConfig.padding8),
-                            child: Text(
-                              "Have a referral code?",
-                              style: TextStyles.body2.bold
-                                  .colour(UiConstants.kPrimaryColor),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          ],
                         )
                 ],
               ),
@@ -237,7 +235,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 "By proceeding, you agree that you are 18 years and older.",
                 textAlign: TextAlign.center,
                 style: TextStyles.body3.colour(
-                  UiConstants.kTextColor2.withOpacity(0.5),
+                  UiConstants.kTextColor,
                 ),
               ),
             ),

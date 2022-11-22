@@ -287,14 +287,12 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static showUsernameInputModalSheet(
-      {String? subtitle, String? successToastSubtitle}) {
+  static showUsernameInputModalSheet() {
     return openModalBottomSheet(
       isScrollControlled: true,
       isBarrierDismissable: false,
       addToScreenStack: true,
-      content: UsernameInputView(
-          subtitle: subtitle, successToastSubtitle: successToastSubtitle),
+      content: UsernameInputView(),
       hapticVibrate: true,
     );
   }

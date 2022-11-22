@@ -335,7 +335,7 @@ class UserProfileForm extends StatelessWidget {
                     isEnabled: false,
                     textEditingController: model.dobController,
                     validator: (val) {
-                      return "";
+                      return null;
                     },
                     suffixIcon: !model.isNameEnabled
                         ? Icon(
